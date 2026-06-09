@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Образовательный тренажёр: Термины и Определения (редактор)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: #e9e5d8;
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+            color: #2e2e2a;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            max-width: 1400px;
+            width: 100%;
+            background: #fffdf8;
+            border-radius: 2rem;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+            padding: 1.8rem;
+            transition: all 0.2s;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, #6a7a5e, #4e6b4a);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .sub {
+            font-size: 0.9rem;
+            color: #6e6a5e;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e2d8ca;
+            padding-bottom: 1.2rem;
+        }
+        .btn {
+            background: #ebe3d4;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #4b5a42;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .btn-primary {
+            background: #cbdcc2;
+            color: #2f492c;
+        }
+        .btn-primary:hover {
+            background: #b9cfae;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #d7cdb7;
+        }
+        .btn-secondary:hover {
+            background: #cabea3;
+            transform: translateY(-1px);
+        }
+        .btn-danger {
+            background: #eedbcb;
+            color: #9b5a3e;
+        }
+        .btn-file {
+            background: #bdd0c4;
+            color: #2c4838;
+        }
+        .btn:active {
+            transform: translateY(1px);
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .file-label {
+            background: #bdd0c4;
+            padding: 0.6rem 1.4rem;
+            border-radius: 3rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #2c4838;
+            cursor: pointer;
+            display: inline-block;
+            transition: 0.2s;
+        }
+        .file-label:hover {
+            background: #a9c2b0;
+        }
+        .info-status {
+            background: #f2ede3;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            color: #5b634f;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .game-board {
+            background: #faf7f0;
+            border-radius: 1.8rem;
+            padding: 1.8rem;
+            min-height: 500px;
+            transition: 0.1s;
+        }
+        .cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.2rem;
+            align-items: start;
+        }
+        .card {
+            width: 260px;
+            min-width: 220px;
+            background: #f5f0e2;
+            border-radius: 1.5rem;
+            padding: 1rem 1rem;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.05);
+            cursor: grab;
+            transition: 0.15s linear;
+            border: 1px solid #e7dfcf;
+            backdrop-filter: blur(1px);
+            word-break: break-word;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #2c2b26;
+        }
+        .card:active {
+            cursor: grabbing;
+        }
+        .card.dragging {
+            opacity: 0.4;
+            cursor: grabbing;
+        }
+        .card.term {
+            background: #e8e6e0;
+            border-left: 6px solid #b8bfa7;
+        }
+        .card.def {
+            background: #f3efdf;
+            border-left: 6px solid #cfc5aa;
+        }
+        .card.matched-pair {
+            background: #cfdabe;
+            border-left: 6px solid #7f9970;
+            cursor: default;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            color: #2e4727;
+            font-weight: 500;
+        }
+        .card.matched-pair .pair-term {
+            font-weight: bold;
+            display: block;
+            border-bottom: 1px dashed #97ab86;
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+        }
+        .card.matched-pair .pair-def {
+            display: block;
+            font-weight: normal;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            color: #aaac9a;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .game-container { padding: 1rem; }
+            .card { width: 100%; max-width: 280px; }
+            .toolbar { gap: 0.6rem; }
+            .btn, .file-label { padding: 0.4rem 1rem; font-size: 0.8rem; }
+        }
+
+        .license-footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #9aa98b;
+            border-top: 1px solid #e3dfd3;
+            padding-top: 1.2rem;
+        }
+        .license-footer a {
+            color: #7f8e70;
+            text-decoration: none;
+        }
+        .license-footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="header">
+        <h1>📚 СОЕДИНИ ТЕРМИН С ОПРЕДЕЛЕНИЕМ</h1>
+        <div class="sub">Перетаскивайте карточки для создания пар</div>
+    </div>
+
+    <div class="toolbar">
+        <label class="file-label btn-file">📂 Загрузить файл (.txt / .csv)
+            <input type="file" id="fileInput" accept=".txt,.csv,text/plain">
+        </label>
+        <button id="shuffleBtn" class="btn btn-secondary">🔄 Перемешать</button>
+        <button id="resetBtn" class="btn btn-danger">🗑️ Сброс</button>
+        <button id="saveProgressBtn" class="btn btn-primary">💾 Сохранить прогресс</button>
+        <button id="loadProgressBtn" class="btn btn-primary">📂 Загрузить прогресс</button>
+        <button id="exportStandaloneBtn" class="btn btn-secondary">✨ Экспорт в тренажёр</button>
+        <div id="statusMsg" class="info-status">⚡ Нет данных</div>
+    </div>
+
+    <div class="game-board">
+        <div id="cardsContainer" class="cards-grid">
+            <div class="empty-message">⬅️ Загрузите файл с парами "Термин;Определение"</div>
+        </div>
+    </div>
+
+    <div class="license-footer">
+        © Преподаватель - Тераевич Алла Сергеевна, 2026. 
+        <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY-NC</a> — 
+        для свободного некоммерческого использования.
+    </div>
+</div>
+
+<script>
+    // ---------- Глобальное состояние ----------
+    let cards = [];            // массив объектов карточек
+    let nextCardId = 1;
+    let nextPairId = 1;
+    let currentPairs = [];     // исходные пары { term, definition } (для экспорта и сброса)
+
+    const container = document.getElementById('cardsContainer');
+    const fileInput = document.getElementById('fileInput');
+    const shuffleBtn = document.getElementById('shuffleBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const saveProgressBtn = document.getElementById('saveProgressBtn');
+    const loadProgressBtn = document.getElementById('loadProgressBtn');
+    const exportStandaloneBtn = document.getElementById('exportStandaloneBtn');
+    const statusDiv = document.getElementById('statusMsg');
+
+    let draggedCard = null;
+    let draggedCardData = null;
+
+    // Демо-пары по умолчанию
+    const demoPairs = [
+        { term: "Анамнез", definition: "Совокупность сведений о развитии болезни" },
+        { term: "Пальпация", definition: "Метод обследования с помощью ощупывания" },
+        { term: "Перкуссия", definition: "Выстукивание для оценки состояния органов" },
+        { term: "Аускультация", definition: "Выслушивание звуковых явлений" }
+    ];
+
+    function updateStatus(text, isOk = true) {
+        statusDiv.innerHTML = isOk ? `✅ ${text}` : `⚠️ ${text}`;
+        setTimeout(() => {
+            if (statusDiv.innerHTML.includes(text)) {
+                if (!isOk) setTimeout(() => updateStatus('Готово', true), 1500);
+                else setTimeout(() => { if(statusDiv.innerHTML.includes(text)) updateStatus('Готово', true); }, 2000);
+            }
+        }, 2000);
+    }
+
+    // Декодирование файла с автоопределением кодировки (UTF-8 или CP1251)
+    function decodeFileContent(arrayBuffer) {
+        let decoder = new TextDecoder('utf-8');
+        let decoded = decoder.decode(arrayBuffer);
+        if (decoded.includes('�') || /[\uFFFD]/.test(decoded)) {
+            decoder = new TextDecoder('windows-1251');
+            decoded = decoder.decode(arrayBuffer);
+            if (decoded.includes('�')) {
+                decoder = new TextDecoder('cp866');
+                decoded = decoder.decode(arrayBuffer);
+            }
+        }
+        return decoded;
+    }
+
+    // Парсинг текста с разделителями ; или |
+    function parseFileContent(content) {
+        const lines = content.split(/\r?\n/);
+        const pairs = [];
+        for (let line of lines) {
+            line = line.trim();
+            if (line === "") continue;
+            let separator = ';';
+            if (line.includes('|')) separator = '|';
+            else if (!line.includes(';')) continue;
+            const parts = line.split(separator);
+            if (parts.length >= 2) {
+                let term = parts[0].trim();
+                let definition = parts.slice(1).join(separator).trim();
+                if (term !== "" && definition !== "") {
+                    pairs.push({ term, definition });
+                }
+            }
+        }
+        return pairs;
+    }
+
+    // Построение игры из массива пар (очищает текущее состояние)
+    function buildGameFromPairs(pairsArray) {
+        if (!pairsArray.length) {
+            updateStatus('Нет пар для построения игры', false);
+            return false;
+        }
+        cards = [];
+        nextCardId = 1;
+        nextPairId = 1;
+
+        for (let pair of pairsArray) {
+            const currentPairId = nextPairId++;
+            cards.push({
+                id: nextCardId++,
+                type: 'term',
+                text: pair.term,
+                pairId: currentPairId,
+                matched: false,
+            });
+            cards.push({
+                id: nextCardId++,
+                type: 'def',
+                text: pair.definition,
+                pairId: currentPairId,
+                matched: false,
+            });
+        }
+        shuffleCardsArray();
+        renderBoard();
+        updateStatus(`Загружено ${pairsArray.length} пар. Перетаскивайте!`, true);
+        return true;
+    }
+
+    // Инициализация игры из пар (сохраняет исходные пары)
+    function initGameFromPairs(pairsArray) {
+        if (!pairsArray.length) return false;
+        currentPairs = JSON.parse(JSON.stringify(pairsArray)); // копия
+        return buildGameFromPairs(pairsArray);
+    }
+
+    // Перемешивание только несобранных карточек
+    function shuffleCardsArray() {
+        const unmatchedCards = cards.filter(c => !c.matched);
+        const matchedCards = cards.filter(c => c.matched);
+        for (let i = unmatchedCards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [unmatchedCards[i], unmatchedCards[j]] = [unmatchedCards[j], unmatchedCards[i]];
+        }
+        cards = [...unmatchedCards, ...matchedCards];
+    }
+
+    // Объединение пары (термин + определение)
+    function mergePair(termCard, defCard) {
+        if (termCard.matched || defCard.matched) return false;
+        if (termCard.pairId !== defCard.pairId) return false;
+        if (termCard.type === 'def' && defCard.type === 'term') {
+            [termCard, defCard] = [defCard, termCard];
+        }
+        if (termCard.type !== 'term' || defCard.type !== 'def') return false;
+
+        termCard.matched = true;
+        defCard.matched = true;
+
+        const mergedText = `<span class="pair-term">📘 ${escapeHtml(termCard.text)}</span><span class="pair-def">📖 ${escapeHtml(defCard.text)}</span>`;
+        const mergedCard = {
+            id: nextCardId++,
+            type: 'merged',
+            text: mergedText,
+            pairId: termCard.pairId,
+            matched: true,
+            isMerged: true,
+            rawTerm: termCard.text,
+            rawDef: defCard.text,
+        };
+        const termIndex = cards.findIndex(c => c.id === termCard.id);
+        const defIndex = cards.findIndex(c => c.id === defCard.id);
+        if (termIndex !== -1 && defIndex !== -1) {
+            let newCards = [...cards];
+            if (termIndex > defIndex) {
+                newCards.splice(termIndex, 1);
+                newCards.splice(defIndex, 1);
+            } else {
+                newCards.splice(defIndex, 1);
+                newCards.splice(termIndex, 1);
+            }
+            newCards.push(mergedCard);
+            cards = newCards;
+        } else {
+            return false;
+        }
+        renderBoard();
+        return true;
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    function renderBoard() {
+        if (!container) return;
+        const visibleCards = cards.filter(c => !c.matched || c.type === 'merged');
+        if (visibleCards.length === 0 && cards.length > 0) {
+            container.innerHTML = `<div class="empty-message">🎉 Поздравляем! Все пары собраны! 🎉<br>Нажмите "Сброс" для новой игры</div>`;
+            return;
+        }
+        if (cards.length === 0) {
+            container.innerHTML = `<div class="empty-message">📂 Загрузите файл с терминами и определениями</div>`;
+            return;
+        }
+
+        container.innerHTML = '';
+        for (let card of cards) {
+            if (card.matched && card.type !== 'merged') continue;
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            if (card.type === 'term') cardDiv.classList.add('term');
+            else if (card.type === 'def') cardDiv.classList.add('def');
+            else if (card.type === 'merged') cardDiv.classList.add('matched-pair');
+            
+            if (card.type === 'merged') {
+                cardDiv.innerHTML = card.text;
+            } else {
+                cardDiv.innerText = card.text;
+            }
+            cardDiv.setAttribute('data-id', card.id);
+            cardDiv.setAttribute('data-type', card.type);
+            cardDiv.setAttribute('data-pairid', card.pairId);
+            cardDiv.setAttribute('data-matched', card.matched);
+            
+            if (!card.matched && (card.type === 'term' || card.type === 'def')) {
+                cardDiv.draggable = true;
+                cardDiv.addEventListener('dragstart', handleDragStart);
+                cardDiv.addEventListener('dragend', handleDragEnd);
+                cardDiv.addEventListener('touchstart', handleTouchStart, { passive: false });
+                cardDiv.addEventListener('touchmove', handleTouchMove, { passive: false });
+                cardDiv.addEventListener('touchend', handleTouchEnd);
+            } else {
+                cardDiv.draggable = false;
+            }
+            container.appendChild(cardDiv);
+        }
+    }
+
+    // ---------- Drag & Drop для мыши ----------
+    function handleDragStart(e) {
+        const el = e.target.closest('.card');
+        if (!el) return;
+        const id = parseInt(el.getAttribute('data-id'));
+        draggedCardData = cards.find(c => c.id === id);
+        if (!draggedCardData || draggedCardData.matched) {
+            e.preventDefault();
+            return false;
+        }
+        draggedCard = el;
+        e.dataTransfer.setData('text/plain', id);
+        e.dataTransfer.effectAllowed = 'move';
+        el.classList.add('dragging');
+    }
+    function handleDragEnd(e) {
+        if (draggedCard) draggedCard.classList.remove('dragging');
+        draggedCard = null;
+        draggedCardData = null;
+    }
+    document.querySelector('.game-board').addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    });
+    container.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+    });
+    container.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const targetCardDiv = e.target.closest('.card');
+        if (!targetCardDiv) return;
+        const draggedId = e.dataTransfer.getData('text/plain');
+        if (!draggedId) return;
+        const sourceId = parseInt(draggedId);
+        const targetId = parseInt(targetCardDiv.getAttribute('data-id'));
+        if (isNaN(sourceId) || isNaN(targetId)) return;
+        const sourceCard = cards.find(c => c.id === sourceId);
+        const targetCard = cards.find(c => c.id === targetId);
+        if (!sourceCard || !targetCard) return;
+        if (sourceCard.matched || targetCard.matched) return;
+        if ((sourceCard.type === 'term' && targetCard.type === 'def') || (sourceCard.type === 'def' && targetCard.type === 'term')) {
+            if (sourceCard.pairId === targetCard.pairId) {
+                mergePair(sourceCard, targetCard);
+                updateStatus('Пара собрана!', true);
+            } else {
+                updateStatus('❌ Неправильное соответствие', false);
+                targetCardDiv.style.transform = 'scale(0.98)';
+                setTimeout(() => { if(targetCardDiv) targetCardDiv.style.transform = ''; }, 200);
+            }
+        } else {
+            updateStatus('Можно соединять только термин с определением', false);
+        }
+        renderBoard();
+    });
+
+    // ---------- Touch support ----------
+    let touchDraggedCardDiv = null;
+    let touchDraggedData = null;
+    function handleTouchStart(e) {
+        e.preventDefault();
+        const el = e.target.closest('.card');
+        if (!el) return;
+        const id = parseInt(el.getAttribute('data-id'));
+        const cardData = cards.find(c => c.id === id);
+        if (!cardData || cardData.matched) return;
+        touchDraggedCardDiv = el;
+        touchDraggedData = cardData;
+        el.classList.add('dragging');
+    }
+    function handleTouchMove(e) {
+        if (!touchDraggedCardDiv) return;
+        e.preventDefault();
+        const touch = e.touches[0];
+        const elemUnder = document.elementsFromPoint(touch.clientX, touch.clientY);
+        const targetCard = elemUnder.find(el => el.classList && el.classList.contains('card'));
+        if (targetCard && targetCard !== touchDraggedCardDiv) {
+            targetCard.style.boxShadow = '0 0 0 2px #b9cfae';
+        } else if (targetCard) {
+            if (targetCard.style) targetCard.style.boxShadow = '';
+        }
+    }
+    function handleTouchEnd(e) {
+        if (!touchDraggedCardDiv) return;
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        const elemUnder = document.elementsFromPoint(touch.clientX, touch.clientY);
+        const targetCardDiv = elemUnder.find(el => el.classList && el.classList.contains('card') && el !== touchDraggedCardDiv);
+        if (targetCardDiv && touchDraggedData) {
+            const targetId = parseInt(targetCardDiv.getAttribute('data-id'));
+            const targetCard = cards.find(c => c.id === targetId);
+            if (targetCard && !targetCard.matched && touchDraggedData && !touchDraggedData.matched) {
+                if ((touchDraggedData.type === 'term' && targetCard.type === 'def') || (touchDraggedData.type === 'def' && targetCard.type === 'term')) {
+                    if (touchDraggedData.pairId === targetCard.pairId) {
+                        mergePair(touchDraggedData, targetCard);
+                        updateStatus('Пара собрана!', true);
+                    } else {
+                        updateStatus('❌ Не та пара', false);
+                    }
+                } else { updateStatus('Нужно соединить термин и определение', false); }
+                renderBoard();
+            }
+        }
+        if (touchDraggedCardDiv) touchDraggedCardDiv.classList.remove('dragging');
+        touchDraggedCardDiv = null;
+        touchDraggedData = null;
+        document.querySelectorAll('.card').forEach(c => c.style.boxShadow = '');
+    }
+
+    // ---------- Управление ----------
+    function shuffleGame() {
+        const activeCards = cards.filter(c => !c.matched && c.type !== 'merged');
+        const mergedCards = cards.filter(c => c.matched && c.type === 'merged');
+        if (activeCards.length === 0) {
+            updateStatus('Нет активных карточек для перемешивания', false);
+            return;
+        }
+        for (let i = activeCards.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [activeCards[i], activeCards[j]] = [activeCards[j], activeCards[i]];
+        }
+        cards = [...activeCards, ...mergedCards];
+        renderBoard();
+        updateStatus('Карточки перемешаны', true);
+    }
+
+    // Полный сброс игры (к начальному состоянию с текущими парами)
+    function resetGame() {
+        if (currentPairs.length === 0) {
+            initGameFromPairs(demoPairs);
+        } else {
+            buildGameFromPairs(currentPairs);
+        }
+        updateStatus('Игра сброшена', true);
+    }
+
+    // Сохранение прогресса (какие пары уже собраны)
+    function saveProgress() {
+        if (currentPairs.length === 0) {
+            updateStatus('Нет данных для сохранения прогресса', false);
+            return;
+        }
+        // Собираем ID пар, которые уже соединены (merged)
+        const mergedPairs = cards.filter(c => c.type === 'merged').map(c => c.pairId);
+        const progress = {
+            pairs: currentPairs,
+            collectedPairIds: mergedPairs,
+            timestamp: new Date().toISOString()
+        };
+        const jsonStr = JSON.stringify(progress, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = `terminy_progress_${Date.now()}.json`;
+        link.click();
+        URL.revokeObjectURL(url);
+        updateStatus('Прогресс сохранён', true);
+    }
+
+    // Загрузка прогресса из JSON-файла
+    function loadProgressFromFile(file) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            try {
+                const data = JSON.parse(evt.target.result);
+                if (!data.pairs || !Array.isArray(data.pairs) || !data.collectedPairIds) {
+                    throw new Error('Неверный формат файла прогресса');
+                }
+                // Проверяем, совпадают ли пары с текущими
+                if (JSON.stringify(currentPairs) !== JSON.stringify(data.pairs)) {
+                    throw new Error('Набор пар не совпадает с текущим. Невозможно загрузить прогресс.');
+                }
+                // Восстанавливаем состояние: перестраиваем игру из currentPairs, затем отмечаем собранные пары
+                buildGameFromPairs(currentPairs);
+                // Отмечаем собранные пары (симулируем их соединение)
+                for (let pairId of data.collectedPairIds) {
+                    const termCard = cards.find(c => c.type === 'term' && c.pairId === pairId && !c.matched);
+                    const defCard = cards.find(c => c.type === 'def' && c.pairId === pairId && !c.matched);
+                    if (termCard && defCard) {
+                        mergePair(termCard, defCard);
+                    }
+                }
+                renderBoard();
+                updateStatus('Прогресс загружен', true);
+            } catch (err) {
+                updateStatus(`Ошибка: ${err.message}`, false);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function triggerLoadProgress() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json';
+        input.onchange = (e) => {
+            if (e.target.files[0]) loadProgressFromFile(e.target.files[0]);
+        };
+        input.click();
+    }
+
+    // Экспорт в готовый тренажёр (для студентов)
+    function exportStandaloneTrainer() {
+        if (currentPairs.length === 0) {
+            updateStatus('Нет пар для экспорта. Сначала загрузите или используйте демо.', false);
+            return;
+        }
+        const pairsData = JSON.stringify(currentPairs);
+        const trainerHTML = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Тренажёр: Термины и Определения</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body { background: #e9e5d8; font-family: 'Segoe UI', 'Roboto', sans-serif; color: #2e2e2a; padding: 1rem; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .game-container { max-width: 1400px; width: 100%; background: #fffdf8; border-radius: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.05); padding: 1.8rem; }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { font-size: 1.9rem; font-weight: 500; background: linear-gradient(135deg, #6a7a5e, #4e6b4a); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .sub { font-size: 0.9rem; color: #6e6a5e; }
+        .toolbar { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid #e2d8ca; padding-bottom: 1.2rem; }
+        .btn { background: #ebe3d4; border: none; padding: 0.6rem 1.4rem; border-radius: 3rem; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.2s; font-family: inherit; }
+        .btn-primary { background: #cbdcc2; color: #2f492c; }
+        .btn-primary:hover { background: #b9cfae; transform: translateY(-2px); }
+        .btn-danger { background: #eedbcb; color: #9b5a3e; }
+        .game-board { background: #faf7f0; border-radius: 1.8rem; padding: 1.8rem; min-height: 500px; }
+        .cards-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; }
+        .card { width: 260px; min-width: 220px; background: #f5f0e2; border-radius: 1.5rem; padding: 1rem; box-shadow: 0 5px 12px rgba(0,0,0,0.05); cursor: grab; border: 1px solid #e7dfcf; word-break: break-word; }
+        .card:active { cursor: grabbing; }
+        .card.dragging { opacity: 0.4; }
+        .card.term { background: #e8e6e0; border-left: 6px solid #b8bfa7; }
+        .card.def { background: #f3efdf; border-left: 6px solid #cfc5aa; }
+        .card.matched-pair { background: #cfdabe; border-left: 6px solid #7f9970; cursor: default; }
+        .card.matched-pair .pair-term { font-weight: bold; display: block; border-bottom: 1px dashed #97ab86; padding-bottom: 6px; margin-bottom: 6px; }
+        .empty-message { text-align: center; padding: 3rem; color: #aaac9a; }
+        @media (max-width: 700px) { .game-container { padding: 1rem; } .card { width: 100%; max-width: 280px; } .btn { padding: 0.4rem 1rem; font-size: 0.8rem; } }
+        .license-footer { margin-top: 2rem; text-align: center; font-size: 0.75rem; color: #9aa98b; border-top: 1px solid #e3dfd3; padding-top: 1.2rem; }
+        .license-footer a { color: #7f8e70; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="header"><h1>📚 СОЕДИНИ ТЕРМИН С ОПРЕДЕЛЕНИЕМ</h1><div class="sub">Перетаскивайте карточки для создания пар</div></div>
+    <div class="toolbar">
+        <button id="resetBtn" class="btn btn-danger">🔄 Начать заново</button>
+        <button id="saveProgressBtn" class="btn btn-primary">💾 Сохранить прогресс</button>
+        <button id="loadProgressBtn" class="btn btn-primary">📂 Загрузить прогресс</button>
+    </div>
+    <div class="game-board"><div id="cardsContainer" class="cards-grid"></div></div>
+    <div class="license-footer">© Преподаватель - Тераевич Алла Сергеевна, 2026. <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">Creative Commons BY-NC</a> — для свободного некоммерческого использования.</div>
+</div>
+<script>
+    const embeddedPairs = ${pairsData};
+    let cards = [], nextCardId = 1, nextPairId = 1;
+    const container = document.getElementById('cardsContainer');
+    let draggedCard = null, draggedCardData = null;
+
+    function buildGame(pairsArray) {
+        cards = []; nextCardId = 1; nextPairId = 1;
+        for (let pair of pairsArray) {
+            const pid = nextPairId++;
+            cards.push({ id: nextCardId++, type: 'term', text: pair.term, pairId: pid, matched: false });
+            cards.push({ id: nextCardId++, type: 'def', text: pair.definition, pairId: pid, matched: false });
+        }
+        for (let i = cards.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [cards[i], cards[j]] = [cards[j], cards[i]]; }
+        renderBoard();
+    }
+
+    function mergePair(termCard, defCard) {
+        if (termCard.matched || defCard.matched) return false;
+        if (termCard.pairId !== defCard.pairId) return false;
+        if (termCard.type === 'def' && defCard.type === 'term') [termCard, defCard] = [defCard, termCard];
+        if (termCard.type !== 'term' || defCard.type !== 'def') return false;
+        termCard.matched = true; defCard.matched = true;
+        const mergedCard = { id: nextCardId++, type: 'merged', text: \`<span class="pair-term">📘 \${escapeHtml(termCard.text)}</span><span class="pair-def">📖 \${escapeHtml(defCard.text)}</span>\`, pairId: termCard.pairId, matched: true, rawTerm: termCard.text, rawDef: defCard.text };
+        const termIdx = cards.findIndex(c => c.id === termCard.id);
+        const defIdx = cards.findIndex(c => c.id === defCard.id);
+        if (termIdx !== -1 && defIdx !== -1) {
+            let newCards = [...cards];
+            if (termIdx > defIdx) { newCards.splice(termIdx,1); newCards.splice(defIdx,1); }
+            else { newCards.splice(defIdx,1); newCards.splice(termIdx,1); }
+            newCards.push(mergedCard);
+            cards = newCards;
+        }
+        renderBoard();
+        return true;
+    }
+
+    function escapeHtml(str) { return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+
+    function renderBoard() {
+        const visible = cards.filter(c => !c.matched || c.type === 'merged');
+        if (visible.length === 0 && cards.length) { container.innerHTML = '<div class="empty-message">🎉 Поздравляем! Все пары собраны! 🎉</div>'; return; }
+        if (!cards.length) { container.innerHTML = '<div class="empty-message">Нет данных</div>'; return; }
+        container.innerHTML = '';
+        for (let card of cards) {
+            if (card.matched && card.type !== 'merged') continue;
+            const div = document.createElement('div');
+            div.className = 'card';
+            if (card.type === 'term') div.classList.add('term');
+            else if (card.type === 'def') div.classList.add('def');
+            else if (card.type === 'merged') div.classList.add('matched-pair');
+            if (card.type === 'merged') div.innerHTML = card.text;
+            else div.innerText = card.text;
+            div.setAttribute('data-id', card.id);
+            div.setAttribute('data-type', card.type);
+            div.setAttribute('data-pairid', card.pairId);
+            if (!card.matched && (card.type === 'term' || card.type === 'def')) {
+                div.draggable = true;
+                div.addEventListener('dragstart', e => { const id = parseInt(div.getAttribute('data-id')); draggedCardData = cards.find(c => c.id === id); if(draggedCardData) e.dataTransfer.setData('text/plain', id); div.classList.add('dragging'); });
+                div.addEventListener('dragend', () => div.classList.remove('dragging'));
+            }
+            container.appendChild(div);
+        }
+    }
+
+    container.addEventListener('dragover', e => e.preventDefault());
+    container.addEventListener('drop', e => {
+        e.preventDefault();
+        const target = e.target.closest('.card');
+        if (!target) return;
+        const sourceId = parseInt(e.dataTransfer.getData('text/plain'));
+        const targetId = parseInt(target.getAttribute('data-id'));
+        const source = cards.find(c => c.id === sourceId);
+        const targetCard = cards.find(c => c.id === targetId);
+        if (source && targetCard && source.id !== targetCard.id && !source.matched && !targetCard.matched &&
+            ((source.type === 'term' && targetCard.type === 'def') || (source.type === 'def' && targetCard.type === 'term'))) {
+            if (source.pairId === targetCard.pairId) mergePair(source, targetCard);
+            else { alert('❌ Неправильное соответствие'); }
+        }
+    });
+
+    function resetGame() { buildGame(embeddedPairs); }
+    function saveProgress() {
+        const merged = cards.filter(c => c.type === 'merged').map(c => c.pairId);
+        const data = { pairs: embeddedPairs, collectedPairIds: merged };
+        const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'terminy_progress.json'; a.click(); URL.revokeObjectURL(a.href);
+        alert('Прогресс сохранён');
+    }
+    function loadProgressFromFile(file) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (JSON.stringify(embeddedPairs) !== JSON.stringify(data.pairs)) throw new Error('Набор пар не совпадает');
+                buildGame(embeddedPairs);
+                for (let pid of data.collectedPairIds) {
+                    const t = cards.find(c => c.type === 'term' && c.pairId === pid && !c.matched);
+                    const d = cards.find(c => c.type === 'def' && c.pairId === pid && !c.matched);
+                    if (t && d) mergePair(t, d);
+                }
+                alert('Прогресс загружен');
+            } catch(e) { alert('Ошибка загрузки'); }
+        };
+        reader.readAsText(file);
+    }
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+    document.getElementById('saveProgressBtn').addEventListener('click', saveProgress);
+    document.getElementById('loadProgressBtn').addEventListener('click', () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange = e => { if(e.target.files[0]) loadProgressFromFile(e.target.files[0]); }; inp.click(); });
+    buildGame(embeddedPairs);
+<\/script>
+</body>
+</html>`;
+        const blob = new Blob([trainerHTML], { type: 'text/html' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'terminy_trainer.html';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        updateStatus('Готовый тренажёр сохранён как terminy_trainer.html', true);
+    }
+
+    // Загрузка файла с парами
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            const arrayBuffer = evt.target.result;
+            const decodedText = decodeFileContent(arrayBuffer);
+            const pairs = parseFileContent(decodedText);
+            if (pairs.length === 0) {
+                updateStatus('Файл не содержит валидных пар', false);
+                return;
+            }
+            initGameFromPairs(pairs);
+        };
+        reader.readAsArrayBuffer(file);
+        fileInput.value = '';
+    });
+
+    shuffleBtn.addEventListener('click', shuffleGame);
+    resetBtn.addEventListener('click', resetGame);
+    saveProgressBtn.addEventListener('click', saveProgress);
+    loadProgressBtn.addEventListener('click', triggerLoadProgress);
+    exportStandaloneBtn.addEventListener('click', exportStandaloneTrainer);
+
+    // Инициализация демо-парами
+    initGameFromPairs(demoPairs);
+</script>
+</body>
+</html>

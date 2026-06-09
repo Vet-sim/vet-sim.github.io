@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>VetSim — Общепрофессиональный цикл</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F4F7F9;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+            color: #3E5C4A;
+            line-height: 1.4;
+            padding: 2rem 1.5rem;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* навигация */
+        .nav-back {
+            margin-bottom: 2rem;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            color: #2C7DA0;
+            background: #EFF3EA;
+            padding: 0.5rem 1.2rem;
+            border-radius: 3rem;
+            transition: 0.2s;
+            font-size: 0.9rem;
+        }
+        .back-link:hover {
+            background: #E2EBD4;
+            gap: 12px;
+        }
+
+        /* заголовок */
+        .page-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+        .subhead {
+            font-size: 1rem;
+            color: #5F7C62;
+            margin-top: 0.5rem;
+        }
+
+        /* сетка карточек */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+        }
+
+        .card {
+            background: #FFFFFF;
+            border-radius: 1.8rem;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E7EDE2;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 28px -8px rgba(0, 0, 0, 0.1);
+            border-color: #C9D6BA;
+        }
+
+        .card-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 0.7rem;
+        }
+        .card-desc {
+            font-size: 0.9rem;
+            line-height: 1.45;
+            color: #537A5A;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        .card-badge {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            width: fit-content;
+            color: #8A9B7A;
+        }
+        .card-action {
+            margin-top: 0.5rem;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2.5rem;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            background: #F0F5EA;
+            color: #2C7DA0;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+            gap: 0.7rem;
+        }
+        .btn-disabled {
+            background: #EFF3EA;
+            color: #9AAE8A;
+            cursor: default;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .btn:hover:not(.btn-disabled) {
+            gap: 0.7rem;
+        }
+        .arrow {
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+        .btn:hover .arrow {
+            transform: translateX(3px);
+        }
+
+        /* футер */
+        .footer {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 1rem;
+            border-top: 1px solid #E2E9DC;
+            font-size: 0.75rem;
+            color: #89A07B;
+        }
+        .footer a {
+            color: #568A6B;
+            text-decoration: none;
+            border-bottom: 1px dotted #BECFAD;
+        }
+        .footer a:hover {
+            color: #2F6B47;
+        }
+
+        @media (max-width: 900px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            body {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        @media (max-width: 580px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- навигация назад -->
+    <div class="nav-back">
+        <a href="index.html" class="back-link">
+            ← На главную
+        </a>
+    </div>
+
+    <div class="page-header">
+        <h1>📖 Общепрофессиональный цикл</h1>
+        <div class="subhead">Тренажёры по анатомии, физиологии, фармакологии, патанатомии и другим базовым дисциплинам</div>
+    </div>
+
+    <div class="cards-grid">
+        <!-- 1. Анатомический атлас (реальный) -->
+        <div class="card">
+            <div class="card-icon">🧬📌</div>
+            <div class="card-title">Анатомический атлас</div>
+            <div class="card-badge">✅ Готов к использованию</div>
+            <div class="card-desc">
+                Интерактивная карта с метками: загружайте изображение, расставляйте метки, сохраняйте тренажёр для студентов. Идеально для изучения анатомии.
+            </div>
+            <div class="card-action">
+                <a href="atlas_editor.html" class="btn btn-primary">
+                    <span>Открыть атлас</span>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 2. Симулятор расчёта доз антибиотиков (фармакология, реальный) -->
+        <div class="card">
+            <div class="card-icon">💊🧪</div>
+            <div class="card-title">Симулятор доз антибиотиков</div>
+            <div class="card-badge">✅ Готов к использованию</div>
+            <div class="card-desc">
+                Рассчитайте разовую и суточную дозу, выбрав вид животного, препарат и введя вес. Учебный инструмент для фармакологии.
+            </div>
+            <div class="card-action">
+                <a href="doses.html" class="btn btn-primary">
+                    <span>Рассчитать дозу</span>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 3. Гистология: определи ткань (планируется) -->
+        <div class="card">
+            <div class="card-icon">🔬🧫</div>
+            <div class="card-title">Гистология: определи ткань</div>
+            <div class="card-badge">⏳ Скоро</div>
+            <div class="card-desc">
+                Викторина по микропрепаратам. Узнавайте ткани и структуры под микроскопом, тренируйте навыки микроскопии.
+            </div>
+            <div class="card-action">
+                <a href="#" class="btn btn-disabled">
+                    <span>В разработке</span>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 4. Физиология: рефлекторная дуга (планируется) -->
+        <div class="card">
+            <div class="card-icon">⚡🧠</div>
+            <div class="card-title">Физиология: рефлекторная дуга</div>
+            <div class="card-badge">⏳ Скоро</div>
+            <div class="card-desc">
+                Анимированная модель прохождения нервного импульса. Изучайте строение и работу рефлекторной дуги в интерактивном формате.
+            </div>
+            <div class="card-action">
+                <a href="#" class="btn btn-disabled">
+                    <span>В разработке</span>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 5. Патология: макропрепараты (планируется) -->
+        <div class="card">
+            <div class="card-icon">🔍🩺</div>
+            <div class="card-title">Патология: макропрепараты</div>
+            <div class="card-badge">⏳ Скоро</div>
+            <div class="card-desc">
+                Клинические случаи и изображения макропрепаратов. Ставьте диагноз по внешнему виду органов и тканей.
+            </div>
+            <div class="card-action">
+                <a href="#" class="btn btn-disabled">
+                    <span>В разработке</span>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Дополнительный информационный блок -->
+    <div style="text-align: center; margin: 1rem 0 1rem;">
+        <p style="color: #8BA47B; font-size: 0.85rem;">✨ По мере развития проекта появятся новые тренажёры по микробиологии, патанатомии и другим дисциплинам.</p>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+        <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+        <p>💬 Сообщество: <a href="#" target="_blank">ВКонтакте (заглушка)</a> | По всем вопросам: edu@vetsim.ru</p>
+    </div>
+</div>
+</body>
+</html>

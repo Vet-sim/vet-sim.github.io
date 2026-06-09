@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ветеринарный симулятор | Расчет антибиотиков</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #edeae2;  /* пастельный серо-бежевый фон */
+            font-family: 'Segoe UI', 'Roboto', system-ui, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1rem;
+            color: #2f3e2e;
+        }
+
+        /* главный контейнер */
+        .simulator-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fefcf7;
+            border-radius: 2rem;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.05);
+            padding: 2rem 1.8rem;
+            transition: all 0.2s;
+            border: 1px solid #e2d9ce;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            color: #4c6a46;
+            border-left: 5px solid #9bbb8a;
+            padding-left: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .sub {
+            color: #7c8a73;
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5dfd3;
+            padding-bottom: 0.6rem;
+        }
+
+        /* форма */
+        .form-group {
+            margin-bottom: 1.6rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .form-group label {
+            font-weight: 600;
+            width: 130px;
+            color: #4f6448;
+        }
+        select, input {
+            flex: 1;
+            min-width: 180px;
+            background: #fffcf5;
+            border: 1px solid #ddd2c2;
+            border-radius: 2rem;
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: #2e3a2a;
+            outline: none;
+            transition: 0.2s;
+        }
+        select:focus, input:focus {
+            border-color: #9bba8a;
+            box-shadow: 0 0 0 2px rgba(155, 186, 138, 0.3);
+        }
+
+        /* блок вес + информация */
+        .weight-info-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+            align-items: flex-start;
+        }
+        .weight-field {
+            flex: 1.2;
+            min-width: 180px;
+        }
+        .info-panel {
+            flex: 2;
+            background: #f4f0e8;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 6px solid #b5cf9e;
+        }
+        .info-panel p {
+            margin: 0.3rem 0;
+            font-size: 0.85rem;
+        }
+        .info-label {
+            font-weight: 700;
+            color: #5b7652;
+            display: inline-block;
+            width: 100px;
+        }
+        .info-value {
+            color: #2d4228;
+        }
+
+        .btn-calc {
+            background: #cbdcc2;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 3rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #2f4d2e;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            margin: 1rem 0 1rem;
+            font-family: inherit;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .btn-calc:hover {
+            background: #b9cfae;
+            transform: translateY(-2px);
+        }
+
+        .result-box {
+            background: #e9e3d6;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            margin: 1rem 0 1.5rem;
+        }
+        .result-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #47633e;
+            letter-spacing: -0.2px;
+        }
+        .disclaimer {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #aaa18b;
+            border-top: 1px solid #e3d8ca;
+            padding-top: 1.2rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 600px) {
+            .simulator-card {
+                padding: 1.5rem;
+            }
+            .form-group label {
+                width: 100%;
+                margin-bottom: 0.2rem;
+            }
+            .info-panel {
+                margin-top: 0.5rem;
+            }
+        }
+
+        hr {
+            margin: 1rem 0;
+            border-color: #e8dfd1;
+        }
+        small {
+            font-size: 0.75rem;
+            color: #8d9a82;
+        }
+    </style>
+</head>
+<body>
+<div class="simulator-card">
+    <h1>💊 Симулятор расчета антибиотиков</h1>
+    <div class="sub">Учебный инструмент для ветеринарных специалистов</div>
+
+    <!-- Вид животного -->
+    <div class="form-group">
+        <label>🐾 Вид животного</label>
+        <select id="animalSelect">
+            <option value="">-- выберите вид --</option>
+        </select>
+    </div>
+
+    <!-- Препарат -->
+    <div class="form-group">
+        <label>💉 Препарат</label>
+        <select id="drugSelect" disabled>
+            <option value="">-- сначала выберите вид --</option>
+        </select>
+    </div>
+
+    <!-- Вес и информационная панель -->
+    <div class="weight-info-row">
+        <div class="weight-field">
+            <label style="font-weight:600; display:block; margin-bottom:0.3rem;">⚖️ Вес животного</label>
+            <input type="number" id="weightInput" placeholder="Например, 12.5" step="any" value="">
+            <span style="font-size:0.75rem; color:#7f8f74;">кг</span>
+        </div>
+        <div class="info-panel" id="infoPanel">
+            <p><span class="info-label">Дозировка:</span> <span id="doseValue" class="info-value">—</span></p>
+            <p><span class="info-label">Путь введения:</span> <span id="routeValue" class="info-value">—</span></p>
+            <p><span class="info-label">Примечание:</span> <span id="notesValue" class="info-value">—</span></p>
+        </div>
+    </div>
+
+    <!-- Кнопка расчёта -->
+    <button id="calcBtn" class="btn-calc">🧮 Рассчитать объем препарата</button>
+
+    <!-- Поле результата -->
+    <div class="result-box">
+        <div class="result-text" id="resultDisplay">📋 Результат появится здесь</div>
+    </div>
+
+    <div class="disclaimer">
+        ⚠️ Дисклеймер: программа носит исключительно образовательный характер. <br>
+        Реальная дозировка и выбор препарата должны определяться ветеринарным врачом на основе клинического случая.
+    </div>
+</div>
+
+<script>
+    // ---------- БАЗА ДАННЫХ ПРЕПАРАТОВ (массив объектов) ----------
+    // Каждый объект содержит drug, animal, dose_mg_kg (число, мг/кг), route, notes
+    const drugsDB = [
+        // СОБАКИ
+        { drug: "Амоксициллин 15%", animal: "собака", dose_mg_kg: 10, route: "п/к, в/м", notes: "каждые 24 ч; не применять при аллергии на пенициллины" },
+        { drug: "Энрофлоксацин", animal: "собака", dose_mg_kg: 5, route: "в/м, п/к", notes: "избегать у щенков до 12 мес (хрящевые нарушения)" },
+        { drug: "Цефалексин", animal: "собака", dose_mg_kg: 15, route: "в/м, п/к", notes: "курс 7-14 дней" },
+        { drug: "Клиндамицин", animal: "собака", dose_mg_kg: 11, route: "перорально", notes: "осторожно при заболеваниях ЖКТ" },
+        // КОШКИ
+        { drug: "Амоксициллин 15%", animal: "кошка", dose_mg_kg: 10, route: "п/к, в/м", notes: "интервал 24 ч; при хламидиозе осторожно" },
+        { drug: "Энрофлоксацин", animal: "кошка", dose_mg_kg: 5, route: "в/м, п/к", notes: "риск поражения сетчатки, доза не выше 5 мг/кг" },
+        { drug: "Цефтиофур", animal: "кошка", dose_mg_kg: 2.2, route: "в/м", notes: "не использовать в/в, курс до 5 дней" },
+        // КРУПНЫЙ РОГАТЫЙ СКОТ (корова)
+        { drug: "Цефтиофур", animal: "корова", dose_mg_kg: 2.2, route: "в/м", notes: "мясо: 8 дней, молоко: 0 ч?" },
+        { drug: "Энрофлоксацин", animal: "корова", dose_mg_kg: 7.5, route: "в/м, п/к", notes: "не применять для молочных коров без консультации" },
+        { drug: "Тилмикозин", animal: "корова", dose_mg_kg: 10, route: "п/к", notes: "опасен для лошадей и свиней" },
+        // ЛОШАДИ
+        { drug: "Цефтиофур", animal: "лошадь", dose_mg_kg: 2.2, route: "в/м", notes: "не вводить в/в" },
+        { drug: "Пенициллин G", animal: "лошадь", dose_mg_kg: 22000, route: "в/в, в/м", notes: "доза в МЕ; 22000 МЕ/кг ~ 13.2 мг/кг (пересчет)" },
+        { drug: "Гентамицин", animal: "лошадь", dose_mg_kg: 6.6, route: "в/в, в/м", notes: "нефротоксичен, контроль почек" },
+        // СВИНЬИ
+        { drug: "Амоксициллин 15%", animal: "свинья", dose_mg_kg: 15, route: "в/м", notes: "курс 3-5 дней" },
+        { drug: "Энрофлоксацин", animal: "свинья", dose_mg_kg: 2.5, route: "в/м", notes: "болезни дыхательных путей" },
+        { drug: "Тилмикозин", animal: "свинья", dose_mg_kg: 10, route: "п/к", notes: "очень токсичен для лошадей" }
+    ];
+
+    // Получить уникальные виды животных из базы
+    function getUniqueAnimals() {
+        const animalsSet = new Set();
+        drugsDB.forEach(item => animalsSet.add(item.animal));
+        return Array.from(animalsSet).sort();
+    }
+
+    // Получить препараты для выбранного вида (уникальные названия)
+    function getDrugsByAnimal(animal) {
+        const drugsSet = new Set();
+        drugsDB.forEach(item => {
+            if (item.animal === animal) drugsSet.add(item.drug);
+        });
+        return Array.from(drugsSet).sort();
+    }
+
+    // Получить полный объект препарата для конкретного вида и названия препарата
+    function getDrugEntry(animal, drugName) {
+        return drugsDB.find(item => item.animal === animal && item.drug === drugName);
+    }
+
+    // DOM элементы
+    const animalSelect = document.getElementById('animalSelect');
+    const drugSelect = document.getElementById('drugSelect');
+    const weightInput = document.getElementById('weightInput');
+    const doseSpan = document.getElementById('doseValue');
+    const routeSpan = document.getElementById('routeValue');
+    const notesSpan = document.getElementById('notesValue');
+    const calcBtn = document.getElementById('calcBtn');
+    const resultDisplay = document.getElementById('resultDisplay');
+
+    // Переменные для текущего выбранного препарата
+    let currentAnimal = '';
+    let currentDrugObj = null;   // объект с дозой и пр.
+
+    // Заполнение списка видов
+    function populateAnimals() {
+        const animals = getUniqueAnimals();
+        animalSelect.innerHTML = '<option value="">-- выберите вид --</option>';
+        animals.forEach(animal => {
+            const option = document.createElement('option');
+            option.value = animal;
+            option.textContent = animal.charAt(0).toUpperCase() + animal.slice(1);
+            animalSelect.appendChild(option);
+        });
+    }
+
+    // Обновить список препаратов в зависимости от выбранного вида
+    function updateDrugsList() {
+        const selectedAnimal = animalSelect.value;
+        if (!selectedAnimal) {
+            drugSelect.innerHTML = '<option value="">-- сначала выберите вид --</option>';
+            drugSelect.disabled = true;
+            // Очистить информационную панель
+            doseSpan.textContent = '—';
+            routeSpan.textContent = '—';
+            notesSpan.textContent = '—';
+            currentDrugObj = null;
+            return;
+        }
+        currentAnimal = selectedAnimal;
+        const drugs = getDrugsByAnimal(selectedAnimal);
+        drugSelect.disabled = false;
+        drugSelect.innerHTML = '<option value="">-- выберите препарат --</option>';
+        drugs.forEach(drug => {
+            const option = document.createElement('option');
+            option.value = drug;
+            option.textContent = drug;
+            drugSelect.appendChild(option);
+        });
+        // Сбросить информацию о препарате
+        doseSpan.textContent = '—';
+        routeSpan.textContent = '—';
+        notesSpan.textContent = '—';
+        currentDrugObj = null;
+    }
+
+    // Обновить информационную панель (дозировка, путь, примечания) по выбранному препарату
+    function updateInfoPanel() {
+        const selectedDrug = drugSelect.value;
+        if (!currentAnimal || !selectedDrug) {
+            doseSpan.textContent = '—';
+            routeSpan.textContent = '—';
+            notesSpan.textContent = '—';
+            currentDrugObj = null;
+            return;
+        }
+        const drugEntry = getDrugEntry(currentAnimal, selectedDrug);
+        if (drugEntry) {
+            doseSpan.textContent = `${drugEntry.dose_mg_kg} мг/кг`;
+            routeSpan.textContent = drugEntry.route;
+            notesSpan.textContent = drugEntry.notes;
+            currentDrugObj = drugEntry;
+        } else {
+            doseSpan.textContent = '—';
+            routeSpan.textContent = '—';
+            notesSpan.textContent = '—';
+            currentDrugObj = null;
+        }
+    }
+
+    // Очистка результата при смене параметров
+    function resetResult() {
+        resultDisplay.innerHTML = '📋 Результат появится здесь';
+    }
+
+    // Главная функция расчета
+    function calculateDose() {
+        // 1. Проверка выбора вида и препарата
+        if (!currentAnimal || !drugSelect.value) {
+            resultDisplay.innerHTML = '⚠️ Ошибка: сначала выберите вид животного и препарат.';
+            return;
+        }
+        if (!currentDrugObj) {
+            resultDisplay.innerHTML = '⚠️ Не удалось получить данные о дозировке. Выберите препарат заново.';
+            return;
+        }
+
+        // 2. Получить вес животного
+        let weight = parseFloat(weightInput.value);
+        if (isNaN(weight) || weight <= 0) {
+            resultDisplay.innerHTML = '❌ Ошибка: введите корректный вес животного (больше 0 кг).';
+            return;
+        }
+
+        // 3. Дозировка (мг/кг)
+        const doseMgPerKg = currentDrugObj.dose_mg_kg;
+        if (!doseMgPerKg || doseMgPerKg <= 0) {
+            resultDisplay.innerHTML = '❌ Ошибка в базе данных: некорректная дозировка.';
+            return;
+        }
+
+        // 4. Запросить концентрацию через prompt
+        let concentrationInput = prompt(`Введите концентрацию препарата "${currentDrugObj.drug}" в мг/мл.\nПримеры: 100, 200, 50.5\nДля амоксициллина 15% = 150 мг/мл (ориентировочно).`, "");
+        if (concentrationInput === null) {
+            resultDisplay.innerHTML = 'ℹ️ Расчет отменён.';
+            return;
+        }
+        let concentration = parseFloat(concentrationInput.replace(',', '.'));
+        if (isNaN(concentration) || concentration <= 0) {
+            resultDisplay.innerHTML = '❌ Ошибка: концентрация должна быть положительным числом (мг/мл).';
+            return;
+        }
+
+        // 5. Расчет объема: (доза мг/кг * вес кг) / концентрация мг/мл
+        const totalMg = doseMgPerKg * weight;
+        const volumeMl = totalMg / concentration;
+        if (volumeMl <= 0) {
+            resultDisplay.innerHTML = '❌ Ошибка: получен нулевой или отрицательный объем. Проверьте введённые данные.';
+            return;
+        }
+
+        // Округление до 1 знака
+        const roundedVolume = Math.round(volumeMl * 10) / 10;
+        resultDisplay.innerHTML = `💉 Рекомендуемый объем: <strong style="font-size:1.6rem;">${roundedVolume} мл</strong><br>
+                                   <small>(${totalMg.toFixed(1)} мг действующего вещества)</small>`;
+    }
+
+    // Обработчики событий
+    animalSelect.addEventListener('change', () => {
+        updateDrugsList();
+        resetResult();
+        // если вид выбран, но препарат не выбран — информация очищена. также очищаем currentDrugObj
+        if (!animalSelect.value) {
+            currentDrugObj = null;
+        }
+    });
+
+    drugSelect.addEventListener('change', () => {
+        updateInfoPanel();
+        resetResult();
+    });
+
+    weightInput.addEventListener('input', () => {
+        if (resultDisplay.innerHTML !== '📋 Результат появится здесь') {
+            resetResult();
+        }
+    });
+
+    calcBtn.addEventListener('click', calculateDose);
+
+    // Инициализация интерфейса
+    populateAnimals();
+    updateDrugsList();    // начальное состояние: вид не выбран -> дизейбл препаратов
+    drugSelect.disabled = true;
+
+    // Дополнительная стилизация для единообразия: placeholder и значения по умолчанию
+    weightInput.placeholder = "Например, 15.2";
+    weightInput.value = "";
+</script>
+</body>
+</html>

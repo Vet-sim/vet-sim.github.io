@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>VetSim | Интерактивные тренажёры для ветеринарного образования</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F4F7F9;   /* свежий светлый серо-голубой фон */
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+            color: #3E5C4A;
+            line-height: 1.4;
+            padding: 2rem 1.5rem;
+        }
+
+        /* главный контейнер с ограничением ширины */
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        /* шапка */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .logo {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+        .tagline {
+            font-size: 1.1rem;
+            color: #5F7C62;
+            border-top: 1px solid #DFE6DA;
+            display: inline-block;
+            padding-top: 0.7rem;
+            margin-top: 0.2rem;
+        }
+
+        /* сетка карточек */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+        }
+
+        /* стили карточки как ссылки */
+        .card-link {
+            display: block;
+            background: #FFFFFF;
+            border-radius: 1.8rem;
+            padding: 1.8rem 1.5rem 1.8rem 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid #E7EDE2;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-link:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 28px -8px rgba(0, 0, 0, 0.12);
+            border-color: #C9D6BA;
+        }
+
+        /* иконка (эмодзи) */
+        .card-icon {
+            font-size: 3.2rem;
+            margin-bottom: 1.2rem;
+        }
+        .card-title {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 0.7rem;
+            letter-spacing: -0.3px;
+        }
+        .card-description {
+            font-size: 0.95rem;
+            line-height: 1.45;
+            color: #537A5A;
+            margin-bottom: 1.8rem;
+            flex-grow: 1;
+        }
+        .card-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: #2C7DA0;
+            background: #F0F5EA;
+            padding: 0.5rem 1rem;
+            border-radius: 2.5rem;
+            width: fit-content;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+        }
+        .card-link:hover .card-action {
+            background: #E2EDD3;
+            gap: 0.7rem;
+        }
+        .arrow {
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+        .card-link:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* футер */
+        .footer {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 1rem;
+            border-top: 1px solid #E2E9DC;
+            font-size: 0.75rem;
+            color: #89A07B;
+        }
+        .footer a {
+            color: #568A6B;
+            text-decoration: none;
+            border-bottom: 1px dotted #BECFAD;
+        }
+        .footer a:hover {
+            color: #2F6B47;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 900px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            body {
+                padding: 1.5rem;
+            }
+            .logo {
+                font-size: 2.4rem;
+            }
+        }
+        @media (max-width: 580px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .card-title {
+                font-size: 1.5rem;
+            }
+            .header {
+                margin-bottom: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">🐾 VetSim</div>
+        <div class="tagline">Интерактивные тренажёры для ветеринарного образования</div>
+    </div>
+
+    <div class="cards-grid">
+        <!-- Универсальное -->
+        <a href="universal.html" class="card-link" id="universalLink">
+            <div class="card-icon">📚⚙️</div>
+            <div class="card-title">Универсальное</div>
+            <div class="card-description">
+                Инструменты, которые работают с любым контентом: игра «Термины-определения», анатомический атлас, конструктор викторин.
+            </div>
+            <div class="card-action">
+                <span>Перейти</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- Общепрофессиональный цикл -->
+        <a href="general.html" class="card-link" id="generalLink">
+            <div class="card-icon">🧬🔬</div>
+            <div class="card-title">Общепрофессиональный цикл</div>
+            <div class="card-description">
+                Анатомия, физиология, гистология, фармакология, патанатомия, микробиология.
+            </div>
+            <div class="card-action">
+                <span>Перейти</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- Профессиональный цикл -->
+        <a href="professional.html" class="card-link" id="profLink">
+            <div class="card-icon">🩺🐄</div>
+            <div class="card-title">Профессиональный цикл</div>
+            <div class="card-description">
+                Хирургия, внутренние незаразные болезни, акушерство, эпизоотология, ветеринарно-санитарная экспертиза.
+            </div>
+            <div class="card-action">
+                <span>Перейти</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+        <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+        <p>💡 Страницы <code>universal.html</code>, <code>general.html</code>, <code>professional.html</code> будут созданы позже для размещения тренажёров.</p>
+    </div>
+</div>
+
+<!-- Небольшой комментарий для разработчика: при клике на карточки переход осуществляется на соответствующий HTML-файл.
+     Вы можете легко заменить href на нужные адреса. Для удобства вёрстка предусматривает адаптивность и чистоту кода. -->
+</body>
+</html>

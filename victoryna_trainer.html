@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор викторин | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: #f4f7f9;
+            color: #2c3e2f;
+            padding: 20px;
+            line-height: 1.4;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Вкладки */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #e2e9da;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #3a6741;
+        }
+        .tab-btn.active {
+            background: #7e9f6e;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            overflow: hidden;
+            padding: 1.8rem;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* стили редактора */
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e9da;
+        }
+        .btn {
+            background: #eef2e9;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: #7e9f6e;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #6c8b5d;
+        }
+        .btn-outline {
+            background: white;
+            border: 1px solid #c0cfaf;
+        }
+        .question-editor-card {
+            background: #fefaf2;
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ede3d4;
+        }
+        .question-editor-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        .question-editor-header h3 {
+            font-size: 1.2rem;
+            color: #4b6e43;
+        }
+        .delete-q {
+            background: #f5d6d0;
+            color: #a1442e;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .field-group {
+            margin-bottom: 12px;
+        }
+        .field-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid #d1dec2;
+            font-family: inherit;
+        }
+        .options-list {
+            margin-left: 15px;
+            margin-top: 8px;
+        }
+        .option-item {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+        }
+        .option-item input {
+            flex: 1;
+        }
+        .add-option {
+            font-size: 0.8rem;
+            margin-top: 6px;
+        }
+        .inline-badge {
+            background: #e2e9da;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        /* стили для тестирования (как в оригинале) */
+        .quiz-container {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+        }
+        .quiz-header {
+            background: #eef3e8;
+            padding: 1rem 1.5rem;
+        }
+        .progress-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .progress-text {
+            font-size: 0.9rem;
+            background: #e2e9da;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #dadfcf;
+            border-radius: 20px;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #7ca86a;
+            border-radius: 20px;
+            transition: width 0.25s;
+        }
+        .case-card {
+            padding: 1.5rem;
+        }
+        .case-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #4b6e43;
+            border-left: 5px solid #9bbb8a;
+            padding-left: 15px;
+        }
+        .symptom-text {
+            background: #fefaf2;
+            padding: 1rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            border: 1px solid #ede3d4;
+        }
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 1.2rem 0;
+        }
+        .option-btn {
+            background: #eef2e9;
+            border: 1px solid #dbdfcf;
+            text-align: left;
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .option-btn.correct {
+            background: #4caf50 !important;
+            color: white;
+        }
+        .option-btn.wrong {
+            background: #f44336 !important;
+            color: white;
+        }
+        .feedback-area {
+            background: #f4f1ea;
+            border-left: 6px solid #9bbb8a;
+            padding: 1rem;
+            border-radius: 20px;
+            margin: 1rem 0;
+            display: none;
+        }
+        .system-badge {
+            background: #d9e3ce;
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            margin-top: 10px;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+        }
+        .next-btn {
+            background: #cfdec2;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        .next-btn.active {
+            background: #7e9f6e;
+            color: white;
+        }
+        .restart-btn {
+            background: #e2cfb0;
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: none;
+            cursor: pointer;
+            display: none;
+        }
+        footer {
+            background: #f9f6ef;
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 0.8rem;
+            color: #9aa98b;
+        }
+        @media (max-width: 640px) {
+            .tab-pane { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="test">🎓 Тестирование</button>
+    </div>
+
+    <!-- Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="editor-header">
+            <button id="addQuestionBtn" class="btn btn-primary">+ Добавить вопрос</button>
+            <div>
+                <button id="saveJsonBtn" class="btn btn-outline">💾 Сохранить JSON</button>
+                <button id="loadJsonBtn" class="btn btn-outline">📂 Загрузить JSON</button>
+                <button id="exportHtmlBtn" class="btn btn-primary">📤 Экспорт в тренажёр</button>
+            </div>
+        </div>
+        <div id="questionsEditorList"></div>
+    </div>
+
+    <!-- Тестирование (динамическое, на основе текущих вопросов) -->
+    <div id="testPane" class="tab-pane">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1>🐄 Ветеринарная диагностика: «Что не так?»</h1>
+                <div class="progress-section">
+                    <span class="progress-text" id="progressCounterTest">Случай 1 из 10</span>
+                    <div class="progress-bar-bg"><div class="progress-fill" id="progressFillTest"></div></div>
+                </div>
+            </div>
+            <div class="case-card">
+                <div class="case-title" id="caseTitleTest">Случай 1</div>
+                <div class="symptom-text" id="questionTextTest"></div>
+                <div id="imageContainerTest" class="image-block" style="margin-bottom:10px;"></div>
+                <div class="options-grid" id="optionsContainerTest"></div>
+                <div id="feedbackAreaTest" class="feedback-area"></div>
+                <div class="nav-buttons">
+                    <button id="nextBtnTest" class="next-btn" disabled>➡ Следующий случай</button>
+                    <button id="restartBtnTest" class="restart-btn">🔄 Начать сначала</button>
+                </div>
+            </div>
+            <footer>© Преподаватель - Тераевич Алла Сергеевна, 2026. CC BY-NC</footer>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ------------------- ИСХОДНЫЕ ДАННЫЕ (10 случаев КРС) -------------------
+    let questions = [
+        { id: 1, text: "У коровы отсутствие жвачки, отрыжка с гнилостным запахом, метеоризм рубца, температура в норме, аппетит отсутствует.", options: ["Тимпания рубца", "Травматический ретикулит", "Кетоз", "Ацидоз"], correct: 0, explanation: "Тимпания рубца – острое вздутие рубца из-за скопления газов.", system: "Пищеварительная система", image: "" },
+        { id: 2, text: "Кашель, носовые истечения гнойного характера, температура 41°C, при аускультации — влажные хрипы в краниальных долях лёгких.", options: ["Бронхопневмония", "Туберкулёз", "Диктиокаулёз", "Эмфизема лёгких"], correct: 0, explanation: "Бронхопневмония – воспаление бронхов и лёгких с гнойным экссудатом.", system: "Дыхательная система", image: "" },
+        { id: 3, text: "Корова на 7-м месяце стельности, внезапное беспокойство, истечение крови из влагалища, шейка матки открыта.", options: ["Аборт", "Вагинит", "Эндометрит", "Задержание последа"], correct: 0, explanation: "Аборт – прерывание беременности.", system: "Репродуктивная система", image: "" },
+        { id: 4, text: "Хромота на тазовую конечность, припухлость в области заплюсневого сустава, болезненность, температура местно повышена.", options: ["Артрит", "Тендинит", "Перелом", "Рана"], correct: 0, explanation: "Артрит – воспаление сустава.", system: "Опорно-двигательная система", image: "" },
+        { id: 5, text: "Уменьшение количества мочи, моча тёмно-красного цвета, отёки на нижней челюсти и в подгрудке, белок в моче.", options: ["Пиелонефрит", "Гломерулонефрит", "Цистит", "Мочекаменная болезнь"], correct: 1, explanation: "Гломерулонефрит – поражение клубочков почек.", system: "Мочевыделительная система", image: "" },
+        { id: 6, text: "Снижение аппетита, потеря веса, запах ацетона изо рта, снижение удоя, нервные явления.", options: ["Кетоз", "Остеомаляция", "Гипомагниемия", "Авитаминоз А"], correct: 0, explanation: "Кетоз – накопление кетоновых тел.", system: "Обмен веществ", image: "" },
+        { id: 7, text: "Отёк в области подгрудка и межчелюстного пространства, набухание яремных вен, пульс слабый, одышка.", options: ["Перикардит", "Эндокардит", "Миокардит", "Анемия"], correct: 0, explanation: "Перикардит – воспаление сердечной сумки.", system: "Сердечно-сосудистая система", image: "" },
+        { id: 8, text: "На коже вымени красные узелки, превращаются в пустулы и корки, снижение удоя, болезненность.", options: ["Оспа коров", "Дерматофилёз", "Чесотка", "Гиподерматоз"], correct: 0, explanation: "Оспа коров – вирусная болезнь.", system: "Кожный покров", image: "" },
+        { id: 9, text: "Неустойчивая походка, тремор мышц, беспокойство, затем угнетение, повышение температуры, скрежет зубами.", options: ["Бешенство", "Листериоз", "Ботулизм", "Энцефалит"], correct: 1, explanation: "Листериоз – поражение ЦНС.", system: "Нервная система", image: "" },
+        { id: 10, text: "Помутнение роговицы, слезотечение, светобоязнь, корова трёт глаз о предметы.", options: ["Кератит", "Конъюнктивит", "Катаракта", "Увеит"], correct: 0, explanation: "Кератит – воспаление роговицы.", system: "Зрительная система", image: "" }
+    ];
+
+    // глобальные переменные для режима тестирования
+    let currentTestIndex = 0;
+    let testAnswered = false;
+    let currentTestQuestions = [];
+
+    // DOM элементы редактора
+    const editorContainer = document.getElementById('questionsEditorList');
+    // DOM тестирования
+    const caseTitleTest = document.getElementById('caseTitleTest');
+    const questionTextTest = document.getElementById('questionTextTest');
+    const optionsContainerTest = document.getElementById('optionsContainerTest');
+    const feedbackAreaTest = document.getElementById('feedbackAreaTest');
+    const nextBtnTest = document.getElementById('nextBtnTest');
+    const restartBtnTest = document.getElementById('restartBtnTest');
+    const progressCounterTest = document.getElementById('progressCounterTest');
+    const progressFillTest = document.getElementById('progressFillTest');
+    const imageContainerTest = document.getElementById('imageContainerTest');
+
+    // ---- РЕДАКТОР ----
+    function renderEditor() {
+        editorContainer.innerHTML = '';
+        questions.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'question-editor-card';
+            card.innerHTML = `
+                <div class="question-editor-header">
+                    <h3>Вопрос ${idx+1}</h3>
+                    <button class="delete-q" data-idx="${idx}">🗑️ Удалить</button>
+                </div>
+                <div class="field-group"><label>Текст вопроса</label><textarea class="q-text" data-idx="${idx}" rows="2">${escapeHtml(q.text)}</textarea></div>
+                <div class="field-group"><label>Изображение (URL, опционально)</label><input class="q-image" data-idx="${idx}" value="${escapeHtml(q.image || '')}"></div>
+                <div class="field-group"><label>Варианты ответов</label><div id="options-editor-${idx}"></div><button class="btn add-option" data-idx="${idx}">+ Добавить вариант</button></div>
+                <div class="field-group"><label>Правильный ответ (индекс, начиная с 0)</label><input class="q-correct" data-idx="${idx}" type="number" value="${q.correct}"></div>
+                <div class="field-group"><label>Пояснение</label><textarea class="q-explanation" data-idx="${idx}" rows="2">${escapeHtml(q.explanation)}</textarea></div>
+                <div class="field-group"><label>Система органов</label><input class="q-system" data-idx="${idx}" value="${escapeHtml(q.system)}"></div>
+            `;
+            editorContainer.appendChild(card);
+            // отрисовка списка вариантов
+            const optionsDiv = document.getElementById(`options-editor-${idx}`);
+            if (optionsDiv) {
+                q.options.forEach((opt, optIdx) => {
+                    const optRow = document.createElement('div');
+                    optRow.className = 'option-item';
+                    optRow.innerHTML = `<input type="text" class="q-option" data-idx="${idx}" data-optidx="${optIdx}" value="${escapeHtml(opt)}"><button class="btn remove-option" data-idx="${idx}" data-optidx="${optIdx}">✖</button>`;
+                    optionsDiv.appendChild(optRow);
+                });
+            }
+        });
+        attachEditorEvents();
+    }
+
+    function attachEditorEvents() {
+        // Текст вопроса
+        document.querySelectorAll('.q-text').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].text = el.value; }));
+        document.querySelectorAll('.q-image').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].image = el.value; }));
+        document.querySelectorAll('.q-correct').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].correct = parseInt(el.value); }));
+        document.querySelectorAll('.q-explanation').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].explanation = el.value; }));
+        document.querySelectorAll('.q-system').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].system = el.value; }));
+        // варианты
+        document.querySelectorAll('.q-option').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; let optidx=el.dataset.optidx; questions[idx].options[optidx] = el.value; }));
+        document.querySelectorAll('.remove-option').forEach(btn => btn.addEventListener('click', e => { let idx=btn.dataset.idx; let optidx=btn.dataset.optidx; questions[idx].options.splice(optidx,1); renderEditor(); }));
+        document.querySelectorAll('.add-option').forEach(btn => btn.addEventListener('click', e => { let idx=btn.dataset.idx; questions[idx].options.push('новый вариант'); renderEditor(); }));
+        document.querySelectorAll('.delete-q').forEach(btn => btn.addEventListener('click', e => { let idx=parseInt(btn.dataset.idx); questions.splice(idx,1); renderEditor(); refreshTestDisplay(); }));
+    }
+
+    // ---- ТЕСТИРОВАНИЕ (полностью автономно на основе текущего массива questions) ----
+    function refreshTestDisplay() {
+        if (questions.length === 0) {
+            caseTitleTest.innerText = 'Нет вопросов';
+            questionTextTest.innerText = 'Сначала добавьте вопросы в редакторе.';
+            optionsContainerTest.innerHTML = '';
+            nextBtnTest.disabled = true;
+            return;
+        }
+        currentTestQuestions = questions;
+        currentTestIndex = 0;
+        testAnswered = false;
+        renderTestQuestion(0);
+        updateTestProgress();
+        nextBtnTest.disabled = true;
+        nextBtnTest.classList.remove('active');
+        restartBtnTest.style.display = 'none';
+        feedbackAreaTest.style.display = 'none';
+    }
+
+    function renderTestQuestion(index) {
+        if (!currentTestQuestions[index]) return;
+        const q = currentTestQuestions[index];
+        caseTitleTest.innerText = `Случай ${index+1} из ${currentTestQuestions.length}`;
+        questionTextTest.innerText = q.text;
+        // изображение
+        imageContainerTest.innerHTML = '';
+        if (q.image && q.image.trim()) {
+            const img = document.createElement('img');
+            img.src = q.image;
+            img.style.maxWidth = '100%';
+            img.style.borderRadius = '16px';
+            img.style.maxHeight = '180px';
+            imageContainerTest.appendChild(img);
+        } else {
+            imageContainerTest.innerHTML = '<div class="image-placeholder" style="color:#8f9b82;">📷 Изображение не загружено</div>';
+        }
+        // кнопки вариантов
+        optionsContainerTest.innerHTML = '';
+        q.options.forEach((opt, optIdx) => {
+            const btn = document.createElement('button');
+            btn.textContent = `${String.fromCharCode(65+optIdx)}. ${opt}`;
+            btn.classList.add('option-btn');
+            btn.dataset.optIndex = optIdx;
+            btn.addEventListener('click', () => handleTestAnswer(optIdx, btn));
+            optionsContainerTest.appendChild(btn);
+        });
+        // сброс подсветок
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('correct', 'wrong'));
+        testAnswered = false;
+        nextBtnTest.disabled = true;
+        nextBtnTest.classList.remove('active');
+        feedbackAreaTest.style.display = 'none';
+    }
+
+    function handleTestAnswer(selectedIdx, clickedBtn) {
+        if (testAnswered) return;
+        const q = currentTestQuestions[currentTestIndex];
+        const isCorrect = (selectedIdx === q.correct);
+        testAnswered = true;
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(btn => btn.disabled = true);
+        const correctBtn = allBtns[q.correct];
+        if (correctBtn) correctBtn.classList.add('correct');
+        if (!isCorrect) clickedBtn.classList.add('wrong');
+        else clickedBtn.classList.add('correct');
+
+        const verdict = isCorrect ? '✅ Верно!' : '❌ Неверно!';
+        const correctAnswerText = q.options[q.correct];
+        feedbackAreaTest.innerHTML = `
+            <div class="feedback-verdict" style="font-weight:800;">${verdict}</div>
+            <div><strong>Правильный диагноз:</strong> ${correctAnswerText}</div>
+            <div>📖 ${q.explanation}</div>
+            <div class="system-badge">🧬 Система: ${q.system}</div>
+        `;
+        feedbackAreaTest.style.display = 'block';
+        nextBtnTest.disabled = false;
+        nextBtnTest.classList.add('active');
+        if (currentTestIndex === currentTestQuestions.length - 1) {
+            // последний вопрос
+            nextBtnTest.innerText = '🏁 Завершить';
+        } else {
+            nextBtnTest.innerText = '➡ Следующий случай';
+        }
+    }
+
+    function nextTestQuestion() {
+        if (!testAnswered) return;
+        if (currentTestIndex + 1 < currentTestQuestions.length) {
+            currentTestIndex++;
+            testAnswered = false;
+            renderTestQuestion(currentTestIndex);
+            updateTestProgress();
+        } else {
+            // завершение
+            alert('🎉 Поздравляем! Вы прошли всю викторину! 🎉\nМожете начать сначала.');
+            restartTestQuiz();
+        }
+    }
+
+    function restartTestQuiz() {
+        currentTestIndex = 0;
+        testAnswered = false;
+        renderTestQuestion(0);
+        updateTestProgress();
+        nextBtnTest.disabled = true;
+        nextBtnTest.classList.remove('active');
+        restartBtnTest.style.display = 'none';
+    }
+
+    function updateTestProgress() {
+        const total = currentTestQuestions.length;
+        const percent = ((currentTestIndex+1)/total)*100;
+        progressFillTest.style.width = `${percent}%`;
+        progressCounterTest.innerText = `Случай ${currentTestIndex+1} из ${total}`;
+    }
+
+    // ---- JSON / Экспорт HTML ----
+    function saveToJson() {
+        const dataStr = JSON.stringify(questions, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'vetsim_quiz.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function loadFromJson(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const newData = JSON.parse(e.target.result);
+                if (Array.isArray(newData)) {
+                    questions = newData;
+                    renderEditor();
+                    refreshTestDisplay();
+                } else alert('Неверный формат JSON');
+            } catch(err) { alert('Ошибка чтения файла'); }
+        };
+        reader.readAsText(file);
+    }
+
+    function exportStandaloneHtml() {
+        // создаём полностью самостоятельный HTML на основе текущего массива questions
+        const qData = JSON.stringify(questions);
+        const standaloneHtml = `<!DOCTYPE html>
+        <html lang="ru">
+        <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Ветеринарная диагностика</title>
+        <style>${document.querySelector('style').innerHTML}</style>
+        </head>
+        <body><div class="main-container"><div class="quiz-container"><div class="quiz-header"><h1>🐄 Ветеринарная диагностика: «Что не так?»</h1><div class="progress-section"><span class="progress-text" id="progressCounter">Случай 1 из ...</span><div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div></div></div><div class="case-card"><div class="case-title" id="caseTitle">Случай 1</div><div class="symptom-text" id="questionText"></div><div id="imageContainer"></div><div class="options-grid" id="optionsContainer"></div><div id="feedbackArea" class="feedback-area"></div><div class="nav-buttons"><button id="nextBtn" class="next-btn" disabled>➡ Следующий случай</button><button id="restartBtn" class="restart-btn">🔄 Начать сначала</button></div></div><footer>© Тераевич Алла Сергеевна, 2026. CC BY-NC</footer></div></div>
+        <script>
+            const quizData = ${qData};
+            let currentIndex = 0, answered = false;
+            const total = quizData.length;
+            const caseTitle = document.getElementById('caseTitle');
+            const questionText = document.getElementById('questionText');
+            const optionsContainer = document.getElementById('optionsContainer');
+            const feedbackArea = document.getElementById('feedbackArea');
+            const nextBtn = document.getElementById('nextBtn');
+            const restartBtn = document.getElementById('restartBtn');
+            const progressCounter = document.getElementById('progressCounter');
+            const progressFill = document.getElementById('progressFill');
+            const imageContainer = document.getElementById('imageContainer');
+            function updateProgress() { const percent = ((currentIndex+1)/total)*100; progressFill.style.width = percent+'%'; progressCounter.innerText = 'Случай '+(currentIndex+1)+' из '+total; }
+            function renderCase() {
+                const q = quizData[currentIndex];
+                caseTitle.innerText = 'Случай '+(currentIndex+1);
+                questionText.innerText = q.text;
+                imageContainer.innerHTML = q.image ? '<img src="'+q.image+'" style="max-width:100%; border-radius:16px; max-height:180px;">' : '<div style="color:#8f9b82;">📷 Изображение не загружено</div>';
+                optionsContainer.innerHTML = '';
+                q.options.forEach((opt, idx) => {
+                    const btn = document.createElement('button');
+                    btn.textContent = String.fromCharCode(65+idx)+'. '+opt;
+                    btn.classList.add('option-btn');
+                    btn.onclick = () => handleAnswer(idx, btn);
+                    optionsContainer.appendChild(btn);
+                });
+                document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('correct','wrong'));
+                answered = false;
+                nextBtn.disabled = true;
+                nextBtn.classList.remove('active');
+                feedbackArea.style.display = 'none';
+                updateProgress();
+            }
+            function handleAnswer(selectedIdx, btn) {
+                if(answered) return;
+                const q = quizData[currentIndex];
+                const isCorrect = (selectedIdx === q.correct);
+                answered = true;
+                const allBtns = document.querySelectorAll('.option-btn');
+                allBtns.forEach(b=>b.disabled=true);
+                allBtns[q.correct].classList.add('correct');
+                if(!isCorrect) btn.classList.add('wrong'); else btn.classList.add('correct');
+                feedbackArea.innerHTML = '<div style="font-weight:800;">'+(isCorrect?'✅ Верно!':'❌ Неверно!')+'</div><div><strong>Правильный диагноз:</strong> '+q.options[q.correct]+'</div><div>📖 '+q.explanation+'</div><div class="system-badge">🧬 Система: '+q.system+'</div>';
+                feedbackArea.style.display = 'block';
+                nextBtn.disabled = false;
+                nextBtn.classList.add('active');
+                if(currentIndex+1 === total) nextBtn.innerText = '🏁 Завершить';
+                else nextBtn.innerText = '➡ Следующий случай';
+            }
+            function nextCase() {
+                if(!answered) return;
+                if(currentIndex+1 < total) { currentIndex++; renderCase(); }
+                else { alert('🎉 Викторина завершена! 🎉\\nНажмите "Начать сначала"'); }
+            }
+            function restartQuiz() { currentIndex=0; renderCase(); nextBtn.disabled=true; nextBtn.classList.remove('active'); restartBtn.style.display='none'; }
+            nextBtn.onclick = nextCase;
+            restartBtn.onclick = () => { currentIndex=0; renderCase(); restartBtn.style.display='none'; };
+            renderCase();
+        <\/script>
+        </body>
+        </html>`;
+        const blob = new Blob([standaloneHtml], {type: 'text/html'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'vetsim_quiz_standalone.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    // ---- Инициализация и переключение вкладок ----
+    document.getElementById('addQuestionBtn').onclick = () => {
+        const newId = Date.now();
+        questions.push({ id: newId, text: 'Новый вопрос', options: ['Вариант A', 'Вариант B'], correct: 0, explanation: 'Пояснение', system: 'Система', image: '' });
+        renderEditor();
+        refreshTestDisplay();
+    };
+    document.getElementById('saveJsonBtn').onclick = () => saveToJson();
+    document.getElementById('loadJsonBtn').onclick = () => {
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
+        inp.onchange = e => loadFromJson(inp.files[0]);
+        inp.click();
+    };
+    document.getElementById('exportHtmlBtn').onclick = () => exportStandaloneHtml();
+    nextBtnTest.onclick = () => nextTestQuestion();
+    restartBtnTest.onclick = () => { currentTestIndex=0; testAnswered=false; renderTestQuestion(0); updateTestProgress(); nextBtnTest.disabled=true; restartBtnTest.style.display='none'; };
+
+    // переключение вкладок
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+            document.getElementById(btn.dataset.tab + 'Pane').classList.add('active');
+            if (btn.dataset.tab === 'test') refreshTestDisplay();
+        });
+    });
+
+    // начальный рендер
+    renderEditor();
+    refreshTestDisplay();
+</script>
+</body>
+</html>

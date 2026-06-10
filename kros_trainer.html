@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Генератор кроссвордов для преподавателей | VetSim</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none; /* предотвращает выделение при кликах, но текст в полях ввода доступен */
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            margin: 0;
+        }
+
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* заголовок */
+        .header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .sub {
+            color: #7B8D6E;
+            font-size: 0.9rem;
+        }
+
+        /* панель управления */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 1.8rem;
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            align-items: center;
+        }
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3C5C33;
+        }
+        .btn-primary {
+            background: #A3B18A;
+            color: #2C4027;
+        }
+        .btn-primary:hover {
+            background: #8fa375;
+            transform: translateY(-1px);
+        }
+        .btn-accent {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-accent:hover {
+            background: #236B8A;
+        }
+        .btn-danger {
+            background: #D4A373;
+            color: #4D2F1A;
+        }
+        select, input[type="text"] {
+            background: #FEFAF2;
+            border: 1px solid #D9D0BD;
+            padding: 8px 14px;
+            border-radius: 2rem;
+            font-family: inherit;
+            outline: none;
+        }
+        .file-label {
+            background: #D9CFB8;
+            padding: 8px 18px;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        input[type="file"] { display: none; }
+
+        /* основная компоновка */
+        .workspace {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+        }
+        .canvas-area {
+            flex: 2;
+            min-width: 320px;
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1rem;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #FDF8F0;
+            border-radius: 0.8rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .side-panel {
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.2rem;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+        }
+        .word-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 1rem 0;
+            background: #FEFAF2;
+            border-radius: 1.2rem;
+            padding: 0.6rem;
+        }
+        .word-item {
+            padding: 6px 10px;
+            margin: 4px 0;
+            background: #F4EFE4;
+            border-radius: 2rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .word-placed {
+            background: #CBE0C0;
+            color: #2A5C2A;
+        }
+        .word-unplaced {
+            background: #F2E0D0;
+            color: #B45F3A;
+        }
+        .manual-mode {
+            margin-top: 1rem;
+            border-top: 1px solid #E2D8CA;
+            padding-top: 1rem;
+        }
+        .info-msg {
+            font-size: 0.75rem;
+            color: #8FAB7A;
+            margin-top: 1rem;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #B0BC9C;
+            border-top: 1px solid #E5DDCF;
+            padding-top: 1rem;
+        }
+        @media (max-width: 800px) {
+            .workspace { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <div class="header">
+        <h1>🧩 Генератор кроссвордов</h1>
+        <div class="sub">Создавайте кроссворды из терминов — для ветеринарии и любых дисциплин</div>
+    </div>
+
+    <div class="toolbar">
+        <label class="file-label">📂 Загрузить слова (TXT) <input type="file" id="wordsFile" accept=".txt"></label>
+        <select id="gridShapeSelect"></select>
+        <button id="autoPlaceBtn" class="btn btn-primary">🤖 Авторасстановка</button>
+        <button id="exportBtn" class="btn btn-accent">📥 Экспорт в кроссворд</button>
+        <button id="clearGridBtn" class="btn btn-danger">🗑️ Сброс сетки</button>
+    </div>
+
+    <div class="workspace">
+        <div class="canvas-area">
+            <canvas id="crossCanvas" width="600" height="600" style="width:100%; height:auto; background:#FDF8F0; border-radius:16px"></canvas>
+        </div>
+        <div class="side-panel">
+            <div style="font-weight: 700;">📖 Список терминов</div>
+            <div id="wordListContainer" class="word-list"></div>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <input type="text" id="newWordInput" placeholder="Новый термин" style="flex:1;">
+                <button id="addWordBtn" class="btn">➕ Добавить</button>
+            </div>
+            <div class="manual-mode">
+                <label style="display: flex; align-items: center; gap: 8px;">
+                    <input type="checkbox" id="manualModeCheck"> ✏️ Режим ручной правки (клик по сетке → вставка выбранного слова)
+                </label>
+                <select id="manualWordSelect" style="width:100%; margin-top: 8px;"></select>
+                <div class="info-msg">💡 В ручном режиме: выберите слово, кликните по начальной ячейке, затем выберите направление (горизонт/вертик) в появившемся окне.</div>
+            </div>
+        </div>
+    </div>
+    <footer>© Преподаватель — Тераевич Алла Сергеевна, 2026. CC BY-NC. Сгенерированные кроссворды можно использовать для обучения.</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // 1. ПРЕДУСТАНОВЛЕННЫЕ ФОРМЫ СЕТКИ (симметричные)
+    // --------------------------------------------------------------
+    const gridShapes = {
+        "Классическая 13x13": { size: 13, matrix: null }, // заполним динамически
+        "Классическая 15x15": { size: 15, matrix: null },
+        "Ромб 13x13": { size: 13, matrix: null },
+        "Бабочка 15x15": { size: 15, matrix: null },
+        "Крест 13x13": { size: 13, matrix: null }
+    };
+
+    // Генерация матриц
+    function generateFullRect(size) {
+        let m = Array(size).fill().map(() => Array(size).fill(1));
+        return m;
+    }
+    function generateRhombus(size) {
+        let m = Array(size).fill().map(() => Array(size).fill(0));
+        let center = Math.floor(size/2);
+        for(let i=0;i<size;i++){
+            let offset = Math.abs(i-center);
+            let start = offset;
+            let end = size-1-offset;
+            for(let j=start; j<=end; j++) m[i][j]=1;
+        }
+        return m;
+    }
+    function generateButterfly(size){
+        let m = Array(size).fill().map(()=>Array(size).fill(1));
+        let q = Math.floor(size/4);
+        for(let i=0;i<q;i++){
+            for(let j=0;j<q;j++){
+                if(i+j < q) { m[i][j]=0; m[i][size-1-j]=0; m[size-1-i][j]=0; m[size-1-i][size-1-j]=0; }
+            }
+        }
+        return m;
+    }
+    function generateCross(size){
+        let m = Array(size).fill().map(()=>Array(size).fill(0));
+        let center = Math.floor(size/2);
+        for(let i=0;i<size;i++) { m[center][i]=1; m[i][center]=1; }
+        return m;
+    }
+
+    gridShapes["Классическая 13x13"].matrix = generateFullRect(13);
+    gridShapes["Классическая 15x15"].matrix = generateFullRect(15);
+    gridShapes["Ромб 13x13"].matrix = generateRhombus(13);
+    gridShapes["Бабочка 15x15"].matrix = generateButterfly(15);
+    gridShapes["Крест 13x13"].matrix = generateCross(13);
+
+    // Текущее состояние
+    let currentShape = "Классическая 13x13";
+    let gridSize = 13;
+    let grid = [];         // 0=чёрная, 1=белая
+    let letters = [];      // буквы (строка или null)
+    let numbers = [];      // номера для ячеек (первые буквы слов)
+    let words = [];        // { text, placed, row, col, direction, id }
+    let termList = [];     // список терминов (строки)
+    let nextWordId = 1;
+    let cellSize = 40;
+
+    const canvas = document.getElementById('crossCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // --------------------------------------------------------------
+    // Вспомогательные функции
+    // --------------------------------------------------------------
+    function loadShape(shapeName){
+        const shape = gridShapes[shapeName];
+        if(!shape) return;
+        currentShape = shapeName;
+        gridSize = shape.size;
+        grid = shape.matrix.map(row => [...row]);
+        letters = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
+        numbers = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
+        words = [];
+        nextWordId = 1;
+        drawGrid();
+        updateWordListUI();
+    }
+
+    function drawGrid(){
+        canvas.width = gridSize * cellSize;
+        canvas.height = gridSize * cellSize;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(let i=0;i<gridSize;i++){
+            for(let j=0;j<gridSize;j++){
+                let x = j*cellSize, y=i*cellSize;
+                if(grid[i][j]===0){
+                    ctx.fillStyle = "#D9D2B0";
+                    ctx.fillRect(x,y,cellSize,cellSize);
+                } else {
+                    ctx.fillStyle = "#FFFFFF";
+                    ctx.fillRect(x,y,cellSize,cellSize);
+                    ctx.strokeStyle = "#D4CDB5";
+                    ctx.strokeRect(x,y,cellSize,cellSize);
+                    if(letters[i][j]){
+                        ctx.fillStyle = "#3E5C4A";
+                        ctx.font = `bold ${Math.floor(cellSize*0.5)}px system-ui`;
+                        ctx.fillText(letters[i][j], x+cellSize*0.35, y+cellSize*0.65);
+                    }
+                    if(numbers[i][j]){
+                        ctx.fillStyle = "#2C7DA0";
+                        ctx.font = `12px system-ui`;
+                        ctx.fillText(numbers[i][j], x+3, y+15);
+                    }
+                }
+            }
+        }
+    }
+
+    // Обновление списка слов в панели
+    function updateWordListUI(){
+        const container = document.getElementById('wordListContainer');
+        const manualSelect = document.getElementById('manualWordSelect');
+        if(!container) return;
+        container.innerHTML = '';
+        manualSelect.innerHTML = '<option value="">-- выберите слово для ручной вставки --</option>';
+        termList.forEach(term => {
+            const placed = words.some(w => w.text === term);
+            const div = document.createElement('div');
+            div.className = `word-item ${placed ? 'word-placed' : 'word-unplaced'}`;
+            div.innerHTML = `<span>${term}</span> ${placed ? '✅' : '❌'}`;
+            container.appendChild(div);
+            const opt = document.createElement('option');
+            opt.value = term;
+            opt.textContent = term;
+            manualSelect.appendChild(opt);
+        });
+    }
+
+    // Пересчёт номеров (для первых букв слов)
+    function renumberWords(){
+        for(let i=0;i<gridSize;i++) for(let j=0;j<gridSize;j++) numbers[i][j]=0;
+        let counter=1;
+        for(let w of words){
+            if(!w.placed) continue;
+            let {row, col, direction} = w;
+            if(direction==='h'){
+                if(col===0 || grid[row][col-1]===0 || (col>0 && letters[row][col-1]==='')){
+                    numbers[row][col]=counter++;
+                }
+            } else {
+                if(row===0 || grid[row-1][col]===0 || (row>0 && letters[row-1][col]==='')){
+                    numbers[row][col]=counter++;
+                }
+            }
+        }
+        drawGrid();
+    }
+
+    // Авторасстановка (жадный алгоритм)
+    function autoPlace(){
+        if(termList.length===0){ alert("Загрузите или добавьте слова"); return; }
+        // очищаем сетку
+        letters = Array(gridSize).fill().map(()=>Array(gridSize).fill(''));
+        words = [];
+        nextWordId=1;
+        let sorted = [...termList].sort((a,b)=>b.length-a.length);
+        let placedWords = [];
+        for(let word of sorted){
+            let best = null;
+            // поиск позиций
+            for(let row=0;row<gridSize;row++){
+                for(let col=0;col<gridSize;col++){
+                    // горизонтально
+                    if(col+word.length <= gridSize){
+                        let ok=true;
+                        for(let k=0;k<word.length;k++){
+                            if(grid[row][col+k]===0) { ok=false; break; }
+                            let existing = letters[row][col+k];
+                            if(existing !== '' && existing !== word[k]) { ok=false; break; }
+                        }
+                        if(ok){
+                            best = {row, col, direction:'h', word};
+                            break;
+                        }
+                    }
+                    if(best) break;
+                    // вертикально
+                    if(row+word.length <= gridSize){
+                        let ok=true;
+                        for(let k=0;k<word.length;k++){
+                            if(grid[row+k][col]===0) { ok=false; break; }
+                            let existing = letters[row+k][col];
+                            if(existing !== '' && existing !== word[k]) { ok=false; break; }
+                        }
+                        if(ok){
+                            best = {row, col, direction:'v', word};
+                            break;
+                        }
+                    }
+                    if(best) break;
+                }
+                if(best) break;
+            }
+            if(best){
+                const {row,col,direction,word:wrd}=best;
+                if(direction==='h'){
+                    for(let k=0;k<wrd.length;k++) letters[row][col+k]=wrd[k];
+                } else {
+                    for(let k=0;k<wrd.length;k++) letters[row+k][col]=wrd[k];
+                }
+                placedWords.push({ text:wrd, row, col, direction, placed:true, id:nextWordId++ });
+            } else {
+                placedWords.push({ text:word, placed:false, row:-1, col:-1, direction:'', id:nextWordId++ });
+            }
+        }
+        words = placedWords;
+        drawGrid();
+        renumberWords();
+        updateWordListUI();
+    }
+
+    // Ручная вставка слова
+    function tryPlaceManual(word, startRow, startCol, direction){
+        let len = word.length;
+        if(direction==='h'){
+            if(startCol+len>gridSize) return false;
+            for(let k=0;k<len;k++){
+                if(grid[startRow][startCol+k]===0) return false;
+                if(letters[startRow][startCol+k] !== '' && letters[startRow][startCol+k] !== word[k]) return false;
+            }
+            for(let k=0;k<len;k++) letters[startRow][startCol+k]=word[k];
+        } else {
+            if(startRow+len>gridSize) return false;
+            for(let k=0;k<len;k++){
+                if(grid[startRow+k][startCol]===0) return false;
+                if(letters[startRow+k][startCol] !== '' && letters[startRow+k][startCol] !== word[k]) return false;
+            }
+            for(let k=0;k<len;k++) letters[startRow+k][startCol]=word[k];
+        }
+        // удаляем старое вхождение слова, если было неразмещённым
+        words = words.filter(w => w.text !== word);
+        words.push({ text:word, row:startRow, col:startCol, direction, placed:true, id:nextWordId++ });
+        drawGrid();
+        renumberWords();
+        updateWordListUI();
+        return true;
+    }
+
+    // Очистка сетки от букв и слов
+    function clearGrid(){
+        letters = Array(gridSize).fill().map(()=>Array(gridSize).fill(''));
+        words = words.filter(w => !w.placed); // оставляем только неразмещённые записи, но можно просто обнулить
+        words = [];
+        nextWordId=1;
+        drawGrid();
+        renumberWords();
+        updateWordListUI();
+    }
+
+    // Экспорт в готовый кроссворд (HTML)
+    function exportCrossword(){
+        if(termList.length===0){ alert("Нет терминов для экспорта"); return; }
+        // собираем вопросы с номерами
+        let questions = [];
+        let usedNumbers = new Map();
+        for(let w of words){
+            if(!w.placed) continue;
+            let num = numbers[w.row][w.col];
+            if(num && !usedNumbers.has(num)){
+                usedNumbers.set(num, w.text);
+                questions.push({ num, word: w.text, row:w.row, col:w.col, dir:w.direction });
+            }
+        }
+        questions.sort((a,b)=>a.num-b.num);
+        const htmlContent = `<!DOCTYPE html>
+<html lang="ru">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Кроссворд</title><style>
+*{box-sizing:border-box;} body{background:#FDF8F0; font-family:system-ui; padding:1.5rem;} .cross-container{max-width:800px; margin:0 auto; background:white; border-radius:2rem; padding:1.5rem; box-shadow:0 8px 20px rgba(0,0,0,0.05);}
+canvas{display:block; margin:0 auto; background:#FDF8F0;} .questions{margin-top:1.5rem;} .q-item{margin:8px 0;} input.answer{padding:5px; width:200px; margin-left:10px;} .check-btn{background:#A3B18A; border:none; padding:8px 20px; border-radius:2rem; cursor:pointer;} .result{font-weight:bold; margin-top:1rem;}
+</style></head>
+<body><div class="cross-container"><h2>🧩 Кроссворд</h2><canvas id="crossCanvas" width="${gridSize*cellSize}" height="${gridSize*cellSize}"></canvas><div class="questions"><h3>Вопросы (по горизонтали и вертикали):</h3>`;
+        let qListHtml = '';
+        for(let q of questions){
+            qListHtml += `<div class="q-item"><strong>${q.num}.</strong> ${q.word} <input type="text" class="answer" data-word="${q.word}" placeholder="Ответ" style="margin-left:12px;"></div>`;
+        }
+        const finalHtml = htmlContent + qListHtml + `<button class="check-btn" id="checkAnswers">Проверить ответы</button><div id="resultMsg" class="result"></div><div style="margin-top:1rem; font-size:0.7rem; color:#A8B89A;">© ВетSim. Не для коммерческого использования.</div></div><script>
+        const canvas = document.getElementById('crossCanvas'); const ctx = canvas.getContext('2d'); const size=${gridSize}, cell=${cellSize};
+        const gridMatrix = ${JSON.stringify(grid)}; const lettersData = ${JSON.stringify(letters)};
+        function drawGrid(){ ctx.clearRect(0,0,canvas.width,canvas.height);
+            for(let i=0;i<size;i++) for(let j=0;j<size;j++){
+                let x=j*cell, y=i*cell; if(gridMatrix[i][j]===0){ ctx.fillStyle="#D9D2B0"; ctx.fillRect(x,y,cell,cell); }
+                else{ ctx.fillStyle="#FFFFFF"; ctx.fillRect(x,y,cell,cell); ctx.strokeStyle="#D4CDB5"; ctx.strokeRect(x,y,cell,cell);
+                if(lettersData[i][j]){ ctx.fillStyle="#3E5C4A"; ctx.font="bold 20px system-ui"; ctx.fillText(lettersData[i][j], x+12, y+28);}
+                if(${JSON.stringify(numbers)}[i] && ${JSON.stringify(numbers)}[i][j]){ ctx.fillStyle="#2C7DA0"; ctx.font="12px system-ui"; ctx.fillText(${JSON.stringify(numbers)}[i][j], x+3, y+15);}
+            }
+        }}
+        drawGrid();
+        document.getElementById('checkAnswers').addEventListener('click',()=>{
+            let inputs = document.querySelectorAll('.answer'); let correct=0; inputs.forEach(inp=>{ let user=inp.value.trim().toLowerCase(); let correctWord=inp.getAttribute('data-word').toLowerCase(); if(user===correctWord){ inp.style.backgroundColor="#CBE0C0"; correct++; } else inp.style.backgroundColor="#F2E0D0"; });
+            document.getElementById('resultMsg').innerHTML=\`✅ Правильно: \${correct} из \${inputs.length}\`;
+        });
+        <\/script></body></html>`;
+        const blob = new Blob([finalHtml], {type:'text/html'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'crossword_ready.html';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        alert("Готовый кроссворд сохранён как crossword_ready.html");
+    }
+
+    // Загрузка слов из TXT
+    function loadWordsFromFile(file){
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const content = e.target.result;
+            const lines = content.split(/\r?\n/).filter(l=>l.trim().length>0);
+            termList = lines.map(l=>l.trim());
+            updateWordListUI();
+            clearGrid();
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    // Обработка кликов по canvas (ручной режим)
+    let manualActive = false;
+    canvas.addEventListener('click', (e) => {
+        if(!document.getElementById('manualModeCheck').checked) return;
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        let mouseX = (e.clientX - rect.left) * scaleX;
+        let mouseY = (e.clientY - rect.top) * scaleY;
+        let col = Math.floor(mouseX / cellSize);
+        let row = Math.floor(mouseY / cellSize);
+        if(row>=0 && row<gridSize && col>=0 && col<gridSize && grid[row][col]===1){
+            let selectedWord = document.getElementById('manualWordSelect').value;
+            if(!selectedWord) { alert("Выберите слово из списка"); return; }
+            let dir = prompt("Введите направление: h (горизонталь) или v (вертикаль)").toLowerCase();
+            if(dir!=='h' && dir!=='v') return;
+            if(tryPlaceManual(selectedWord, row, col, dir)){
+                alert(`Слово "${selectedWord}" размещено!`);
+                updateWordListUI();
+            } else { alert("Не удалось разместить слово: нет места или конфликт букв"); }
+        }
+    });
+
+    // Инициализация UI
+    function populateShapeSelect(){
+        const select = document.getElementById('gridShapeSelect');
+        select.innerHTML = '';
+        Object.keys(gridShapes).forEach(shape=>{
+            const opt = document.createElement('option');
+            opt.value = shape;
+            opt.textContent = shape;
+            select.appendChild(opt);
+        });
+        select.value = currentShape;
+        select.addEventListener('change', (e) => { loadShape(e.target.value); });
+    }
+
+    document.getElementById('wordsFile').addEventListener('change', (e)=> { if(e.target.files[0]) loadWordsFromFile(e.target.files[0]); });
+    document.getElementById('autoPlaceBtn').addEventListener('click', autoPlace);
+    document.getElementById('exportBtn').addEventListener('click', exportCrossword);
+    document.getElementById('clearGridBtn').addEventListener('click', clearGrid);
+    document.getElementById('addWordBtn').addEventListener('click', ()=>{
+        let newWord = document.getElementById('newWordInput').value.trim();
+        if(newWord && !termList.includes(newWord)){ termList.push(newWord); updateWordListUI(); clearGrid(); document.getElementById('newWordInput').value='';}
+        else alert("Слово уже есть или пустое");
+    });
+
+    // Демо-данные при старте
+    termList = ["Лопатка","Плечевая","Лучевая","Локтевая","Запястье","Пясть","Фаланга"];
+    populateShapeSelect();
+    loadShape("Классическая 13x13");
+    updateWordListUI();
+    clearGrid();
+</script>
+</body>
+</html>

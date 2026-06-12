@@ -24,7 +24,6 @@
             margin: 0 auto;
         }
 
-        /* навигация */
         .nav-back {
             margin-bottom: 2rem;
         }
@@ -46,7 +45,6 @@
             gap: 12px;
         }
 
-        /* заголовок */
         .page-header {
             text-align: center;
             margin-bottom: 2.5rem;
@@ -66,77 +64,60 @@
             margin-top: 0.5rem;
         }
 
-      /* сетка карточек — адаптивная, карточки не шире 320px */
-.cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 320px));
-    gap: 2rem;
-    justify-content: center;
-    margin: 2rem 0 3rem;
-}
+        /* Сетка карточек — три колонки на десктопе */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+        }
 
-/* карточка — почти квадратная, с ограничением ширины и минимальной высотой */
-.card {
-    background: #FFFFFF;
-    border-radius: 1.8rem;
-    padding: 1.8rem 1.5rem;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-    border: 1px solid #E7EDE2;
-    transition: all 0.25s ease;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 320px;
-    min-height: 360px;  /* делает карточку ближе к квадрату */
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 28px -8px rgba(0, 0, 0, 0.1);
-    border-color: #C9D6BA;
-}
-
-.card-icon {
-    font-size: 2.8rem;
-    margin-bottom: 1rem;
-}
-
-.card-title {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #1F4E6E;
-    margin-bottom: 0.7rem;
-}
-
-.card-desc {
-    font-size: 0.9rem;
-    line-height: 1.45;
-    color: #537A5A;
-    margin-bottom: 1.5rem;
-    flex-grow: 1;
-}
-
-.card-badge {
-    font-size: 0.7rem;
-    background: #F0EEE5;
-    display: inline-block;
-    padding: 0.2rem 0.8rem;
-    border-radius: 2rem;
-    margin-bottom: 1rem;
-    width: fit-content;
-    color: #8A9B7A;
-}
-
-.card-action {
-    margin-top: 0.5rem;
-}
-
-/* для мобильных устройств — карточки чуть выше, но нормально */
-@media (max-width: 768px) {
-    .card {
-        min-height: auto;
-    }
-}
+        /* Карточка */
+        .card {
+            background: #FFFFFF;
+            border-radius: 1.8rem;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E7EDE2;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 28px -8px rgba(0, 0, 0, 0.1);
+            border-color: #C9D6BA;
+        }
+        .card-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 0.7rem;
+        }
+        .card-desc {
+            font-size: 0.9rem;
+            line-height: 1.45;
+            color: #537A5A;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        .card-badge {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            width: fit-content;
+            color: #8A9B7A;
+        }
+        .card-action {
+            margin-top: 0.5rem;
+        }
         .btn {
             display: inline-flex;
             align-items: center;
@@ -158,16 +139,6 @@
             background: #236B8A;
             gap: 0.7rem;
         }
-        .btn-disabled {
-            background: #EFF3EA;
-            color: #9AAE8A;
-            cursor: default;
-            pointer-events: none;
-            opacity: 0.7;
-        }
-        .btn:hover:not(.btn-disabled) {
-            gap: 0.7rem;
-        }
         .arrow {
             font-size: 1rem;
             transition: transform 0.2s;
@@ -176,24 +147,7 @@
             transform: translateX(3px);
         }
 
-        /* футер */
-        .footer {
-            text-align: center;
-            padding-top: 2rem;
-            margin-top: 1rem;
-            border-top: 1px solid #E2E9DC;
-            font-size: 0.75rem;
-            color: #89A07B;
-        }
-        .footer a {
-            color: #568A6B;
-            text-decoration: none;
-            border-bottom: 1px dotted #BECFAD;
-        }
-        .footer a:hover {
-            color: #2F6B47;
-        }
-
+        /* Адаптивность */
         @media (max-width: 900px) {
             .cards-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -211,15 +165,29 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .footer {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 1rem;
+            border-top: 1px solid #E2E9DC;
+            font-size: 0.75rem;
+            color: #89A07B;
+        }
+        .footer a {
+            color: #568A6B;
+            text-decoration: none;
+            border-bottom: 1px dotted #BECFAD;
+        }
+        .footer a:hover {
+            color: #2F6B47;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- навигация назад -->
     <div class="nav-back">
-        <a href="index.html" class="back-link">
-            ← На главную
-        </a>
+        <a href="index.html" class="back-link">← На главную</a>
     </div>
 
     <div class="page-header">
@@ -227,26 +195,29 @@
         <div class="subhead">Инструменты, которые подойдут для любого предмета – от анатомии до фармакологии</div>
     </div>
 
-    <div class="card">
-    <div class="card-icon">🧩📖</div>
-    <div class="card-title">Соедини термин с определением</div>
-    <div class="card-badge">✅ Готов к использованию</div>
-    <div class="card-desc">
-        Готовая игра для студентов. Перетаскивайте термин к определению. Работает без интернета.
-    </div>
-    <div class="card-action">
-        <a href="terminy_trainer.html" class="btn btn-primary">
-            <span>Запустить тренажёр</span>
-            <span class="arrow">→</span>
-        </a>
-    </div>
-</div>
+    <!-- ВСЕ ТРИ КАРТОЧКИ ВНУТРИ ОДНОЙ СЕТКИ -->
+    <div class="cards-grid">
+        <!-- Карточка 1 -->
+        <div class="card">
+            <div class="card-icon">🧩📖</div>
+            <div class="card-title">Соедини термин с определением</div>
+            <div class="card-badge">✅ Готов к использованию</div>
+            <div class="card-desc">
+                Готовая игра для студентов. Перетаскивайте термин к определению. Работает без интернета.
+            </div>
+            <div class="card-action">
+                <a href="terminy_trainer.html" class="btn btn-primary">
+                    <span>Запустить тренажёр</span>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
 
-        <!-- 2. Конструктор викторин (планируется) -->
+        <!-- Карточка 2 -->
         <div class="card">
             <div class="card-icon">📝🧪</div>
             <div class="card-title">Конструктор викторин</div>
-           <div class="card-badge">✅ Готов к использованию</div>
+            <div class="card-badge">✅ Готов к использованию</div>
             <div class="card-desc">
                 Создавайте тесты с любыми вопросами, отправляйте студентам. Поддержка изображений, вариантов ответов и автоматическая проверка.
             </div>
@@ -258,7 +229,7 @@
             </div>
         </div>
 
-        <!-- 3. Генератор кроссвордов (план) -->
+        <!-- Карточка 3 -->
         <div class="card">
             <div class="card-icon">✏️🔍</div>
             <div class="card-title">Генератор филвордов</div>
@@ -275,7 +246,6 @@
         </div>
     </div>
 
-    <!-- Дополнительный блок с анонсом, если нужно (можно оставить) -->
     <div style="text-align: center; margin: 1rem 0 1rem;">
         <p style="color: #8BA47B; font-size: 0.85rem;">✨ Больше тренажёров появится в ближайшее время. Следите за обновлениями!</p>
     </div>

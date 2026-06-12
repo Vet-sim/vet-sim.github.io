@@ -182,15 +182,15 @@
 <body>
 <div class="main-container">
     <div class="header">
-        <h1>🧩 Генератор кроссвордов</h1>
-        <div class="sub">Создавайте кроссворды из терминов — для ветеринарии и любых дисциплин</div>
+        <h1>🧩 Генератор филвордов</h1>
+        <div class="sub">Создавайте филворды из терминов — для ветеринарии и любых дисциплин</div>
     </div>
 
     <div class="toolbar">
         <label class="file-label">📂 Загрузить слова (TXT) <input type="file" id="wordsFile" accept=".txt"></label>
         <select id="gridShapeSelect"></select>
         <button id="autoPlaceBtn" class="btn btn-primary">🤖 Авторасстановка</button>
-        <button id="exportBtn" class="btn btn-accent">📥 Экспорт в кроссворд</button>
+        <button id="exportBtn" class="btn btn-accent">📥 Экспорт в филворд</button>
         <button id="clearGridBtn" class="btn btn-danger">🗑️ Сброс сетки</button>
     </div>
 
@@ -214,7 +214,7 @@
             </div>
         </div>
     </div>
-    <footer>© Преподаватель — Тераевич Алла Сергеевна, 2026. CC BY-NC. Сгенерированные кроссворды можно использовать для обучения.</footer>
+    <footer>© Преподаватель — Тераевич Алла Сергеевна, 2026. CC BY-NC. Сгенерированные филворды можно использовать для обучения.</footer>
 </div>
 
 <script>
@@ -470,7 +470,7 @@
         updateWordListUI();
     }
 
-    // Экспорт в готовый кроссворд (HTML)
+    // Экспорт в готовый филворд (HTML)
     function exportCrossword(){
         if(termList.length===0){ alert("Нет терминов для экспорта"); return; }
         // собираем вопросы с номерами
@@ -491,7 +491,7 @@
 *{box-sizing:border-box;} body{background:#FDF8F0; font-family:system-ui; padding:1.5rem;} .cross-container{max-width:800px; margin:0 auto; background:white; border-radius:2rem; padding:1.5rem; box-shadow:0 8px 20px rgba(0,0,0,0.05);}
 canvas{display:block; margin:0 auto; background:#FDF8F0;} .questions{margin-top:1.5rem;} .q-item{margin:8px 0;} input.answer{padding:5px; width:200px; margin-left:10px;} .check-btn{background:#A3B18A; border:none; padding:8px 20px; border-radius:2rem; cursor:pointer;} .result{font-weight:bold; margin-top:1rem;}
 </style></head>
-<body><div class="cross-container"><h2>🧩 Кроссворд</h2><canvas id="crossCanvas" width="${gridSize*cellSize}" height="${gridSize*cellSize}"></canvas><div class="questions"><h3>Вопросы (по горизонтали и вертикали):</h3>`;
+<body><div class="cross-container"><h2>🧩 Филворд</h2><canvas id="crossCanvas" width="${gridSize*cellSize}" height="${gridSize*cellSize}"></canvas><div class="questions"><h3>Вопросы (по горизонтали и вертикали):</h3>`;
         let qListHtml = '';
         for(let q of questions){
             qListHtml += `<div class="q-item"><strong>${q.num}.</strong> ${q.word} <input type="text" class="answer" data-word="${q.word}" placeholder="Ответ" style="margin-left:12px;"></div>`;

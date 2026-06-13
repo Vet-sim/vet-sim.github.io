@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор «Игра-бродилка» | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #E7EDE2;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2EAD9;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .field-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+        .field-option {
+            background: #F3F6EF;
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .field-option.selected {
+            background: #A3B18A;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .preview-area {
+            background: #F9F7F2;
+            border-radius: 28px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .field-canvas {
+            max-width: 100%;
+            height: auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .questions-list {
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        .question-item {
+            background: #FEFCF9;
+            border: 1px solid #E2EAD9;
+            border-radius: 60px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🎲 Конструктор «Игра-бродилка»</h1>
+    <div class="sub">Создайте викторину-ходилку для двух команд</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
+    </div>
+
+    <!-- Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="toolbar">
+            <button id="loadQuestionsBtn" class="btn btn-outline">📂 Загрузить вопросы (TXT)</button>
+            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект</button>
+            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
+        </div>
+        <div class="field-selector" id="fieldSelector"></div>
+        <div class="preview-area">
+            <canvas id="fieldCanvas" class="field-canvas" width="800" height="400" style="width:100%; height:auto; background:#FFF2E0;"></canvas>
+        </div>
+        <div class="questions-list" id="questionsList"></div>
+        <div class="info-text">
+            💡 Формат файла вопросов: каждая строка — <strong>номер_клетки; вопрос; правильный ответ</strong><br>
+            Пример: <code>5; Какой орган отвечает за фильтрацию крови?; Почки</code>
+        </div>
+    </div>
+
+    <!-- Экспорт -->
+    <div id="exportPane" class="tab-pane">
+        <div class="toolbar">
+            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовую игру</button>
+        </div>
+        <div style="background:#F3F6EF; border-radius:20px; padding:1rem;">
+            <p>✔ Выберите поле, загрузите вопросы, нажмите «Экспорт» – получите HTML-файл для студентов.</p>
+        </div>
+    </div>
+    <footer>© ВетСим — обучающая бродилка</footer>
+</div>
+
+<script>
+    // -------------------------------------------------------------
+    //  ПРЕДУСТАНОВЛЕННЫЕ ПОЛЯ (координаты клеток)
+    // -------------------------------------------------------------
+    const fields = {
+        field1: { name: "Поле 1 (30 клеток)", cells: generateRectPath(5,6), image: "field1.png" },
+        field2: { name: "Поле 2 (36 клеток)", cells: generateRectPath(6,6), image: "field2.png" },
+        field3: { name: "Поле 3 (42 клетки)", cells: generateRectPath(6,7), image: "field3.png" },
+        field4: { name: "Поле 4 (48 клеток)", cells: generateRectPath(6,8), image: "field4.png" },
+        field5: { name: "Поле 5 (54 клетки)", cells: generateRectPath(6,9), image: "field5.png" }
+    };
+    // Генерация змейки для прямоугольной сетки
+    function generateRectPath(rows, cols) {
+        const cells = [];
+        for (let i = 0; i < rows; i++) {
+            if (i % 2 === 0) {
+                for (let j = 0; j < cols; j++) cells.push({ x: j, y: i });
+            } else {
+                for (let j = cols-1; j >= 0; j--) cells.push({ x: j, y: i });
+            }
+        }
+        return cells;
+    }
+
+    let currentFieldId = "field1";
+    let questions = {}; // key: cell number (1-indexed), value: { question, answer }
+
+    const canvas = document.getElementById('fieldCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawField() {
+        const cells = fields[currentFieldId].cells;
+        const stepX = canvas.width / (Math.max(...cells.map(c=>c.x)) + 1);
+        const stepY = canvas.height / (Math.max(...cells.map(c=>c.y)) + 1);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "#FFF2E0";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.strokeStyle = "#A3B18A";
+        ctx.lineWidth = 1;
+        for (let i=0; i<cells.length; i++) {
+            const cx = cells[i].x * stepX + stepX/2;
+            const cy = cells[i].y * stepY + stepY/2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, stepX/3, 0, 2*Math.PI);
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = "#3E5C4A";
+            ctx.font = `${Math.floor(stepX/3)}px system-ui`;
+            ctx.fillText(i+1, cx-5, cy+5);
+            if (questions[i+1]) {
+                ctx.fillStyle = "#2C7DA0";
+                ctx.beginPath();
+                ctx.arc(cx+stepX/4, cy-stepY/4, 6, 0, 2*Math.PI);
+                ctx.fill();
+            }
+        }
+    }
+
+    function renderFieldSelector() {
+        const container = document.getElementById('fieldSelector');
+        container.innerHTML = '';
+        for (const [id, field] of Object.entries(fields)) {
+            const btn = document.createElement('div');
+            btn.className = 'field-option' + (currentFieldId === id ? ' selected' : '');
+            btn.textContent = field.name;
+            btn.onclick = () => {
+                currentFieldId = id;
+                renderFieldSelector();
+                drawField();
+                renderQuestionsList();
+            };
+            container.appendChild(btn);
+        }
+    }
+
+    function renderQuestionsList() {
+        const container = document.getElementById('questionsList');
+        container.innerHTML = '<div style="margin-bottom:0.5rem;"><strong>📋 Вопросы на клетках:</strong></div>';
+        const cellsCount = fields[currentFieldId].cells.length;
+        for (let i=1; i<=cellsCount; i++) {
+            if (questions[i]) {
+                const qDiv = document.createElement('div');
+                qDiv.className = 'question-item';
+                qDiv.innerHTML = `<strong>Клетка ${i}:</strong> ${escapeHtml(questions[i].question)} → <em>${escapeHtml(questions[i].answer)}</em>`;
+                container.appendChild(qDiv);
+            }
+        }
+        if (Object.keys(questions).length === 0) {
+            container.innerHTML += '<div style="color:#8A9B7A; padding:1rem;">Нет загруженных вопросов</div>';
+        }
+    }
+
+    function loadQuestionsFromTxt(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const lines = e.target.result.split(/\r?\n/);
+            const newQuestions = {};
+            for (let line of lines) {
+                line = line.trim();
+                if (line === '') continue;
+                const parts = line.split(';');
+                if (parts.length >= 3) {
+                    const cellNum = parseInt(parts[0]);
+                    const question = parts[1].trim();
+                    const answer = parts[2].trim();
+                    if (!isNaN(cellNum) && question && answer) {
+                        newQuestions[cellNum] = { question, answer };
+                    }
+                }
+            }
+            questions = newQuestions;
+            drawField();
+            renderQuestionsList();
+            alert(`Загружено вопросов: ${Object.keys(questions).length}`);
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    function saveProject() {
+        const project = {
+            fieldId: currentFieldId,
+            questions: questions
+        };
+        const dataStr = JSON.stringify(project, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'gameboard_project.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function loadProject(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const obj = JSON.parse(e.target.result);
+                currentFieldId = obj.fieldId || 'field1';
+                questions = obj.questions || {};
+                renderFieldSelector();
+                drawField();
+                renderQuestionsList();
+            } catch(err) { alert('Ошибка загрузки'); }
+        };
+        reader.readAsText(file);
+    }
+
+    function exportGame() {
+        const exportField = fields[currentFieldId];
+        const exportQuestions = JSON.parse(JSON.stringify(questions));
+        const cellsData = exportField.cells;
+        const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Игра-бродилка | ВетСим</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#FDF8F0;font-family:system-ui;padding:1.5rem;color:#3E5C4A;}
+.container{max-width:1200px;margin:0 auto;}
+h1{text-align:center;color:#1F4E6E;}
+.game-panel{display:flex;flex-wrap:wrap;gap:1.5rem;}
+.board{flex:2;min-width:300px;}
+.info{flex:1;background:#F3F6EF;border-radius:28px;padding:1rem;}
+.cells-canvas{width:100%;height:auto;background:#FFF2E0;border-radius:20px;cursor:pointer;}
+.teams{display:flex;gap:1rem;margin-bottom:1rem;}
+.team-card{background:white;border-radius:40px;padding:0.5rem 1rem;flex:1;text-align:center;}
+.team-red{background:#FFE4DE;}
+.team-blue{background:#DEEBFF;}
+.dice{text-align:center;margin:1rem 0;}
+.dice-btn{background:#2C7DA0;color:white;border:none;padding:0.6rem 1.5rem;border-radius:40px;font-size:1.2rem;cursor:pointer;}
+.dice-result{font-size:2rem;margin:0.5rem;}
+.status{background:white;border-radius:28px;padding:1rem;margin-top:1rem;}
+button:disabled{opacity:0.5;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎲 Игра-бродилка: Ветеринарная викторина</h1>
+<br>
+<div class="game-panel">
+<div class="board">
+<canvas id="boardCanvas" width="800" height="400" style="width:100%; height:auto; background:#FFF2E0; border-radius:20px;"></canvas>
+</div>
+<div class="info">
+<div class="teams">
+<div class="team-card team-red" id="team1Card"><strong>🔴 Команда 1</strong><br>Позиция: <span id="pos1">1</span></div>
+<div class="team-card team-blue" id="team2Card"><strong>🔵 Команда 2</strong><br>Позиция: <span id="pos2">1</span></div>
+</div>
+<div class="dice">
+<button id="rollBtn" class="dice-btn">🎲 Бросить кубик</button>
+<div id="diceResult" class="dice-result">⚀</div>
+<div id="turnIndicator" style="font-weight:bold;">Ход команды 1</div>
+</div>
+<div class="status" id="statusMsg"></div>
+<button id="resetGameBtn" style="margin-top:1rem; background:#E2CFB0; border:none; padding:0.5rem 1rem; border-radius:40px; cursor:pointer;">🔄 Начать заново</button>
+</div>
+</div>
+</div>
+<script>
+const cellsData = ${JSON.stringify(cellsData)};
+const questionsData = ${JSON.stringify(exportQuestions)};
+let positions = [1, 1]; // команда 1, команда 2 (индекс 0 и 1)
+let currentTeam = 0; // 0 - команда 1, 1 - команда 2
+let waitingForQuestion = false;
+let canvas = document.getElementById('boardCanvas');
+let ctx = canvas.getContext('2d');
+let stepX, stepY;
+let diceValue = 1;
+let lastRoll = 0;
+let gameActive = true;
+
+function drawBoard() {
+    const w = canvas.width, h = canvas.height;
+    const maxX = Math.max(...cellsData.map(c=>c.x));
+    const maxY = Math.max(...cellsData.map(c=>c.y));
+    stepX = w / (maxX + 1);
+    stepY = h / (maxY + 1);
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = "#FFF2E0";
+    ctx.fillRect(0,0,w,h);
+    ctx.strokeStyle = "#A3B18A";
+    ctx.lineWidth = 1;
+    for (let i=0; i<cellsData.length; i++) {
+        const cx = cellsData[i].x * stepX + stepX/2;
+        const cy = cellsData[i].y * stepY + stepY/2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, stepX/3, 0, 2*Math.PI);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#3E5C4A";
+        ctx.font = \`\${Math.floor(stepX/3)}px system-ui\`;
+        ctx.fillText(i+1, cx-5, cy+5);
+        if (questionsData[i+1]) {
+            ctx.fillStyle = "#2C7DA0";
+            ctx.beginPath();
+            ctx.arc(cx+stepX/4, cy-stepY/4, 6, 0, 2*Math.PI);
+            ctx.fill();
+        }
+    }
+    // Рисуем фишки
+    for (let t=0; t<2; t++) {
+        const pos = positions[t];
+        if (pos <= cellsData.length) {
+            const cell = cellsData[pos-1];
+            const cx = cell.x * stepX + stepX/2;
+            const cy = cell.y * stepY + stepY/2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, stepX/4, 0, 2*Math.PI);
+            ctx.fillStyle = t===0 ? "#E07A5F" : "#3D5A80";
+            ctx.fill();
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = "white";
+            ctx.font = \`bold \${Math.floor(stepX/5)}px system-ui\`;
+            ctx.fillText(t===0 ? "1" : "2", cx-5, cy+5);
+        }
+    }
+}
+
+function updateUI() {
+    document.getElementById('pos1').innerText = positions[0];
+    document.getElementById('pos2').innerText = positions[1];
+    document.getElementById('turnIndicator').innerHTML = \`Ход команды \${currentTeam+1}\`;
+    if (positions[0] >= cellsData.length) {
+        document.getElementById('statusMsg').innerHTML = "🏆 Победила команда 1! 🏆";
+        gameActive = false;
+        document.getElementById('rollBtn').disabled = true;
+    } else if (positions[1] >= cellsData.length) {
+        document.getElementById('statusMsg').innerHTML = "🏆 Победила команда 2! 🏆";
+        gameActive = false;
+        document.getElementById('rollBtn').disabled = true;
+    }
+    drawBoard();
+}
+
+function askQuestion(cellNum, callback) {
+    const q = questionsData[cellNum];
+    if (!q) { callback(true); return; }
+    waitingForQuestion = true;
+    const answer = prompt(\`❓ Вопрос для команды \${currentTeam+1} (клетка \${cellNum}):\n\n\${q.question}\`, "");
+    if (answer === null) { waitingForQuestion = false; return; }
+    const isCorrect = answer.trim().toLowerCase() === q.answer.toLowerCase();
+    if (isCorrect) {
+        alert("✅ Правильно! Остаётесь на клетке.");
+        callback(true);
+    } else {
+        alert(\`❌ Неправильно! Правильный ответ: \${q.answer}. Возвращаемся назад.\`);
+        callback(false);
+    }
+    waitingForQuestion = false;
+}
+
+function moveAndAsk(roll) {
+    if (!gameActive) return;
+    if (waitingForQuestion) return;
+    const oldPos = positions[currentTeam];
+    let newPos = oldPos + roll;
+    if (newPos > cellsData.length) newPos = cellsData.length;
+    positions[currentTeam] = newPos;
+    drawBoard();
+    if (newPos === cellsData.length) {
+        updateUI();
+        return;
+    }
+    if (questionsData[newPos]) {
+        askQuestion(newPos, (correct) => {
+            if (!correct) {
+                positions[currentTeam] = oldPos;
+                drawBoard();
+                updateUI();
+            }
+            // передача хода
+            currentTeam = (currentTeam + 1) % 2;
+            updateUI();
+        });
+    } else {
+        currentTeam = (currentTeam + 1) % 2;
+        updateUI();
+    }
+}
+
+document.getElementById('rollBtn').onclick = () => {
+    if (!gameActive) return;
+    if (waitingForQuestion) { alert("Сначала ответьте на вопрос"); return; }
+    const roll = Math.floor(Math.random() * 6) + 1;
+    diceValue = roll;
+    document.getElementById('diceResult').innerHTML = ['⚀','⚁','⚂','⚃','⚄','⚅'][roll-1];
+    moveAndAsk(roll);
+};
+document.getElementById('resetGameBtn').onclick = () => {
+    positions = [1,1];
+    currentTeam = 0;
+    gameActive = true;
+    waitingForQuestion = false;
+    document.getElementById('rollBtn').disabled = false;
+    updateUI();
+    document.getElementById('statusMsg').innerHTML = "";
+};
+drawBoard();
+updateUI();
+<\/script>
+</body>
+</html>`;
+        const blob = new Blob([html], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'gameboard.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    }
+
+    // Инициализация
+    window.onload = () => {
+        renderFieldSelector();
+        drawField();
+        document.getElementById('loadQuestionsBtn').onclick = () => {
+            const inp = document.createElement('input');
+            inp.type = 'file';
+            inp.accept = '.txt';
+            inp.onchange = e => loadQuestionsFromTxt(inp.files[0]);
+            inp.click();
+        };
+        document.getElementById('saveProjectBtn').onclick = saveProject;
+        document.getElementById('loadProjectBtn').onclick = () => {
+            const inp = document.createElement('input');
+            inp.type = 'file';
+            inp.accept = '.json';
+            inp.onchange = e => loadProject(inp.files[0]);
+            inp.click();
+        };
+        document.getElementById('exportGameBtn').onclick = exportGame;
+        // Переключение вкладок
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.onclick = () => {
+                const tab = btn.getAttribute('data-tab');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                document.getElementById(tab + 'Pane').classList.add('active');
+            };
+        });
+    };
+</script>
+</body>
+</html>

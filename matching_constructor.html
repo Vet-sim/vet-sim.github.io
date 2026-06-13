@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор «Сопоставление групп» | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #E7EDE2;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2EAD9;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #C0CFAF;
+        }
+        .pairs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .pair-row {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            background: #FEFCF9;
+            border: 1px solid #E2EAD9;
+            border-radius: 60px;
+            padding: 0.6rem 1rem;
+            flex-wrap: wrap;
+        }
+        .pair-left, .pair-right {
+            flex: 1;
+            min-width: 180px;
+        }
+        .pair-left input, .pair-right input {
+            width: 100%;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+            font-size: 0.9rem;
+        }
+        .remove-pair {
+            background: #F4E2DE;
+            border: none;
+            border-radius: 30px;
+            padding: 5px 12px;
+            cursor: pointer;
+            color: #B45F4B;
+        }
+        .info-text {
+            font-size: 0.75rem;
+            color: #8BA47B;
+            margin-top: 1rem;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+        @media (max-width: 700px) {
+            .pair-row { flex-direction: column; align-items: stretch; border-radius: 28px; }
+            .remove-pair { align-self: flex-end; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔗 Конструктор «Сопоставление групп»</h1>
+    <div class="sub">Создайте пары терминов и определений – студент будет перетаскивать</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
+    </div>
+
+    <!-- Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="toolbar">
+            <button id="addPairBtn" class="btn btn-primary">➕ Добавить пару</button>
+            <button id="loadDemoBtn" class="btn btn-outline">📋 Загрузить пример (лекарства → механизм)</button>
+        </div>
+        <div id="pairsList"></div>
+        <div class="info-text">
+            💡 Левая колонка – термин / понятие. Правая колонка – определение / описание. Готовый тренажёр позволит студенту перетаскивать определения к терминам.
+        </div>
+    </div>
+
+    <!-- Экспорт -->
+    <div id="exportPane" class="tab-pane">
+        <div class="toolbar">
+            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
+            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовое задание</button>
+        </div>
+        <div style="background:#F3F6EF; border-radius:20px; padding:1rem; margin-top:1rem;">
+            <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
+            ✔ Нажмите «Экспорт» – получите HTML-файл для студентов. Задание: перетащите определения к соответствующим терминам.</p>
+        </div>
+    </div>
+    <footer>© ВетСим — интерактивное сопоставление. Drag & drop, проверка.</footer>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Данные
+        let pairs = [];
+
+        // Элементы DOM
+        const pairsContainer = document.getElementById('pairsList');
+        const addBtn = document.getElementById('addPairBtn');
+        const demoBtn = document.getElementById('loadDemoBtn');
+        const saveBtn = document.getElementById('saveProjectBtn');
+        const loadBtn = document.getElementById('loadProjectBtn');
+        const exportBtn = document.getElementById('exportGameBtn');
+
+        if (!addBtn) console.error('addPairBtn not found');
+        if (!demoBtn) console.error('loadDemoBtn not found');
+        if (!saveBtn) console.error('saveProjectBtn not found');
+        if (!loadBtn) console.error('loadProjectBtn not found');
+        if (!exportBtn) console.error('exportGameBtn not found');
+
+        // Функция отрисовки списка пар
+        function renderPairs() {
+            if (!pairsContainer) return;
+            pairsContainer.innerHTML = '';
+            if (pairs.length === 0) {
+                pairsContainer.innerHTML = '<div style="text-align:center; color:#8A9B7A; padding:2rem;">✨ Нажмите «Добавить пару», чтобы создать упражнение</div>';
+                return;
+            }
+            for (let i = 0; i < pairs.length; i++) {
+                const p = pairs[i];
+                const row = document.createElement('div');
+                row.className = 'pair-row';
+                row.innerHTML = `
+                    <div class="pair-left">
+                        <input type="text" class="left-input" data-idx="${i}" value="${escapeHtml(p.left)}" placeholder="Термин">
+                    </div>
+                    <div class="pair-right">
+                        <input type="text" class="right-input" data-idx="${i}" value="${escapeHtml(p.right)}" placeholder="Определение">
+                    </div>
+                    <button class="remove-pair" data-idx="${i}">🗑️ Удалить</button>
+                `;
+                pairsContainer.appendChild(row);
+            }
+            // привязываем события к новым элементам
+            document.querySelectorAll('.left-input').forEach(inp => {
+                inp.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-idx'));
+                    if (!isNaN(idx) && pairs[idx]) pairs[idx].left = e.target.value;
+                });
+            });
+            document.querySelectorAll('.right-input').forEach(inp => {
+                inp.addEventListener('change', (e) => {
+                    const idx = parseInt(e.target.getAttribute('data-idx'));
+                    if (!isNaN(idx) && pairs[idx]) pairs[idx].right = e.target.value;
+                });
+            });
+            document.querySelectorAll('.remove-pair').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    if (!isNaN(idx)) {
+                        pairs.splice(idx, 1);
+                        renderPairs();
+                    }
+                });
+            });
+        }
+
+        // Добавить пару
+        function addPair() {
+            pairs.push({ left: `Термин ${pairs.length+1}`, right: `Определение ${pairs.length+1}` });
+            renderPairs();
+        }
+
+        // Загрузить демо
+        function loadDemo() {
+            pairs = [
+                { left: "Амоксициллин", right: "Полусинтетический пенициллин, активен против грамположительных бактерий" },
+                { left: "Мелоксикам", right: "НПВС, противовоспалительное, жаропонижающее, обезболивающее" },
+                { left: "Атропин", right: "М-холиноблокатор, применяется при брадикардии, отравлениях ФОС" },
+                { left: "Габапентин", right: "Противосудорожное, используется при хронической боли у животных" },
+                { left: "Преднизолон", right: "Глюкокортикоид, мощное противовоспалительное средство" }
+            ];
+            renderPairs();
+        }
+
+        // Сохранить проект
+        function saveProject() {
+            if (!pairs.length) {
+                alert('Нет данных для сохранения');
+                return;
+            }
+            const dataStr = JSON.stringify({ pairs }, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'matching_pairs.json';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        // Загрузить проект
+        function loadProject() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const obj = JSON.parse(ev.target.result);
+                        if (obj.pairs && Array.isArray(obj.pairs)) {
+                            pairs = obj.pairs;
+                            renderPairs();
+                        } else {
+                            alert('Неверный формат файла');
+                        }
+                    } catch(err) {
+                        alert('Ошибка чтения файла');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Экспорт в тренажёр
+        function exportTrainer() {
+            if (pairs.length === 0) {
+                alert('Добавьте хотя бы одну пару перед экспортом');
+                return;
+            }
+            const exportPairs = JSON.parse(JSON.stringify(pairs));
+            const html = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Сопоставление терминов | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:1rem;color:#3E5C4A;}
+        .container{max-width:1200px;margin:0 auto;}
+        h1{text-align:center;color:#1F4E6E;margin-bottom:0.5rem;}
+        .sub{text-align:center;margin-bottom:1.5rem;}
+        .game-layout{display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;}
+        .left-col, .right-col{flex:1;min-width:280px;background:#F9F7F2;border-radius:28px;padding:1.2rem;border:1px solid #E2EAD9;}
+        .col-title{font-weight:700;font-size:1.2rem;margin-bottom:1rem;text-align:center;color:#2C7DA0;}
+        .cards-list{display:flex;flex-direction:column;gap:0.8rem;}
+        .term-card{background:white;border:1px solid #D1DEC2;border-radius:60px;padding:0.8rem 1rem;cursor:pointer;}
+        .term-card.matched{background:#DAF1D8;border-color:#7CA86A;text-decoration:line-through;cursor:default;opacity:0.8;}
+        .def-card{background:#FEFCF9;border:1px solid #D1DEC2;border-radius:60px;padding:0.8rem 1rem;cursor:grab;user-select:none;}
+        .def-card.dragging{opacity:0.5;}
+        .def-card.matched{background:#DAF1D8;border-color:#7CA86A;text-decoration:line-through;cursor:default;opacity:0.6;}
+        .btn-check{background:#2C7DA0;color:white;border:none;padding:0.6rem 1.5rem;border-radius:40px;cursor:pointer;margin-top:1.5rem;}
+        .reset-btn{background:#E2CFB0;margin-left:1rem;}
+        .score{background:#F3F6EF;border-radius:40px;padding:0.5rem 1rem;text-align:center;margin:1rem 0;}
+        footer{text-align:center;margin-top:2rem;font-size:0.7rem;}
+        @media (max-width:700px){.game-layout{flex-direction:column;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🔗 Сопоставьте термины и определения</h1>
+    <div class="sub">Перетащите определение к подходящему термину</div>
+    <div class="score">Сопоставлено: <span id="matchedCount">0</span> из <span id="totalCount">0</span></div>
+    <div class="game-layout">
+        <div class="left-col"><div class="col-title">📌 Термины</div><div id="leftTerms" class="cards-list"></div></div>
+        <div class="right-col"><div class="col-title">📖 Определения</div><div id="rightDefs" class="cards-list"></div></div>
+    </div>
+    <div style="text-align:center;">
+        <button id="checkBtn" class="btn-check">Проверить</button>
+        <button id="resetBtn" class="btn-check reset-btn">Сбросить всё</button>
+    </div>
+    <footer>© ВетСим</footer>
+</div>
+<script>
+    const originalPairs = ${JSON.stringify(exportPairs)};
+    let terms = [], defs = [], dragDefId = null;
+    function init() {
+        terms = originalPairs.map((p,idx)=>({id:idx, text:p.left, matched:false, defId:null}));
+        defs = originalPairs.map((p,idx)=>({id:idx, text:p.right, matched:false, termId:null}));
+        for(let i=defs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[defs[i],defs[j]]=[defs[j],defs[i]];}
+        render();
+    }
+    function render(){
+        const leftDiv=document.getElementById('leftTerms'), rightDiv=document.getElementById('rightDefs');
+        leftDiv.innerHTML=''; rightDiv.innerHTML='';
+        terms.forEach(term=>{
+            const card=document.createElement('div');
+            card.className='term-card'+(term.matched?' matched':'');
+            card.textContent=term.text;
+            if(!term.matched){
+                card.addEventListener('dragover',e=>e.preventDefault());
+                card.addEventListener('drop',e=>{
+                    e.preventDefault();
+                    if(dragDefId===null)return;
+                    const def=defs.find(d=>d.id===dragDefId);
+                    if(!def||def.matched)return;
+                    if(def.text===originalPairs[term.id].right){
+                        term.matched=true; term.defId=def.id;
+                        def.matched=true; def.termId=term.id;
+                        render();
+                    } else alert('❌ Неправильно!');
+                    dragDefId=null;
+                });
+            }
+            leftDiv.appendChild(card);
+        });
+        defs.forEach(def=>{
+            const card=document.createElement('div');
+            card.className='def-card'+(def.matched?' matched':'');
+            card.textContent=def.text;
+            if(!def.matched){
+                card.setAttribute('draggable','true');
+                card.addEventListener('dragstart',e=>{dragDefId=def.id;e.dataTransfer.setData('text/plain',def.id);card.classList.add('dragging');});
+                card.addEventListener('dragend',e=>{card.classList.remove('dragging');dragDefId=null;});
+            } else card.setAttribute('draggable','false');
+            rightDiv.appendChild(card);
+        });
+        document.getElementById('matchedCount').innerText=terms.filter(t=>t.matched).length;
+        document.getElementById('totalCount').innerText=terms.length;
+    }
+    function check(){const all=terms.every(t=>t.matched);alert(all?'🎉 Все верно!':\`✅ Сопоставлено \${terms.filter(t=>t.matched).length} из \${terms.length}\`);}
+    function reset(){init();}
+    document.getElementById('checkBtn').addEventListener('click',check);
+    document.getElementById('resetBtn').addEventListener('click',reset);
+    init();
+<\/script>
+</body>
+</html>`;
+            const blob = new Blob([html], { type: 'text/html' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'matching_exercise.html';
+            link.click();
+            URL.revokeObjectURL(link.href);
+        }
+
+        // Escape HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+        }
+
+        // Инициализация: загружаем демо и вешаем обработчики
+        loadDemo();
+
+        // Назначаем обработчики кнопкам
+        if (addBtn) addBtn.addEventListener('click', addPair);
+        if (demoBtn) demoBtn.addEventListener('click', loadDemo);
+        if (saveBtn) saveBtn.addEventListener('click', saveProject);
+        if (loadBtn) loadBtn.addEventListener('click', loadProject);
+        if (exportBtn) exportBtn.addEventListener('click', exportTrainer);
+
+        // Переключение вкладок
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.getAttribute('data-tab');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                document.getElementById(tab + 'Pane').classList.add('active');
+                if (tab === 'editor') renderPairs(); // обновить отображение при возврате
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор «Хронология / Последовательность» | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Стили редактора */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2EAD9;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #C0CFAF;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+            font-size: 0.9rem;
+        }
+
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .step-card {
+            background: #FEFCF9;
+            border: 1px solid #E2EAD9;
+            border-radius: 24px;
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .step-order {
+            background: #F0F5EA;
+            border-radius: 40px;
+            padding: 0.3rem 0.8rem;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content input, .step-content textarea {
+            margin-bottom: 0.5rem;
+        }
+
+        .step-image {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .remove-step {
+            background: #F4E2DE;
+            border: none;
+            border-radius: 30px;
+            padding: 0.3rem 0.8rem;
+            cursor: pointer;
+            color: #B45F4B;
+        }
+
+        .add-step {
+            margin-top: 1rem;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+
+        @media (max-width: 700px) {
+            .step-card { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⏳ Конструктор «Хронология / Последовательность»</h1>
+    <div class="sub">Создайте упражнение: расположите шаги в правильном порядке</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
+    </div>
+
+    <!-- Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="toolbar">
+            <button id="addStepBtn" class="btn btn-primary">+ Добавить шаг</button>
+            <button id="resetDemoBtn" class="btn btn-outline">📋 Загрузить пример (жизненный цикл аскариды)</button>
+        </div>
+        <div id="stepsContainer" class="steps-list"></div>
+    </div>
+
+    <!-- Экспорт -->
+    <div id="exportPane" class="tab-pane">
+        <div class="toolbar">
+            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
+            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовое задание</button>
+        </div>
+        <div style="background:#F3F6EF; border-radius:20px; padding:1rem; margin-top:1rem;">
+            <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
+            ✔ Нажмите «Экспорт» – получите HTML-файл для студентов. Они будут перетаскивать шаги в правильную последовательность.</p>
+        </div>
+    </div>
+    <footer>© ВетСим — интерактивная последовательность. Drag & drop, проверка порядка.</footer>
+</div>
+
+<script>
+    // ----- Данные -----
+    let steps = [];  // каждый элемент: { id, text, imageUrl }
+    let nextId = 1;
+
+    // Демо-данные: жизненный цикл аскариды (пример для ветеринарии)
+    function loadDemo() {
+        steps = [
+            { id: nextId++, text: "Яйца аскариды с личинкой попадают в окружающую среду с фекалиями", imageUrl: "" },
+            { id: nextId++, text: "Личинка развивается в яйце до инвазионной стадии (2-3 недели)", imageUrl: "" },
+            { id: nextId++, text: "Животное заглатывает инвазионные яйца с кормом или водой", imageUrl: "" },
+            { id: nextId++, text: "В тонком кишечнике из яиц выходят личинки", imageUrl: "" },
+            { id: nextId++, text: "Личинки мигрируют через стенку кишки, кровь, печень, лёгкие", imageUrl: "" },
+            { id: nextId++, text: "Из лёгких личинки поднимаются в глотку и заглатываются", imageUrl: "" },
+            { id: nextId++, text: "В тонком кишечнике личинки превращаются во взрослых аскарид", imageUrl: "" },
+            { id: nextId++, text: "Самки откладывают яйца, цикл повторяется", imageUrl: "" }
+        ];
+        renderEditor();
+    }
+
+    function renderEditor() {
+        const container = document.getElementById('stepsContainer');
+        container.innerHTML = '';
+        steps.forEach((step, idx) => {
+            const card = document.createElement('div');
+            card.className = 'step-card';
+            card.innerHTML = `
+                <div class="step-order">Шаг ${idx+1}</div>
+                <div class="step-content">
+                    <input type="text" class="step-text" data-id="${step.id}" value="${escapeHtml(step.text)}" placeholder="Текст шага">
+                    <div class="step-image">
+                        <input type="text" class="step-image-url" data-id="${step.id}" value="${escapeHtml(step.imageUrl)}" placeholder="URL изображения (опционально)">
+                    </div>
+                </div>
+                <button class="remove-step" data-id="${step.id}">🗑️ Удалить</button>
+            `;
+            container.appendChild(card);
+        });
+        // обработчики
+        document.querySelectorAll('.step-text').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                const id = parseInt(inp.getAttribute('data-id'));
+                const step = steps.find(s => s.id === id);
+                if (step) step.text = inp.value;
+            });
+        });
+        document.querySelectorAll('.step-image-url').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                const id = parseInt(inp.getAttribute('data-id'));
+                const step = steps.find(s => s.id === id);
+                if (step) step.imageUrl = inp.value;
+            });
+        });
+        document.querySelectorAll('.remove-step').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                steps = steps.filter(s => s.id !== id);
+                renderEditor();
+            });
+        });
+    }
+
+    function addStep() {
+        steps.push({ id: nextId++, text: "Новый шаг", imageUrl: "" });
+        renderEditor();
+    }
+
+    function saveProject() {
+        const project = { steps, nextId };
+        const dataStr = JSON.stringify(project, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'sequence_project.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function loadProject(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const proj = JSON.parse(e.target.result);
+                steps = proj.steps || [];
+                nextId = proj.nextId || 1;
+                renderEditor();
+            } catch(err) { alert('Ошибка загрузки'); }
+        };
+        reader.readAsText(file);
+    }
+
+    // Экспорт готового тренажёра для студентов
+    function exportGame() {
+        const stepsData = JSON.parse(JSON.stringify(steps));
+        const htmlContent = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Восстанови последовательность | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:1.5rem;color:#3E5C4A;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{text-align:center;color:#1F4E6E;margin-bottom:0.5rem;}
+        .sub{text-align:center;margin-bottom:1.5rem;}
+        .steps-list{display:flex;flex-direction:column;gap:1rem;margin:1rem 0;}
+        .step-card{background:#FEFCF9;border:1px solid #E2EAD9;border-radius:24px;padding:1rem;display:flex;align-items:center;gap:1rem;cursor:grab;transition:0.1s;}
+        .step-card.dragging{opacity:0.5;}
+        .step-order{background:#F0F5EA;border-radius:40px;padding:0.3rem 0.8rem;font-weight:bold;min-width:60px;text-align:center;}
+        .step-content{flex:1;}
+        .step-image{max-width:100px; max-height:60px; margin-top:5px; object-fit:contain;}
+        .btn{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:1rem;}
+        .reset-btn{background:#E2CFB0;margin-left:1rem;}
+        .feedback{text-align:center;margin-top:1rem;font-weight:bold;padding:0.5rem;border-radius:40px;}
+        .correct-feedback{background:#DAF1D8;color:#2A6B2F;}
+        .wrong-feedback{background:#FFE4DE;color:#BC5A3C;}
+        footer{text-align:center;margin-top:2rem;font-size:0.7rem;}
+        @media (max-width:700px){.step-card{flex-direction:column;align-items:stretch;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⏳ Расположите шаги в правильном порядке</h1>
+    <div class="sub">Перетаскивайте карточки, чтобы восстановить последовательность</div>
+    <div id="gameArea"></div>
+    <div style="text-align:center;">
+        <button id="checkBtn" class="btn">Проверить порядок</button>
+        <button id="resetBtn" class="btn reset-btn">Сбросить</button>
+    </div>
+    <div id="feedback" class="feedback"></div>
+    <footer>© ВетСим – интерактивная хронология</footer>
+</div>
+<script>
+    const correctSteps = ${JSON.stringify(stepsData)};
+    let currentSteps = [];
+    let dragIndex = null;
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function init() {
+        currentSteps = shuffleArray([...correctSteps]);
+        render();
+    }
+
+    function render() {
+        const container = document.getElementById('gameArea');
+        let html = '<div class="steps-list">';
+        currentSteps.forEach((step, idx) => {
+            html += \`
+                <div class="step-card" draggable="true" data-index="\${idx}">
+                    <div class="step-order">Шаг \${idx+1}</div>
+                    <div class="step-content">
+                        <div>\${escapeHtml(step.text)}</div>
+                        \${step.imageUrl ? \`<img src="\${step.imageUrl}" class="step-image" onerror="this.style.display='none'">\` : ''}
+                    </div>
+                </div>
+            \`;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        attachDragEvents();
+    }
+
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    function attachDragEvents() {
+        const items = document.querySelectorAll('.step-card');
+        items.forEach((item, idx) => {
+            item.setAttribute('draggable', 'true');
+            item.addEventListener('dragstart', (e) => {
+                dragIndex = idx;
+                e.dataTransfer.setData('text/plain', idx);
+                item.classList.add('dragging');
+            });
+            item.addEventListener('dragend', (e) => {
+                item.classList.remove('dragging');
+                dragIndex = null;
+            });
+            item.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            item.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const targetIndex = idx;
+                if (dragIndex !== null && dragIndex !== targetIndex) {
+                    const moved = currentSteps[dragIndex];
+                    currentSteps.splice(dragIndex, 1);
+                    currentSteps.splice(targetIndex, 0, moved);
+                    render();
+                }
+            });
+        });
+    }
+
+    function checkOrder() {
+        let correct = true;
+        for (let i = 0; i < currentSteps.length; i++) {
+            if (currentSteps[i].id !== correctSteps[i].id) {
+                correct = false;
+                break;
+            }
+        }
+        const feedbackDiv = document.getElementById('feedback');
+        if (correct) {
+            feedbackDiv.innerHTML = '✅ Поздравляем! Порядок абсолютно верный.';
+            feedbackDiv.className = 'feedback correct-feedback';
+        } else {
+            feedbackDiv.innerHTML = '❌ Неправильный порядок. Попробуйте ещё раз.';
+            feedbackDiv.className = 'feedback wrong-feedback';
+        }
+    }
+
+    function resetGame() {
+        init();
+        document.getElementById('feedback').innerHTML = '';
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', checkOrder);
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+    init();
+<\/script>
+</body>
+</html>`;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'sequence_trainer.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    }
+
+    // Инициализация
+    function init() {
+        loadDemo();
+        document.getElementById('addStepBtn').addEventListener('click', addStep);
+        document.getElementById('resetDemoBtn').addEventListener('click', loadDemo);
+        document.getElementById('saveProjectBtn').addEventListener('click', saveProject);
+        document.getElementById('loadProjectBtn').addEventListener('click', () => {
+            const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json';
+            inp.onchange = e => loadProject(inp.files[0]);
+            inp.click();
+        });
+        document.getElementById('exportGameBtn').addEventListener('click', exportGame);
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                document.getElementById(btn.dataset.tab + 'Pane').classList.add('active');
+                if (btn.dataset.tab === 'editor') renderEditor();
+            });
+        });
+    }
+
+    init();
+</script>
+</body>
+</html>

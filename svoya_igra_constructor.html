@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор «Своя игра» | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+        }
+        /* вкладки */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            border: 1px solid #E7EDE2;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        /* редактор тем и вопросов */
+        .theme-block {
+            background: #FEFCF9;
+            border: 1px solid #E2EAD9;
+            border-radius: 24px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .theme-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .theme-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .q-row {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .q-points {
+            width: 80px;
+            padding: 6px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+            text-align: center;
+        }
+        .q-question {
+            flex: 2;
+            min-width: 180px;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+        }
+        .q-answer {
+            flex: 2;
+            min-width: 180px;
+            padding: 6px 12px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+        }
+        .btn-icon {
+            background: #EEF2E9;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .flex-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+        .export-preview {
+            background: #F3F6EF;
+            border-radius: 28px;
+            padding: 1rem;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        @media (max-width: 700px) {
+            .q-row { flex-direction: column; align-items: stretch; }
+            .q-points { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🎮 Конструктор «Своя игра»</h1>
+    <div class="sub">Создайте викторину по типу Jeopardy! — темы, вопросы разной стоимости, ответы</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт в игру</button>
+    </div>
+
+    <!-- Вкладка редактора -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="flex-row">
+            <button id="addThemeBtn" class="btn-primary">➕ Добавить тему</button>
+            <button id="saveGameBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadGameBtn" class="btn-secondary">📂 Загрузить проект</button>
+        </div>
+        <div id="themesContainer"></div>
+        <p style="margin-top: 1rem; font-size: 0.8rem; color: #8BA47B;">Подсказка: для каждой темы можно добавить вопросы разной стоимости (например, 100, 200, 300...). Стоимость может быть любой.</p>
+    </div>
+
+    <!-- Вкладка экспорта (инструкция + кнопка) -->
+    <div id="exportPane" class="tab-pane">
+        <div class="export-preview">
+            <h3>📌 Как экспортировать готовую игру</h3>
+            <p>После того как вы создали темы и вопросы, нажмите кнопку ниже. Браузер скачает файл <strong>ready_game.html</strong>. Этот файл можно открыть на любом компьютере без интернета и использовать для игры со студентами.</p>
+            <button id="exportGameBtn" class="btn-primary" style="margin-top: 1rem;">⬇️ Экспортировать готовую игру</button>
+        </div>
+    </div>
+
+    <footer>© ВетСим — интерактивное обучение. Своя игра: темы, вопросы, ответы.</footer>
+</div>
+
+<script>
+    // Структура: массив тем, каждая тема: { name: "Название", questions: [{ points: 100, question: "...", answer: "..." }] }
+    let gameData = {
+        themes: []
+    };
+
+    const themesContainer = document.getElementById('themesContainer');
+
+    // Сохранение в JSON
+    function saveGameToJSON() {
+        const dataStr = JSON.stringify(gameData, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'jeopardy_project.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    // Загрузка из JSON
+    function loadGameFromJSON(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const loaded = JSON.parse(e.target.result);
+                if (loaded.themes && Array.isArray(loaded.themes)) {
+                    gameData = loaded;
+                    renderEditor();
+                } else {
+                    alert("Неверный формат файла");
+                }
+            } catch(err) { alert("Ошибка чтения файла"); }
+        };
+        reader.readAsText(file);
+    }
+
+    // Рендер редактора
+    function renderEditor() {
+        themesContainer.innerHTML = '';
+        if (gameData.themes.length === 0) {
+            themesContainer.innerHTML = '<div style="background:#F3F6EF; border-radius:28px; padding:2rem; text-align:center;">➕ Нажмите «Добавить тему», чтобы начать</div>';
+            return;
+        }
+        gameData.themes.forEach((theme, tIdx) => {
+            const themeDiv = document.createElement('div');
+            themeDiv.className = 'theme-block';
+            themeDiv.innerHTML = `
+                <div class="theme-header">
+                    <input type="text" class="theme-name-input" data-theme="${tIdx}" value="${escapeHtml(theme.name)}" placeholder="Название темы" style="font-weight:700; font-size:1.1rem; border:none; background:transparent; border-bottom:1px solid #D1DEC2; padding:4px; width:70%;">
+                    <button class="btn-icon remove-theme" data-theme="${tIdx}">🗑️ Удалить тему</button>
+                </div>
+                <div id="questions-${tIdx}" style="margin-top: 1rem;"></div>
+                <button class="add-question-btn btn-icon" data-theme="${tIdx}">+ Добавить вопрос</button>
+            `;
+            themesContainer.appendChild(themeDiv);
+
+            const questionsContainer = document.getElementById(`questions-${tIdx}`);
+            if (questionsContainer) {
+                theme.questions.forEach((q, qIdx) => {
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'q-row';
+                    qDiv.innerHTML = `
+                        <input type="number" class="q-points" data-theme="${tIdx}" data-q="${qIdx}" value="${q.points}" placeholder="Стоимость" style="width:100px;">
+                        <input type="text" class="q-question" data-theme="${tIdx}" data-q="${qIdx}" value="${escapeHtml(q.question)}" placeholder="Вопрос">
+                        <input type="text" class="q-answer" data-theme="${tIdx}" data-q="${qIdx}" value="${escapeHtml(q.answer)}" placeholder="Ответ (правильный)">
+                        <button class="btn-icon remove-question" data-theme="${tIdx}" data-q="${qIdx}">✖</button>
+                    `;
+                    questionsContainer.appendChild(qDiv);
+                });
+            }
+
+            // обработчики для этой темы
+            themeDiv.querySelector('.remove-theme').addEventListener('click', () => {
+                gameData.themes.splice(tIdx, 1);
+                renderEditor();
+            });
+            themeDiv.querySelector('.theme-name-input').addEventListener('change', (e) => {
+                gameData.themes[tIdx].name = e.target.value;
+            });
+            themeDiv.querySelector('.add-question-btn').addEventListener('click', () => {
+                gameData.themes[tIdx].questions.push({ points: 100, question: "Новый вопрос", answer: "Ответ" });
+                renderEditor();
+            });
+        });
+        attachQuestionEvents();
+    }
+
+    function attachQuestionEvents() {
+        // изменение стоимости
+        document.querySelectorAll('.q-points').forEach(inp => {
+            inp.removeEventListener('change', changePoints);
+            inp.addEventListener('change', changePoints);
+            function changePoints(e) {
+                let tIdx = parseInt(inp.getAttribute('data-theme'));
+                let qIdx = parseInt(inp.getAttribute('data-q'));
+                gameData.themes[tIdx].questions[qIdx].points = parseInt(inp.value);
+            }
+        });
+        // изменение вопроса
+        document.querySelectorAll('.q-question').forEach(inp => {
+            inp.removeEventListener('change', changeQuestion);
+            inp.addEventListener('change', changeQuestion);
+            function changeQuestion(e) {
+                let tIdx = parseInt(inp.getAttribute('data-theme'));
+                let qIdx = parseInt(inp.getAttribute('data-q'));
+                gameData.themes[tIdx].questions[qIdx].question = inp.value;
+            }
+        });
+        // изменение ответа
+        document.querySelectorAll('.q-answer').forEach(inp => {
+            inp.removeEventListener('change', changeAnswer);
+            inp.addEventListener('change', changeAnswer);
+            function changeAnswer(e) {
+                let tIdx = parseInt(inp.getAttribute('data-theme'));
+                let qIdx = parseInt(inp.getAttribute('data-q'));
+                gameData.themes[tIdx].questions[qIdx].answer = inp.value;
+            }
+        });
+        // удаление вопроса
+        document.querySelectorAll('.remove-question').forEach(btn => {
+            btn.removeEventListener('click', removeQ);
+            btn.addEventListener('click', removeQ);
+            function removeQ(e) {
+                let tIdx = parseInt(btn.getAttribute('data-theme'));
+                let qIdx = parseInt(btn.getAttribute('data-q'));
+                gameData.themes[tIdx].questions.splice(qIdx, 1);
+                renderEditor();
+            }
+        });
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
+    // Экспорт готовой игры (отдельный HTML)
+    function exportGame() {
+        if (gameData.themes.length === 0) {
+            alert("Добавьте хотя бы одну тему с вопросами!");
+            return;
+        }
+        const gameDataStr = JSON.stringify(gameData);
+        const standaloneHTML = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Своя игра | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1F3B3A;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #F4E9D8;
+            padding: 1rem;
+        }
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 #0F2A28;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .theme-col {
+            background: #2C5F5A;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        .theme-title {
+            background: #1F4E4A;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #3D807A;
+        }
+        .question-cell {
+            background: #3A7C76;
+            margin: 0.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        .question-cell.used {
+            background: #5C9E97;
+            cursor: default;
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+        .question-cell:hover:not(.used) {
+            background: #4F958D;
+            transform: scale(1.02);
+        }
+        .question-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: #FDF8F0;
+            color: #2C3E2F;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 2rem;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        .modal-question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+        .modal-answer {
+            background: #E2EAD9;
+            border-radius: 2rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+            font-size: 1.1rem;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        button {
+            background: #2C7DA0;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn {
+            background: #A3B18A;
+        }
+        .score-board {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            background: #1F4E4A;
+            padding: 0.5rem;
+            border-radius: 2rem;
+            display: inline-block;
+            width: auto;
+        }
+        .reset-game {
+            background: #D4A373;
+            margin-left: 1rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+        @media (max-width: 700px) {
+            .game-board { grid-template-columns: 1fr; }
+            .theme-title { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <h1>🎲 СВОЯ ИГРА</h1>
+        <div><span class="score-board">💰 Счёт: <span id="score">0</span></span>
+        <button id="resetAllBtn" class="reset-game">🔄 Начать заново</button></div>
+    </div>
+    <div id="gameBoard" class="game-board"></div>
+    <footer>© ВетСим — образовательная игра. Вопросы созданы преподавателем.</footer>
+</div>
+<script>
+    const gameData = ${gameDataStr};
+    let scores = 0;
+    let usedQuestions = []; // массив {themeIdx, qIdx}
+
+    function renderBoard() {
+        const board = document.getElementById('gameBoard');
+        board.innerHTML = '';
+        gameData.themes.forEach((theme, tIdx) => {
+            const col = document.createElement('div');
+            col.className = 'theme-col';
+            col.innerHTML = \`<div class="theme-title">\${escapeHtml(theme.name)}</div>\`;
+            theme.questions.forEach((q, qIdx) => {
+                const isUsed = usedQuestions.some(u => u.themeIdx === tIdx && u.qIdx === qIdx);
+                const cell = document.createElement('div');
+                cell.className = 'question-cell' + (isUsed ? ' used' : '');
+                cell.textContent = q.points;
+                if (!isUsed) {
+                    cell.addEventListener('click', () => openQuestion(tIdx, qIdx));
+                }
+                col.appendChild(cell);
+            });
+            board.appendChild(col);
+        });
+    }
+
+    function openQuestion(themeIdx, qIdx) {
+        const q = gameData.themes[themeIdx].questions[qIdx];
+        const modal = document.createElement('div');
+        modal.className = 'question-modal';
+        modal.innerHTML = \`
+            <div class="modal-card">
+                <div class="modal-question">❓ \${escapeHtml(q.question)}</div>
+                <div class="modal-buttons">
+                    <button class="show-answer-btn">Показать ответ</button>
+                    <button class="correct-btn">✅ Верно (+ \${q.points})</button>
+                    <button class="wrong-btn">❌ Неверно (0)</button>
+                    <button class="close-btn">✖ Закрыть</button>
+                </div>
+                <div class="modal-answer">📖 Ответ: \${escapeHtml(q.answer)}</div>
+            </div>
+        \`;
+        document.body.appendChild(modal);
+
+        const showAnswerBtn = modal.querySelector('.show-answer-btn');
+        const answerDiv = modal.querySelector('.modal-answer');
+        showAnswerBtn.addEventListener('click', () => {
+            answerDiv.style.display = 'block';
+        });
+        const correctBtn = modal.querySelector('.correct-btn');
+        const wrongBtn = modal.querySelector('.wrong-btn');
+        const closeBtn = modal.querySelector('.close-btn');
+
+        function closeModal(addScore) {
+            if (addScore !== undefined) {
+                scores += addScore;
+                document.getElementById('score').textContent = scores;
+                // отметить вопрос использованным
+                if (!usedQuestions.some(u => u.themeIdx === themeIdx && u.qIdx === qIdx)) {
+                    usedQuestions.push({ themeIdx, qIdx });
+                }
+                renderBoard();
+            }
+            modal.remove();
+        }
+
+        correctBtn.addEventListener('click', () => closeModal(q.points));
+        wrongBtn.addEventListener('click', () => closeModal(0));
+        closeBtn.addEventListener('click', () => closeModal());
+    }
+
+    function resetGame() {
+        scores = 0;
+        usedQuestions = [];
+        document.getElementById('score').textContent = scores;
+        renderBoard();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
+    document.getElementById('resetAllBtn').addEventListener('click', resetGame);
+    renderBoard();
+<\/script>
+</body>
+</html>`;
+        const blob = new Blob([standaloneHTML], {type: 'text/html'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'ready_game.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    // Инициализация демо-примера
+    function initDemo() {
+        if (gameData.themes.length === 0) {
+            gameData.themes = [
+                { name: "Анатомия", questions: [
+                    { points: 100, question: "Как называется первый черепно-мозговой нерв?", answer: "Обонятельный" },
+                    { points: 200, question: "Сколько пар черепно-мозговых нервов у собаки?", answer: "12" },
+                    { points: 300, question: "Какой нерв иннервирует жевательные мышцы?", answer: "Тройничный (V пара)" }
+                ]},
+                { name: "Фармакология", questions: [
+                    { points: 100, question: "Какое лекарство используется для экстренной анестезии?", answer: "Пропофол" },
+                    { points: 200, question: "Что означает аббревиатура НПВС?", answer: "Нестероидные противовоспалительные средства" }
+                ]}
+            ];
+            renderEditor();
+        }
+    }
+
+    // Обработчики кнопок
+    document.getElementById('addThemeBtn').addEventListener('click', () => {
+        gameData.themes.push({ name: "Новая тема", questions: [] });
+        renderEditor();
+    });
+    document.getElementById('saveGameBtn').addEventListener('click', saveGameToJSON);
+    document.getElementById('loadGameBtn').addEventListener('click', () => {
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
+        inp.onchange = e => loadGameFromJSON(inp.files[0]);
+        inp.click();
+    });
+    document.getElementById('exportGameBtn').addEventListener('click', exportGame);
+
+    // Переключение вкладок
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(btn.dataset.tab + 'Pane').classList.add('active');
+        });
+    });
+
+    initDemo();
+</script>
+</body>
+</html>

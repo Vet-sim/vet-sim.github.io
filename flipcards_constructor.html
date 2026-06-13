@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор Flip‑карточки | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #E7EDE2;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2EAD9;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .cards-editor {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .card-row {
+            background: #FEFCF9;
+            border: 1px solid #E2EAD9;
+            border-radius: 28px;
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+        .card-front, .card-back {
+            flex: 1;
+            min-width: 200px;
+        }
+        .card-front textarea, .card-back textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 24px;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            resize: vertical;
+        }
+        .remove-card {
+            background: #F4E2DE;
+            border: none;
+            border-radius: 30px;
+            padding: 6px 12px;
+            cursor: pointer;
+            color: #B45F4B;
+        }
+        .info-text {
+            font-size: 0.75rem;
+            color: #8BA47B;
+            margin-top: 1rem;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+        @media (max-width: 700px) {
+            .card-row { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🃏 Конструктор «Flip‑карточки»</h1>
+    <div class="sub">Создайте набор двусторонних карточек (текст)</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
+    </div>
+
+    <!-- Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="toolbar">
+            <button id="addCardBtn" class="btn btn-primary">➕ Добавить карточку</button>
+            <button id="loadDemoBtn" class="btn btn-outline">📋 Загрузить пример (анатомия)</button>
+        </div>
+        <div id="cardsEditor" class="cards-editor"></div>
+        <div class="info-text">
+            💡 Лицевая сторона – вопрос/термин. Оборотная сторона – ответ/определение.
+        </div>
+    </div>
+
+    <!-- Экспорт -->
+    <div id="exportPane" class="tab-pane">
+        <div class="toolbar">
+            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
+            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовый тренажёр</button>
+        </div>
+        <div style="background:#F3F6EF; border-radius:20px; padding:1rem;">
+            <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
+            ✔ Нажмите «Экспорт» – получите HTML-файл для студентов.</p>
+        </div>
+    </div>
+    <footer>© ВетСим — интерактивные карточки</footer>
+</div>
+
+<script>
+    (function() {
+        let cards = [];
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+        }
+
+        function renderEditor() {
+            const container = document.getElementById('cardsEditor');
+            if (!container) return;
+            container.innerHTML = '';
+            if (cards.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:2rem;">✨ Нажмите «Добавить карточку»</div>';
+                return;
+            }
+            for (let i = 0; i < cards.length; i++) {
+                const card = cards[i];
+                const row = document.createElement('div');
+                row.className = 'card-row';
+                row.setAttribute('data-idx', i);
+                row.innerHTML = `
+                    <div class="card-front">
+                        <textarea class="front-text" rows="2" placeholder="Лицевая сторона (вопрос)">${escapeHtml(card.front)}</textarea>
+                    </div>
+                    <div class="card-back">
+                        <textarea class="back-text" rows="2" placeholder="Оборотная сторона (ответ)">${escapeHtml(card.back)}</textarea>
+                    </div>
+                    <button class="remove-card" data-idx="${i}">🗑️ Удалить</button>
+                `;
+                container.appendChild(row);
+            }
+            // Привязка событий
+            document.querySelectorAll('.front-text').forEach(ta => {
+                const idx = parseInt(ta.closest('.card-row').getAttribute('data-idx'));
+                ta.oninput = () => { if (cards[idx]) cards[idx].front = ta.value; };
+            });
+            document.querySelectorAll('.back-text').forEach(ta => {
+                const idx = parseInt(ta.closest('.card-row').getAttribute('data-idx'));
+                ta.oninput = () => { if (cards[idx]) cards[idx].back = ta.value; };
+            });
+            document.querySelectorAll('.remove-card').forEach(btn => {
+                btn.onclick = () => {
+                    const idx = parseInt(btn.getAttribute('data-idx'));
+                    cards.splice(idx, 1);
+                    renderEditor();
+                };
+            });
+        }
+
+        function addCard() {
+            cards.push({ front: 'Новый термин', back: 'Новое определение' });
+            renderEditor();
+        }
+
+        function loadDemo() {
+            cards = [
+                { front: 'Сколько пар черепно-мозговых нервов у собаки?', back: '12 пар' },
+                { front: 'Какой нерв отвечает за обоняние?', back: 'Обонятельный нерв (I пара)' },
+                { front: 'Назовите основные методы клинического обследования', back: 'Осмотр, пальпация, перкуссия, аускультация' },
+                { front: 'Что такое кетоз?', back: 'Нарушение обмена веществ с накоплением кетоновых тел' }
+            ];
+            renderEditor();
+        }
+
+        function saveProject() {
+            if (!cards.length) { alert('Нет карточек для сохранения'); return; }
+            const blob = new Blob([JSON.stringify({ cards }, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'flipcards_project.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        function loadProject() {
+            const inp = document.createElement('input');
+            inp.type = 'file';
+            inp.accept = '.json';
+            inp.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    try {
+                        const obj = JSON.parse(ev.target.result);
+                        if (obj.cards && Array.isArray(obj.cards)) {
+                            cards = obj.cards;
+                            renderEditor();
+                        } else alert('Неверный формат');
+                    } catch(err) { alert('Ошибка загрузки'); }
+                };
+                reader.readAsText(file);
+            };
+            inp.click();
+        }
+
+        function exportGame() {
+            if (!cards.length) { alert('Добавьте карточки'); return; }
+            const exportCards = JSON.parse(JSON.stringify(cards));
+            const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Flip‑карточки | ВетСим</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#FDF8F0;font-family:system-ui;padding:1.5rem;color:#3E5C4A;}
+.container{max-width:1000px;margin:0 auto;}
+h1{text-align:center;color:#1F4E6E;}
+.stats{display:flex;justify-content:space-between;background:#F3F6EF;border-radius:40px;padding:0.5rem 1rem;margin:1rem 0;}
+.card-container{perspective:1000px;margin:1rem auto;max-width:500px;cursor:pointer;}
+.flip-card{position:relative;width:100%;aspect-ratio:4/3;transition:transform 0.6s;transform-style:preserve-3d;border-radius:28px;}
+.flip-card.flipped{transform:rotateY(180deg);}
+.front,.back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:28px;padding:1rem;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1rem;}
+.front{background:white;border:2px solid #A3B18A;color:#2C7DA0;}
+.back{background:#2C7DA0;color:white;transform:rotateY(180deg);}
+.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:0.8rem;margin:1.5rem 0;}
+.btn{background:#EEF2E9;border:none;padding:0.6rem 1.2rem;border-radius:40px;cursor:pointer;}
+.btn-primary{background:#2C7DA0;color:white;}
+.btn-secondary{background:#A3B18A;color:white;}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🃏 Flip‑карточки</h1>
+<div class="stats"><span>📊 Карточка <span id="currentIdx">1</span> из <span id="totalCount">0</span></span>
+<span>✅ Выучено: <span id="learnedCount">0</span></span>
+<button id="shuffleBtn" class="btn">🔀 Перемешать</button>
+<button id="resetLearnedBtn" class="btn">🔄 Сбросить</button></div>
+<div class="card-container"><div class="flip-card" id="flipCard"><div class="front" id="frontSide"></div><div class="back" id="backSide"></div></div></div>
+<div class="controls">
+<button id="prevBtn" class="btn">◀ Предыдущая</button>
+<button id="flipBtn" class="btn btn-primary">🔄 Перевернуть</button>
+<button id="nextBtn" class="btn">Следующая ▶</button>
+<button id="knowBtn" class="btn btn-secondary">✅ Знаю</button>
+<button id="dontKnowBtn" class="btn">❌ Не знаю</button>
+</div>
+</div>
+<script>
+const cardsData = ${JSON.stringify(exportCards)};
+let cards = cardsData.map(c => ({ front: c.front, back: c.back, learned: false }));
+let idx=0, flipped=false;
+function escapeHtml(s){if(!s)return '';return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);}
+function update(){document.getElementById('frontSide').innerHTML=escapeHtml(cards[idx].front);document.getElementById('backSide').innerHTML=escapeHtml(cards[idx].back);if(flipped)document.getElementById('flipCard').classList.add('flipped');else document.getElementById('flipCard').classList.remove('flipped');document.getElementById('currentIdx').innerHTML=idx+1;document.getElementById('totalCount').innerHTML=cards.length;let l=cards.filter(c=>c.learned).length;document.getElementById('learnedCount').innerHTML=l;}
+function flip(){flipped=!flipped;update();}
+function next(){if(idx+1<cards.length){idx++;flipped=false;update();}else alert('Последняя карточка');}
+function prev(){if(idx>0){idx--;flipped=false;update();}else alert('Первая карточка');}
+function mark(l){cards[idx].learned=l;if(idx+1<cards.length){idx++;flipped=false;update();}else alert('Все карточки пройдены');update();}
+function shuffle(){for(let i=cards.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}idx=0;flipped=false;update();}
+function resetLearn(){cards.forEach(c=>c.learned=false);idx=0;flipped=false;update();}
+document.getElementById('flipBtn').onclick=flip;document.getElementById('nextBtn').onclick=next;document.getElementById('prevBtn').onclick=prev;document.getElementById('knowBtn').onclick=()=>mark(true);document.getElementById('dontKnowBtn').onclick=()=>mark(false);document.getElementById('shuffleBtn').onclick=shuffle;document.getElementById('resetLearnedBtn').onclick=resetLearn;document.getElementById('cardContainer').onclick=flip;
+update();
+<\/script>
+</body>
+</html>`;
+            const blob = new Blob([html], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'flipcards_game.html';
+            a.click();
+            URL.revokeObjectURL(a.href);
+        }
+
+        function init() {
+            loadDemo(); // стартовый демо-набор
+            document.getElementById('addCardBtn').onclick = addCard;
+            document.getElementById('loadDemoBtn').onclick = loadDemo;
+            document.getElementById('saveProjectBtn').onclick = saveProject;
+            document.getElementById('loadProjectBtn').onclick = loadProject;
+            document.getElementById('exportGameBtn').onclick = exportGame;
+
+            const btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(btn => {
+                btn.onclick = function() {
+                    const tab = this.getAttribute('data-tab');
+                    btns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                    document.getElementById(tab + 'Pane').classList.add('active');
+                    if (tab === 'editor') renderEditor();
+                };
+            });
+        }
+
+        init();
+    })();
+</script>
+</body>
+</html>

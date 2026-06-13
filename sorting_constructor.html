@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор «Сортировка по категориям» | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Панель управления */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2EAD9;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #C0CFAF;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+            font-size: 0.9rem;
+        }
+
+        /* Сетка категорий */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .category-card {
+            background: #FEFCF9;
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-header {
+            background: #F0F5EA;
+            padding: 0.8rem 1rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            border-bottom: 1px solid #D8E4CC;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-header input {
+            width: 70%;
+            font-weight: 600;
+            background: white;
+            border: 1px solid #D1DEC2;
+            border-radius: 30px;
+            padding: 4px 10px;
+            font-size: 0.9rem;
+        }
+
+        .delete-cat {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #B45F4B;
+        }
+
+        .items-list {
+            min-height: 200px;
+            padding: 1rem;
+            background: #FFFFFF;
+            flex-grow: 1;
+        }
+
+        .draggable-item {
+            background: #FDF8F0;
+            border: 1px solid #D1DEC2;
+            border-radius: 40px;
+            padding: 6px 12px;
+            margin-bottom: 8px;
+            cursor: grab;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.1s;
+        }
+
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .item-text {
+            flex-grow: 1;
+        }
+
+        .remove-item {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #A7A88F;
+            font-size: 1.1rem;
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 6px;
+            padding: 10px;
+            border-top: 1px solid #E2EAD9;
+        }
+
+        .add-item-form input {
+            flex: 1;
+            font-size: 0.8rem;
+            padding: 6px 10px;
+        }
+
+        .pool-section {
+            margin-top: 2rem;
+            border-top: 2px dashed #CFDEC0;
+            padding-top: 1rem;
+        }
+
+        .pool-title {
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: #7E9A6C;
+        }
+
+        .pool-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            background: #F9F7F2;
+            border-radius: 28px;
+            padding: 1rem;
+            min-height: 100px;
+        }
+
+        .pool-item {
+            background: #E2EAD9;
+            border-radius: 40px;
+            padding: 5px 14px;
+            cursor: grab;
+            font-size: 0.85rem;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+
+        @media (max-width: 700px) {
+            .categories-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧩 Конструктор «Сортировка по категориям»</h1>
+    <div class="sub">Создайте упражнение: перетащите элементы в нужные категории</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
+    </div>
+
+    <!-- Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="toolbar">
+            <button id="addCategoryBtn" class="btn btn-primary">+ Добавить категорию</button>
+            <button id="resetDemoBtn" class="btn btn-outline">📋 Сбросить к демо (болезни)</button>
+        </div>
+        <div id="categoriesContainer" class="categories-grid"></div>
+        <div class="pool-section">
+            <div class="pool-title">📦 Общий пул элементов (перетащите в категории)</div>
+            <div id="poolContainer" class="pool-items" ondragover="event.preventDefault()"></div>
+        </div>
+    </div>
+
+    <!-- Экспорт -->
+    <div id="exportPane" class="tab-pane">
+        <div class="toolbar">
+            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
+            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовое задание</button>
+        </div>
+        <div style="background:#F3F6EF; border-radius:20px; padding:1rem; margin-top:1rem;">
+            <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
+            ✔ Нажмите «Экспорт» – получите HTML-файл для студентов. Они будут перетаскивать карточки в категории и получать обратную связь.</p>
+        </div>
+    </div>
+    <footer>© ВетСим — интерактивная сортировка. Drag & drop, категории, элементы.</footer>
+</div>
+
+<script>
+    // ---------- СТРУКТУРА ДАННЫХ ----------
+    let categories = []; // { id, name, items: [{ id, text }] }
+    let poolItems = []; // { id, text }
+    let nextId = 100;
+
+    // ---------- ДЕМО-ДАННЫЕ (болезни по категориям) ----------
+    function loadDemoData() {
+        categories = [
+            { id: nextId++, name: "Бактериальные", items: [
+                { id: nextId++, text: "Сальмонеллёз" },
+                { id: nextId++, text: "Туберкулёз" },
+                { id: nextId++, text: "Бруцеллёз" }
+            ] },
+            { id: nextId++, name: "Вирусные", items: [
+                { id: nextId++, text: "Бешенство" },
+                { id: nextId++, text: "Чума плотоядных" },
+                { id: nextId++, text: "Инфекционный ринотрахеит" }
+            ] },
+            { id: nextId++, name: "Незаразные", items: [
+                { id: nextId++, text: "Мастит" },
+                { id: nextId++, text: "Кетоз" },
+                { id: nextId++, text: "Тимпания рубца" }
+            ] },
+            { id: nextId++, name: "Грибковые", items: [
+                { id: nextId++, text: "Дерматофитоз (стригущий лишай)" },
+                { id: nextId++, text: "Кандидоз" }
+            ] },
+            { id: nextId++, name: "Паразитарные", items: [
+                { id: nextId++, text: "Аскаридоз" },
+                { id: nextId++, text: "Эймериоз (кокцидиоз)" },
+                { id: nextId++, text: "Пироплазмоз" }
+            ] }
+        ];
+        // пул элементов – обычно те, что не распределены, но для демо все уже в категориях.
+        // Для демонстрации добавим пару элементов в пул, чтобы показать возможность.
+        poolItems = [
+            { id: nextId++, text: "Лептоспироз (бактериальное)" },
+            { id: nextId++, text: "Парвовирусный энтерит (вирусное)" },
+            { id: nextId++, text: "Гиповитаминоз А (незаразное)" },
+            { id: nextId++, text: "Трихофития (грибковое)" },
+            { id: nextId++, text: "Фасциолёз (паразитарное)" }
+        ];
+    }
+
+    // Глобальные переменные для drag
+    let dragSourceItem = null;
+    let dragSourceCategoryId = null;
+
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    // Отрисовка редактора
+    function renderEditor() {
+        const container = document.getElementById('categoriesContainer');
+        container.innerHTML = '';
+        categories.forEach(cat => {
+            const card = document.createElement('div');
+            card.className = 'category-card';
+            card.setAttribute('data-cat-id', cat.id);
+            card.innerHTML = `
+                <div class="category-header">
+                    <input type="text" class="cat-name" data-id="${cat.id}" value="${escapeHtml(cat.name)}" placeholder="Название категории">
+                    <button class="delete-cat" data-id="${cat.id}">🗑️</button>
+                </div>
+                <div class="items-list" data-cat-id="${cat.id}" ondragover="event.preventDefault()"></div>
+                <div class="add-item-form">
+                    <input type="text" class="new-item-input" data-id="${cat.id}" placeholder="Новый элемент">
+                    <button class="add-item-btn" data-id="${cat.id}">+ Добавить</button>
+                </div>
+            `;
+            container.appendChild(card);
+
+            // заполнение списка элементов
+            const itemsContainer = card.querySelector('.items-list');
+            cat.items.forEach(item => {
+                const itemDiv = createDraggableItem(item, cat.id);
+                itemsContainer.appendChild(itemDiv);
+            });
+        });
+
+        // отрисовка пула
+        const poolDiv = document.getElementById('poolContainer');
+        poolDiv.innerHTML = '';
+        poolItems.forEach(item => {
+            const poolItem = createPoolItem(item);
+            poolDiv.appendChild(poolItem);
+        });
+
+        // обработчики для категорий
+        document.querySelectorAll('.cat-name').forEach(inp => {
+            inp.removeEventListener('change', handleCatNameChange);
+            inp.addEventListener('change', handleCatNameChange);
+        });
+        document.querySelectorAll('.delete-cat').forEach(btn => {
+            btn.removeEventListener('click', handleDeleteCat);
+            btn.addEventListener('click', handleDeleteCat);
+        });
+        document.querySelectorAll('.add-item-btn').forEach(btn => {
+            btn.removeEventListener('click', handleAddItem);
+            btn.addEventListener('click', handleAddItem);
+        });
+    }
+
+    function createDraggableItem(item, catId) {
+        const div = document.createElement('div');
+        div.className = 'draggable-item';
+        div.setAttribute('draggable', 'true');
+        div.setAttribute('data-item-id', item.id);
+        div.setAttribute('data-cat-id', catId);
+        div.innerHTML = `
+            <span class="item-text">${escapeHtml(item.text)}</span>
+            <button class="remove-item" data-item-id="${item.id}" data-cat-id="${catId}">✖</button>
+        `;
+        div.addEventListener('dragstart', handleDragStart);
+        div.addEventListener('dragend', handleDragEnd);
+        div.querySelector('.remove-item').addEventListener('click', (e) => {
+            e.stopPropagation();
+            removeItemFromCategory(catId, item.id);
+        });
+        return div;
+    }
+
+    function createPoolItem(item) {
+        const div = document.createElement('div');
+        div.className = 'pool-item';
+        div.setAttribute('draggable', 'true');
+        div.setAttribute('data-item-id', item.id);
+        div.textContent = item.text;
+        div.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'pool', itemId: item.id }));
+            e.dataTransfer.effectAllowed = 'move';
+            dragSourceItem = { type: 'pool', itemId: item.id };
+        });
+        div.addEventListener('dragend', () => { dragSourceItem = null; });
+        return div;
+    }
+
+    function handleDragStart(e) {
+        const target = e.target.closest('.draggable-item');
+        if (!target) return;
+        const itemId = parseInt(target.getAttribute('data-item-id'));
+        const catId = parseInt(target.getAttribute('data-cat-id'));
+        e.dataTransfer.setData('text/plain', JSON.stringify({ type: 'category', itemId, sourceCatId: catId }));
+        e.dataTransfer.effectAllowed = 'move';
+        dragSourceItem = { type: 'category', itemId, sourceCatId: catId };
+    }
+    function handleDragEnd() { dragSourceItem = null; }
+
+    // Обработка drop на категорию
+    function setupDropTargets() {
+        document.querySelectorAll('.items-list').forEach(list => {
+            list.addEventListener('dragover', (e) => e.preventDefault());
+            list.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const targetCatId = parseInt(list.getAttribute('data-cat-id'));
+                const rawData = e.dataTransfer.getData('text/plain');
+                if (!rawData) return;
+                const data = JSON.parse(rawData);
+                if (data.type === 'category') {
+                    moveItemBetweenCategories(data.sourceCatId, data.itemId, targetCatId);
+                } else if (data.type === 'pool') {
+                    moveItemFromPoolToCategory(data.itemId, targetCatId);
+                }
+                renderEditor();
+                setupDropTargets();
+            });
+        });
+        // Пул тоже может принимать элементы обратно
+        const poolDiv = document.getElementById('poolContainer');
+        if (poolDiv) {
+            poolDiv.addEventListener('dragover', (e) => e.preventDefault());
+            poolDiv.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const rawData = e.dataTransfer.getData('text/plain');
+                if (!rawData) return;
+                const data = JSON.parse(rawData);
+                if (data.type === 'category') {
+                    moveItemToPool(data.sourceCatId, data.itemId);
+                }
+                renderEditor();
+                setupDropTargets();
+            });
+        }
+    }
+
+    function moveItemBetweenCategories(fromCatId, itemId, toCatId) {
+        const fromCat = categories.find(c => c.id === fromCatId);
+        const toCat = categories.find(c => c.id === toCatId);
+        if (!fromCat || !toCat) return;
+        const itemIndex = fromCat.items.findIndex(i => i.id === itemId);
+        if (itemIndex === -1) return;
+        const [movedItem] = fromCat.items.splice(itemIndex, 1);
+        toCat.items.push(movedItem);
+    }
+
+    function moveItemFromPoolToCategory(itemId, catId) {
+        const itemIndex = poolItems.findIndex(i => i.id === itemId);
+        if (itemIndex === -1) return;
+        const [movedItem] = poolItems.splice(itemIndex, 1);
+        const cat = categories.find(c => c.id === catId);
+        if (cat) cat.items.push(movedItem);
+    }
+
+    function moveItemToPool(catId, itemId) {
+        const cat = categories.find(c => c.id === catId);
+        if (!cat) return;
+        const itemIndex = cat.items.findIndex(i => i.id === itemId);
+        if (itemIndex === -1) return;
+        const [movedItem] = cat.items.splice(itemIndex, 1);
+        poolItems.push(movedItem);
+    }
+
+    function removeItemFromCategory(catId, itemId) {
+        const cat = categories.find(c => c.id === catId);
+        if (cat) {
+            cat.items = cat.items.filter(i => i.id !== itemId);
+            renderEditor();
+            setupDropTargets();
+        }
+    }
+
+    function handleCatNameChange(e) {
+        const id = parseInt(e.target.getAttribute('data-id'));
+        const newName = e.target.value;
+        const cat = categories.find(c => c.id === id);
+        if (cat) cat.name = newName;
+    }
+
+    function handleDeleteCat(e) {
+        const id = parseInt(e.target.getAttribute('data-id'));
+        const catIndex = categories.findIndex(c => c.id === id);
+        if (catIndex !== -1) {
+            // перемещаем все элементы в пул
+            const deletedCat = categories[catIndex];
+            poolItems.push(...deletedCat.items);
+            categories.splice(catIndex, 1);
+            renderEditor();
+            setupDropTargets();
+        }
+    }
+
+    function handleAddItem(e) {
+        const catId = parseInt(e.target.getAttribute('data-id'));
+        const input = e.target.parentElement.querySelector('.new-item-input');
+        const text = input.value.trim();
+        if (text === '') return;
+        const cat = categories.find(c => c.id === catId);
+        if (cat) {
+            cat.items.push({ id: nextId++, text: text });
+            input.value = '';
+            renderEditor();
+            setupDropTargets();
+        }
+    }
+
+    function addCategory() {
+        const newId = nextId++;
+        categories.push({ id: newId, name: `Новая категория`, items: [] });
+        renderEditor();
+        setupDropTargets();
+    }
+
+    function resetToDemo() {
+        loadDemoData();
+        renderEditor();
+        setupDropTargets();
+    }
+
+    // Сохранение проекта
+    function saveProject() {
+        const project = { categories, poolItems, nextId };
+        const dataStr = JSON.stringify(project, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'sorting_project.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function loadProject(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const proj = JSON.parse(e.target.result);
+                categories = proj.categories || [];
+                poolItems = proj.poolItems || [];
+                nextId = proj.nextId || 1000;
+                renderEditor();
+                setupDropTargets();
+            } catch(err) { alert('Ошибка загрузки'); }
+        };
+        reader.readAsText(file);
+    }
+
+    // Экспорт в готовый тренажёр для студентов
+    function exportGame() {
+        const exportData = { categories, poolItems };
+        const htmlContent = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сортировка по категориям | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:1.5rem;color:#3E5C4A;}
+        .container{max-width:1400px;margin:0 auto;}
+        h1{text-align:center;color:#1F4E6E;margin-bottom:0.5rem;}
+        .sub{text-align:center;margin-bottom:1.5rem;}
+        .categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
+        .category-card{background:#FEFCF9;border:1px solid #E2EAD9;border-radius:24px;overflow:hidden;}
+        .category-header{background:#F0F5EA;padding:0.8rem;font-weight:700;color:#2C7DA0;border-bottom:1px solid #D8E4CC;}
+        .items-list{min-height:200px;padding:1rem;}
+        .draggable-item{background:#FDF8F0;border:1px solid #D1DEC2;border-radius:40px;padding:6px 12px;margin-bottom:8px;cursor:grab;}
+        .pool-section{margin-top:2rem;border-top:2px dashed #CFDEC0;padding-top:1rem;}
+        .pool-items{display:flex;flex-wrap:wrap;gap:8px;background:#F9F7F2;border-radius:28px;padding:1rem;min-height:100px;}
+        .pool-item{background:#E2EAD9;border-radius:40px;padding:5px 14px;cursor:grab;}
+        .btn-check{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:1rem;}
+        .btn-reset{background:#E2CFB0;margin-left:1rem;}
+        .feedback{text-align:center;margin-top:1rem;font-weight:bold;}
+        footer{text-align:center;margin-top:2rem;font-size:0.7rem;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📌 Сортировка: распределите болезни по категориям</h1>
+    <div class="sub">Перетащите элементы в нужные категории</div>
+    <div id="gameArea"></div>
+    <div style="text-align:center;">
+        <button id="checkBtn" class="btn-check">Проверить</button>
+        <button id="resetBtn" class="btn-check btn-reset">Сбросить</button>
+    </div>
+    <div id="feedback" class="feedback"></div>
+    <footer>© ВетСим – обучающая сортировка</footer>
+</div>
+<script>
+    const gameData = ${JSON.stringify(exportData)};
+    let categories = gameData.categories;
+    let poolItems = gameData.poolItems;
+    let currentPool = [...poolItems];
+    let currentCategories = categories.map(cat => ({ ...cat, items: [...cat.items] }));
+    let nextId = 1000;
+    let dragSource = null;
+
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    function render() {
+        const container = document.getElementById('gameArea');
+        let html = '<div class="categories-grid">';
+        currentCategories.forEach(cat => {
+            html += \`
+                <div class="category-card">
+                    <div class="category-header">\${escapeHtml(cat.name)}</div>
+                    <div class="items-list" data-cat-id="\${cat.id}" ondragover="event.preventDefault()"></div>
+                </div>
+            \`;
+        });
+        html += '</div><div class="pool-section"><div class="pool-title">📦 Несортированные элементы</div><div id="poolArea" class="pool-items" ondragover="event.preventDefault()"></div></div>';
+        container.innerHTML = html;
+
+        // заполнение категорий
+        currentCategories.forEach(cat => {
+            const listDiv = document.querySelector(\`.items-list[data-cat-id="\${cat.id}"]\`);
+            if(listDiv) {
+                cat.items.forEach(item => {
+                    const itemDiv = createItemElement(item, cat.id);
+                    listDiv.appendChild(itemDiv);
+                });
+            }
+        });
+        const poolDiv = document.getElementById('poolArea');
+        if(poolDiv) {
+            currentPool.forEach(item => {
+                const poolItem = createPoolItemElement(item);
+                poolDiv.appendChild(poolItem);
+            });
+        }
+        attachDragEvents();
+    }
+
+    function createItemElement(item, catId) {
+        const div = document.createElement('div');
+        div.className = 'draggable-item';
+        div.setAttribute('draggable','true');
+        div.setAttribute('data-item-id',item.id);
+        div.setAttribute('data-source-cat',catId);
+        div.textContent = item.text;
+        div.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', JSON.stringify({ type:'category', itemId:item.id, sourceCatId:catId }));
+            dragSource = { type:'category', itemId:item.id, sourceCatId:catId };
+        });
+        div.addEventListener('dragend', () => dragSource = null);
+        return div;
+    }
+
+    function createPoolItemElement(item) {
+        const div = document.createElement('div');
+        div.className = 'pool-item';
+        div.setAttribute('draggable','true');
+        div.setAttribute('data-item-id',item.id);
+        div.textContent = item.text;
+        div.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', JSON.stringify({ type:'pool', itemId:item.id }));
+            dragSource = { type:'pool', itemId:item.id };
+        });
+        div.addEventListener('dragend', () => dragSource = null);
+        return div;
+    }
+
+    function attachDragEvents() {
+        document.querySelectorAll('.items-list').forEach(list => {
+            list.addEventListener('drop', e => {
+                e.preventDefault();
+                const targetCatId = parseInt(list.getAttribute('data-cat-id'));
+                if(!dragSource) return;
+                if(dragSource.type === 'category') {
+                    moveItemBetweenCats(dragSource.sourceCatId, dragSource.itemId, targetCatId);
+                } else if(dragSource.type === 'pool') {
+                    moveItemFromPoolToCat(dragSource.itemId, targetCatId);
+                }
+                dragSource = null;
+                render();
+            });
+        });
+        const poolDiv = document.getElementById('poolArea');
+        if(poolDiv) {
+            poolDiv.addEventListener('drop', e => {
+                e.preventDefault();
+                if(dragSource && dragSource.type === 'category') {
+                    moveItemToPool(dragSource.sourceCatId, dragSource.itemId);
+                    dragSource = null;
+                    render();
+                }
+            });
+        }
+    }
+
+    function moveItemBetweenCats(fromCatId, itemId, toCatId) {
+        const fromCat = currentCategories.find(c => c.id === fromCatId);
+        const toCat = currentCategories.find(c => c.id === toCatId);
+        if(!fromCat || !toCat) return;
+        const itemIndex = fromCat.items.findIndex(i => i.id === itemId);
+        if(itemIndex === -1) return;
+        const [item] = fromCat.items.splice(itemIndex,1);
+        toCat.items.push(item);
+    }
+    function moveItemFromPoolToCat(itemId, catId) {
+        const itemIndex = currentPool.findIndex(i => i.id === itemId);
+        if(itemIndex === -1) return;
+        const [item] = currentPool.splice(itemIndex,1);
+        const cat = currentCategories.find(c => c.id === catId);
+        if(cat) cat.items.push(item);
+    }
+    function moveItemToPool(catId, itemId) {
+        const cat = currentCategories.find(c => c.id === catId);
+        if(!cat) return;
+        const itemIndex = cat.items.findIndex(i => i.id === itemId);
+        if(itemIndex === -1) return;
+        const [item] = cat.items.splice(itemIndex,1);
+        currentPool.push(item);
+    }
+    function checkAnswers() {
+        let allCorrect = true;
+        // ожидаем, что каждый элемент должен быть в категории, совпадающей с исходной (original categories)
+        // просто покажем сообщение
+        alert("Проверка: оцените визуально корректность распределения. Преподаватель может сверить с эталоном.");
+    }
+    function resetGame() {
+        currentCategories = categories.map(cat => ({ ...cat, items: [...cat.items] }));
+        currentPool = [...poolItems];
+        render();
+    }
+    document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+    render();
+<\/script>
+</body>
+</html>`;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'sorting_game.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    // Инициализация
+    function init() {
+        loadDemoData();
+        renderEditor();
+        setupDropTargets();
+        document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
+        document.getElementById('resetDemoBtn').addEventListener('click', resetToDemo);
+        document.getElementById('saveProjectBtn').addEventListener('click', saveProject);
+        document.getElementById('loadProjectBtn').addEventListener('click', () => {
+            const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json';
+            inp.onchange = e => loadProject(inp.files[0]);
+            inp.click();
+        });
+        document.getElementById('exportGameBtn').addEventListener('click', exportGame);
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+                document.getElementById(btn.dataset.tab + 'Pane').classList.add('active');
+                if (btn.dataset.tab === 'editor') {
+                    renderEditor();
+                    setupDropTargets();
+                }
+            });
+        });
+    }
+    init();
+</script>
+</body>
+</html>

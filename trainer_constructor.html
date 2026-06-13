@@ -38,7 +38,6 @@
             flex-wrap: wrap;
             gap: 2rem;
         }
-        /* панель редактора */
         .editor-panel {
             flex: 1.5;
             background: white;
@@ -181,7 +180,6 @@
     <div class="sub">Создайте свой тренажёр: загрузите картинку, добавьте этапы, вопросы, варианты — экспортируйте в HTML</div>
 
     <div class="main-layout">
-        <!-- ЛЕВАЯ ПАНЕЛЬ – РЕДАКТОР -->
         <div class="editor-panel">
             <div class="flex-row">
                 <button id="addStageBtn" class="btn-primary">➕ Добавить этап</button>
@@ -192,7 +190,6 @@
             <div id="stagesContainer"></div>
         </div>
 
-        <!-- ПРАВАЯ ПАНЕЛЬ – ИЗОБРАЖЕНИЕ (превью) -->
         <div class="image-panel">
             <div class="section-title">📸 Ваше изображение</div>
             <img id="trainerImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23F7F5EE'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%238A9B7A'%3EНажмите для загрузки%3C/text%3E%3C/svg%3E" alt="Превью изображения" style="cursor:pointer;">
@@ -204,14 +201,13 @@
 
 <script>
     // ----- Структура данных: этапы, внутри каждого – вопросы -----
-    let stages = [];   // каждый этап: { name: "Этап 1", questions: [{ text: "...", options: ["opt1","opt2"], correct: 0 }] }
-    let currentImageData = null; // base64 или URL
+    let stages = [];
+    let currentImageData = null;
 
-    // DOM элементы
     const stagesContainer = document.getElementById('stagesContainer');
     const trainerImage = document.getElementById('trainerImage');
 
-    // --- Загрузка изображения пользователем ---
+    // Загрузка изображения
     trainerImage.addEventListener('click', () => {
         const input = document.createElement('input');
         input.type = 'file';
@@ -230,7 +226,11 @@
         input.click();
     });
 
-    // ---- вспомогательные функции для рендеринга редактора ----
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
     function renderEditor() {
         stagesContainer.innerHTML = '';
         if (stages.length === 0) {
@@ -253,7 +253,6 @@
             `;
             stagesContainer.appendChild(stageDiv);
 
-            // отрисовка вопросов для этого этапа
             const questionsContainer = document.getElementById(`questions-${stageIdx}`);
             if (questionsContainer) {
                 stage.questions.forEach((q, qIdx) => {
@@ -270,7 +269,6 @@
                         <div style="margin-top: 6px;"><label>✅ Правильный ответ (индекс, начиная с 0): </label><input type="number" class="correct-idx" data-stage="${stageIdx}" data-q="${qIdx}" value="${q.correct}" style="width:70px;"></div>
                     `;
                     questionsContainer.appendChild(qDiv);
-                    // отрисовка вариантов
                     const optsDiv = document.getElementById(`opts-${stageIdx}-${qIdx}`);
                     if (optsDiv) {
                         q.options.forEach((opt, optIdx) => {
@@ -286,20 +284,19 @@
                 });
             }
 
-            // обработчики
+            // обработчики для этого этапа
             stageDiv.querySelector('.remove-stage').addEventListener('click', () => { stages.splice(stageIdx,1); renderEditor(); });
             stageDiv.querySelector('.stage-name-input').addEventListener('change', (e) => { stages[stageIdx].name = e.target.value; renderEditor(); });
             stageDiv.querySelector('.add-question-btn').addEventListener('click', () => {
                 stages[stageIdx].questions.push({ text: "Новый вопрос", options: ["Вариант A","Вариант B"], correct: 0 });
                 renderEditor();
             });
-            // делегирование для динамических кнопок
             attachQuestionEvents(stageIdx);
         });
     }
 
     function attachQuestionEvents(stageIdx) {
-        // удаление вопросов
+        // удаление вопроса
         document.querySelectorAll(`.remove-question[data-stage="${stageIdx}"]`).forEach(btn => {
             btn.removeEventListener('click', remHandler);
             btn.addEventListener('click', remHandler);
@@ -359,9 +356,6 @@
         });
     }
 
-    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
-
-    // ---- Сохранить / загрузить проект JSON ----
     function saveProject() {
         const project = {
             image: currentImageData || trainerImage.src,
@@ -392,23 +386,11 @@
         reader.readAsText(file);
     }
 
-    // ---- ЭКСПОРТ В ГОТОВЫЙ ТРЕНАЖЁР (самостоятельный HTML) ----
     function exportTrainer() {
         if (!stages.length) { alert("Добавьте хотя бы один этап и вопросы!"); return; }
-        // генерируем HTML-код готового тренажёра
         const imageSrc = currentImageData || trainerImage.src;
         const stagesData = stages;
-
-        // функция для генерации случайного перемешанного массива индексов
-        function shuffleArray(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        const stagesJSON = JSON.stringify(stagesData);
+        // генерация перемешанных индексов для экспорта будет внутри скрипта
         const standaloneHTML = `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -455,10 +437,18 @@
     <footer>© ВетСим — тренажёр создан в конструкторе</footer>
 </div>
 <script>
-    const stagesData = ${stagesJSON};
+    const stagesData = ${JSON.stringify(stagesData)};
     let currentStageIdx = 0;
-    let userAnswers = [];   // для каждого этапа массив ответов по вопросам (индексы выбранных вариантов)
-    let shuffledOptions = []; // для каждого этапа и вопроса храним перемешанные индексы вариантов
+    let userAnswers = [];
+    let shuffledOptions = [];
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
 
     function initShuffled() {
         shuffledOptions = [];
@@ -466,11 +456,7 @@
             shuffledOptions[s] = [];
             for (let q = 0; q < stagesData[s].questions.length; q++) {
                 let indices = stagesData[s].questions[q].options.map((_, idx) => idx);
-                for (let i = indices.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [indices[i], indices[j]] = [indices[j], indices[i]];
-                }
-                shuffledOptions[s][q] = indices;
+                shuffledOptions[s][q] = shuffleArray([...indices]);
             }
         }
     }
@@ -581,7 +567,7 @@
     renderStageButtons();
     renderStage();
     document.getElementById('resetBtn').onclick = resetAnswers;
-</script>
+<\/script>
 </body>
 </html>`;
         const blob = new Blob([standaloneHTML], {type: 'text/html'});
@@ -592,7 +578,7 @@
         URL.revokeObjectURL(a.href);
     }
 
-    // --- Инициализация демо-данных (один этап с примером) ---
+    // Инициализация демо-данных (один этап с примером)
     function initDemo() {
         if (stages.length === 0) {
             stages = [
@@ -608,7 +594,6 @@
         }
     }
 
-    // ---- Обработчики глобальных кнопок ----
     document.getElementById('addStageBtn').addEventListener('click', () => {
         stages.push({ name: `Этап ${stages.length+1}`, questions: [] });
         renderEditor();

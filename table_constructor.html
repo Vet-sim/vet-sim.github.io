@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор таблиц | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+            color: #3E5C4A;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.7rem;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            padding: 20px;
+            border: 1px solid #E7EDE2;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+            font-size: 0.9rem;
+        }
+        button {
+            background: #EEF2E9;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        .grid-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 20px;
+        }
+        .grid-table th, .grid-table td {
+            border: 1px solid #D1DEC2;
+            padding: 12px;
+            vertical-align: top;
+        }
+        .grid-table th {
+            background: #F0F5EA;
+            font-weight: bold;
+        }
+        .grid-table td {
+            cursor: pointer;
+            background-color: #fff;
+        }
+        .grid-table td.selected {
+            background-color: #E9F0E3;
+            outline: 2px solid #A3B18A;
+        }
+        .dropdown-badge {
+            background: #E2EAD9;
+            border-radius: 20px;
+            padding: 4px 12px;
+            display: inline-block;
+            font-size: 0.8rem;
+        }
+        .info-text {
+            font-size: 0.75rem;
+            color: #8BA47B;
+            margin-top: 8px;
+        }
+        .inline-input {
+            width: 100%;
+            padding: 4px;
+            border: 1px solid #A3B18A;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+        @media (max-width: 700px) {
+            .grid-table th, .grid-table td { padding: 6px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📊 Конструктор табличных заданий</h1>
+    <div class="sub">Создайте таблицу: вводите текст или настраивайте выпадающие списки в любых ячейках</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт</button>
+    </div>
+
+    <!-- Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="form-group">
+            <label>Название задания</label>
+            <input type="text" id="taskTitle" value="Таблица: Заполните пропуски / выберите ответ">
+        </div>
+        <div class="form-group">
+            <label>Размер таблицы (строки × столбцы)</label>
+            <div class="flex">
+                <input type="number" id="rowsCount" value="3" min="1" max="10" style="width:80px;">
+                <span>×</span>
+                <input type="number" id="colsCount" value="4" min="1" max="8" style="width:80px;">
+                <button id="applySizeBtn">Применить размер</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Заголовки столбцов (через запятую)</label>
+            <textarea id="colHeaders" rows="2">Термин, Описание, Пример, Примечание</textarea>
+            <button id="applyHeadersBtn" style="margin-top:6px;">Применить заголовки</button>
+        </div>
+        <div class="form-group">
+            <label>Таблица (клик – выделить ячейку, двойной клик – редактировать текст)</label>
+            <div id="tableView" class="table-wrapper"></div>
+            <div class="flex">
+                <button id="editTextBtn" class="btn-primary">✏️ Редактировать текст выделенной ячейки</button>
+                <button id="addDropdownBtn" class="btn-primary">▼ Вставить выпадающий список</button>
+                <button id="clearCellBtn">🗑️ Очистить ячейку (сделать текстовой)</button>
+            </div>
+            <div class="info-text">
+                💡 Выделите ячейку → нажмите «Редактировать текст» или дважды кликните по ней.<br>
+                📌 Выделите ячейку → «Вставить выпадающий список» → введите варианты через запятую.
+            </div>
+        </div>
+    </div>
+
+    <!-- Экспорт -->
+    <div id="exportPane" class="tab-pane">
+        <div class="flex">
+            <button id="saveJsonBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadJsonBtn" class="btn-secondary">📂 Загрузить проект</button>
+            <button id="exportHtmlBtn" class="btn-primary">🚀 Экспорт в готовый тренажёр</button>
+        </div>
+        <div style="background:#F3F6EF; border-radius:20px; padding:16px; margin-top:20px;">
+            <p>✅ Все текстовые ячейки станут полями ввода, выпадающие списки – выпадающими списками.<br>
+            📥 Студент заполнит пропуски и выберет варианты, затем проверит ответы.</p>
+        </div>
+    </div>
+
+    <footer>© ВетСим — создавайте интерактивные таблицы</footer>
+</div>
+
+<script>
+    // ----- Глобальные данные -----
+    let currentRows = 3, currentCols = 4;
+    let tableData = [];          // [row][col] = { type: 'text', value: '' } или { type: 'dropdown', options: [] }
+    let selectedRow = -1, selectedCol = -1;
+
+    // DOM элементы
+    const rowsInput = document.getElementById('rowsCount');
+    const colsInput = document.getElementById('colsCount');
+    const colHeadersTextarea = document.getElementById('colHeaders');
+    const tableViewDiv = document.getElementById('tableView');
+    const taskTitleInput = document.getElementById('taskTitle');
+
+    function initEmptyTable(rows, cols) {
+        const data = [];
+        for (let i = 0; i < rows; i++) {
+            data[i] = [];
+            for (let j = 0; j < cols; j++) {
+                data[i][j] = { type: 'text', value: '' };
+            }
+        }
+        return data;
+    }
+
+    function getHeaders() {
+        let raw = colHeadersTextarea.value;
+        let headers = raw.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        while (headers.length < currentCols) headers.push(`Колонка ${headers.length+1}`);
+        return headers.slice(0, currentCols);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    }
+
+    // Перерисовка таблицы
+    function renderTable() {
+        if (!tableViewDiv) return;
+        const headers = getHeaders();
+        let html = '<table class="grid-table"><thead><tr><th style="width:40px;">#</th>';
+        for (let j = 0; j < currentCols; j++) {
+            html += `<th>${escapeHtml(headers[j])}</th>`;
+        }
+        html += '</thead><tbody>';
+        for (let i = 0; i < currentRows; i++) {
+            html += `<tr><td style="background:#F0F5EA; font-weight:bold; text-align:center;">${i+1}</td>`;
+            for (let j = 0; j < currentCols; j++) {
+                const cell = tableData[i][j];
+                let content = '';
+                if (cell.type === 'text') {
+                    let display = cell.value && cell.value.trim() !== '' ? cell.value : '✏️ (пусто)';
+                    content = `<div class="cell-display">${escapeHtml(display)}</div>`;
+                } else {
+                    let preview = cell.options.join(', ');
+                    content = `<div><span class="dropdown-badge">▼ выпадающий список (${cell.options.length})</span><br><small>${escapeHtml(preview)}</small></div>`;
+                }
+                const selectedClass = (selectedRow === i && selectedCol === j) ? 'selected' : '';
+                html += `<td class="${selectedClass}" data-row="${i}" data-col="${j}">${content}</td>`;
+            }
+            html += '</tr>';
+        }
+        html += '</tbody></table>';
+        tableViewDiv.innerHTML = html;
+
+        // Обработчик клика для выбора ячейки
+        const cells = tableViewDiv.querySelectorAll('td[data-row]');
+        cells.forEach(td => {
+            const row = parseInt(td.getAttribute('data-row'));
+            const col = parseInt(td.getAttribute('data-col'));
+            td.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedRow = row;
+                selectedCol = col;
+                renderTable();
+            });
+            td.addEventListener('dblclick', (e) => {
+                e.stopPropagation();
+                editCellText(row, col);
+            });
+        });
+    }
+
+    // Функция редактирования текста в ячейке (через prompt, но надёжно)
+    function editCellText(row, col) {
+        const cell = tableData[row][col];
+        if (cell.type !== 'text') {
+            alert('Эта ячейка содержит выпадающий список. Очистите её (кнопка "Очистить ячейку"), чтобы редактировать текст.');
+            return;
+        }
+        let newVal = prompt('Введите текст для ячейки (оставьте пустым, чтобы очистить):', cell.value);
+        if (newVal !== null) {
+            cell.value = newVal;
+            renderTable();
+        }
+    }
+
+    // Редактирование выделенной ячейки через кнопку
+    function editSelectedCell() {
+        if (selectedRow === -1 || selectedCol === -1) {
+            alert('Сначала выберите ячейку (кликните по ней)');
+            return;
+        }
+        editCellText(selectedRow, selectedCol);
+    }
+
+    function resizeTable() {
+        let newRows = parseInt(rowsInput.value);
+        let newCols = parseInt(colsInput.value);
+        if (isNaN(newRows) || newRows < 1) newRows = 1;
+        if (isNaN(newCols) || newCols < 1) newCols = 1;
+        const newData = [];
+        for (let i = 0; i < newRows; i++) {
+            newData[i] = [];
+            for (let j = 0; j < newCols; j++) {
+                if (i < currentRows && j < currentCols && tableData[i] && tableData[i][j]) {
+                    newData[i][j] = { ...tableData[i][j] };
+                } else {
+                    newData[i][j] = { type: 'text', value: '' };
+                }
+            }
+        }
+        tableData = newData;
+        currentRows = newRows;
+        currentCols = newCols;
+        let headersRaw = colHeadersTextarea.value;
+        let headerList = headersRaw.split(',').map(s => s.trim());
+        while (headerList.length < currentCols) headerList.push(`Колонка ${headerList.length+1}`);
+        colHeadersTextarea.value = headerList.slice(0, currentCols).join(', ');
+        renderTable();
+    }
+
+    function applyHeaders() {
+        renderTable();
+    }
+
+    function addDropdownToSelected() {
+        if (selectedRow === -1 || selectedCol === -1) {
+            alert('Сначала выберите ячейку (кликните по ней)');
+            return;
+        }
+        let optionsStr = prompt('Введите варианты для выпадающего списка (через запятую):', 'Верно, Неверно');
+        if (!optionsStr || optionsStr.trim() === '') return;
+        let opts = optionsStr.split(',').map(o => o.trim()).filter(o => o.length > 0);
+        if (opts.length === 0) return;
+        tableData[selectedRow][selectedCol] = { type: 'dropdown', options: opts };
+        renderTable();
+    }
+
+    function clearSelectedCell() {
+        if (selectedRow === -1 || selectedCol === -1) {
+            alert('Выберите ячейку');
+            return;
+        }
+        tableData[selectedRow][selectedCol] = { type: 'text', value: '' };
+        renderTable();
+    }
+
+    function saveProject() {
+        const project = {
+            taskTitle: taskTitleInput.value,
+            colHeaders: colHeadersTextarea.value,
+            rows: currentRows,
+            cols: currentCols,
+            data: tableData
+        };
+        const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'table_project.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function loadProject(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const proj = JSON.parse(e.target.result);
+                taskTitleInput.value = proj.taskTitle || 'Таблица';
+                colHeadersTextarea.value = proj.colHeaders || 'Термин, Описание, Пример';
+                currentRows = proj.rows || 3;
+                currentCols = proj.cols || 4;
+                rowsInput.value = currentRows;
+                colsInput.value = currentCols;
+                tableData = proj.data || initEmptyTable(currentRows, currentCols);
+                renderTable();
+                selectedRow = -1; selectedCol = -1;
+            } catch (err) {
+                alert('Ошибка загрузки файла');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function exportTrainer() {
+        const title = taskTitleInput.value;
+        const headers = getHeaders();
+        const rowsCount = currentRows;
+        const colsCount = currentCols;
+        const dataCopy = JSON.parse(JSON.stringify(tableData));
+
+        const trainerHtml = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>${escapeHtml(title)} | ВетСим</title>
+    <style>
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:20px;}
+        .container{max-width:1200px;margin:0 auto;}
+        h1{color:#1F4E6E;text-align:center;}
+        .score{background:#F3F6EF;padding:8px 16px;border-radius:40px;text-align:center;margin:15px 0;}
+        table{width:100%;border-collapse:collapse;background:white;margin:20px 0;}
+        th,td{border:1px solid #D1DEC2;padding:12px;vertical-align:top;}
+        th{background:#F0F5EA;font-weight:bold;}
+        select,input{width:100%;padding:6px;border-radius:20px;border:1px solid #A3B18A;}
+        .btn{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:10px;}
+        .reset-btn{background:#E2CFB0;margin-left:12px;}
+        footer{text-align:center;margin-top:30px;font-size:0.7rem;}
+        .flex{display:flex;gap:10px;justify-content:center;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>${escapeHtml(title)}</h1>
+    <div class="score" id="scoreArea">✅ Результат: <span id="scoreValue">0</span> / <span id="totalPoints">0</span></div>
+    <div id="taskTable"></div>
+    <div class="flex">
+        <button id="checkBtn" class="btn">Проверить</button>
+        <button id="resetBtn" class="btn reset-btn">Сбросить всё</button>
+    </div>
+    <footer>© ВетСим — интерактивное задание</footer>
+</div>
+<script>
+    const tableData = ${JSON.stringify(dataCopy)};
+    const rows = ${rowsCount};
+    const cols = ${colsCount};
+    const headers = ${JSON.stringify(headers)};
+    let userAnswers = Array(rows).fill().map(() => Array(cols).fill(""));
+
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    function render() {
+        let html = '<table><thead><tr><th>#</th>';
+        for(let j=0; j<cols; j++) html += '<th>'+escapeHtml(headers[j])+'</th>';
+        html += '</thead><tbody>';
+        for(let i=0; i<rows; i++) {
+            html += '<tr><td style="background:#F0F5EA; font-weight:bold;">'+(i+1)+'</td>';
+            for(let j=0; j<cols; j++) {
+                const cell = tableData[i][j];
+                if(cell.type === 'dropdown') {
+                    let sel = '<select data-row="'+i+'" data-col="'+j+'"><option value="">— выберите —</option>';
+                    cell.options.forEach(opt => {
+                        let selected = (userAnswers[i][j] === opt) ? 'selected' : '';
+                        sel += '<option value="'+escapeHtml(opt)+'" '+selected+'>'+escapeHtml(opt)+'</option>';
+                    });
+                    sel += '</select>';
+                    html += '<td>'+sel+'</td>';
+                } else {
+                    let val = userAnswers[i][j] || '';
+                    html += '<td><input type="text" data-row="'+i+'" data-col="'+j+'" value="'+escapeHtml(val)+'" placeholder="Введите ответ"></td>';
+                }
+            }
+            html += '</tr>';
+        }
+        html += '</tbody></table>';
+        document.getElementById('taskTable').innerHTML = html;
+        attachEvents();
+    }
+
+    function attachEvents() {
+        document.querySelectorAll('select').forEach(s => {
+            s.addEventListener('change', (e) => {
+                let row = parseInt(s.getAttribute('data-row'));
+                let col = parseInt(s.getAttribute('data-col'));
+                userAnswers[row][col] = s.value;
+            });
+        });
+        document.querySelectorAll('input').forEach(inp => {
+            inp.addEventListener('input', (e) => {
+                let row = parseInt(inp.getAttribute('data-row'));
+                let col = parseInt(inp.getAttribute('data-col'));
+                userAnswers[row][col] = inp.value;
+            });
+        });
+    }
+
+    function checkAnswers() {
+        let correct = 0, total = 0;
+        for(let i=0; i<rows; i++) {
+            for(let j=0; j<cols; j++) {
+                const cell = tableData[i][j];
+                let expected = '';
+                if(cell.type === 'dropdown') {
+                    expected = cell.options[0] || '';
+                } else {
+                    expected = cell.value || '';
+                }
+                let user = userAnswers[i][j] || '';
+                total++;
+                if(user.trim().toLowerCase() === expected.trim().toLowerCase()) correct++;
+            }
+        }
+        document.getElementById('scoreValue').innerText = correct;
+        document.getElementById('totalPoints').innerText = total;
+        if(correct === total && total>0) alert('🎉 Поздравляем! Все ответы верны.');
+    }
+
+    function resetAll() {
+        for(let i=0; i<rows; i++) for(let j=0; j<cols; j++) userAnswers[i][j] = '';
+        render();
+        document.getElementById('scoreValue').innerText = '0';
+        document.getElementById('totalPoints').innerText = '0';
+    }
+
+    render();
+    document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+<\/script>
+</body>
+</html>`;
+        const blob = new Blob([trainerHtml], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'table_trainer.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function initDemo() {
+        tableData = initEmptyTable(3, 4);
+        // оставляем полностью пустым, но для демо добавим пример в первую ячейку
+        if (tableData[0] && tableData[0][0]) tableData[0][0].value = 'Пример: введите свой текст';
+        renderTable();
+        rowsInput.value = 3;
+        colsInput.value = 4;
+        selectedRow = -1; selectedCol = -1;
+    }
+
+    // Обработчики
+    document.getElementById('applySizeBtn').addEventListener('click', resizeTable);
+    document.getElementById('applyHeadersBtn').addEventListener('click', applyHeaders);
+    document.getElementById('editTextBtn').addEventListener('click', editSelectedCell);
+    document.getElementById('addDropdownBtn').addEventListener('click', addDropdownToSelected);
+    document.getElementById('clearCellBtn').addEventListener('click', clearSelectedCell);
+    document.getElementById('saveJsonBtn').addEventListener('click', saveProject);
+    document.getElementById('loadJsonBtn').addEventListener('click', () => {
+        const inp = document.createElement('input');
+        inp.type = 'file';
+        inp.accept = '.json';
+        inp.onchange = e => loadProject(inp.files[0]);
+        inp.click();
+    });
+    document.getElementById('exportHtmlBtn').addEventListener('click', exportTrainer);
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById(btn.dataset.tab + 'Pane').classList.add('active');
+        });
+    });
+
+    initDemo();
+</script>
+</body>
+</html>

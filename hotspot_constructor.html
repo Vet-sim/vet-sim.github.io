@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор «Интерактивный плакат с горячими точками» | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .tab-pane {
+            display: none;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2EAD9;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #C0CFAF;
+        }
+
+        .canvas-container {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            overflow-x: auto;
+            text-align: center;
+            background: #F9F7F2;
+            border-radius: 28px;
+            padding: 1rem;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .image-canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            cursor: crosshair;
+        }
+
+        .hotspot {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: #2C7DA0;
+            border: 2px solid white;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+            transition: 0.1s;
+            z-index: 10;
+        }
+
+        .hotspot.selected {
+            background: #D4A373;
+            transform: translate(-50%, -50%) scale(1.2);
+        }
+
+        .hotspot:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            background: #D4A373;
+        }
+
+        .points-list {
+            margin-top: 1.5rem;
+            background: #F9F9F5;
+            border-radius: 24px;
+            padding: 1rem;
+        }
+
+        .point-item {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            background: white;
+            border: 1px solid #E2EAD9;
+            border-radius: 60px;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .point-preview {
+            width: 32px;
+            height: 32px;
+            background: #2C7DA0;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .point-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .point-info input, .point-info textarea {
+            width: 100%;
+            margin-bottom: 4px;
+        }
+
+        .point-actions button {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin: 0 4px;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+
+        @media (max-width: 700px) {
+            .point-item { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🖼️ Конструктор «Интерактивный плакат с горячими точками»</h1>
+    <div class="sub">Загрузите изображение, расставьте метки, добавьте описания</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
+    </div>
+
+    <!-- Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="toolbar">
+            <button id="loadImageBtn" class="btn btn-primary">📸 Загрузить изображение</button>
+            <button id="clearHotspotsBtn" class="btn btn-outline">🗑️ Удалить все метки</button>
+            <button id="resetDemoBtn" class="btn btn-outline">📋 Загрузить демо-схему (сечение кожи)</button>
+        </div>
+        <div class="canvas-container" id="canvasContainer">
+            <div class="canvas-wrapper" id="canvasWrapper">
+                <img id="mainImage" class="image-canvas" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 400'%3E%3Crect width='600' height='400' fill='%23F3F1E8'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%238A9B7A'%3EНажмите «Загрузить изображение»%3C/text%3E%3C/svg%3E" alt="Плакат">
+                <div id="hotspotsContainer"></div>
+            </div>
+        </div>
+        <div class="points-list" id="pointsList">
+            <div style="text-align:center; color:#8A9B7A; padding:1rem;">✨ Кликните на изображение, чтобы добавить метку</div>
+        </div>
+    </div>
+
+    <!-- Экспорт -->
+    <div id="exportPane" class="tab-pane">
+        <div class="toolbar">
+            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
+            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовый плакат</button>
+        </div>
+        <div style="background:#F3F6EF; border-radius:20px; padding:1rem; margin-top:1rem;">
+            <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
+            ✔ Нажмите «Экспорт» – получите HTML-файл для студентов. Точки фиксированы относительно изображения и не смещаются.</p>
+        </div>
+    </div>
+    <footer>© ВетСим — интерактивный плакат. Кликабельные зоны, пояснения.</footer>
+</div>
+
+<script>
+    // ----- Данные -----
+    let currentImage = null;
+    let hotspots = [];              // { id, xPercent, yPercent, title, description, imageUrl }
+    let nextId = 1;
+    let selectedHotspotId = null;
+
+    const mainImage = document.getElementById('mainImage');
+    const hotspotsContainer = document.getElementById('hotspotsContainer');
+    const pointsListDiv = document.getElementById('pointsList');
+
+    // Получение координат в процентах (относительно ширины/высоты изображения)
+    function getRelativePercentCoords(e) {
+        const rect = mainImage.getBoundingClientRect();
+        let clientX, clientY;
+        if (e.touches) {
+            clientX = e.touches[0].clientX;
+            clientY = e.touches[0].clientY;
+        } else {
+            clientX = e.clientX;
+            clientY = e.clientY;
+        }
+        let percentX = (clientX - rect.left) / rect.width;
+        let percentY = (clientY - rect.top) / rect.height;
+        percentX = Math.min(Math.max(percentX, 0), 1);
+        percentY = Math.min(Math.max(percentY, 0), 1);
+        return { xPercent: percentX, yPercent: percentY };
+    }
+
+    function updateHotspotsVisual() {
+        hotspotsContainer.innerHTML = '';
+        const rect = mainImage.getBoundingClientRect();
+        if (rect.width === 0) return;
+        hotspots.forEach(hot => {
+            const left = hot.xPercent * rect.width;
+            const top = hot.yPercent * rect.height;
+            const dot = document.createElement('div');
+            dot.className = 'hotspot' + (selectedHotspotId === hot.id ? ' selected' : '');
+            dot.style.left = left + 'px';
+            dot.style.top = top + 'px';
+            dot.setAttribute('data-id', hot.id);
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                selectedHotspotId = hot.id;
+                updateHotspotsVisual();
+                renderPointsList();
+            });
+            hotspotsContainer.appendChild(dot);
+        });
+    }
+
+    function renderPointsList() {
+        if (hotspots.length === 0) {
+            pointsListDiv.innerHTML = '<div style="text-align:center; color:#8A9B7A; padding:1rem;">✨ Кликните на изображение, чтобы добавить метку</div>';
+            return;
+        }
+        let html = '';
+        hotspots.forEach((hot, idx) => {
+            html += `
+                <div class="point-item" data-id="${hot.id}">
+                    <div class="point-preview">${idx+1}</div>
+                    <div class="point-info">
+                        <input type="text" class="point-title" data-id="${hot.id}" value="${escapeHtml(hot.title || 'Без названия')}" placeholder="Заголовок">
+                        <textarea class="point-desc" data-id="${hot.id}" rows="2" placeholder="Описание точки">${escapeHtml(hot.description || '')}</textarea>
+                        <input type="text" class="point-image" data-id="${hot.id}" value="${escapeHtml(hot.imageUrl || '')}" placeholder="URL дополнительного изображения (опционально)">
+                    </div>
+                    <div class="point-actions">
+                        <button class="delete-point" data-id="${hot.id}">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+        pointsListDiv.innerHTML = html;
+
+        document.querySelectorAll('.point-title').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                const id = parseInt(inp.getAttribute('data-id'));
+                const hot = hotspots.find(h => h.id === id);
+                if (hot) hot.title = inp.value;
+            });
+        });
+        document.querySelectorAll('.point-desc').forEach(ta => {
+            ta.addEventListener('change', (e) => {
+                const id = parseInt(ta.getAttribute('data-id'));
+                const hot = hotspots.find(h => h.id === id);
+                if (hot) hot.description = ta.value;
+            });
+        });
+        document.querySelectorAll('.point-image').forEach(inp => {
+            inp.addEventListener('change', (e) => {
+                const id = parseInt(inp.getAttribute('data-id'));
+                const hot = hotspots.find(h => h.id === id);
+                if (hot) hot.imageUrl = inp.value;
+            });
+        });
+        document.querySelectorAll('.delete-point').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                hotspots = hotspots.filter(h => h.id !== id);
+                if (selectedHotspotId === id) selectedHotspotId = null;
+                updateHotspotsVisual();
+                renderPointsList();
+            });
+        });
+    }
+
+    function addHotspot(xPercent, yPercent) {
+        const newId = nextId++;
+        hotspots.push({ id: newId, xPercent, yPercent, title: `Точка ${hotspots.length+1}`, description: 'Описание...', imageUrl: '' });
+        selectedHotspotId = newId;
+        updateHotspotsVisual();
+        renderPointsList();
+    }
+
+    // Загрузка изображения
+    document.getElementById('loadImageBtn').addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/jpeg, image/png, image/jpg, image/webp';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    currentImage = ev.target.result;
+                    mainImage.src = currentImage;
+                    hotspots = [];
+                    selectedHotspotId = null;
+                    updateHotspotsVisual();
+                    renderPointsList();
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
+    });
+
+    mainImage.addEventListener('click', (e) => {
+        if (mainImage.src.includes('svg')) return;
+        const { xPercent, yPercent } = getRelativePercentCoords(e);
+        addHotspot(xPercent, yPercent);
+    });
+
+    window.addEventListener('resize', () => { updateHotspotsVisual(); });
+    mainImage.addEventListener('load', () => { updateHotspotsVisual(); });
+
+    document.getElementById('clearHotspotsBtn').addEventListener('click', () => {
+        hotspots = [];
+        selectedHotspotId = null;
+        updateHotspotsVisual();
+        renderPointsList();
+    });
+
+    function loadDemoSkin() {
+        currentImage = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500"%3E%3Crect width="800" height="500" fill="%23F8E3C0"/%3E%3Ctext x="50%25" y="30%25" text-anchor="middle" font-size="20"%3EСхема кожи (демо)%3C/text%3E%3Ctext x="30%25" y="50%25" fill="%238A6B4A"%3EЭпидермис%3C/text%3E%3Ctext x="30%25" y="60%25" fill="%23A8835E"%3EДерма%3C/text%3E%3Ctext x="30%25" y="70%25" fill="%237A5A3E"%3EГиподермис%3C/text%3E%3C/svg%3E';
+        mainImage.src = currentImage;
+        hotspots = [
+            { id: nextId++, xPercent: 0.25, yPercent: 0.30, title: "Эпидермис", description: "Наружный слой, защита от внешних воздействий, обновляется каждые 2-4 недели.", imageUrl: "" },
+            { id: nextId++, xPercent: 0.25, yPercent: 0.50, title: "Дерма", description: "Соединительная ткань, содержит кровеносные сосуды, нервные окончания.", imageUrl: "" },
+            { id: nextId++, xPercent: 0.25, yPercent: 0.70, title: "Гиподермис", description: "Подкожная жировая клетчатка, термоизоляция, амортизация.", imageUrl: "" }
+        ];
+        selectedHotspotId = null;
+        updateHotspotsVisual();
+        renderPointsList();
+    }
+    document.getElementById('resetDemoBtn').addEventListener('click', loadDemoSkin);
+
+    function saveProject() {
+        const project = {
+            image: mainImage.src,
+            hotspots: hotspots.map(h => ({ ...h })),
+            nextId: nextId
+        };
+        const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'hotspot_project.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function loadProject(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const proj = JSON.parse(e.target.result);
+                mainImage.src = proj.image;
+                hotspots = proj.hotspots || [];
+                nextId = proj.nextId || 1;
+                selectedHotspotId = null;
+                updateHotspotsVisual();
+                renderPointsList();
+            } catch(err) { alert('Ошибка загрузки'); }
+        };
+        reader.readAsText(file);
+    }
+
+    // ЭКСПОРТ — исправленное позиционирование
+    function exportGame() {
+        const exportImage = mainImage.src;
+        const exportHotspots = hotspots.map(h => ({
+            xPercent: h.xPercent,
+            yPercent: h.yPercent,
+            title: h.title,
+            description: h.description,
+            imageUrl: h.imageUrl
+        }));
+        const htmlContent = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Интерактивный плакат | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:1rem;color:#3E5C4A;}
+        .container{max-width:1200px;margin:0 auto;}
+        h1{text-align:center;color:#1F4E6E;margin-bottom:0.5rem;}
+        .sub{text-align:center;margin-bottom:1rem;}
+        .poster-wrapper{position:relative;display:inline-block;width:100%;text-align:center;}
+        .poster-img{width:100%;height:auto;border-radius:24px;box-shadow:0 4px 12px rgba(0,0,0,0.1);display:block;}
+        .hotspots-layer{position:absolute;top:0;left:0;width:100%;height:100%;}
+        .hotspot-dot{position:absolute;width:18px;height:18px;background:#2C7DA0;border:2px solid white;border-radius:50%;transform:translate(-50%,-50%);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,0.3);transition:0.1s;}
+        .hotspot-dot:hover{transform:translate(-50%,-50%) scale(1.2);background:#D4A373;}
+        .modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:1000;}
+        .modal-card{background:#FEFCF9;max-width:500px;width:90%;border-radius:32px;padding:1.5rem;text-align:center;}
+        .modal-title{font-size:1.5rem;font-weight:700;color:#2C7DA0;margin-bottom:0.5rem;}
+        .modal-desc{margin:1rem 0;white-space:pre-wrap;}
+        .modal-img{max-width:100%;border-radius:20px;margin-top:0.5rem;}
+        .close-btn{background:#2C7DA0;color:white;border:none;padding:0.5rem 1.5rem;border-radius:40px;margin-top:1rem;cursor:pointer;}
+        footer{text-align:center;margin-top:2rem;font-size:0.7rem;}
+        @media (max-width:600px){.hotspot-dot{width:18px;height:18px;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🖼️ Интерактивный плакат</h1>
+    <div class="sub">Нажмите на цветные точки, чтобы узнать подробности</div>
+    <div class="poster-wrapper">
+        <img id="posterImage" class="poster-img" src="${exportImage}" alt="Плакат">
+        <div id="hotspotsLayer" class="hotspots-layer"></div>
+    </div>
+    <footer>© ВетСим — обучающий плакат</footer>
+</div>
+<script>
+    const hotspotsData = ${JSON.stringify(exportHotspots)};
+    const poster = document.getElementById('posterImage');
+    const layer = document.getElementById('hotspotsLayer');
+    let modal = null;
+
+    function updateHotspots() {
+        if (!poster.complete || poster.naturalWidth === 0) return;
+        const rect = poster.getBoundingClientRect();
+        const containerRect = poster.parentElement.getBoundingClientRect();
+        // точки позиционируются относительно родительского контейнера (poster-wrapper), который имеет те же размеры, что и изображение
+        layer.innerHTML = '';
+        hotspotsData.forEach(hot => {
+            const left = hot.xPercent * rect.width;
+            const top = hot.yPercent * rect.height;
+            const dot = document.createElement('div');
+            dot.className = 'hotspot-dot';
+            dot.style.left = left + 'px';
+            dot.style.top = top + 'px';
+            dot.addEventListener('click', () => showInfo(hot));
+            layer.appendChild(dot);
+        });
+    }
+
+    function showInfo(hot) {
+        if (modal) modal.remove();
+        modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = \`
+            <div class="modal-card">
+                <div class="modal-title">\${escapeHtml(hot.title || 'Информация')}</div>
+                <div class="modal-desc">\${escapeHtml(hot.description || 'Нет описания')}</div>
+                \${hot.imageUrl ? \`<img class="modal-img" src="\${hot.imageUrl}" onerror="this.style.display='none'">\` : ''}
+                <button class="close-btn">Закрыть</button>
+            </div>
+        \`;
+        document.body.appendChild(modal);
+        modal.querySelector('.close-btn').addEventListener('click', () => modal.remove());
+        modal.addEventListener('click', (e) => { if(e.target === modal) modal.remove(); });
+    }
+
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    poster.onload = function() {
+        updateHotspots();
+        window.addEventListener('resize', updateHotspots);
+    };
+    if (poster.complete) poster.onload();
+<\/script>
+</body>
+</html>`;
+        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'interactive_poster.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    }
+
+    document.getElementById('saveProjectBtn').addEventListener('click', saveProject);
+    document.getElementById('loadProjectBtn').addEventListener('click', () => {
+        const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json';
+        inp.onchange = e => loadProject(inp.files[0]);
+        inp.click();
+    });
+    document.getElementById('exportGameBtn').addEventListener('click', exportGame);
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.getElementById(btn.dataset.tab + 'Pane').classList.add('active');
+            if (btn.dataset.tab === 'editor') {
+                updateHotspotsVisual();
+                renderPointsList();
+            }
+        });
+    });
+</script>
+</body>
+</html>

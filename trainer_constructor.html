@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор интерактивных тренажёров | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+        }
+        .main-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        /* панель редактора */
+        .editor-panel {
+            flex: 1.5;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            border: 1px solid #E7EDE2;
+        }
+        .image-panel {
+            flex: 1;
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid #E7EDE2;
+        }
+        .image-panel img {
+            max-width: 100%;
+            border-radius: 20px;
+            background: #F7F5EE;
+            cursor: pointer;
+            max-height: 280px;
+            object-fit: contain;
+        }
+        .section-title {
+            font-weight: 700;
+            margin: 1rem 0 0.8rem 0;
+            font-size: 1.2rem;
+            color: #2C7DA0;
+            border-left: 4px solid #A3B18A;
+            padding-left: 12px;
+        }
+        .stage-block {
+            background: #FEFCF9;
+            border: 1px solid #E2EAD9;
+            border-radius: 24px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .stage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .stage-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        .btn-icon {
+            background: #EEF2E9;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .question-item {
+            background: #FDF8F0;
+            border-radius: 20px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+        }
+        .question-text {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+            margin-bottom: 0.5rem;
+        }
+        .options-area {
+            margin-left: 1rem;
+        }
+        .opt-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+        .opt-row input {
+            flex: 1;
+            padding: 6px 10px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+        }
+        .correct-select {
+            width: 80px;
+            padding: 4px;
+            border-radius: 30px;
+        }
+        .add-opt {
+            font-size: 0.75rem;
+            background: #E2EAD9;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+        .flex-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        @media (max-width: 700px) {
+            .main-layout { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧩 Конструктор интерактивных тренажёров</h1>
+    <div class="sub">Создайте свой тренажёр: загрузите картинку, добавьте этапы, вопросы, варианты — экспортируйте в HTML</div>
+
+    <div class="main-layout">
+        <!-- ЛЕВАЯ ПАНЕЛЬ – РЕДАКТОР -->
+        <div class="editor-panel">
+            <div class="flex-row">
+                <button id="addStageBtn" class="btn-primary">➕ Добавить этап</button>
+                <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+                <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
+                <button id="exportTrainerBtn" class="btn-primary">🚀 Экспорт в готовый тренажёр</button>
+            </div>
+            <div id="stagesContainer"></div>
+        </div>
+
+        <!-- ПРАВАЯ ПАНЕЛЬ – ИЗОБРАЖЕНИЕ (превью) -->
+        <div class="image-panel">
+            <div class="section-title">📸 Ваше изображение</div>
+            <img id="trainerImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%23F7F5EE'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%238A9B7A'%3EНажмите для загрузки%3C/text%3E%3C/svg%3E" alt="Превью изображения" style="cursor:pointer;">
+            <p style="margin-top: 0.5rem; font-size:0.8rem;">Нажмите на картинку, чтобы загрузить своё (JPG/PNG)</p>
+        </div>
+    </div>
+    <footer>© ВетСим — создавайте тренажёры без программирования. Перемешивание вариантов, экспорт в HTML, работа без интернета.</footer>
+</div>
+
+<script>
+    // ----- Структура данных: этапы, внутри каждого – вопросы -----
+    let stages = [];   // каждый этап: { name: "Этап 1", questions: [{ text: "...", options: ["opt1","opt2"], correct: 0 }] }
+    let currentImageData = null; // base64 или URL
+
+    // DOM элементы
+    const stagesContainer = document.getElementById('stagesContainer');
+    const trainerImage = document.getElementById('trainerImage');
+
+    // --- Загрузка изображения пользователем ---
+    trainerImage.addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/jpeg, image/png, image/jpg';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    trainerImage.src = ev.target.result;
+                    currentImageData = ev.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+        input.click();
+    });
+
+    // ---- вспомогательные функции для рендеринга редактора ----
+    function renderEditor() {
+        stagesContainer.innerHTML = '';
+        if (stages.length === 0) {
+            stagesContainer.innerHTML = '<div style="background:#F3F6EF; border-radius:28px; padding:2rem; text-align:center;">➕ Нажмите «Добавить этап», чтобы начать создание тренажёра</div>';
+            return;
+        }
+        stages.forEach((stage, stageIdx) => {
+            const stageDiv = document.createElement('div');
+            stageDiv.className = 'stage-block';
+            stageDiv.innerHTML = `
+                <div class="stage-header">
+                    <span class="stage-name">📌 ${escapeHtml(stage.name)}</span>
+                    <button class="btn-icon remove-stage" data-stage="${stageIdx}">🗑️ Удалить этап</button>
+                </div>
+                <div class="stage-name-edit">
+                    <input type="text" class="stage-name-input" data-stage="${stageIdx}" value="${escapeHtml(stage.name)}" style="width:100%; border-radius:30px; border:1px solid #D1DEC2; padding:6px 12px;">
+                </div>
+                <div id="questions-${stageIdx}" style="margin-top: 1rem;"></div>
+                <button class="add-question-btn btn-icon" data-stage="${stageIdx}">+ Добавить вопрос</button>
+            `;
+            stagesContainer.appendChild(stageDiv);
+
+            // отрисовка вопросов для этого этапа
+            const questionsContainer = document.getElementById(`questions-${stageIdx}`);
+            if (questionsContainer) {
+                stage.questions.forEach((q, qIdx) => {
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'question-item';
+                    qDiv.innerHTML = `
+                        <div style="display:flex; justify-content:space-between;">
+                            <strong>Вопрос ${qIdx+1}</strong>
+                            <button class="btn-icon remove-question" data-stage="${stageIdx}" data-q="${qIdx}">✖</button>
+                        </div>
+                        <input type="text" class="question-text-input" data-stage="${stageIdx}" data-q="${qIdx}" value="${escapeHtml(q.text)}" placeholder="Текст вопроса">
+                        <div class="options-area" id="opts-${stageIdx}-${qIdx}"></div>
+                        <button class="add-opt-btn" data-stage="${stageIdx}" data-q="${qIdx}">➕ Добавить вариант</button>
+                        <div style="margin-top: 6px;"><label>✅ Правильный ответ (индекс, начиная с 0): </label><input type="number" class="correct-idx" data-stage="${stageIdx}" data-q="${qIdx}" value="${q.correct}" style="width:70px;"></div>
+                    `;
+                    questionsContainer.appendChild(qDiv);
+                    // отрисовка вариантов
+                    const optsDiv = document.getElementById(`opts-${stageIdx}-${qIdx}`);
+                    if (optsDiv) {
+                        q.options.forEach((opt, optIdx) => {
+                            const optRow = document.createElement('div');
+                            optRow.className = 'opt-row';
+                            optRow.innerHTML = `
+                                <input type="text" class="option-text" data-stage="${stageIdx}" data-q="${qIdx}" data-opt="${optIdx}" value="${escapeHtml(opt)}" placeholder="Вариант">
+                                <button class="remove-opt" data-stage="${stageIdx}" data-q="${qIdx}" data-opt="${optIdx}">✖</button>
+                            `;
+                            optsDiv.appendChild(optRow);
+                        });
+                    }
+                });
+            }
+
+            // обработчики
+            stageDiv.querySelector('.remove-stage').addEventListener('click', () => { stages.splice(stageIdx,1); renderEditor(); });
+            stageDiv.querySelector('.stage-name-input').addEventListener('change', (e) => { stages[stageIdx].name = e.target.value; renderEditor(); });
+            stageDiv.querySelector('.add-question-btn').addEventListener('click', () => {
+                stages[stageIdx].questions.push({ text: "Новый вопрос", options: ["Вариант A","Вариант B"], correct: 0 });
+                renderEditor();
+            });
+            // делегирование для динамических кнопок
+            attachQuestionEvents(stageIdx);
+        });
+    }
+
+    function attachQuestionEvents(stageIdx) {
+        // удаление вопросов
+        document.querySelectorAll(`.remove-question[data-stage="${stageIdx}"]`).forEach(btn => {
+            btn.removeEventListener('click', remHandler);
+            btn.addEventListener('click', remHandler);
+            function remHandler(e) {
+                let qIdx = parseInt(btn.getAttribute('data-q'));
+                stages[stageIdx].questions.splice(qIdx,1);
+                renderEditor();
+            }
+        });
+        // изменение текста вопроса
+        document.querySelectorAll(`.question-text-input[data-stage="${stageIdx}"]`).forEach(inp => {
+            inp.removeEventListener('change', changeText);
+            inp.addEventListener('change', changeText);
+            function changeText(e) {
+                let qIdx = parseInt(inp.getAttribute('data-q'));
+                stages[stageIdx].questions[qIdx].text = inp.value;
+            }
+        });
+        // изменение правильного индекса
+        document.querySelectorAll(`.correct-idx[data-stage="${stageIdx}"]`).forEach(inp => {
+            inp.removeEventListener('change', changeCorrect);
+            inp.addEventListener('change', changeCorrect);
+            function changeCorrect(e) {
+                let qIdx = parseInt(inp.getAttribute('data-q'));
+                stages[stageIdx].questions[qIdx].correct = parseInt(inp.value);
+            }
+        });
+        // добавление варианта
+        document.querySelectorAll(`.add-opt-btn[data-stage="${stageIdx}"]`).forEach(btn => {
+            btn.removeEventListener('click', addOpt);
+            btn.addEventListener('click', addOpt);
+            function addOpt(e) {
+                let qIdx = parseInt(btn.getAttribute('data-q'));
+                stages[stageIdx].questions[qIdx].options.push("новый вариант");
+                renderEditor();
+            }
+        });
+        // изменение текста варианта и удаление варианта
+        document.querySelectorAll(`.option-text[data-stage="${stageIdx}"]`).forEach(inp => {
+            inp.removeEventListener('change', changeOptText);
+            inp.addEventListener('change', changeOptText);
+            function changeOptText(e) {
+                let qIdx = parseInt(inp.getAttribute('data-q'));
+                let optIdx = parseInt(inp.getAttribute('data-opt'));
+                stages[stageIdx].questions[qIdx].options[optIdx] = inp.value;
+            }
+        });
+        document.querySelectorAll(`.remove-opt[data-stage="${stageIdx}"]`).forEach(btn => {
+            btn.removeEventListener('click', removeOptHandler);
+            btn.addEventListener('click', removeOptHandler);
+            function removeOptHandler(e) {
+                let qIdx = parseInt(btn.getAttribute('data-q'));
+                let optIdx = parseInt(btn.getAttribute('data-opt'));
+                stages[stageIdx].questions[qIdx].options.splice(optIdx,1);
+                renderEditor();
+            }
+        });
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    // ---- Сохранить / загрузить проект JSON ----
+    function saveProject() {
+        const project = {
+            image: currentImageData || trainerImage.src,
+            stages: stages
+        };
+        const dataStr = JSON.stringify(project, null, 2);
+        const blob = new Blob([dataStr], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'trainer_project.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function loadProject(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const proj = JSON.parse(e.target.result);
+                if (proj.image) {
+                    trainerImage.src = proj.image;
+                    currentImageData = proj.image;
+                }
+                stages = proj.stages || [];
+                renderEditor();
+            } catch(err) { alert("Ошибка загрузки проекта"); }
+        };
+        reader.readAsText(file);
+    }
+
+    // ---- ЭКСПОРТ В ГОТОВЫЙ ТРЕНАЖЁР (самостоятельный HTML) ----
+    function exportTrainer() {
+        if (!stages.length) { alert("Добавьте хотя бы один этап и вопросы!"); return; }
+        // генерируем HTML-код готового тренажёра
+        const imageSrc = currentImageData || trainerImage.src;
+        const stagesData = stages;
+
+        // функция для генерации случайного перемешанного массива индексов
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        const stagesJSON = JSON.stringify(stagesData);
+        const standaloneHTML = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интерактивный тренажёр | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,'Segoe UI',Roboto;color:#3E5C4A;padding:1.5rem;}
+        .container{max-width:1100px;margin:0 auto;}
+        h1{font-size:1.8rem;color:#1F4E6E;text-align:center;}
+        .sub{text-align:center;margin-bottom:1.5rem;}
+        .trainer-layout{display:flex;gap:2rem;flex-wrap:wrap;}
+        .left-img{flex:1; background:white; border-radius:28px; padding:1rem; text-align:center;}
+        .left-img img{max-width:100%; border-radius:20px;}
+        .right-panel{flex:2; background:white; border-radius:28px; padding:1.5rem; border:1px solid #E7EDE2;}
+        .stage-buttons{display:flex; gap:0.8rem; flex-wrap:wrap; margin-bottom:1.5rem;}
+        .stage-btn{background:#EEF2E9; border:none; padding:0.5rem 1rem; border-radius:40px; cursor:pointer;}
+        .stage-btn.active{background:#2C7DA0; color:white;}
+        .pairs-container{display:flex; flex-direction:column; gap:1rem; max-height:500px; overflow-y:auto;}
+        .pair-row{background:#FEFCF9; border:1px solid #E2EAD9; border-radius:60px; padding:10px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
+        .pair-left{font-weight:600; background:#F0EEE5; padding:6px 14px; border-radius:40px;}
+        select{padding:8px 12px; border-radius:40px; border:1px solid #D1DEC2; background:white;}
+        .correct-badge{background:#DAF1D8; color:#2A6B2F; padding:4px 12px; border-radius:30px;}
+        .progress-info{background:#F3F6EF; border-radius:40px; padding:8px 16px; margin-bottom:1rem; display:flex; justify-content:space-between;}
+        footer{margin-top:2rem; text-align:center; font-size:0.7rem;}
+        .reset-btn{background:#E2CFB0; border:none; padding:8px 20px; border-radius:40px; margin-top:1rem; cursor:pointer;}
+        @media (max-width:700px){.pair-row{flex-direction:column; align-items:stretch; gap:0.5rem;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧠 Интерактивный тренажёр</h1>
+    <div class="sub">Перемешанные варианты • Много этапов</div>
+    <div class="trainer-layout">
+        <div class="left-img"><img src="${imageSrc}" alt="Изображение" style="max-width:100%; border-radius:20px;"></div>
+        <div class="right-panel">
+            <div class="stage-buttons" id="stageButtons"></div>
+            <div class="progress-info"><span id="progressText">Правильных ответов: 0 / ...</span><span>🎲 варианты перемешаны</span></div>
+            <div id="gameContainer" class="pairs-container"></div>
+            <button id="resetBtn" class="reset-btn">🔄 Сбросить все ответы</button>
+        </div>
+    </div>
+    <footer>© ВетСим — тренажёр создан в конструкторе</footer>
+</div>
+<script>
+    const stagesData = ${stagesJSON};
+    let currentStageIdx = 0;
+    let userAnswers = [];   // для каждого этапа массив ответов по вопросам (индексы выбранных вариантов)
+    let shuffledOptions = []; // для каждого этапа и вопроса храним перемешанные индексы вариантов
+
+    function initShuffled() {
+        shuffledOptions = [];
+        for (let s = 0; s < stagesData.length; s++) {
+            shuffledOptions[s] = [];
+            for (let q = 0; q < stagesData[s].questions.length; q++) {
+                let indices = stagesData[s].questions[q].options.map((_, idx) => idx);
+                for (let i = indices.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [indices[i], indices[j]] = [indices[j], indices[i]];
+                }
+                shuffledOptions[s][q] = indices;
+            }
+        }
+    }
+
+    function initAnswers() {
+        userAnswers = [];
+        for (let s = 0; s < stagesData.length; s++) {
+            userAnswers[s] = new Array(stagesData[s].questions.length).fill(null);
+        }
+    }
+
+    function countCorrect() {
+        let correct = 0;
+        let stage = stagesData[currentStageIdx];
+        if (!stage) return 0;
+        for (let qIdx = 0; qIdx < stage.questions.length; qIdx++) {
+            let ans = userAnswers[currentStageIdx][qIdx];
+            if (ans !== null && ans === stage.questions[qIdx].correct) correct++;
+        }
+        return correct;
+    }
+
+    function updateProgress() {
+        let correct = countCorrect();
+        let total = stagesData[currentStageIdx].questions.length;
+        document.getElementById('progressText').innerHTML = \`✅ Правильных ответов: \${correct} / \${total}\`;
+    }
+
+    function renderStage() {
+        const container = document.getElementById('gameContainer');
+        const stage = stagesData[currentStageIdx];
+        if (!stage) return;
+        container.innerHTML = '';
+        for (let qIdx = 0; qIdx < stage.questions.length; qIdx++) {
+            const q = stage.questions[qIdx];
+            const row = document.createElement('div');
+            row.className = 'pair-row';
+            const leftSpan = document.createElement('div');
+            leftSpan.className = 'pair-left';
+            leftSpan.textContent = q.text;
+            const select = document.createElement('select');
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = '— выберите ответ —';
+            select.appendChild(defaultOpt);
+            const shuffled = shuffledOptions[currentStageIdx][qIdx];
+            for (let optIdx of shuffled) {
+                const optEl = document.createElement('option');
+                optEl.value = optIdx;
+                optEl.textContent = q.options[optIdx];
+                if (userAnswers[currentStageIdx][qIdx] === optIdx) optEl.selected = true;
+                select.appendChild(optEl);
+            }
+            select.addEventListener('change', (e) => {
+                const val = parseInt(e.target.value);
+                userAnswers[currentStageIdx][qIdx] = isNaN(val) ? null : val;
+                updateProgress();
+                highlightRow(row, qIdx);
+            });
+            row.appendChild(leftSpan);
+            row.appendChild(select);
+            container.appendChild(row);
+            highlightRow(row, qIdx);
+        }
+        updateProgress();
+    }
+
+    function highlightRow(row, qIdx) {
+        const isCorrect = (userAnswers[currentStageIdx][qIdx] === stagesData[currentStageIdx].questions[qIdx].correct);
+        const badge = row.querySelector('.correct-badge');
+        if (badge) badge.remove();
+        row.style.backgroundColor = isCorrect ? '#F1F9EE' : '#FEFCF9';
+        row.style.borderLeft = isCorrect ? '4px solid #7CA86A' : '1px solid #E2EAD9';
+        if (isCorrect && !row.querySelector('.correct-badge')) {
+            const span = document.createElement('span');
+            span.className = 'correct-badge';
+            span.textContent = '✓ верно';
+            row.appendChild(span);
+        } else if (!isCorrect && row.querySelector('.correct-badge')) row.querySelector('.correct-badge').remove();
+    }
+
+    function renderStageButtons() {
+        const btnsDiv = document.getElementById('stageButtons');
+        btnsDiv.innerHTML = '';
+        stagesData.forEach((stage, idx) => {
+            const btn = document.createElement('button');
+            btn.textContent = stage.name || \`Этап \${idx+1}\`;
+            btn.classList.add('stage-btn');
+            if (idx === currentStageIdx) btn.classList.add('active');
+            btn.onclick = () => {
+                currentStageIdx = idx;
+                renderStageButtons();
+                renderStage();
+            };
+            btnsDiv.appendChild(btn);
+        });
+    }
+
+    function resetAnswers() {
+        for (let i = 0; i < stagesData[currentStageIdx].questions.length; i++) {
+            userAnswers[currentStageIdx][i] = null;
+        }
+        renderStage();
+    }
+
+    initShuffled();
+    initAnswers();
+    renderStageButtons();
+    renderStage();
+    document.getElementById('resetBtn').onclick = resetAnswers;
+</script>
+</body>
+</html>`;
+        const blob = new Blob([standaloneHTML], {type: 'text/html'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'custom_trainer.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    // --- Инициализация демо-данных (один этап с примером) ---
+    function initDemo() {
+        if (stages.length === 0) {
+            stages = [
+                {
+                    name: "Этап 1: Анатомия",
+                    questions: [
+                        { text: "Как называется первый черепно-мозговой нерв?", options: ["Обонятельный", "Зрительный", "Блоковый"], correct: 0 },
+                        { text: "Какой нерв отвечает за движение глаз?", options: ["Глазодвигательный", "Отводящий", "Блоковый"], correct: 0 }
+                    ]
+                }
+            ];
+            renderEditor();
+        }
+    }
+
+    // ---- Обработчики глобальных кнопок ----
+    document.getElementById('addStageBtn').addEventListener('click', () => {
+        stages.push({ name: `Этап ${stages.length+1}`, questions: [] });
+        renderEditor();
+    });
+    document.getElementById('saveProjectBtn').addEventListener('click', saveProject);
+    document.getElementById('loadProjectBtn').addEventListener('click', () => {
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
+        inp.onchange = e => loadProject(inp.files[0]);
+        inp.click();
+    });
+    document.getElementById('exportTrainerBtn').addEventListener('click', exportTrainer);
+
+    initDemo();
+</script>
+</body>
+</html>

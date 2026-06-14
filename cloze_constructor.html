@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор «Текст с пропусками» | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,'Segoe UI',Roboto,sans-serif;color:#3E5C4A;padding:1.5rem;}
+        .container{max-width:1300px;margin:0 auto;}
+        h1{font-size:1.8rem;font-weight:600;color:#1F4E6E;text-align:center;margin-bottom:0.3rem;}
+        .sub{text-align:center;color:#7C8F7C;margin-bottom:1.8rem;font-size:0.9rem;}
+        .tabs{display:flex;gap:1rem;justify-content:center;margin-bottom:2rem;flex-wrap:wrap;}
+        .tab-btn{background:#EEF2E9;border:none;padding:0.6rem 1.8rem;border-radius:40px;font-weight:600;cursor:pointer;transition:0.2s;}
+        .tab-btn.active{background:#2C7DA0;color:white;}
+        .tab-pane{display:none;background:white;border-radius:28px;padding:1.5rem;box-shadow:0 8px 20px rgba(0,0,0,0.03);border:1px solid #E7EDE2;}
+        .tab-pane.active{display:block;}
+        .editor-section{margin-bottom:1.5rem;}
+        label{font-weight:600;display:block;margin-bottom:0.5rem;}
+        input,textarea{width:100%;padding:10px 14px;border-radius:30px;border:1px solid #D1DEC2;font-family:inherit;font-size:0.9rem;}
+        .text-editor{background:#FEFCF9;border:1px solid #E2EAD9;border-radius:24px;padding:1rem;min-height:200px;font-size:1rem;line-height:1.5;white-space:pre-wrap;overflow-y:auto;}
+        .gap-marker{display:inline-block;background:#F0EEE5;border:1px dashed #A3B18A;border-radius:30px;padding:4px 12px;margin:0 2px;font-weight:600;color:#2C7DA0;cursor:pointer;}
+        .toolbar{display:flex;gap:0.8rem;flex-wrap:wrap;margin:1rem 0;}
+        .btn-icon{background:#EEF2E9;border:none;padding:6px 14px;border-radius:30px;cursor:pointer;font-size:0.8rem;}
+        .btn-primary{background:#2C7DA0;color:white;border:none;padding:8px 20px;border-radius:40px;font-weight:600;cursor:pointer;}
+        .btn-secondary{background:#A3B18A;color:white;border:none;padding:8px 20px;border-radius:40px;cursor:pointer;}
+        .flex-row{display:flex;gap:1rem;flex-wrap:wrap;margin:1rem 0;align-items:center;}
+        .gap-list{background:#F3F6EF;border-radius:28px;padding:1rem;margin-top:1rem;}
+        .gap-item{display:flex;gap:0.8rem;align-items:center;margin-bottom:0.8rem;background:white;border-radius:40px;padding:6px 12px;flex-wrap:wrap;}
+        .gap-order{font-weight:bold;background:#2C7DA0;color:white;border-radius:30px;width:30px;text-align:center;padding:4px;}
+        .gap-question{flex:2;min-width:150px;}
+        footer{margin-top:2rem;text-align:center;font-size:0.7rem;color:#A7B89A;border-top:1px solid #E2EAD9;padding-top:1rem;}
+        @media (max-width:700px){.gap-item{flex-direction:column;align-items:stretch;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📝 Конструктор «Текст с пропусками»</h1>
+    <div class="sub">Создайте учебный текст с пропусками (Cloze-задание). Экспортируйте в готовый тренажёр.</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
+    </div>
+
+    <div id="editorPane" class="tab-pane active">
+        <div class="editor-section">
+            <label>📌 Название задания</label>
+            <input type="text" id="taskTitle" value="Текст с пропусками (вставьте правильные слова)">
+        </div>
+        <div class="editor-section">
+            <label>✏️ Текст (используйте кнопку «Добавить пропуск» для вставки [___])</label>
+            <div class="toolbar">
+                <button id="addGapBtn" class="btn-icon">➕ Добавить пропуск</button>
+                <button id="clearTextBtn" class="btn-icon">🗑️ Очистить текст</button>
+            </div>
+            <div id="textEditor" class="text-editor" contenteditable="true">
+                Сердце собаки состоит из [___] камер. Артерии несут кровь от [___], а вены — к сердцу.
+            </div>
+            <p style="font-size:0.75rem; margin-top:6px;">💡 Поставьте курсор в нужное место и нажмите «Добавить пропуск».</p>
+        </div>
+        <div class="editor-section">
+            <label>📋 Список пропусков (укажите правильные ответы)</label>
+            <div id="gapsPanel" class="gap-list"></div>
+        </div>
+    </div>
+
+    <div id="exportPane" class="tab-pane">
+        <div class="flex-row">
+            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
+            <button id="exportBtn" class="btn-primary">🚀 Экспорт в готовый тренажёр</button>
+        </div>
+        <div style="background:#F3F6EF; border-radius:28px; padding:1rem; margin-top:1rem;">
+            <h3>📌 Инструкция</h3>
+            <p>Нажмите «Экспорт», скачается файл <strong>cloze_trainer.html</strong>. Откройте его в любом браузере – студенты увидят текст с полями ввода, смогут проверить ответы и увидеть результат.</p>
+        </div>
+    </div>
+    <footer>© ВетСим — задание «Текст с пропусками» (Cloze). Работает во всех браузерах.</footer>
+</div>
+
+<script>
+    // ---------- Глобальные переменные ----------
+    let gaps = [];
+    let nextId = 1;
+
+    const textEditor = document.getElementById('textEditor');
+    const gapsPanel = document.getElementById('gapsPanel');
+    const taskTitleInput = document.getElementById('taskTitle');
+
+    // Преобразование всех текстовых [___] в спаны-маркеры
+    function convertBracketsToMarkers() {
+        const walker = document.createTreeWalker(textEditor, NodeFilter.SHOW_TEXT, null, false);
+        const nodesToReplace = [];
+        while (walker.nextNode()) {
+            const node = walker.currentNode;
+            if (node.nodeType === Node.TEXT_NODE && node.textContent.includes('[___]')) {
+                nodesToReplace.push(node);
+            }
+        }
+        nodesToReplace.forEach(node => {
+            const parent = node.parentNode;
+            const text = node.textContent;
+            const parts = text.split(/(\[___\])/g);
+            const fragment = document.createDocumentFragment();
+            for (let part of parts) {
+                if (part === '[___]') {
+                    const span = document.createElement('span');
+                    span.className = 'gap-marker';
+                    span.setAttribute('data-id', nextId++);
+                    span.textContent = '[___]';
+                    span.contentEditable = 'false';
+                    fragment.appendChild(span);
+                    gaps.push({ id: parseInt(span.getAttribute('data-id')), correctAnswer: '' });
+                } else if (part) {
+                    fragment.appendChild(document.createTextNode(part));
+                }
+            }
+            parent.replaceChild(fragment, node);
+        });
+        const unique = [];
+        const ids = new Set();
+        for (let g of gaps) {
+            if (!ids.has(g.id)) {
+                ids.add(g.id);
+                unique.push(g);
+            }
+        }
+        gaps = unique;
+        refreshGapsList();
+    }
+
+    function refreshGapsList() {
+        const markers = textEditor.querySelectorAll('.gap-marker');
+        const newGaps = [];
+        markers.forEach(marker => {
+            let id = marker.getAttribute('data-id');
+            if (!id) {
+                id = nextId++;
+                marker.setAttribute('data-id', id);
+            }
+            let existing = gaps.find(g => g.id == id);
+            if (!existing) existing = { id: parseInt(id), correctAnswer: '' };
+            newGaps.push(existing);
+        });
+        gaps = newGaps;
+        gapsPanel.innerHTML = '';
+        if (gaps.length === 0) {
+            gapsPanel.innerHTML = '<div style="padding:1rem; text-align:center;">Пропусков пока нет. Нажмите «Добавить пропуск» в тексте.</div>';
+            return;
+        }
+        gaps.forEach((gap, idx) => {
+            const div = document.createElement('div');
+            div.className = 'gap-item';
+            div.innerHTML = `
+                <div class="gap-order">${idx+1}</div>
+                <div class="gap-question"><input type="text" class="gap-answer-input" data-id="${gap.id}" value="${escapeHtml(gap.correctAnswer)}" placeholder="Правильный ответ"></div>
+                <button class="btn-icon remove-gap" data-id="${gap.id}">✖ Удалить пропуск</button>
+            `;
+            gapsPanel.appendChild(div);
+        });
+        document.querySelectorAll('.gap-answer-input').forEach(inp => inp.addEventListener('change', answerChangeHandler));
+        document.querySelectorAll('.remove-gap').forEach(btn => btn.addEventListener('click', removeGapHandler));
+    }
+
+    function answerChangeHandler(e) {
+        const id = parseInt(e.target.getAttribute('data-id'));
+        const val = e.target.value;
+        const gap = gaps.find(g => g.id === id);
+        if (gap) gap.correctAnswer = val;
+    }
+
+    function removeGapHandler(e) {
+        const id = parseInt(e.target.getAttribute('data-id'));
+        const marker = textEditor.querySelector(`.gap-marker[data-id="${id}"]`);
+        if (marker) {
+            const textNode = document.createTextNode('______');
+            marker.parentNode.replaceChild(textNode, marker);
+        }
+        gaps = gaps.filter(g => g.id !== id);
+        refreshGapsList();
+    }
+
+    function addGap() {
+        const selection = window.getSelection();
+        if (!selection.rangeCount) { alert("Поставьте курсор в нужное место"); return; }
+        const range = selection.getRangeAt(0);
+        const newId = nextId++;
+        const span = document.createElement('span');
+        span.className = 'gap-marker';
+        span.setAttribute('data-id', newId);
+        span.textContent = '[___]';
+        span.contentEditable = 'false';
+        range.deleteContents();
+        range.insertNode(span);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        gaps.push({ id: newId, correctAnswer: '' });
+        refreshGapsList();
+    }
+
+    function clearText() {
+        if (confirm("Очистить весь текст?")) {
+            textEditor.innerHTML = 'Введите ваш текст...';
+            gaps = [];
+            nextId = 1;
+            refreshGapsList();
+        }
+    }
+
+    function saveProject() {
+        const project = {
+            taskTitle: taskTitleInput.value,
+            editorHTML: textEditor.innerHTML,
+            gaps: gaps.map(g => ({ id: g.id, correctAnswer: g.correctAnswer }))
+        };
+        const blob = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'cloze_project.json';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function loadProject(file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const proj = JSON.parse(e.target.result);
+                taskTitleInput.value = proj.taskTitle || "Текст с пропусками";
+                textEditor.innerHTML = proj.editorHTML || "Текст";
+                gaps = proj.gaps || [];
+                if (gaps.length) nextId = Math.max(...gaps.map(g => g.id), 0) + 1;
+                else nextId = 1;
+                convertBracketsToMarkers();
+                refreshGapsList();
+            } catch(err) { alert("Ошибка загрузки проекта"); }
+        };
+        reader.readAsText(file);
+    }
+
+    // ---------- ЭКСПОРТ (исправленный) ----------
+    function exportTrainer() {
+        const title = taskTitleInput.value;
+        const rawHTML = textEditor.innerHTML;
+        const gapsData = gaps.map(g => ({ correctAnswer: g.correctAnswer }));
+
+        const standalone = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${escapeHtml(title)} | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,'Segoe UI',Roboto,sans-serif;color:#3E5C4A;padding:1.5rem;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{font-size:1.8rem;color:#1F4E6E;text-align:center;margin-bottom:1rem;}
+        .task-text{background:white;border-radius:28px;padding:1.5rem;border:1px solid #E2EAD9;font-size:1rem;line-height:1.6;margin:1rem 0;}
+        .gap-input{display:inline-block;width:150px;padding:6px 10px;border-radius:30px;border:1px solid #A3B18A;background:#FFFEF7;margin:0 4px;font-family:inherit;text-align:center;}
+        .btn-group{display:flex;gap:1rem;justify-content:center;margin:1rem 0;}
+        .check-btn{background:#2C7DA0;color:white;border:none;padding:10px 24px;border-radius:40px;cursor:pointer;font-weight:bold;}
+        .reset-btn{background:#E2CFB0;border:none;padding:8px 20px;border-radius:40px;cursor:pointer;}
+        .feedback{background:#F3F6EF;border-radius:28px;padding:1rem;margin-top:1rem;text-align:center;}
+        .correct{background:#DAF1D8;color:#2A6B2F;}
+        .wrong{background:#FFE4DE;color:#BC5A3C;}
+        .score{text-align:center;margin-bottom:1rem;background:#F3F6EF;padding:0.5rem;border-radius:40px;}
+        footer{text-align:center;font-size:0.7rem;margin-top:2rem;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>${escapeHtml(title)}</h1>
+    <div class="score">📊 Результат: <span id="scoreValue">0</span> / <span id="totalCount"></span></div>
+    <div class="task-text" id="taskTextContainer"></div>
+    <div class="btn-group">
+        <button id="checkBtn" class="check-btn">🔍 Проверить</button>
+        <button id="resetBtn" class="reset-btn">🔄 Сбросить</button>
+    </div>
+    <div id="feedback" class="feedback"></div>
+    <footer>© ВетСим — интерактивное задание. Введите ответы в поля.</footer>
+</div>
+<script>
+    const gapsData = ${JSON.stringify(gapsData)};
+    let userAnswers = new Array(gapsData.length).fill('');
+
+    function render() {
+        const container = document.getElementById('taskTextContainer');
+        const raw = ${JSON.stringify(rawHTML)};
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = raw;
+        const placeholders = wrapper.querySelectorAll('.gap-marker');
+        placeholders.forEach((ph, idx) => {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'gap-input';
+            input.placeholder = '_____';
+            input.value = userAnswers[idx] || '';
+            input.setAttribute('data-idx', idx);
+            input.addEventListener('input', (e) => {
+                userAnswers[parseInt(e.target.getAttribute('data-idx'))] = e.target.value;
+            });
+            ph.parentNode.replaceChild(input, ph);
+        });
+        // ВАЖНО: перемещаем готовые узлы, а не перезаписываем innerHTML
+        container.innerHTML = '';
+        while (wrapper.firstChild) {
+            container.appendChild(wrapper.firstChild);
+        }
+        document.getElementById('totalCount').innerText = gapsData.length;
+    }
+
+    function evaluate() {
+        let correct = 0;
+        const details = [];
+        for (let i = 0; i < gapsData.length; i++) {
+            const user = (userAnswers[i] || '').trim().toLowerCase();
+            const correctAnswer = (gapsData[i].correctAnswer || '').trim().toLowerCase();
+            const ok = (user === correctAnswer);
+            if (ok) correct++;
+            details.push({ idx: i, ok, user, correct: gapsData[i].correctAnswer });
+        }
+        const percent = gapsData.length ? Math.round((correct / gapsData.length)*100) : 0;
+        document.getElementById('scoreValue').innerHTML = \`\${correct} из \${gapsData.length} (\${percent}%)\`;
+        const feedbackDiv = document.getElementById('feedback');
+        if (correct === gapsData.length && gapsData.length > 0) {
+            feedbackDiv.innerHTML = '<div class="correct">🎉 Отлично! Все ответы верны!</div>';
+        } else {
+            const missed = details.filter(d => !d.ok).map(d => \`Пропуск \${d.idx+1}: «\${d.correct}» (вы ввели: «\${d.user || 'пусто'}»)\`);
+            feedbackDiv.innerHTML = '<div class="wrong">❌ Не все ответы правильны.<br>' + missed.join('<br>') + '</div>';
+        }
+    }
+
+    function resetAll() {
+        userAnswers.fill('');
+        render();
+        document.getElementById('scoreValue').innerHTML = '0';
+        document.getElementById('feedback').innerHTML = '';
+    }
+
+    render();
+    document.getElementById('checkBtn').addEventListener('click', evaluate);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+<\/script>
+</body>
+</html>`;
+        const blob = new Blob([standalone], {type: 'text/html'});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'cloze_trainer.html';
+        a.click();
+        URL.revokeObjectURL(a.href);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
+    function init() {
+        convertBracketsToMarkers();
+        refreshGapsList();
+    }
+
+    // Обработчики кнопок
+    document.getElementById('addGapBtn').addEventListener('click', addGap);
+    document.getElementById('clearTextBtn').addEventListener('click', clearText);
+    document.getElementById('saveProjectBtn').addEventListener('click', saveProject);
+    document.getElementById('loadProjectBtn').addEventListener('click', () => {
+        const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
+        inp.onchange = e => loadProject(inp.files[0]);
+        inp.click();
+    });
+    document.getElementById('exportBtn').addEventListener('click', exportTrainer);
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.getElementById(btn.dataset.tab + 'Pane').classList.add('active');
+        });
+    });
+
+    init();
+</script>
+</body>
+</html>

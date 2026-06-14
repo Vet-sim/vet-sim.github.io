@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор урока | Сборка тренажёров</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.05);
+            overflow: hidden;
+            padding: 1.8rem;
+        }
+
+        h1 {
+            font-size: 1.9rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area {
+            background: #F4F0E8;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border: 2px dashed #C9D6BA;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #E2CFB0;
+            color: #9B5A3E;
+        }
+
+        .file-list {
+            margin: 1.5rem 0;
+        }
+
+        .file-item {
+            background: #FEFCF8;
+            border: 1px solid #E2D8CA;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .file-name {
+            font-weight: 600;
+            min-width: 180px;
+            background: #F0EADF;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .tab-title-input {
+            flex: 2;
+            min-width: 150px;
+            padding: 6px 12px;
+            border-radius: 2rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            background: white;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: #B65F3A;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .file-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn {
+                padding: 6px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧩 Конструктор урока</h1>
+    <div class="sub">Соберите несколько HTML-тренажёров в один файл с вкладками</div>
+
+    <div class="upload-area">
+        <input type="file" id="fileInput" multiple accept=".html,.htm" style="display:none;">
+        <button id="addBtn" class="btn btn-primary">📂 Добавить HTML-файл(ы)</button>
+        <p style="margin-top: 8px; font-size:0.8rem;">Выберите один или несколько готовых тренажёров (HTML).</p>
+    </div>
+
+    <div id="fileListContainer" class="file-list">
+        <div style="text-align:center; color:#A7B89A;">Нет добавленных файлов</div>
+    </div>
+
+    <div class="action-buttons">
+        <button id="exportBtn" class="btn btn-secondary">✨ Собрать урок</button>
+        <button id="clearBtn" class="btn btn-danger">🗑️ Очистить всё</button>
+    </div>
+
+    <footer>© ВетСим — конструктор урока. Все скрипты и стили будут объединены.</footer>
+</div>
+
+<script>
+    // Хранилище загруженных файлов
+    let lessonFiles = []; // каждый элемент: { tabName, bodyHTML, stylesHTML, scriptsHTML }
+
+    const fileInput = document.getElementById('fileInput');
+    const addBtn = document.getElementById('addBtn');
+    const fileListContainer = document.getElementById('fileListContainer');
+    const exportBtn = document.getElementById('exportBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    // Функция извлечения данных из HTML-строки
+    function parseHtmlFile(content, fileName) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(content, 'text/html');
+        
+        // Извлекаем title
+        let title = doc.title.trim();
+        if (!title) title = fileName.replace(/\.html?$/i, '');
+        
+        // Извлекаем все стили (встроенные <style>)
+        const styles = [];
+        doc.querySelectorAll('style').forEach(styleTag => {
+            styles.push(styleTag.innerHTML);
+        });
+        // Также можно взять стили из link[rel="stylesheet"], но мы их не будем подключать,
+        // чтобы не зависеть от внешних файлов. Оставим только inline.
+        
+        // Извлекаем все скрипты
+        const scripts = [];
+        doc.querySelectorAll('script').forEach(scriptTag => {
+            if (scriptTag.src) {
+                // Внешний скрипт – предупреждение, но добавим как есть (может работать)
+                scripts.push(`(function(){ const s = document.createElement('script'); s.src = "${scriptTag.src}"; document.body.appendChild(s); })();`);
+            } else {
+                scripts.push(scriptTag.innerHTML);
+            }
+        });
+        
+        // Извлекаем содержимое body (всё, что между <body> и </body>)
+        let bodyContent = '';
+        if (doc.body) {
+            bodyContent = doc.body.innerHTML;
+        } else {
+            // fallback
+            const bodyMatch = content.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+            if (bodyMatch) bodyContent = bodyMatch[1];
+        }
+        
+        return { title, styles, scripts, bodyContent };
+    }
+    
+    // Добавление файлов
+    async function addFiles(files) {
+        for (let file of files) {
+            if (!file.name.match(/\.html?$/i)) {
+                alert(`Файл "${file.name}" не является HTML. Пропускаем.`);
+                continue;
+            }
+            try {
+                const content = await readFileAsText(file);
+                const { title, styles, scripts, bodyContent } = parseHtmlFile(content, file.name);
+                lessonFiles.push({
+                    tabName: title,
+                    bodyHTML: bodyContent,
+                    stylesHTML: styles.join('\n'),
+                    scriptsHTML: scripts.join('\n')
+                });
+            } catch (err) {
+                console.error(err);
+                alert(`Ошибка обработки файла "${file.name}"`);
+            }
+        }
+        renderFileList();
+    }
+    
+    function readFileAsText(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.onerror = e => reject(e);
+            reader.readAsText(file, 'UTF-8');
+        });
+    }
+    
+    // Удаление файла по индексу
+    function removeFile(index) {
+        lessonFiles.splice(index, 1);
+        renderFileList();
+    }
+    
+    // Обновить название вкладки
+    function updateTabName(index, newName) {
+        lessonFiles[index].tabName = newName;
+    }
+    
+    // Отрисовка списка файлов
+    function renderFileList() {
+        if (lessonFiles.length === 0) {
+            fileListContainer.innerHTML = '<div style="text-align:center; color:#A7B89A;">Нет добавленных файлов</div>';
+            return;
+        }
+        let html = '';
+        lessonFiles.forEach((item, idx) => {
+            html += `
+                <div class="file-item" data-index="${idx}">
+                    <span class="file-name">📄 ${escapeHtml(item.tabName)}</span>
+                    <input type="text" class="tab-title-input" value="${escapeHtml(item.tabName)}" placeholder="Название вкладки">
+                    <button class="remove-btn" data-index="${idx}">🗑️</button>
+                </div>
+            `;
+        });
+        fileListContainer.innerHTML = html;
+        
+        // Привязываем обработчики к полям ввода и кнопкам удаления
+        document.querySelectorAll('.file-item').forEach((itemDiv, idx) => {
+            const input = itemDiv.querySelector('.tab-title-input');
+            const removeBtn = itemDiv.querySelector('.remove-btn');
+            const realIndex = parseInt(itemDiv.dataset.index);
+            if (input) {
+                input.addEventListener('change', (e) => {
+                    updateTabName(realIndex, e.target.value);
+                });
+            }
+            if (removeBtn) {
+                removeBtn.addEventListener('click', () => {
+                    removeFile(realIndex);
+                });
+            }
+        });
+    }
+    
+    // Экспорт урока
+    function exportLesson() {
+        if (lessonFiles.length === 0) {
+            alert('Нет добавленных тренажёров. Добавьте хотя бы один HTML-файл.');
+            return;
+        }
+        
+        // Собираем все стили в один блок
+        const allStyles = lessonFiles.map(f => f.stylesHTML).filter(s => s.trim()).join('\n\n');
+        // Собираем все скрипты в один блок
+        const allScripts = lessonFiles.map(f => f.scriptsHTML).filter(s => s.trim()).join('\n\n');
+        
+        // Генерируем содержимое вкладок
+        let tabsHtml = '';
+        let panesHtml = '';
+        
+        lessonFiles.forEach((file, idx) => {
+            const tabId = `tab-${idx}`;
+            const paneId = `pane-${idx}`;
+            const activeClass = idx === 0 ? 'active' : '';
+            tabsHtml += `<button class="tab-btn ${activeClass}" data-tab="${paneId}">${escapeHtml(file.tabName)}</button>`;
+            panesHtml += `<div class="tab-pane ${activeClass}" id="${paneId}">${file.bodyHTML}</div>`;
+        });
+        
+        // Шаблон итогового документа
+        const finalHtml = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Сборный урок | Конструктор VetSim</title>
+    <style>
+        /* Глобальные стили для вкладок */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+        }
+        .tabs-container {
+            background: white;
+            border-radius: 0 0 1.5rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            max-width: 1400px;
+            margin: 1rem auto;
+            overflow: hidden;
+        }
+        .tabs-header {
+            display: flex;
+            flex-wrap: wrap;
+            background: #FEFCF8;
+            border-bottom: 1px solid #E2D8CA;
+            padding: 0.5rem 1rem 0 1rem;
+            gap: 0.3rem;
+        }
+        .tab-btn {
+            background: #F0EAE0;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 2rem 2rem 0 0;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-pane {
+            display: none;
+            padding: 1.5rem;
+            background: white;
+            animation: fade 0.2s ease;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        @keyframes fade {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        /* Дополнительные стили для адаптации встроенного содержимого */
+        .tab-pane img, .tab-pane canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        /* Стили из загруженных тренажёров будут добавлены ниже */
+        ${allStyles}
+    </style>
+    ${allScripts ? `<script>${allScripts}<\/script>` : ''}
+</head>
+<body>
+<div class="tabs-container">
+    <div class="tabs-header">
+        ${tabsHtml}
+    </div>
+    ${panesHtml}
+</div>
+<script>
+    // Переключение вкладок
+    function initTabs() {
+        const buttons = document.querySelectorAll('.tab-btn');
+        const panes = document.querySelectorAll('.tab-pane');
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetId = btn.getAttribute('data-tab');
+                buttons.forEach(b => b.classList.remove('active'));
+                panes.forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                const activePane = document.getElementById(targetId);
+                if (activePane) activePane.classList.add('active');
+            });
+        });
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initTabs);
+    } else {
+        initTabs();
+    }
+<\/script>
+</body>
+</html>`;
+        
+        // Скачиваем файл
+        const blob = new Blob([finalHtml], {type: 'text/html'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'lesson.html';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        alert('Урок собран и сохранён как lesson.html');
+    }
+    
+    // Очистка
+    function clearAll() {
+        if (lessonFiles.length && confirm('Удалить все добавленные файлы?')) {
+            lessonFiles = [];
+            renderFileList();
+        } else if (lessonFiles.length === 0) {
+            alert('Список уже пуст');
+        }
+    }
+    
+    // Обработчик добавления файлов
+    addBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length) {
+            addFiles(Array.from(e.target.files));
+            fileInput.value = ''; // чтобы можно было добавить те же файлы повторно
+        }
+    });
+    exportBtn.addEventListener('click', exportLesson);
+    clearBtn.addEventListener('click', clearAll);
+    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+</script>
+</body>
+</html>

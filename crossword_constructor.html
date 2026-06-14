@@ -34,6 +34,7 @@
         .word-item { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; background: white; border-radius: 40px; padding: 6px 14px; margin-bottom: 8px; border: 1px solid #E2EAD9; }
         .word-text { font-weight: 600; min-width: 100px; }
         .word-def-input { flex: 2; min-width: 150px; border: 1px solid #D1DEC2; border-radius: 30px; padding: 6px 12px; font-family: inherit; }
+        .info-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; font-size: 0.85rem; color: #6B8A6B; }
         footer { margin-top: 2rem; text-align: center; font-size: 0.7rem; color: #A7B89A; border-top: 1px solid #E2EAD9; padding-top: 1rem; }
         @media (max-width: 700px) { .cell { width: 32px; height: 32px; font-size: 0.9rem; } .word-item { flex-direction: column; align-items: stretch; } }
     </style>
@@ -55,8 +56,13 @@
             <button id="clearGridBtn" class="btn">🗑️ Очистить сетку</button>
             <label style="display:flex; align-items:center; gap:8px;">📏 Размер: <input type="number" id="gridSize" value="15" min="5" max="30" style="width:70px;"></label>
             <button id="resizeGridBtn" class="btn">Применить</button>
+            <button id="clearAllDefsBtn" class="btn btn-secondary">🧹 Очистить все определения</button>
         </div>
         <div id="gridContainer" class="grid-container"></div>
+        <div class="info-bar">
+            <span>📊 Слов загружено: <span id="totalWordsCount">0</span></span>
+            <span>✅ Слов в сетке: <span id="placedWordsCount">0</span></span>
+        </div>
         <div class="word-list" id="wordListPanel"></div>
         <p style="font-size:0.75rem; margin-top:8px;">💡 После авторасстановки в списке появятся только размещённые слова. Введите для них определения — они попадут в экспорт.</p>
     </div>
@@ -95,6 +101,15 @@
     const saveProjectBtn = document.getElementById('saveProjectBtn');
     const loadProjectBtn = document.getElementById('loadProjectBtn');
     const exportCrosswordBtn = document.getElementById('exportCrosswordBtn');
+    const clearAllDefsBtn = document.getElementById('clearAllDefsBtn');
+    const totalWordsSpan = document.getElementById('totalWordsCount');
+    const placedWordsSpan = document.getElementById('placedWordsCount');
+
+    // ----- Вспомогательные функции обновления счётчиков -----
+    function updateCounters() {
+        totalWordsSpan.textContent = allWords.length;
+        placedWordsSpan.textContent = placedWords.length;
+    }
 
     // ----- Вспомогательные функции -----
     function initEmptyGrid(sz) {
@@ -123,6 +138,7 @@
                     updatePlacedWordsFromGrid();
                     renderWordListForPlacedWords();
                     renderGrid();
+                    updateCounters();
                 });
                 td.appendChild(input);
                 td.addEventListener('click', () => selectCell(i, j));
@@ -150,6 +166,7 @@
             allWords = lines.map(w => w.trim().toUpperCase());
             renderWordListForAllWords();
             alert(`Загружено ${allWords.length} слов. Нажмите "Авторасстановка"`);
+            updateCounters();
         };
         reader.readAsText(file, 'UTF-8');
     }
@@ -265,12 +282,13 @@
                     updatePlacedWordsFromGrid();
                     renderGrid();
                     renderWordListForPlacedWords();
+                    updateCounters();
                 }
             });
         });
     }
 
-    // ----- АЛГОРИТМ АВТОРАССТАНОВКИ -----
+    // ----- АЛГОРИТМ АВТОРАССТАНОВКИ (из вашего кода, не менялся) -----
     function autoPlace() {
         if (!allWords.length) { alert("Нет слов для расстановки. Загрузите файл."); return; }
         const sorted = [...allWords].sort((a,b) => b.length - a.length);
@@ -327,7 +345,8 @@
             grid = newGrid;
             placedWords = placed;               // напрямую сохраняем список размещённых
             renderGrid();
-            renderWordListForPlacedWords();      // теперь отобразятся все размещённые слова
+            renderWordListForPlacedWords();      // теперь отобразятся все размещенные слова
+            updateCounters();
             alert(`Размещено ${placed.length} из ${sorted.length} слов. Остальные можно добавить вручную.`);
         } else {
             alert("Не удалось разместить ни одного слова. Увеличьте размер сетки (сейчас " + size + ").");
@@ -340,6 +359,7 @@
         placedWords = [];
         renderWordListForPlacedWords();
         wordDefMap.clear();
+        updateCounters();
     }
 
     function resizeGrid() {
@@ -359,6 +379,17 @@
         updatePlacedWordsFromGrid();   // пересчитываем слова (может потерять, но лучше так)
         renderWordListForPlacedWords();
         gridSizeInput.value = size;
+        updateCounters();
+    }
+
+    // Очистка всех определений (новая функция)
+    function clearAllDefinitions() {
+        wordDefMap.clear();
+        // также очищаем поля ввода в DOM, если они уже есть
+        const inputs = document.querySelectorAll('.word-def-input');
+        inputs.forEach(inp => inp.value = '');
+        renderWordListForPlacedWords(); // обновляем список (поля станут пустыми)
+        alert("Все определения удалены");
     }
 
     // Сохранение / загрузка проекта
@@ -385,6 +416,7 @@
                 document.getElementById('gridSize').value = size;
                 renderGrid();
                 renderWordListForPlacedWords();
+                updateCounters();
             } catch(err) { alert("Ошибка загрузки файла проекта"); }
         };
         reader.readAsText(file);
@@ -566,6 +598,7 @@
     autoPlaceBtn.addEventListener('click', autoPlace);
     clearGridBtn.addEventListener('click', clearGrid);
     resizeGridBtn.addEventListener('click', resizeGrid);
+    clearAllDefsBtn.addEventListener('click', clearAllDefinitions);
     saveProjectBtn.addEventListener('click', saveProject);
     loadProjectBtn.addEventListener('click', () => {
         const inp = document.createElement('input');
@@ -581,6 +614,7 @@
     grid = initEmptyGrid(15);
     renderGrid();
     renderWordListForAllWords();
+    updateCounters();
 
     // Переключение вкладок
     document.querySelectorAll('.tab-btn').forEach(btn => {

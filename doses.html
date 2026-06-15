@@ -189,7 +189,8 @@
         { id:16, name:"Цефкином", group:"C", status:"первый выбор", doseMin:2, doseMax:2, route:"в/м", frequency:"1 раз/д", concentration:50, injectionSpeed:"в/м", meatWD:10, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"свиньи" },
         { id:17, name:"Цефоперазон", group:"M,E", status:"резерв", doseMin:25, doseMax:50, route:"в/м, в/в", frequency:"2 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"нарушение свертываемости", note:"не для с/х" },
         { id:18, name:"Цефтазидим", group:"M,E", status:"резерв", doseMin:20, doseMax:30, route:"в/м, в/в", frequency:"3 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
-        { id:19, name:"Цефтриаксон", group:"M,E", status:"резерв", doseMin:20, doseMax:30, route:"в/в, в/м", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"гипербилирубинемия у новорожденных", note:"не для с/х" },
+        // ИСПРАВЛЕННЫЙ ПРЕПАРАТ (id:19) – теперь для сельхозживотных
+        { id:19, name:"Цефтриаксон", group:"C", status:"резерв", doseMin:20, doseMax:30, route:"в/м, в/в", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:15, milkWD:72, eggsWD:null, contraindications:"гиперчувствительность к цефалоспоринам", note:"только для сельскохозяйственных животных" },
         { id:20, name:"Цефиксим", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
         { id:21, name:"Цефподоксим", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
         { id:22, name:"Цефдинир", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
@@ -325,7 +326,7 @@
             <div class="result-line"><strong>💊 ${drug.name}</strong> (${drug.status}, группа ${drug.group})</div>
             <div class="result-line">⚖️ Разовая доза: <strong>${volumeMl.toFixed(2)} мл</strong> (средняя ${avgDose} мг/кг × ${weight} кг / ${drug.concentration} мг/мл)</div>
             <div class="result-line">📅 Суточная доза (${freq} раз/д): <strong>${dailyMl.toFixed(2)} мл</strong></div>
-            <div class="result-line">🚀 Способ введения: ${drug.injectionSpeed}</div>
+            <div class="result-line">🚀 Скорость введения: ${drug.injectionSpeed}</div>
             <div class="result-line">⏱️ Путь введения / кратность: ${drug.route}, ${drug.frequency}</div>
             <div class="result-line">🐄 Ограничения продукции: ${withdrawal}</div>
             <div class="result-line">⚠️ Противопоказания: ${drug.contraindications}</div>

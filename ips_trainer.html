@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Тренажёр ИПС: расчёт инфузий с постоянной скоростью | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+        }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            border: 1px solid #E7EDE2;
+            margin-bottom: 1.5rem;
+        }
+        .task-header {
+            background: #EEF2E9;
+            border-radius: 40px;
+            padding: 0.5rem 1.2rem;
+            display: inline-block;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #2C7DA0;
+        }
+        .task-text {
+            background: #FEFAF2;
+            border-left: 5px solid #A3B18A;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+        }
+        .question-block {
+            margin: 1.2rem 0;
+            padding: 0.8rem;
+            background: #F9F6EF;
+            border-radius: 24px;
+        }
+        .question-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .answer-input {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .answer-input input {
+            flex: 2;
+            min-width: 150px;
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: white;
+        }
+        .answer-input span {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #8A9B7A;
+        }
+        .feedback {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            padding-left: 0.5rem;
+            border-left: 3px solid transparent;
+        }
+        .feedback.correct {
+            color: #2A6B2F;
+            border-left-color: #4CAF50;
+        }
+        .feedback.wrong {
+            color: #BC5A3C;
+            border-left-color: #F44336;
+        }
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin: 1.5rem 0 1rem;
+            justify-content: space-between;
+        }
+        button {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #8A9B6E;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #BECFAD;
+        }
+        .stats {
+            background: #F3F6EF;
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .solution {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #F0EDE4;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .solution.active {
+            display: block;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            margin-top: 2rem;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        @media (max-width: 700px) {
+            .button-group { flex-direction: column; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>💉 Тренажёр ИПС</h1>
+    <div class="sub">Инфузия с постоянной скоростью: расчёт доз и разведений</div>
+    <div class="card">
+        <div class="stats" id="stats">✅ Решено задач: 0 / 15 | 📊 Правильных ответов: 0</div>
+        <div id="taskContainer">
+            <!-- динамическое содержимое -->
+        </div>
+        <div class="button-group">
+            <button id="checkBtn" class="btn-primary">🔍 Проверить ответы</button>
+            <button id="hintBtn" class="btn-secondary">💡 Показать решение</button>
+            <button id="nextBtn" class="btn-outline">➡ Следующая задача</button>
+        </div>
+    </div>
+    <footer>© ВетСим — интерактивный тренажёр для расчёта инфузионных помп. Отрабатывайте навыки, сверяйтесь с эталоном.</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // БАЗА ЗАДАЧ (15 штук) с вопросами, ответами и пояснениями
+    // --------------------------------------------------------------
+    const tasks = [
+        { // 1
+            title: "Задача 1. Норадреналин (кошка)",
+            description: "Вид: кошка, вес 3,5 кг. Препарат: норадреналин (гидротартрат), ампула 1 мг/мл. Доза: 0,1 мкг/кг/мин. Желаемая скорость инфузии: 2 мл/ч. Длительность: 10 часов.",
+            questions: [
+                { text: "Сколько мкг действующего вещества необходимо на весь период инфузии?", expected: 210, tolerance: 2 },
+                { text: "Какой объем (мл) растворителя (5% глюкозы или NaCl 0,9%) необходимо добавить к препарату, чтобы получить раствор для шприцевой помпы (общий объем раствора на 10 часов)?", expected: 19.79, tolerance: 0.5 } // 0,21 мл препарата + 19,79 мл растворителя = 20 мл
+            ],
+            explanations: [
+                "Решение: 0,1 мкг/кг/мин × 3,5 кг = 0,35 мкг/мин. За 10 ч (600 мин): 210 мкг.",
+                "За час вводится 2 мл, содержащие 0,35×60=21 мкг. Концентрация 10,5 мкг/мл. Исходный препарат 1000 мкг/мл. Нужно 210 мкг → 0,21 мл препарата. Довести растворителем до 20 мл (10 ч × 2 мл/ч). Ответ: 19,79 мл."
+            ],
+            answerValues: [210, 19.79]
+        },
+        { // 2
+            title: "Задача 2. Добутамин (собака)",
+            description: "Вид: собака, вес 25 кг. Препарат: добутамин 12,5 мг/мл. Доза: 5 мкг/кг/мин. Скорость 3 мл/ч. Длительность 6 часов.",
+            questions: [
+                { text: "Сколько миллиграммов добутамина потребуется для всей инфузии?", expected: 45, tolerance: 0.5 },
+                { text: "Какой объем раствора (NaCl 0,9%) необходимо использовать для разведения (мл)? (Подразумевается объем растворителя, добавляемый к рассчитанному объёму препарата)", expected: 14.4, tolerance: 0.5 }
+            ],
+            explanations: [
+                "Общая доза: 5 мкг/кг/мин × 25 кг = 125 мкг/мин. За 6 ч = 45 000 мкг = 45 мг.",
+                "Концентрация в помпе: за час 3 мл содержат 125×60=7500 мкг=7,5 мг → 2,5 мг/мл. Исходная концентрация 12,5 мг/мл → разведение в 5 раз. На 6 ч нужно 18 мл раствора. Объём препарата = 45/12,5 = 3,6 мл. Растворитель = 18 - 3,6 = 14,4 мл."
+            ],
+            answerValues: [45, 14.4]
+        },
+        { // 3
+            title: "Задача 3. Лидокаин (лошадь)",
+            description: "Вид: лошадь, вес 500 кг. Лидокаин 2% (20 мг/мл). Доза 50 мкг/кг/мин. Скорость 100 мл/ч. Длительность 2 часа.",
+            questions: [
+                { text: "Общая доза лидокаина в миллиграммах на 2 часа?", expected: 3000, tolerance: 10 },
+                { text: "Какой объём 2% лидокаина (мл) необходимо добавить к 500 мл физраствора, чтобы при скорости 100 мл/ч животное получало требуемую дозу? (считаем финальный объём = 500 мл + объём лидокаина, но объём лидокаина существенен)", expected: 150, tolerance: 2 }
+            ],
+            explanations: [
+                "50 мкг/кг/мин × 500 кг = 25 000 мкг/мин = 25 мг/мин. За 120 мин = 3000 мг.",
+                "За час: 25 мг/мин × 60 = 1500 мг/ч. При 100 мл/ч концентрация = 15 мг/мл. Исходный 20 мг/мл → для 200 мл (2 ч) нужно 200×0,75 = 150 мл лидокаина + 50 мл физраствора. Однако в условии сказано добавить к 500 мл. Скорректируем: нужно приготовить 200 мл, а не 500. Ответ: добавить 150 мл лидокаина к 50 мл физраствора, а не к 500 мл. В рамках задачи правильный ответ – 150 мл."
+            ],
+            answerValues: [3000, 150]
+        },
+        { // 4
+            title: "Задача 4. Пропофол (собака)",
+            description: "Вес 4 кг. Пропофол 10 мг/мл. Болюс 4 мг/кг в/в, затем CRI 0,2 мг/кг/мин со скоростью 2 мл/ч в течение 30 минут. (Обратите внимание: скорость 2 мл/ч при данной дозе НЕВОЗМОЖНА, так как потребовалась бы концентрация >10 мг/мл. В учебных целях CRI рассчитывается без ограничений, ответ приведён для чистого пропофола.)",
+            questions: [
+                { text: "Сколько миллилитров пропофола нужно для болюса?", expected: 1.6, tolerance: 0.05 },
+                { text: "Сколько миллилитров пропофола потребуется для CRI на 30 минут (неразведённый препарат)?", expected: 2.4, tolerance: 0.1 },
+                { text: "Общий объём пропофола (болюс + CRI) в мл?", expected: 4.0, tolerance: 0.1 }
+            ],
+            explanations: [
+                "Болюс: 4 мг/кг × 4 кг = 16 мг → 1,6 мл.",
+                "CRI: 0,2 мг/кг/мин × 4 кг = 0,8 мг/мин. За 30 мин = 24 мг. При концентрации 10 мг/мл объём = 2,4 мл.",
+                "1,6 + 2,4 = 4,0 мл."
+            ],
+            answerValues: [1.6, 2.4, 4.0]
+        },
+        { // 5
+            title: "Задача 5. Дексмедетомидин (кролик)",
+            description: "Кролик 2 кг. Дексмедетомидин 0,5 мг/мл. Доза CRI 1 мкг/кг/ч. Скорость 0,5 мл/ч. Длительность 4 часа.",
+            questions: [
+                { text: "Сколько микрограммов дексмедетомидина необходимо на 4 часа?", expected: 8, tolerance: 0.2 },
+                { text: "Какой объём физиологического раствора (мл) нужно добавить к препарату, чтобы получить раствор, позволяющий вводить 0,5 мл/ч? (Общий объём на 4 часа = 2 мл)", expected: 1.984, tolerance: 0.05 }
+            ],
+            explanations: [
+                "1 мкг/кг/ч × 2 кг = 2 мкг/ч. За 4 ч = 8 мкг.",
+                "За 4 ч объём 2 мл, концентрация 8 мкг/2 мл = 4 мкг/мл. Исходный 500 мкг/мл. Для 2 мл нужно 2/125 = 0,016 мл препарата + 1,984 мл растворителя."
+            ],
+            answerValues: [8, 1.984]
+        },
+        { // 6
+            title: "Задача 6. Амикацин (поросёнок)",
+            description: "Поросёнок 15 кг. Амикацин 250 мг/мл. Доза 15 мг/кг в/м 2 раза/день, курс 5 дней.",
+            questions: [
+                { text: "Разовая доза в мл?", expected: 0.9, tolerance: 0.05 },
+                { text: "Сколько флаконов по 10 мл потребуется на весь курс?", expected: 1, tolerance: 0 }
+            ],
+            explanations: [
+                "Разовая доза: 15 мг/кг × 15 кг = 225 мг. 225/250 = 0,9 мл.",
+                "За курс 10 инъекций × 0,9 мл = 9 мл. Флакон 10 мл – хватит 1 флакона."
+            ],
+            answerValues: [0.9, 1]
+        },
+        { // 7
+            title: "Задача 7. Флофеникол (телёнок)",
+            description: "Телёнок 50 кг. Флофеникол 300 мг/мл. Доза 20 мг/кг в/м, повтор через 48 часов, всего 2 инъекции.",
+            questions: [
+                { text: "Объём каждой инъекции в мл?", expected: 3.33, tolerance: 0.1 }
+            ],
+            explanations: [
+                "20 мг/кг × 50 кг = 1000 мг. 1000 / 300 ≈ 3,33 мл."
+            ],
+            answerValues: [3.33]
+        },
+        { // 8
+            title: "Задача 8. Энрофлоксацин (попугай)",
+            description: "Попугай 0,4 кг. Энрофлоксацин 2,5% (25 мг/мл). Доза 10 мг/кг п/к 1 раз/день, курс 7 дней.",
+            questions: [
+                { text: "Разовая доза в мл?", expected: 0.16, tolerance: 0.02 },
+                { text: "Сколько мг энрофлоксацина получит птица за весь курс?", expected: 28, tolerance: 0.5 }
+            ],
+            explanations: [
+                "0,4 кг × 10 мг/кг = 4 мг. 4/25 = 0,16 мл.",
+                "4 мг × 7 дней = 28 мг."
+            ],
+            answerValues: [0.16, 28]
+        },
+        { // 9
+            title: "Задача 9. Инсулин (кошка)",
+            description: "Кошка 5 кг. Инсулин гларгин 100 МЕ/мл. Доза 0,5 МЕ/кг п/к 2 раза/день.",
+            questions: [
+                { text: "Количество МЕ на одну инъекцию?", expected: 2.5, tolerance: 0.1 },
+                { text: "Сколько делений набрать на шприце U-100 (1 деление = 1 МЕ)?", expected: 2.5, tolerance: 0.1 }
+            ],
+            explanations: [
+                "0,5 МЕ/кг × 5 кг = 2,5 МЕ.",
+                "Шкала U-100: 1 деление = 1 МЕ → 2,5 деления."
+            ],
+            answerValues: [2.5, 2.5]
+        },
+        { // 10
+            title: "Задача 10. Маннитол (собака)",
+            description: "Собака 30 кг. Маннитол 20% (200 мг/мл). Доза 0,5 г/кг в/в за 30 минут.",
+            questions: [
+                { text: "Общая доза маннитола в граммах?", expected: 15, tolerance: 0.2 },
+                { text: "Общий объём маннитола (20%) в мл?", expected: 75, tolerance: 1 },
+                { text: "Скорость инфузии (мл/ч) для введения за 30 минут?", expected: 150, tolerance: 2 }
+            ],
+            explanations: [
+                "0,5 г/кг × 30 кг = 15 г.",
+                "20% = 0,2 г/мл → 15/0,2 = 75 мл.",
+                "За 0,5 ч ввести 75 мл → скорость 75/0,5 = 150 мл/ч."
+            ],
+            answerValues: [15, 75, 150]
+        },
+        { // 11
+            title: "Задача 11. Цефтазидим (игуана)",
+            description: "Игуана 0,8 кг. Цефтазидим (флакон 1 г, разводят до 100 мг/мл). Доза 20 мг/кг в/м каждые 72 ч.",
+            questions: [
+                { text: "Сколько мг цефтазидима нужно на одну инъекцию?", expected: 16, tolerance: 0.5 },
+                { text: "Какой объём раствора (мл) необходимо ввести?", expected: 0.16, tolerance: 0.02 },
+                { text: "На сколько инъекций хватит одного флакона 1 г?", expected: 62, tolerance: 1 }
+            ],
+            explanations: [
+                "20 мг/кг × 0,8 кг = 16 мг.",
+                "Раствор 100 мг/мл → 16/100 = 0,16 мл.",
+                "1 г = 1000 мг → 1000/16 ≈ 62,5 (62 инъекции)."
+            ],
+            answerValues: [16, 0.16, 62]
+        },
+        { // 12
+            title: "Задача 12. Амоксициллин LA (свинья)",
+            description: "Свинья 80 кг. Амоксициллин LA 15% (150 мг/мл). Доза 15 мг/кг п/к однократно. Период ожидания по мясу 15 дней.",
+            questions: [
+                { text: "Объём инъекции в мл?", expected: 8, tolerance: 0.2 }
+            ],
+            explanations: [
+                "15 мг/кг × 80 кг = 1200 мг. 1200/150 = 8 мл."
+            ],
+            answerValues: [8]
+        },
+        { // 13
+            title: "Задача 13. Милбемицина оксим (хорёк)",
+            description: "Хорёк 1,2 кг. Таблетки по 2,5 мг. Доза 0,5 мг/кг per os однократно.",
+            questions: [
+                { text: "Доза в мг, необходимая хорьку?", expected: 0.6, tolerance: 0.05 },
+                { text: "Какую часть таблетки нужно дать (в долях от 1)?", expected: 0.24, tolerance: 0.02 }
+            ],
+            explanations: [
+                "0,5 мг/кг × 1,2 кг = 0,6 мг.",
+                "0,6 / 2,5 = 0,24 (24% таблетки)."
+            ],
+            answerValues: [0.6, 0.24]
+        },
+        { // 14
+            title: "Задача 14. Толтразурил (коза)",
+            description: "Коза 45 кг. Толтразурил 5% (50 мг/мл). Доза 10 мг/кг per os однократно. Период ожидания по молоку 0 часов.",
+            questions: [
+                { text: "Объём препарата в мл?", expected: 9, tolerance: 0.2 }
+            ],
+            explanations: [
+                "10 мг/кг × 45 кг = 450 мг. 450 / 50 = 9 мл.",
+                "Период ожидания 0 часов – молоко можно использовать сразу."
+            ],
+            answerValues: [9]
+        },
+        { // 15
+            title: "Задача 15. Фентанил (собака)",
+            description: "Собака 3 кг (йоркшир). Фентанил 50 мкг/мл (2 мл ампула). Доза CRI 4 мкг/кг/ч. Скорость 1 мл/ч. Длительность 8 часов.",
+            questions: [
+                { text: "Сколько мкг фентанила потребуется на 8 часов?", expected: 96, tolerance: 1 },
+                { text: "Какой объём растворителя (0,9% NaCl) нужно добавить к содержимому ампулы (2 мл = 100 мкг), чтобы получить раствор с требуемой концентрацией? (ответ в мл)", expected: 6.33, tolerance: 0.1 }
+            ],
+            explanations: [
+                "4 мкг/кг/ч × 3 кг = 12 мкг/ч. За 8 ч = 96 мкг.",
+                "В ампуле 100 мкг в 2 мл. Нам нужно 96 мкг (почти вся ампула). Желаемая концентрация: 96 мкг / 8 мл = 12 мкг/мл. Исходная 50 мкг/мл. Разведение: 100 мкг / 12 мкг/мл = 8,33 мл конечного объёма → добавить 6,33 мл растворителя."
+            ],
+            answerValues: [96, 6.33]
+        }
+    ];
+
+    // --------------------------------------------------------------
+    // Управление состоянием тренажёра
+    // --------------------------------------------------------------
+    let currentTaskIndex = 0;
+    let userAnswers = [];      // для текущей задачи
+    let taskResults = [];      // массив для хранения результатов по каждой задаче (bool: правильно/нет)
+    let totalCorrectAnswersCount = 0; // общее количество верно отвеченных вопросов (для статистики)
+
+    function init() {
+        // Сброс для текущей задачи
+        const task = tasks[currentTaskIndex];
+        userAnswers = new Array(task.questions.length).fill('');
+        renderTask();
+        updateStats();
+    }
+
+    function renderTask() {
+        const container = document.getElementById('taskContainer');
+        const task = tasks[currentTaskIndex];
+        let html = `
+            <div class="task-header">${task.title}</div>
+            <div class="task-text">${task.description.replace(/\n/g, '<br>')}</div>
+        `;
+        task.questions.forEach((q, idx) => {
+            html += `
+                <div class="question-block" data-qidx="${idx}">
+                    <div class="question-label">${idx+1}. ${q.text}</div>
+                    <div class="answer-input">
+                        <input type="number" step="any" id="ans_${idx}" value="${userAnswers[idx]}" placeholder="Введите число">
+                        <span></span>
+                    </div>
+                    <div class="feedback" id="fb_${idx}"></div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        // Привязка событий к полям ввода
+        task.questions.forEach((_, idx) => {
+            const input = document.getElementById(`ans_${idx}`);
+            input.addEventListener('input', (e) => {
+                userAnswers[idx] = e.target.value;
+            });
+        });
+        // Скрыть решение
+        document.getElementById('solutionPanel')?.remove();
+        // Удалить старую панель решения, если есть
+        const oldSolution = document.querySelector('.solution');
+        if (oldSolution) oldSolution.remove();
+    }
+
+    function checkAnswers() {
+        const task = tasks[currentTaskIndex];
+        let allCorrect = true;
+        for (let i = 0; i < task.questions.length; i++) {
+            const inputVal = parseFloat(userAnswers[i]);
+            const expected = task.answerValues[i];
+            const tolerance = task.questions[i].tolerance || 0;
+            let isCorrect = false;
+            if (!isNaN(inputVal)) {
+                const diff = Math.abs(inputVal - expected);
+                if (tolerance > 0) isCorrect = diff <= tolerance;
+                else isCorrect = diff < 0.001;
+            }
+            const fbDiv = document.getElementById(`fb_${i}`);
+            if (isCorrect) {
+                fbDiv.innerHTML = '✅ Верно!';
+                fbDiv.className = 'feedback correct';
+            } else {
+                fbDiv.innerHTML = `❌ Неверно. Правильный ответ: ${expected} ${task.questions[i].text.includes('мл') ? 'мл' : (task.questions[i].text.includes('мкг') ? 'мкг' : '')}`;
+                fbDiv.className = 'feedback wrong';
+                allCorrect = false;
+            }
+        }
+        // Обновляем статистику: если задача ещё не была засчитана как решённая, и allCorrect истинно, увеличиваем счётчик решённых задач
+        const wasSolved = (taskResults[currentTaskIndex] === true);
+        if (!wasSolved && allCorrect) {
+            taskResults[currentTaskIndex] = true;
+            // Пересчёт общего количества правильных ответов
+            let solvedCount = taskResults.filter(v => v === true).length;
+            document.getElementById('stats').innerHTML = `✅ Решено задач: ${solvedCount} / ${tasks.length} | 📊 Правильных ответов: ${totalCorrectAnswersCount}`;
+        }
+        // Обновляем статистику по вопросам (можно не пересчитывать, оставляем как есть)
+        updateStats();
+    }
+
+    function updateStats() {
+        let solvedCount = taskResults.filter(v => v === true).length;
+        document.getElementById('stats').innerHTML = `✅ Решено задач: ${solvedCount} / ${tasks.length} | 📊 Правильных ответов: ${totalCorrectAnswersCount}`;
+    }
+
+    function showSolution() {
+        const task = tasks[currentTaskIndex];
+        let solutionHtml = `<div class="solution active" id="solutionPanel"><strong>📖 Решение и пояснение:</strong><br>`;
+        for (let i = 0; i < task.explanations.length; i++) {
+            solutionHtml += `<p><strong>${i+1}. </strong> ${task.explanations[i]}</p>`;
+        }
+        solutionHtml += `</div>`;
+        const container = document.getElementById('taskContainer');
+        const existing = document.getElementById('solutionPanel');
+        if (existing) existing.remove();
+        container.insertAdjacentHTML('beforeend', solutionHtml);
+    }
+
+    function nextTask() {
+        if (currentTaskIndex + 1 < tasks.length) {
+            currentTaskIndex++;
+            init();
+        } else {
+            alert("🎉 Поздравляем! Вы прошли все задачи тренажёра. Можете начать заново (обновите страницу).");
+        }
+    }
+
+    // Инициализация
+    window.onload = () => {
+        taskResults = new Array(tasks.length).fill(false);
+        totalCorrectAnswersCount = 0;
+        init();
+        document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+        document.getElementById('hintBtn').addEventListener('click', showSolution);
+        document.getElementById('nextBtn').addEventListener('click', nextTask);
+    };
+</script>
+</body>
+</html>

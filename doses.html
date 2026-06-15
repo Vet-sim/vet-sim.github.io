@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Ветеринарный симулятор | Расчет антибиотиков</title>
+    <title>Симулятор доз антибиотиков | ВетСим</title>
     <style>
         * {
             margin: 0;
@@ -12,436 +12,342 @@
         }
 
         body {
-            background: #edeae2;  /* пастельный серо-бежевый фон */
-            font-family: 'Segoe UI', 'Roboto', system-ui, 'Helvetica Neue', sans-serif;
-            padding: 2rem 1rem;
-            color: #2f3e2e;
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
         }
 
-        /* главный контейнер */
-        .simulator-card {
-            max-width: 800px;
+        .container {
+            max-width: 1100px;
             margin: 0 auto;
-            background: #fefcf7;
-            border-radius: 2rem;
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.05);
-            padding: 2rem 1.8rem;
-            transition: all 0.2s;
-            border: 1px solid #e2d9ce;
         }
 
         h1 {
             font-size: 1.8rem;
-            font-weight: 500;
-            letter-spacing: -0.3px;
-            color: #4c6a46;
-            border-left: 5px solid #9bbb8a;
-            padding-left: 1rem;
-            margin-bottom: 1.2rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
         }
 
         .sub {
-            color: #7c8a73;
-            font-size: 0.85rem;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #e5dfd3;
-            padding-bottom: 0.6rem;
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
         }
 
-        /* форма */
-        .form-group {
-            margin-bottom: 1.6rem;
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            border: 1px solid #E7EDE2;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            margin-bottom: 1.2rem;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             gap: 0.8rem;
         }
-        .form-group label {
+
+        .form-row label {
             font-weight: 600;
-            width: 130px;
-            color: #4f6448;
+            width: 180px;
         }
+
         select, input {
             flex: 1;
-            min-width: 180px;
-            background: #fffcf5;
-            border: 1px solid #ddd2c2;
-            border-radius: 2rem;
-            padding: 0.7rem 1rem;
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
             font-size: 0.9rem;
-            font-family: inherit;
-            color: #2e3a2a;
-            outline: none;
-            transition: 0.2s;
-        }
-        select:focus, input:focus {
-            border-color: #9bba8a;
-            box-shadow: 0 0 0 2px rgba(155, 186, 138, 0.3);
+            background: white;
         }
 
-        /* блок вес + информация */
-        .weight-info-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.8rem;
-            align-items: flex-start;
-        }
-        .weight-field {
-            flex: 1.2;
-            min-width: 180px;
-        }
-        .info-panel {
-            flex: 2;
-            background: #f4f0e8;
-            border-radius: 1.2rem;
-            padding: 0.8rem 1.2rem;
-            border-left: 6px solid #b5cf9e;
-        }
-        .info-panel p {
-            margin: 0.3rem 0;
-            font-size: 0.85rem;
-        }
-        .info-label {
-            font-weight: 700;
-            color: #5b7652;
-            display: inline-block;
-            width: 100px;
-        }
-        .info-value {
-            color: #2d4228;
-        }
-
-        .btn-calc {
-            background: #cbdcc2;
+        button {
+            background: #2C7DA0;
+            color: white;
             border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 3rem;
-            font-weight: 700;
-            font-size: 1rem;
-            color: #2f4d2e;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
-            margin: 1rem 0 1rem;
-            font-family: inherit;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .btn-calc:hover {
-            background: #b9cfae;
-            transform: translateY(-2px);
-        }
-
-        .result-box {
-            background: #e9e3d6;
-            border-radius: 1.5rem;
-            padding: 1.2rem;
-            text-align: center;
-            margin: 1rem 0 1.5rem;
-        }
-        .result-text {
-            font-size: 1.4rem;
+            padding: 10px 24px;
+            border-radius: 40px;
             font-weight: 600;
-            color: #47633e;
-            letter-spacing: -0.2px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-right: 1rem;
         }
-        .disclaimer {
-            font-size: 0.7rem;
-            text-align: center;
-            color: #aaa18b;
-            border-top: 1px solid #e3d8ca;
-            padding-top: 1.2rem;
+
+        button:hover {
+            background: #236B8A;
+        }
+
+        .result-area {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1.2rem;
             margin-top: 1rem;
+            border-left: 5px solid #A3B18A;
         }
 
-        @media (max-width: 600px) {
-            .simulator-card {
-                padding: 1.5rem;
-            }
-            .form-group label {
+        .result-line {
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .warning {
+            color: #BC5A3C;
+            background: #FFE4DE;
+            padding: 0.5rem;
+            border-radius: 30px;
+            margin-top: 0.8rem;
+            text-align: center;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            margin-top: 2rem;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .form-row label {
                 width: 100%;
-                margin-bottom: 0.2rem;
             }
-            .info-panel {
-                margin-top: 0.5rem;
+            button {
+                width: 100%;
+                margin-bottom: 0.5rem;
             }
-        }
-
-        hr {
-            margin: 1rem 0;
-            border-color: #e8dfd1;
-        }
-        small {
-            font-size: 0.75rem;
-            color: #8d9a82;
         }
     </style>
 </head>
 <body>
-<div class="simulator-card">
-    <h1>💊 Симулятор расчета антибиотиков</h1>
-    <div class="sub">Учебный инструмент для ветеринарных специалистов</div>
+<div class="container">
+    <h1>💊 Симулятор расчёта доз антибиотиков</h1>
+    <div class="sub">Выберите группу животных и препарат, введите вес – получите дозу, скорость введения, периоды ожидания</div>
 
-    <!-- Вид животного -->
-    <div class="form-group">
-        <label>🐾 Вид животного</label>
-        <select id="animalSelect">
-            <option value="">-- выберите вид --</option>
-        </select>
-    </div>
-
-    <!-- Препарат -->
-    <div class="form-group">
-        <label>💉 Препарат</label>
-        <select id="drugSelect" disabled>
-            <option value="">-- сначала выберите вид --</option>
-        </select>
-    </div>
-
-    <!-- Вес и информационная панель -->
-    <div class="weight-info-row">
-        <div class="weight-field">
-            <label style="font-weight:600; display:block; margin-bottom:0.3rem;">⚖️ Вес животного</label>
-            <input type="number" id="weightInput" placeholder="Например, 12.5" step="any" value="">
-            <span style="font-size:0.75rem; color:#7f8f74;">кг</span>
+    <div class="card">
+        <div class="form-row">
+            <label>🐾 Группа животных:</label>
+            <select id="groupSelect">
+                <option value="M">Мелкие домашние (M) – собаки, кошки</option>
+                <option value="C">Сельскохозяйственные (C) – КРС, свиньи, овцы, козы</option>
+                <option value="E">Экзоты (E) – птицы, рептилии, грызуны, кролики</option>
+            </select>
         </div>
-        <div class="info-panel" id="infoPanel">
-            <p><span class="info-label">Дозировка:</span> <span id="doseValue" class="info-value">—</span></p>
-            <p><span class="info-label">Путь введения:</span> <span id="routeValue" class="info-value">—</span></p>
-            <p><span class="info-label">Примечание:</span> <span id="notesValue" class="info-value">—</span></p>
+
+        <div class="form-row">
+            <label>💊 Препарат (статус):</label>
+            <select id="drugSelect"></select>
+        </div>
+
+        <div class="form-row">
+            <label>⚖️ Вес животного (кг):</label>
+            <input type="number" id="weightInput" step="0.1" value="10">
+        </div>
+
+        <div class="form-row">
+            <button id="calcBtn">Рассчитать дозу</button>
+            <button id="resetBtn" style="background:#E2CFB0; color:#3E5C4A;">Сбросить</button>
+        </div>
+
+        <div id="resultPanel" class="result-area">
+            <div class="result-line">📌 Результат появится после расчёта</div>
         </div>
     </div>
 
-    <!-- Кнопка расчёта -->
-    <button id="calcBtn" class="btn-calc">🧮 Рассчитать объем препарата</button>
-
-    <!-- Поле результата -->
-    <div class="result-box">
-        <div class="result-text" id="resultDisplay">📋 Результат появится здесь</div>
-    </div>
-
-    <div class="disclaimer">
-        ⚠️ Дисклеймер: программа носит исключительно образовательный характер. <br>
-        Реальная дозировка и выбор препарата должны определяться ветеринарным врачом на основе клинического случая.
-    </div>
+    <footer>© ВетСим – интерактивный симулятор. Данные носят образовательный характер. Всегда сверяйтесь с инструкцией.</footer>
 </div>
 
 <script>
-    // ---------- БАЗА ДАННЫХ ПРЕПАРАТОВ (массив объектов) ----------
-    // Каждый объект содержит drug, animal, dose_mg_kg (число, мг/кг), route, notes
-    const drugsDB = [
-        // СОБАКИ
-        { drug: "Амоксициллин 15%", animal: "собака", dose_mg_kg: 10, route: "п/к, в/м", notes: "каждые 24 ч; не применять при аллергии на пенициллины" },
-        { drug: "Энрофлоксацин", animal: "собака", dose_mg_kg: 5, route: "в/м, п/к", notes: "избегать у щенков до 12 мес (хрящевые нарушения)" },
-        { drug: "Цефалексин", animal: "собака", dose_mg_kg: 15, route: "в/м, п/к", notes: "курс 7-14 дней" },
-        { drug: "Клиндамицин", animal: "собака", dose_mg_kg: 11, route: "перорально", notes: "осторожно при заболеваниях ЖКТ" },
-        // КОШКИ
-        { drug: "Амоксициллин 15%", animal: "кошка", dose_mg_kg: 10, route: "п/к, в/м", notes: "интервал 24 ч; при хламидиозе осторожно" },
-        { drug: "Энрофлоксацин", animal: "кошка", dose_mg_kg: 5, route: "в/м, п/к", notes: "риск поражения сетчатки, доза не выше 5 мг/кг" },
-        { drug: "Цефтиофур", animal: "кошка", dose_mg_kg: 2.2, route: "в/м", notes: "не использовать в/в, курс до 5 дней" },
-        // КРУПНЫЙ РОГАТЫЙ СКОТ (корова)
-        { drug: "Цефтиофур", animal: "корова", dose_mg_kg: 2.2, route: "в/м", notes: "мясо: 8 дней, молоко: 0 ч?" },
-        { drug: "Энрофлоксацин", animal: "корова", dose_mg_kg: 7.5, route: "в/м, п/к", notes: "не применять для молочных коров без консультации" },
-        { drug: "Тилмикозин", animal: "корова", dose_mg_kg: 10, route: "п/к", notes: "опасен для лошадей и свиней" },
-        // ЛОШАДИ
-        { drug: "Цефтиофур", animal: "лошадь", dose_mg_kg: 2.2, route: "в/м", notes: "не вводить в/в" },
-        { drug: "Пенициллин G", animal: "лошадь", dose_mg_kg: 22000, route: "в/в, в/м", notes: "доза в МЕ; 22000 МЕ/кг ~ 13.2 мг/кг (пересчет)" },
-        { drug: "Гентамицин", animal: "лошадь", dose_mg_kg: 6.6, route: "в/в, в/м", notes: "нефротоксичен, контроль почек" },
-        // СВИНЬИ
-        { drug: "Амоксициллин 15%", animal: "свинья", dose_mg_kg: 15, route: "в/м", notes: "курс 3-5 дней" },
-        { drug: "Энрофлоксацин", animal: "свинья", dose_mg_kg: 2.5, route: "в/м", notes: "болезни дыхательных путей" },
-        { drug: "Тилмикозин", animal: "свинья", dose_mg_kg: 10, route: "п/к", notes: "очень токсичен для лошадей" }
+    // --------------------------------------------------------------
+    // БАЗА ДАННЫХ: 100 антибиотиков (группа, статус, доза, концентрация, скорость, периоды ожидания, противопоказания)
+    // --------------------------------------------------------------
+    const drugs = [
+        { id:1, name:"Амоксициллин", group:"M,C,E", status:"первый выбор", doseMin:10, doseMax:20, route:"per os, п/к, в/м", frequency:"каждые 12-24 ч", concentration:150, injectionSpeed:"в/м/п/к медленно; в/в – только растворимая форма, медленно", meatWD:15, milkWD:60, eggsWD:null, contraindications:"гиперчувствительность к пенициллинам, кролики, морские свинки", note:"" },
+        { id:2, name:"Амоксициллин + клавулановая кислота", group:"M,C,E", status:"первый выбор", doseMin:12.5, doseMax:25, route:"per os, п/к, в/м", frequency:"2 раза/д", concentration:140, injectionSpeed:"как для амоксициллина", meatWD:15, milkWD:60, eggsWD:null, contraindications:"тяжелые нарушения печени, аллергия на β-лактамы", note:"" },
+        { id:3, name:"Бензилпенициллин (пенициллин G)", group:"M,C", status:"первый выбор", doseMin:10, doseMax:15, route:"в/м, натриевая соль в/в", frequency:"1-2 раза/д", concentration:200, injectionSpeed:"в/м; в/в медленно", meatWD:15, milkWD:72, eggsWD:null, contraindications:"аллергия на пенициллины", note:"доза в мг/кг (ориентир)" },
+        { id:4, name:"Клоксациллин", group:"M,C", status:"резерв", doseMin:15, doseMax:25, route:"per os", frequency:"3 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:5, milkWD:48, eggsWD:null, contraindications:"резистентные стафилококки, аллергия", note:"" },
+        { id:5, name:"Диклоксациллин", group:"M,C", status:"резерв", doseMin:10, doseMax:20, route:"per os", frequency:"3 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:5, milkWD:null, eggsWD:null, contraindications:"аналогично клоксациллину", note:"" },
+        { id:6, name:"Ампициллин", group:"M,C", status:"первый выбор", doseMin:10, doseMax:20, route:"в/м, п/к, в/в", frequency:"2-3 раза/д", concentration:150, injectionSpeed:"в/м/п/к/в/в", meatWD:15, milkWD:48, eggsWD:null, contraindications:"аллергия, энтериты у грызунов", note:"" },
+        { id:7, name:"Карбенициллин", group:"M", status:"резерв", doseMin:50, doseMax:100, route:"в/в", frequency:"4 раза/д", concentration:100, injectionSpeed:"в/в медленно", meatWD:null, milkWD:null, eggsWD:null, contraindications:"сердечная недостаточность", note:"не для с/х" },
+        { id:8, name:"Тикарциллин", group:"M,C", status:"резерв", doseMin:50, doseMax:100, route:"в/в", frequency:"4 раза/д", concentration:100, injectionSpeed:"в/в", meatWD:7, milkWD:null, eggsWD:null, contraindications:"кровотечения в анамнезе", note:"" },
+        { id:9, name:"Пиперациллин", group:"M", status:"резерв", doseMin:50, doseMax:100, route:"в/в", frequency:"3-4 раза/д", concentration:100, injectionSpeed:"в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия на пенициллины", note:"не для с/х" },
+        { id:10, name:"Цефалексин", group:"M,C,E", status:"первый выбор", doseMin:15, doseMax:25, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:5, milkWD:48, eggsWD:null, contraindications:"аллергия на цефалоспорины", note:"" },
+        { id:11, name:"Цефадроксил", group:"M,C", status:"первый выбор", doseMin:10, doseMax:15, route:"per os", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:5, milkWD:null, eggsWD:null, contraindications:"аналогично", note:"" },
+        { id:12, name:"Цефазолин", group:"M,C", status:"первый выбор", doseMin:15, doseMax:30, route:"в/м, в/в", frequency:"3 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:5, milkWD:48, eggsWD:null, contraindications:"аллергия", note:"" },
+        { id:13, name:"Цефалотин", group:"M", status:"резерв", doseMin:20, doseMax:40, route:"в/в", frequency:"4 раза/д", concentration:100, injectionSpeed:"в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"почечная недостаточность", note:"не для с/х" },
+        { id:14, name:"Цефуроксим", group:"M,C", status:"первый выбор", doseMin:10, doseMax:25, route:"в/м, п/к, в/в", frequency:"2-3 раза/д", concentration:100, injectionSpeed:"в/м/п/к/в/в", meatWD:5, milkWD:48, eggsWD:null, contraindications:"аллергия", note:"" },
+        { id:15, name:"Цефтиофур", group:"C", status:"первый выбор", doseMin:2, doseMax:5, route:"в/м", frequency:"1 раз/д", concentration:50, injectionSpeed:"в/м", meatWD:8, milkWD:12, eggsWD:null, contraindications:"аллергия", note:"КРС, свиньи" },
+        { id:16, name:"Цефкином", group:"C", status:"первый выбор", doseMin:2, doseMax:2, route:"в/м", frequency:"1 раз/д", concentration:50, injectionSpeed:"в/м", meatWD:10, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"свиньи" },
+        { id:17, name:"Цефоперазон", group:"M,E", status:"резерв", doseMin:25, doseMax:50, route:"в/м, в/в", frequency:"2 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"нарушение свертываемости", note:"не для с/х" },
+        { id:18, name:"Цефтазидим", group:"M,E", status:"резерв", doseMin:20, doseMax:30, route:"в/м, в/в", frequency:"3 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
+        { id:19, name:"Цефтриаксон", group:"M,E", status:"резерв", doseMin:20, doseMax:30, route:"в/в, в/м", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"гипербилирубинемия у новорожденных", note:"не для с/х" },
+        { id:20, name:"Цефиксим", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
+        { id:21, name:"Цефподоксим", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
+        { id:22, name:"Цефдинир", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"перорально", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
+        { id:23, name:"Цефокситин", group:"M", status:"резерв", doseMin:15, doseMax:30, route:"в/м, в/в", frequency:"3-4 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
+        { id:24, name:"Цефотаксим", group:"M,E", status:"резерв", doseMin:20, doseMax:30, route:"в/в, в/м", frequency:"3-4 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
+        { id:25, name:"Имипенем + циластатин", group:"M", status:"строгий резерв", doseMin:5, doseMax:10, route:"в/в медленно", frequency:"3-4 раза/д", concentration:100, injectionSpeed:"в/в медленно", meatWD:null, milkWD:null, eggsWD:null, contraindications:"судороги в анамнезе, тяжелая почечная недостаточность", note:"не для с/х" },
+        { id:26, name:"Меропенем", group:"M,E", status:"строгий резерв", doseMin:10, doseMax:20, route:"в/в", frequency:"2-3 раза/д", concentration:100, injectionSpeed:"в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия на карбапенемы", note:"не для с/х" },
+        { id:27, name:"Эртапенем", group:"M", status:"строгий резерв", doseMin:10, doseMax:15, route:"в/в", frequency:"1 раз/д", concentration:100, injectionSpeed:"в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
+        { id:28, name:"Гентамицин", group:"M,C", status:"первый выбор", doseMin:2, doseMax:4, route:"в/м, п/к, в/в медленно", frequency:"2-3 раза/д", concentration:50, injectionSpeed:"в/м/п/к, в/в медленно", meatWD:40, milkWD:72, eggsWD:null, contraindications:"почечная недостаточность, ототоксичность", note:"" },
+        { id:29, name:"Амикацин", group:"M,C", status:"резерв", doseMin:10, doseMax:15, route:"в/м, в/в", frequency:"2-3 раза/д", concentration:50, injectionSpeed:"в/м/в/в", meatWD:40, milkWD:null, eggsWD:null, contraindications:"нарушение слуха, почек", note:"" },
+        { id:30, name:"Тобрамицин", group:"M", status:"резерв", doseMin:2, doseMax:4, route:"в/в, в/м", frequency:"3 раза/д", concentration:50, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аналогично гентамицину", note:"не для с/х" },
+        { id:31, name:"Стрептомицин", group:"C", status:"первый выбор", doseMin:10, doseMax:20, route:"в/м", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"в/м", meatWD:30, milkWD:72, eggsWD:null, contraindications:"нарушение слуха, беременность", note:"" },
+        { id:32, name:"Дигидрострептомицин", group:"C", status:"первый выбор", doseMin:10, doseMax:15, route:"в/м", frequency:"1 раз/д", concentration:100, injectionSpeed:"в/м", meatWD:30, milkWD:null, eggsWD:null, contraindications:"ототоксичность", note:"" },
+        { id:33, name:"Неомицин", group:"C", status:"первый выбор", doseMin:10, doseMax:20, route:"per os", frequency:"энтерально", concentration:100, injectionSpeed:"per os", meatWD:20, milkWD:48, eggsWD:null, contraindications:"системное всасывание – нефротоксичность", note:"только энтерально" },
+        { id:34, name:"Канамицин", group:"M,C", status:"резерв", doseMin:5, doseMax:10, route:"в/м", frequency:"2 раза/д", concentration:50, injectionSpeed:"в/м", meatWD:30, milkWD:null, eggsWD:null, contraindications:"аналогично аминогликозидам", note:"" },
+        { id:35, name:"Тетрациклин", group:"C", status:"первый выбор", doseMin:10, doseMax:20, route:"per os, в/м", frequency:"2 раза/д", concentration:100, injectionSpeed:"в/м, per os", meatWD:15, milkWD:72, eggsWD:7, contraindications:"молодняк (зубы), беременность", note:"" },
+        { id:36, name:"Доксициклин", group:"M,E", status:"первый выбор", doseMin:5, doseMax:10, route:"per os, в/в медленно", frequency:"1-2 раза/д", concentration:50, injectionSpeed:"per os, в/в медленно", meatWD:null, milkWD:null, eggsWD:null, contraindications:"молодые животные, печеночная недостаточность", note:"не для с/х" },
+        { id:37, name:"Окситетрациклин", group:"C", status:"первый выбор", doseMin:10, doseMax:20, route:"в/м, п/к", frequency:"1 раз/д", concentration:100, injectionSpeed:"в/м/п/к", meatWD:20, milkWD:72, eggsWD:null, contraindications:"аллергия", note:"" },
+        { id:38, name:"Миноциклин", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"вестибулярные нарушения", note:"не для с/х" },
+        { id:39, name:"Хлортетрациклин", group:"C", status:"первый выбор", doseMin:10, doseMax:20, route:"per os", frequency:"кормовая добавка", concentration:100, injectionSpeed:"per os", meatWD:5, milkWD:48, eggsWD:null, contraindications:"те же, что у тетрациклинов", note:"" },
+        { id:40, name:"Эритромицин", group:"M,C", status:"первый выбор", doseMin:10, doseMax:20, route:"per os, в/в", frequency:"3 раза/д", concentration:100, injectionSpeed:"per os, в/в", meatWD:15, milkWD:null, eggsWD:null, contraindications:"желудочно-кишечные расстройства", note:"" },
+        { id:41, name:"Тилозин", group:"C", status:"первый выбор", doseMin:10, doseMax:20, route:"в/м, per os (вода)", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"в/м", meatWD:10, milkWD:null, eggsWD:7, contraindications:"лошади (колит)", note:"" },
+        { id:42, name:"Тилмикозин", group:"C", status:"первый выбор", doseMin:10, doseMax:15, route:"п/к", frequency:"однократно", concentration:100, injectionSpeed:"п/к", meatWD:30, milkWD:null, eggsWD:null, contraindications:"внутривенное введение (летально), лошади", note:"" },
+        { id:43, name:"Тультромицин", group:"C", status:"резерв", doseMin:2.5, doseMax:2.5, route:"п/к", frequency:"однократно", concentration:100, injectionSpeed:"п/к", meatWD:35, milkWD:null, eggsWD:null, contraindications:"гиперчувствительность", note:"" },
+        { id:44, name:"Гамитромицин", group:"C", status:"резерв", doseMin:6, doseMax:6, route:"в/м", frequency:"однократно", concentration:100, injectionSpeed:"в/м", meatWD:10, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"свиньи" },
+        { id:45, name:"Тиамулин", group:"C", status:"первый выбор", doseMin:10, doseMax:15, route:"per os, в/м", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:6, milkWD:null, eggsWD:null, contraindications:"кролики, хомяки (токсичен)", note:"" },
+        { id:46, name:"Валнемулин", group:"C", status:"резерв", doseMin:2, doseMax:3, route:"per os", frequency:"в корме", concentration:100, injectionSpeed:"per os", meatWD:7, milkWD:null, eggsWD:null, contraindications:"печеночная недостаточность", note:"" },
+        { id:47, name:"Азитромицин", group:"M,E", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"1 раз/д", concentration:100, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"тяжелые нарушения ритма", note:"не для с/х" },
+        { id:48, name:"Кларитромицин", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"печеночная недостаточность", note:"не для с/х" },
+        { id:49, name:"Спирамицин", group:"M,C", status:"первый выбор", doseMin:50, doseMax:100, route:"per os, в/м", frequency:"1 раз/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:15, milkWD:72, eggsWD:null, contraindications:"аллергия", note:"доза в тыс. МЕ/кг, пересчитано в мг" },
+        { id:50, name:"Энрофлоксацин", group:"M,C,E", status:"первый выбор", doseMin:5, doseMax:10, route:"п/к, в/м, в/в медленно", frequency:"1 раз/д", concentration:50, injectionSpeed:"п/к/в/м/в/в медленно", meatWD:14, milkWD:72, eggsWD:8, contraindications:"молодняк (до 1 года у собак), кошки с ретинопатией", note:"" },
+        { id:51, name:"Ципрофлоксацин", group:"M", status:"резерв", doseMin:10, doseMax:20, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аналогично фторхинолонам", note:"не для с/х" },
+        { id:52, name:"Марбофлоксацин", group:"M,C", status:"первый выбор", doseMin:2, doseMax:5, route:"per os, п/к, в/в", frequency:"1 раз/д", concentration:50, injectionSpeed:"per os/п/к/в/в", meatWD:8, milkWD:72, eggsWD:null, contraindications:"болезни суставов у молодняка", note:"" },
+        { id:53, name:"Орбифлоксацин", group:"M", status:"первый выбор", doseMin:2.5, doseMax:7.5, route:"per os, п/к", frequency:"1 раз/д", concentration:50, injectionSpeed:"per os/п/к", meatWD:null, milkWD:null, eggsWD:null, contraindications:"эпилепсия", note:"не для с/х" },
+        { id:54, name:"Дифлоксацин", group:"C", status:"первый выбор", doseMin:2, doseMax:5, route:"в/м", frequency:"1 раз/д", concentration:50, injectionSpeed:"в/м", meatWD:10, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"" },
+        { id:55, name:"Данофлоксацин", group:"C", status:"первый выбор", doseMin:5, doseMax:10, route:"per os, в воду", frequency:"1 раз/д", concentration:50, injectionSpeed:"per os", meatWD:7, milkWD:null, eggsWD:5, contraindications:"нельзя несушек", note:"птица" },
+        { id:56, name:"Левофлоксацин", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os, в/в", frequency:"1-2 раза/д", concentration:50, injectionSpeed:"per os/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"хондропатия", note:"не для с/х" },
+        { id:57, name:"Моксифлоксацин", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os, в/в", frequency:"1 раз/д", concentration:50, injectionSpeed:"per os/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"удлинение QT", note:"не для с/х" },
+        { id:58, name:"Офлоксацин", group:"M", status:"резерв", doseMin:10, doseMax:15, route:"per os", frequency:"2 раза/д", concentration:50, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аналогично", note:"не для с/х" },
+        { id:59, name:"Прадофлоксацин", group:"M", status:"резерв", doseMin:3, doseMax:5, route:"per os", frequency:"1 раз/д", concentration:50, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"гиперчувствительность", note:"не для с/х" },
+        { id:60, name:"Хлорамфеникол", group:"M,E", status:"резерв", doseMin:20, doseMax:50, route:"per os, п/к, в/м, в/в", frequency:"3 раза/д", concentration:100, injectionSpeed:"разные пути", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аплазия костного мозга, молодняк", note:"запрещен для СХ" },
+        { id:61, name:"Флофеникол", group:"C", status:"первый выбор", doseMin:15, doseMax:20, route:"в/м", frequency:"2 раза/д через 48 ч", concentration:100, injectionSpeed:"в/м", meatWD:30, milkWD:72, eggsWD:null, contraindications:"аллергия", note:"" },
+        { id:62, name:"Тиамфеникол", group:"M,C", status:"резерв", doseMin:20, doseMax:30, route:"per os, в/м", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:15, milkWD:null, eggsWD:null, contraindications:"угнетение кроветворения", note:"" },
+        { id:63, name:"Триметоприм + сульфаметоксазол", group:"M,C,E", status:"первый выбор", doseMin:15, doseMax:30, route:"per os, п/к, в/в", frequency:"2 раза/д", concentration:100, injectionSpeed:"разные пути", meatWD:12, milkWD:48, eggsWD:null, contraindications:"дегидратация, почечная/печеночная недостаточность", note:"" },
+        { id:64, name:"Триметоприм + сульфадиазин", group:"M,C", status:"первый выбор", doseMin:15, doseMax:30, route:"per os, в/м", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:15, milkWD:null, eggsWD:null, contraindications:"аналогично", note:"" },
+        { id:65, name:"Сульфадиметоксин", group:"C", status:"первый выбор", doseMin:25, doseMax:50, route:"per os", frequency:"1 раз/д", concentration:100, injectionSpeed:"per os", meatWD:15, milkWD:null, eggsWD:null, contraindications:"кристаллурия", note:"кокцидиоз" },
+        { id:66, name:"Сульфадиазин", group:"C,M", status:"первый выбор", doseMin:25, doseMax:50, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os", meatWD:10, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"токсоплазмоз" },
+        { id:67, name:"Сульфаметазин", group:"C", status:"первый выбор", doseMin:50, doseMax:100, route:"per os", frequency:"1 раз/д", concentration:100, injectionSpeed:"per os", meatWD:7, milkWD:null, eggsWD:null, contraindications:"почечная недостаточность", note:"кролики, птица" },
+        { id:68, name:"Сульфахиносоксалин", group:"C", status:"первый выбор", doseMin:30, doseMax:50, route:"в воду", frequency:"1 раз/д", concentration:100, injectionSpeed:"в воду", meatWD:null, milkWD:null, eggsWD:5, contraindications:"стресс", note:"птица" },
+        { id:69, name:"Орметоприм + сульфадиметоксин", group:"C", status:"первый выбор", doseMin:10, doseMax:20, route:"per os, в/м", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:10, milkWD:null, eggsWD:null, contraindications:"аналогично", note:"" },
+        { id:70, name:"Батрим", group:"M,C,E", status:"первый выбор", doseMin:15, doseMax:30, route:"per os, п/к, в/в", frequency:"2 раза/д", concentration:100, injectionSpeed:"разные пути", meatWD:12, milkWD:48, eggsWD:null, contraindications:"аналогично триметоприм/сульфа", note:"коммерческое название" },
+        { id:71, name:"Линкомицин", group:"M,C", status:"первый выбор", doseMin:10, doseMax:15, route:"per os, в/м", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:7, milkWD:48, eggsWD:null, contraindications:"грызуны, кролики (диарея)", note:"" },
+        { id:72, name:"Клиндамицин", group:"M,E", status:"первый выбор", doseMin:5, doseMax:10, route:"per os, в/м", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:null, milkWD:null, eggsWD:null, contraindications:"кролики, хомяки, морские свинки (летальный энтерит)", note:"не для СХ" },
+        { id:73, name:"Ванкомицин", group:"M", status:"строгий резерв", doseMin:10, doseMax:15, route:"в/в медленно", frequency:"2-3 раза/д", concentration:100, injectionSpeed:"в/в медленно", meatWD:null, milkWD:null, eggsWD:null, contraindications:"ототоксичность, нефротоксичность", note:"не для с/х" },
+        { id:74, name:"Тейкопланин", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"в/м, в/в", frequency:"1 раз/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"не для с/х" },
+        { id:75, name:"Колистин (полимиксин E)", group:"M,C", status:"резерв", doseMin:2, doseMax:4, route:"в/м, в/в, per os", frequency:"2 раза/д", concentration:50, injectionSpeed:"в/м/в/в, per os", meatWD:15, milkWD:null, eggsWD:null, contraindications:"неврологические нарушения, почечная недостаточность", note:"" },
+        { id:76, name:"Полимиксин B", group:"M", status:"резерв", doseMin:1, doseMax:2, route:"в/м, местно", frequency:"1-2 раза/д", concentration:50, injectionSpeed:"в/м", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аналогично колистину", note:"не для с/х" },
+        { id:77, name:"Рифампицин", group:"M", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"гепатотоксичность, оранжевые выделения", note:"не для с/х" },
+        { id:78, name:"Метронидазол", group:"M,E", status:"первый выбор", doseMin:10, doseMax:15, route:"per os, в/в медленно", frequency:"2 раза/д", concentration:50, injectionSpeed:"per os/в/в", meatWD:21, milkWD:null, eggsWD:null, contraindications:"неврологические заболевания", note:"" },
+        { id:79, name:"Тиннидазол", group:"M", status:"резерв", doseMin:10, doseMax:15, route:"per os", frequency:"1 раз/д", concentration:50, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аналогично метронидазолу", note:"не для с/х" },
+        { id:80, name:"Линезолид", group:"M", status:"строгий резерв", doseMin:10, doseMax:15, route:"per os, в/в", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"угнетение тромбоцитов, серотониновый синдром", note:"не для с/х" },
+        { id:81, name:"Фосфомицин", group:"M", status:"резерв", doseMin:30, doseMax:50, route:"per os, в/в", frequency:"2-3 раза/д", concentration:100, injectionSpeed:"per os/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"гипернатриемия", note:"не для с/х" },
+        { id:82, name:"Мупироцин", group:"M", status:"первый выбор", doseMin:0, doseMax:0, route:"местно", frequency:"2-3 раза/д", concentration:20, injectionSpeed:"местно", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"только местно" },
+        { id:83, name:"Бактрацин", group:"M,C", status:"местно", doseMin:0, doseMax:0, route:"мазь, спрей", frequency:"2-3 раза/д", concentration:10, injectionSpeed:"местно", meatWD:7, milkWD:null, eggsWD:null, contraindications:"гиперчувствительность", note:"" },
+        { id:84, name:"Спектиномицин", group:"C", status:"первый выбор", doseMin:10, doseMax:20, route:"в/м", frequency:"1 раз/д", concentration:100, injectionSpeed:"в/м", meatWD:10, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"птица, свиньи" },
+        { id:85, name:"Спектиномицин + линкомицин", group:"C", status:"первый выбор", doseMin:10, doseMax:15, route:"per os, в/м", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:7, milkWD:null, eggsWD:null, contraindications:"как для линкомицина", note:"" },
+        { id:86, name:"Фузидиевая кислота", group:"M", status:"первый выбор", doseMin:0, doseMax:0, route:"местно", frequency:"2-3 раза/д", concentration:20, injectionSpeed:"местно", meatWD:null, milkWD:null, eggsWD:null, contraindications:"гиперчувствительность", note:"не для с/х" },
+        { id:87, name:"Новобиоцин", group:"C", status:"резерв", doseMin:10, doseMax:15, route:"per os, в/м", frequency:"1-2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:14, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"мастит" },
+        { id:88, name:"Хлорамфеникол пальмитат (для рептилий)", group:"E", status:"резерв", doseMin:20, doseMax:50, route:"per os", frequency:"3 раза/д", concentration:100, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аплазия костного мозга", note:"рептилии, осторожно" },
+        { id:89, name:"Энрофлоксацин для птиц", group:"E", status:"первый выбор", doseMin:5, doseMax:10, route:"per os, в воду", frequency:"1 раз/д", concentration:50, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:8, contraindications:"не для несушек", note:"" },
+        { id:90, name:"Доксициклин для попугаев", group:"E", status:"первый выбор", doseMin:5, doseMax:10, route:"per os", frequency:"1-2 раза/д", concentration:50, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"печеночная недостаточность", note:"" },
+        { id:91, name:"Азитромицин для грызунов", group:"E", status:"резерв", doseMin:5, doseMax:10, route:"per os", frequency:"1 раз/д", concentration:100, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"нарушение ритма", note:"экзоты" },
+        { id:92, name:"Клиндамицин для рептилий", group:"E", status:"первый выбор", doseMin:5, doseMax:10, route:"per os, в/м", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os/в/м", meatWD:null, milkWD:null, eggsWD:null, contraindications:"дисбактериоз", note:"рептилии, с осторожностью" },
+        { id:93, name:"Тобрамицин для рептилий", group:"E", status:"резерв", doseMin:2, doseMax:4, route:"в/м, в/в", frequency:"2-3 раза/д", concentration:50, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"нефротоксичность", note:"рептилии" },
+        { id:94, name:"Цефтазидим для рептилий", group:"E", status:"резерв", doseMin:20, doseMax:30, route:"в/м, в/в", frequency:"3 раза/д", concentration:100, injectionSpeed:"в/м/в/в", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"рептилии" },
+        { id:95, name:"Метронидазол для рептилий и грызунов", group:"E", status:"первый выбор", doseMin:10, doseMax:15, route:"per os", frequency:"2 раза/д", concentration:50, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"неврология", note:"" },
+        { id:96, name:"Триметоприм/сульфа для кроликов", group:"E", status:"первый выбор", doseMin:15, doseMax:30, route:"per os, п/к", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os/п/к", meatWD:null, milkWD:null, eggsWD:null, contraindications:"дисбактериоз", note:"кролики, осторожно" },
+        { id:97, name:"Цефалексин для хомяков", group:"E", status:"первый выбор", doseMin:15, doseMax:25, route:"per os", frequency:"2 раза/д", concentration:100, injectionSpeed:"per os", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"" },
+        { id:98, name:"Гентамицин для экзотов (низкие дозы)", group:"E", status:"первый выбор", doseMin:1, doseMax:2, route:"в/м, п/к", frequency:"2-3 раза/д", concentration:50, injectionSpeed:"в/м/п/к", meatWD:null, milkWD:null, eggsWD:null, contraindications:"нефротоксичность", note:"контроль почек" },
+        { id:99, name:"Окситетрациклин для птиц", group:"E", status:"первый выбор", doseMin:10, doseMax:20, route:"в/м", frequency:"1 раз/д", concentration:100, injectionSpeed:"в/м", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"" },
+        { id:100, name:"Флофеникол для рептилий", group:"E", status:"резерв", doseMin:15, doseMax:20, route:"в/м", frequency:"через 48-72 ч", concentration:100, injectionSpeed:"в/м", meatWD:null, milkWD:null, eggsWD:null, contraindications:"аллергия", note:"экзоты" }
     ];
 
-    // Получить уникальные виды животных из базы
-    function getUniqueAnimals() {
-        const animalsSet = new Set();
-        drugsDB.forEach(item => animalsSet.add(item.animal));
-        return Array.from(animalsSet).sort();
-    }
-
-    // Получить препараты для выбранного вида (уникальные названия)
-    function getDrugsByAnimal(animal) {
-        const drugsSet = new Set();
-        drugsDB.forEach(item => {
-            if (item.animal === animal) drugsSet.add(item.drug);
-        });
-        return Array.from(drugsSet).sort();
-    }
-
-    // Получить полный объект препарата для конкретного вида и названия препарата
-    function getDrugEntry(animal, drugName) {
-        return drugsDB.find(item => item.animal === animal && item.drug === drugName);
-    }
-
-    // DOM элементы
-    const animalSelect = document.getElementById('animalSelect');
+    // ----- Логика работы -----
+    const groupSelect = document.getElementById('groupSelect');
     const drugSelect = document.getElementById('drugSelect');
     const weightInput = document.getElementById('weightInput');
-    const doseSpan = document.getElementById('doseValue');
-    const routeSpan = document.getElementById('routeValue');
-    const notesSpan = document.getElementById('notesValue');
     const calcBtn = document.getElementById('calcBtn');
-    const resultDisplay = document.getElementById('resultDisplay');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultPanel = document.getElementById('resultPanel');
 
-    // Переменные для текущего выбранного препарата
-    let currentAnimal = '';
-    let currentDrugObj = null;   // объект с дозой и пр.
-
-    // Заполнение списка видов
-    function populateAnimals() {
-        const animals = getUniqueAnimals();
-        animalSelect.innerHTML = '<option value="">-- выберите вид --</option>';
-        animals.forEach(animal => {
+    function filterDrugsByGroup(group) {
+        const filtered = drugs.filter(d => d.group.includes(group));
+        drugSelect.innerHTML = '';
+        filtered.forEach(d => {
             const option = document.createElement('option');
-            option.value = animal;
-            option.textContent = animal.charAt(0).toUpperCase() + animal.slice(1);
-            animalSelect.appendChild(option);
-        });
-    }
-
-    // Обновить список препаратов в зависимости от выбранного вида
-    function updateDrugsList() {
-        const selectedAnimal = animalSelect.value;
-        if (!selectedAnimal) {
-            drugSelect.innerHTML = '<option value="">-- сначала выберите вид --</option>';
-            drugSelect.disabled = true;
-            // Очистить информационную панель
-            doseSpan.textContent = '—';
-            routeSpan.textContent = '—';
-            notesSpan.textContent = '—';
-            currentDrugObj = null;
-            return;
-        }
-        currentAnimal = selectedAnimal;
-        const drugs = getDrugsByAnimal(selectedAnimal);
-        drugSelect.disabled = false;
-        drugSelect.innerHTML = '<option value="">-- выберите препарат --</option>';
-        drugs.forEach(drug => {
-            const option = document.createElement('option');
-            option.value = drug;
-            option.textContent = drug;
+            option.value = d.id;
+            option.textContent = `${d.name} (${d.status})`;
             drugSelect.appendChild(option);
         });
-        // Сбросить информацию о препарате
-        doseSpan.textContent = '—';
-        routeSpan.textContent = '—';
-        notesSpan.textContent = '—';
-        currentDrugObj = null;
+        if (filtered.length) drugSelect.selectedIndex = 0;
     }
 
-    // Обновить информационную панель (дозировка, путь, примечания) по выбранному препарату
-    function updateInfoPanel() {
-        const selectedDrug = drugSelect.value;
-        if (!currentAnimal || !selectedDrug) {
-            doseSpan.textContent = '—';
-            routeSpan.textContent = '—';
-            notesSpan.textContent = '—';
-            currentDrugObj = null;
-            return;
-        }
-        const drugEntry = getDrugEntry(currentAnimal, selectedDrug);
-        if (drugEntry) {
-            doseSpan.textContent = `${drugEntry.dose_mg_kg} мг/кг`;
-            routeSpan.textContent = drugEntry.route;
-            notesSpan.textContent = drugEntry.notes;
-            currentDrugObj = drugEntry;
-        } else {
-            doseSpan.textContent = '—';
-            routeSpan.textContent = '—';
-            notesSpan.textContent = '—';
-            currentDrugObj = null;
-        }
+    function getDrugById(id) {
+        return drugs.find(d => d.id === parseInt(id));
     }
 
-    // Очистка результата при смене параметров
-    function resetResult() {
-        resultDisplay.innerHTML = '📋 Результат появится здесь';
-    }
-
-    // Главная функция расчета
-    function calculateDose() {
-        // 1. Проверка выбора вида и препарата
-        if (!currentAnimal || !drugSelect.value) {
-            resultDisplay.innerHTML = '⚠️ Ошибка: сначала выберите вид животного и препарат.';
-            return;
-        }
-        if (!currentDrugObj) {
-            resultDisplay.innerHTML = '⚠️ Не удалось получить данные о дозировке. Выберите препарат заново.';
-            return;
-        }
-
-        // 2. Получить вес животного
-        let weight = parseFloat(weightInput.value);
+    function calculate() {
+        const group = groupSelect.value;
+        const drugId = drugSelect.value;
+        const weight = parseFloat(weightInput.value);
         if (isNaN(weight) || weight <= 0) {
-            resultDisplay.innerHTML = '❌ Ошибка: введите корректный вес животного (больше 0 кг).';
+            resultPanel.innerHTML = `<div class="warning">⚠️ Введите корректный вес животного (кг)</div>`;
             return;
         }
-
-        // 3. Дозировка (мг/кг)
-        const doseMgPerKg = currentDrugObj.dose_mg_kg;
-        if (!doseMgPerKg || doseMgPerKg <= 0) {
-            resultDisplay.innerHTML = '❌ Ошибка в базе данных: некорректная дозировка.';
-            return;
-        }
-
-        // 4. Запросить концентрацию через prompt
-        let concentrationInput = prompt(`Введите концентрацию препарата "${currentDrugObj.drug}" в мг/мл.\nПримеры: 100, 200, 50.5\nДля амоксициллина 15% = 150 мг/мл (ориентировочно).`, "");
-        if (concentrationInput === null) {
-            resultDisplay.innerHTML = 'ℹ️ Расчет отменён.';
-            return;
-        }
-        let concentration = parseFloat(concentrationInput.replace(',', '.'));
-        if (isNaN(concentration) || concentration <= 0) {
-            resultDisplay.innerHTML = '❌ Ошибка: концентрация должна быть положительным числом (мг/мл).';
-            return;
-        }
-
-        // 5. Расчет объема: (доза мг/кг * вес кг) / концентрация мг/мл
-        const totalMg = doseMgPerKg * weight;
-        const volumeMl = totalMg / concentration;
-        if (volumeMl <= 0) {
-            resultDisplay.innerHTML = '❌ Ошибка: получен нулевой или отрицательный объем. Проверьте введённые данные.';
-            return;
-        }
-
-        // Округление до 1 знака
-        const roundedVolume = Math.round(volumeMl * 10) / 10;
-        resultDisplay.innerHTML = `💉 Рекомендуемый объем: <strong style="font-size:1.6rem;">${roundedVolume} мл</strong><br>
-                                   <small>(${totalMg.toFixed(1)} мг действующего вещества)</small>`;
+        const drug = getDrugById(drugId);
+        if (!drug) return;
+        const avgDose = (drug.doseMin + drug.doseMax) / 2;
+        const doseMg = avgDose * weight;
+        const volumeMl = doseMg / drug.concentration;
+        let freq = 1;
+        if (drug.frequency.includes('2 раза')) freq = 2;
+        else if (drug.frequency.includes('3 раза')) freq = 3;
+        else if (drug.frequency.includes('4 раза')) freq = 4;
+        else freq = 1;
+        const dailyMl = volumeMl * freq;
+        let withdrawal = '';
+        if (drug.meatWD) withdrawal += `Мясо: ${drug.meatWD} дн. `;
+        if (drug.milkWD) withdrawal += `Молоко: ${drug.milkWD} ч. `;
+        if (drug.eggsWD) withdrawal += `Яйца: ${drug.eggsWD} дн.`;
+        if (!withdrawal) withdrawal = 'Не регламентировано для СХ (или не適用)';
+        resultPanel.innerHTML = `
+            <div class="result-line"><strong>💊 ${drug.name}</strong> (${drug.status}, группа ${drug.group})</div>
+            <div class="result-line">⚖️ Разовая доза: <strong>${volumeMl.toFixed(2)} мл</strong> (средняя ${avgDose} мг/кг × ${weight} кг / ${drug.concentration} мг/мл)</div>
+            <div class="result-line">📅 Суточная доза (${freq} раз/д): <strong>${dailyMl.toFixed(2)} мл</strong></div>
+            <div class="result-line">🚀 Скорость введения: ${drug.injectionSpeed}</div>
+            <div class="result-line">⏱️ Путь введения / кратность: ${drug.route}, ${drug.frequency}</div>
+            <div class="result-line">🐄 Ограничения продукции: ${withdrawal}</div>
+            <div class="result-line">⚠️ Противопоказания: ${drug.contraindications}</div>
+            ${drug.note ? `<div class="result-line">📌 Примечание: ${drug.note}</div>` : ''}
+        `;
     }
 
-    // Обработчики событий
-    animalSelect.addEventListener('change', () => {
-        updateDrugsList();
-        resetResult();
-        // если вид выбран, но препарат не выбран — информация очищена. также очищаем currentDrugObj
-        if (!animalSelect.value) {
-            currentDrugObj = null;
-        }
+    function resetForm() {
+        weightInput.value = '10';
+        groupSelect.dispatchEvent(new Event('change'));
+        resultPanel.innerHTML = `<div class="result-line">📌 Результат появится после расчёта</div>`;
+    }
+
+    groupSelect.addEventListener('change', () => {
+        filterDrugsByGroup(groupSelect.value);
     });
 
-    drugSelect.addEventListener('change', () => {
-        updateInfoPanel();
-        resetResult();
-    });
+    calcBtn.addEventListener('click', calculate);
+    resetBtn.addEventListener('click', resetForm);
 
-    weightInput.addEventListener('input', () => {
-        if (resultDisplay.innerHTML !== '📋 Результат появится здесь') {
-            resetResult();
-        }
-    });
-
-    calcBtn.addEventListener('click', calculateDose);
-
-    // Инициализация интерфейса
-    populateAnimals();
-    updateDrugsList();    // начальное состояние: вид не выбран -> дизейбл препаратов
-    drugSelect.disabled = true;
-
-    // Дополнительная стилизация для единообразия: placeholder и значения по умолчанию
-    weightInput.placeholder = "Например, 15.2";
-    weightInput.value = "";
+    // Начальная фильтрация (мелкие домашние)
+    filterDrugsByGroup('M');
 </script>
 </body>
 </html>

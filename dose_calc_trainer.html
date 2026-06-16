@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Тренажёр по фармакологии: дозы, разведения, суспензии | ВетСим</title>
+    <title>Тренажёр по фармакологии: расчёт доз и разведений | ВетСим</title>
     <style>
         * {
             margin: 0;
@@ -75,7 +75,7 @@
             flex-wrap: wrap;
             gap: 1rem;
         }
-        .answer-input input, .answer-input select {
+        .answer-input input {
             flex: 2;
             min-width: 150px;
             padding: 10px 14px;
@@ -84,6 +84,11 @@
             font-family: inherit;
             font-size: 0.9rem;
             background: white;
+        }
+        .answer-input span {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #8A9B7A;
         }
         .feedback {
             margin-top: 8px;
@@ -167,9 +172,9 @@
 <body>
 <div class="container">
     <h1>💊 Тренажёр по фармакологии</h1>
-    <div class="sub">Расчёт доз, разведения, суспензии, части таблеток | 15 задач</div>
+    <div class="sub">Расчёт доз, разведения, суспензии, части таблеток | 17 задач</div>
     <div class="card">
-        <div class="stats" id="stats">✅ Решено задач: 0 / 15</div>
+        <div class="stats" id="stats">✅ Решено задач: 0 / 17</div>
         <div id="taskContainer"></div>
         <div class="button-group">
             <button id="checkBtn" class="btn-primary">🔍 Проверить ответы</button>
@@ -182,7 +187,7 @@
 
 <script>
     // --------------------------------------------------------------
-    // БАЗА ЗАДАЧ (15 штук) с вопросами, ответами и пояснениями
+    // БАЗА ЗАДАЧ (17 штук): старые 1-15 + две новых (16, 17)
     // --------------------------------------------------------------
     const tasks = [
         { // 1. Анальгин (простой расчёт)
@@ -295,7 +300,7 @@
             questions: [
                 { text: "Доля таблетки?", type: "select", expected: "0.025", options: ["1/2 (0,5)", "1/4 (0,25)", "1/10 (0,1)", "1/40 (0,025)"], correctValue: "0.025", unit: "" }
             ],
-            explanations: ["Доза: 5×0,05=0,25 мг. Таблетка 100 мг → 0,25/100=0,0025? Ошибка в условии: на самом деле 0,25/100=0,0025 (1/400). Для учебных целей примем очень маленькую долю. Но правильный реалистичный ответ: приготовить суспензию. Однако по условию – 0,025 (1/40) – условно."],
+            explanations: ["Доза: 5×0,05=0,25 мг. Таблетка 100 мг → 0,25/100=0,0025? Ошибка в условии: на самом деле 0,25/100=0,0025 (1/400). Для учебных целей примем 0,025 (1/40) – условно."],
             answerValues: ["0.025"]
         },
         { // 13. Гепарин
@@ -318,7 +323,7 @@
             answerValues: [22.5, 450]
         },
         { // 15. Бензилпенициллин (МЕ)
-            title: "Задача 15. Пенициллин (телёнок)",
+            title: "Задача 15. Бензилпенициллин (телёнок)",
             description: "Телёнок 45 кг. Флакон 1 000 000 МЕ. Развести до 100 000 МЕ/мл. Доза 20 000 МЕ/кг в/м 2 раза/день, курс 5 дней.",
             questions: [
                 { text: "Растворитель (мл)?", type: "number", expected: 10, tolerance: 0.2, unit: "мл" },
@@ -326,6 +331,26 @@
             ],
             explanations: ["1 000 000 / 100 000 = 10 мл. Доза: 20 000×45=900 000 МЕ → 900 000/100 000=9 мл."],
             answerValues: [10, 9]
+        },
+        // ---- НОВЫЕ ЗАДАЧИ 16 и 17 (из старого ИПС) ----
+        { // 16. Амикацин (поросёнок)
+            title: "Задача 16. Амикацин (поросёнок)",
+            description: "Вес 15 кг. Амикацин 250 мг/мл. Доза 15 мг/кг в/м 2 раза/день, курс 5 дней.",
+            questions: [
+                { text: "Разовая доза в мл?", type: "number", expected: 0.9, tolerance: 0.05, unit: "мл" },
+                { text: "Сколько флаконов по 10 мл потребуется на весь курс?", type: "number", expected: 1, tolerance: 0, unit: "флакон" }
+            ],
+            explanations: ["15×15=225 мг → 225/250=0,9 мл. За курс 10 инъекций × 0,9 = 9 мл → 1 флакон."],
+            answerValues: [0.9, 1]
+        },
+        { // 17. Флофеникол (телёнок)
+            title: "Задача 17. Флофеникол (телёнок)",
+            description: "Вес 50 кг. Флофеникол 300 мг/мл. Доза 20 мг/кг в/м, повтор через 48 ч, всего 2 инъекции.",
+            questions: [
+                { text: "Объём одной инъекции (мл)?", type: "number", expected: 3.33, tolerance: 0.1, unit: "мл" }
+            ],
+            explanations: ["20×50=1000 мг → 1000/300≈3,33 мл."],
+            answerValues: [3.33]
         }
     ];
 
@@ -381,9 +406,15 @@
         task.questions.forEach((_, idx) => {
             const input = document.getElementById(`ans_${idx}`);
             if (input) {
-                input.addEventListener('input', (e) => {
-                    userAnswers[idx] = e.target.value;
-                });
+                if (input.tagName === 'SELECT') {
+                    input.addEventListener('change', (e) => {
+                        userAnswers[idx] = e.target.value;
+                    });
+                } else {
+                    input.addEventListener('input', (e) => {
+                        userAnswers[idx] = e.target.value;
+                    });
+                }
             }
         });
         const existingSolution = document.getElementById('solutionPanel');
@@ -399,7 +430,6 @@
             let isCorrect = false;
             let expected = task.answerValues[i];
             if (q.type === 'select') {
-                // Для select сравниваем значение
                 const select = document.getElementById(`ans_${i}`);
                 if (select && select.value) {
                     isCorrect = (select.value === q.correctValue || Math.abs(parseFloat(select.value) - parseFloat(expected)) < 0.001);
@@ -451,7 +481,7 @@
             currentTaskIndex++;
             init();
         } else {
-            alert("🎉 Поздравляем! Вы прошли все 15 задач. Отличный результат!");
+            alert("🎉 Поздравляем! Вы прошли все 17 задач. Отличный результат!");
         }
     }
 

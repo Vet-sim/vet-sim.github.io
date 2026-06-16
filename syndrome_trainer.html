@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Синдромальный подход: интерпретация симптомов | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            padding: 1.8rem 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.2rem;
+        }
+
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F4F0E8;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+        }
+
+        .scenario-counter {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+        }
+
+        .case-description {
+            background: #F8F6F0;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.8rem;
+            border-left: 5px solid #A3B18A;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #FDFBF7;
+            border-radius: 20px;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #E7EDE2;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+
+        .option-item:hover {
+            background: #F5F3EC;
+        }
+
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2C7DA0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .option-item label {
+            flex: 1;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .option-item.correct-answer {
+            background: #E4F2DF;
+            border-color: #6B9E6B;
+        }
+
+        .option-item.wrong-answer {
+            background: #FDE8E0;
+            border-color: #D47A6A;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #8FA375;
+        }
+
+        .btn-warning {
+            background: #E2CFB0;
+            color: #4D3E2A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .result-area {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 24px;
+            background: #F8F6F0;
+            display: none;
+        }
+
+        .result-area .message {
+            font-size: 0.95rem;
+            color: #5A7052;
+        }
+
+        .explanation-area {
+            margin-top: 1.2rem;
+            padding: 1rem;
+            border-radius: 20px;
+            background: #FDF7E6;
+            border: 1px dashed #C9D6BA;
+            display: none;
+        }
+
+        .explanation-area strong {
+            color: #2C7DA0;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            margin-top: 2rem;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 1.2rem 1rem;
+            }
+            .option-item {
+                padding: 0.6rem 1rem;
+            }
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📋 Синдромальный подход: интерпретация симптомов</h1>
+    <div class="sub">Выберите синдром, соответствующий клинической картине</div>
+
+    <div class="progress-bar">
+        <span class="progress-text" id="scenarioLabel">Сценарий 1 из 5</span>
+        <span class="scenario-counter" id="counterDisplay">✅ Пройдено: 0</span>
+    </div>
+
+    <!-- Блок сценария -->
+    <div id="scenarioContainer">
+        <div class="case-description" id="caseDescription"></div>
+        <div class="options-group" id="optionsGroup"></div>
+    </div>
+
+    <!-- Результат проверки -->
+    <div id="resultArea" class="result-area">
+        <div class="message" id="resultMessage"></div>
+    </div>
+
+    <!-- Пояснение (отдельно) -->
+    <div id="explanationArea" class="explanation-area">
+        <strong>📌 Пояснение:</strong>
+        <div id="explanationText"></div>
+    </div>
+
+    <!-- Кнопки управления -->
+    <div class="action-buttons">
+        <button id="checkBtn" class="btn btn-primary">🔍 Проверить</button>
+        <button id="showExplanationBtn" class="btn btn-secondary">📖 Показать пояснение</button>
+        <button id="nextBtn" class="btn btn-success" disabled>➡️ Следующий сценарий</button>
+    </div>
+
+    <footer>© ВетСим — тренажёр для ветеринарного образования.</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // ДАННЫЕ СЦЕНАРИЕВ
+    // --------------------------------------------------------------
+    const scenarios = [
+        {
+            description: "Собака, 4 года, метис. Анамнез: рвота, диарея, анорексия, вялость в течение 2 дней. При осмотре: слизистые сухие, тургор снижен, температура 38,9°C, ЧСС 120, ЧДД 28, живот умеренно болезненный при пальпации.",
+            options: [
+                "Гастроэнтерит (желудочно-кишечный)",
+                "Респираторный синдром",
+                "Гепатобилиарный синдром",
+                "Урологический синдром"
+            ],
+            correctIndex: 0,
+            explanation: "Рвота, диарея, анорексия, болезненность живота – классическая картина гастроэнтерита."
+        },
+        {
+            description: "Кошка, 6 лет, беспородная. Поступила с кашлем, чиханием, серозными выделениями из носа, одышкой. При осмотре: температура 39,6°C, ЧДД 48, при аускультации жёсткое везикулярное дыхание, хрипы.",
+            options: [
+                "Гастроэнтерит",
+                "Респираторный синдром",
+                "Дерматологический синдром",
+                "Кардиологический синдром"
+            ],
+            correctIndex: 1,
+            explanation: "Кашель, чихание, выделения из носа, одышка, хрипы – признаки респираторного синдрома."
+        },
+        {
+            description: "Собака, 10 лет, лабрадор. Анамнез: полиурия, полидипсия, снижение веса на фоне повышенного аппетита, вялость. При осмотре: слизистые влажные, тургор нормальный, температура 38,2°C, ЧСС 110, ЧДД 24.",
+            options: [
+                "Гепатобилиарный синдром",
+                "Эндокринный синдром (сахарный диабет, гиперкортицизм)",
+                "Почечный синдром",
+                "Неврологический синдром"
+            ],
+            correctIndex: 1,
+            explanation: "Полиурия, полидипсия, снижение веса с повышенным аппетитом – классические признаки эндокринного синдрома."
+        },
+        {
+            description: "Кошка, 8 лет, персидская. Анамнез: анорексия, рвота, иктеричность слизистых оболочек, тёмная моча. При осмотре: слизистые жёлтые, температура 38,5°C, ЧСС 140, ЧДД 30, печень пальпируется за рёберной дугой.",
+            options: [
+                "Гастроэнтерит",
+                "Гепатобилиарный синдром (гепатит, холангит, липидоз)",
+                "Респираторный синдром",
+                "Урологический синдром"
+            ],
+            correctIndex: 1,
+            explanation: "Иктеричность слизистых, тёмная моча, увеличенная печень – признаки гепатобилиарного синдрома."
+        },
+        {
+            description: "Собака, 7 лет, овчарка. Анамнез: слабость, бледность слизистых, снижение аппетита, быстрая утомляемость, тахипноэ при нагрузке. При осмотре: слизистые бледные, ЧСС 150, ЧДД 35, температура 37,9°C, при аускультации шум.",
+            options: [
+                "Кардиологический синдром",
+                "Гематологический синдром (анемия)",
+                "Респираторный синдром",
+                "Эндокринный синдром"
+            ],
+            correctIndex: 1,
+            explanation: "Бледность слизистых, тахикардия, шум, слабость – классические признаки анемии (гематологический синдром)."
+        }
+    ];
+
+    // --------------------------------------------------------------
+    // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+    // --------------------------------------------------------------
+    let currentIndex = 0;              // индекс текущего сценария (0..4)
+    let completedCount = 0;            // количество пройденных сценариев (увеличивается при переходе на следующий)
+    let isAnswered = false;            // флаг, что на текущий сценарий уже отвечено (проверено)
+    let totalScenarios = scenarios.length;
+
+    // DOM-элементы
+    const caseDescription = document.getElementById('caseDescription');
+    const optionsGroup = document.getElementById('optionsGroup');
+    const checkBtn = document.getElementById('checkBtn');
+    const showExplanationBtn = document.getElementById('showExplanationBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultArea = document.getElementById('resultArea');
+    const resultMessage = document.getElementById('resultMessage');
+    const explanationArea = document.getElementById('explanationArea');
+    const explanationText = document.getElementById('explanationText');
+    const scenarioLabel = document.getElementById('scenarioLabel');
+    const counterDisplay = document.getElementById('counterDisplay');
+
+    // --------------------------------------------------------------
+    // ФУНКЦИИ ОТРИСОВКИ
+    // --------------------------------------------------------------
+    function renderScenario(index) {
+        const scenario = scenarios[index];
+        if (!scenario) return;
+
+        // Сброс состояния
+        isAnswered = false;
+        resultArea.style.display = 'none';
+        explanationArea.style.display = 'none';
+        nextBtn.disabled = true;
+        checkBtn.disabled = false;
+        showExplanationBtn.disabled = false;
+
+        // Обновить счётчик и заголовок
+        scenarioLabel.textContent = `Сценарий ${index + 1} из ${totalScenarios}`;
+
+        // Описание
+        caseDescription.textContent = scenario.description;
+
+        // Варианты ответов (радиокнопки)
+        optionsGroup.innerHTML = '';
+        scenario.options.forEach((optionText, idx) => {
+            const div = document.createElement('div');
+            div.className = 'option-item';
+
+            const radio = document.createElement('input');
+            radio.type = 'radio';
+            radio.name = 'syndrome';
+            radio.value = idx;
+            radio.id = `option-${idx}`;
+
+            const label = document.createElement('label');
+            label.htmlFor = `option-${idx}`;
+            label.textContent = optionText;
+
+            div.appendChild(radio);
+            div.appendChild(label);
+            optionsGroup.appendChild(div);
+        });
+
+        // Снять все выделения (классы)
+        document.querySelectorAll('.option-item').forEach(el => {
+            el.classList.remove('correct-answer', 'wrong-answer');
+        });
+    }
+
+    // Обновить счётчик пройденных
+    function updateCounter() {
+        counterDisplay.textContent = `✅ Пройдено: ${completedCount}`;
+    }
+
+    // --------------------------------------------------------------
+    // ОБРАБОТЧИКИ
+    // --------------------------------------------------------------
+
+    // Проверка ответа
+    function checkAnswer() {
+        if (isAnswered) return; // уже проверено
+
+        const selected = document.querySelector('input[name="syndrome"]:checked');
+        if (!selected) {
+            alert('Пожалуйста, выберите один из вариантов синдрома.');
+            return;
+        }
+
+        const selectedIndex = parseInt(selected.value, 10);
+        const scenario = scenarios[currentIndex];
+        const isCorrect = (selectedIndex === scenario.correctIndex);
+
+        // Подсветка вариантов
+        const items = document.querySelectorAll('.option-item');
+        items.forEach((item, idx) => {
+            item.classList.remove('correct-answer', 'wrong-answer');
+            if (idx === scenario.correctIndex) {
+                item.classList.add('correct-answer');
+            } else if (idx === selectedIndex && !isCorrect) {
+                item.classList.add('wrong-answer');
+            }
+        });
+
+        // Сообщение
+        resultArea.style.display = 'block';
+        if (isCorrect) {
+            resultMessage.innerHTML = '✅ Правильно!';
+        } else {
+            resultMessage.innerHTML = `❌ Неправильно. Правильный ответ: <strong>${scenario.options[scenario.correctIndex]}</strong>`;
+        }
+
+        // Показываем пояснение всегда (или по желанию пользователя, но мы покажем сразу)
+        explanationText.textContent = scenario.explanation;
+        explanationArea.style.display = 'block';
+
+        // Блокируем радиокнопки
+        document.querySelectorAll('input[name="syndrome"]').forEach(input => input.disabled = true);
+
+        // Активируем кнопку "Следующий"
+        nextBtn.disabled = false;
+        // Деактивируем кнопку проверки (чтобы нельзя было повторно нажать)
+        checkBtn.disabled = true;
+        // Деактивируем кнопку пояснения (она уже не нужна, т.к. пояснение показано)
+        showExplanationBtn.disabled = true;
+
+        isAnswered = true;
+    }
+
+    // Показать пояснение (без проверки)
+    function showExplanation() {
+        if (isAnswered) return; // если уже проверено, пояснение уже показано, можно не делать ничего
+        const scenario = scenarios[currentIndex];
+        // Показать правильный ответ и пояснение
+        explanationText.innerHTML = `<strong>Правильный ответ:</strong> ${scenario.options[scenario.correctIndex]}<br><br><strong>Пояснение:</strong> ${scenario.explanation}`;
+        explanationArea.style.display = 'block';
+
+        // Также можно подсветить правильный ответ, но не блокировать выбор
+        const items = document.querySelectorAll('.option-item');
+        items.forEach((item, idx) => {
+            if (idx === scenario.correctIndex) {
+                item.classList.add('correct-answer');
+            } else {
+                item.classList.remove('correct-answer', 'wrong-answer');
+            }
+        });
+
+        // Деактивируем кнопку "Показать пояснение", чтобы не нажимали повторно
+        showExplanationBtn.disabled = true;
+        // Не блокируем радиокнопки, студент может попробовать выбрать и проверить
+    }
+
+    // Переход к следующему сценарию
+    function nextScenario() {
+        if (!isAnswered) return; // безопасность
+
+        // Увеличиваем счётчик пройденных только если это не последний сценарий,
+        // но мы увеличиваем при переходе, даже если ответили неправильно? По логике, сценарий считается пройденным, если на него ответили.
+        // В любом случае, увеличим счётчик.
+        completedCount++;
+        updateCounter();
+
+        if (currentIndex + 1 < totalScenarios) {
+            currentIndex++;
+            renderScenario(currentIndex);
+        } else {
+            // Все сценарии пройдены
+            alert('🎉 Поздравляем! Вы прошли все сценарии!');
+            // Деактивируем кнопку "Следующий"
+            nextBtn.disabled = true;
+            // Можно также сбросить на первый, но оставим как есть.
+        }
+    }
+
+    // --------------------------------------------------------------
+    // ИНИЦИАЛИЗАЦИЯ
+    // --------------------------------------------------------------
+    function init() {
+        renderScenario(0);
+        updateCounter();
+        // Обработчики событий
+        checkBtn.addEventListener('click', checkAnswer);
+        showExplanationBtn.addEventListener('click', showExplanation);
+        nextBtn.addEventListener('click', nextScenario);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

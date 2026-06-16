@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Тренажёр «Сбор анамнеза (GOSCE)» | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+            padding: 1.8rem 2rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.2rem;
+        }
+
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F4F0E8;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+        }
+
+        .progress-fill {
+            height: 6px;
+            background: #A3B18A;
+            border-radius: 10px;
+            flex: 1;
+            margin: 0 1rem;
+        }
+
+        .progress-fill-inner {
+            height: 100%;
+            width: 0%;
+            background: #2C7DA0;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .case-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            margin: 0.5rem 0 0.2rem;
+        }
+
+        .case-description {
+            background: #F8F6F0;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.8rem;
+            border-left: 5px solid #A3B18A;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .question-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem;
+            background: #FDFBF7;
+            border-radius: 20px;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #E7EDE2;
+            transition: background 0.15s;
+        }
+
+        .question-number {
+            font-weight: 600;
+            color: #7C8F7C;
+            min-width: 30px;
+        }
+
+        .question-text {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .question-select {
+            padding: 6px 10px;
+            border-radius: 40px;
+            border: 1px solid #D1DEC2;
+            background: white;
+            font-family: inherit;
+            font-size: 0.9rem;
+            min-width: 70px;
+        }
+
+        .question-item.correct {
+            background: #E4F2DF;
+            border-color: #6B9E6B;
+        }
+
+        .question-item.wrong {
+            background: #FDE8E0;
+            border-color: #D47A6A;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #8FA375;
+        }
+
+        .btn-warning {
+            background: #E2CFB0;
+            color: #4D3E2A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .result-area {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 24px;
+            background: #F8F6F0;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .result-area .score {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .result-area .message {
+            font-size: 0.95rem;
+            color: #5A7052;
+        }
+
+        .show-answer-area {
+            margin-top: 1.2rem;
+            padding: 1rem;
+            border-radius: 20px;
+            background: #FDF7E6;
+            border: 1px dashed #C9D6BA;
+            display: none;
+        }
+
+        .show-answer-area ol {
+            padding-left: 1.5rem;
+            margin: 0.5rem 0;
+        }
+
+        .show-answer-area li {
+            margin-bottom: 0.3rem;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            margin-top: 2rem;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 1.2rem 1rem;
+            }
+            .question-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.4rem;
+            }
+            .question-select {
+                align-self: flex-start;
+            }
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📋 Сбор анамнеза по алгоритму (GOSCE)</h1>
+    <div class="sub">Отработка логической последовательности опроса владельца</div>
+
+    <!-- Прогресс -->
+    <div class="progress-bar">
+        <span class="progress-text" id="progressText">Сценарий 1 из 2</span>
+        <div class="progress-fill">
+            <div class="progress-fill-inner" id="progressFill"></div>
+        </div>
+        <span class="progress-text" id="scenarioCounter">✅ Пройдено: 0</span>
+    </div>
+
+    <!-- Основной контент -->
+    <div id="scenarioContainer">
+        <div class="case-title" id="caseTitle">Сценарий 1</div>
+        <div class="case-description" id="caseDescription"></div>
+        <div class="questions-list" id="questionsList"></div>
+    </div>
+
+    <!-- Блок кнопок -->
+    <div class="action-buttons">
+        <button id="checkBtn" class="btn btn-primary">🔍 Проверить</button>
+        <button id="showAnswerBtn" class="btn btn-secondary">📖 Показать правильный порядок</button>
+        <button id="nextBtn" class="btn btn-success" disabled>➡️ Следующий сценарий</button>
+    </div>
+
+    <!-- Область результата -->
+    <div id="resultArea" class="result-area" style="display: none;">
+        <div class="score" id="scoreDisplay"></div>
+        <div class="message" id="messageDisplay"></div>
+    </div>
+
+    <!-- Область показа правильного порядка -->
+    <div id="showAnswerArea" class="show-answer-area">
+        <strong>📌 Правильная последовательность:</strong>
+        <ol id="correctOrderList"></ol>
+    </div>
+
+    <footer>© ВетСим — интерактивный тренажёр для ветеринарного образования.</footer>
+</div>
+
+<script>
+    // --------------------------------------------------------------
+    // ДАННЫЕ СЦЕНАРИЕВ
+    // --------------------------------------------------------------
+    const scenarios = [
+        {
+            id: 1,
+            title: "Собака, 7 лет, анорексия и вялость",
+            description: `Собака, 7 лет, метис, поступила с жалобами на отказ от корма в течение 3 дней, вялость, рвоту 2 раза за последние сутки. Хозяин отмечает, что собака много пьёт, часто мочится. При осмотре: слизистые сухие, тургор кожи снижен, температура 38,2°C, ЧСС 120, ЧДД 28.`,
+            questions: [
+                "Когда впервые появилась рвота?",
+                "Какой объём воды выпивает собака в сутки?",
+                "Изменилась ли частота мочеиспускания?",
+                "Проводилась ли вакцинация в этом году?",
+                "Какие препараты давали собаке?",
+                "Менялся ли рацион кормления в последнее время?",
+                "Были ли контакты с другими животными?",
+                "Как часто бывает рвота (после еды, натощак)?",
+                "Есть ли аппетит сейчас (пытается ли есть)?",
+                "Какая температура тела была вчера?"
+            ],
+            // Правильный порядок (индексы вопросов в эталонном порядке, начиная с 0)
+            correctOrder: [
+                0,  // Когда впервые появилась рвота?
+                7,  // Как часто бывает рвота...
+                9,  // Какая температура тела была вчера?
+                8,  // Есть ли аппетит сейчас...
+                1,  // Какой объём воды...
+                2,  // Изменилась ли частота мочеиспускания?
+                3,  // Проводилась ли вакцинация...
+                4,  // Какие препараты давали...
+                5,  // Менялся ли рацион...
+                6   // Были ли контакты...
+            ]
+        },
+        {
+            id: 2,
+            title: "Телёнок, 2 месяца, диарея и слабость",
+            description: `Телёнок, 2 месяца, голштинской породы, поступил с жалобами на диарею в течение 2 дней, отказ от молока, вялость. Температура 39,8°C, слизистые бледные, тургор кожи снижен, живот болезненный при пальпации.`,
+            questions: [
+                "Когда началась диарея?",
+                "Какой цвет и консистенция кала?",
+                "Есть ли кровь в кале?",
+                "Проводилась ли вакцинация?",
+                "Проводили ли обработку от гельминтов?",
+                "Какой рацион кормления телёнка (молоко, заменитель, сено)?",
+                "Какой объём молока даёте в сутки?",
+                "Есть ли доступ к чистой воде?",
+                "Были ли другие больные телята в группе?",
+                "Проводилось ли лечение (какое, доза)?",
+                "Были ли стрессы (транспортировка, смена корма)?",
+                "Измеряли ли температуру тела?"
+            ],
+            correctOrder: [
+                0,  // Когда началась диарея?
+                1,  // Какой цвет и консистенция кала?
+                2,  // Есть ли кровь в кале?
+                9,  // Проводилось ли лечение?
+                3,  // Проводилась ли вакцинация?
+                4,  // Проводили ли обработку от гельминтов?
+                8,  // Были ли другие больные телята?
+                5,  // Какой рацион кормления?
+                6,  // Какой объём молока?
+                7,  // Есть ли доступ к чистой воде?
+                10, // Были ли стрессы?
+                11  // Измеряли ли температуру тела?
+            ]
+        }
+    ];
+
+    // --------------------------------------------------------------
+    // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ
+    // --------------------------------------------------------------
+    let currentScenarioIndex = 0;          // 0 или 1
+    let currentQuestions = [];            // массив объектов { text, correctOrder, userOrder }
+    let totalScenarios = scenarios.length;
+    let completedCount = 0;               // сколько сценариев пройдено правильно
+    let isAnswered = false;               // флаг, что уже проверяли
+
+    // DOM-элементы
+    const caseTitle = document.getElementById('caseTitle');
+    const caseDescription = document.getElementById('caseDescription');
+    const questionsList = document.getElementById('questionsList');
+    const checkBtn = document.getElementById('checkBtn');
+    const showAnswerBtn = document.getElementById('showAnswerBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resultArea = document.getElementById('resultArea');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const messageDisplay = document.getElementById('messageDisplay');
+    const showAnswerArea = document.getElementById('showAnswerArea');
+    const correctOrderList = document.getElementById('correctOrderList');
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+    const scenarioCounter = document.getElementById('scenarioCounter');
+
+    // --------------------------------------------------------------
+    // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    // --------------------------------------------------------------
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Обновить индикатор прогресса
+    function updateProgress() {
+        progressText.textContent = `Сценарий ${currentScenarioIndex + 1} из ${totalScenarios}`;
+        const percent = ((currentScenarioIndex + 1) / totalScenarios) * 100;
+        progressFill.style.width = `${percent}%`;
+        scenarioCounter.textContent = `✅ Пройдено: ${completedCount}`;
+    }
+
+    // Загрузить сценарий по индексу
+    function loadScenario(index) {
+        const scenario = scenarios[index];
+        if (!scenario) return;
+
+        // Сброс состояния
+        isAnswered = false;
+        resultArea.style.display = 'none';
+        showAnswerArea.style.display = 'none';
+        nextBtn.disabled = true;
+        checkBtn.disabled = false;
+        showAnswerBtn.disabled = false;
+
+        // Заголовок и описание
+        caseTitle.textContent = scenario.title;
+        caseDescription.textContent = scenario.description;
+
+        // Создаём массив вопросов с правильным порядком (индекс в массиве questions)
+        // и перемешиваем их
+        const shuffledIndices = shuffleArray(Array.from({ length: scenario.questions.length }, (_, i) => i));
+        currentQuestions = shuffledIndices.map((idx) => ({
+            text: scenario.questions[idx],
+            correctOrder: scenario.correctOrder.indexOf(idx) + 1, // правильный номер (1..N)
+            originalIndex: idx
+        }));
+
+        // Теперь currentQuestions содержит вопросы в случайном порядке, у каждого есть correctOrder.
+        // Добавим поле userOrder (по умолчанию 0)
+        currentQuestions.forEach(q => q.userOrder = 0);
+
+        // Отрисовка
+        renderQuestions();
+        updateProgress();
+    }
+
+    // Отрисовать вопросы с выпадающими списками
+    function renderQuestions() {
+        questionsList.innerHTML = '';
+        const n = currentQuestions.length;
+
+        currentQuestions.forEach((q, idx) => {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.dataset.index = idx;
+
+            const numberSpan = document.createElement('span');
+            numberSpan.className = 'question-number';
+            numberSpan.textContent = `${idx + 1}.`;
+
+            const textSpan = document.createElement('span');
+            textSpan.className = 'question-text';
+            textSpan.textContent = q.text;
+
+            const select = document.createElement('select');
+            select.className = 'question-select';
+            // Добавляем опцию "—" со значением 0
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = 0;
+            defaultOpt.textContent = '—';
+            select.appendChild(defaultOpt);
+            for (let i = 1; i <= n; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = i;
+                select.appendChild(opt);
+            }
+            // Устанавливаем текущее значение (если уже выбрано)
+            if (q.userOrder && q.userOrder > 0) {
+                select.value = q.userOrder;
+            }
+            select.addEventListener('change', (e) => {
+                const val = parseInt(e.target.value, 10);
+                q.userOrder = val;
+                // Сбрасываем подсветку при изменении
+                const parent = e.target.closest('.question-item');
+                parent.classList.remove('correct', 'wrong');
+                resultArea.style.display = 'none';
+            });
+
+            div.appendChild(numberSpan);
+            div.appendChild(textSpan);
+            div.appendChild(select);
+            questionsList.appendChild(div);
+        });
+    }
+
+    // Проверка ответов
+    function checkAnswers() {
+        if (isAnswered) return;
+        let correctCount = 0;
+        const n = currentQuestions.length;
+        const items = document.querySelectorAll('.question-item');
+
+        // Проверяем, что все вопросы пронумерованы (нет нулевых)
+        let allSelected = true;
+        currentQuestions.forEach(q => {
+            if (q.userOrder === 0) allSelected = false;
+        });
+        if (!allSelected) {
+            alert('Пожалуйста, выберите порядковый номер для каждого вопроса.');
+            return;
+        }
+
+        // Проверяем на дублирование номеров
+        const usedNumbers = currentQuestions.map(q => q.userOrder);
+        const unique = new Set(usedNumbers);
+        if (unique.size !== n) {
+            alert('Номера не должны повторяться. Присвойте каждому вопросу уникальный номер.');
+            return;
+        }
+
+        // Подсчёт правильных
+        currentQuestions.forEach((q, idx) => {
+            const isCorrect = (q.userOrder === q.correctOrder);
+            if (isCorrect) correctCount++;
+            // Подсветка
+            const item = items[idx];
+            item.classList.remove('correct', 'wrong');
+            if (isCorrect) {
+                item.classList.add('correct');
+            } else {
+                item.classList.add('wrong');
+            }
+        });
+
+        // Вывод результата
+        const score = correctCount;
+        const total = n;
+        resultArea.style.display = 'block';
+        scoreDisplay.textContent = `✅ Правильно: ${score} из ${total}`;
+        const percent = Math.round((score / total) * 100);
+        let message = '';
+        if (score === total) {
+            message = '🎉 Отлично! Вы правильно восстановили последовательность!';
+            // Если сценарий ещё не пройден, увеличиваем счётчик
+            if (!isAnswered) {
+                // Проверяем, не был ли этот сценарий уже засчитан
+                // Так как мы не храним флаг пройденности для каждого сценария, используем completedCount
+                // Но нужно избежать повторного засчитывания при повторной проверке.
+                // Мы установим флаг isAnswered, чтобы при повторной проверке не засчитывалось.
+                // Также нужно учесть, что может быть несколько попыток. Засчитываем только при первом правильном.
+                // Поэтому сделаем: если isAnswered === false и score === total, то увеличиваем completedCount и блокируем кнопку проверки.
+                completedCount++;
+                updateProgress();
+                // Блокируем кнопку проверки и активируем следующую
+                checkBtn.disabled = true;
+                showAnswerBtn.disabled = true;
+                nextBtn.disabled = false;
+                // Сохраняем, что ответили правильно
+                isAnswered = true;
+                // Также можно сделать кнопку "Показать правильный порядок" неактивной
+            }
+        } else {
+            message = '❌ Есть ошибки. Попробуйте ещё раз или посмотрите правильный порядок.';
+            // Не блокируем кнопки
+        }
+        messageDisplay.textContent = message;
+
+        // Если все правильно, то кнопка "Следующий" становится активной (уже сделано)
+        // Если не все правильно, оставляем возможность повторной проверки
+    }
+
+    // Показать правильный порядок
+    function showCorrectOrder() {
+        // Формируем список: для каждого вопроса его правильный порядок
+        const n = currentQuestions.length;
+        // Создаём массив пар (номер, текст)
+        const ordered = [];
+        for (let i = 0; i < n; i++) {
+            const q = currentQuestions[i];
+            ordered.push({ order: q.correctOrder, text: q.text });
+        }
+        // Сортируем по порядку
+        ordered.sort((a, b) => a.order - b.order);
+
+        // Отрисовываем в showAnswerArea
+        correctOrderList.innerHTML = '';
+        ordered.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item.text;
+            correctOrderList.appendChild(li);
+        });
+        showAnswerArea.style.display = 'block';
+    }
+
+    // Переход к следующему сценарию
+    function nextScenario() {
+        if (currentScenarioIndex + 1 < totalScenarios) {
+            currentScenarioIndex++;
+            loadScenario(currentScenarioIndex);
+        } else {
+            // Все сценарии пройдены
+            alert('🎉 Поздравляем! Вы прошли все сценарии!');
+            // Можно сбросить на первый сценарий или оставить как есть
+            // currentScenarioIndex = 0;
+            // loadScenario(0);
+            // Но лучше просто деактивировать кнопку
+            nextBtn.disabled = true;
+        }
+    }
+
+    // Сброс (можно не делать)
+
+    // --------------------------------------------------------------
+    // ИНИЦИАЛИЗАЦИЯ И ОБРАБОТЧИКИ СОБЫТИЙ
+    // --------------------------------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+        // Загружаем первый сценарий
+        loadScenario(0);
+
+        // Кнопка проверки
+        checkBtn.addEventListener('click', checkAnswers);
+
+        // Кнопка показа правильного порядка
+        showAnswerBtn.addEventListener('click', showCorrectOrder);
+
+        // Кнопка следующего сценария
+        nextBtn.addEventListener('click', nextScenario);
+    });
+
+    // Также обновляем прогресс при изменении
+    // функция updateProgress вызывается внутри loadScenario и при правильном ответе
+</script>
+</body>
+</html>

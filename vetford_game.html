@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВетФорт Боярд: Операция "Кот и Ко"</title>
+    <style>
+        /* Общие стили и палитра */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #e8e0d5;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f5f0e8'/%3E%3Crect width='50' height='50' fill='%23f0ebe2'/%3E%3C/svg%3E");
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .game-container {
+            max-width: 900px;
+            width: 100%;
+            background: #fefcf7;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 2px solid #d6cdbe;
+            position: relative;
+        }
+        /* Шапка */
+        .header {
+            background: #2b5e6b;
+            padding: 16px 24px;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 4px solid #f4c542;
+        }
+        .title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .inventory {
+            display: flex;
+            gap: 6px;
+            background: #1f4752;
+            padding: 4px 12px;
+            border-radius: 30px;
+        }
+        .inv-item {
+            background: #e5dccc;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #2b2b2b;
+            font-weight: 600;
+            box-shadow: inset 0 -2px 0 #b0a392;
+        }
+        .stress-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        .stress-track {
+            width: 120px;
+            height: 10px;
+            background: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .stress-fill {
+            height: 100%;
+            width: 0%;
+            background: #f05454;
+            transition: width 0.3s;
+        }
+        /* Контент */
+        .stage-wrapper {
+            padding: 30px 30px 20px;
+            min-height: 400px;
+        }
+        .stage-location {
+            font-size: 0.9rem;
+            color: #6b7f82;
+            border-bottom: 1px dashed #d6cdbe;
+            padding-bottom: 6px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .stage-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1f3f47;
+            margin-bottom: 12px;
+        }
+        .stage-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #3a4d52;
+            margin-bottom: 20px;
+            background: #f8f4ed;
+            padding: 16px 20px;
+            border-radius: 16px;
+            border-left: 5px solid #f4c542;
+        }
+        .game-area {
+            min-height: 200px;
+            background: #fffcf7;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #e2d9cc;
+        }
+        /* Кнопки навигации */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 30px 24px;
+            gap: 12px;
+            background: #f4f0e8;
+            border-top: 2px solid #d6cdbe;
+        }
+        .btn {
+            background: #e2d9cc;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #2b3f44;
+            box-shadow: 0 3px 0 #b8ae9c;
+        }
+        .btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+        .btn-primary {
+            background: #f4c542;
+            color: #1f3f47;
+            box-shadow: 0 3px 0 #c99d2e;
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            transform: none;
+            box-shadow: 0 3px 0 #b8ae9c;
+            pointer-events: none;
+        }
+        .btn-secondary {
+            background: #bccbd2;
+            box-shadow: 0 3px 0 #95a8b0;
+        }
+        .btn-success {
+            background: #6baa7a;
+            color: white;
+            box-shadow: 0 3px 0 #4b7d57;
+        }
+        .btn-danger {
+            background: #d97a6a;
+            color: white;
+            box-shadow: 0 3px 0 #b85f4f;
+        }
+        /* Утилиты для мини-игр */
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+        .option-btn {
+            background: #f0ebe2;
+            border: 2px solid #d6cdbe;
+            padding: 10px 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.1s;
+        }
+        .option-btn:hover {
+            background: #e5dccc;
+            border-color: #b8ae9c;
+        }
+        .option-btn.selected {
+            background: #f4c542;
+            border-color: #c99d2e;
+        }
+        .option-btn.correct {
+            background: #6baa7a;
+            border-color: #4b7d57;
+            color: white;
+        }
+        .option-btn.wrong {
+            background: #d97a6a;
+            border-color: #b85f4f;
+            color: white;
+        }
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .slider-group label {
+            font-weight: 600;
+        }
+        .slider-group input[type="range"] {
+            width: 100%;
+            max-width: 300px;
+        }
+        .collect-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .collect-item {
+            background: #f0ebe2;
+            border: 2px solid #d6cdbe;
+            padding: 8px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .collect-item.picked {
+            background: #6baa7a;
+            color: white;
+            border-color: #4b7d57;
+        }
+        .inventory-slot {
+            display: inline-block;
+            background: #e5dccc;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin: 4px;
+            font-size: 0.8rem;
+            border: 1px dashed #b8ae9c;
+        }
+        .click-map {
+            position: relative;
+            display: inline-block;
+        }
+        .click-map img {
+            max-width: 100%;
+            display: block;
+            border-radius: 12px;
+        }
+        .click-map .target {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: rgba(244, 197, 66, 0.3);
+            border: 2px dashed #f4c542;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .click-map .target:hover {
+            background: rgba(244, 197, 66, 0.6);
+        }
+        .rhythm-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .rhythm-indicator {
+            width: 80px;
+            height: 80px;
+            background: #d6cdbe;
+            border-radius: 50%;
+            transition: 0.1s;
+        }
+        .rhythm-indicator.active {
+            background: #f4c542;
+            transform: scale(1.1);
+        }
+        .rhythm-btn {
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            border-radius: 60px;
+            background: #f4c542;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #c99d2e;
+        }
+        .rhythm-btn:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        .result-msg {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+        .inventory-full {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .inventory-full .inv-badge {
+            background: #e5dccc;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        /* Адаптивность */
+        @media (max-width: 650px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .status {
+                justify-content: space-between;
+            }
+            .stage-wrapper {
+                padding: 20px 16px;
+            }
+            .nav-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .btn {
+                flex: 1;
+                min-width: 100px;
+                text-align: center;
+            }
+        }
+        /* Стили для финала */
+        .final-score {
+            font-size: 2rem;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="app">
+    <!-- Шапка -->
+    <div class="header">
+        <div class="title">🐾 ВетФорт Боярд</div>
+        <div class="status">
+            <div class="inventory" id="inventoryDisplay">
+                <span class="inv-item">💉 шприц</span>
+                <span class="inv-item">🔪 скальпель</span>
+                <span class="inv-item">💊 успокоительное</span>
+            </div>
+            <div class="stress-bar">
+                <span>😰 стресс</span>
+                <div class="stress-track"><div class="stress-fill" id="stressFill" style="width:0%"></div></div>
+                <span id="stressLabel">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Основная область -->
+    <div class="stage-wrapper" id="stageWrapper">
+        <div class="stage-location" id="stageLocation">Приёмная</div>
+        <div class="stage-title" id="stageTitle">Этап 1: Приёмная / Ресепшн</div>
+        <div class="stage-description" id="stageDescription">На ресепшене сидит кот. Он не просто мяукает, а требует жалобную книгу и кофе. Выберите правильный тон общения.</div>
+        <div class="game-area" id="gameArea">
+            <!-- Здесь будет контент мини-игры -->
+        </div>
+    </div>
+
+    <!-- Навигация -->
+    <div class="nav-buttons">
+        <button class="btn btn-secondary" id="prevBtn" disabled>◀ Назад</button>
+        <button class="btn btn-primary" id="nextBtn">Далее ▶</button>
+    </div>
+</div>
+
+<script>
+    // ========== ДАННЫЕ КВЕСТА ==========
+    // Состояние
+    let state = {
+        currentStage: 0,
+        stress: 0,            // 0-100
+        inventory: {
+            syringe: false,
+            scalpel: false,
+            sedative: false
+        },
+        stageCompleted: false, // для текущего этапа
+        stageResults: [],      // массив результатов этапов (true/false)
+    };
+
+    // Массив этапов (15 штук)
+    const stages = [
+        { // 0
+            id: 0,
+            location: 'Приёмная / Ресепшн',
+            title: 'Этап 1: Приёмная / Ресепшн',
+            description: 'На ресепшене сидит кот. Он не просто мяукает, а требует жалобную книгу и кофе. Выберите правильный тон общения.',
+            gameType: 'choice',
+            gameData: {
+                question: 'Как вы ответите коту?',
+                options: [
+                    { text: 'Привет, пушистый! Что случилось?', correct: false },
+                    { text: 'Здравствуйте, уважаемый кот! Чем могу помочь?', correct: true },
+                    { text: 'Эй, котяра, вали отсюда!', correct: false },
+                    { text: 'Мяу?', correct: false }
+                ],
+                successMsg: 'Отлично! Кот оценил вежливость и дал вам шприц. (+инвентарь)',
+                failMsg: 'Кот обиделся и поцарапал вам руку. Стресс +15%',
+                onSuccess: () => { state.inventory.syringe = true; updateInventory(); }
+            }
+        },
+        { // 1
+            id: 1,
+            location: 'Кабинет УЗИ',
+            title: 'Этап 2: Кабинет УЗИ',
+            description: 'Принести кота на УЗИ. Кот вырывается. Нужно быстро ввести данные (вес, порода) в систему, пока кот не сбежал.',
+            gameType: 'typing',
+            gameData: {
+                fields: [
+                    { label: 'Вес (кг)', value: '4.5' },
+                    { label: 'Порода', value: 'Британская короткошерстная' }
+                ],
+                timeLimit: 15, // секунд
+                successMsg: 'Данные введены вовремя! Кот не сбежал. Получен скальпель.',
+                failMsg: 'Вы слишком долго вводили данные, кот сбежал. Стресс +10%',
+                onSuccess: () => { state.inventory.scalpel = true; updateInventory(); }
+            }
+        },
+        { // 2
+            id: 2,
+            location: 'Операционная',
+            title: 'Этап 3: Операционная',
+            description: 'Кастрация кота. На экране появляется анатомическая схема. Нужно правильно выбрать инструменты из списка в нужном порядке: скальпель → зажим → лигатура.',
+            gameType: 'dragdrop',
+            gameData: {
+                tools: ['Скальпель', 'Зажим', 'Лигатура'],
+                correctOrder: ['Скальпель', 'Зажим', 'Лигатура'],
+                successMsg: 'Операция прошла успешно! Уровень стресса снижен на 5%',
+                failMsg: 'Порядок нарушен, кот потерял слишком много крови. Стресс +20%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 3
+            id: 3,
+            location: 'Лаборатория',
+            title: 'Этап 4: Лаборатория',
+            description: 'Анализ мочи собаки. В микроскопе видны кристаллы. Определите их тип.',
+            gameType: 'match',
+            gameData: {
+                image: '🔬 (микроскоп)',
+                options: ['Струвиты', 'Оксалаты', 'Ураты', 'Цистин'],
+                correct: 0, // индекс правильного
+                successMsg: 'Вы правильно определили струвиты! Назначена диета. Стресс -5%',
+                failMsg: 'Неверный тип кристаллов. Диета не поможет. Стресс +10%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 4
+            id: 4,
+            location: 'Рентген-кабинет',
+            title: 'Этап 5: Рентген-кабинет',
+            description: 'Собака проглотила носок. На рентгеновском снимке найдите инородный предмет и обведите его курсором.',
+            gameType: 'find',
+            gameData: {
+                // Используем простое изображение с областями
+                targetArea: { x: 60, y: 40, w: 40, h: 30 }, // % от картинки
+                successMsg: 'Вы нашли носок! Операция по извлечению назначена. Стресс -5%',
+                failMsg: 'Вы кликнули не туда, носок остался. Стресс +10%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 5
+            id: 5,
+            location: 'Стоматология',
+            title: 'Этап 6: Стоматология',
+            description: 'У собаки зубной камень. Нужно правильно настроить бормашину (скорость вращения, охлаждение), чтобы не спалить псу десну.',
+            gameType: 'slider',
+            gameData: {
+                sliders: [
+                    { label: 'Скорость (об/мин)', min: 0, max: 100, correct: 70 },
+                    { label: 'Охлаждение (%)', min: 0, max: 100, correct: 50 }
+                ],
+                successMsg: 'Параметры настроены верно! Камень снят. Стресс -5%',
+                failMsg: 'Неверная настройка, десна повреждена. Стресс +15%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 6
+            id: 6,
+            location: 'Аптека / Склад',
+            title: 'Этап 7: Аптека / Склад',
+            description: 'Собрать аптечку для выезда на дом к агрессивному ротвейлеру. Выберите предметы: седативное, намордник (виртуальный), бинты.',
+            gameType: 'collect',
+            gameData: {
+                items: ['Седативное', 'Намордник', 'Бинты', 'Игрушка', 'Ошейник'],
+                correct: ['Седативное', 'Намордник', 'Бинты'],
+                successMsg: 'Аптечка собрана правильно! Вы готовы к выезду. Получено успокоительное.',
+                failMsg: 'Аптечка неполная или лишнее. Стресс +10%',
+                onSuccess: () => { state.inventory.sedative = true; updateInventory(); }
+            }
+        },
+        { // 7
+            id: 7,
+            location: 'Вызов на дом',
+            title: 'Этап 8: Вызов на дом',
+            description: 'Ехать к клиенту в частный сектор. Выберите кратчайший маршрут по карте, чтобы успеть до рождения котят.',
+            gameType: 'map',
+            gameData: {
+                routes: [
+                    { name: 'Через центр (длинный, но пробки)', time: 25, correct: false },
+                    { name: 'Объездная (короткий, без пробок)', time: 15, correct: true },
+                    { name: 'По грунтовке (грязно, но быстро)', time: 20, correct: false }
+                ],
+                successMsg: 'Вы выбрали объездную и успели вовремя! Котята родились здоровыми. Стресс -10%',
+                failMsg: 'Вы застряли в пробке, котята родились на диване. Стресс +15%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 10); updateStress(); }
+            }
+        },
+        { // 8
+            id: 8,
+            location: 'Реанимация',
+            title: 'Этап 9: Реанимация',
+            description: 'Хомяк упал в обморок от стресса. Нужно ритмично нажимать на область сердца в такт метронома.',
+            gameType: 'rhythm',
+            gameData: {
+                beats: 6,
+                successMsg: 'СЛР проведена успешно! Хомяк очнулся. Стресс -5%',
+                failMsg: 'Ритм сбился, хомяк не выжил. Стресс +20%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 9
+            id: 9,
+            location: 'Дерматология',
+            title: 'Этап 10: Дерматология',
+            description: 'У кошки лишай. Под лампой Вуда найдите пораженные участки шерсти на модели кошки и кликните по ним.',
+            gameType: 'clickarea',
+            gameData: {
+                spots: [ { x: 30, y: 40 }, { x: 70, y: 60 }, { x: 50, y: 20 } ],
+                successMsg: 'Все пораженные участки найдены! Лечение назначено. Стресс -5%',
+                failMsg: 'Вы пропустили участок, лишай останется. Стресс +10%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 10
+            id: 10,
+            location: 'Груминг-зона',
+            title: 'Этап 11: Груминг-зона',
+            description: 'Колтун у пуделя размером с футбольный мяч. Виртуально «выстригите» его, не задев кожу (снайпер-клик).',
+            gameType: 'sniper',
+            gameData: {
+                targetSize: 30, // пикселей
+                successMsg: 'Колтун удалён идеально! Клиент счастлив. Стресс -5%',
+                failMsg: 'Вы задели кожу, пудель в шоке. Стресс +15%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 11
+            id: 11,
+            location: 'Вакцинация',
+            title: 'Этап 12: Вакцинация',
+            description: 'Вакцинировать щенка от бешенства. Щенок кусается за палец. Нужно одной рукой держать щенка (ползунок удержания), а другой — сделать укол (кликнуть в нужный момент).',
+            gameType: 'sync',
+            gameData: {
+                successMsg: 'Вакцинация проведена успешно! Щенок привит. Стресс -5%',
+                failMsg: 'Щенок вырвался, укол сделан неверно. Стресс +15%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 12
+            id: 12,
+            location: 'Прием экзотических животных',
+            title: 'Этап 13: Прием экзотических животных',
+            description: 'Попугай корелла кричит матом на клиента. Угадайте по поведению попугая, что с ним не так — стресс или болезнь?',
+            gameType: 'behavior',
+            gameData: {
+                question: 'Попугай распушил хвост, крылья дрожат, он громко кричит. Что это?',
+                options: [
+                    { text: 'Стресс', correct: true },
+                    { text: 'Болезнь (инфекция)', correct: false },
+                    { text: 'Голод', correct: false },
+                    { text: 'Территориальное поведение', correct: false }
+                ],
+                successMsg: 'Верно! Попугай просто испуган, дайте ему успокоительное. Стресс -5%',
+                failMsg: 'Неверно, вы начали лечить от инфекции, а это просто стресс. Стресс +10%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 13
+            id: 13,
+            location: 'Бухгалтерия / Касса',
+            title: 'Этап 14: Бухгалтерия / Касса',
+            description: 'Выставить счет клиенту за сложную операцию. Цены меняются. Быстро посчитайте итоговую сумму с учетом скидки 10% для постоянного клиента.',
+            gameType: 'calculate',
+            gameData: {
+                basePrice: 15000,
+                discount: 10, // %
+                successMsg: 'Счет выставлен верно! Клиент доволен. Стресс -5%',
+                failMsg: 'Ошибка в расчетах, клиент устроил скандал. Стресс +15%',
+                onSuccess: () => { state.stress = Math.max(0, state.stress - 5); updateStress(); }
+            }
+        },
+        { // 14
+            id: 14,
+            location: 'Холл клиники (Финал)',
+            title: 'Этап 15: Главный босс — Хаски',
+            description: 'Хаски с расстройством ЖКТ. Ему нужна ваша помощь и внимание. Одновременно успокойте владельца, назначьте лечение и не дайте хаски утащить ваш халат.',
+            gameType: 'boss',
+            gameData: {
+                successMsg: 'Вы справились со всеми задачами! Хаски накормлен, владелец успокоен, халат спасён. Вы — Ветеринарный Бог!',
+                failMsg: 'Хаски съел ваш халат, владелец в истерике. Вас ждёт карьера грумера в ТЦ.',
+                // Множественные шаги
+            }
+        }
+    ];
+
+    // ========== ФУНКЦИИ УПРАВЛЕНИЯ СОСТОЯНИЕМ ==========
+    function updateInventory() {
+        const inv = document.getElementById('inventoryDisplay');
+        let items = [];
+        if (state.inventory.syringe) items.push('💉 шприц');
+        if (state.inventory.scalpel) items.push('🔪 скальпель');
+        if (state.inventory.sedative) items.push('💊 успокоительное');
+        inv.innerHTML = items.length ? items.map(i => `<span class="inv-item">${i}</span>`).join('') : '🧰 пусто';
+    }
+
+    function updateStress() {
+        const fill = document.getElementById('stressFill');
+        const label = document.getElementById('stressLabel');
+        const stress = Math.min(100, Math.max(0, state.stress));
+        fill.style.width = stress + '%';
+        label.textContent = stress + '%';
+        if (stress >= 100) {
+            alert('😱 Уровень стресса достиг максимума! Вы увольняетесь в первый же день. Игра окончена.');
+            // Можно перезапустить или остановить
+            state.stress = 0;
+            updateStress();
+            // Сброс на первый этап
+            state.currentStage = 0;
+            state.stageCompleted = false;
+            renderStage(0);
+        }
+    }
+
+    // Обновление навигации
+    function updateNav() {
+        document.getElementById('prevBtn').disabled = (state.currentStage === 0);
+        const nextBtn = document.getElementById('nextBtn');
+        const isLast = state.currentStage === stages.length - 1;
+        nextBtn.textContent = isLast ? '🏁 Завершить' : 'Далее ▶';
+        // Если этап не пройден, кнопка "Далее" заблокирована
+        nextBtn.disabled = !state.stageCompleted;
+    }
+
+    // ========== РЕНДЕРИНГ ЭТАПА ==========
+    function renderStage(index) {
+        const stage = stages[index];
+        if (!stage) return;
+
+        document.getElementById('stageLocation').textContent = `📍 ${stage.location}`;
+        document.getElementById('stageTitle').textContent = stage.title;
+        document.getElementById('stageDescription').textContent = stage.description;
+
+        const gameArea = document.getElementById('gameArea');
+        gameArea.innerHTML = '';
+
+        // Сброс флага завершения этапа
+        state.stageCompleted = false;
+
+        // Вызов соответствующей функции рендеринга по типу игры
+        switch (stage.gameType) {
+            case 'choice':
+                renderChoice(stage, gameArea);
+                break;
+            case 'typing':
+                renderTyping(stage, gameArea);
+                break;
+            case 'dragdrop':
+                renderDragDrop(stage, gameArea);
+                break;
+            case 'match':
+                renderMatch(stage, gameArea);
+                break;
+            case 'find':
+                renderFind(stage, gameArea);
+                break;
+            case 'slider':
+                renderSlider(stage, gameArea);
+                break;
+            case 'collect':
+                renderCollect(stage, gameArea);
+                break;
+            case 'map':
+                renderMap(stage, gameArea);
+                break;
+            case 'rhythm':
+                renderRhythm(stage, gameArea);
+                break;
+            case 'clickarea':
+                renderClickArea(stage, gameArea);
+                break;
+            case 'sniper':
+                renderSniper(stage, gameArea);
+                break;
+            case 'sync':
+                renderSync(stage, gameArea);
+                break;
+            case 'behavior':
+                renderBehavior(stage, gameArea);
+                break;
+            case 'calculate':
+                renderCalculate(stage, gameArea);
+                break;
+            case 'boss':
+                renderBoss(stage, gameArea);
+                break;
+            default:
+                gameArea.innerHTML = '<p>Игра в разработке</p>';
+        }
+
+        updateNav();
+        updateInventory();
+        updateStress();
+    }
+
+    // ========== МИНИ-ИГРЫ ==========
+    // 1. Choice (выбор реплики)
+    function renderChoice(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>${data.question}</p><div class="flex-row">`;
+        data.options.forEach((opt, idx) => {
+            html += `<button class="option-btn" data-idx="${idx}">${opt.text}</button>`;
+        });
+        html += `</div><div id="choiceResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const btns = container.querySelectorAll('.option-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (state.stageCompleted) return;
+                const idx = parseInt(this.dataset.idx);
+                const isCorrect = data.options[idx].correct;
+                const resultDiv = container.querySelector('#choiceResult');
+                // Подсветка
+                btns.forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
+                this.classList.add('selected');
+                if (isCorrect) {
+                    this.classList.add('correct');
+                    resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                    if (data.onSuccess) data.onSuccess();
+                    state.stageCompleted = true;
+                } else {
+                    this.classList.add('wrong');
+                    resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                    state.stress += 15;
+                    updateStress();
+                    // Можно не блокировать, но дадим попробовать снова? По условию, ошибка повышает стресс, но можно продолжить.
+                    // Для простоты - разрешим повторные попытки, но стресс уже повышен.
+                    // Но чтобы не зацикливать, разрешим попробовать снова, но стресс не будет снижаться.
+                }
+                updateNav();
+            });
+        });
+    }
+
+    // 2. Typing (скорость набора)
+    function renderTyping(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>Введите данные как можно быстрее (таймер ${data.timeLimit} сек):</p>`;
+        data.fields.forEach(f => {
+            html += `<div><label>${f.label}: <input type="text" class="typing-field" data-correct="${f.value}" placeholder="введите значение"></label></div>`;
+        });
+        html += `<div id="typingTimer" style="font-weight:bold; margin-top:8px;">Осталось: ${data.timeLimit} сек</div>`;
+        html += `<button id="typingSubmit" class="btn btn-primary">Проверить</button>`;
+        html += `<div id="typingResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        let timeLeft = data.timeLimit;
+        const timerEl = container.querySelector('#typingTimer');
+        const submitBtn = container.querySelector('#typingSubmit');
+        const resultDiv = container.querySelector('#typingResult');
+        const fields = container.querySelectorAll('.typing-field');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            timerEl.textContent = `Осталось: ${timeLeft} сек`;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                timerEl.textContent = 'Время вышло!';
+                // Автоматическая проверка?
+                if (!state.stageCompleted) {
+                    resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                    state.stress += 10;
+                    updateStress();
+                    state.stageCompleted = true;
+                    submitBtn.disabled = true;
+                    updateNav();
+                }
+            }
+        }, 1000);
+
+        submitBtn.addEventListener('click', function() {
+            if (state.stageCompleted) return;
+            clearInterval(timer);
+            let allCorrect = true;
+            fields.forEach(f => {
+                const correct = f.dataset.correct;
+                if (f.value.trim() !== correct) allCorrect = false;
+            });
+            if (allCorrect) {
+                resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                if (data.onSuccess) data.onSuccess();
+                state.stageCompleted = true;
+            } else {
+                resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                state.stress += 10;
+                updateStress();
+                state.stageCompleted = true; // можно позволить попробовать еще? для упрощения - завершаем с ошибкой
+            }
+            submitBtn.disabled = true;
+            updateNav();
+        });
+    }
+
+    // 3. DragDrop (перетаскивание) – используем клики по порядку
+    function renderDragDrop(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>Выберите инструменты в правильном порядке (кликайте по очереди):</p><div class="flex-row" id="toolsContainer">`;
+        data.tools.forEach((tool, idx) => {
+            html += `<div class="collect-item" data-tool="${tool}" data-idx="${idx}" style="cursor:pointer;">${tool}</div>`;
+        });
+        html += `</div><div id="ddResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const toolsContainer = container.querySelector('#toolsContainer');
+        const resultDiv = container.querySelector('#ddResult');
+        const items = toolsContainer.querySelectorAll('.collect-item');
+        let selectedOrder = [];
+        const correctOrder = data.correctOrder;
+
+        items.forEach(item => {
+            item.addEventListener('click', function() {
+                if (state.stageCompleted) return;
+                const tool = this.dataset.tool;
+                // Проверяем, не выбран ли уже
+                if (this.classList.contains('picked')) return;
+                this.classList.add('picked');
+                selectedOrder.push(tool);
+                // Проверяем, достигнут ли нужный порядок
+                if (selectedOrder.length === correctOrder.length) {
+                    // Проверяем соответствие
+                    let correct = true;
+                    for (let i = 0; i < correctOrder.length; i++) {
+                        if (selectedOrder[i] !== correctOrder[i]) { correct = false; break; }
+                    }
+                    if (correct) {
+                        resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                        if (data.onSuccess) data.onSuccess();
+                    } else {
+                        resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                        state.stress += 20;
+                        updateStress();
+                    }
+                    state.stageCompleted = true;
+                    updateNav();
+                    // Блокируем дальнейшие клики
+                    items.forEach(el => el.style.cursor = 'default');
+                }
+            });
+        });
+    }
+
+    // 4. Match (сопоставление)
+    function renderMatch(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>${data.image}</p><p>Какой тип кристаллов вы видите?</p><div class="flex-row">`;
+        data.options.forEach((opt, idx) => {
+            html += `<button class="option-btn" data-idx="${idx}">${opt}</button>`;
+        });
+        html += `</div><div id="matchResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const btns = container.querySelectorAll('.option-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (state.stageCompleted) return;
+                const idx = parseInt(this.dataset.idx);
+                const isCorrect = (idx === data.correct);
+                const resultDiv = container.querySelector('#matchResult');
+                btns.forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
+                this.classList.add('selected');
+                if (isCorrect) {
+                    this.classList.add('correct');
+                    resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                    if (data.onSuccess) data.onSuccess();
+                } else {
+                    this.classList.add('wrong');
+                    resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                    state.stress += 10;
+                    updateStress();
+                }
+                state.stageCompleted = true;
+                updateNav();
+            });
+        });
+    }
+
+    // 5. Find (поиск объекта на картинке) - упрощенно через клик по области
+    function renderFind(stage, container) {
+        const data = stage.gameData;
+        // Создаем изображение-заглушку с областью-мишенью
+        const area = data.targetArea;
+        let html = `<div class="click-map" style="position:relative; width:300px; height:200px; background:#e5dccc; border-radius:12px; margin:0 auto;">
+            <div style="position:absolute; top:10px; left:10px; color:#6b7f82;">Рентген-снимок</div>
+            <div class="target" style="left:${area.x}%; top:${area.y}%; width:${area.w}px; height:${area.h}px; background:rgba(244,197,66,0.3); border:2px dashed #f4c542; border-radius:8px; cursor:pointer;" data-target="true"></div>
+        </div>
+        <p>Кликните на предполагаемое место нахождения носка (обведено пунктиром).</p>
+        <div id="findResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const target = container.querySelector('.target');
+        const resultDiv = container.querySelector('#findResult');
+
+        target.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (state.stageCompleted) return;
+            // Проверяем, что кликнули по мишени (уже произошло)
+            resultDiv.innerHTML = `✅ ${data.successMsg}`;
+            if (data.onSuccess) data.onSuccess();
+            state.stageCompleted = true;
+            updateNav();
+        });
+
+        // Если кликнуть мимо, тоже обработаем
+        const map = container.querySelector('.click-map');
+        map.addEventListener('click', function(e) {
+            if (e.target === target) return;
+            if (state.stageCompleted) return;
+            resultDiv.innerHTML = `❌ ${data.failMsg}`;
+            state.stress += 10;
+            updateStress();
+            state.stageCompleted = true;
+            updateNav();
+        });
+    }
+
+    // 6. Slider (настройка ползунков)
+    function renderSlider(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>Настройте параметры:</p><div class="slider-group">`;
+        data.sliders.forEach((s, idx) => {
+            html += `<label>${s.label}: <input type="range" min="${s.min}" max="${s.max}" value="${Math.floor((s.min+s.max)/2)}" class="slider-input" data-idx="${idx}"> <span class="slider-value" id="sliderVal${idx}">${Math.floor((s.min+s.max)/2)}</span></label>`;
+        });
+        html += `</div><button id="sliderSubmit" class="btn btn-primary">Проверить</button><div id="sliderResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const sliders = container.querySelectorAll('.slider-input');
+        sliders.forEach(slider => {
+            slider.addEventListener('input', function() {
+                const idx = this.dataset.idx;
+                document.getElementById(`sliderVal${idx}`).textContent = this.value;
+            });
+        });
+
+        const submitBtn = container.querySelector('#sliderSubmit');
+        const resultDiv = container.querySelector('#sliderResult');
+
+        submitBtn.addEventListener('click', function() {
+            if (state.stageCompleted) return;
+            let allCorrect = true;
+            sliders.forEach((slider, idx) => {
+                const val = parseInt(slider.value);
+                const correct = data.sliders[idx].correct;
+                if (Math.abs(val - correct) > 5) allCorrect = false;
+            });
+            if (allCorrect) {
+                resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                if (data.onSuccess) data.onSuccess();
+            } else {
+                resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                state.stress += 15;
+                updateStress();
+            }
+            state.stageCompleted = true;
+            updateNav();
+        });
+    }
+
+    // 7. Collect (сборка набора)
+    function renderCollect(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>Выберите предметы для аптечки (кликайте):</p><div class="collect-grid">`;
+        data.items.forEach(item => {
+            html += `<div class="collect-item" data-item="${item}" style="cursor:pointer;">${item}</div>`;
+        });
+        html += `</div><button id="collectSubmit" class="btn btn-primary">Готово</button><div id="collectResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const items = container.querySelectorAll('.collect-item');
+        const selected = new Set();
+
+        items.forEach(item => {
+            item.addEventListener('click', function() {
+                if (state.stageCompleted) return;
+                this.classList.toggle('picked');
+                const itemName = this.dataset.item;
+                if (this.classList.contains('picked')) {
+                    selected.add(itemName);
+                } else {
+                    selected.delete(itemName);
+                }
+            });
+        });
+
+        const submitBtn = container.querySelector('#collectSubmit');
+        const resultDiv = container.querySelector('#collectResult');
+
+        submitBtn.addEventListener('click', function() {
+            if (state.stageCompleted) return;
+            const correctSet = new Set(data.correct);
+            let correct = true;
+            if (selected.size !== correctSet.size) correct = false;
+            else {
+                for (let item of selected) {
+                    if (!correctSet.has(item)) { correct = false; break; }
+                }
+            }
+            if (correct) {
+                resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                if (data.onSuccess) data.onSuccess();
+            } else {
+                resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                state.stress += 10;
+                updateStress();
+            }
+            state.stageCompleted = true;
+            updateNav();
+        });
+    }
+
+    // 8. Map (выбор маршрута)
+    function renderMap(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>Выберите маршрут:</p><div class="flex-row">`;
+        data.routes.forEach((route, idx) => {
+            html += `<button class="option-btn" data-idx="${idx}">${route.name} (${route.time} мин)</button>`;
+        });
+        html += `</div><div id="mapResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const btns = container.querySelectorAll('.option-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (state.stageCompleted) return;
+                const idx = parseInt(this.dataset.idx);
+                const isCorrect = data.routes[idx].correct;
+                const resultDiv = container.querySelector('#mapResult');
+                btns.forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
+                this.classList.add('selected');
+                if (isCorrect) {
+                    this.classList.add('correct');
+                    resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                    if (data.onSuccess) data.onSuccess();
+                } else {
+                    this.classList.add('wrong');
+                    resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                    state.stress += 15;
+                    updateStress();
+                }
+                state.stageCompleted = true;
+                updateNav();
+            });
+        });
+    }
+
+    // 9. Rhythm (ритм-игра) – упрощенно: нужно кликать в такт метроному (визуальный индикатор)
+    function renderRhythm(stage, container) {
+        const data = stage.gameData;
+        let html = `<div class="rhythm-box">
+            <p>Нажимайте кнопку в такт метроному (когда индикатор загорится). Сделайте ${data.beats} правильных нажатий.</p>
+            <div class="rhythm-indicator" id="rhythmIndicator"></div>
+            <button class="rhythm-btn" id="rhythmBtn">👆 Нажать</button>
+            <div id="rhythmStatus">Попаданий: 0 / ${data.beats}</div>
+            <div id="rhythmResult" class="result-msg"></div>
+        </div>`;
+        container.innerHTML = html;
+
+        const indicator = container.querySelector('#rhythmIndicator');
+        const btn = container.querySelector('#rhythmBtn');
+        const status = container.querySelector('#rhythmStatus');
+        const resultDiv = container.querySelector('#rhythmResult');
+
+        let hits = 0;
+        let totalBeats = data.beats;
+        let beatInterval = 600; // ms
+        let nextBeatTime = Date.now() + beatInterval;
+        let active = false;
+        let gameActive = true;
+        let beatTimer;
+
+        function startBeats() {
+            beatTimer = setInterval(() => {
+                if (!gameActive || state.stageCompleted) {
+                    clearInterval(beatTimer);
+                    return;
+                }
+                active = true;
+                indicator.classList.add('active');
+                // Через 200 мс снимаем подсветку
+                setTimeout(() => {
+                    indicator.classList.remove('active');
+                    active = false;
+                }, 200);
+            }, beatInterval);
+        }
+
+        startBeats();
+
+        btn.addEventListener('click', function() {
+            if (state.stageCompleted || !gameActive) return;
+            if (active) {
+                hits++;
+                status.textContent = `Попаданий: ${hits} / ${totalBeats}`;
+                if (hits >= totalBeats) {
+                    // Победа
+                    resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                    if (data.onSuccess) data.onSuccess();
+                    state.stageCompleted = true;
+                    gameActive = false;
+                    clearInterval(beatTimer);
+                    updateNav();
+                }
+            } else {
+                // Промах
+                resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                state.stress += 20;
+                updateStress();
+                state.stageCompleted = true;
+                gameActive = false;
+                clearInterval(beatTimer);
+                updateNav();
+            }
+        });
+
+        // Если пользователь не успел нажать ни разу за время, можно через таймаут?
+        // Ограничим время игры 10 секунд
+        setTimeout(() => {
+            if (!state.stageCompleted) {
+                gameActive = false;
+                clearInterval(beatTimer);
+                resultDiv.innerHTML = `❌ Время вышло! ${data.failMsg}`;
+                state.stress += 20;
+                updateStress();
+                state.stageCompleted = true;
+                updateNav();
+            }
+        }, 15000);
+    }
+
+    // 10. ClickArea (клик по областям)
+    function renderClickArea(stage, container) {
+        const data = stage.gameData;
+        // Используем изображение-заглушку
+        let html = `<p>Кликните на все пораженные участки (отмечены пунктиром).</p>
+        <div class="click-map" style="position:relative; width:300px; height:200px; background:#d6cdbe; border-radius:12px; margin:0 auto;">
+            <div style="position:absolute; top:10px; left:10px; color:#4b5f64;">Модель кошки</div>`;
+        data.spots.forEach((spot, idx) => {
+            html += `<div class="click-spot" data-idx="${idx}" style="position:absolute; left:${spot.x}%; top:${spot.y}%; width:20px; height:20px; background:rgba(244,197,66,0.5); border:2px dashed #f4c542; border-radius:50%; cursor:pointer;"></div>`;
+        });
+        html += `</div><div id="clickAreaResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const spots = container.querySelectorAll('.click-spot');
+        const resultDiv = container.querySelector('#clickAreaResult');
+        let found = 0;
+        const total = spots.length;
+
+        spots.forEach(spot => {
+            spot.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (state.stageCompleted) return;
+                if (this.dataset.found) return;
+                this.dataset.found = 'true';
+                this.style.background = 'rgba(107,170,122,0.7)';
+                found++;
+                if (found === total) {
+                    resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                    if (data.onSuccess) data.onSuccess();
+                    state.stageCompleted = true;
+                    updateNav();
+                }
+            });
+        });
+
+        // Если кликнуть мимо всех пятен
+        const map = container.querySelector('.click-map');
+        map.addEventListener('click', function(e) {
+            if (e.target.classList.contains('click-spot')) return;
+            if (state.stageCompleted) return;
+            // Нештрафуем за лишние клики, только если много?
+            // Можно добавить предупреждение, но не критично
+        });
+    }
+
+    // 11. Sniper (точный клик)
+    function renderSniper(stage, container) {
+        const data = stage.gameData;
+        // Отображаем квадрат-мишень и просим кликнуть в его центр
+        let html = `<p>Кликните как можно точнее в центр колтуна (зелёная точка).</p>
+        <div style="position:relative; width:200px; height:200px; background:#f0ebe2; border-radius:50%; margin:0 auto; border:2px solid #b8ae9c;">
+            <div class="sniper-target" style="position:absolute; top:50%; left:50%; width:20px; height:20px; background:green; border-radius:50%; transform:translate(-50%,-50%); cursor:crosshair;"></div>
+        </div>
+        <div id="sniperResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const target = container.querySelector('.sniper-target');
+        const resultDiv = container.querySelector('#sniperResult');
+
+        target.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (state.stageCompleted) return;
+            // Считаем, что клик был точным
+            resultDiv.innerHTML = `✅ ${data.successMsg}`;
+            if (data.onSuccess) data.onSuccess();
+            state.stageCompleted = true;
+            updateNav();
+        });
+
+        // Если кликнуть мимо, тоже обработаем
+        const containerDiv = container.querySelector('div[style*="200px"]');
+        containerDiv.addEventListener('click', function(e) {
+            if (e.target === target) return;
+            if (state.stageCompleted) return;
+            resultDiv.innerHTML = `❌ ${data.failMsg}`;
+            state.stress += 15;
+            updateStress();
+            state.stageCompleted = true;
+            updateNav();
+        });
+    }
+
+    // 12. Sync (синхронизация ползунка и клик)
+    function renderSync(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>Удерживайте ползунок на значении 50, затем кликните "Укол" в нужный момент (когда индикатор загорится).</p>
+        <div><label>Удержание: <input type="range" min="0" max="100" value="50" class="sync-slider" style="width:200px;"></label></div>
+        <div><button id="syncInjection" class="btn btn-primary">💉 Укол</button></div>
+        <div id="syncResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const slider = container.querySelector('.sync-slider');
+        const injectBtn = container.querySelector('#syncInjection');
+        const resultDiv = container.querySelector('#syncResult');
+
+        // Случайным образом меняем "момент" для укола через таймеры
+        let injectionReady = false;
+        let timer;
+
+        function randomInjectionTime() {
+            // Через 2-5 секунд от начала игры
+            const delay = 2000 + Math.random() * 3000;
+            timer = setTimeout(() => {
+                if (state.stageCompleted) return;
+                injectionReady = true;
+                // Визуально подсветим кнопку
+                injectBtn.style.background = '#f4c542';
+                injectBtn.textContent = '💉 Сейчас!';
+                // Если не нажать через 3 секунды, пропуск
+                setTimeout(() => {
+                    if (!state.stageCompleted && injectionReady) {
+                        injectionReady = false;
+                        injectBtn.style.background = '';
+                        injectBtn.textContent = '💉 Укол';
+                        // Пропуск - ошибка
+                        resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                        state.stress += 15;
+                        updateStress();
+                        state.stageCompleted = true;
+                        updateNav();
+                    }
+                }, 3000);
+            }, delay);
+        }
+
+        randomInjectionTime();
+
+        injectBtn.addEventListener('click', function() {
+            if (state.stageCompleted) return;
+            const val = parseInt(slider.value);
+            // Проверяем, что удержание в пределах 45-55
+            if (val >= 45 && val <= 55 && injectionReady) {
+                // успех
+                clearTimeout(timer);
+                resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                if (data.onSuccess) data.onSuccess();
+                state.stageCompleted = true;
+                updateNav();
+            } else {
+                // ошибка
+                clearTimeout(timer);
+                resultDiv.innerHTML = `❌ Удержание сбито или момент неправильный. ${data.failMsg}`;
+                state.stress += 15;
+                updateStress();
+                state.stageCompleted = true;
+                updateNav();
+            }
+        });
+    }
+
+    // 13. Behavior (угадывание поведения)
+    function renderBehavior(stage, container) {
+        const data = stage.gameData;
+        let html = `<p>${data.question}</p><div class="flex-row">`;
+        data.options.forEach((opt, idx) => {
+            html += `<button class="option-btn" data-idx="${idx}">${opt.text}</button>`;
+        });
+        html += `</div><div id="behaviorResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const btns = container.querySelectorAll('.option-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (state.stageCompleted) return;
+                const idx = parseInt(this.dataset.idx);
+                const isCorrect = data.options[idx].correct;
+                const resultDiv = container.querySelector('#behaviorResult');
+                btns.forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
+                this.classList.add('selected');
+                if (isCorrect) {
+                    this.classList.add('correct');
+                    resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                    if (data.onSuccess) data.onSuccess();
+                } else {
+                    this.classList.add('wrong');
+                    resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                    state.stress += 10;
+                    updateStress();
+                }
+                state.stageCompleted = true;
+                updateNav();
+            });
+        });
+    }
+
+    // 14. Calculate (расчет суммы)
+    function renderCalculate(stage, container) {
+        const data = stage.gameData;
+        const finalPrice = data.basePrice * (1 - data.discount / 100);
+        let html = `<p>Базовая стоимость операции: ${data.basePrice} руб. Скидка для постоянного клиента: ${data.discount}%.</p>
+        <p>Введите итоговую сумму:</p>
+        <input type="number" id="calcInput" placeholder="сумма в рублях" style="padding:8px; border-radius:20px; border:1px solid #d6cdbe;">
+        <button id="calcSubmit" class="btn btn-primary">Проверить</button>
+        <div id="calcResult" class="result-msg"></div>`;
+        container.innerHTML = html;
+
+        const input = container.querySelector('#calcInput');
+        const submitBtn = container.querySelector('#calcSubmit');
+        const resultDiv = container.querySelector('#calcResult');
+
+        submitBtn.addEventListener('click', function() {
+            if (state.stageCompleted) return;
+            const userVal = parseFloat(input.value);
+            if (Math.abs(userVal - finalPrice) < 1) {
+                resultDiv.innerHTML = `✅ ${data.successMsg}`;
+                if (data.onSuccess) data.onSuccess();
+            } else {
+                resultDiv.innerHTML = `❌ ${data.failMsg}`;
+                state.stress += 15;
+                updateStress();
+            }
+            state.stageCompleted = true;
+            updateNav();
+        });
+    }
+
+    // 15. Boss (финальный босс)
+    function renderBoss(stage, container) {
+        const data = stage.gameData;
+        // Многоэтапный босс: 3 шага
+        let step = 0;
+        let html = `<div id="bossContent">
+            <p>Финальный босс: Хаски с расстройством ЖКТ. Выполните три задачи!</p>
+            <div id="bossStep"></div>
+            <div id="bossResult" class="result-msg"></div>
+        </div>`;
+        container.innerHTML = html;
+
+        const stepDiv = container.querySelector('#bossStep');
+        const resultDiv = container.querySelector('#bossResult');
+
+        function renderStep() {
+            if (step === 0) {
+                // Успокоить владельца
+                stepDiv.innerHTML = `<p>Шаг 1: Успокойте владельца хаски. Выберите правильную фразу:</p>
+                <div class="flex-row">
+                    <button class="boss-opt" data-correct="true">"Не волнуйтесь, мы всё исправим. Расскажите подробнее."</button>
+                    <button class="boss-opt" data-correct="false">"Ваша собака просто переела, ничего страшного."</button>
+                    <button class="boss-opt" data-correct="false">"У нас сейчас много работы, подождите."</button>
+                </div>`;
+            } else if (step === 1) {
+                // Назначить лечение
+                stepDiv.innerHTML = `<p>Шаг 2: Назначьте правильное лечение при расстройстве ЖКТ у хаски.</p>
+                <div class="flex-row">
+                    <button class="boss-opt" data-correct="false">Антибиотики широкого спектра</button>
+                    <button class="boss-opt" data-correct="true">Диета, адсорбенты, пробиотики</button>
+                    <button class="boss-opt" data-correct="false">Хирургическое вмешательство</button>
+                </div>`;
+            } else if (step === 2) {
+                // Не дать хаски утащить халат (игра на реакцию)
+                stepDiv.innerHTML = `<p>Шаг 3: Хаски пытается утащить ваш халат! Быстро кликните на кнопку "Спасти халат", когда появится сигнал!</p>
+                <button id="saveCoatBtn" class="btn btn-primary" style="font-size:1.2rem;">🛡️ Спасти халат</button>
+                <div id="coatTimer"></div>`;
+                // Запускаем таймер
+                let saved = false;
+                const coatBtn = stepDiv.querySelector('#saveCoatBtn');
+                const timerDiv = stepDiv.querySelector('#coatTimer');
+                let timeoutId;
+
+                function startCoatChallenge() {
+                    // Через 1-3 секунды появляется сигнал
+                    const delay = 1000 + Math.random() * 2000;
+                    timerDiv.textContent = 'Ждите сигнала...';
+                    timeoutId = setTimeout(() => {
+                        if (state.stageCompleted) return;
+                        timerDiv.innerHTML = '⚠️ ХАЛАСКИ! Спасайте халат! <span style="color:red; font-weight:bold;">НАЖМИТЕ!</span>';
+                        coatBtn.disabled = false;
+                        // Даём 2 секунды на реакцию
+                        setTimeout(() => {
+                            if (!state.stageCompleted && !saved) {
+                                // Не успели
+                                resultDiv.innerHTML = `❌ Хаски утащил халат! ${data.failMsg}`;
+                                state.stress += 20;
+                                updateStress();
+                                state.stageCompleted = true;
+                                updateNav();
+                            }
+                        }, 2000);
+                    }, delay);
+                }
+
+                coatBtn.disabled = true;
+                coatBtn.addEventListener('click', function() {
+                    if (state.stageCompleted) return;
+                    if (this.disabled) return;
+                    saved = true;
+                    clearTimeout(timeoutId);
+                    resultDiv.innerHTML = `✅ Халат спасён! ${data.successMsg}`;
+                    // Завершаем этап
+                    state.stageCompleted = true;
+                    // Увеличиваем счетчик пройденных
+                    updateNav();
+                });
+
+                startCoatChallenge();
+                // Обработчик для кнопок лечения и успокоения
+                // Они будут обработаны через делегирование
+            }
+            // Обновляем обработчики для кнопок boss-opt
+            stepDiv.querySelectorAll('.boss-opt').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (state.stageCompleted) return;
+                    const correct = this.dataset.correct === 'true';
+                    if (correct) {
+                        // Переход к следующему шагу
+                        step++;
+                        if (step === 3) {
+                            // Все шаги пройдены, финал уже в обработке? Но мы должны завершить после 3-го шага.
+                            // На 3-м шаге уже есть своя логика, поэтому здесь просто обновим.
+                            // Но если step стал 3, значит все шаги пройдены, но мы ещё на 3-м шаге.
+                            // В 3-м шаге уже есть своя проверка.
+                        }
+                        renderStep();
+                    } else {
+                        // Ошибка
+                        resultDiv.innerHTML = `❌ Неправильный выбор. ${data.failMsg}`;
+                        state.stress += 15;
+                        updateStress();
+                        state.stageCompleted = true;
+                        updateNav();
+                    }
+                });
+            });
+        }
+
+        // Инициализируем первый шаг
+        renderStep();
+
+        // После завершения всех шагов (когда state.stageCompleted станет true)
+        // В 3-м шаге мы устанавливаем state.stageCompleted = true при успехе.
+    }
+
+    // ========== НАВИГАЦИЯ ==========
+    document.getElementById('prevBtn').addEventListener('click', function() {
+        if (state.currentStage > 0) {
+            state.currentStage--;
+            state.stageCompleted = false; // сбрасываем, так как переходим назад, надо заново проходить
+            renderStage(state.currentStage);
+        }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', function() {
+        if (!state.stageCompleted) return;
+        const isLast = state.currentStage === stages.length - 1;
+        if (isLast) {
+            // Финал
+            const stress = state.stress;
+            const totalCorrect = state.stageResults.filter(r => r).length;
+            let finalMsg = '';
+            if (stress < 30 && totalCorrect >= 12) {
+                finalMsg = '🏆 Поздравляем! Вы — Ветеринарный Бог!';
+            } else {
+                finalMsg = '😅 Вы справились, но есть куда расти. Вас ждёт карьера грумера в ТЦ.';
+            }
+            alert(`Игра завершена!\n${finalMsg}\nСтресс: ${stress}%\nПравильных этапов: ${totalCorrect} из ${stages.length}`);
+            // Можно перезапустить
+            if (confirm('Начать заново?')) {
+                state.currentStage = 0;
+                state.stress = 0;
+                state.inventory = { syringe: false, scalpel: false, sedative: false };
+                state.stageCompleted = false;
+                state.stageResults = [];
+                updateInventory();
+                updateStress();
+                renderStage(0);
+            }
+            return;
+        }
+        state.currentStage++;
+        state.stageCompleted = false;
+        renderStage(state.currentStage);
+    });
+
+    // ========== СТАРТ ==========
+    window.onload = function() {
+        renderStage(0);
+        updateInventory();
+        updateStress();
+    };
+</script>
+</body>
+</html>

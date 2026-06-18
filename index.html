@@ -2,18 +2,17 @@
 <html lang="ru">
 <head>
     <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
+        ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>VetSim | Интерактивные тренажёры для ветеринарного образования</title>
@@ -25,20 +24,18 @@
         }
 
         body {
-            background: #F4F7F9;   /* свежий светлый серо-голубой фон */
+            background: #F4F7F9;
             font-family: system-ui, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
             color: #3E5C4A;
             line-height: 1.4;
             padding: 2rem 1.5rem;
         }
 
-        /* главный контейнер с ограничением ширины */
         .container {
             max-width: 1280px;
             margin: 0 auto;
         }
 
-        /* шапка */
         .header {
             text-align: center;
             margin-bottom: 3rem;
@@ -63,7 +60,6 @@
             margin-top: 0.2rem;
         }
 
-        /* сетка карточек */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -71,12 +67,11 @@
             margin: 2rem 0 3rem;
         }
 
-        /* стили карточки как ссылки */
         .card-link {
             display: block;
             background: #FFFFFF;
             border-radius: 1.8rem;
-            padding: 1.8rem 1.5rem 1.8rem 1.5rem;
+            padding: 1.8rem 1.5rem;
             text-decoration: none;
             color: inherit;
             transition: all 0.25s ease;
@@ -92,7 +87,6 @@
             border-color: #C9D6BA;
         }
 
-        /* иконка (эмодзи) */
         .card-icon {
             font-size: 3.2rem;
             margin-bottom: 1.2rem;
@@ -136,7 +130,6 @@
             transform: translateX(4px);
         }
 
-        /* футер */
         .footer {
             text-align: center;
             padding-top: 2rem;
@@ -154,7 +147,6 @@
             color: #2F6B47;
         }
 
-        /* Адаптивность */
         @media (max-width: 900px) {
             .cards-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -187,39 +179,31 @@
         <div class="logo">🐾 VetSim</div>
         <div class="tagline">Интерактивные тренажёры для ветеринарного образования</div>
     </div>
-    </div> <!-- закрывается header -->
 
-    <!-- ===== ОПИСАНИЕ ПРОЕКТА (вставьте сюда) ===== -->
+    <!-- Описание проекта -->
     <div style="max-width: 800px; margin: 0 auto 2.5rem auto; text-align: center; padding: 1rem 0; border-bottom: 1px solid #E2E9DC;">
-
         <p style="font-size: 1.15rem; color: #3E5C4A; line-height: 1.6; margin-bottom: 0.5rem;">
             <strong>ВетСим</strong> — открытая платформа с бесплатными конструкторами 
             для создания интерактивных тренажёров по ветеринарии.
         </p>
-
         <p style="font-size: 0.95rem; color: #5F7C62; line-height: 1.5; margin-bottom: 0.8rem;">
             Преподаватели, студенты и практикующие врачи могут использовать готовые тренажёры 
             или создавать свои — всё бесплатно, без интернета и без программирования.
         </p>
-
         <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; font-size: 0.85rem;">
             <span style="background: #EEF2E9; padding: 0.2rem 0.8rem; border-radius: 30px;">🧩 15+ конструкторов</span>
             <span style="background: #EEF2E9; padding: 0.2rem 0.8rem; border-radius: 30px;">💡 Работает без интернета</span>
             <span style="background: #EEF2E9; padding: 0.2rem 0.8rem; border-radius: 30px;">🎓 Для преподавателей и студентов</span>
         </div>
-
         <p style="margin-top: 0.8rem; font-size: 0.85rem; color: #89A07B;">
             👉 Выберите раздел ниже, чтобы начать
         </p>
-
     </div>
-    <!-- ===== КОНЕЦ ОПИСАНИЯ ===== -->
 
-    <div class="cards-grid">
-        <!-- ... карточки ... -->
+    <!-- Карточки -->
     <div class="cards-grid">
         <!-- Универсальное -->
-        <a href="universal.html" class="card-link" id="universalLink">
+        <a href="universal.html" class="card-link">
             <div class="card-icon">📚⚙️</div>
             <div class="card-title">Универсальное</div>
             <div class="card-description">
@@ -232,7 +216,7 @@
         </a>
 
         <!-- Общепрофессиональный цикл -->
-        <a href="general.html" class="card-link" id="generalLink">
+        <a href="general.html" class="card-link">
             <div class="card-icon">🧬🔬</div>
             <div class="card-title">Общепрофессиональный цикл</div>
             <div class="card-description">
@@ -245,7 +229,7 @@
         </a>
 
         <!-- Профессиональный цикл -->
-        <a href="professional.html" class="card-link" id="profLink">
+        <a href="professional.html" class="card-link">
             <div class="card-icon">🩺🐄</div>
             <div class="card-title">Профессиональный цикл</div>
             <div class="card-description">
@@ -254,31 +238,32 @@
             <div class="card-action">
                 <span>Перейти</span>
                 <span class="arrow">→</span>
-           </a>
-    </div>
-</div>
-    </div>
+            </div>
+        </a>
+    </div> <!-- конец .cards-grid -->
+
     <div style="text-align: center; margin: 1rem 0 1rem;">
         <p style="color: #8BA47B; font-size: 0.85rem;">✨ Больше тренажёров появится в ближайшее время. Следите за обновлениями!</p>
     </div>
 
-   <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
-    <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
-    <p style="margin-top: 0.5rem;">
-        <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
-        <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
-        <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
-        <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
-    </p>
-    <p style="margin-top: 0.5rem;">
-        Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
-    </p>
-    <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
-        💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
-    </p>
-    <p style="font-size: 0.7rem; color: #89A07B;">
-        © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
-    </p>
-</footer>
+    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
+        <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
+            <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
+            <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
+            <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
+        </p>
+        <p style="margin-top: 0.5rem;">
+            Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
+            💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
+        </p>
+        <p style="font-size: 0.7rem; color: #89A07B;">
+            © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
+        </p>
+    </footer>
+</div> <!-- конец .container -->
 </body>
 </html>

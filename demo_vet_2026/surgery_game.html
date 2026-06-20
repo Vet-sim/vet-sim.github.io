@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Своя игра: Ветеринарная хирургия | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1F3B3A;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #F4E9D8;
+            padding: 1rem;
+        }
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 #0F2A28;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .theme-col {
+            background: #2C5F5A;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        .theme-title {
+            background: #1F4E4A;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-bottom: 2px solid #3D807A;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .question-cell {
+            background: #3A7C76;
+            margin: 0.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        .question-cell.used {
+            background: #5C9E97;
+            cursor: default;
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+        .question-cell:hover:not(.used) {
+            background: #4F958D;
+            transform: scale(1.02);
+        }
+        .question-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: #FDF8F0;
+            color: #2C3E2F;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 2rem;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        .modal-question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+        .modal-answer {
+            background: #E2EAD9;
+            border-radius: 2rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+            font-size: 1.1rem;
+        }
+        .modal-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        button {
+            background: #2C7DA0;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            transform: scale(1.02);
+        }
+        .close-btn {
+            background: #A3B18A;
+        }
+        .score-board {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            background: #1F4E4A;
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            display: inline-block;
+        }
+        .reset-game {
+            background: #D4A373;
+            margin-left: 1rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+        @media (max-width: 900px) {
+            .game-board {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .game-board {
+                grid-template-columns: 1fr;
+            }
+            .theme-title {
+                font-size: 1rem;
+                min-height: auto;
+                padding: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem;">
+        <h1 style="margin-bottom: 0;">🎲 ВЕТЕРИНАРНАЯ ХИРУРГИЯ</h1>
+        <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <span class="score-board">💰 Счёт: <span id="score">0</span></span>
+            <button id="resetAllBtn" class="reset-game">🔄 Начать заново</button>
+        </div>
+    </div>
+    <div id="gameBoard" class="game-board"></div>
+    <footer>© ВетСим — интерактивная игра. Вопросы по ветеринарной хирургии (МДЖ и СХ).</footer>
+</div>
+<script>
+    // ===== ДАННЫЕ ИГРЫ =====
+    const gameData = {
+        themes: [
+            {
+                name: "Общая хирургия",
+                questions: [
+                    { points: 100, question: "Какое основное правило асептики при подготовке операционного поля?", answer: "Обработка от центра к периферии" },
+                    { points: 200, question: "Какой метод гемостаза считается наиболее эффективным при кровотечении из паренхиматозных органов?", answer: "Тампонада или применение гемостатической губки" },
+                    { points: 300, question: "Какая стадия заживления раны характеризуется образованием грануляционной ткани?", answer: "Пролиферация (вторая фаза)" },
+                    { points: 400, question: "Какой антибиотик является препаратом выбора для профилактики хирургической инфекции у крупного рогатого скота?", answer: "Цефтиофур (или цефалоспорины I поколения)" },
+                    { points: 500, question: "Какой шовный материал обладает наименьшей реакцией тканей и рекомендуется для наложения внутрикожных швов?", answer: "Монофиламентный полипропилен или полиглекапрон (PDS II)" }
+                ]
+            },
+            {
+                name: "Оперативная хирургия",
+                questions: [
+                    { points: 100, question: "Как называется разрез для доступа к брюшной полости у собаки по белой линии?", answer: "Срединная лапаротомия" },
+                    { points: 200, question: "Какой тип овариогистерэктомии (ОВЭ) считается наиболее безопасным у кошек?", answer: "Овариогистерэктомия через боковой доступ (фланковый)" },
+                    { points: 300, question: "Какой метод фиксации переломов показан при диафизарных переломах трубчатых костей у крупных собак?", answer: "Накостный остеосинтез с пластиной и винтами" },
+                    { points: 400, question: "Какое осложнение наиболее характерно для резекции желудка при завороте у собаки?", answer: "Демпинг-синдром и хроническая диарея" },
+                    { points: 500, question: "Какая методика используется для коррекции заворота желудка у лошадей?", answer: "Торакотомия или лапаротомия с гастропексией (подвешивание желудка)" }
+                ]
+            },
+            {
+                name: "Частная хирургия (МДЖ)",
+                questions: [
+                    { points: 100, question: "Какая порода собак предрасположена к врождённым портальным шунтам?", answer: "Йоркширский терьер, мальтийская болонка, ирландский волкодав" },
+                    { points: 200, question: "Какой метод лечения пателлярного вывиха I степени у собак чаще всего рекомендуется?", answer: "Консервативный (физиотерапия, массаж, хондропротекторы)" },
+                    { points: 300, question: "Какое заболевание чаще всего вызывает уретру у котов и требует перинеальной уретростомии?", answer: "Рекуррентная обструкция уретры (мочекаменная болезнь, идиопатический цистит)" },
+                    { points: 400, question: "Какой диагностический тест является золотым стандартом для подтверждения дисплазии тазобедренного сустава у собак?", answer: "Рентгенография (схема Норберга-Ольсона)" },
+                    { points: 500, question: "Какой метод хирургического лечения крипторхизма у собак считается предпочтительным?", answer: "Кастрация с удалением обоих семенников (при паховой или брюшной локализации)" }
+                ]
+            },
+            {
+                name: "Частная хирургия (СХ)",
+                questions: [
+                    { points: 100, question: "Какое осложнение чаще всего возникает после кесарева сечения у коров?", answer: "Эндометрит и задержание последа" },
+                    { points: 200, question: "Какой метод удаления рогов у телят считается наиболее гуманным?", answer: "Термокаутеризация или химическое прижигание (в раннем возрасте)" },
+                    { points: 300, question: "Какой тип грыжи у свиней чаще всего требует оперативного вмешательства?", answer: "Пупочная грыжа (у поросят)" },
+                    { points: 400, question: "Какая методика применяется при лечении переломов трубчатых костей у крупного рогатого скота?", answer: "Внешний скелетный фиксатор (аппарат Илизарова или стержневой)" },
+                    { points: 500, question: "Какое осложнение характерно для тонзиллэктомии у свиней?", answer: "Кровотечение, отёк глотки, регургитация" }
+                ]
+            },
+            {
+                name: "Офтальмология и ортопедия",
+                questions: [
+                    { points: 100, question: "Какой тест используется для оценки слезопродукции у собак?", answer: "Тест Ширмера (TST)" },
+                    { points: 200, question: "Какая патология глаз у кошек чаще всего связана с герпесвирусной инфекцией?", answer: "Кератит (дендритный язвенный)" },
+                    { points: 300, question: "Какой метод лечения энтропиона у собак считается наиболее радикальным?", answer: "Хирургическая коррекция (пластика века)" },
+                    { points: 400, question: "Какое заболевание опорно-двигательного аппарата часто встречается у крупных собак в молодом возрасте и требует хирургического лечения?", answer: "Дисплазия тазобедренного сустава (или остеохондроз)" },
+                    { points: 500, question: "Какой метод остеосинтеза показан при переломах мыщелка плечевой кости у собак?", answer: "Винтовой остеосинтез (компрессионные винты)" }
+                ]
+            }
+        ]
+    };
+
+    // ===== ЛОГИКА ИГРЫ =====
+    let scores = 0;
+    let usedQuestions = [];
+
+    function renderBoard() {
+        const board = document.getElementById('gameBoard');
+        board.innerHTML = '';
+        gameData.themes.forEach((theme, tIdx) => {
+            const col = document.createElement('div');
+            col.className = 'theme-col';
+            col.innerHTML = `<div class="theme-title">${escapeHtml(theme.name)}</div>`;
+            theme.questions.forEach((q, qIdx) => {
+                const isUsed = usedQuestions.some(u => u.themeIdx === tIdx && u.qIdx === qIdx);
+                const cell = document.createElement('div');
+                cell.className = 'question-cell' + (isUsed ? ' used' : '');
+                cell.textContent = q.points;
+                if (!isUsed) {
+                    cell.addEventListener('click', () => openQuestion(tIdx, qIdx));
+                }
+                col.appendChild(cell);
+            });
+            board.appendChild(col);
+        });
+    }
+
+    function openQuestion(themeIdx, qIdx) {
+        const q = gameData.themes[themeIdx].questions[qIdx];
+        const modal = document.createElement('div');
+        modal.className = 'question-modal';
+        modal.innerHTML = `
+            <div class="modal-card">
+                <div class="modal-question">❓ ${escapeHtml(q.question)}</div>
+                <div class="modal-buttons">
+                    <button class="show-answer-btn">📖 Показать ответ</button>
+                    <button class="correct-btn">✅ Верно (+${q.points})</button>
+                    <button class="wrong-btn">❌ Неверно (0)</button>
+                    <button class="close-btn">✖ Закрыть</button>
+                </div>
+                <div class="modal-answer">📖 Ответ: ${escapeHtml(q.answer)}</div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const showAnswerBtn = modal.querySelector('.show-answer-btn');
+        const answerDiv = modal.querySelector('.modal-answer');
+        showAnswerBtn.addEventListener('click', () => {
+            answerDiv.style.display = 'block';
+        });
+        const correctBtn = modal.querySelector('.correct-btn');
+        const wrongBtn = modal.querySelector('.wrong-btn');
+        const closeBtn = modal.querySelector('.close-btn');
+
+        function closeModal(addScore) {
+            if (addScore !== undefined) {
+                scores += addScore;
+                document.getElementById('score').textContent = scores;
+                if (!usedQuestions.some(u => u.themeIdx === themeIdx && u.qIdx === qIdx)) {
+                    usedQuestions.push({ themeIdx, qIdx });
+                }
+                renderBoard();
+            }
+            modal.remove();
+        }
+
+        correctBtn.addEventListener('click', () => closeModal(q.points));
+        wrongBtn.addEventListener('click', () => closeModal(0));
+        closeBtn.addEventListener('click', () => closeModal());
+    }
+
+    function resetGame() {
+        scores = 0;
+        usedQuestions = [];
+        document.getElementById('score').textContent = scores;
+        renderBoard();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
+    document.getElementById('resetAllBtn').addEventListener('click', resetGame);
+    renderBoard();
+</script>
+</body>
+</html>

@@ -2,25 +2,24 @@
 <html lang="ru">
 <head>
     <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
+        ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Анатомический атлас: интерактивная карта с метками (исправлено)</title>
+    <title>Анатомический атлас: интерактивная карта с метками</title>
     <style>
         * {
             box-sizing: border-box;
-            user-select: none; /* предотвращает выделение при перетаскивании, но текст в полях ввода остаётся доступным */
+            user-select: none;
         }
 
         body {
@@ -240,6 +239,17 @@
     let trainingLabels = [];            // { id, label, matchedToId, matched }
     let dragEnabled = true;
 
+    // ---------- АДАПТИВНЫЕ РАЗМЕРЫ ДЛЯ ОТРИСОВКИ ----------
+    function getAdaptiveRadius() {
+        return Math.max(8, canvas.width / 50);
+    }
+    function getAdaptiveFontSize() {
+        return Math.max(12, canvas.width / 40);
+    }
+    function getAdaptiveLabelFontSize() {
+        return Math.max(10, canvas.width / 50);
+    }
+
     // ---------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ----------
     function resizeCanvasToImage() {
         if (!imgLoaded) return;
@@ -254,25 +264,36 @@
         if (!imgLoaded) return;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        const radius = getAdaptiveRadius();
+        const fontSize = getAdaptiveFontSize();
+        const labelSize = getAdaptiveLabelFontSize();
+
         // рисуем метки
         annotations.forEach(ann => {
             ctx.beginPath();
-            ctx.arc(ann.x, ann.y, 14, 0, 2 * Math.PI);
+            ctx.arc(ann.x, ann.y, radius, 0, 2 * Math.PI);
             ctx.fillStyle = '#FFF6E8cc';
             ctx.fill();
             ctx.strokeStyle = '#A3B18A';
             ctx.lineWidth = 2.5;
             ctx.stroke();
             ctx.fillStyle = '#3E5C4A';
-            ctx.font = `bold ${Math.max(14, canvas.width/45)}px "Segoe UI"`;
-            ctx.fillText(ann.id, ann.x-6, ann.y-8);
+            ctx.font = `bold ${fontSize}px "Segoe UI"`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(ann.id, ann.x, ann.y);
+            // возвращаем стандартные настройки для подписи
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'alphabetic';
+
             // если в режиме тренировки и есть привязанная подпись, показать текст
             if (currentMode === 'train') {
                 const matchedLabel = trainingLabels.find(l => l.matchedToId === ann.id && l.matched);
                 if (matchedLabel) {
-                    ctx.font = `12px system-ui`;
+                    ctx.font = `${labelSize}px system-ui`;
                     ctx.fillStyle = '#2C5E2E';
-                    ctx.fillText(matchedLabel.label, ann.x+18, ann.y-8);
+                    ctx.fillText(matchedLabel.label, ann.x + radius + 6, ann.y + labelSize * 0.4);
                 }
             }
         });
@@ -353,12 +374,13 @@
 
     function tryDeleteAnnotationByClick(e) {
         const { x, y } = getMouseCoord(e);
+        const radius = getAdaptiveRadius();
         let clickedIndex = -1;
         for (let i=0; i<annotations.length; i++) {
             const dx = annotations[i].x - x;
             const dy = annotations[i].y - y;
             const dist = Math.hypot(dx, dy);
-            if (dist < 18) {
+            if (dist < radius + 4) {
                 clickedIndex = i;
                 break;
             }
@@ -458,8 +480,9 @@
         const labelObj = trainingLabels.find(l => l.id === labelId);
         if (!labelObj || labelObj.matched) return;
         const coord = getMouseCoord(e);
+        const radius = getAdaptiveRadius();
         let nearestMarker = null;
-        let minDist = 30;
+        let minDist = radius + 6;
         for (let ann of annotations) {
             const dist = Math.hypot(ann.x - coord.x, ann.y - coord.y);
             if (dist < minDist) {
@@ -515,8 +538,9 @@
             let canvasY = (touch.clientY - rect.top) * scaleY;
             canvasX = Math.min(Math.max(0, canvasX), canvas.width);
             canvasY = Math.min(Math.max(0, canvasY), canvas.height);
+            const radius = getAdaptiveRadius();
             let nearestMarker = null;
-            let minDist = 30;
+            let minDist = radius + 6;
             for (let ann of annotations) {
                 const dist = Math.hypot(ann.x - canvasX, ann.y - canvasY);
                 if (dist < minDist) { minDist = dist; nearestMarker = ann; }
@@ -647,15 +671,25 @@
             let img = new Image();
             img.src = embeddedImageSrc;
             img.onload = () => { canvas.width = img.width; canvas.height = img.height; canvas.style.width='100%'; canvas.style.height='auto'; redraw(); initTraining(); };
+            function getRadius(){ return Math.max(8, canvas.width/50); }
+            function getFontSize(){ return Math.max(12, canvas.width/40); }
+            function getLabelSize(){ return Math.max(10, canvas.width/50); }
             function redraw() {
                 ctx.clearRect(0,0,canvas.width,canvas.height);
                 ctx.drawImage(img,0,0);
+                const radius = getRadius();
+                const fontSize = getFontSize();
+                const labelSize = getLabelSize();
                 embeddedAnnotations.forEach(ann => {
-                    ctx.beginPath(); ctx.arc(ann.x, ann.y, 14, 0, 2*Math.PI);
+                    ctx.beginPath(); ctx.arc(ann.x, ann.y, radius, 0, 2*Math.PI);
                     ctx.fillStyle='#FFF6E8cc'; ctx.fill(); ctx.strokeStyle='#A3B18A'; ctx.stroke();
-                    ctx.fillStyle='#3E5C4A'; ctx.fillText(ann.id, ann.x-6, ann.y-8);
+                    ctx.fillStyle='#3E5C4A';
+                    ctx.font = \`bold \${fontSize}px "Segoe UI"\`;
+                    ctx.textAlign='center'; ctx.textBaseline='middle';
+                    ctx.fillText(ann.id, ann.x, ann.y);
+                    ctx.textAlign='left'; ctx.textBaseline='alphabetic';
                     const matched = trainingLabels.find(l=>l.matchedToId===ann.id && l.matched);
-                    if(matched) ctx.fillText(matched.label, ann.x+18, ann.y-8);
+                    if(matched) { ctx.font = \`\${labelSize}px system-ui\`; ctx.fillStyle='#2C5E2E'; ctx.fillText(matched.label, ann.x+radius+6, ann.y+labelSize*0.4); }
                 });
             }
             function initTraining() {
@@ -685,7 +719,8 @@
                     const rect=canvas.getBoundingClientRect();
                     const scaleX=canvas.width/rect.width, scaleY=canvas.height/rect.height;
                     let canvasX=(e.clientX-rect.left)*scaleX, canvasY=(e.clientY-rect.top)*scaleY;
-                    let nearest=null, minDist=30;
+                    const radius = getRadius();
+                    let nearest=null, minDist=radius+6;
                     embeddedAnnotations.forEach(ann=>{ let d=Math.hypot(ann.x-canvasX, ann.y-canvasY); if(d<minDist){minDist=d; nearest=ann;} });
                     if(nearest && labelObj.label === nearest.label){
                         labelObj.matched=true; labelObj.matchedToId=nearest.id;
@@ -739,7 +774,6 @@
     // ----- СОБЫТИЯ CANVAS ДЛЯ РЕДАКТИРОВАНИЯ -----
     canvas.addEventListener('click', (e) => {
         if (currentMode !== 'edit') return;
-        // Проверяем, что клик левой кнопкой
         if (e.button !== 0) return;
         const { x, y } = getMouseCoord(e);
         addAnnotation(x, y);
@@ -766,7 +800,7 @@
         });
     }
 </script>
-    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
+<footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
     <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
     <p style="margin-top: 0.5rem;">
         <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 

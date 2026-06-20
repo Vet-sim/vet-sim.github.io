@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВетСим – демо-версия для вузов</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        h1 { font-size: 2rem; color: #1F4E6E; margin-bottom: 0.3rem; }
+        .sub { color: #7C8F7C; margin-bottom: 2rem; font-size: 1rem; }
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            transition: 0.2s;
+        }
+        .card:hover {
+            border-color: #A3B18A;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        }
+        .card h3 { color: #1F4E6E; margin-bottom: 0.3rem; }
+        .card p { color: #5F7C62; margin-bottom: 0.8rem; }
+        .card a {
+            display: inline-block;
+            background: #2C7DA0;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .card a:hover { background: #236B8A; }
+        footer {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            text-align: center;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        .contact {
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            color: #8A9B7A;
+        }
+        .contact a { color: #2C7DA0; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐾 ВетСим – демо-материалы</h1>
+        <p class="sub">Интерактивные тренажёры для ветеринарного образования (вузовский уровень)</p>
+
+        <div class="card">
+            <h3>🩺 Оценка тяжести (Триаж)</h3>
+            <p>5 клинических сценариев по алгоритму ABCDE. Оценка сознания, дыхания, кровообращения, степени тяжести и первых действий.</p>
+            <a href="triage_trainer.html">Открыть тренажёр →</a>
+        </div>
+
+        <div class="card">
+            <h3>🧩 Дифференциальная диагностика</h3>
+            <p>20 смешанных клинических сценариев (инфекционные и незаразные болезни). Выбор наиболее вероятного диагноза из дифференциального ряда.</p>
+            <a href="ddx_trainer.html">Открыть тренажёр →</a>
+        </div>
+
+        <div class="card">
+            <h3>🧠 Синдромальный подход</h3>
+            <p>5 сценариев для отработки интерпретации симптомов и определения ведущего синдрома (ЖКТ, респираторный, эндокринный, гепатобилиарный, гематологический).</p>
+            <a href="syndrome_trainer.html">Открыть тренажёр →</a>
+        </div>
+
+        <div class="card">
+            <h3>💉 ИПС (инфузии с постоянной скоростью)</h3>
+            <p>Расчёт доз и разведений для норадреналина, добутамина, лидокаина, пропофола и других препаратов. Отработка навыков интенсивной терапии.</p>
+            <a href="ips_trainer.html">Открыть тренажёр →</a>
+        </div>
+
+        <div class="contact">
+            📧 По вопросам сотрудничества: <a href="mailto:vetsim@mail.ru">vetsim@mail.ru</a>
+        </div>
+        <footer>© 2026 ВетСим · Демо-версия для вузов</footer>
+    </div>
+</body>
+</html>

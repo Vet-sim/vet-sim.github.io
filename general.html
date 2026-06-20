@@ -2,18 +2,17 @@
 <html lang="ru">
 <head>
     <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
+        ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>VetSim — Общепрофессиональный цикл</title>
@@ -79,7 +78,7 @@
             margin-top: 0.5rem;
         }
 
-        /* сетка карточек */
+        /* ===== СЕТКА КАРТОЧЕК ===== */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -87,6 +86,7 @@
             margin: 2rem 0 3rem;
         }
 
+        /* ===== КАРТОЧКА ===== */
         .card {
             background: #FFFFFF;
             border-radius: 1.8rem;
@@ -134,6 +134,7 @@
         .card-action {
             margin-top: 0.5rem;
         }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -173,6 +174,29 @@
             transform: translateX(3px);
         }
 
+        /* ===== АДАПТИВНОСТЬ ===== */
+        @media (max-width: 900px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            body {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        @media (max-width: 580px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .card-title {
+                font-size: 1.3rem;
+            }
+        }
+
         /* футер */
         .footer {
             text-align: center;
@@ -190,24 +214,6 @@
         .footer a:hover {
             color: #2F6B47;
         }
-
-        @media (max-width: 900px) {
-            .cards-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-            }
-            body {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-        }
-        @media (max-width: 580px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-        }
     </style>
 </head>
 <body>
@@ -224,8 +230,10 @@
         <div class="subhead">Тренажёры по анатомии, физиологии, фармакологии, патанатомии и другим базовым дисциплинам</div>
     </div>
 
+    <!-- ===== ВСЕ КАРТОЧКИ В ОДНОЙ СЕТКЕ ===== -->
     <div class="cards-grid">
-        <!-- 1. Анатомический атлас (реальный) -->
+
+        <!-- 1. Анатомический атлас -->
         <div class="card">
             <div class="card-icon">🧬📌</div>
             <div class="card-title">Анатомический атлас</div>
@@ -241,7 +249,7 @@
             </div>
         </div>
 
-        <!-- 2. Симулятор расчёта доз антибиотиков (фармакология, реальный) -->
+        <!-- 2. Симулятор доз антибиотиков -->
         <div class="card">
             <div class="card-icon">💊🧪</div>
             <div class="card-title">Симулятор доз антибиотиков</div>
@@ -257,24 +265,24 @@
             </div>
         </div>
 
-       <!-- Карточка 7 — Тренажёр по фармакологии -->
-<div class="card">
-    <div class="card-icon">💊📐</div>
-    <div class="card-title">Тренажёр по фармакологии</div>
-    <div class="card-badge">✅ Готов к использованию</div>
-    <div class="card-desc">
-        Расчёт доз и разведений для 17 препаратов: анальгин, дексаметазон, амоксициллин, инсулин, глюкоза, фуросемид, тилозин, энрофлоксацин, цефтриаксон, кальция глюконат, марбофлоксацин, доксициклин, гепарин, дротаверин, пенициллин, амикацин, флофеникол.
-        Разведения порошков, периоды ожидания, перевод МЕ, суспензии, части таблеток.
-    </div>
-    <div class="card-action">
-        <a href="dose_calc_trainer.html" class="btn btn-primary">
-            <span>Перейти к тренажёру</span>
-            <span class="arrow">→</span>
-        </a>
-    </div>
-</div>
-    </div>
-        <!-- 3. Гистология: определи ткань (планируется) -->
+        <!-- 3. Тренажёр по фармакологии (расчёт доз и разведений) -->
+        <div class="card">
+            <div class="card-icon">💊📐</div>
+            <div class="card-title">Тренажёр по фармакологии</div>
+            <div class="card-badge">✅ Готов к использованию</div>
+            <div class="card-desc">
+                Расчёт доз и разведений для 17 препаратов: анальгин, дексаметазон, амоксициллин, инсулин, глюкоза, фуросемид, тилозин, энрофлоксацин, цефтриаксон, кальция глюконат, марбофлоксацин, доксициклин, гепарин, дротаверин, пенициллин, амикацин, флофеникол.
+                Разведения порошков, периоды ожидания, перевод МЕ, суспензии, части таблеток.
+            </div>
+            <div class="card-action">
+                <a href="dose_calc_trainer.html" class="btn btn-primary">
+                    <span>Перейти к тренажёру</span>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 4. Гистология: определи ткань (планируется) -->
         <div class="card">
             <div class="card-icon">🔬🧫</div>
             <div class="card-title">Гистология: определи ткань</div>
@@ -290,7 +298,7 @@
             </div>
         </div>
 
-        <!-- 4. Физиология: рефлекторная дуга (планируется) -->
+        <!-- 5. Физиология: рефлекторная дуга (планируется) -->
         <div class="card">
             <div class="card-icon">⚡🧠</div>
             <div class="card-title">Физиология: рефлекторная дуга</div>
@@ -306,7 +314,7 @@
             </div>
         </div>
 
-        <!-- 5. Патология: макропрепараты (планируется) -->
+        <!-- 6. Патология: макропрепараты (планируется) -->
         <div class="card">
             <div class="card-icon">🔍🩺</div>
             <div class="card-title">Патология: макропрепараты</div>
@@ -321,36 +329,29 @@
                 </a>
             </div>
         </div>
-        
+
+    </div>
+    <!-- ===== КОНЕЦ СЕТКИ ===== -->
 
     <!-- Дополнительный информационный блок -->
     <div style="text-align: center; margin: 1rem 0 1rem;">
         <p style="color: #8BA47B; font-size: 0.85rem;">✨ По мере развития проекта появятся новые тренажёры по микробиологии, патанатомии и другим дисциплинам.</p>
     </div>
 
+    <!-- Единый футер -->
     <div class="footer">
         <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
         <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
         <p>💬 Сообщество: <a href="#" target="_blank">ВКонтакте (заглушка)</a> | По всем вопросам: edu@vetsim.ru</p>
+        <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
+            🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования
+        </p>
+        <p style="font-size: 0.7rem; color: #89A07B;">
+            © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
+        </p>
     </div>
+
 </div>
-    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
-    <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
-    <p style="margin-top: 0.5rem;">
-        <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
-        <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
-        <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
-        <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
-    </p>
-    <p style="margin-top: 0.5rem;">
-        Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
-    </p>
-    <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
-        💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
-    </p>
-    <p style="font-size: 0.7rem; color: #89A07B;">
-        © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
-    </p>
-</footer>
+<!-- конец .container -->
 </body>
 </html>

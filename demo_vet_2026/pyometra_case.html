@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Клинический кейс: Пиометра у суки | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            padding: 1.8rem 2rem;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.2rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .case-banner {
+            background: #FEFAF2;
+            border-left: 5px solid #A3B18A;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            margin-bottom: 1.8rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .case-banner strong {
+            color: #1F4E6E;
+        }
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F4F0E8;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .progress-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .progress-counter {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #2C7DA0;
+        }
+        .question-block {
+            margin-bottom: 1.8rem;
+        }
+        .question-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: #1F4E6E;
+        }
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-bottom: 1.5rem;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #FDFBF7;
+            border-radius: 16px;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #E7EDE2;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #F5F3EC;
+        }
+        .option-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2C7DA0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .option-item label {
+            flex: 1;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .option-item.correct-answer {
+            background: #E4F2DF;
+            border-color: #6B9E6B;
+        }
+        .option-item.wrong-answer {
+            background: #FDE8E0;
+            border-color: #D47A6A;
+        }
+        .option-item.disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .option-item.disabled:hover {
+            background: #FDFBF7;
+        }
+        .feedback-area {
+            background: #F8F6F0;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        .feedback-area .verdict {
+            font-weight: 600;
+        }
+        .feedback-area .explanation {
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .feedback-area .explanation strong {
+            color: #2C7DA0;
+        }
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #8FA375;
+        }
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #5A8A5A;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .result-summary {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        .result-summary h2 {
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+        .result-summary .score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .result-summary .message {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            margin-top: 2rem;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 1.2rem 1rem; }
+            .option-item { padding: 0.6rem 1rem; }
+            .action-buttons { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ДЕМО-ШАПКА -->
+    <div style="background: #EEF2E9; padding: 0.8rem 1.5rem; border-bottom: 2px solid #A3B18A; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <strong style="color: #1F4E6E;">🐾 ВетСим</strong>
+            <span style="color: #5F7C62; margin-left: 1rem; font-size: 0.9rem;">Демо-версия для вузов</span>
+        </div>
+        <div style="font-size: 0.8rem;">
+            <a href="index.html" style="color: #2C7DA0; text-decoration: none;">← Назад к списку</a>
+            <span style="color: #A7B89A; margin: 0 0.5rem;">|</span>
+            <span style="color: #A7B89A;">📧 as_ter@mail.ru</span>
+        </div>
+    </div>
+    <!-- КОНЕЦ ДЕМО-ШАПКИ -->
+
+    <div class="container">
+        <h1>🩺 Клинический кейс: Пиометра у суки</h1>
+        <div class="sub">Из практики ветеринарной клиники «ЛапЛандия»</div>
+
+        <!-- Баннер с описанием кейса -->
+        <div class="case-banner">
+            <strong>🐾 Пациент:</strong> Адель, сука, 7 лет (порода не указана)<br>
+            <strong>📌 Диагноз:</strong> открытая форма пиометры (гнойное воспаление матки)<br>
+            <strong>💉 Лечение:</strong> экстренная овариогистерэктомия<br>
+            <strong>✅ Исход:</strong> выздоровление, швы заживают, активность восстанавливается<br><br>
+            <em>«Владельцы заметили выделения из вульвы и обратились вовремя. Благодаря быстрой реакции удалось спасти жизнь питомца.»</em>
+        </div>
+
+        <!-- Прогресс -->
+        <div class="progress-bar">
+            <span class="progress-text" id="progressLabel">Вопрос 1 из 10</span>
+            <span class="progress-counter" id="progressCounter">✅ Правильных: 0</span>
+        </div>
+
+        <!-- Контейнер для вопроса -->
+        <div id="questionContainer">
+            <div class="question-block">
+                <div class="question-title" id="questionTitle"></div>
+                <div class="options-group" id="optionsGroup"></div>
+            </div>
+            <div class="feedback-area" id="feedbackArea">
+                <div class="verdict" id="verdict"></div>
+                <div class="explanation" id="explanation"></div>
+            </div>
+        </div>
+
+        <!-- Кнопки управления -->
+        <div class="action-buttons">
+            <button id="checkBtn" class="btn btn-primary">🔍 Проверить</button>
+            <button id="nextBtn" class="btn btn-success" disabled>➡️ Следующий вопрос</button>
+            <button id="resetBtn" class="btn btn-secondary" style="display:none;">🔄 Пройти заново</button>
+        </div>
+
+        <!-- Итоговый результат -->
+        <div class="result-summary" id="resultSummary">
+            <h2>🎉 Кейс завершён!</h2>
+            <div class="score" id="finalScore">0/10</div>
+            <div class="message" id="finalMessage"></div>
+        </div>
+
+        <footer>© ВетСим — клинический кейс предоставлен ветклиникой «ЛапЛандия».</footer>
+    </div>
+
+    <script>
+        // --------------------------------------------------------------
+        // ДАННЫЕ КЕЙСА: 10 вопросов с множественным выбором
+        // --------------------------------------------------------------
+        const questions = [
+            {
+                title: "1. Какие вопросы следует задать владельцу при подозрении на пиометру? (выберите все верные)",
+                options: [
+                    "Были ли ранее случаи пиометры у этой собаки?",
+                    "Отмечали ли вы у питомца вялость, отказ от корма, жажду?",
+                    "Какого цвета выделения и как давно они появились?",
+                    "Была ли у собаки вязка в последние 2 месяца?",
+                    "Есть ли у вас другие животные?"
+                ],
+                correct: [0,1,2,3],
+                explanation: "Важно уточнить анамнез репродуктивных циклов, общее состояние, характер выделений и возможную вязку — это помогает исключить другие патологии и оценить стадию процесса."
+            },
+            {
+                title: "2. Какие клинические признаки характерны для открытой формы пиометры? (выберите все верные)",
+                options: [
+                    "Гнойные выделения из вульвы",
+                    "Отказ от корма, вялость",
+                    "Повышенная жажда (полидипсия)",
+                    "Отёк конечностей",
+                    "Запах ацетона изо рта"
+                ],
+                correct: [0,1,2],
+                explanation: "Открытая пиометра проявляется гнойными выделениями, общим угнетением, анорексией и полидипсией. Отёк конечностей и запах ацетона не характерны для данной патологии."
+            },
+            {
+                title: "3. Какие диагностические методы подтверждают диагноз «пиометра»? (выберите все верные)",
+                options: [
+                    "УЗИ органов малого таза",
+                    "Общий анализ крови (лейкоцитоз, нейтрофилия)",
+                    "Рентгенография брюшной полости (в некоторых случаях)",
+                    "Цитология влагалищного мазка",
+                    "Биохимический анализ мочи"
+                ],
+                correct: [0,1,2],
+                explanation: "УЗИ — основной метод визуализации. Общий анализ крови подтверждает воспаление. Рентген может быть полезен при закрытой форме или для исключения других причин. Цитология мазка и биохимия мочи не являются специфическими."
+            },
+            {
+                title: "4. Какие заболевания следует исключить при дифференциальной диагностике пиометры? (выберите все верные)",
+                options: [
+                    "Вагинит",
+                    "Эндометрит",
+                    "Новообразования матки",
+                    "Киста яичника",
+                    "Заворот желудка"
+                ],
+                correct: [0,1,2,3],
+                explanation: "Дифференциальная диагностика включает вагинит, эндометрит, опухоли матки, кисты яичников. Заворот желудка не связан с репродуктивной системой."
+            },
+            {
+                title: "5. Почему при закрытой форме пиометры состояние может быть более опасным? (выберите все верные)",
+                options: [
+                    "Отсутствие выделений приводит к запоздалой диагностике",
+                    "Гнойное содержимое накапливается в матке, риск разрыва и сепсиса выше",
+                    "Требуется более сложная операция",
+                    "Антибиотики при закрытой форме неэффективны",
+                    "Прогноз всегда неблагоприятный"
+                ],
+                correct: [0,1,3],
+                explanation: "Закрытая форма часто протекает без выделений, что затягивает диагностику. Матка переполняется гноем, высок риск разрыва и сепсиса. Антибиотики без хирургии неэффективны. Прогноз зависит от своевременности лечения."
+            },
+            {
+                title: "6. Каков стандартный план лечения при открытой форме пиометры? (выберите все верные)",
+                options: [
+                    "Экстренная овариогистерэктомия",
+                    "Консервативная терапия антибиотиками",
+                    "Гормональная терапия",
+                    "Инфузионная терапия и подготовка к операции"
+                ],
+                correct: [0,3],
+                explanation: "Единственное эффективное лечение — экстренное удаление матки и яичников. Перед операцией может потребоваться инфузионная подготовка для стабилизации состояния. Консервативная терапия неэффективна и опасна."
+            },
+            {
+                title: "7. Какие осложнения могут возникнуть после овариогистерэктомии при пиометре? (выберите все верные)",
+                options: [
+                    "Кровотечение из культи матки",
+                    "Инфекция операционной раны",
+                    "Послеоперационный сепсис",
+                    "Эндометрит",
+                    "Рубцовые спайки в брюшной полости"
+                ],
+                correct: [0,1,2,4],
+                explanation: "Возможны кровотечение, инфицирование раны, сепсис и образование спаек. Эндометрит невозможен после удаления матки."
+            },
+            {
+                title: "8. Какие рекомендации дать владельцу после операции? (выберите все верные)",
+                options: [
+                    "Контроль швов и гигиена операционной раны",
+                    "Ограничение физической активности до снятия швов",
+                    "Кормление лёгкой пищей, контроль аппетита",
+                    "Применение антибиотиков по назначению врача",
+                    "Стерилизация не требуется, так как операция уже проведена"
+                ],
+                correct: [0,1,2,3,4],
+                explanation: "Все перечисленные пункты важны. Стерилизация уже выполнена, но рекомендации по уходу обязательны для полноценного восстановления."
+            },
+            {
+                title: "9. Какие меры профилактики позволяют предотвратить развитие пиометры? (выберите все верные)",
+                options: [
+                    "Плановая стерилизация сук, не имеющих племенной ценности",
+                    "Регулярные профилактические осмотры у ветеринара",
+                    "Применение гормональных препаратов для подавления течки",
+                    "Контроль общего состояния и своевременное обращение к врачу",
+                    "Исключение вязок без племенной необходимости"
+                ],
+                correct: [0,1,3,4],
+                explanation: "Стерилизация — основной метод профилактики. Регулярные осмотры и внимательное отношение к состоянию питомца важны. Гормональные препараты могут увеличивать риск пиометры."
+            },
+            {
+                title: "10. Каким собакам рекомендована плановая стерилизация для профилактики пиометры? (выберите все верные)",
+                options: [
+                    "Сукам старше 5–6 лет",
+                    "Молодым сукам с наследственной предрасположенностью к пиометре",
+                    "Сукам, не предназначенным для разведения",
+                    "Всем нестерилизованным самкам при отсутствии противопоказаний к наркозу",
+                    "Только сукам после первой течки"
+                ],
+                correct: [0,1,2,3],
+                explanation: "Рекомендации по стерилизации индивидуальны, но в целом показана сукам старше 5 лет, с предрасположенностью, не используемым в разведении, и по возможности всем нестерилизованным самкам при отсутствии противопоказаний. Только после первой течки — необоснованное ограничение."
+            }
+        ];
+
+        // --------------------------------------------------------------
+        // ЛОГИКА ТРЕНАЖЁРА
+        // --------------------------------------------------------------
+        let currentQuestion = 0;
+        let correctCount = 0;
+        let answered = false; // отвечал ли на текущий вопрос
+
+        const questionTitle = document.getElementById('questionTitle');
+        const optionsGroup = document.getElementById('optionsGroup');
+        const feedbackArea = document.getElementById('feedbackArea');
+        const verdict = document.getElementById('verdict');
+        const explanation = document.getElementById('explanation');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressLabel = document.getElementById('progressLabel');
+        const progressCounter = document.getElementById('progressCounter');
+        const resultSummary = document.getElementById('resultSummary');
+        const finalScore = document.getElementById('finalScore');
+        const finalMessage = document.getElementById('finalMessage');
+
+        function renderQuestion(index) {
+            const q = questions[index];
+            questionTitle.textContent = q.title;
+            optionsGroup.innerHTML = '';
+            q.options.forEach((text, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.value = idx;
+                cb.id = `opt-${idx}`;
+                const label = document.createElement('label');
+                label.htmlFor = `opt-${idx}`;
+                label.textContent = text;
+                div.appendChild(cb);
+                div.appendChild(label);
+                optionsGroup.appendChild(div);
+            });
+            // Сброс состояния
+            feedbackArea.style.display = 'none';
+            resultSummary.style.display = 'none';
+            resetBtn.style.display = 'none';
+            checkBtn.disabled = false;
+            nextBtn.disabled = true;
+            answered = false;
+            // Убираем подсветку
+            document.querySelectorAll('.option-item').forEach(el => {
+                el.classList.remove('correct-answer', 'wrong-answer', 'disabled');
+            });
+            // Активируем чекбоксы
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = false);
+            progressLabel.textContent = `Вопрос ${index+1} из ${questions.length}`;
+            progressCounter.textContent = `✅ Правильных: ${correctCount}`;
+        }
+
+        function checkAnswer() {
+            if (answered) return;
+            const q = questions[currentQuestion];
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const selected = [];
+            checkboxes.forEach((cb, idx) => {
+                if (cb.checked) selected.push(idx);
+            });
+            if (selected.length === 0) {
+                alert('Пожалуйста, выберите хотя бы один вариант.');
+                return;
+            }
+            // Сортируем для сравнения
+            const correctSorted = [...q.correct].sort((a,b)=>a-b);
+            const selectedSorted = [...selected].sort((a,b)=>a-b);
+            const isCorrect = JSON.stringify(correctSorted) === JSON.stringify(selectedSorted);
+            if (isCorrect) correctCount++;
+
+            // Подсветка
+            const items = document.querySelectorAll('.option-item');
+            items.forEach((item, idx) => {
+                if (q.correct.includes(idx)) {
+                    item.classList.add('correct-answer');
+                } else if (selected.includes(idx) && !q.correct.includes(idx)) {
+                    item.classList.add('wrong-answer');
+                }
+                item.classList.add('disabled');
+            });
+            // Блокируем чекбоксы
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.disabled = true);
+
+            // Показываем обратную связь
+            feedbackArea.style.display = 'block';
+            if (isCorrect) {
+                verdict.innerHTML = '✅ Верно!';
+                verdict.style.color = '#2A6B2F';
+            } else {
+                verdict.innerHTML = '❌ Неверно. Правильные варианты выделены зелёным.';
+                verdict.style.color = '#BC5A3C';
+            }
+            explanation.innerHTML = `<strong>📌 Пояснение:</strong> ${q.explanation}`;
+
+            answered = true;
+            checkBtn.disabled = true;
+            nextBtn.disabled = false;
+            progressCounter.textContent = `✅ Правильных: ${correctCount}`;
+        }
+
+        function nextQuestion() {
+            if (!answered) return;
+            if (currentQuestion + 1 < questions.length) {
+                currentQuestion++;
+                renderQuestion(currentQuestion);
+            } else {
+                // Завершение кейса
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('questionContainer').style.display = 'none';
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            resetBtn.style.display = 'inline-block';
+            resultSummary.style.display = 'block';
+            const total = questions.length;
+            finalScore.textContent = `${correctCount}/${total}`;
+            let msg = '';
+            if (correctCount === total) msg = '🌟 Отлично! Вы блестяще разобрали этот клинический случай!';
+            else if (correctCount >= 8) msg = '👏 Хороший результат! Ошибки есть, но вы на правильном пути.';
+            else if (correctCount >= 5) msg = '📖 Неплохо, но стоит повторить материал по пиометре.';
+            else msg = '💪 Рекомендуем пересмотреть клинические рекомендации по пиометре.';
+            finalMessage.textContent = msg;
+            progressLabel.textContent = 'Кейс завершён';
+            progressCounter.textContent = `✅ Правильных: ${correctCount}`;
+        }
+
+        function resetAll() {
+            currentQuestion = 0;
+            correctCount = 0;
+            document.getElementById('questionContainer').style.display = 'block';
+            checkBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'inline-block';
+            resetBtn.style.display = 'none';
+            resultSummary.style.display = 'none';
+            renderQuestion(0);
+        }
+
+        // Обработчики
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextQuestion);
+        resetBtn.addEventListener('click', resetAll);
+
+        // Инициализация
+        renderQuestion(0);
+    </script>
+</body>
+</html>

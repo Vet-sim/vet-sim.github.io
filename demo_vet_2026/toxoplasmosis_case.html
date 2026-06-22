@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Клинический кейс: Лёгочный токсоплазмоз у кошки | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            padding: 2rem;
+            border: 1px solid #E7EDE2;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.2rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .case-banner {
+            background: #FEFAF2;
+            border-left: 5px solid #A3B18A;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            margin-bottom: 1.8rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .case-banner strong {
+            color: #1F4E6E;
+        }
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F4F0E8;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .progress-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .progress-counter {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #2C7DA0;
+        }
+        .stage-block {
+            margin-bottom: 1.8rem;
+        }
+        .stage-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+        .stage-title .badge {
+            display: inline-block;
+            background: #EEF2E9;
+            padding: 0.1rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #2C7DA0;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
+        .stage-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.8rem;
+            color: #5F7C62;
+        }
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #FDFBF7;
+            border-radius: 16px;
+            padding: 0.5rem 1.2rem;
+            border: 1px solid #E7EDE2;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #F5F3EC;
+        }
+        .option-item input[type="radio"] {
+            width: 17px;
+            height: 17px;
+            accent-color: #2C7DA0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .option-item label {
+            flex: 1;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .option-item.correct-answer {
+            background: #E4F2DF;
+            border-color: #6B9E6B;
+        }
+        .option-item.wrong-answer {
+            background: #FDE8E0;
+            border-color: #D47A6A;
+        }
+        .option-item.disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .option-item.disabled:hover {
+            background: #FDFBF7;
+        }
+        .feedback-area {
+            background: #F8F6F0;
+            border-radius: 16px;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1.2rem;
+            display: none;
+            border-left: 4px solid #A3B18A;
+        }
+        .feedback-area .verdict {
+            font-weight: 600;
+        }
+        .feedback-area .explanation {
+            margin-top: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .feedback-area .explanation strong {
+            color: #2C7DA0;
+        }
+        .feedback-area .explanation .highlight {
+            background: #FDF7E6;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #8FA375;
+        }
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #5A8A5A;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .result-summary {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1.5rem;
+            text-align: center;
+            display: none;
+            margin-top: 1.5rem;
+        }
+        .result-summary h2 {
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+        .result-summary .score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .result-summary .message {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            line-height: 1.5;
+        }
+        .result-summary .key-points {
+            text-align: left;
+            background: white;
+            border-radius: 16px;
+            padding: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #E2EAD9;
+        }
+        .result-summary .key-points li {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            margin-top: 2rem;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 1.2rem; }
+            .option-item { padding: 0.5rem 0.8rem; }
+            .action-buttons { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ДЕМО-ШАПКА -->
+    <div style="background: #EEF2E9; padding: 0.8rem 1.5rem; border-bottom: 2px solid #A3B18A; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <strong style="color: #1F4E6E;">🐾 ВетСим</strong>
+            <span style="color: #5F7C62; margin-left: 1rem; font-size: 0.9rem;">Демо-версия для вузов</span>
+        </div>
+        <div style="font-size: 0.8rem;">
+            <a href="index.html" style="color: #2C7DA0; text-decoration: none;">← Назад к списку</a>
+            <span style="color: #A7B89A; margin: 0 0.5rem;">|</span>
+            <span style="color: #A7B89A;">📧 as_ter@mail.ru</span>
+        </div>
+    </div>
+    <!-- КОНЕЦ ДЕМО-ШАПКИ -->
+
+    <div class="container">
+        <h1>🦠 Клинический кейс: Лёгочный токсоплазмоз у кошки</h1>
+        <div class="sub">Дифференциальная диагностика у иммунокомпрометированного пациента</div>
+
+        <div class="case-banner">
+            <strong>📌 Источник:</strong> Лобанов П.С. Клинический случай легочной формы токсоплазмоза на фоне хронической вирусной инфекции у кошки // Аграрный вестник Верхневолжья. 2024. № 3 (48)<br>
+            <strong>🐾 Пациент:</strong> Кот, хроническая FeLV-инфекция, ранее перенесённый FIP<br>
+            <strong>🩺 Диагноз:</strong> Лёгочная форма токсоплазмоза<br>
+            <strong>💊 Лечение:</strong> Клиндамицин 12 мг/кг × 2 раза/сут × 28 дней
+        </div>
+
+        <div class="progress-bar">
+            <span class="progress-text" id="progressLabel">Этап 1 из 5</span>
+            <span class="progress-counter" id="progressCounter">✅ Правильно: 0</span>
+        </div>
+
+        <div id="stageContainer">
+            <!-- динамическое содержимое -->
+        </div>
+
+        <div class="action-buttons">
+            <button id="checkBtn" class="btn btn-primary">🔍 Проверить</button>
+            <button id="nextBtn" class="btn btn-success" disabled>➡️ Следующий этап</button>
+            <button id="resetBtn" class="btn btn-secondary" style="display:none;">🔄 Пройти заново</button>
+        </div>
+
+        <div class="result-summary" id="resultSummary">
+            <h2>🎉 Вы завершили клинический разбор!</h2>
+            <div class="score" id="finalScore">0/5</div>
+            <div class="message" id="finalMessage"></div>
+            <div class="key-points" id="keyPoints">
+                <strong>📌 Ключевые выводы для практики:</strong>
+                <ul>
+                    <li>✅ Токсоплазмоз может маскироваться под другие заболевания, особенно у иммунокомпрометированных животных.</li>
+                    <li>✅ Диагностический алгоритм должен быть многоступенчатым: от общих анализов к специфическим ПЦР.</li>
+                    <li>✅ Отсутствие бактериального роста не исключает инфекционную природу.</li>
+                    <li>✅ ПЦР экссудата на Toxoplasma gondii — ключевой метод при плевральном выпоте.</li>
+                    <li>✅ Клиндамицин 12 мг/кг × 2 раза/сут × 28 дней — эффективная схема терапии.</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>© ВетСим — клинический кейс по материалам научной статьи. Работает без интернета.</footer>
+    </div>
+
+    <script>
+        // ===== ДАННЫЕ КЕЙСА (5 этапов) =====
+        const stages = [
+            // Этап 1: первичные диагностические исследования
+            {
+                title: "Этап 1. Первичная диагностика",
+                badge: "Сбор данных",
+                description: "Кот поступил с признаками плеврального выпота, лимфоаденопатии, на фоне хронической FeLV-инфекции. Какие исследования вы назначите на первом этапе? (выберите ОДИН наиболее полный вариант)",
+                options: [
+                    "Только общий анализ крови и рентген",
+                    "Общий и биохимический анализ крови, УЗИ, рентген, ПЦР на FeLV/FIP, цитологический и микробиологический анализ пунктата",
+                    "Только УЗИ и ПЦР на токсоплазмоз",
+                    "Только биохимический анализ крови и УЗИ"
+                ],
+                correctIndex: 1,
+                explanation: "Правильный протокол: ОАК, БАК, УЗИ, рентген, ПЦР на FeLV/FIP, цитологический и микробиологический анализ пунктата. Именно такой подход позволяет оценить системные изменения и исключить другие инфекции."
+            },
+            // Этап 2: интерпретация результатов
+            {
+                title: "Этап 2. Интерпретация результатов",
+                badge: "Анализ",
+                description: "Получены следующие результаты: нейтрофильное бактериальное воспаление, отсутствие бактериального и грибкового роста микрофлоры. Что это означает?",
+                options: [
+                    "Подтверждает бактериальную инфекцию",
+                    "Исключает бактериальную инфекцию как первопричину, указывает на необходимость поиска других возбудителей",
+                    "Подтверждает диагноз токсоплазмоз",
+                    "Требует смены антибиотика"
+                ],
+                correctIndex: 1,
+                explanation: "Отсутствие бактериального и грибкового роста при наличии воспаления — важный сигнал. Это исключает бактериальную инфекцию как первопричину и указывает на необходимость поиска других возбудителей, в том числе внутриклеточных паразитов."
+            },
+            // Этап 3: дополнительная диагностика при отсутствии эффекта
+            {
+                title: "Этап 3. Дополнительная диагностика",
+                badge: "Углублённое обследование",
+                description: "После эвакуации жидкости и антибактериальной терапии наступило временное улучшение, затем состояние ухудшилось. Какое исследование нужно провести следующим?",
+                options: [
+                    "Повторный общий анализ крови",
+                    "ПЦР экссудата на Toxoplasma gondii",
+                    "Компьютерную томографию грудной клетки",
+                    "Бактериологический посев с определением чувствительности"
+                ],
+                correctIndex: 1,
+                explanation: "При отсутствии стойкого эффекта от антибактериальной терапии и наличии экссудативного плеврита ключевым становится ПЦР-исследование экссудата на Toxoplasma gondii. Именно это исследование позволило установить окончательный диагноз в описанном случае."
+            },
+            // Этап 4: окончательный диагноз
+            {
+                title: "Этап 4. Окончательный диагноз",
+                badge: "Диагноз",
+                description: "ПЦР экссудата выявила ДНК Toxoplasma gondii. Какой диагноз следует поставить?",
+                options: [
+                    "Классический токсоплазмоз с поражением ЦНС",
+                    "Лёгочная форма токсоплазмоза",
+                    "Токсоплазмоз с поражением органов брюшной полости",
+                    "Хронический токсоплазмоз (носительство)"
+                ],
+                correctIndex: 1,
+                explanation: "Наличие плеврального выпота, поражения лёгких (ателектаз) и обнаружение ДНК Toxoplasma gondii в экссудате позволяет установить диагноз лёгочная форма токсоплазмоза. Это редкая, но опасная форма заболевания."
+            },
+            // Этап 5: лечение
+            {
+                title: "Этап 5. Назначение лечения",
+                badge: "Терапия",
+                description: "Какое лечение является препаратом выбора при лёгочной форме токсоплазмоза у кошек на фоне FeLV?",
+                options: [
+                    "Антибиотики широкого спектра (цефалоспорины)",
+                    "Клиндамицин 12 мг/кг × 2 раза/сут × 28 дней",
+                    "Противовирусные препараты (интерфероны)",
+                    "Кортикостероиды для снятия воспаления"
+                ],
+                correctIndex: 1,
+                explanation: "Клиндамицин — препарат выбора при токсоплазмозе. Схема: 12 мг/кг два раза в сутки в течение 28 дней. Именно такое лечение было назначено в описанном клиническом случае и повысило шансы на выздоровление."
+            }
+        ];
+
+        // ===== ЛОГИКА ТРЕНАЖЁРА =====
+        let currentStage = 0;
+        let correctCount = 0;
+        let isAnswered = false;
+
+        const stageContainer = document.getElementById('stageContainer');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressLabel = document.getElementById('progressLabel');
+        const progressCounter = document.getElementById('progressCounter');
+        const resultSummary = document.getElementById('resultSummary');
+        const finalScore = document.getElementById('finalScore');
+        const finalMessage = document.getElementById('finalMessage');
+        const keyPoints = document.getElementById('keyPoints');
+
+        function renderStage(index) {
+            const stage = stages[index];
+            const html = `
+                <div class="stage-block">
+                    <div class="stage-title">
+                        ${stage.title}
+                        <span class="badge">${stage.badge}</span>
+                    </div>
+                    <div class="stage-description">${stage.description}</div>
+                    <div class="options-group" id="optionsGroup">
+                        ${stage.options.map((text, idx) => `
+                            <div class="option-item">
+                                <input type="radio" name="stage" value="${idx}" id="opt-${idx}">
+                                <label for="opt-${idx}">${text}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="feedback-area" id="feedbackArea">
+                        <div class="verdict" id="verdict"></div>
+                        <div class="explanation" id="explanation"></div>
+                    </div>
+                </div>
+            `;
+            stageContainer.innerHTML = html;
+            resultSummary.style.display = 'none';
+            resetBtn.style.display = 'none';
+            checkBtn.disabled = false;
+            nextBtn.disabled = true;
+            isAnswered = false;
+            document.querySelectorAll('.option-item').forEach(el => {
+                el.classList.remove('correct-answer', 'wrong-answer', 'disabled');
+            });
+            document.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = false);
+            progressLabel.textContent = `Этап ${index+1} из ${stages.length}`;
+            progressCounter.textContent = `✅ Правильно: ${correctCount}`;
+        }
+
+        function checkAnswer() {
+            if (isAnswered) return;
+            const stage = stages[currentStage];
+            const selected = document.querySelector('input[name="stage"]:checked');
+            if (!selected) {
+                alert('Пожалуйста, выберите один вариант ответа.');
+                return;
+            }
+            const selectedIndex = parseInt(selected.value, 10);
+            const isCorrect = (selectedIndex === stage.correctIndex);
+            if (isCorrect) correctCount++;
+
+            const items = document.querySelectorAll('.option-item');
+            items.forEach((item, idx) => {
+                if (idx === stage.correctIndex) {
+                    item.classList.add('correct-answer');
+                } else if (idx === selectedIndex && !isCorrect) {
+                    item.classList.add('wrong-answer');
+                }
+                item.classList.add('disabled');
+            });
+            document.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = true);
+
+            const feedbackArea = document.getElementById('feedbackArea');
+            const verdict = document.getElementById('verdict');
+            const explanation = document.getElementById('explanation');
+            feedbackArea.style.display = 'block';
+            if (isCorrect) {
+                verdict.innerHTML = '✅ Верно!';
+                verdict.style.color = '#2A6B2F';
+            } else {
+                verdict.innerHTML = '❌ Неверно. Правильный вариант выделен зелёным.';
+                verdict.style.color = '#BC5A3C';
+            }
+            explanation.innerHTML = `<strong>📌 Пояснение:</strong> ${stage.explanation}`;
+
+            isAnswered = true;
+            checkBtn.disabled = true;
+            nextBtn.disabled = false;
+            progressCounter.textContent = `✅ Правильно: ${correctCount}`;
+        }
+
+        function nextStage() {
+            if (!isAnswered) return;
+            if (currentStage + 1 < stages.length) {
+                currentStage++;
+                renderStage(currentStage);
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('stageContainer').style.display = 'none';
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            resetBtn.style.display = 'inline-block';
+            resultSummary.style.display = 'block';
+            const total = stages.length;
+            finalScore.textContent = `${correctCount}/${total}`;
+            let msg = '';
+            if (correctCount === total) {
+                msg = '🌟 Отлично! Вы продемонстрировали глубокое понимание клинического мышления при работе с иммунокомпрометированными пациентами.';
+            } else if (correctCount >= 4) {
+                msg = '👏 Хороший результат! Обратите внимание на этап, где была допущена ошибка — это ключевой момент дифференциальной диагностики.';
+            } else {
+                msg = '📖 Рекомендуем пересмотреть алгоритм диагностики токсоплазмоза у кошек и обратить внимание на роль ПЦР-диагностики.';
+            }
+            finalMessage.textContent = msg;
+            progressLabel.textContent = 'Клинический разбор завершён';
+            progressCounter.textContent = `✅ Правильно: ${correctCount}`;
+        }
+
+        function resetAll() {
+            currentStage = 0;
+            correctCount = 0;
+            document.getElementById('stageContainer').style.display = 'block';
+            checkBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'inline-block';
+            resetBtn.style.display = 'none';
+            resultSummary.style.display = 'none';
+            renderStage(0);
+        }
+
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextStage);
+        resetBtn.addEventListener('click', resetAll);
+
+        renderStage(0);
+    </script>
+</body>
+</html>

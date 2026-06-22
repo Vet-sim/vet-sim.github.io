@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Анатомический переполох: Операция "Спасение Рекса"</title>
+    <style>
+        /* ----- Общие стили ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #f0f4f0;
+            background-image: radial-gradient(circle at 10% 20%, rgba(76, 175, 80, 0.03) 0%, transparent 50%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ----- Основной контейнер (стиль медпанели) ----- */
+        .game-container {
+            max-width: 820px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.10), 0 6px 12px rgba(0, 0, 0, 0.05);
+            padding: 32px 30px 28px;
+            border: 1px solid #dce8dc;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        /* Декоративные элементы "медицинского" стиля */
+        .game-container::before {
+            content: "⚕️";
+            position: absolute;
+            top: -18px;
+            right: 30px;
+            font-size: 48px;
+            opacity: 0.10;
+            transform: rotate(12deg);
+        }
+
+        /* ----- Верхняя панель (заголовок + прогресс) ----- */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e8f0e8;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f3a2a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-title span {
+            background: #4CAF50;
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        .progress-display {
+            background: #eef4ee;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #2d4a35;
+            border: 1px solid #c8dcc8;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-display .step-number {
+            background: #4CAF50;
+            color: white;
+            padding: 0 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            line-height: 26px;
+        }
+
+        /* ----- Индикатор прогресса (полоска) ----- */
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: #e2ece2;
+            border-radius: 20px;
+            margin: 12px 0 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4CAF50, #66bb6a);
+            border-radius: 20px;
+            transition: width 0.45s ease;
+        }
+
+        /* ----- Блок задания ----- */
+        .stage-card {
+            background: #fafffa;
+            border-radius: 24px;
+            padding: 24px 26px 20px;
+            border: 1px solid #dde8dd;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+        }
+
+        .stage-location {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4CAF50;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            border-bottom: 2px dotted #d4e4d4;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+
+        .stage-question {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1f3a2a;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .stage-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 6px 0 16px;
+        }
+
+        /* Кнопки вариантов — стиль "кнопки дефибриллятора" */
+        .option-btn {
+            background: #f5faf5;
+            border: 2px solid #c8dcc8;
+            border-radius: 60px;
+            padding: 14px 22px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1f3a2a;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 2px 0 #c0d0c0;
+            font-family: inherit;
+        }
+
+        .option-btn .marker {
+            width: 28px;
+            height: 28px;
+            background: #dce8dc;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #3a5a3a;
+            flex-shrink: 0;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background: #ecf5ec;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 0 #c0d0c0;
+        }
+
+        .option-btn:active:not(.disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 0px 0 #c0d0c0;
+        }
+
+        .option-btn.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .option-btn.correct-answer {
+            background: #c8e6c8;
+            border-color: #4CAF50;
+            box-shadow: 0 2px 0 #2e7d32;
+        }
+
+        .option-btn.wrong-answer {
+            background: #f8d7da;
+            border-color: #e57373;
+            box-shadow: 0 2px 0 #c62828;
+        }
+
+        /* ----- Область фидбека (результат) ----- */
+        .feedback-area {
+            margin: 12px 0 6px;
+            padding: 14px 20px;
+            border-radius: 40px;
+            background: #f0f8f0;
+            border-left: 6px solid #4CAF50;
+            display: none;
+            animation: fadeSlide 0.3s ease;
+        }
+
+        .feedback-area.show {
+            display: block;
+        }
+
+        .feedback-area .verdict {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .feedback-area .verdict.correct {
+            color: #2e7d32;
+        }
+
+        .feedback-area .verdict.wrong {
+            color: #c62828;
+        }
+
+        .feedback-area .hint {
+            font-size: 0.9rem;
+            color: #3d5a3d;
+            margin-top: 4px;
+        }
+
+        @keyframes fadeSlide {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ----- Кнопка "Далее" / "Завершить" ----- */
+        .next-btn-wrap {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-next {
+            background: #4CAF50;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            box-shadow: 0 4px 0 #2e7d32;
+            border: 1px solid #43a047;
+        }
+
+        .btn-next:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #2e7d32;
+        }
+
+        .btn-next:disabled {
+            opacity: 0.4;
+            transform: none;
+            box-shadow: 0 4px 0 #2e7d32;
+            pointer-events: none;
+        }
+
+        .btn-next.finish {
+            background: #ff9800;
+            box-shadow: 0 4px 0 #e65100;
+            border-color: #fb8c00;
+        }
+
+        /* ----- Финальный экран ----- */
+        .final-screen {
+            text-align: center;
+            padding: 30px 10px 20px;
+        }
+
+        .final-screen .big-icon {
+            font-size: 5rem;
+            margin-bottom: 10px;
+        }
+
+        .final-screen .title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1f3a2a;
+        }
+
+        .final-screen .sub {
+            font-size: 1.2rem;
+            color: #3d6b3d;
+            margin: 10px 0 20px;
+        }
+
+        .final-screen .dog-img {
+            font-size: 6rem;
+            margin: 10px 0;
+        }
+
+        .btn-restart {
+            background: #4CAF50;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #2e7d32;
+            transition: 0.15s;
+            font-family: inherit;
+        }
+
+        .btn-restart:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #2e7d32;
+        }
+
+        /* Скрытые блоки */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 650px) {
+            .game-container {
+                padding: 20px 16px 20px;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .header-title {
+                font-size: 1.2rem;
+            }
+            .stage-question {
+                font-size: 1.1rem;
+            }
+            .option-btn {
+                padding: 12px 16px;
+                font-size: 0.95rem;
+            }
+            .progress-display {
+                justify-content: center;
+            }
+            .btn-next {
+                width: 100%;
+                text-align: center;
+            }
+            .final-screen .title {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container" id="app">
+    <!-- Шапка -->
+    <div class="header">
+        <div class="header-title">
+            🐾 Анатомический переполох
+            <span>Спасение Рекса</span>
+        </div>
+        <div class="progress-display">
+            <span>Этап</span>
+            <span class="step-number" id="stepNumber">1</span>
+            <span>/ 15</span>
+        </div>
+    </div>
+
+    <!-- Полоска прогресса -->
+    <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Основной блок: игра -->
+    <div id="gameArea">
+        <div class="stage-card" id="stageCard">
+            <div class="stage-location" id="stageLocation">Ресепшн (Вход)</div>
+            <div class="stage-question" id="stageQuestion">Задание загружается...</div>
+            <div class="stage-options" id="optionsContainer"></div>
+
+            <!-- Фидбек -->
+            <div class="feedback-area" id="feedbackArea">
+                <div class="verdict" id="verdictText"></div>
+                <div class="hint" id="hintText"></div>
+            </div>
+
+            <!-- Кнопка Далее -->
+            <div class="next-btn-wrap">
+                <button class="btn-next" id="nextBtn" disabled>Далее →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Финальный экран (скрыт по умолчанию) -->
+    <div id="finalScreen" class="final-screen hidden">
+        <div class="big-icon">🏆</div>
+        <div class="dog-img">🐕</div>
+        <div class="title">Рекс спасён!</div>
+        <div class="sub">
+            Вы прошли все 15 испытаний!<br>
+            Звезда экрана снова на ногах, а клиника ликует.
+        </div>
+        <p style="color: #4a6a4a; font-weight: 500; margin: 10px 0 20px;">
+            «Внутри клиники ходят слухи, что вам предложили должность главного врача.<br>
+            Но вы скромно отказались — у вас ещё есть неотвеченные вопросы на экзамене. 😄»
+        </p>
+        <button class="btn-restart" id="restartBtn">🔄 Пройти квест заново</button>
+    </div>
+</div>
+
+<script>
+    // ================================================================
+    // ДАННЫЕ КВЕСТА (15 этапов)
+    // ================================================================
+    const stages = [
+        {
+            location: "Ресепшн (Вход)",
+            question: "У стойки регистратуры вас встречает взволнованный владелец Рекса. Он утверждает, что у собаки «отказала правая задняя лапа», потому что он её «отсидел». Ваша первая задача — проверить базовые рефлексы. Какой рефлекс вы проверите первым делом, чтобы убедиться в целостности нервного пути?",
+            options: [
+                "Рефлекс угрозы (мигательный)",
+                "Коленный (пателлярный) рефлекс",
+                "Корнеальный рефлекс",
+                "Подошвенный рефлекс"
+            ],
+            correct: 1,
+            hint: "Коленный рефлекс — классический тест на целостность спинномозговых рефлекторных дуг."
+        },
+        {
+            location: "Кабинет УЗИ-диагностики",
+            question: "На мониторе аппарата УЗИ вы видите странную картину. Желудочно-кишечный тракт выглядит как хаотичное нагромождение трубок, а не как четко дифференцированные отделы. Какое анатомическое образование, являющееся границей между тонкой и толстой кишкой, вы ищете на экране, чтобы восстановить порядок в этом хаосе?",
+            options: [
+                "Пилорический сфинктер желудка",
+                "Илеоцекальный клапан",
+                "Кардиальный сфинктер",
+                "Слепая кишка (цекум)"
+            ],
+            correct: 1,
+            hint: "Илеоцекальный клапан — анатомическая граница между тонкой и толстой кишкой."
+        },
+        {
+            location: "Лаборатория (Гематология)",
+            question: "Анализ крови Рекса показал критически низкий уровень эритроцитов. Лаборант в панике кричит о «багровом море, которое обмелело». Вам срочно нужно назначить поддерживающую терапию. Какой препарат является стандартным компонентом инфузионной терапии при анемии для восстановления объема циркулирующей крови?",
+            options: [
+                "Глюкоза 40%",
+                "Раствор Рингера-Локка",
+                "Кальция борглюконат",
+                "Аскорбиновая кислота"
+            ],
+            correct: 1,
+            hint: "Раствор Рингера-Локка — изотонический сбалансированный раствор для восполнения объема крови."
+        },
+        {
+            location: "Хирургия (Предоперационная)",
+            question: "Перед операцией анестезиолог просит рассчитать дозу препарата. Вес Рекса — 25 кг. Дозировка пропофола для индукции анестезии составляет 4 мг/кг внутривенно. Сколько миллилитров 1% раствора пропофола вам потребуется ввести? (Концентрация 1% означает 10 мг вещества в 1 мл раствора).",
+            options: [
+                "1 мл",
+                "5 мл",
+                "10 мл",
+                "25 мл"
+            ],
+            correct: 2,
+            hint: "25 кг × 4 мг/кг = 100 мг. 1 мл 1% раствора = 10 мг. 100 / 10 = 10 мл."
+        },
+        {
+            location: "Физиология (Дыхательная система)",
+            question: "После интубации Рекс начал синеть. Вы заподозрили проблему с газообменом. Вспоминая физиологию, какой основной механизм обеспечивает движение кислорода из альвеол в кровь?",
+            options: [
+                "Активный транспорт",
+                "Осмос",
+                "Диффузия по градиенту концентрации",
+                "Эндоцитоз"
+            ],
+            correct: 2,
+            hint: "Газы движутся по градиенту концентрации путём пассивной диффузии."
+        },
+        {
+            location: "Рентген-кабинет",
+            question: "Снимок брюшной полости сделан. Но изображение перевернуто. Где на правильно ориентированном рентгеновском снимке вентральной брюшной стенки должна находиться тень печени?",
+            options: [
+                "Слева",
+                "Справа",
+                "По центру",
+                "Каудально (снизу)"
+            ],
+            correct: 1,
+            hint: "Тень печени на вентральном снимке проецируется справа от средней линии."
+        },
+        {
+            location: "Инфекционное отделение",
+            question: "В соседнем боксе чихает кот с подозрением на ринотрахеит. Нужно срочно вспомнить классификацию возбудителей. К какой группе микроорганизмов относится вирус герпеса кошек?",
+            options: [
+                "Бактерия",
+                "Простейшее",
+                "ДНК-содержащий вирус",
+                "Грибок"
+            ],
+            correct: 2,
+            hint: "Вирус герпеса кошек — ДНК-содержащий вирус семейства Herpesviridae."
+        },
+        {
+            location: "Зоомагазин при клинике",
+            question: "Владельцу Рекса нужен корм для быстрого восстановления. Консультант предлагает несколько вариантов. Какой нутриент является основным источником энергии для собак и должен преобладать в их рационе?",
+            options: [
+                "Углеводы",
+                "Белки",
+                "Жиры",
+                "Клетчатка"
+            ],
+            correct: 1,
+            hint: "Основной источник энергии у собак — белки и жиры, но в большинстве рационов преобладают белки."
+        },
+        {
+            location: "Ординаторская (Кофе-брейк)",
+            question: "За чашкой кофе обсуждается сложный случай. Необходимо поставить диагноз 'острый панкреатит'. Для этого требуется анализ на специфический фермент поджелудочной железы. Какой показатель биохимии крови наиболее информативен при подозрении на панкреатит?",
+            options: [
+                "АЛТ (аланинаминотрансфераза)",
+                "Липаза",
+                "Креатинин",
+                "Щелочная фосфатаза"
+            ],
+            correct: 1,
+            hint: "Липаза — специфический панкреатический фермент, повышается при панкреатите."
+        },
+        {
+            location: "Отделение интенсивной терапии (ОИТ)",
+            question: "Рексу стало хуже, развился отек легких. Нужно срочно выбрать диуретик для снятия легочного отека. Какой петлевой диуретик действует наиболее быстро и мощно?",
+            options: [
+                "Спиронолактон",
+                "Гидрохлортиазид",
+                "Фуросемид",
+                "Маннитол"
+            ],
+            correct: 2,
+            hint: "Фуросемид — быстродействующий петлевой диуретик для купирования отёка лёгких."
+        },
+        {
+            location: "Цитологическая лаборатория",
+            question: "Из желудка Рекса взяли мазок-отпечаток инородного тела. Под микроскопом вы видите клетки с сегментированными ядрами и мелкой зернистостью в цитоплазме, окрашенной в розовый цвет. Кто эти 'солдаты', первыми пришедшие на борьбу с чужеродным объектом?",
+            options: [
+                "Лимфоциты",
+                "Эозинофилы",
+                "Нейтрофилы",
+                "Макрофаги"
+            ],
+            correct: 2,
+            hint: "Нейтрофилы — фагоциты с сегментированным ядром, первыми прибывают в очаг воспаления."
+        },
+        {
+            location: "Патологоанатомическое отделение (Теория)",
+            question: "Студенты шутят, что это самый тихий кабинет. Здесь изучают причины болезней. Процесс необратимого повреждения и гибели клеток под действием патогенного фактора называется...",
+            options: [
+                "Атрофия",
+                "Некроз",
+                "Апоптоз",
+                "Дистрофия"
+            ],
+            correct: 1,
+            hint: "Некроз — необратимое повреждение и гибель клеток под действием внешнего фактора."
+        },
+        {
+            location: "Мойка и дезинфекция инструментов",
+            question: "Инструменты после операции нужно обработать. Стерилизация — это процесс уничтожения всех форм микробной жизни, включая самые устойчивые... Что именно уничтожается при стерилизации, чего может не быть при дезинфекции?",
+            options: [
+                "Вирусы",
+                "Бактерии",
+                "Споры бактерий",
+                "Грибы"
+            ],
+            correct: 2,
+            hint: "Стерилизация уничтожает все формы, включая бактериальные споры, в отличие от дезинфекции."
+        },
+        {
+            location: "Приемный покой (Выписка)",
+            question: "Операция прошла успешно, Рекс спасен! Вы пишете рекомендации владельцу. Какова нормальная ректальная температура тела у здоровой взрослой собаки в градусах Цельсия?",
+            options: [
+                "36.6 °C",
+                "37.5-39.0 °C",
+                "40.0-41.0 °C",
+                "35.0-36.0 °C"
+            ],
+            correct: 1,
+            hint: "Нормальная ректальная температура у взрослой собаки — 37.5–39.0 °C."
+        },
+        {
+            location: "Холл клиники (Финал)",
+            question: "Вас благодарят за спасение звезды. В качестве награды вам предлагают выбрать любой сувенир. Ваш выбор падает на модель собачьего скелета. Какая кость формирует тазовую впадину (acetabulum)?",
+            options: [
+                "Седалищная кость",
+                "Бедренная кость",
+                "Безымянная кость (os coxae)",
+                "Крестцовая кость"
+            ],
+            correct: 2,
+            hint: "Acetabulum формируется тремя костями таза: подвздошной, лонной и седалищной, которые вместе образуют безымянную кость."
+        }
+    ];
+
+    // ================================================================
+    // ЛОГИКА ИГРЫ
+    // ================================================================
+    let currentStage = 0;
+    let totalStages = stages.length;
+    let isAnswered = false;
+
+    // DOM-элементы
+    const stageLocation = document.getElementById('stageLocation');
+    const stageQuestion = document.getElementById('stageQuestion');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedbackArea = document.getElementById('feedbackArea');
+    const verdictText = document.getElementById('verdictText');
+    const hintText = document.getElementById('hintText');
+    const nextBtn = document.getElementById('nextBtn');
+    const stepNumber = document.getElementById('stepNumber');
+    const progressFill = document.getElementById('progressFill');
+    const gameArea = document.getElementById('gameArea');
+    const finalScreen = document.getElementById('finalScreen');
+    const restartBtn = document.getElementById('restartBtn');
+
+    // ----- Рендеринг этапа -----
+    function renderStage(index) {
+        const stage = stages[index];
+        if (!stage) return;
+
+        // Обновляем заголовок и номер
+        stepNumber.textContent = index + 1;
+        progressFill.style.width = ((index / totalStages) * 100) + '%';
+
+        stageLocation.textContent = `📍 ${stage.location}`;
+        stageQuestion.textContent = stage.question;
+
+        // Очищаем контейнер с вариантами
+        optionsContainer.innerHTML = '';
+        isAnswered = false;
+        feedbackArea.classList.remove('show');
+        nextBtn.disabled = true;
+        // Сбрасываем класс finish, если был
+        nextBtn.classList.remove('finish');
+        // Если это последний этап, меняем текст кнопки
+        if (index === totalStages - 1) {
+            nextBtn.textContent = '🏁 Завершить игру';
+            nextBtn.classList.add('finish');
+        } else {
+            nextBtn.textContent = 'Далее →';
+            nextBtn.classList.remove('finish');
+        }
+
+        // Создаём кнопки вариантов
+        const letters = ['A', 'B', 'C', 'D'];
+        stage.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span class="marker">${letters[idx]}</span> ${opt}`;
+            btn.dataset.index = idx;
+            btn.addEventListener('click', () => handleOptionClick(btn, idx, stage));
+            optionsContainer.appendChild(btn);
+        });
+
+        // Скрываем финал, если он был виден
+        finalScreen.classList.add('hidden');
+        gameArea.classList.remove('hidden');
+    }
+
+    // ----- Обработка клика по варианту -----
+    function handleOptionClick(btn, selectedIdx, stage) {
+        if (isAnswered) return;
+
+        const isCorrect = (selectedIdx === stage.correct);
+        const allOptions = document.querySelectorAll('.option-btn');
+
+        // Блокируем все кнопки
+        allOptions.forEach(b => b.classList.add('disabled'));
+
+        // Подсветка
+        allOptions.forEach((b, idx) => {
+            if (idx === stage.correct) {
+                b.classList.add('correct-answer');
+            } else if (idx === selectedIdx && !isCorrect) {
+                b.classList.add('wrong-answer');
+            }
+        });
+
+        // Показываем фидбек
+        feedbackArea.classList.add('show');
+        if (isCorrect) {
+            verdictText.className = 'verdict correct';
+            verdictText.textContent = '✅ Верно!';
+        } else {
+            verdictText.className = 'verdict wrong';
+            verdictText.textContent = '❌ Неверно!';
+        }
+        hintText.textContent = stage.hint;
+
+        isAnswered = true;
+        nextBtn.disabled = false;
+    }
+
+    // ----- Переход к следующему этапу или финал -----
+    function goToNext() {
+        if (!isAnswered) return;
+
+        if (currentStage < totalStages - 1) {
+            currentStage++;
+            renderStage(currentStage);
+        } else {
+            // Показываем финальный экран
+            gameArea.classList.add('hidden');
+            finalScreen.classList.remove('hidden');
+            // Полоска прогресса на 100%
+            progressFill.style.width = '100%';
+            stepNumber.textContent = totalStages;
+        }
+    }
+
+    // ----- Перезапуск -----
+    function restartGame() {
+        currentStage = 0;
+        renderStage(0);
+        // Сброс полоски
+        progressFill.style.width = '0%';
+    }
+
+    // ================================================================
+    // ПОДКЛЮЧЕНИЕ СОБЫТИЙ
+    // ================================================================
+    nextBtn.addEventListener('click', goToNext);
+    restartBtn.addEventListener('click', restartGame);
+
+    // Запуск игры при загрузке
+    renderStage(0);
+</script>
+
+</body>
+</html>

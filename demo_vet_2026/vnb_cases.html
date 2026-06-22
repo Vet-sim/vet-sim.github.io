@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Клинические кейсы: ВНБ мелких домашних животных | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            padding: 1.8rem 2rem;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.2rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F4F0E8;
+            border-radius: 40px;
+            padding: 0.3rem 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .progress-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .progress-counter {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #2C7DA0;
+        }
+
+        .case-description {
+            background: #F8F6F0;
+            border-radius: 20px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.8rem;
+            border-left: 5px solid #A3B18A;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .case-description strong {
+            color: #1F4E6E;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-bottom: 1.5rem;
+        }
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: #FDFBF7;
+            border-radius: 16px;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #E7EDE2;
+            transition: background 0.15s;
+            cursor: pointer;
+        }
+        .option-item:hover {
+            background: #F5F3EC;
+        }
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2C7DA0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .option-item label {
+            flex: 1;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+        .option-item.correct-answer {
+            background: #E4F2DF;
+            border-color: #6B9E6B;
+        }
+        .option-item.wrong-answer {
+            background: #FDE8E0;
+            border-color: #D47A6A;
+        }
+        .option-item.disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+        .option-item.disabled:hover {
+            background: #FDFBF7;
+        }
+
+        .feedback-area {
+            background: #F8F6F0;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+        .feedback-area .verdict {
+            font-weight: 600;
+        }
+        .feedback-area .explanation {
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+        .feedback-area .explanation strong {
+            color: #2C7DA0;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #8FA375;
+        }
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #5A8A5A;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .result-summary {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        .result-summary h2 {
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+        .result-summary .score {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .result-summary .message {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            margin-top: 2rem;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .container { padding: 1.2rem 1rem; }
+            .option-item { padding: 0.6rem 1rem; }
+            .action-buttons { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ДЕМО-ШАПКА -->
+    <div style="background: #EEF2E9; padding: 0.8rem 1.5rem; border-bottom: 2px solid #A3B18A; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <strong style="color: #1F4E6E;">🐾 ВетСим</strong>
+            <span style="color: #5F7C62; margin-left: 1rem; font-size: 0.9rem;">Демо-версия для вузов</span>
+        </div>
+        <div style="font-size: 0.8rem;">
+            <a href="index.html" style="color: #2C7DA0; text-decoration: none;">← Назад к списку</a>
+            <span style="color: #A7B89A; margin: 0 0.5rem;">|</span>
+            <span style="color: #A7B89A;">📧 as_ter@mail.ru</span>
+        </div>
+    </div>
+    <!-- КОНЕЦ ДЕМО-ШАПКИ -->
+
+    <div class="container">
+        <h1>🩺 Клинические кейсы: ВНБ мелких домашних животных</h1>
+        <div class="sub">7 реалистичных случаев для отработки диагностики и клинического мышления</div>
+
+        <div class="progress-bar">
+            <span class="progress-text" id="progressLabel">Случай 1 из 7</span>
+            <span class="progress-counter" id="progressCounter">✅ Правильно: 0</span>
+        </div>
+
+        <div id="caseContainer">
+            <div class="case-description" id="caseDescription"></div>
+            <div class="options-group" id="optionsGroup"></div>
+            <div class="feedback-area" id="feedbackArea">
+                <div class="verdict" id="verdict"></div>
+                <div class="explanation" id="explanation"></div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="checkBtn" class="btn btn-primary">🔍 Проверить</button>
+            <button id="nextBtn" class="btn btn-success" disabled>➡️ Следующий случай</button>
+            <button id="resetBtn" class="btn btn-secondary" style="display:none;">🔄 Пройти заново</button>
+        </div>
+
+        <div class="result-summary" id="resultSummary">
+            <h2>🎉 Вы завершили все случаи!</h2>
+            <div class="score" id="finalScore">0/7</div>
+            <div class="message" id="finalMessage"></div>
+        </div>
+
+        <footer>© ВетСим — клинические кейсы по внутренним незаразным болезням (МДЖ).</footer>
+    </div>
+
+    <script>
+        // ===== 7 КЛИНИЧЕСКИХ КЕЙСОВ =====
+        const cases = [
+            {
+                title: "Случай 1. Хроническая почечная недостаточность",
+                description: "Кошка, 12 лет, беспородная. Поступила с жалобами на полиурию, полидипсию, снижение аппетита, периодическую рвоту, похудание. При осмотре: слизистые сухие, тургор кожи снижен, температура 38,0°C, ЧСС 140, ЧДД 28. При пальпации: почки уменьшены, бугристые. Анализ крови: креатинин 400 мкмоль/л (норма 44–140), мочевина 35 ммоль/л (норма 3–8).",
+                options: [
+                    "Хроническая почечная недостаточность",
+                    "Острая почечная недостаточность",
+                    "Сахарный диабет",
+                    "Гипертиреоз"
+                ],
+                correctIndex: 0,
+                explanation: "Хроническая почечная недостаточность (ХПН): полиурия, полидипсия, рвота, похудание, анемия, азотемия (повышение креатинина и мочевины), уменьшение и бугристость почек при пальпации. Отличие от острой формы: постепенное развитие, уменьшение почек, более выраженная анемия. Сахарный диабет даёт полиурию/полидипсию, но обычно нет снижения почек. Гипертиреоз — полифагия, снижение веса, тахикардия."
+            },
+            {
+                title: "Случай 2. Сахарный диабет",
+                description: "Собака, 8 лет, цвергшнауцер. Анамнез: полиурия, полидипсия, полифагия, снижение веса в течение месяца, вялость. При осмотре: слизистые влажные, тургор нормальный, температура 38,2°C, ЧСС 120, ЧДД 24. В моче глюкоза 4+, кетоновые тела отрицательно. Глюкоза крови 18 ммоль/л (норма 4–6,5).",
+                options: [
+                    "Сахарный диабет",
+                    "Гиперкортицизм",
+                    "Хроническая почечная недостаточность",
+                    "Гипертиреоз"
+                ],
+                correctIndex: 0,
+                explanation: "Сахарный диабет: классическая триада — полиурия, полидипсия, полифагия + потеря веса + гипергликемия. У кошек чаще диабет II типа, у собак — I типа. Гиперкортицизм даёт полифагию и ожирение, потери веса нет. Почечная недостаточность — без полифагии. Гипертиреоз — гиперактивность, тахикардия."
+            },
+            {
+                title: "Случай 3. Гипертиреоз",
+                description: "Кошка, 10 лет, беспородная. Анамнез: снижение веса при повышенном аппетите, гиперактивность, тахикардия, периодическая рвота. При осмотре: слизистые розовые, температура 38,5°C, ЧСС 190, ЧДД 28. При пальпации щитовидной железы: увеличение, подвижна.",
+                options: [
+                    "Гипертиреоз",
+                    "Сахарный диабет",
+                    "Хроническая почечная недостаточность",
+                    "Гиперкортицизм"
+                ],
+                correctIndex: 0,
+                explanation: "Гипертиреоз — повышение уровня тироксина (Т4). Характерны: потеря веса при нормальном/повышенном аппетите, тахикардия, гиперактивность, увеличение щитовидной железы. У кошек старше 8 лет. Дифференцируют с сахарным диабетом (нет полидипсии/полиурии) и ХПН (нет увеличения щитовидной железы)."
+            },
+            {
+                title: "Случай 4. Панкреатит",
+                description: "Собака, 6 лет, метис. Анамнез: острая рвота, отказ от корма, болезненность в краниальной части брюшной полости. При осмотре: слизистые влажные, температура 39,1°C, ЧСС 130, ЧДД 30. При пальпации живота — болезненность в эпигастральной области, живот напряжён. Повышение липазы и амилазы в крови (в 3 раза).",
+                options: [
+                    "Панкреатит",
+                    "Гастроэнтерит",
+                    "Заворот желудка",
+                    "Холецистит"
+                ],
+                correctIndex: 0,
+                explanation: "Панкреатит — острое воспаление поджелудочной железы. Характерны: рвота, боль в эпигастральной области, лейкоцитоз, повышение липазы и амилазы. Гастроэнтерит — диарея, менее выраженная боль. Заворот желудка — острое вздутие. Холецистит — желтуха, боль в правом подреберье."
+            },
+            {
+                title: "Случай 5. Гиперкортицизм (синдром Кушинга)",
+                description: "Собака, 9 лет, такса. Анамнез: полиурия, полидипсия, полифагия, увеличение живота ('ожирение' с тонкими конечностями), алопеция по бокам. При осмотре: слизистые розовые, температура 38,0°C, ЧСС 110, ЧДД 20. Кожа истончена, множественные пигментные пятна.",
+                options: [
+                    "Гиперкортицизм (синдром Кушинга)",
+                    "Сахарный диабет",
+                    "Гипотиреоз",
+                    "Первичный дерматит"
+                ],
+                correctIndex: 0,
+                explanation: "Гиперкортицизм: полидипсия/полиурия, полифагия, алопеция, истончение кожи, 'живот с подвешиванием', слабость мышц. В отличие от сахарного диабета — нет потери веса при полифагии. Гипотиреоз — без полифагии. Первичный дерматит — без системных признаков."
+            },
+            {
+                title: "Случай 6. Гиперадренокортицизм (болезнь Кушинга)",
+                description: "Собака, 7 лет, метис. Анамнез: повышенная жажда и мочеотделение, выпадение шерсти по бокам, слабость задних конечностей, мышцы атрофичны. При осмотре: слизистые розовые, температура 38,2°C, ЧСС 120, ЧДД 24. Кожа истончена, кальциноз кожи.",
+                options: [
+                    "Гиперадренокортицизм (болезнь Кушинга)",
+                    "Сахарный диабет",
+                    "Гипотиреоз",
+                    "Хроническая почечная недостаточность"
+                ],
+                correctIndex: 0,
+                explanation: "Гиперадренокортицизм: гиперкортицизм, вызванный избытком глюкокортикоидов. Характерны: полиурия/полидипсия, алопеция, атрофия мышц, истончение кожи, кальциноз. Отличается от сахарного диабета — нет гипергликемии. От гипотиреоза — нет набора веса, есть атрофия мышц."
+            },
+            {
+                title: "Случай 7. Пероральный дерматит (пищевая аллергия)",
+                description: "Собака, 4 года, бигль. Анамнез: постоянный зуд, покраснение кожи в паховой области и на животе, повторяющиеся отиты, расчёсы. При осмотре: слизистые розовые, температура 38,3°C, ЧСС 100, ЧДД 20. Кожа гиперемирована, есть папулы, корки. Дерматологические симптомы не купируются стандартной терапией.",
+                options: [
+                    "Пероральный дерматит (пищевая аллергия)",
+                    "Атопический дерматит",
+                    "Демодекоз",
+                    "Кожная форма микроспории"
+                ],
+                correctIndex: 0,
+                explanation: "Пероральный дерматит (пищевая аллергия): зуд, рецидивирующие отиты, поражение кожи в области паха и живота. Часто не поддаётся стандартной терапии, улучшается при исключении аллергена из рациона. Атопический дерматит — сезонный. Демодекоз — с поражением волосяных фолликулов. Микроспория — с очагами облысения."
+            }
+        ];
+
+        // ===== ЛОГИКА ТРЕНАЖЁРА =====
+        let currentCase = 0;
+        let correctCount = 0;
+        let isAnswered = false;
+
+        const caseDescription = document.getElementById('caseDescription');
+        const optionsGroup = document.getElementById('optionsGroup');
+        const feedbackArea = document.getElementById('feedbackArea');
+        const verdict = document.getElementById('verdict');
+        const explanation = document.getElementById('explanation');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const progressLabel = document.getElementById('progressLabel');
+        const progressCounter = document.getElementById('progressCounter');
+        const resultSummary = document.getElementById('resultSummary');
+        const finalScore = document.getElementById('finalScore');
+        const finalMessage = document.getElementById('finalMessage');
+
+        function renderCase(index) {
+            const c = cases[index];
+            caseDescription.innerHTML = `<strong>${c.title}</strong><br><br>${c.description.replace(/\n/g, '<br>')}`;
+            optionsGroup.innerHTML = '';
+            c.options.forEach((text, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'diagnosis';
+                radio.value = idx;
+                radio.id = `opt-${idx}`;
+                const label = document.createElement('label');
+                label.htmlFor = `opt-${idx}`;
+                label.textContent = text;
+                div.appendChild(radio);
+                div.appendChild(label);
+                optionsGroup.appendChild(div);
+            });
+            feedbackArea.style.display = 'none';
+            resultSummary.style.display = 'none';
+            resetBtn.style.display = 'none';
+            checkBtn.disabled = false;
+            nextBtn.disabled = true;
+            isAnswered = false;
+            document.querySelectorAll('.option-item').forEach(el => {
+                el.classList.remove('correct-answer', 'wrong-answer', 'disabled');
+            });
+            document.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = false);
+            progressLabel.textContent = `Случай ${index+1} из ${cases.length}`;
+            progressCounter.textContent = `✅ Правильно: ${correctCount}`;
+        }
+
+        function checkAnswer() {
+            if (isAnswered) return;
+            const c = cases[currentCase];
+            const selected = document.querySelector('input[name="diagnosis"]:checked');
+            if (!selected) {
+                alert('Пожалуйста, выберите один вариант диагноза.');
+                return;
+            }
+            const selectedIndex = parseInt(selected.value, 10);
+            const isCorrect = (selectedIndex === c.correctIndex);
+            if (isCorrect) correctCount++;
+
+            const items = document.querySelectorAll('.option-item');
+            items.forEach((item, idx) => {
+                if (idx === c.correctIndex) {
+                    item.classList.add('correct-answer');
+                } else if (idx === selectedIndex && !isCorrect) {
+                    item.classList.add('wrong-answer');
+                }
+                item.classList.add('disabled');
+            });
+            document.querySelectorAll('input[type="radio"]').forEach(radio => radio.disabled = true);
+
+            feedbackArea.style.display = 'block';
+            if (isCorrect) {
+                verdict.innerHTML = '✅ Верно!';
+                verdict.style.color = '#2A6B2F';
+            } else {
+                verdict.innerHTML = '❌ Неверно. Правильный диагноз выделен зелёным.';
+                verdict.style.color = '#BC5A3C';
+            }
+            explanation.innerHTML = `<strong>📌 Пояснение:</strong> ${c.explanation}`;
+
+            isAnswered = true;
+            checkBtn.disabled = true;
+            nextBtn.disabled = false;
+            progressCounter.textContent = `✅ Правильно: ${correctCount}`;
+        }
+
+        function nextCase() {
+            if (!isAnswered) return;
+            if (currentCase + 1 < cases.length) {
+                currentCase++;
+                renderCase(currentCase);
+            } else {
+                showResult();
+            }
+        }
+
+        function showResult() {
+            document.getElementById('caseContainer').style.display = 'none';
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            resetBtn.style.display = 'inline-block';
+            resultSummary.style.display = 'block';
+            const total = cases.length;
+            finalScore.textContent = `${correctCount}/${total}`;
+            let msg = '';
+            if (correctCount === total) msg = '🌟 Отлично! Вы уверенно диагностируете ВНБ мелких домашних животных!';
+            else if (correctCount >= 5) msg = '👏 Хороший результат! Рекомендуем повторить дифференциальную диагностику.';
+            else msg = '📖 Стоит пересмотреть раздел внутренних незаразных болезней.';
+            finalMessage.textContent = msg;
+            progressLabel.textContent = 'Все случаи завершены';
+            progressCounter.textContent = `✅ Правильно: ${correctCount}`;
+        }
+
+        function resetAll() {
+            currentCase = 0;
+            correctCount = 0;
+            document.getElementById('caseContainer').style.display = 'block';
+            checkBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'inline-block';
+            resetBtn.style.display = 'none';
+            resultSummary.style.display = 'none';
+            renderCase(0);
+        }
+
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextCase);
+        resetBtn.addEventListener('click', resetAll);
+
+        renderCase(0);
+    </script>
+</body>
+</html>

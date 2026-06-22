@@ -240,7 +240,7 @@
             return;
         }
         const cardsData = JSON.stringify(cards);
-        // Ключевое исправление: экранируем все </script> внутри строки, чтобы не закрыть текущий скрипт
+        // Формируем HTML с экранированием всех закрывающих тегов script
         const trainerHTML = `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -481,9 +481,10 @@
 <\/script>
 </body>
 </html>`;
-        // Заменяем все потенциально опасные закрывающие теги
-        const safeHTML = trainerHTML.replace(/<\/script>/gi, '<\\/script>');
-        const blob = new Blob([safeHTML], {type: 'text/html'});
+
+        // Заменяем все <\/script> на </script> для корректного HTML
+        const finalHTML = trainerHTML.replace(/<\\\/script>/g, '</script>');
+        const blob = new Blob([finalHTML], {type: 'text/html'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;

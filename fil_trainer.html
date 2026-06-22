@@ -391,93 +391,41 @@
 </div>
 
 <script>
-    // ===== ДАННЫЕ =====
-    const cards = ${cardsData};
-    let currentIndex = 0;
-    let knownCount = 0;
-    let unknownCount = 0;
+    // ... весь остальной JavaScript-код (массив, функции addCard, renderCardList, exportTrainer и т.д.) ...
 
-    const cardFlip = document.getElementById('cardFlip');
-    const cardFront = document.getElementById('cardFront');
-    const cardBack = document.getElementById('cardBack');
-    const counter = document.getElementById('counter');
-    const knownSpan = document.getElementById('knownCount');
-    const unknownSpan = document.getElementById('unknownCount');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const resetStatsBtn = document.getElementById('resetStatsBtn');
-
-    function renderCard(index) {
-        const card = cards[index];
-        if (!card) return;
-        // Сброс переворота
-        cardFlip.classList.remove('flipped');
-        // Передняя сторона
-        cardFront.innerHTML = \`
-            \${card.image ? \`<img src="\${card.image}" alt="Иллюстрация">\` : ''}
-            <div class="text">\${escapeHtml(card.front)}</div>
-        \`;
-        // Задняя сторона
-        cardBack.innerHTML = \`
-            \${card.image ? \`<img src="\${card.image}" alt="Иллюстрация">\` : ''}
-            <div class="text">\${escapeHtml(card.back)}</div>
-        \`;
-        counter.textContent = \`Карточка \${index+1} из \${cards.length}\`;
-        updateStats();
+    // ===== ЭКСПОРТ ГОТОВОГО ТРЕНАЖЁРА =====
+    function exportTrainer() {
+        // ... код экспорта ...
+        const blob = new Blob([trainerHTML], {type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'flip_cards_trainer.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 
-    function flipCard() {
-        cardFlip.classList.toggle('flipped');
-    }
-
-    function nextCard() {
-        if (currentIndex + 1 < cards.length) {
-            currentIndex++;
-            renderCard(currentIndex);
+    // ===== ОЧИСТКА ВСЕХ КАРТОЧЕК =====
+    function clearAll() {
+        if (cards.length === 0) return;
+        if (confirm('Удалить все карточки?')) {
+            cards = [];
+            renderCardList();
         }
     }
 
-    function prevCard() {
-        if (currentIndex - 1 >= 0) {
-            currentIndex--;
-            renderCard(currentIndex);
-        }
-    }
+    // ===== ОБРАБОТЧИКИ =====
+    addBtn.addEventListener('click', addCard);
+    exportBtn.addEventListener('click', exportTrainer);
+    clearAllBtn.addEventListener('click', clearAll);
 
-    function updateStats() {
-        knownSpan.textContent = \`✅ Знаю: \${knownCount}\`;
-        unknownSpan.textContent = \`❌ Не знаю: \${unknownCount}\`;
-    }
-
-    function resetStats() {
-        knownCount = 0;
-        unknownCount = 0;
-        updateStats();
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
-    }
-
-    // События
-    document.getElementById('cardContainer').addEventListener('click', flipCard);
-    prevBtn.addEventListener('click', prevCard);
-    nextBtn.addEventListener('click', nextCard);
-    resetStatsBtn.addEventListener('click', resetStats);
-
-    // Обработка клавиш
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') prevCard();
-        else if (e.key === 'ArrowRight') nextCard();
-        else if (e.key === ' ' || e.key === 'Space') {
-            e.preventDefault();
-            flipCard();
-        }
-    });
-
-    renderCard(0);
+    // ===== НАЧАЛЬНАЯ ОТРИСОВКА =====
+    renderCardList();
 </script>
+
+<!-- КОНЕЦ СКРИПТА -->
 </body>
 </html>`;
         const blob = new Blob([trainerHTML], {type: 'text/html'});

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Флип-карточки: Антибиотики в ветеринарии | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            border: 1px solid #E7EDE2;
+            text-align: center;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            margin-bottom: 0.2rem;
+        }
+        .sub {
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .card-container {
+            perspective: 1000px;
+            min-height: 380px;
+            margin: 1.5rem 0;
+            cursor: pointer;
+        }
+        .card-flip {
+            position: relative;
+            width: 100%;
+            min-height: 380px;
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
+        }
+        .card-flip.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 28px;
+            border: 1px solid #E2EAD9;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 380px;
+            text-align: center;
+        }
+        .card-front {
+            background: #FEFCF9;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background: #F4F7F0;
+        }
+        .card-face .card-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+        .card-face .card-subtitle {
+            font-size: 1rem;
+            color: #5F7C62;
+            margin-bottom: 0.8rem;
+        }
+        .card-face .card-class {
+            display: inline-block;
+            background: #EEF2E9;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #2C7DA0;
+            margin-bottom: 0.8rem;
+        }
+        .card-face .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 0.3rem 1rem;
+            text-align: left;
+            width: 100%;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .detail-grid .label {
+            font-weight: 600;
+            color: #1F4E6E;
+        }
+        .detail-grid .value {
+            color: #3E5C4A;
+        }
+        .card-face .footnote {
+            margin-top: 0.8rem;
+            font-size: 0.75rem;
+            color: #8A9B7A;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 0.8rem;
+            width: 100%;
+        }
+        .counter {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #7C8F7C;
+        }
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #8FA375;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #D1DEC2;
+        }
+        .btn-outline:hover {
+            background: #F5F3EC;
+        }
+        .stats {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #5F7C62;
+        }
+        .badge-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.5rem;
+        }
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            background: #EEF2E9;
+            color: #3E5C4A;
+        }
+        footer {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 1.2rem; }
+            .card-face { padding: 1rem; min-height: 320px; }
+            .card-face .card-title { font-size: 1.3rem; }
+            .detail-grid { grid-template-columns: 1fr; gap: 0.2rem; }
+            .detail-grid .label { font-weight: 600; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ДЕМО-ШАПКА -->
+    <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: #EEF2E9; padding: 0.5rem 1.5rem; border-bottom: 2px solid #A3B18A; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <strong style="color: #1F4E6E;">🐾 ВетСим</strong>
+            <span style="color: #5F7C62; margin-left: 0.8rem; font-size: 0.8rem;">Демо-версия для вузов</span>
+        </div>
+        <div style="font-size: 0.75rem;">
+            <a href="index.html" style="color: #2C7DA0; text-decoration: none;">← Назад к списку</a>
+            <span style="color: #A7B89A; margin: 0 0.5rem;">|</span>
+            <span style="color: #A7B89A;">📧 as_ter@mail.ru</span>
+        </div>
+    </div>
+
+    <div class="container" style="margin-top: 4rem;">
+        <h1>💊 Антибиотики в ветеринарии</h1>
+        <div class="sub">20 флип-карточек для изучения ключевых препаратов</div>
+
+        <div class="card-container" id="cardContainer">
+            <div class="card-flip" id="cardFlip">
+                <div class="card-face card-front" id="cardFront"></div>
+                <div class="card-face card-back" id="cardBack"></div>
+            </div>
+        </div>
+
+        <div class="counter" id="counter">Карточка 1 из 20</div>
+
+        <div class="action-row">
+            <button class="btn btn-outline" id="prevBtn">◀ Предыдущая</button>
+            <button class="btn btn-primary" id="flipBtn">🔄 Перевернуть</button>
+            <button class="btn btn-outline" id="nextBtn">Следующая ▶</button>
+        </div>
+
+        <div class="stats">
+            <span id="knownCount">✅ Знаю: 0</span>
+            <span style="margin: 0 0.8rem;">|</span>
+            <span id="unknownCount">❌ Не знаю: 0</span>
+        </div>
+
+        <div class="action-row">
+            <button class="btn btn-secondary" id="resetStatsBtn">🔄 Сбросить статистику</button>
+        </div>
+
+        <footer>© ВетСим — интерактивные флип-карточки. Работает без интернета.</footer>
+    </div>
+
+    <script>
+        // ===== 20 КАРТОЧЕК ПО АНТИБИОТИКАМ (для демо-версии) =====
+        const cards = [
+            // Бета-лактамы (1–5)
+            {
+                front: "💊 Амоксициллин",
+                back: {
+                    class: "Бета-лактам (пенициллин)",
+                    mechanism: "Ингибирование синтеза клеточной стенки бактерий",
+                    dose: "10–20 мг/кг per os, п/к, в/м 2 раза/д",
+                    indications: "Широкий спектр: ЖКТ, дыхательные пути, мочеполовая система",
+                    restrictions: "Мясо 15 д, молоко 60 ч. Не применять кроликам, морским свинкам."
+                }
+            },
+            {
+                front: "💊 Амоксициллин + клавулановая кислота",
+                back: {
+                    class: "Бета-лактам (пенициллин + ингибитор β-лактамаз)",
+                    mechanism: "Защищённый пенициллин, активен против β-лактамазопродуцирующих бактерий",
+                    dose: "12,5–25 мг/кг per os, п/к, в/м 2 раза/д",
+                    indications: "Инфекции кожи, мочевыводящих путей, респираторные инфекции",
+                    restrictions: "Мясо 15 д, молоко 60 ч. Не применять при тяжёлых нарушениях печени."
+                }
+            },
+            {
+                front: "💊 Цефтиофур",
+                back: {
+                    class: "Бета-лактам (цефалоспорин III поколения)",
+                    mechanism: "Ингибирование синтеза клеточной стенки (грам+ и грам-)",
+                    dose: "2–5 мг/кг в/м 1 раз/д (КРС, свиньи)",
+                    indications: "Респираторные инфекции КРС и свиней, мастит",
+                    restrictions: "Мясо 3–13 д, молоко 0–12 ч. Только для с/х."
+                }
+            },
+            {
+                front: "💊 Цефалексин",
+                back: {
+                    class: "Бета-лактам (цефалоспорин I поколения)",
+                    mechanism: "Ингибирование синтеза клеточной стенки (грам+)",
+                    dose: "15–25 мг/кг per os 2 раза/д",
+                    indications: "Инфекции кожи, мочевыводящих путей у собак и кошек",
+                    restrictions: "Мясо 5 д, молоко 48 ч. Аллергия на цефалоспорины."
+                }
+            },
+            {
+                front: "💊 Бензилпенициллин",
+                back: {
+                    class: "Бета-лактам (пенициллин)",
+                    mechanism: "Ингибирование синтеза клеточной стенки (грам+)",
+                    dose: "20–40 тыс. МЕ/кг в/м 1–2 раза/д",
+                    indications: "Инфекции кожи, мягких тканей, клостридиоз, стафилококкоз",
+                    restrictions: "Мясо 15 д, молоко 72 ч. Аллергия на пенициллины."
+                }
+            },
+            // Макролиды и линкозамиды (6–8)
+            {
+                front: "💊 Тилозин",
+                back: {
+                    class: "Макролид",
+                    mechanism: "Ингибирование синтеза белка (50S рибосома)",
+                    dose: "10–20 мг/кг в/м 1–2 раза/д или с водой",
+                    indications: "Респираторные инфекции свиней, птицы, микоплазмоз",
+                    restrictions: "Мясо 8–14 д, яйца 7 д. Токсичен для лошадей."
+                }
+            },
+            {
+                front: "💊 Тилмикозин",
+                back: {
+                    class: "Макролид",
+                    mechanism: "Ингибирование синтеза белка (50S рибосома)",
+                    dose: "10–15 мг/кг п/к однократно",
+                    indications: "Респираторные болезни свиней (актинобациллёз, пастереллёз)",
+                    restrictions: "Мясо 20–40 д. Строго п/к! В/в — летально. Токсичен для лошадей."
+                }
+            },
+            {
+                front: "💊 Клиндамицин",
+                back: {
+                    class: "Линкозамид",
+                    mechanism: "Ингибирование синтеза белка (50S рибосома)",
+                    dose: "5–10 мг/кг per os, в/м 2 раза/д",
+                    indications: "Анаэробные инфекции, остеомиелит, стоматологические инфекции",
+                    restrictions: "Не для СХ. Токсичен для кроликов, хомяков, морских свинок."
+                }
+            },
+            // Фторхинолоны и аминогликозиды (9–12)
+            {
+                front: "💊 Энрофлоксацин",
+                back: {
+                    class: "Фторхинолон",
+                    mechanism: "Ингибирование ДНК-гиразы бактерий",
+                    dose: "5–10 мг/кг п/к, в/м, в/в 1 раз/д",
+                    indications: "Инфекции ЖКТ, дыхательных путей, мочеполовой системы",
+                    restrictions: "Мясо 14 д, молоко 72 ч, яйца 7–10 д. Не применять растущим животным."
+                }
+            },
+            {
+                front: "💊 Марбофлоксацин",
+                back: {
+                    class: "Фторхинолон",
+                    mechanism: "Ингибирование ДНК-гиразы бактерий",
+                    dose: "2–5 мг/кг per os, п/к, в/в 1 раз/д",
+                    indications: "Инфекции кожи, мочевыводящих путей, респираторные инфекции у МДЖ",
+                    restrictions: "Мясо 8 д, молоко 72 ч. Болезни суставов у молодняка."
+                }
+            },
+            {
+                front: "💊 Гентамицин",
+                back: {
+                    class: "Аминогликозид",
+                    mechanism: "Ингибирование синтеза белка (30S рибосома)",
+                    dose: "2–4 мг/кг в/м, п/к, в/в медленно 2–3 раза/д",
+                    indications: "Тяжёлые инфекции (грам-), сепсис, мочевые инфекции",
+                    restrictions: "Мясо 40 д, молоко 72 ч. Нефротоксичен, ототоксичен."
+                }
+            },
+            {
+                front: "💊 Амикацин",
+                back: {
+                    class: "Аминогликозид (резервный)",
+                    mechanism: "Ингибирование синтеза белка (30S рибосома)",
+                    dose: "10–15 мг/кг в/м, в/в 2–3 раза/д",
+                    indications: "Резистентные грам-инфекции, синегнойная палочка",
+                    restrictions: "Мясо 40 д. Нефротоксичен, ототоксичен. Резервный препарат."
+                }
+            },
+            // Тетрациклины и комбинации (13–16)
+            {
+                front: "💊 Окситетрациклин",
+                back: {
+                    class: "Тетрациклин",
+                    mechanism: "Ингибирование синтеза белка (30S рибосома)",
+                    dose: "10–20 мг/кг в/м, п/к 1 раз/д",
+                    indications: "Широкий спектр: КРС, свиньи, птица (респираторные, кишечные инфекции)",
+                    restrictions: "Мясо 20 д, молоко 72 ч. Не применять беременным, молодняку."
+                }
+            },
+            {
+                front: "💊 Доксициклин",
+                back: {
+                    class: "Тетрациклин (полусинтетический)",
+                    mechanism: "Ингибирование синтеза белка (30S рибосома)",
+                    dose: "5–10 мг/кг per os, в/в медленно 1–2 раза/д",
+                    indications: "МДЖ, лошади (боррелиоз, микоплазмоз, эрлихиоз)",
+                    restrictions: "Не рекомендован для СХ. Печеночная недостаточность."
+                }
+            },
+            {
+                front: "💊 Триметоприм-сульфаметоксазол (ТМП-СМЗ)",
+                back: {
+                    class: "Сульфаниламид + ингибитор фолатсинтазы",
+                    mechanism: "Блокировка синтеза фолиевой кислоты (два этапа)",
+                    dose: "15–30 мг/кг per os, п/к, в/в 2 раза/д",
+                    indications: "Широкий спектр: инфекции МДЖ и СХ (ЖКТ, дыхание, мочевые пути)",
+                    restrictions: "Мясо 10–15 д, молоко 48 ч. Дегидратация, болезни печени/почек."
+                }
+            },
+            {
+                front: "💊 Метронидазол",
+                back: {
+                    class: "Нитроимидазол",
+                    mechanism: "Нарушение структуры ДНК анаэробов",
+                    dose: "10–15 мг/кг per os, в/в медленно 2 раза/д",
+                    indications: "Анаэробные инфекции, протозойные инфекции (лямблиоз, трихомоноз)",
+                    restrictions: "Мясо 21 д. Неврологические нарушения, беременность."
+                }
+            },
+            // Специфические (17–20)
+            {
+                front: "💊 Колистин (полимиксин E)",
+                back: {
+                    class: "Полимиксин",
+                    mechanism: "Нарушение целостности клеточной мембраны грам-бактерий",
+                    dose: "2–4 мг/кг в/м, в/в, per os 2 раза/д",
+                    indications: "Резервный препарат против E. coli, Salmonella, Pseudomonas",
+                    restrictions: "Мясо 10–20 д. Нейротоксичен, нефротоксичен."
+                }
+            },
+            {
+                front: "💊 Флофеникол",
+                back: {
+                    class: "Аналог хлорамфеникола",
+                    mechanism: "Ингибирование синтеза белка (50S рибосома)",
+                    dose: "15–20 мг/кг в/м 2 раза/д через 48 ч",
+                    indications: "Респираторные инфекции КРС и свиней",
+                    restrictions: "Мясо 30 д, молоко 72 ч. Запрещён в пищевой продукции в ряде стран."
+                }
+            },
+            {
+                front: "💊 Макролиды: общие особенности",
+                back: {
+                    class: "Макролиды (общее)",
+                    mechanism: "Ингибирование синтеза белка (50S рибосома), бактериостатик",
+                    dose: "Зависит от препарата, обычно 5–20 мг/кг",
+                    indications: "Респираторные инфекции, микоплазмоз, хламидиоз",
+                    restrictions: "Токсичны для лошадей (колит). Высокий риск резистентности."
+                }
+            },
+            {
+                front: "🧪 Классификация антибиотиков по механизму действия",
+                back: {
+                    class: "Общая фармакология",
+                    mechanism: "Бета-лактамы: клеточная стенка. Аминогликозиды: 30S рибосома. Макролиды: 50S рибосома. Фторхинолоны: ДНК-гираза. Тетрациклины: 30S рибосома.",
+                    dose: "—",
+                    indications: "—",
+                    restrictions: "Для выбора препарата важно знать механизм действия и спектр."
+                }
+            }
+        ];
+
+        // ===== ЛОГИКА РАБОТЫ =====
+        let currentIndex = 0;
+        let knownCount = 0;
+        let unknownCount = 0;
+
+        const cardFlip = document.getElementById('cardFlip');
+        const cardFront = document.getElementById('cardFront');
+        const cardBack = document.getElementById('cardBack');
+        const counter = document.getElementById('counter');
+        const knownSpan = document.getElementById('knownCount');
+        const unknownSpan = document.getElementById('unknownCount');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const flipBtn = document.getElementById('flipBtn');
+        const resetStatsBtn = document.getElementById('resetStatsBtn');
+
+        function renderCard(index) {
+            const card = cards[index];
+            if (!card) return;
+            // Сброс переворота
+            cardFlip.classList.remove('flipped');
+            // Передняя сторона
+            const frontHTML = `
+                <div class="card-title">${escapeHtml(card.front)}</div>
+                <div class="badge-group">
+                    <span class="badge">Кликните для ответа</span>
+                </div>
+                <div style="margin-top: 0.5rem; font-size: 0.8rem; color: #A7B89A;">${index+1} / ${cards.length}</div>
+            `;
+            cardFront.innerHTML = frontHTML;
+
+            // Задняя сторона
+            const back = card.back;
+            let detailHTML = '';
+            if (back.class) detailHTML += `<div class="label">Класс</div><div class="value">${escapeHtml(back.class)}</div>`;
+            if (back.mechanism) detailHTML += `<div class="label">Механизм</div><div class="value">${escapeHtml(back.mechanism)}</div>`;
+            if (back.dose) detailHTML += `<div class="label">Доза</div><div class="value">${escapeHtml(back.dose)}</div>`;
+            if (back.indications) detailHTML += `<div class="label">Показания</div><div class="value">${escapeHtml(back.indications)}</div>`;
+            if (back.restrictions) detailHTML += `<div class="label">Особенности</div><div class="value">${escapeHtml(back.restrictions)}</div>`;
+
+            const backHTML = `
+                <div style="width:100%; text-align:left;">
+                    <div style="text-align:center; margin-bottom: 0.8rem;">
+                        <span class="card-class">${escapeHtml(back.class)}</span>
+                    </div>
+                    <div class="detail-grid">
+                        ${detailHTML}
+                    </div>
+                </div>
+            `;
+            cardBack.innerHTML = backHTML;
+            counter.textContent = `Карточка ${index+1} из ${cards.length}`;
+            updateStats();
+        }
+
+        function flipCard() {
+            cardFlip.classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            if (currentIndex + 1 < cards.length) {
+                currentIndex++;
+                renderCard(currentIndex);
+            }
+        }
+
+        function prevCard() {
+            if (currentIndex - 1 >= 0) {
+                currentIndex--;
+                renderCard(currentIndex);
+            }
+        }
+
+        function updateStats() {
+            knownSpan.textContent = `✅ Знаю: ${knownCount}`;
+            unknownSpan.textContent = `❌ Не знаю: ${unknownCount}`;
+        }
+
+        function resetStats() {
+            knownCount = 0;
+            unknownCount = 0;
+            updateStats();
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+        }
+
+        // События
+        document.getElementById('cardContainer').addEventListener('click', flipCard);
+        prevBtn.addEventListener('click', prevCard);
+        nextBtn.addEventListener('click', nextCard);
+        flipBtn.addEventListener('click', flipCard);
+        resetStatsBtn.addEventListener('click', resetStats);
+
+        // Клавиши
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevCard();
+            else if (e.key === 'ArrowRight') nextCard();
+            else if (e.key === ' ' || e.key === 'Space') {
+                e.preventDefault();
+                flipCard();
+            }
+        });
+
+        // Инициализация
+        renderCard(0);
+    </script>
+</body>
+</html>

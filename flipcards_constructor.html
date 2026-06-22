@@ -1,28 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Конструктор Flip‑карточки | ВетСим</title>
+    <title>Редактор флип-карточек с изображениями | ВетСим</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #FDF8F0;
             font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
@@ -30,370 +13,500 @@
             padding: 1.5rem;
         }
         .container {
-            max-width: 1300px;
+            max-width: 900px;
             margin: 0 auto;
-        }
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #1F4E6E;
-            text-align: center;
-            margin-bottom: 0.3rem;
-        }
-        .sub {
-            text-align: center;
-            color: #7C8F7C;
-            margin-bottom: 1.5rem;
-        }
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-        .tab-btn {
-            background: #EEF2E9;
-            border: none;
-            padding: 0.6rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
-            background: #2C7DA0;
-            color: white;
-        }
-        .tab-pane {
-            display: none;
             background: white;
             border-radius: 28px;
-            padding: 1.5rem;
+            padding: 2rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
             border: 1px solid #E7EDE2;
         }
-        .tab-pane.active {
-            display: block;
-        }
-        .toolbar {
+        h1 { font-size: 1.8rem; color: #1F4E6E; margin-bottom: 0.3rem; }
+        .sub { color: #7C8F7C; margin-bottom: 1.8rem; }
+        .editor-row {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
             gap: 0.8rem;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #E2EAD9;
+        }
+        .editor-row label { font-weight: 600; }
+        .editor-row input[type="text"] {
+            padding: 10px 14px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .editor-row input[type="file"] {
+            padding: 8px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+        }
+        .preview-img {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 16px;
+            border: 1px solid #E2EAD9;
+            display: none;
+            margin-top: 0.5rem;
         }
         .btn {
             background: #EEF2E9;
             border: none;
-            padding: 0.5rem 1.2rem;
+            padding: 10px 24px;
             border-radius: 40px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 0.85rem;
             transition: 0.2s;
+            font-family: inherit;
         }
-        .btn-primary {
-            background: #2C7DA0;
-            color: white;
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-secondary { background: #A3B18A; color: white; }
+        .btn-secondary:hover { background: #8FA375; }
+        .btn-danger { background: #FDE8E0; color: #BC5A3C; }
+        .btn-danger:hover { background: #F5D5CC; }
+        .card-list {
+            margin: 1.5rem 0;
+            max-height: 400px;
+            overflow-y: auto;
         }
-        .btn-secondary {
-            background: #A3B18A;
-            color: white;
-        }
-        .cards-editor {
+        .card-item {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 1rem;
-            margin-top: 1rem;
-        }
-        .card-row {
-            background: #FEFCF9;
+            background: #F9F6EF;
+            border-radius: 20px;
+            padding: 0.8rem 1.2rem;
+            margin-bottom: 0.8rem;
             border: 1px solid #E2EAD9;
-            border-radius: 28px;
-            padding: 1rem;
+        }
+        .card-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #D1DEC2;
+        }
+        .card-item .info {
+            flex: 1;
+        }
+        .card-item .info .q { font-weight: 600; }
+        .card-item .info .a { color: #5F7C62; }
+        .card-item .remove-btn { cursor: pointer; color: #BC5A3C; font-size: 1.2rem; background: none; border: none; }
+        .action-row {
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
-            align-items: center;
-        }
-        .card-front, .card-back {
-            flex: 1;
-            min-width: 200px;
-        }
-        .card-front textarea, .card-back textarea {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 24px;
-            border: 1px solid #D1DEC2;
-            font-family: inherit;
-            resize: vertical;
-        }
-        .remove-card {
-            background: #F4E2DE;
-            border: none;
-            border-radius: 30px;
-            padding: 6px 12px;
-            cursor: pointer;
-            color: #B45F4B;
-        }
-        .info-text {
-            font-size: 0.75rem;
-            color: #8BA47B;
             margin-top: 1rem;
         }
         footer {
-            margin-top: 2rem;
             text-align: center;
+            margin-top: 2rem;
             font-size: 0.7rem;
             color: #A7B89A;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
         }
         @media (max-width: 700px) {
-            .card-row { flex-direction: column; align-items: stretch; }
+            .container { padding: 1rem; }
+            .card-item { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>🃏 Конструктор «Flip‑карточки»</h1>
-    <div class="sub">Создайте набор двусторонних карточек (текст)</div>
+    <h1>🧩 Редактор флип-карточек</h1>
+    <div class="sub">Создайте карточки с текстом и изображениями, экспортируйте готовый тренажёр для студентов</div>
 
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
-        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
+    <!-- Форма добавления карточки -->
+    <div class="editor-row">
+        <label>📝 Вопрос (лицевая сторона)</label>
+        <input type="text" id="frontInput" placeholder="Например: Что такое анамнез?">
+    </div>
+    <div class="editor-row">
+        <label>📝 Ответ (обратная сторона)</label>
+        <input type="text" id="backInput" placeholder="Например: Совокупность сведений о развитии болезни">
+    </div>
+    <div class="editor-row">
+        <label>🖼️ Изображение (опционально)</label>
+        <input type="file" id="imageInput" accept="image/jpeg, image/png, image/jpg">
+        <img id="preview" class="preview-img" alt="Предпросмотр">
+    </div>
+    <button id="addCardBtn" class="btn btn-primary">➕ Добавить карточку</button>
+
+    <!-- Список карточек -->
+    <div class="card-list" id="cardList"></div>
+
+    <!-- Кнопки управления -->
+    <div class="action-row">
+        <button id="exportBtn" class="btn btn-secondary">🚀 Экспортировать готовый тренажёр</button>
+        <button id="clearAllBtn" class="btn btn-danger">🗑️ Очистить все карточки</button>
     </div>
 
-    <!-- Редактор -->
-    <div id="editorPane" class="tab-pane active">
-        <div class="toolbar">
-            <button id="addCardBtn" class="btn btn-primary">➕ Добавить карточку</button>
-            <button id="loadDemoBtn" class="btn btn-outline">📋 Загрузить пример (анатомия)</button>
-        </div>
-        <div id="cardsEditor" class="cards-editor"></div>
-        <div class="info-text">
-            💡 Лицевая сторона – вопрос/термин. Оборотная сторона – ответ/определение.
-        </div>
-    </div>
-
-    <!-- Экспорт -->
-    <div id="exportPane" class="tab-pane">
-        <div class="toolbar">
-            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
-            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
-            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовый тренажёр</button>
-        </div>
-        <div style="background:#F3F6EF; border-radius:20px; padding:1rem;">
-            <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
-            ✔ Нажмите «Экспорт» – получите HTML-файл для студентов.</p>
-        </div>
-    </div>
-    <footer>© ВетСим — интерактивные карточки</footer>
+    <footer>© ВетСим — редактор флип-карточек. Все изображения встраиваются в файл.</footer>
 </div>
 
 <script>
-    (function() {
-        let cards = [];
+    // ===== ХРАНИЛИЩЕ КАРТОЧЕК =====
+    let cards = [];
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    const frontInput = document.getElementById('frontInput');
+    const backInput = document.getElementById('backInput');
+    const imageInput = document.getElementById('imageInput');
+    const preview = document.getElementById('preview');
+    const cardList = document.getElementById('cardList');
+    const addBtn = document.getElementById('addCardBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+
+    let currentImageBase64 = null;
+
+    // Предпросмотр изображения
+    imageInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            currentImageBase64 = ev.target.result;
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Добавление карточки
+    function addCard() {
+        const front = frontInput.value.trim();
+        const back = backInput.value.trim();
+        if (!front || !back) {
+            alert('Заполните поле "Вопрос" и "Ответ".');
+            return;
         }
+        cards.push({
+            front: front,
+            back: back,
+            image: currentImageBase64 || null
+        });
+        // Сброс формы
+        frontInput.value = '';
+        backInput.value = '';
+        imageInput.value = '';
+        currentImageBase64 = null;
+        preview.style.display = 'none';
+        preview.src = '';
+        renderCardList();
+    }
 
-        function renderEditor() {
-            const container = document.getElementById('cardsEditor');
-            if (!container) return;
-            container.innerHTML = '';
-            if (cards.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:2rem;">✨ Нажмите «Добавить карточку»</div>';
-                return;
-            }
-            for (let i = 0; i < cards.length; i++) {
-                const card = cards[i];
-                const row = document.createElement('div');
-                row.className = 'card-row';
-                row.setAttribute('data-idx', i);
-                row.innerHTML = `
-                    <div class="card-front">
-                        <textarea class="front-text" rows="2" placeholder="Лицевая сторона (вопрос)">${escapeHtml(card.front)}</textarea>
-                    </div>
-                    <div class="card-back">
-                        <textarea class="back-text" rows="2" placeholder="Оборотная сторона (ответ)">${escapeHtml(card.back)}</textarea>
-                    </div>
-                    <button class="remove-card" data-idx="${i}">🗑️ Удалить</button>
-                `;
-                container.appendChild(row);
-            }
-            // Привязка событий
-            document.querySelectorAll('.front-text').forEach(ta => {
-                const idx = parseInt(ta.closest('.card-row').getAttribute('data-idx'));
-                ta.oninput = () => { if (cards[idx]) cards[idx].front = ta.value; };
+    // Отрисовка списка карточек
+    function renderCardList() {
+        cardList.innerHTML = '';
+        if (cards.length === 0) {
+            cardList.innerHTML = '<div style="padding:1rem; text-align:center; color:#8A9B7A;">Карточек пока нет. Добавьте первую!</div>';
+            return;
+        }
+        cards.forEach((card, index) => {
+            const div = document.createElement('div');
+            div.className = 'card-item';
+            div.innerHTML = `
+                ${card.image ? `<img src="${card.image}" alt="Изображение">` : '<div style="width:60px; height:60px; background:#F0EEE5; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#A7B89A;">📷</div>'}
+                <div class="info">
+                    <div class="q">${escapeHtml(card.front)}</div>
+                    <div class="a">${escapeHtml(card.back)}</div>
+                </div>
+                <button class="remove-btn" data-index="${index}">✖</button>
+            `;
+            cardList.appendChild(div);
+        });
+        // Обработчики удаления
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.index);
+                cards.splice(idx, 1);
+                renderCardList();
             });
-            document.querySelectorAll('.back-text').forEach(ta => {
-                const idx = parseInt(ta.closest('.card-row').getAttribute('data-idx'));
-                ta.oninput = () => { if (cards[idx]) cards[idx].back = ta.value; };
-            });
-            document.querySelectorAll('.remove-card').forEach(btn => {
-                btn.onclick = () => {
-                    const idx = parseInt(btn.getAttribute('data-idx'));
-                    cards.splice(idx, 1);
-                    renderEditor();
-                };
-            });
-        }
+        });
+    }
 
-        function addCard() {
-            cards.push({ front: 'Новый термин', back: 'Новое определение' });
-            renderEditor();
-        }
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
 
-        function loadDemo() {
-            cards = [
-                { front: 'Сколько пар черепно-мозговых нервов у собаки?', back: '12 пар' },
-                { front: 'Какой нерв отвечает за обоняние?', back: 'Обонятельный нерв (I пара)' },
-                { front: 'Назовите основные методы клинического обследования', back: 'Осмотр, пальпация, перкуссия, аускультация' },
-                { front: 'Что такое кетоз?', back: 'Нарушение обмена веществ с накоплением кетоновых тел' }
-            ];
-            renderEditor();
+    // === ЭКСПОРТ ГОТОВОГО ТРЕНАЖЁРА ===
+    function exportTrainer() {
+        if (cards.length === 0) {
+            alert('Добавьте хотя бы одну карточку.');
+            return;
         }
-
-        function saveProject() {
-            if (!cards.length) { alert('Нет карточек для сохранения'); return; }
-            const blob = new Blob([JSON.stringify({ cards }, null, 2)], { type: 'application/json' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'flipcards_project.json';
-            a.click();
-            URL.revokeObjectURL(a.href);
+        const cardsData = JSON.stringify(cards);
+        const trainerHTML = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Флип-карточки | ВетСим</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-
-        function loadProject() {
-            const inp = document.createElement('input');
-            inp.type = 'file';
-            inp.accept = '.json';
-            inp.onchange = (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    try {
-                        const obj = JSON.parse(ev.target.result);
-                        if (obj.cards && Array.isArray(obj.cards)) {
-                            cards = obj.cards;
-                            renderEditor();
-                        } else alert('Неверный формат');
-                    } catch(err) { alert('Ошибка загрузки'); }
-                };
-                reader.readAsText(file);
-            };
-            inp.click();
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
+            border: 1px solid #E7EDE2;
+            text-align: center;
         }
-
-        function exportGame() {
-            if (!cards.length) { alert('Добавьте карточки'); return; }
-            const exportCards = JSON.parse(JSON.stringify(cards));
-            const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Flip‑карточки | ВетСим</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:#FDF8F0;font-family:system-ui;padding:1.5rem;color:#3E5C4A;}
-.container{max-width:1000px;margin:0 auto;}
-h1{text-align:center;color:#1F4E6E;}
-.stats{display:flex;justify-content:space-between;background:#F3F6EF;border-radius:40px;padding:0.5rem 1rem;margin:1rem 0;}
-.card-container{perspective:1000px;margin:1rem auto;max-width:500px;cursor:pointer;}
-.flip-card{position:relative;width:100%;aspect-ratio:4/3;transition:transform 0.6s;transform-style:preserve-3d;border-radius:28px;}
-.flip-card.flipped{transform:rotateY(180deg);}
-.front,.back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:28px;padding:1rem;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1rem;}
-.front{background:white;border:2px solid #A3B18A;color:#2C7DA0;}
-.back{background:#2C7DA0;color:white;transform:rotateY(180deg);}
-.controls{display:flex;flex-wrap:wrap;justify-content:center;gap:0.8rem;margin:1.5rem 0;}
-.btn{background:#EEF2E9;border:none;padding:0.6rem 1.2rem;border-radius:40px;cursor:pointer;}
-.btn-primary{background:#2C7DA0;color:white;}
-.btn-secondary{background:#A3B18A;color:white;}
-</style>
+        h1 { font-size: 1.8rem; color: #1F4E6E; margin-bottom: 0.3rem; }
+        .sub { color: #7C8F7C; margin-bottom: 1.5rem; }
+        .card-container {
+            perspective: 1000px;
+            min-height: 320px;
+            margin: 1.5rem 0;
+            cursor: pointer;
+        }
+        .card-flip {
+            position: relative;
+            width: 100%;
+            min-height: 320px;
+            transition: transform 0.5s;
+            transform-style: preserve-3d;
+        }
+        .card-flip.flipped {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background: #FEFCF9;
+            border-radius: 28px;
+            border: 1px solid #E2EAD9;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 320px;
+        }
+        .card-front {
+            background: #FEFCF9;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+            background: #F4F7F0;
+        }
+        .card-face img {
+            max-width: 100%;
+            max-height: 180px;
+            border-radius: 16px;
+            margin-bottom: 1rem;
+        }
+        .card-face .text {
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+        .counter {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #7C8F7C;
+        }
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-secondary { background: #A3B18A; color: white; }
+        .btn-secondary:hover { background: #8FA375; }
+        .stats { margin-top: 1rem; font-size: 0.9rem; color: #5F7C62; }
+        footer {
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 1.2rem; }
+            .card-face { padding: 1rem; min-height: 260px; }
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-<h1>🃏 Flip‑карточки</h1>
-<div class="stats"><span>📊 Карточка <span id="currentIdx">1</span> из <span id="totalCount">0</span></span>
-<span>✅ Выучено: <span id="learnedCount">0</span></span>
-<button id="shuffleBtn" class="btn">🔀 Перемешать</button>
-<button id="resetLearnedBtn" class="btn">🔄 Сбросить</button></div>
-<div class="card-container"><div class="flip-card" id="flipCard"><div class="front" id="frontSide"></div><div class="back" id="backSide"></div></div></div>
-<div class="controls">
-<button id="prevBtn" class="btn">◀ Предыдущая</button>
-<button id="flipBtn" class="btn btn-primary">🔄 Перевернуть</button>
-<button id="nextBtn" class="btn">Следующая ▶</button>
-<button id="knowBtn" class="btn btn-secondary">✅ Знаю</button>
-<button id="dontKnowBtn" class="btn">❌ Не знаю</button>
+    <h1>📇 Флип-карточки</h1>
+    <div class="sub">Кликните по карточке, чтобы перевернуть</div>
+
+    <div class="card-container" id="cardContainer">
+        <div class="card-flip" id="cardFlip">
+            <div class="card-face card-front" id="cardFront"></div>
+            <div class="card-face card-back" id="cardBack"></div>
+        </div>
+    </div>
+
+    <div class="counter" id="counter">Карточка 1 из ${cards.length}</div>
+
+    <div class="action-row">
+        <button class="btn btn-primary" id="prevBtn">◀ Предыдущая</button>
+        <button class="btn btn-secondary" id="nextBtn">Следующая ▶</button>
+    </div>
+
+    <div class="stats">
+        <span id="knownCount">✅ Знаю: 0</span>
+        <span style="margin: 0 1rem;">|</span>
+        <span id="unknownCount">❌ Не знаю: 0</span>
+    </div>
+
+    <div class="action-row">
+        <button class="btn btn-secondary" id="resetStatsBtn">🔄 Сбросить статистику</button>
+    </div>
+
+    <footer>© ВетСим — интерактивные флип-карточки. Работает без интернета.</footer>
 </div>
-</div>
+
 <script>
-const cardsData = ${JSON.stringify(exportCards)};
-let cards = cardsData.map(c => ({ front: c.front, back: c.back, learned: false }));
-let idx=0, flipped=false;
-function escapeHtml(s){if(!s)return '';return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);}
-function update(){document.getElementById('frontSide').innerHTML=escapeHtml(cards[idx].front);document.getElementById('backSide').innerHTML=escapeHtml(cards[idx].back);if(flipped)document.getElementById('flipCard').classList.add('flipped');else document.getElementById('flipCard').classList.remove('flipped');document.getElementById('currentIdx').innerHTML=idx+1;document.getElementById('totalCount').innerHTML=cards.length;let l=cards.filter(c=>c.learned).length;document.getElementById('learnedCount').innerHTML=l;}
-function flip(){flipped=!flipped;update();}
-function next(){if(idx+1<cards.length){idx++;flipped=false;update();}else alert('Последняя карточка');}
-function prev(){if(idx>0){idx--;flipped=false;update();}else alert('Первая карточка');}
-function mark(l){cards[idx].learned=l;if(idx+1<cards.length){idx++;flipped=false;update();}else alert('Все карточки пройдены');update();}
-function shuffle(){for(let i=cards.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[cards[i],cards[j]]=[cards[j],cards[i]];}idx=0;flipped=false;update();}
-function resetLearn(){cards.forEach(c=>c.learned=false);idx=0;flipped=false;update();}
-document.getElementById('flipBtn').onclick=flip;document.getElementById('nextBtn').onclick=next;document.getElementById('prevBtn').onclick=prev;document.getElementById('knowBtn').onclick=()=>mark(true);document.getElementById('dontKnowBtn').onclick=()=>mark(false);document.getElementById('shuffleBtn').onclick=shuffle;document.getElementById('resetLearnedBtn').onclick=resetLearn;document.getElementById('cardContainer').onclick=flip;
-update();
-<\/script>
+    // ===== ДАННЫЕ =====
+    const cards = ${cardsData};
+    let currentIndex = 0;
+    let knownCount = 0;
+    let unknownCount = 0;
+
+    const cardFlip = document.getElementById('cardFlip');
+    const cardFront = document.getElementById('cardFront');
+    const cardBack = document.getElementById('cardBack');
+    const counter = document.getElementById('counter');
+    const knownSpan = document.getElementById('knownCount');
+    const unknownSpan = document.getElementById('unknownCount');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const resetStatsBtn = document.getElementById('resetStatsBtn');
+
+    function renderCard(index) {
+        const card = cards[index];
+        if (!card) return;
+        // Сброс переворота
+        cardFlip.classList.remove('flipped');
+        // Передняя сторона
+        cardFront.innerHTML = \`
+            \${card.image ? \`<img src="\${card.image}" alt="Иллюстрация">\` : ''}
+            <div class="text">\${escapeHtml(card.front)}</div>
+        \`;
+        // Задняя сторона
+        cardBack.innerHTML = \`
+            \${card.image ? \`<img src="\${card.image}" alt="Иллюстрация">\` : ''}
+            <div class="text">\${escapeHtml(card.back)}</div>
+        \`;
+        counter.textContent = \`Карточка \${index+1} из \${cards.length}\`;
+        updateStats();
+    }
+
+    function flipCard() {
+        cardFlip.classList.toggle('flipped');
+    }
+
+    function nextCard() {
+        if (currentIndex + 1 < cards.length) {
+            currentIndex++;
+            renderCard(currentIndex);
+        }
+    }
+
+    function prevCard() {
+        if (currentIndex - 1 >= 0) {
+            currentIndex--;
+            renderCard(currentIndex);
+        }
+    }
+
+    function updateStats() {
+        knownSpan.textContent = \`✅ Знаю: \${knownCount}\`;
+        unknownSpan.textContent = \`❌ Не знаю: \${unknownCount}\`;
+    }
+
+    function resetStats() {
+        knownCount = 0;
+        unknownCount = 0;
+        updateStats();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
+    // События
+    document.getElementById('cardContainer').addEventListener('click', flipCard);
+    prevBtn.addEventListener('click', prevCard);
+    nextBtn.addEventListener('click', nextCard);
+    resetStatsBtn.addEventListener('click', resetStats);
+
+    // Обработка клавиш
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevCard();
+        else if (e.key === 'ArrowRight') nextCard();
+        else if (e.key === ' ' || e.key === 'Space') {
+            e.preventDefault();
+            flipCard();
+        }
+    });
+
+    renderCard(0);
+</script>
 </body>
 </html>`;
-            const blob = new Blob([html], { type: 'text/html' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'flipcards_game.html';
-            a.click();
-            URL.revokeObjectURL(a.href);
+        const blob = new Blob([trainerHTML], {type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'flip_cards_trainer.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Очистка всех карточек
+    function clearAll() {
+        if (cards.length === 0) return;
+        if (confirm('Удалить все карточки?')) {
+            cards = [];
+            renderCardList();
         }
+    }
 
-        function init() {
-            loadDemo(); // стартовый демо-набор
-            document.getElementById('addCardBtn').onclick = addCard;
-            document.getElementById('loadDemoBtn').onclick = loadDemo;
-            document.getElementById('saveProjectBtn').onclick = saveProject;
-            document.getElementById('loadProjectBtn').onclick = loadProject;
-            document.getElementById('exportGameBtn').onclick = exportGame;
+    // Обработчики
+    addBtn.addEventListener('click', addCard);
+    exportBtn.addEventListener('click', exportTrainer);
+    clearAllBtn.addEventListener('click', clearAll);
 
-            const btns = document.querySelectorAll('.tab-btn');
-            btns.forEach(btn => {
-                btn.onclick = function() {
-                    const tab = this.getAttribute('data-tab');
-                    btns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-                    document.getElementById(tab + 'Pane').classList.add('active');
-                    if (tab === 'editor') renderEditor();
-                };
-            });
-        }
-
-        init();
-    })();
+    // Начальная отрисовка
+    renderCardList();
 </script>
-    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
-    <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
-    <p style="margin-top: 0.5rem;">
-        <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
-        <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
-        <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
-        <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
-    </p>
-    <p style="margin-top: 0.5rem;">
-        Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
-    </p>
-    <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
-        💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
-    </p>
-    <p style="font-size: 0.7rem; color: #89A07B;">
-        © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
-    </p>
-</footer>
 </body>
 </html>

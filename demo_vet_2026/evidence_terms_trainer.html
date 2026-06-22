@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Доказательная ветеринарная медицина | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+        }
+
+        /* Сетка терминов */
+        .term-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .term-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.2rem 1.2rem 0.8rem;
+            border: 1px solid #E7EDE2;
+            transition: 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+        .term-card:hover {
+            border-color: #A3B18A;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+        }
+
+        .term-icon {
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+        .term-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1F4E6E;
+            margin-bottom: 0.3rem;
+        }
+        .term-definition {
+            font-size: 0.9rem;
+            color: #5F7C62;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+        .term-tag {
+            display: inline-block;
+            margin-top: 0.6rem;
+            font-size: 0.65rem;
+            background: #EEF2E9;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            color: #2C7DA0;
+            align-self: flex-start;
+        }
+
+        /* Фильтры */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.8rem;
+            justify-content: center;
+        }
+        .filter-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .filter-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .filter-btn:hover {
+            background: #D1DEC2;
+        }
+        .filter-btn.active:hover {
+            background: #236B8A;
+        }
+
+        .counter {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #8A9B7A;
+            margin-bottom: 1.2rem;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+            margin-top: 2rem;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 700px) {
+            .term-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ДЕМО-ШАПКА -->
+    <div style="background: #EEF2E9; padding: 0.8rem 1.5rem; border-bottom: 2px solid #A3B18A; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <strong style="color: #1F4E6E;">🐾 ВетСим</strong>
+            <span style="color: #5F7C62; margin-left: 1rem; font-size: 0.9rem;">Демо-версия для вузов</span>
+        </div>
+        <div style="font-size: 0.8rem;">
+            <a href="index.html" style="color: #2C7DA0; text-decoration: none;">← Назад к списку</a>
+            <span style="color: #A7B89A; margin: 0 0.5rem;">|</span>
+            <span style="color: #A7B89A;">📧 as_ter@mail.ru</span>
+        </div>
+    </div>
+    <!-- КОНЕЦ ДЕМО-ШАПКИ -->
+
+    <div class="container">
+        <h1>📚 Доказательная ветеринарная медицина</h1>
+        <div class="sub">20 ключевых терминов и понятий</div>
+
+        <div class="filter-bar">
+            <button class="filter-btn active" data-filter="all">Все</button>
+            <button class="filter-btn" data-filter="method">Методология</button>
+            <button class="filter-btn" data-filter="diagnostic">Диагностика</button>
+            <button class="filter-btn" data-filter="clinical">Клинические концепции</button>
+            <button class="filter-btn" data-filter="ethics">Этика</button>
+        </div>
+
+        <div class="counter" id="counter">Показано: 20 из 20</div>
+
+        <div class="term-grid" id="termGrid"></div>
+
+        <footer>© ВетСим — справочник по доказательной ветеринарной медицине. Работает без интернета.</footer>
+    </div>
+
+    <script>
+        // ===== ДАННЫЕ =====
+        const terms = [
+            { term: "Доказательная ветеринарная медицина", definition: "Подход к принятию клинических решений, основанный на интеграции лучших доступных научных данных, клинического опыта врача и предпочтений пациента/владельца.", icon: "📊", tag: "method" },
+            { term: "Уровень доказательности (LoE)", definition: "Иерархическая классификация качества научных данных, где систематические обзоры и РКИ находятся на вершине, а экспертные мнения — в основании.", icon: "📈", tag: "method" },
+            { term: "Рандомизированное контролируемое исследование (РКИ)", definition: "Золотой стандарт клинических исследований, в котором участники случайным образом распределяются в группы лечения и контроля для минимизации систематической ошибки.", icon: "🧪", tag: "method" },
+            { term: "Систематический обзор", definition: "Исследование, в котором критически оцениваются, отбираются и синтезируются все первичные исследования по конкретному клиническому вопросу.", icon: "📋", tag: "method" },
+            { term: "Мета-анализ", definition: "Статистический метод, объединяющий результаты нескольких независимых исследований для получения более точной оценки эффекта лечения.", icon: "📊", tag: "method" },
+            { term: "Слепое исследование", definition: "Исследование, в котором участники (или исследователи) не знают, кто получает лечение, а кто — плацебо, что снижает риск систематической ошибки.", icon: "🙈", tag: "method" },
+            { term: "Плацебо-контроль", definition: "Метод контроля, при котором одна группа получает активное лечение, а другая — инертное вещество, не имеющее терапевтического эффекта.", icon: "💊", tag: "method" },
+            { term: "Отношение шансов (ОШ)", definition: "Статистический показатель, используемый в клинических исследованиях для оценки связи между воздействием и исходом.", icon: "📐", tag: "method" },
+            { term: "Чувствительность диагностического теста", definition: "Вероятность того, что тест даст положительный результат у пациента с заболеванием (способность правильно выявлять больных).", icon: "🎯", tag: "diagnostic" },
+            { term: "Специфичность диагностического теста", definition: "Вероятность того, что тест даст отрицательный результат у пациента без заболевания (способность правильно исключать здоровых).", icon: "🛡️", tag: "diagnostic" },
+            { term: "Положительная прогностическая ценность (ППЦ)", definition: "Вероятность наличия заболевания при положительном результате теста.", icon: "✅", tag: "diagnostic" },
+            { term: "Отрицательная прогностическая ценность (ОПЦ)", definition: "Вероятность отсутствия заболевания при отрицательном результате теста.", icon: "❌", tag: "diagnostic" },
+            { term: "Клинический случай", definition: "Описание истории болезни одного пациента, используемое для иллюстрации редких заболеваний или нестандартных подходов к лечению.", icon: "📖", tag: "clinical" },
+            { term: "Когортное исследование", definition: "Наблюдательное исследование, в котором группа пациентов прослеживается во времени для оценки влияния факторов риска или лечения на исходы.", icon: "👥", tag: "clinical" },
+            { term: "Исследование «случай-контроль»", definition: "Ретроспективное исследование, в котором сравниваются пациенты с интересующим исходом (случаи) и без него (контроль) для выявления факторов риска.", icon: "🔍", tag: "clinical" },
+            { term: "N-of-1 исследование", definition: "Индивидуальный клинический эксперимент, в котором один пациент получает разные виды лечения в разные периоды времени для определения наиболее эффективной терапии.", icon: "🧬", tag: "clinical" },
+            { term: "Градиент убедительности рекомендаций (GRADE)", definition: "Система оценки качества доказательств и силы рекомендаций, используемая для разработки клинических протоколов.", icon: "⚖️", tag: "clinical" },
+            { term: "Эффективность и действенность", definition: "Эффективность — результат лечения в идеальных условиях (РКИ); действенность — результат в реальной клинической практике.", icon: "🏥", tag: "clinical" },
+            { term: "Причинность (критерии Брэдфорда Хилла)", definition: "Набор из 9 критериев, используемых для оценки причинно-следственной связи между воздействием и исходом в эпидемиологических исследованиях.", icon: "🔗", tag: "clinical" },
+            { term: "Информированное согласие", definition: "Процесс, в ходе которого владелец животного получает полную информацию о предстоящем вмешательстве, его рисках, альтернативах и добровольно принимает решение.", icon: "📜", tag: "ethics" }
+        ];
+
+        // ===== ФИЛЬТРАЦИЯ =====
+        let currentFilter = 'all';
+
+        function renderTerms(filter) {
+            const grid = document.getElementById('termGrid');
+            const filtered = filter === 'all' ? terms : terms.filter(t => t.tag === filter);
+            grid.innerHTML = '';
+            filtered.forEach(t => {
+                const card = document.createElement('div');
+                card.className = 'term-card';
+                card.innerHTML = `
+                    <div class="term-icon">${t.icon}</div>
+                    <div class="term-name">${escapeHtml(t.term)}</div>
+                    <div class="term-definition">${escapeHtml(t.definition)}</div>
+                    <span class="term-tag">${t.tag === 'method' ? 'Методология' : t.tag === 'diagnostic' ? 'Диагностика' : t.tag === 'clinical' ? 'Клиническая концепция' : 'Этика'}</span>
+                `;
+                grid.appendChild(card);
+            });
+            document.getElementById('counter').textContent = `Показано: ${filtered.length} из ${terms.length}`;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+        }
+
+        // ===== ФИЛЬТРЫ =====
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                renderTerms(currentFilter);
+            });
+        });
+
+        // Инициализация
+        renderTerms('all');
+    </script>
+</body>
+</html>

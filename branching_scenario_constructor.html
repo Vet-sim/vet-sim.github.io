@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ВетСим: Конструктор клинических сценариев</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            padding: 1.8rem;
+            border: 1px solid #E7EDE2;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 0.2rem;
+        }
+        .sub {
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        .tabs {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E7EDE2;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.8rem;
+        }
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+        }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-pane {
+            display: none;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* ---- Редактор ---- */
+        .step-card {
+            background: #F9F6EF;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #E2EAD9;
+            transition: 0.1s;
+        }
+        .step-card .step-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .step-card .step-id {
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .step-card .step-actions {
+            display: flex;
+            gap: 0.8rem;
+        }
+        .step-card input, .step-card textarea, .step-card select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: white;
+            margin-bottom: 0.6rem;
+        }
+        .step-card textarea {
+            min-height: 70px;
+            resize: vertical;
+            border-radius: 20px;
+        }
+        .step-card .option-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+            background: #F4F1E8;
+            padding: 0.6rem 0.8rem;
+            border-radius: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        .step-card .option-row input[type="text"] {
+            flex: 2;
+            min-width: 120px;
+            margin-bottom: 0;
+        }
+        .step-card .option-row select {
+            flex: 1;
+            min-width: 120px;
+            margin-bottom: 0;
+        }
+        .step-card .option-row .remove-opt {
+            background: none;
+            border: none;
+            color: #BC5A3C;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-secondary { background: #A3B18A; color: white; }
+        .btn-secondary:hover { background: #8FA375; }
+        .btn-danger { background: #FDE8E0; color: #BC5A3C; }
+        .btn-danger:hover { background: #F5D5CC; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-warning { background: #E2CFB0; color: #4D3E2A; }
+        .btn-warning:hover { background: #D6C09B; }
+        .step-card .ending-type {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin: 0.6rem 0;
+        }
+        .step-card .ending-type label { display: flex; align-items: center; gap: 0.4rem; }
+
+        /* ---- Предпросмотр ---- */
+        .preview-step {
+            background: #F9F6EF;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #E2EAD9;
+            min-height: 200px;
+        }
+        .preview-step .preview-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            margin-bottom: 0.6rem;
+        }
+        .preview-step .preview-desc {
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+        }
+        .preview-step .preview-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .preview-step .preview-options button {
+            background: white;
+            border: 1px solid #D1DEC2;
+            padding: 10px 18px;
+            border-radius: 40px;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .preview-step .preview-options button:hover {
+            background: #E9F0E3;
+            border-color: #A3B18A;
+        }
+        .preview-step .preview-options button:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .preview-step .ending-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+        .ending-success { background: #CBE0C0; color: #2E5C2E; }
+        .ending-failure { background: #F2D9CB; color: #9B5A3E; }
+        .ending-neutral { background: #D9D0BD; color: #4D4D3A; }
+
+        /* ---- Результаты (карта ветвления) ---- */
+        .result-tree {
+            background: #F9F6EF;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #E2EAD9;
+        }
+        .result-tree ul {
+            list-style: none;
+            padding-left: 1.5rem;
+        }
+        .result-tree li {
+            margin: 0.5rem 0;
+            border-left: 2px solid #C9D6BA;
+            padding-left: 1rem;
+        }
+        .result-tree .node {
+            font-weight: 600;
+        }
+        .result-tree .node-ending {
+            color: #2C7DA0;
+        }
+
+        /* ---- Общее ---- */
+        .flex-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            margin: 1rem 0;
+        }
+        .mt-1 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .text-center { text-align: center; }
+        .text-muted { color: #8A9B7A; }
+
+        @media (max-width: 700px) {
+            .main-container { padding: 1rem; }
+            .step-card { padding: 1rem; }
+            .option-row { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <h1>🧩 Конструктор клинических сценариев</h1>
+    <div class="sub">Создавайте интерактивные симуляторы для студентов</div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+        <button class="tab-btn" data-tab="preview">🎯 Предпросмотр</button>
+        <button class="tab-btn" data-tab="results">📊 Результаты</button>
+    </div>
+
+    <!-- Вкладка: Редактор -->
+    <div id="editorPane" class="tab-pane active">
+        <div class="flex-row">
+            <button id="addStepBtn" class="btn btn-success">➕ Добавить шаг</button>
+            <button id="resetDemoBtn" class="btn btn-warning">🔄 Восстановить демо-сценарий</button>
+            <button id="exportJsonBtn" class="btn btn-secondary">💾 Сохранить JSON</button>
+            <button id="loadJsonBtn" class="btn btn-secondary">📂 Загрузить JSON</button>
+            <button id="exportHtmlBtn" class="btn btn-primary">🚀 Экспорт в тренажёр</button>
+            <input type="file" id="fileInput" accept=".json" style="display:none;">
+        </div>
+        <div id="stepsContainer"></div>
+    </div>
+
+    <!-- Вкладка: Предпросмотр -->
+    <div id="previewPane" class="tab-pane">
+        <div id="previewContainer">
+            <div class="preview-step" id="previewStep"></div>
+        </div>
+    </div>
+
+    <!-- Вкладка: Результаты -->
+    <div id="resultsPane" class="tab-pane">
+        <div id="resultsContainer" class="result-tree"></div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // ДЕМО-СЦЕНАРИЙ (ОРИТ: пациент в критическом состоянии)
+    // ============================================================
+    const DEMO_STEPS = [
+        {
+            id: "start",
+            title: "Поступление пациента",
+            description: "В отделение реанимации поступила собака, 8 лет, лабрадор. Доставлена с клиникой острой дыхательной недостаточности. При осмотре: слизистые цианотичные, ЧДД 60, ЧСС 160, пульс слабый, температура 39,2°C. Владельцы сообщают, что собака подавилась костью 2 часа назад.",
+            image: "",
+            options: [
+                { text: "Провести интубацию и начать ИВЛ", nextStep: "step_intubation" },
+                { text: "Сделать рентген грудной клетки", nextStep: "step_xray" },
+                { text: "Назначить кислородную маску и наблюдать", nextStep: "step_oxygen" }
+            ],
+            isEnding: false,
+            endingType: ""
+        },
+        {
+            id: "step_intubation",
+            title: "Интубация и ИВЛ",
+            description: "Вы успешно провели интубацию и подключили пациента к аппарату ИВЛ. Сатурация начала повышаться. Однако при аускультации лёгких слышны ослабленные дыхательные шумы справа. На мониторе – снижение сатурации до 88%.",
+            image: "",
+            options: [
+                { text: "Проверить положение интубационной трубки", nextStep: "step_check_tube" },
+                { text: "Увеличить давление вдоха", nextStep: "step_increase_pressure" },
+                { text: "Выполнить дренаж плевральной полости", nextStep: "step_drainage" }
+            ],
+            isEnding: false,
+            endingType: ""
+        },
+        {
+            id: "step_xray",
+            title: "Рентгенография",
+            description: "Вы сделали рентген грудной клетки. На снимке видно инородное тело (кость) в пищеводе на уровне грудной клетки, а также признаки пневмоторакса справа.",
+            image: "",
+            options: [
+                { text: "Удалить инородное тело эндоскопически", nextStep: "step_endoscopy" },
+                { text: "Выполнить торакотомию", nextStep: "step_surgery" },
+                { text: "Назначить консервативную терапию", nextStep: "step_conservative" }
+            ],
+            isEnding: false,
+            endingType: ""
+        },
+        {
+            id: "step_oxygen",
+            title: "Кислородная маска",
+            description: "Вы назначили кислородную маску. Через 30 минут состояние ухудшилось: сатурация упала до 82%, животное стало беспокойным. Нарастают признаки дыхательной недостаточности.",
+            image: "",
+            options: [
+                { text: "Перейти к интубации и ИВЛ", nextStep: "step_intubation" },
+                { text: "Повысить концентрацию кислорода", nextStep: "step_failure" }
+            ],
+            isEnding: false,
+            endingType: ""
+        },
+        {
+            id: "step_check_tube",
+            title: "Проверка трубки",
+            description: "Вы проверили положение интубационной трубки – она стоит правильно. При аускультации справа дыхание не проводится. Вероятно, пневмоторакс нарастает.",
+            image: "",
+            options: [
+                { text: "Выполнить плевральную пункцию", nextStep: "step_success" },
+                { text: "Установить дренаж по Бюлау", nextStep: "step_success" }
+            ],
+            isEnding: false,
+            endingType: ""
+        },
+        {
+            id: "step_drainage",
+            title: "Дренирование",
+            description: "Вы выполнили дренирование плевральной полости. Эвакуировано около 200 мл воздуха. Дыхание восстановилось, сатурация повысилась до 96%. Состояние стабилизировалось.",
+            image: "",
+            options: [
+                { text: "Продолжить наблюдение в ОРИТ", nextStep: "step_success" }
+            ],
+            isEnding: false,
+            endingType: ""
+        },
+        {
+            id: "step_endoscopy",
+            title: "Эндоскопическое удаление",
+            description: "Вы успешно удалили кость эндоскопически через пищевод. Пациент стабилен. Пневмоторакс разрешился самостоятельно. Назначена антибиотикотерапия.",
+            image: "",
+            options: [],
+            isEnding: true,
+            endingType: "success"
+        },
+        {
+            id: "step_surgery",
+            title: "Торакотомия",
+            description: "Вы выполнили торакотомию, удалили кость из пищевода, ушили дефект. Операция прошла успешно. Пациент в стабильном состоянии, переведён в палату интенсивной терапии.",
+            image: "",
+            options: [],
+            isEnding: true,
+            endingType: "success"
+        },
+        {
+            id: "step_failure",
+            title: "Ухудшение",
+            description: "Несмотря на кислородную терапию, состояние пациента критически ухудшилось. Развилась остановка дыхания. Реанимационные мероприятия не привели к восстановлению.",
+            image: "",
+            options: [],
+            isEnding: true,
+            endingType: "failure"
+        },
+        {
+            id: "step_conservative",
+            title: "Консервативная терапия",
+            description: "Вы назначили консервативную терапию: антибиотики, спазмолитики, наблюдение. Однако через 4 часа у пациента развился сепсис и полиорганная недостаточность.",
+            image: "",
+            options: [],
+            isEnding: true,
+            endingType: "failure"
+        },
+        {
+            id: "step_success",
+            title: "Стабилизация",
+            description: "Пациент стабилен, дыхание самостоятельное, сатурация 97%. Отмечается положительная динамика. План перевода в общую палату через 12 часов.",
+            image: "",
+            options: [],
+            isEnding: true,
+            endingType: "success"
+        },
+        {
+            id: "step_increase_pressure",
+            title: "Повышение давления",
+            description: "Вы увеличили давление вдоха. Это привело к баротравме и усилению пневмоторакса. Состояние резко ухудшилось.",
+            image: "",
+            options: [],
+            isEnding: true,
+            endingType: "failure"
+        }
+    ];
+
+    // ============================================================
+    // СОСТОЯНИЕ
+    // ============================================================
+    let steps = [];          // копия текущего сценария
+    let nextId = 100;        // для генерации id новых шагов
+
+    // Текущая вкладка
+    let currentTab = 'editor';
+
+    // Для предпросмотра
+    let previewStack = [];
+
+    // ============================================================
+    // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    // ============================================================
+    function generateId() {
+        return 'step_' + (nextId++);
+    }
+
+    function getStepById(id) {
+        return steps.find(s => s.id === id);
+    }
+
+    function getAllStepIds() {
+        return steps.map(s => s.id);
+    }
+
+    // ============================================================
+    // ОТРИСОВКА РЕДАКТОРА
+    // ============================================================
+    function renderEditor() {
+        const container = document.getElementById('stepsContainer');
+        if (!steps.length) {
+            container.innerHTML = '<div class="text-center text-muted" style="padding:2rem;">Нет шагов. Добавьте первый шаг или загрузите сценарий.</div>';
+            return;
+        }
+        let html = '';
+        steps.forEach((step, index) => {
+            const isStart = (step.id === 'start');
+            html += `<div class="step-card" data-id="${step.id}">
+                <div class="step-header">
+                    <span class="step-id">${isStart ? '🏁 ' : ''}${step.id} ${step.isEnding ? '🔚' : ''}</span>
+                    <div class="step-actions">
+                        <button class="btn btn-danger remove-step" data-id="${step.id}">🗑️</button>
+                    </div>
+                </div>
+                <div>
+                    <input type="text" class="step-title" value="${escapeHtml(step.title)}" placeholder="Заголовок шага" data-id="${step.id}">
+                    <textarea class="step-desc" placeholder="Описание клинической ситуации" data-id="${step.id}">${escapeHtml(step.description)}</textarea>
+                    <input type="text" class="step-image" value="${escapeHtml(step.image)}" placeholder="URL изображения (опционально)" data-id="${step.id}">
+                </div>
+                <div class="ending-type">
+                    <label><input type="checkbox" class="step-ending" data-id="${step.id}" ${step.isEnding ? 'checked' : ''}> Финальный шаг</label>
+                    <select class="step-ending-type" data-id="${step.id}" ${!step.isEnding ? 'disabled' : ''}>
+                        <option value="success" ${step.endingType === 'success' ? 'selected' : ''}>✅ Успех</option>
+                        <option value="failure" ${step.endingType === 'failure' ? 'selected' : ''}>❌ Неудача</option>
+                        <option value="neutral" ${step.endingType === 'neutral' ? 'selected' : ''}>⚖️ Нейтральный</option>
+                    </select>
+                </div>
+                <div class="step-options">
+                    <div class="text-muted" style="font-weight:600; margin:0.5rem 0 0.3rem;">Варианты действий:</div>
+                    ${step.options.map((opt, oi) => `
+                        <div class="option-row" data-id="${step.id}" data-optidx="${oi}">
+                            <input type="text" class="opt-text" value="${escapeHtml(opt.text)}" placeholder="Текст варианта">
+                            <select class="opt-next">
+                                <option value="">-- выберите следующий шаг --</option>
+                                ${getAllStepIds().map(id => `<option value="${id}" ${id === opt.nextStep ? 'selected' : ''}>${id}</option>`).join('')}
+                            </select>
+                            <button class="remove-opt" data-id="${step.id}" data-optidx="${oi}">✖</button>
+                        </div>
+                    `).join('')}
+                    <button class="btn btn-secondary add-option" data-id="${step.id}" style="font-size:0.8rem; padding:4px 14px;">➕ Добавить вариант</button>
+                </div>
+            </div>`;
+        });
+        container.innerHTML = html;
+
+        // Привязываем события
+        // Изменение полей
+        container.querySelectorAll('.step-title').forEach(el => {
+            el.addEventListener('change', function() {
+                const id = this.dataset.id;
+                const step = getStepById(id);
+                if (step) step.title = this.value;
+            });
+        });
+        container.querySelectorAll('.step-desc').forEach(el => {
+            el.addEventListener('change', function() {
+                const id = this.dataset.id;
+                const step = getStepById(id);
+                if (step) step.description = this.value;
+            });
+        });
+        container.querySelectorAll('.step-image').forEach(el => {
+            el.addEventListener('change', function() {
+                const id = this.dataset.id;
+                const step = getStepById(id);
+                if (step) step.image = this.value;
+            });
+        });
+        container.querySelectorAll('.step-ending').forEach(el => {
+            el.addEventListener('change', function() {
+                const id = this.dataset.id;
+                const step = getStepById(id);
+                if (step) {
+                    step.isEnding = this.checked;
+                    // Включить/выключить select ending-type
+                    const select = document.querySelector(`.step-ending-type[data-id="${id}"]`);
+                    if (select) select.disabled = !this.checked;
+                    renderEditor(); // перерисовываем, чтобы обновить отображение
+                }
+            });
+        });
+        container.querySelectorAll('.step-ending-type').forEach(el => {
+            el.addEventListener('change', function() {
+                const id = this.dataset.id;
+                const step = getStepById(id);
+                if (step) step.endingType = this.value;
+            });
+        });
+        // Удаление шага
+        container.querySelectorAll('.remove-step').forEach(el => {
+            el.addEventListener('click', function() {
+                const id = this.dataset.id;
+                if (id === 'start') { alert('Нельзя удалить стартовый шаг.'); return; }
+                if (!confirm(`Удалить шаг "${id}"? Это может нарушить ссылки в других шагах.`)) return;
+                steps = steps.filter(s => s.id !== id);
+                renderEditor();
+            });
+        });
+        // Добавление опции
+        container.querySelectorAll('.add-option').forEach(el => {
+            el.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const step = getStepById(id);
+                if (step) {
+                    step.options.push({ text: 'Новый вариант', nextStep: '' });
+                    renderEditor();
+                }
+            });
+        });
+        // Удаление опции
+        container.querySelectorAll('.remove-opt').forEach(el => {
+            el.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const idx = parseInt(this.dataset.optidx);
+                const step = getStepById(id);
+                if (step) {
+                    step.options.splice(idx, 1);
+                    renderEditor();
+                }
+            });
+        });
+        // Изменение текста опции и nextStep
+        container.querySelectorAll('.opt-text').forEach(el => {
+            el.addEventListener('change', function() {
+                const row = this.closest('.option-row');
+                const id = row.dataset.id;
+                const idx = parseInt(row.dataset.optidx);
+                const step = getStepById(id);
+                if (step && step.options[idx]) {
+                    step.options[idx].text = this.value;
+                }
+            });
+        });
+        container.querySelectorAll('.opt-next').forEach(el => {
+            el.addEventListener('change', function() {
+                const row = this.closest('.option-row');
+                const id = row.dataset.id;
+                const idx = parseInt(row.dataset.optidx);
+                const step = getStepById(id);
+                if (step && step.options[idx]) {
+                    step.options[idx].nextStep = this.value;
+                }
+            });
+        });
+    }
+
+    // ============================================================
+    // ПРЕДПРОСМОТР
+    // ============================================================
+    function renderPreview(stepId) {
+        const container = document.getElementById('previewStep');
+        const step = getStepById(stepId);
+        if (!step) {
+            container.innerHTML = '<div class="text-center text-muted">Шаг не найден. Начните с начала.</div>';
+            return;
+        }
+        let html = `<div class="preview-title">${escapeHtml(step.title)}</div>
+                    <div class="preview-desc">${escapeHtml(step.description)}</div>`;
+        if (step.image) {
+            html += `<div><img src="${escapeHtml(step.image)}" alt="Изображение" style="max-width:100%; max-height:200px; border-radius:12px; margin-bottom:1rem;"></div>`;
+        }
+        if (step.isEnding) {
+            let badgeClass = '';
+            let label = '';
+            if (step.endingType === 'success') { badgeClass = 'ending-success'; label = '✅ Успех'; }
+            else if (step.endingType === 'failure') { badgeClass = 'ending-failure'; label = '❌ Неудача'; }
+            else { badgeClass = 'ending-neutral'; label = '⚖️ Нейтральный'; }
+            html += `<div class="ending-badge ${badgeClass}">${label}</div>
+                     <div style="margin-top:1rem;"><button class="btn btn-primary" id="previewRestart">🔄 Пройти заново</button></div>`;
+            container.innerHTML = html;
+            document.getElementById('previewRestart')?.addEventListener('click', function() {
+                previewStack = [];
+                renderPreview('start');
+            });
+            return;
+        }
+        if (step.options.length === 0) {
+            html += `<div class="text-muted">У этого шага нет вариантов. Добавьте их в редакторе.</div>`;
+        } else {
+            html += `<div class="preview-options">`;
+            step.options.forEach((opt, idx) => {
+                html += `<button class="preview-opt" data-next="${opt.nextStep}">${escapeHtml(opt.text)}</button>`;
+            });
+            html += `</div>`;
+        }
+        container.innerHTML = html;
+
+        document.querySelectorAll('.preview-opt').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const next = this.dataset.next;
+                if (!next) { alert('Этот вариант никуда не ведёт.'); return; }
+                if (!getStepById(next)) { alert(`Шаг "${next}" не существует.`); return; }
+                previewStack.push(next);
+                renderPreview(next);
+            });
+        });
+    }
+
+    // ============================================================
+    // РЕЗУЛЬТАТЫ (карта ветвления)
+    // ============================================================
+    function renderResults() {
+        const container = document.getElementById('resultsContainer');
+        if (!steps.length) {
+            container.innerHTML = '<div class="text-center text-muted">Нет шагов для отображения.</div>';
+            return;
+        }
+        let html = '<ul>';
+        // Начинаем с start
+        const startStep = getStepById('start');
+        if (!startStep) {
+            html += '<li>Стартовый шаг не найден.</li>';
+        } else {
+            html += buildTree(startStep, new Set());
+        }
+        html += '</ul>';
+        container.innerHTML = html;
+    }
+
+    function buildTree(step, visited) {
+        if (visited.has(step.id)) {
+            return `<li><span class="node">${step.id} (циклическая ссылка)</span></li>`;
+        }
+        visited.add(step.id);
+        let li = `<li><span class="node ${step.isEnding ? 'node-ending' : ''}">${step.id} ${step.isEnding ? '🔚' : ''}</span>`;
+        if (step.options && step.options.length) {
+            li += '<ul>';
+            step.options.forEach(opt => {
+                const nextStep = getStepById(opt.nextStep);
+                if (nextStep) {
+                    li += buildTree(nextStep, new Set(visited));
+                } else {
+                    li += `<li><span class="text-muted">${escapeHtml(opt.text)} → (неизвестный шаг: ${opt.nextStep})</span></li>`;
+                }
+            });
+            li += '</ul>';
+        }
+        li += '</li>';
+        return li;
+    }
+
+    // ============================================================
+    // УПРАВЛЕНИЕ ДАННЫМИ
+    // ============================================================
+    function loadDemo() {
+        steps = JSON.parse(JSON.stringify(DEMO_STEPS));
+        // Обновим nextId, чтобы не конфликтовать с id демо
+        const maxId = steps.reduce((max, s) => {
+            const num = parseInt(s.id.replace('step_', ''));
+            return num > max ? num : max;
+        }, 0);
+        nextId = maxId + 1;
+        renderEditor();
+        renderPreview('start');
+        renderResults();
+    }
+
+    function addStep() {
+        const newId = generateId();
+        steps.push({
+            id: newId,
+            title: 'Новый шаг',
+            description: 'Введите описание клинической ситуации',
+            image: '',
+            options: [],
+            isEnding: false,
+            endingType: ''
+        });
+        renderEditor();
+        // Обновим выпадающие списки в редакторе, чтобы новый шаг появился
+        renderEditor(); // перерисовка обновит все select
+    }
+
+    function resetDemo() {
+        if (!confirm('Восстановить демонстрационный сценарий? Все изменения будут потеряны.')) return;
+        loadDemo();
+    }
+
+    function exportJson() {
+        if (!steps.length) { alert('Нет данных для экспорта.'); return; }
+        const data = JSON.stringify(steps, null, 2);
+        const blob = new Blob([data], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'scenario.json';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function loadJson(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (!Array.isArray(data)) throw new Error('Неверный формат');
+                steps = data;
+                // Обновим nextId
+                const maxId = steps.reduce((max, s) => {
+                    const num = parseInt(s.id.replace('step_', ''));
+                    return num > max ? num : max;
+                }, 0);
+                nextId = maxId + 1;
+                renderEditor();
+                renderPreview('start');
+                renderResults();
+                alert('Сценарий загружен успешно.');
+            } catch(err) {
+                alert('Ошибка загрузки: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function exportHtml() {
+        if (!steps.length) { alert('Нет шагов для экспорта.'); return; }
+        // Проверим наличие стартового шага
+        if (!getStepById('start')) {
+            alert('В сценарии должен быть шаг с id = "start".');
+            return;
+        }
+        const data = JSON.stringify(steps);
+        // Создаём HTML-файл для студента
+        const html = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Клинический симулятор | ВетСим</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            border: 1px solid #E7EDE2;
+        }
+        h1 { font-size: 1.8rem; color: #1F4E6E; margin-bottom: 0.3rem; }
+        .sub { color: #7C8F7C; margin-bottom: 1.5rem; }
+        .preview-step {
+            background: #F9F6EF;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #E2EAD9;
+            min-height: 200px;
+        }
+        .preview-title { font-size: 1.4rem; font-weight: 700; color: #1F4E6E; margin-bottom: 0.6rem; }
+        .preview-desc { font-size: 1rem; line-height: 1.5; margin-bottom: 1.2rem; }
+        .preview-options { display: flex; flex-direction: column; gap: 0.8rem; }
+        .preview-options button {
+            background: white;
+            border: 1px solid #D1DEC2;
+            padding: 10px 18px;
+            border-radius: 40px;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .preview-options button:hover { background: #E9F0E3; border-color: #A3B18A; }
+        .ending-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 700;
+            margin-top: 1rem;
+        }
+        .ending-success { background: #CBE0C0; color: #2E5C2E; }
+        .ending-failure { background: #F2D9CB; color: #9B5A3E; }
+        .ending-neutral { background: #D9D0BD; color: #4D4D3A; }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .text-center { text-align: center; }
+        .mt-1 { margin-top: 1rem; }
+        img { max-width: 100%; max-height: 200px; border-radius: 12px; margin-bottom: 1rem; }
+        @media (max-width: 600px) { .container { padding: 1rem; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧩 Клинический симулятор</h1>
+    <div class="sub">Принимайте решения и следите за развитием событий</div>
+    <div id="previewStep" class="preview-step"></div>
+</div>
+<script>
+    const scenarioData = ${data};
+    let currentStepId = 'start';
+    let history = [];
+
+    function getStep(id) {
+        return scenarioData.find(s => s.id === id);
+    }
+
+    function render(stepId) {
+        const step = getStep(stepId);
+        const container = document.getElementById('previewStep');
+        if (!step) {
+            container.innerHTML = '<div class="text-center text-muted">Шаг не найден. Перезагрузите страницу.</div>';
+            return;
+        }
+        let html = \`<div class="preview-title">\${escapeHtml(step.title)}</div>
+                    <div class="preview-desc">\${escapeHtml(step.description)}</div>\`;
+        if (step.image) {
+            html += \`<img src="\${escapeHtml(step.image)}" alt="Изображение">\`;
+        }
+        if (step.isEnding) {
+            let badgeClass = '', label = '';
+            if (step.endingType === 'success') { badgeClass = 'ending-success'; label = '✅ Успех'; }
+            else if (step.endingType === 'failure') { badgeClass = 'ending-failure'; label = '❌ Неудача'; }
+            else { badgeClass = 'ending-neutral'; label = '⚖️ Нейтральный'; }
+            html += \`<div class="ending-badge \${badgeClass}">\${label}</div>
+                     <div class="mt-1"><button class="btn btn-primary" id="restartBtn">🔄 Пройти заново</button></div>\`;
+            container.innerHTML = html;
+            document.getElementById('restartBtn')?.addEventListener('click', function() {
+                history = [];
+                render('start');
+            });
+            return;
+        }
+        if (step.options.length === 0) {
+            html += \`<div class="text-muted">Этот шаг не имеет вариантов продолжения.</div>\`;
+        } else {
+            html += \`<div class="preview-options">\`;
+            step.options.forEach((opt, idx) => {
+                html += \`<button class="preview-opt" data-next="\${opt.nextStep}">\${escapeHtml(opt.text)}</button>\`;
+            });
+            html += \`</div>\`;
+        }
+        container.innerHTML = html;
+
+        document.querySelectorAll('.preview-opt').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const next = this.dataset.next;
+                if (!next) { alert('Этот вариант никуда не ведёт.'); return; }
+                if (!getStep(next)) { alert('Ошибка: следующий шаг не существует.'); return; }
+                history.push(currentStepId);
+                currentStepId = next;
+                render(currentStepId);
+            });
+        });
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
+    render('start');
+</script>
+</body>
+</html>`;
+        const blob = new Blob([html], {type: 'text/html'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'clinical_simulator.html';
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // ============================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ============================================================
+    function init() {
+        loadDemo();
+
+        // Переключение вкладок
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                document.getElementById(tab + 'Pane').classList.add('active');
+                // Обновляем содержимое при переключении
+                if (tab === 'preview') {
+                    renderPreview(previewStack.length ? previewStack[previewStack.length-1] : 'start');
+                } else if (tab === 'results') {
+                    renderResults();
+                } else {
+                    renderEditor();
+                }
+            });
+        });
+
+        // Кнопки управления
+        document.getElementById('addStepBtn').addEventListener('click', addStep);
+        document.getElementById('resetDemoBtn').addEventListener('click', resetDemo);
+        document.getElementById('exportJsonBtn').addEventListener('click', exportJson);
+        document.getElementById('loadJsonBtn').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            if (this.files.length) {
+                loadJson(this.files[0]);
+                this.value = '';
+            }
+        });
+        document.getElementById('exportHtmlBtn').addEventListener('click', exportHtml);
+
+        // Событие для обновления предпросмотра после редактирования (через перерисовку)
+        // Мы будем перерисовывать предпросмотр при переключении на вкладку preview
+    }
+
+    // ============================================================
+    // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ HTML
+    // ============================================================
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
+    // Запуск при загрузке
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

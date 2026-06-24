@@ -756,7 +756,7 @@
     }
 
     // ============================================================
-    // ЭКСПОРТ В ТРЕНАЖЁР (С ИСПРАВЛЕНИЕМ ПРОБЛЕМЫ С ВЫВОДОМ КОДА)
+    // ЭКСПОРТ В ТРЕНАЖЁР (БЕЗ ВЫВОДА КОДА НА СТРАНИЦУ)
     // ============================================================
     function exportHtml() {
         if (!steps.length) { alert('Нет шагов для экспорта.'); return; }
@@ -766,165 +766,165 @@
         }
         const data = JSON.stringify(steps);
 
-        // Формируем HTML, экранируя все закрывающие теги script внутри строки
-        let html = `<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Клинический симулятор | ВетСим</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #FDF8F0;
-            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
-            color: #3E5C4A;
-            padding: 1.5rem;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .container {
-            max-width: 700px;
-            width: 100%;
-            background: white;
-            border-radius: 2rem;
-            padding: 2rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
-            border: 1px solid #E7EDE2;
-        }
-        h1 { font-size: 1.8rem; color: #1F4E6E; margin-bottom: 0.3rem; }
-        .sub { color: #7C8F7C; margin-bottom: 1.5rem; }
-        .preview-step {
-            background: #F9F6EF;
-            border-radius: 1.5rem;
-            padding: 1.5rem;
-            border: 1px solid #E2EAD9;
-            min-height: 200px;
-        }
-        .preview-title { font-size: 1.4rem; font-weight: 700; color: #1F4E6E; margin-bottom: 0.6rem; }
-        .preview-desc { font-size: 1rem; line-height: 1.5; margin-bottom: 1.2rem; }
-        .preview-options { display: flex; flex-direction: column; gap: 0.8rem; }
-        .preview-options button {
-            background: white;
-            border: 1px solid #D1DEC2;
-            padding: 10px 18px;
-            border-radius: 40px;
-            text-align: left;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
-        .preview-options button:hover { background: #E9F0E3; border-color: #A3B18A; }
-        .ending-badge {
-            display: inline-block;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-weight: 700;
-            margin-top: 1rem;
-        }
-        .ending-success { background: #CBE0C0; color: #2E5C2E; }
-        .ending-failure { background: #F2D9CB; color: #9B5A3E; }
-        .ending-neutral { background: #D9D0BD; color: #4D4D3A; }
-        .btn {
-            background: #EEF2E9;
-            border: none;
-            padding: 8px 18px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-        }
-        .btn-primary { background: #2C7DA0; color: white; }
-        .btn-primary:hover { background: #236B8A; }
-        .text-center { text-align: center; }
-        .mt-1 { margin-top: 1rem; }
-        img { max-width: 100%; max-height: 200px; border-radius: 12px; margin-bottom: 1rem; }
-        @media (max-width: 600px) { .container { padding: 1rem; } }
-    </style>
-</head>
-<body>
-<div class="container">
-    <h1>🧩 Клинический симулятор</h1>
-    <div class="sub">Принимайте решения и следите за развитием событий</div>
-    <div id="previewStep" class="preview-step"></div>
-</div>
-<script>
-    const scenarioData = ${data};
-    let currentStepId = 'start';
-    let history = [];
+        // Собираем HTML через массив строк, чтобы избежать закрывающих тегов script внутри
+        const parts = [];
+        parts.push('<!DOCTYPE html>');
+        parts.push('<html lang="ru">');
+        parts.push('<head>');
+        parts.push('    <meta charset="UTF-8">');
+        parts.push('    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">');
+        parts.push('    <title>Клинический симулятор | ВетСим</title>');
+        parts.push('    <style>');
+        parts.push('        * { margin: 0; padding: 0; box-sizing: border-box; }');
+        parts.push('        body {');
+        parts.push('            background: #FDF8F0;');
+        parts.push('            font-family: system-ui, \'Segoe UI\', \'Roboto\', sans-serif;');
+        parts.push('            color: #3E5C4A;');
+        parts.push('            padding: 1.5rem;');
+        parts.push('            min-height: 100vh;');
+        parts.push('            display: flex;');
+        parts.push('            justify-content: center;');
+        parts.push('            align-items: center;');
+        parts.push('        }');
+        parts.push('        .container {');
+        parts.push('            max-width: 700px;');
+        parts.push('            width: 100%;');
+        parts.push('            background: white;');
+        parts.push('            border-radius: 2rem;');
+        parts.push('            padding: 2rem;');
+        parts.push('            box-shadow: 0 8px 24px rgba(0,0,0,0.05);');
+        parts.push('            border: 1px solid #E7EDE2;');
+        parts.push('        }');
+        parts.push('        h1 { font-size: 1.8rem; color: #1F4E6E; margin-bottom: 0.3rem; }');
+        parts.push('        .sub { color: #7C8F7C; margin-bottom: 1.5rem; }');
+        parts.push('        .preview-step {');
+        parts.push('            background: #F9F6EF;');
+        parts.push('            border-radius: 1.5rem;');
+        parts.push('            padding: 1.5rem;');
+        parts.push('            border: 1px solid #E2EAD9;');
+        parts.push('            min-height: 200px;');
+        parts.push('        }');
+        parts.push('        .preview-title { font-size: 1.4rem; font-weight: 700; color: #1F4E6E; margin-bottom: 0.6rem; }');
+        parts.push('        .preview-desc { font-size: 1rem; line-height: 1.5; margin-bottom: 1.2rem; }');
+        parts.push('        .preview-options { display: flex; flex-direction: column; gap: 0.8rem; }');
+        parts.push('        .preview-options button {');
+        parts.push('            background: white;');
+        parts.push('            border: 1px solid #D1DEC2;');
+        parts.push('            padding: 10px 18px;');
+        parts.push('            border-radius: 40px;');
+        parts.push('            text-align: left;');
+        parts.push('            cursor: pointer;');
+        parts.push('            transition: 0.2s;');
+        parts.push('            font-family: inherit;');
+        parts.push('            font-size: 0.95rem;');
+        parts.push('        }');
+        parts.push('        .preview-options button:hover { background: #E9F0E3; border-color: #A3B18A; }');
+        parts.push('        .ending-badge {');
+        parts.push('            display: inline-block;');
+        parts.push('            padding: 6px 18px;');
+        parts.push('            border-radius: 40px;');
+        parts.push('            font-weight: 700;');
+        parts.push('            margin-top: 1rem;');
+        parts.push('        }');
+        parts.push('        .ending-success { background: #CBE0C0; color: #2E5C2E; }');
+        parts.push('        .ending-failure { background: #F2D9CB; color: #9B5A3E; }');
+        parts.push('        .ending-neutral { background: #D9D0BD; color: #4D4D3A; }');
+        parts.push('        .btn {');
+        parts.push('            background: #EEF2E9;');
+        parts.push('            border: none;');
+        parts.push('            padding: 8px 18px;');
+        parts.push('            border-radius: 40px;');
+        parts.push('            font-weight: 600;');
+        parts.push('            cursor: pointer;');
+        parts.push('            transition: 0.2s;');
+        parts.push('            font-family: inherit;');
+        parts.push('        }');
+        parts.push('        .btn-primary { background: #2C7DA0; color: white; }');
+        parts.push('        .btn-primary:hover { background: #236B8A; }');
+        parts.push('        .text-center { text-align: center; }');
+        parts.push('        .mt-1 { margin-top: 1rem; }');
+        parts.push('        img { max-width: 100%; max-height: 200px; border-radius: 12px; margin-bottom: 1rem; }');
+        parts.push('        @media (max-width: 600px) { .container { padding: 1rem; } }');
+        parts.push('    </style>');
+        parts.push('</head>');
+        parts.push('<body>');
+        parts.push('<div class="container">');
+        parts.push('    <h1>🧩 Клинический симулятор</h1>');
+        parts.push('    <div class="sub">Принимайте решения и следите за развитием событий</div>');
+        parts.push('    <div id="previewStep" class="preview-step"></div>');
+        parts.push('</div>');
+        // Теперь добавляем скрипт, разбивая закрывающий тег на части
+        parts.push('<script>');
+        parts.push('    const scenarioData = ' + data + ';');
+        parts.push('    let currentStepId = "start";');
+        parts.push('    let history = [];');
+        parts.push('');
+        parts.push('    function getStep(id) {');
+        parts.push('        return scenarioData.find(s => s.id === id);');
+        parts.push('    }');
+        parts.push('');
+        parts.push('    function render(stepId) {');
+        parts.push('        const step = getStep(stepId);');
+        parts.push('        const container = document.getElementById("previewStep");');
+        parts.push('        if (!step) {');
+        parts.push('            container.innerHTML = \'<div class="text-center text-muted">Шаг не найден. Перезагрузите страницу.</div>\';');
+        parts.push('            return;');
+        parts.push('        }');
+        parts.push('        let html = `<div class="preview-title">${escapeHtml(step.title)}</div>` +');
+        parts.push('                  `<div class="preview-desc">${escapeHtml(step.description)}</div>`;');
+        parts.push('        if (step.image) {');
+        parts.push('            html += `<img src="${escapeHtml(step.image)}" alt="Изображение">`;');
+        parts.push('        }');
+        parts.push('        if (step.isEnding) {');
+        parts.push('            let badgeClass = "", label = "";');
+        parts.push('            if (step.endingType === "success") { badgeClass = "ending-success"; label = "✅ Успех"; }');
+        parts.push('            else if (step.endingType === "failure") { badgeClass = "ending-failure"; label = "❌ Неудача"; }');
+        parts.push('            else { badgeClass = "ending-neutral"; label = "⚖️ Нейтральный"; }');
+        parts.push('            html += `<div class="ending-badge ${badgeClass}">${label}</div>` +');
+        parts.push('                     `<div class="mt-1"><button class="btn btn-primary" id="restartBtn">🔄 Пройти заново</button></div>`;');
+        parts.push('            container.innerHTML = html;');
+        parts.push('            document.getElementById("restartBtn")?.addEventListener("click", function() {');
+        parts.push('                history = [];');
+        parts.push('                render("start");');
+        parts.push('            });');
+        parts.push('            return;');
+        parts.push('        }');
+        parts.push('        if (step.options.length === 0) {');
+        parts.push('            html += `<div class="text-muted">Этот шаг не имеет вариантов продолжения.</div>`;');
+        parts.push('        } else {');
+        parts.push('            html += `<div class="preview-options">`;');
+        parts.push('            step.options.forEach((opt, idx) => {');
+        parts.push('                html += `<button class="preview-opt" data-next="${opt.nextStep}">${escapeHtml(opt.text)}</button>`;');
+        parts.push('            });');
+        parts.push('            html += `</div>`;');
+        parts.push('        }');
+        parts.push('        container.innerHTML = html;');
+        parts.push('');
+        parts.push('        document.querySelectorAll(".preview-opt").forEach(btn => {');
+        parts.push('            btn.addEventListener("click", function() {');
+        parts.push('                const next = this.dataset.next;');
+        parts.push('                if (!next) { alert("Этот вариант никуда не ведёт."); return; }');
+        parts.push('                if (!getStep(next)) { alert("Ошибка: следующий шаг не существует."); return; }');
+        parts.push('                history.push(currentStepId);');
+        parts.push('                currentStepId = next;');
+        parts.push('                render(currentStepId);');
+        parts.push('            });');
+        parts.push('        });');
+        parts.push('    }');
+        parts.push('');
+        parts.push('    function escapeHtml(str) {');
+        parts.push('        if (!str) return "";');
+        parts.push('        return str.replace(/[&<>]/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;"})[m]);');
+        parts.push('    }');
+        parts.push('');
+        parts.push('    render("start");');
+        // Разбиваем закрывающий тег script, чтобы не закрыть текущий
+        parts.push('</scr' + 'ipt>');
+        parts.push('</body>');
+        parts.push('</html>');
 
-    function getStep(id) {
-        return scenarioData.find(s => s.id === id);
-    }
-
-    function render(stepId) {
-        const step = getStep(stepId);
-        const container = document.getElementById('previewStep');
-        if (!step) {
-            container.innerHTML = '<div class="text-center text-muted">Шаг не найден. Перезагрузите страницу.</div>';
-            return;
-        }
-        let html = \`<div class="preview-title">\${escapeHtml(step.title)}</div>
-                    <div class="preview-desc">\${escapeHtml(step.description)}</div>\`;
-        if (step.image) {
-            html += \`<img src="\${escapeHtml(step.image)}" alt="Изображение">\`;
-        }
-        if (step.isEnding) {
-            let badgeClass = '', label = '';
-            if (step.endingType === 'success') { badgeClass = 'ending-success'; label = '✅ Успех'; }
-            else if (step.endingType === 'failure') { badgeClass = 'ending-failure'; label = '❌ Неудача'; }
-            else { badgeClass = 'ending-neutral'; label = '⚖️ Нейтральный'; }
-            html += \`<div class="ending-badge \${badgeClass}">\${label}</div>
-                     <div class="mt-1"><button class="btn btn-primary" id="restartBtn">🔄 Пройти заново</button></div>\`;
-            container.innerHTML = html;
-            document.getElementById('restartBtn')?.addEventListener('click', function() {
-                history = [];
-                render('start');
-            });
-            return;
-        }
-        if (step.options.length === 0) {
-            html += \`<div class="text-muted">Этот шаг не имеет вариантов продолжения.</div>\`;
-        } else {
-            html += \`<div class="preview-options">\`;
-            step.options.forEach((opt, idx) => {
-                html += \`<button class="preview-opt" data-next="\${opt.nextStep}">\${escapeHtml(opt.text)}</button>\`;
-            });
-            html += \`</div>\`;
-        }
-        container.innerHTML = html;
-
-        document.querySelectorAll('.preview-opt').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const next = this.dataset.next;
-                if (!next) { alert('Этот вариант никуда не ведёт.'); return; }
-                if (!getStep(next)) { alert('Ошибка: следующий шаг не существует.'); return; }
-                history.push(currentStepId);
-                currentStepId = next;
-                render(currentStepId);
-            });
-        });
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
-    }
-
-    render('start');
-<\/script>
-</body>
-</html>`;
-
-        // Ключевое исправление: экранируем все вхождения </script> внутри сгенерированной строки,
-        // чтобы они не закрыли текущий скрипт
-        const safeHtml = html.replace(/<\/script>/gi, '<\\/script>');
-
-        const blob = new Blob([safeHtml], {type: 'text/html'});
+        const finalHtml = parts.join('\n');
+        const blob = new Blob([finalHtml], {type: 'text/html'});
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -971,7 +971,6 @@
         document.getElementById('exportHtmlBtn').addEventListener('click', exportHtml);
     }
 
-    // Запуск при загрузке
     document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>

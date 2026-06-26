@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Клинический кейс: Кусанная рана у кота</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clinic-name {
+            color: #7C8F7C;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+            border-left: 4px solid #A3B18A;
+            padding-left: 12px;
+        }
+
+        .case-intro {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #E2EAD9;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .case-intro strong {
+            color: #1F4E6E;
+        }
+
+        .progress-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #2C7DA0;
+        }
+
+        .progress-track {
+            flex: 1;
+            min-width: 120px;
+            height: 6px;
+            background: #E2EAD9;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #2C7DA0;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .stage-badge {
+            background: #E2CFB0;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #4D3E2A;
+            display: inline-block;
+            margin-top: 0.3rem;
+        }
+
+        .question-block {
+            margin: 1.2rem 0;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .option-btn {
+            background: #F9F6EF;
+            border: 2px solid #E2EAD9;
+            border-radius: 60px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #3E5C4A;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-btn .marker {
+            width: 28px;
+            height: 28px;
+            background: #E2EAD9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #5F7C62;
+            flex-shrink: 0;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background: #E9F0E3;
+            border-color: #A3B18A;
+            transform: translateY(-1px);
+        }
+
+        .option-btn:active:not(.disabled) {
+            transform: translateY(1px);
+        }
+
+        .option-btn.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .option-btn.correct {
+            background: #CBE0C0;
+            border-color: #6B9E6B;
+        }
+
+        .option-btn.wrong {
+            background: #F2D9CB;
+            border-color: #D47A6A;
+        }
+
+        .feedback-area {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0 1.2rem;
+            border-left: 5px solid #A3B18A;
+            display: none;
+        }
+
+        .feedback-area.show {
+            display: block;
+        }
+
+        .feedback-area .verdict {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .feedback-area .verdict.correct {
+            color: #3A7A3A;
+        }
+
+        .feedback-area .verdict.wrong {
+            color: #B5533A;
+        }
+
+        .feedback-area .explanation {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            line-height: 1.5;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #8FA375;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        /* Итоговый экран */
+        .final-screen {
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+
+        .final-screen .score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1F4E6E;
+        }
+
+        .final-screen .message {
+            font-size: 1.2rem;
+            margin: 0.8rem 0 1.5rem;
+            color: #3E5C4A;
+        }
+
+        .final-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .final-screen .btn {
+            font-size: 1rem;
+            padding: 12px 36px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .step-counter {
+            font-size: 0.8rem;
+            color: #8A9B7A;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.2rem 1rem;
+            }
+            h1 {
+                font-size: 1.4rem;
+                flex-wrap: wrap;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .option-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            .action-row {
+                justify-content: stretch;
+            }
+            .action-row .btn {
+                flex: 1;
+                text-align: center;
+            }
+            .feedback-area {
+                padding: 0.8rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <!-- Заголовок -->
+    <h1>🩺 Клинический кейс: Кусанная рана у кота</h1>
+    <div class="clinic-name">🏥 Ветклиника «ЛапЛандия»</div>
+
+    <!-- Вводная -->
+    <div class="case-intro">
+        <strong>📋 Вводная:</strong> В клинику поступил кот с кусанной раной в области хвоста. Владельцы заметили рану на следующий день после драки с соседским котом. Внешне рана выглядит небольшой, но под кожей пальпируется полость (карман). Общее состояние удовлетворительное, температура 38,6°C.
+        <br><br>
+        <strong>🎯 Задача:</strong> Ответьте на 5 вопросов, чтобы правильно определить тактику лечения.
+    </div>
+
+    <!-- Прогресс -->
+    <div class="progress-area">
+        <span class="progress-text" id="progressLabel">Вопрос 1 из 5</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="step-counter" id="stepCounter">Этапы: 0 / 6</span>
+    </div>
+
+    <!-- Блок вопроса -->
+    <div id="questionBlock">
+        <div class="question-block">
+            <div class="question-text" id="questionText">Загрузка вопроса...</div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="feedback-area" id="feedbackArea">
+                <div class="verdict" id="verdictText"></div>
+                <div class="explanation" id="explanationText"></div>
+            </div>
+            <div class="action-row">
+                <button class="btn btn-primary" id="nextBtn" disabled>➡️ Следующий</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Итоговый экран -->
+    <div id="finalScreen" class="final-screen hidden">
+        <div class="icon">🐱</div>
+        <div class="score" id="finalScore">0%</div>
+        <div class="message" id="finalMessage">Отличный результат!</div>
+        <div style="margin-bottom: 1rem; font-size: 0.95rem; color: #5F7C62;" id="finalDetails"></div>
+        <button class="btn btn-success" id="restartBtn">🔄 Пройти заново</button>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // ДАННЫЕ КЕЙСА
+    // ============================================================
+    const stages = [
+        { id: 1, title: "Первичная обработка и ревизия раны", desc: "Оценить глубину, выявить карманы, удалить некротические ткани" },
+        { id: 2, title: "Установка дренажа", desc: "Обеспечить отток экссудата и предотвратить абсцесс" },
+        { id: 3, title: "Назначение антибиотиков и обезболивающих", desc: "Контроль инфекции и боли" },
+        { id: 4, title: "Ежедневные процедуры: промывание, контроль выделений", desc: "Мониторинг динамики заживления" },
+        { id: 5, title: "Удаление дренажа", desc: "Когда выделения прекратились и воспаление спало" },
+        { id: 6, title: "Вторичное заживление раны", desc: "Без нагноения и осложнений" }
+    ];
+
+    const questions = [
+        {
+            id: 1,
+            question: 'Почему кусанную рану нельзя просто зашить?',
+            options: [
+                'А) Это слишком дорого и долго',
+                'Б) Под кожей могут оставаться «карманы», где скапливается инфекция',
+                'В) Швы мешают дренированию',
+                'Г) Это неэстетично'
+            ],
+            correct: 1, // индекс правильного ответа (0-based)
+            explanation: 'Кусанные раны часто имеют скрытые полости (карманы) под кожей. Если просто зашить рану, инфекция останется внутри, что приведёт к абсцессу. Именно поэтому сначала проводят ревизию, промывание и дренирование.'
+        },
+        {
+            id: 2,
+            question: 'Для чего устанавливают дренаж при кусанной ране?',
+            options: [
+                'А) Чтобы рана выглядела аккуратнее',
+                'Б) Для оттока экссудата и предотвращения абсцесса',
+                'В) Чтобы кот не разлизывал рану',
+                'Г) Для ускорения образования рубца'
+            ],
+            correct: 1,
+            explanation: 'Дренаж обеспечивает отток экссудата (воспалительной жидкости) из раны, предотвращая её накопление и развитие абсцесса. Это ключевой элемент лечения при кусанных ранах с карманами.'
+        },
+        {
+            id: 3,
+            question: 'Какие препараты чаще всего назначают при кусанных ранах?',
+            options: [
+                'А) Только обезболивающие',
+                'Б) Антибиотики широкого спектра + обезболивающие',
+                'В) Гормональные препараты',
+                'Г) Противовирусные'
+            ],
+            correct: 1,
+            explanation: 'При кусанных ранах высок риск бактериальной инфекции, поэтому назначают антибиотики широкого спектра (например, амоксициллин+клавуланат или цефалоспорины). Обезболивающие необходимы для контроля боли и снижения стресса у животного.'
+        },
+        {
+            id: 4,
+            question: 'Что такое «вторичное заживление» раны?',
+            options: [
+                'А) Заживление под швами',
+                'Б) Заживление через формирование грануляционной ткани без наложения швов',
+                'В) Заживление с использованием лазера',
+                'Г) Заживление с помощью антибиотиков'
+            ],
+            correct: 1,
+            explanation: 'Вторичное заживление — это процесс, при котором рана заживает самостоятельно, без наложения швов, через образование грануляционной ткани. Обычно так заживают инфицированные раны с дефектом тканей. В этом случае важно поддерживать чистоту раны и контролировать выделения.'
+        },
+        {
+            id: 5,
+            question: 'Когда можно удалять дренаж?',
+            options: [
+                'А) Через 24 часа после установки',
+                'Б) Когда выделения по дренажу прекратились и воспаление спало',
+                'В) Когда кот перестал хромать',
+                'Г) Через 7 дней независимо от состояния'
+            ],
+            correct: 1,
+            explanation: 'Дренаж удаляют, когда выделения по нему прекратились (или стали минимальными), а признаки воспаления (отёк, болезненность, покраснение) спали. В среднем это занимает 3–7 дней. Решение об удалении принимает врач на основе клинической картины.'
+        }
+    ];
+
+    // ============================================================
+    // СОСТОЯНИЕ И ЛОГИКА
+    // ============================================================
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let isAnswered = false;
+
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedbackArea = document.getElementById('feedbackArea');
+    const verdictText = document.getElementById('verdictText');
+    const explanationText = document.getElementById('explanationText');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressFill = document.getElementById('progressFill');
+    const stepCounter = document.getElementById('stepCounter');
+    const questionBlock = document.getElementById('questionBlock');
+    const finalScreen = document.getElementById('finalScreen');
+    const finalScore = document.getElementById('finalScore');
+    const finalMessage = document.getElementById('finalMessage');
+    const finalDetails = document.getElementById('finalDetails');
+    const restartBtn = document.getElementById('restartBtn');
+
+    // Инициализация
+    function init() {
+        currentQuestionIndex = 0;
+        correctCount = 0;
+        isAnswered = false;
+        finalScreen.classList.add('hidden');
+        questionBlock.classList.remove('hidden');
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQuestionIndex];
+        if (!q) return;
+
+        // Обновляем прогресс
+        progressLabel.textContent = `Вопрос ${currentQuestionIndex + 1} из ${questions.length}`;
+        progressFill.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+
+        // Обновляем этапы (для справки)
+        const completedStages = Math.min(currentQuestionIndex, stages.length);
+        stepCounter.textContent = `Этапы: ${completedStages} / ${stages.length}`;
+
+        // Вопрос
+        questionText.textContent = q.question;
+
+        // Варианты ответов
+        optionsContainer.innerHTML = '';
+        const letters = ['А', 'Б', 'В', 'Г'];
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span class="marker">${letters[idx]}</span> ${opt}`;
+            btn.dataset.index = idx;
+            btn.addEventListener('click', () => handleOptionClick(btn, idx));
+            optionsContainer.appendChild(btn);
+        });
+
+        // Сброс фидбека
+        feedbackArea.classList.remove('show');
+        feedbackArea.style.display = 'none';
+        nextBtn.disabled = true;
+        isAnswered = false;
+
+        // Сброс подсветки
+        document.querySelectorAll('.option-btn').forEach(b => {
+            b.classList.remove('correct', 'wrong', 'disabled');
+        });
+    }
+
+    function handleOptionClick(btn, selectedIdx) {
+        if (isAnswered) return;
+
+        const q = questions[currentQuestionIndex];
+        const isCorrect = (selectedIdx === q.correct);
+
+        // Блокируем все кнопки
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
+
+        // Подсвечиваем
+        document.querySelectorAll('.option-btn').forEach((b, idx) => {
+            if (idx === q.correct) {
+                b.classList.add('correct');
+            } else if (idx === selectedIdx && !isCorrect) {
+                b.classList.add('wrong');
+            }
+        });
+
+        // Показываем фидбек
+        feedbackArea.style.display = 'block';
+        feedbackArea.classList.add('show');
+        if (isCorrect) {
+            verdictText.className = 'verdict correct';
+            verdictText.textContent = '✅ Правильно!';
+            correctCount++;
+        } else {
+            verdictText.className = 'verdict wrong';
+            verdictText.textContent = '❌ Неправильно!';
+        }
+        explanationText.textContent = q.explanation;
+
+        isAnswered = true;
+        nextBtn.disabled = false;
+
+        // Обновляем этапы (показываем, какой этап соответствует ответу)
+        const stageIdx = Math.min(currentQuestionIndex, stages.length - 1);
+        if (stages[stageIdx]) {
+            stepCounter.textContent = `Этапы: ${stageIdx + 1} / ${stages.length}`;
+        }
+    }
+
+    function goToNext() {
+        if (!isAnswered) return;
+
+        if (currentQuestionIndex + 1 < questions.length) {
+            currentQuestionIndex++;
+            renderQuestion();
+        } else {
+            showFinalScreen();
+        }
+    }
+
+    function showFinalScreen() {
+        questionBlock.classList.add('hidden');
+        finalScreen.classList.remove('hidden');
+
+        const total = questions.length;
+        const percent = Math.round((correctCount / total) * 100);
+        finalScore.textContent = `${percent}%`;
+        finalDetails.textContent = `Правильных ответов: ${correctCount} из ${total}`;
+
+        let message = '';
+        if (percent === 100) message = '🌟 Идеально! Вы — настоящий эксперт по кусанным ранам!';
+        else if (percent >= 80) message = '🎉 Отличный результат! Вы хорошо знаете алгоритм лечения.';
+        else if (percent >= 60) message = '😊 Хорошо, но стоит повторить материал о дренировании и заживлении.';
+        else message = '📖 Рекомендуем перечитать тему «Хирургическая обработка ран». Попробуйте ещё раз!';
+        finalMessage.textContent = message;
+    }
+
+    function restartQuiz() {
+        init();
+    }
+
+    // ============================================================
+    // ПОДКЛЮЧЕНИЕ СОБЫТИЙ
+    // ============================================================
+    nextBtn.addEventListener('click', goToNext);
+    restartBtn.addEventListener('click', restartQuiz);
+
+    // Запуск
+    init();
+</script>
+</body>
+</html>

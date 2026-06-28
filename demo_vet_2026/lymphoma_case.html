@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Клинический кейс: Эпителиотропная лимфома у кошки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .clinic-name {
+            color: #7C8F7C;
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+            border-left: 4px solid #A3B18A;
+            padding-left: 12px;
+        }
+
+        .case-intro {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #E2EAD9;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .case-intro strong {
+            color: #1F4E6E;
+        }
+
+        .case-intro .highlight {
+            background: #E9F0E3;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+        }
+
+        .case-intro .badge {
+            display: inline-block;
+            background: #E2CFB0;
+            padding: 0.1rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #4D3E2A;
+        }
+
+        .progress-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #2C7DA0;
+        }
+
+        .progress-track {
+            flex: 1;
+            min-width: 120px;
+            height: 6px;
+            background: #E2EAD9;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #2C7DA0;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        .question-block {
+            margin: 1.2rem 0;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .option-btn {
+            background: #F9F6EF;
+            border: 2px solid #E2EAD9;
+            border-radius: 60px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #3E5C4A;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-btn .marker {
+            width: 28px;
+            height: 28px;
+            background: #E2EAD9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #5F7C62;
+            flex-shrink: 0;
+        }
+
+        .option-btn:hover:not(.disabled) {
+            background: #E9F0E3;
+            border-color: #A3B18A;
+            transform: translateY(-1px);
+        }
+
+        .option-btn:active:not(.disabled) {
+            transform: translateY(1px);
+        }
+
+        .option-btn.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .option-btn.correct {
+            background: #CBE0C0;
+            border-color: #6B9E6B;
+        }
+
+        .option-btn.wrong {
+            background: #F2D9CB;
+            border-color: #D47A6A;
+        }
+
+        .feedback-area {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0 1.2rem;
+            border-left: 5px solid #A3B18A;
+            display: none;
+        }
+
+        .feedback-area.show {
+            display: block;
+        }
+
+        .feedback-area .verdict {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .feedback-area .verdict.correct {
+            color: #3A7A3A;
+        }
+
+        .feedback-area .verdict.wrong {
+            color: #B5533A;
+        }
+
+        .feedback-area .explanation {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            line-height: 1.5;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        /* Итоговый экран */
+        .final-screen {
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+
+        .final-screen .score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1F4E6E;
+        }
+
+        .final-screen .message {
+            font-size: 1.2rem;
+            margin: 0.8rem 0 1.5rem;
+            color: #3E5C4A;
+        }
+
+        .final-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .final-screen .btn {
+            font-size: 1rem;
+            padding: 12px 36px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .reference-note {
+            font-size: 0.75rem;
+            color: #8A9B7A;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
+        /* Кастомизация скролла для вводной */
+        .case-intro::-webkit-scrollbar {
+            width: 4px;
+        }
+        .case-intro::-webkit-scrollbar-thumb {
+            background: #C9D6BA;
+            border-radius: 10px;
+        }
+        .case-intro::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.2rem 1rem;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .option-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            .action-row {
+                justify-content: stretch;
+            }
+            .action-row .btn {
+                flex: 1;
+                text-align: center;
+            }
+            .feedback-area {
+                padding: 0.8rem 1rem;
+            }
+            .case-intro {
+                max-height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <!-- Заголовок -->
+    <h1>🩺 Клинический кейс: Эпителиотропная лимфома у кошки</h1>
+    <div class="clinic-name">🏥 Ветклиника «Возрождение», г. Вологда</div>
+
+    <!-- Вводная -->
+    <div class="case-intro" id="caseIntro">
+        <strong>📋 Вводная:</strong> В клинику поступила кошка <strong>Василиса</strong>, 12 лет, метис. Принималась в другой клинике с диагнозом <span class="highlight">«аллергическая реакция»</span> (назначены: преднизолон 0,5 мг/кг, синулокс 20 мг/кг). Лечение в течение 14 дней <strong>не дало улучшений</strong>.
+        <br><br>
+        <strong>Жалобы владельцев:</strong>
+        <br>
+        • Зуд 6/10 баллов.
+        <br>
+        • Поражения на коже (уши, спина, латеральная часть лап).
+        <br>
+        • Снижение аппетита, вялость, отказ от еды.
+        <br>
+        • Обработки от эктопаразитов не проводились. Вакцинация не выполнена.
+        <br><br>
+        <strong>Осмотр:</strong> Эксфолиативные поражения, бляшки, корочки в области ушей, спины, лап. Гипотрихоз в латеральной части лап.
+        <br><br>
+        <strong>Дифференциальный диагноз:</strong> <span class="badge">Эпителиотропная лимфома</span> · <span class="badge">Тимома</span> · <span class="badge">Листовидная пузырчатка</span> · <span class="badge">Другие новообразования</span>
+        <br><br>
+        <strong>Диагностика:</strong>
+        <br>
+        • Соскобы на эктопаразиты: <span class="highlight">отрицательно</span>.
+        <br>
+        • Цитология: нейтрофилы +, дегенеративные нейтрофилы ++, кокки ед.
+        <br>
+        • Рентген (исключение тимомы): <span class="highlight">патологий не выявлено</span>.
+        <br>
+        • УЗИ: выявлено образование в области почки.
+        <br>
+        • <strong>ТИБ (тонкоигольная биопсия) почки:</strong> подтверждена <span class="highlight">эпителиотропная лимфома</span>.
+        <br><br>
+        <strong>Исход:</strong> Владельцы, ознакомившись с диагнозом и прогнозом, приняли решение о <span class="highlight">гуманной эвтаназии</span>.
+        <br><br>
+        <span style="font-size: 0.8rem; color: #8A9B7A;">📚 На основе данных: J Feline Med Surg. 2020;22(6):521-529; Vet Dermatol. 2018;29(3):236-e85.</span>
+    </div>
+
+    <!-- Прогресс -->
+    <div class="progress-area">
+        <span class="progress-text" id="progressLabel">Вопрос 1 из 7</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="reference-note">🔬 Эпителиотропная лимфома</span>
+    </div>
+
+    <!-- Блок вопроса -->
+    <div id="questionBlock">
+        <div class="question-block">
+            <div class="question-text" id="questionText">Загрузка вопроса...</div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="feedback-area" id="feedbackArea">
+                <div class="verdict" id="verdictText"></div>
+                <div class="explanation" id="explanationText"></div>
+            </div>
+            <div class="action-row">
+                <button class="btn btn-primary" id="nextBtn" disabled>➡️ Следующий</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Итоговый экран -->
+    <div id="finalScreen" class="final-screen hidden">
+        <div class="icon">🐱🧬</div>
+        <div class="score" id="finalScore">0%</div>
+        <div class="message" id="finalMessage">Отличный результат!</div>
+        <div style="margin-bottom: 1rem; font-size: 0.95rem; color: #5F7C62;" id="finalDetails"></div>
+        <button class="btn btn-success" id="restartBtn">🔄 Пройти заново</button>
+        <div style="margin-top: 1rem; font-size: 0.7rem; color: #8A9B7A;">
+            📚 Источники: J Feline Med Surg. 2020;22(6):521-529 · Vet Dermatol. 2018;29(3):236-e85 · Vet Pathol. 2016;53(4):774-781.
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // ДАННЫЕ КЕЙСА (7 вопросов)
+    // ============================================================
+    const questions = [
+        {
+            id: 1,
+            question: 'Почему лечение преднизолоном и антибиотиками не дало эффекта?',
+            options: [
+                'А) Неправильная дозировка препаратов',
+                'Б) Причина заболевания не является аллергической реакцией',
+                'В) У кошки была устойчивость к антибиотикам',
+                'Г) Препараты были несовместимы'
+            ],
+            correct: 1,
+            explanation: 'Отсутствие ответа на ГКС и антибиотики говорит о том, что причина дерматита не аллергическая и не бактериальная. Эпителиотропная лимфома на ГКС не отвечает, а может даже маскироваться. Это важный диагностический признак, указывающий на необходимость более глубокого обследования.'
+        },
+        {
+            id: 2,
+            question: 'Какие дифференциальные диагнозы следует рассмотреть при эксфолиативных поражениях у кошек?',
+            options: [
+                'А) Эпителиотропная лимфома',
+                'Б) Листовидная пузырчатка',
+                'В) Дерматофитоз',
+                'Г) Все вышеперечисленные'
+            ],
+            correct: 3,
+            explanation: 'Эксфолиативный дерматит у кошек может быть вызван эпителиотропной лимфомой, листовидной пузырчаткой, дерматофитозом и другими причинами. Широкий дифференциальный ряд требует системного подхода к диагностике.'
+        },
+        {
+            id: 3,
+            question: 'Что такое эпителиотропная лимфома?',
+            options: [
+                'А) Лимфома, поражающая только кожу',
+                'Б) Т-клеточная лимфома, инфильтрирующая эпидермис и слизистые',
+                'В) Доброкачественное новообразование кожи',
+                'Г) Лимфома, вызывающая зуд'
+            ],
+            correct: 1,
+            explanation: 'Эпителиотропная лимфома — это Т-клеточная лимфома, характеризующаяся инфильтрацией эпидермиса и слизистых оболочек, что проявляется кожными поражениями. Это агрессивная форма лимфомы, требующая ранней диагностики.'
+        },
+        {
+            id: 4,
+            question: 'Почему при кожных поражениях с подозрением на лимфому важно проводить УЗИ и биопсию?',
+            options: [
+                'А) Для исключения других дерматозов',
+                'Б) Для стадирования и выявления висцеральных поражений',
+                'В) Для подтверждения диагноза',
+                'Г) Все вышеперечисленное'
+            ],
+            correct: 3,
+            explanation: 'Комплексная диагностика (УЗИ, биопсия) позволяет подтвердить лимфому, выявить поражение других органов и определить стадию заболевания. Это критически важно для прогноза и выбора тактики лечения.'
+        },
+        {
+            id: 5,
+            question: 'Какая диагностика была ключевой для подтверждения диагноза в этом случае?',
+            options: [
+                'А) Рентгенография',
+                'Б) Соскобы на эктопаразиты',
+                'В) ТИБ (тонкоигольная биопсия) почки',
+                'Г) Цитология'
+            ],
+            correct: 2,
+            explanation: 'ТИБ почки подтвердила лимфому, так как образование в почке было вторичным очагом. УЗИ выявило поражение почки, а биопсия позволила гистологически подтвердить диагноз. Без биопсии диагноз остался бы предположительным.'
+        },
+        {
+            id: 6,
+            question: 'Какой прогноз при эпителиотропной лимфоме у кошек?',
+            options: [
+                'А) Благоприятный при своевременном лечении',
+                'Б) Сомнительный, зависит от стадии',
+                'В) Плохой, медиана выживаемости 1–6 месяцев',
+                'Г) Полное излечение возможно'
+            ],
+            correct: 2,
+            explanation: 'Эпителиотропная лимфома — агрессивное заболевание с плохим прогнозом даже на фоне химиотерапии. Медиана выживаемости составляет 1–6 месяцев. Это важно учитывать при обсуждении прогноза с владельцами.'
+        },
+        {
+            id: 7,
+            question: 'Какое решение приняли владельцы и почему?',
+            options: [
+                'А) Продолжили химиотерапию',
+                'Б) Отказались от лечения и выбрали эвтаназию',
+                'В) Перевели кошку в другую клинику',
+                'Г) Начали лечение народными средствами'
+            ],
+            correct: 1,
+            explanation: 'Владельцы, осознав тяжесть диагноза и плохой прогноз, приняли решение о гуманной эвтаназии, чтобы избавить кошку от страданий. Это решение было принято на основе консультации с врачом и понимания неизбежности прогрессирования заболевания.'
+        }
+    ];
+
+    // ============================================================
+    // СОСТОЯНИЕ И ЛОГИКА
+    // ============================================================
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let isAnswered = false;
+
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedbackArea = document.getElementById('feedbackArea');
+    const verdictText = document.getElementById('verdictText');
+    const explanationText = document.getElementById('explanationText');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressFill = document.getElementById('progressFill');
+    const questionBlock = document.getElementById('questionBlock');
+    const finalScreen = document.getElementById('finalScreen');
+    const finalScore = document.getElementById('finalScore');
+    const finalMessage = document.getElementById('finalMessage');
+    const finalDetails = document.getElementById('finalDetails');
+    const restartBtn = document.getElementById('restartBtn');
+
+    // Инициализация
+    function init() {
+        currentQuestionIndex = 0;
+        correctCount = 0;
+        isAnswered = false;
+        finalScreen.classList.add('hidden');
+        questionBlock.classList.remove('hidden');
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQuestionIndex];
+        if (!q) return;
+
+        // Обновляем прогресс
+        progressLabel.textContent = `Вопрос ${currentQuestionIndex + 1} из ${questions.length}`;
+        progressFill.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+
+        // Вопрос
+        questionText.textContent = q.question;
+
+        // Варианты ответов
+        optionsContainer.innerHTML = '';
+        const letters = ['А', 'Б', 'В', 'Г'];
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span class="marker">${letters[idx]}</span> ${opt}`;
+            btn.dataset.index = idx;
+            btn.addEventListener('click', () => handleOptionClick(btn, idx));
+            optionsContainer.appendChild(btn);
+        });
+
+        // Сброс фидбека
+        feedbackArea.classList.remove('show');
+        feedbackArea.style.display = 'none';
+        nextBtn.disabled = true;
+        isAnswered = false;
+
+        // Сброс подсветки
+        document.querySelectorAll('.option-btn').forEach(b => {
+            b.classList.remove('correct', 'wrong', 'disabled');
+        });
+    }
+
+    function handleOptionClick(btn, selectedIdx) {
+        if (isAnswered) return;
+
+        const q = questions[currentQuestionIndex];
+        const isCorrect = (selectedIdx === q.correct);
+
+        // Блокируем все кнопки
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
+
+        // Подсвечиваем
+        document.querySelectorAll('.option-btn').forEach((b, idx) => {
+            if (idx === q.correct) {
+                b.classList.add('correct');
+            } else if (idx === selectedIdx && !isCorrect) {
+                b.classList.add('wrong');
+            }
+        });
+
+        // Показываем фидбек
+        feedbackArea.style.display = 'block';
+        feedbackArea.classList.add('show');
+        if (isCorrect) {
+            verdictText.className = 'verdict correct';
+            verdictText.textContent = '✅ Правильно!';
+            correctCount++;
+        } else {
+            verdictText.className = 'verdict wrong';
+            verdictText.textContent = '❌ Неправильно!';
+        }
+        explanationText.textContent = q.explanation;
+
+        isAnswered = true;
+        nextBtn.disabled = false;
+    }
+
+    function goToNext() {
+        if (!isAnswered) return;
+
+        if (currentQuestionIndex + 1 < questions.length) {
+            currentQuestionIndex++;
+            renderQuestion();
+        } else {
+            showFinalScreen();
+        }
+    }
+
+    function showFinalScreen() {
+        questionBlock.classList.add('hidden');
+        finalScreen.classList.remove('hidden');
+
+        const total = questions.length;
+        const percent = Math.round((correctCount / total) * 100);
+        finalScore.textContent = `${percent}%`;
+        finalDetails.textContent = `Правильных ответов: ${correctCount} из ${total}`;
+
+        let message = '';
+        if (percent === 100) message = '🌟 Отлично! Вы отлично разобрались в сложном случае!';
+        else if (percent >= 80) message = '🎉 Хороший результат! Вы понимаете ключевые аспекты диагностики.';
+        else if (percent >= 60) message = '😊 Неплохо, но стоит повторить материал о лимфомах у кошек.';
+        else message = '📖 Рекомендуем перечитать раздел о кожных лимфомах. Попробуйте ещё раз!';
+        finalMessage.textContent = message;
+    }
+
+    function restartQuiz() {
+        init();
+    }
+
+    // ============================================================
+    // ПОДКЛЮЧЕНИЕ СОБЫТИЙ
+    // ============================================================
+    nextBtn.addEventListener('click', goToNext);
+    restartBtn.addEventListener('click', restartQuiz);
+
+    // Запуск
+    init();
+</script>
+</body>
+</html>

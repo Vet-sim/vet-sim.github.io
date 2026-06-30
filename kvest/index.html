@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>Квесты ВетСим</title>
+    <style>
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        /* Заголовок */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #5F7C62;
+            margin-top: 0.5rem;
+        }
+
+        /* Сетка карточек */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0 3rem;
+        }
+
+        /* Карточка квеста */
+        .card {
+            background: #FFFFFF;
+            border-radius: 1.8rem;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E7EDE2;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 28px -8px rgba(0, 0, 0, 0.12);
+            border-color: #C9D6BA;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 0.7rem;
+        }
+
+        .card-desc {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #537A5A;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-badge {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            width: fit-content;
+            color: #8A9B7A;
+        }
+
+        .card-action .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2.5rem;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            background: #2C7DA0;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .card-action .btn:hover {
+            background: #236B8A;
+            gap: 0.7rem;
+            transform: translateY(-2px);
+        }
+
+        .card-action .btn .arrow {
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .card-action .btn:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* Заглушка для будущих квестов */
+        .card.soon {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .card.soon .btn {
+            background: #E2EAD9;
+            color: #8A9B7A;
+            pointer-events: none;
+        }
+
+        .card.soon .btn .arrow {
+            opacity: 0.5;
+        }
+
+        .card.soon:hover {
+            transform: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Футер */
+        .footer {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 1rem;
+            border-top: 1px solid #E2E9DC;
+            font-size: 0.75rem;
+            color: #89A07B;
+        }
+
+        .footer a {
+            color: #568A6B;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            color: #2F6B47;
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 1rem;
+            }
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Заголовок -->
+    <div class="header">
+        <h1>🧩 Квесты ВетСим</h1>
+        <p>Интерактивные диагностические приключения для ветеринаров всех уровней</p>
+    </div>
+
+    <!-- Сетка карточек -->
+    <div class="cards-grid">
+        <!-- Квест 1: Ветеринарный детектив -->
+        <div class="card">
+            <div class="card-icon">🩺</div>
+            <div class="card-title">Ветеринарный детектив</div>
+            <div class="card-badge">✅ Готов к прохождению</div>
+            <div class="card-desc">
+                Расследуйте случай острого пиелонефрита у кота Барсика. Соберите анамнез, интерпретируйте анализы, поставьте диагноз и назначьте лечение.
+            </div>
+            <div class="card-action">
+                <a href="detective.html" class="btn">
+                    <span>Пройти квест</span>
+                    <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Квест 2: (заглушка) -->
+        <div class="card soon">
+            <div class="card-icon">🔜</div>
+            <div class="card-title">Скоро</div>
+            <div class="card-badge">⏳ В разработке</div>
+            <div class="card-desc">
+                Новый квест появится совсем скоро. Следите за обновлениями!
+            </div>
+            <div class="card-action">
+                <span class="btn" style="background:#E2EAD9; color:#8A9B7A; pointer-events:none;">
+                    <span>Ожидайте</span>
+                    <span class="arrow">→</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Квест 3: (заглушка) -->
+        <div class="card soon">
+            <div class="card-icon">🔜</div>
+            <div class="card-title">Скоро</div>
+            <div class="card-badge">⏳ В разработке</div>
+            <div class="card-desc">
+                Ещё один увлекательный кейс готовится для вас.
+            </div>
+            <div class="card-action">
+                <span class="btn" style="background:#E2EAD9; color:#8A9B7A; pointer-events:none;">
+                    <span>Ожидайте</span>
+                    <span class="arrow">→</span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Футер -->
+    <div class="footer">
+        <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="../index.html">Главная</a> ·
+            <a href="../universal.html">Универсальное</a> ·
+            <a href="../general.html">Общепрофессиональный</a> ·
+            <a href="../professional.html">Профессиональный</a>
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.7rem;">
+            Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY‑NC 4.0</a>
+        </p>
+        <p style="font-size: 0.7rem; color: #89A07B;">
+            © 2026 ВетСим · Автор: Алла Сергеевна Тераевич
+        </p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Тренажёр: Термины и Определения</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+        body { background: #e9e5d8; font-family: 'Segoe UI', 'Roboto', sans-serif; color: #2e2e2a; padding: 1rem; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .game-container { max-width: 1400px; width: 100%; background: #fffdf8; border-radius: 2rem; box-shadow: 0 12px 28px rgba(0,0,0,0.05); padding: 1.8rem; }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { font-size: 1.9rem; font-weight: 500; background: linear-gradient(135deg, #6a7a5e, #4e6b4a); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .sub { font-size: 0.9rem; color: #6e6a5e; }
+        .toolbar { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid #e2d8ca; padding-bottom: 1.2rem; }
+        .btn { background: #ebe3d4; border: none; padding: 0.6rem 1.4rem; border-radius: 3rem; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: 0.2s; font-family: inherit; }
+        .btn-primary { background: #cbdcc2; color: #2f492c; }
+        .btn-primary:hover { background: #b9cfae; transform: translateY(-2px); }
+        .btn-danger { background: #eedbcb; color: #9b5a3e; }
+        .game-board { background: #faf7f0; border-radius: 1.8rem; padding: 1.8rem; min-height: 500px; }
+        .cards-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; }
+        .card { width: 260px; min-width: 220px; background: #f5f0e2; border-radius: 1.5rem; padding: 1rem; box-shadow: 0 5px 12px rgba(0,0,0,0.05); cursor: grab; border: 1px solid #e7dfcf; word-break: break-word; }
+        .card:active { cursor: grabbing; }
+        .card.dragging { opacity: 0.4; }
+        .card.term { background: #e8e6e0; border-left: 6px solid #b8bfa7; }
+        .card.def { background: #f3efdf; border-left: 6px solid #cfc5aa; }
+        .card.matched-pair { background: #cfdabe; border-left: 6px solid #7f9970; cursor: default; }
+        .card.matched-pair .pair-term { font-weight: bold; display: block; border-bottom: 1px dashed #97ab86; padding-bottom: 6px; margin-bottom: 6px; }
+        .empty-message { text-align: center; padding: 3rem; color: #aaac9a; }
+        @media (max-width: 700px) { .game-container { padding: 1rem; } .card { width: 100%; max-width: 280px; } .btn { padding: 0.4rem 1rem; font-size: 0.8rem; } }
+        .license-footer { margin-top: 2rem; text-align: center; font-size: 0.75rem; color: #9aa98b; border-top: 1px solid #e3dfd3; padding-top: 1.2rem; }
+        .license-footer a { color: #7f8e70; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div class="header"><h1>📚 СОЕДИНИ ТЕРМИН С ОПРЕДЕЛЕНИЕМ</h1><div class="sub">Перетаскивайте карточки для создания пар</div></div>
+    <div class="toolbar">
+        <button id="resetBtn" class="btn btn-danger">🔄 Начать заново</button>
+        <button id="saveProgressBtn" class="btn btn-primary">💾 Сохранить прогресс</button>
+        <button id="loadProgressBtn" class="btn btn-primary">📂 Загрузить прогресс</button>
+    </div>
+    <div class="game-board"><div id="cardsContainer" class="cards-grid"></div></div>
+    <div class="license-footer">© Преподаватель - Тераевич Алла Сергеевна, 2026. <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">Creative Commons BY-NC</a> — для свободного некоммерческого использования.</div>
+</div>
+<script>
+    const embeddedPairs = [{"term":"Анамнез","definition":"Совокупность сведений о развитии болезни, полученных от владельца"},{"term":"Пальпация","definition":"Метод обследования с помощью ощупывания"},{"term":"Перкуссия","definition":"Выстукивание для оценки состояния органов"},{"term":"Аускультация","definition":"Выслушивание звуковых явлений"},{"term":"Термометрия","definition":"Измерение температуры тела"},{"term":"Осмотр","definition":"Визуальная оценка общего состояния и видимых слизистых"},{"term":"Рентгенография","definition":"Метод лучевой диагностики внутренних органов"},{"term":"УЗИ","definition":"Ультразвуковое исследование органов брюшной и грудной полостей"},{"term":"Анализ крови","definition":"Лабораторное исследование клеточного и биохимического состава"},{"term":"Руминотомия","definition":"Хирургическое вскрытие рубца у жвачных животных"}];
+    let cards = [], nextCardId = 1, nextPairId = 1;
+    const container = document.getElementById('cardsContainer');
+    let draggedCard = null, draggedCardData = null;
+
+    function buildGame(pairsArray) {
+        cards = []; nextCardId = 1; nextPairId = 1;
+        for (let pair of pairsArray) {
+            const pid = nextPairId++;
+            cards.push({ id: nextCardId++, type: 'term', text: pair.term, pairId: pid, matched: false });
+            cards.push({ id: nextCardId++, type: 'def', text: pair.definition, pairId: pid, matched: false });
+        }
+        for (let i = cards.length - 1; i > 0; i--) { const j = Math.floor(Math.random()*(i+1)); [cards[i], cards[j]] = [cards[j], cards[i]]; }
+        renderBoard();
+    }
+
+    function mergePair(termCard, defCard) {
+        if (termCard.matched || defCard.matched) return false;
+        if (termCard.pairId !== defCard.pairId) return false;
+        if (termCard.type === 'def' && defCard.type === 'term') [termCard, defCard] = [defCard, termCard];
+        if (termCard.type !== 'term' || defCard.type !== 'def') return false;
+        termCard.matched = true; defCard.matched = true;
+        const mergedCard = { id: nextCardId++, type: 'merged', text: `<span class="pair-term">📘 ${escapeHtml(termCard.text)}</span><span class="pair-def">📖 ${escapeHtml(defCard.text)}</span>`, pairId: termCard.pairId, matched: true, rawTerm: termCard.text, rawDef: defCard.text };
+        const termIdx = cards.findIndex(c => c.id === termCard.id);
+        const defIdx = cards.findIndex(c => c.id === defCard.id);
+        if (termIdx !== -1 && defIdx !== -1) {
+            let newCards = [...cards];
+            if (termIdx > defIdx) { newCards.splice(termIdx,1); newCards.splice(defIdx,1); }
+            else { newCards.splice(defIdx,1); newCards.splice(termIdx,1); }
+            newCards.push(mergedCard);
+            cards = newCards;
+        }
+        renderBoard();
+        return true;
+    }
+
+    function escapeHtml(str) { return str.replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
+
+    function renderBoard() {
+        const visible = cards.filter(c => !c.matched || c.type === 'merged');
+        if (visible.length === 0 && cards.length) { container.innerHTML = '<div class="empty-message">🎉 Поздравляем! Все пары собраны! 🎉</div>'; return; }
+        if (!cards.length) { container.innerHTML = '<div class="empty-message">Нет данных</div>'; return; }
+        container.innerHTML = '';
+        for (let card of cards) {
+            if (card.matched && card.type !== 'merged') continue;
+            const div = document.createElement('div');
+            div.className = 'card';
+            if (card.type === 'term') div.classList.add('term');
+            else if (card.type === 'def') div.classList.add('def');
+            else if (card.type === 'merged') div.classList.add('matched-pair');
+            if (card.type === 'merged') div.innerHTML = card.text;
+            else div.innerText = card.text;
+            div.setAttribute('data-id', card.id);
+            div.setAttribute('data-type', card.type);
+            div.setAttribute('data-pairid', card.pairId);
+            if (!card.matched && (card.type === 'term' || card.type === 'def')) {
+                div.draggable = true;
+                div.addEventListener('dragstart', e => { const id = parseInt(div.getAttribute('data-id')); draggedCardData = cards.find(c => c.id === id); if(draggedCardData) e.dataTransfer.setData('text/plain', id); div.classList.add('dragging'); });
+                div.addEventListener('dragend', () => div.classList.remove('dragging'));
+            }
+            container.appendChild(div);
+        }
+    }
+
+    container.addEventListener('dragover', e => e.preventDefault());
+    container.addEventListener('drop', e => {
+        e.preventDefault();
+        const target = e.target.closest('.card');
+        if (!target) return;
+        const sourceId = parseInt(e.dataTransfer.getData('text/plain'));
+        const targetId = parseInt(target.getAttribute('data-id'));
+        const source = cards.find(c => c.id === sourceId);
+        const targetCard = cards.find(c => c.id === targetId);
+        if (source && targetCard && source.id !== targetCard.id && !source.matched && !targetCard.matched &&
+            ((source.type === 'term' && targetCard.type === 'def') || (source.type === 'def' && targetCard.type === 'term'))) {
+            if (source.pairId === targetCard.pairId) mergePair(source, targetCard);
+            else { alert('❌ Неправильное соответствие'); }
+        }
+    });
+
+    function resetGame() { buildGame(embeddedPairs); }
+    function saveProgress() {
+        const merged = cards.filter(c => c.type === 'merged').map(c => c.pairId);
+        const data = { pairs: embeddedPairs, collectedPairIds: merged };
+        const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'terminy_progress.json'; a.click(); URL.revokeObjectURL(a.href);
+        alert('Прогресс сохранён');
+    }
+    function loadProgressFromFile(file) {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (JSON.stringify(embeddedPairs) !== JSON.stringify(data.pairs)) throw new Error('Набор пар не совпадает');
+                buildGame(embeddedPairs);
+                for (let pid of data.collectedPairIds) {
+                    const t = cards.find(c => c.type === 'term' && c.pairId === pid && !c.matched);
+                    const d = cards.find(c => c.type === 'def' && c.pairId === pid && !c.matched);
+                    if (t && d) mergePair(t, d);
+                }
+                alert('Прогресс загружен');
+            } catch(e) { alert('Ошибка загрузки'); }
+        };
+        reader.readAsText(file);
+    }
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+    document.getElementById('saveProgressBtn').addEventListener('click', saveProgress);
+    document.getElementById('loadProgressBtn').addEventListener('click', () => { const inp = document.createElement('input'); inp.type='file'; inp.accept='application/json'; inp.onchange = e => { if(e.target.files[0]) loadProgressFromFile(e.target.files[0]); }; inp.click(); });
+    buildGame(embeddedPairs);
+</script>
+</body>
+</html>

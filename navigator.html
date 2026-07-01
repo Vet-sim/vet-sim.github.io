@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ВетСим-Навигатор: Кто ты в ветеринарии?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 2.5rem;
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.05);
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E7EDE2;
+            position: relative;
+        }
+
+        /* ===== СТАРТОВЫЙ ЭКРАН ===== */
+        .start-screen {
+            text-align: center;
+            padding: 1.5rem 0.5rem;
+        }
+
+        .start-screen .logo {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .start-screen h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1F4E6E;
+            letter-spacing: -0.5px;
+        }
+
+        .start-screen .sub {
+            font-size: 1.2rem;
+            color: #2C7DA0;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        .start-screen .desc {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #5F7C62;
+            max-width: 580px;
+            margin: 0.8rem auto 2rem;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 14px 40px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+            transform: translateY(-2px);
+        }
+
+        .btn-olive {
+            background: #A3B18A;
+            color: #fff;
+        }
+        .btn-olive:hover {
+            background: #8FA375;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #A3B18A;
+            color: #3E5C4A;
+        }
+        .btn-outline:hover {
+            background: #F0EEE5;
+        }
+
+        /* ===== ПРОГРЕСС ===== */
+        .progress-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+            color: #5F7C62;
+            font-weight: 500;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: #E2EAD9;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #2C7DA0;
+            border-radius: 20px;
+            transition: width 0.5s ease;
+        }
+
+        .block-label {
+            font-size: 0.8rem;
+            color: #A3B18A;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        /* ===== ВОПРОСЫ ===== */
+        .question-screen {
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-number {
+            font-size: 0.9rem;
+            color: #8A9B7A;
+            margin-bottom: 0.3rem;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .option-btn {
+            background: #F9F6EF;
+            border: 2px solid #E2EAD9;
+            border-radius: 60px;
+            padding: 14px 22px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #3E5C4A;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .option-btn .marker {
+            width: 30px;
+            height: 30px;
+            background: #E2EAD9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #1F4E6E;
+            flex-shrink: 0;
+        }
+
+        .option-btn:hover:not(.selected) {
+            background: #E9F0E3;
+            border-color: #A3B18A;
+            transform: scale(1.01);
+        }
+
+        .option-btn.selected {
+            border-color: #2C7DA0;
+            background: #E1ECF5;
+        }
+
+        .option-btn.selected .marker {
+            background: #2C7DA0;
+            color: #fff;
+        }
+
+        /* ===== РЕЗУЛЬТАТЫ ===== */
+        .result-screen {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .result-screen h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-card {
+            background: #F9F6EF;
+            border-radius: 1.5rem;
+            padding: 1.5rem 1.8rem;
+            margin-bottom: 1.2rem;
+            border-left: 6px solid #2C7DA0;
+            transition: 0.2s;
+        }
+
+        .result-card:nth-child(2) { border-left-color: #A3B18A; }
+        .result-card:nth-child(3) { border-left-color: #D4A373; }
+
+        .result-card .spec-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-card .spec-desc {
+            font-size: 0.95rem;
+            color: #5F7C62;
+            margin: 0.4rem 0 0.6rem;
+        }
+
+        .result-card .spec-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.3rem 1rem;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+            margin-top: 0.5rem;
+        }
+
+        .result-card .spec-details strong {
+            color: #1F4E6E;
+        }
+
+        .result-card .spec-details .label {
+            color: #8A9B7A;
+            font-weight: 500;
+        }
+
+        .result-card .pros-cons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .result-card .pros-cons .pros { color: #2E7D32; }
+        .result-card .pros-cons .cons { color: #C62828; }
+
+        .result-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* ===== ФУТЕР ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid #E2EAD9;
+            font-size: 0.8rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer .brand {
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            body { padding: 1rem; }
+            .container { padding: 1.2rem 1rem; }
+            .start-screen h1 { font-size: 1.8rem; }
+            .question-text { font-size: 1.1rem; }
+            .option-btn { padding: 12px 16px; font-size: 0.9rem; }
+            .result-card .spec-details { grid-template-columns: 1fr; }
+            .result-card .pros-cons { flex-direction: column; gap: 0.3rem; }
+            .btn { padding: 12px 24px; font-size: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 1rem; }
+            .start-screen .logo { font-size: 2.8rem; }
+            .start-screen h1 { font-size: 1.5rem; }
+            .option-btn .marker { width: 26px; height: 26px; font-size: 0.8rem; }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <!-- СТАРТОВЫЙ ЭКРАН -->
+    <div id="startScreen" class="start-screen">
+        <div class="logo">🧠</div>
+        <h1>ВетСим-Навигатор</h1>
+        <div class="sub">Кто ты в ветеринарии?</div>
+        <div class="desc">
+            15 вопросов помогут определить твои склонности и предложат 3 подходящие специализации.<br>
+            Ветеринария — это не только клиника. Открой свой путь! 🐾
+        </div>
+        <button class="btn btn-primary" id="startBtn">🚀 Начать тест</button>
+    </div>
+
+    <!-- ЭКРАН ВОПРОСОВ -->
+    <div id="questionScreen" class="question-screen hidden">
+        <div class="progress-section">
+            <div class="progress-top">
+                <span id="qCounter">1 / 15</span>
+                <span id="blockLabel" class="block-label">🧠 Твой подход к работе</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill" style="width:0%;"></div>
+            </div>
+        </div>
+        <div class="question-number" id="qNumber">Вопрос 1</div>
+        <div class="question-text" id="qText">Загрузка вопроса...</div>
+        <div class="options" id="optionsContainer"></div>
+    </div>
+
+    <!-- ЭКРАН РЕЗУЛЬТАТОВ -->
+    <div id="resultScreen" class="result-screen hidden">
+        <h2>🎉 Твой ветеринарный профиль!</h2>
+        <div id="resultCards"></div>
+        <div class="result-actions">
+            <button class="btn btn-primary" id="restartBtn">🔄 Пройти тест заново</button>
+            <button class="btn btn-olive" id="downloadBtn">📋 Скачать результат</button>
+        </div>
+    </div>
+
+    <!-- ФУТЕР -->
+    <div class="footer">
+        <span class="brand">🐾 ВетСим</span> — ветеринарное просвещение<br>
+        <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a> &nbsp;·&nbsp;
+        <a href="https://vk.com/VetSimPros" target="_blank">vk.com/VetSimPros</a>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // ДАННЫЕ: ВОПРОСЫ (15)
+    // ============================================================
+    const questions = [
+        // БЛОК 1: Твой подход к работе (1–4)
+        {
+            block: '🧠 Твой подход к работе',
+            text: 'Ты на приёме. Пациент — пожилая собака с хронической болезнью. Хозяин очень тревожен. Твои действия?',
+            options: [
+                { label: 'Сначала подробно расспрошу, успокою хозяина, объясню каждый шаг. Главное — контакт и доверие.', value: 'A' },
+                { label: 'Сосредоточусь на диагностике: анализы, УЗИ, рентген. Мне важна объективная картина.', value: 'B' },
+                { label: 'Оценю, можно ли помочь хирургически или нужна интенсивная терапия. Действовать быстро и чётко.', value: 'C' },
+                { label: 'Сделаю всё по протоколу и оформлю документы. Главное — соблюсти все правила.', value: 'D' }
+            ]
+        },
+        {
+            block: '🧠 Твой подход к работе',
+            text: 'Что тебя больше всего привлекает в ветеринарии?',
+            options: [
+                { label: 'Возможность помогать людям через их животных, видеть благодарность.', value: 'A' },
+                { label: 'Постоянное обучение, научный подход, сложные диагностические задачи.', value: 'B' },
+                { label: 'Работа руками, точность, результат, который видно сразу.', value: 'C' },
+                { label: 'Понимание, что я контролирую качество продуктов и защищаю людей от болезней.', value: 'D' }
+            ]
+        },
+        {
+            block: '🧠 Твой подход к работе',
+            text: 'Какой рабочий процесс тебе ближе?',
+            options: [
+                { label: 'Размеренный приём, длительные беседы с владельцами, наблюдение в динамике.', value: 'A' },
+                { label: 'Лабораторные исследования, микроскопия, интерпретация данных.', value: 'B' },
+                { label: 'Операционная или работа с инструментами, чёткий план, результат.', value: 'C' },
+                { label: 'Выезды на фермы, рынки, проверки, оформление документов.', value: 'D' }
+            ]
+        },
+        {
+            block: '🧠 Твой подход к работе',
+            text: 'Что для тебя важнее в работе?',
+            options: [
+                { label: 'Эмоциональная отдача и связь с пациентом и владельцем.', value: 'A' },
+                { label: 'Точность диагноза и научная обоснованность решений.', value: 'B' },
+                { label: 'Техническое мастерство и умение делать сложные манипуляции.', value: 'C' },
+                { label: 'Соблюдение законов и защита общества от болезней.', value: 'D' }
+            ]
+        },
+        // БЛОК 2: Твои ценности (5–7)
+        {
+            block: '🌟 Твои ценности',
+            text: 'Выбери один самый важный для тебя фактор в профессии:',
+            options: [
+                { label: 'Эмпатия, забота, психологический комфорт', value: 'A' },
+                { label: 'Интеллектуальный вызов и решение сложных задач', value: 'B' },
+                { label: 'Конкретный, видимый результат моих рук', value: 'C' },
+                { label: 'Финансовая стабильность и востребованность', value: 'D' }
+            ]
+        },
+        {
+            block: '🌟 Твои ценности',
+            text: 'Что тебя пугает в профессии больше всего?',
+            options: [
+                { label: 'Не суметь помочь, потерять пациента', value: 'A' },
+                { label: 'Ошибиться в диагнозе', value: 'B' },
+                { label: 'Сделать техническую ошибку во время манипуляции', value: 'C' },
+                { label: 'Допустить эпидемиологическую ошибку и навредить людям', value: 'D' }
+            ]
+        },
+        {
+            block: '🌟 Твои ценности',
+            text: 'Представь: ты уже специалист с большим опытом. Какой заголовок в профессиональном журнале ты хотел бы увидеть рядом со своей фамилией?',
+            options: [
+                { label: '«Врач, которому доверяют тысячи владельцев»', value: 'A' },
+                { label: '«Автор уникального диагностического алгоритма»', value: 'B' },
+                { label: '«Мастер с минимальным процентом осложнений»', value: 'C' },
+                { label: '«Эксперт, обеспечивающий безопасность страны»', value: 'D' }
+            ]
+        },
+        // БЛОК 3: Твой стиль взаимодействия (8–10)
+        {
+            block: '🤝 Твой стиль взаимодействия',
+            text: 'Как ты принимаешь решения в нестандартной ситуации?',
+            options: [
+                { label: 'Консультируюсь с коллегами, собираю мнения', value: 'A' },
+                { label: 'Опираюсь на протоколы и исследования', value: 'B' },
+                { label: 'Доверяю интуиции и опыту', value: 'C' },
+                { label: 'Действую строго по инструкции', value: 'D' }
+            ]
+        },
+        {
+            block: '🤝 Твой стиль взаимодействия',
+            text: 'Какая команда тебе ближе?',
+            options: [
+                { label: 'Где все поддерживают друг друга, делятся эмоциями', value: 'A' },
+                { label: 'Где коллеги — эксперты, есть с кем обсудить сложные случаи', value: 'B' },
+                { label: 'Где чёткое разделение обязанностей и дисциплина', value: 'C' },
+                { label: 'Где работают по строгим государственным стандартам', value: 'D' }
+            ]
+        },
+        {
+            block: '🤝 Твой стиль взаимодействия',
+            text: 'Как ты относишься к рутине?',
+            options: [
+                { label: 'Принимаю, потому что это даёт стабильность', value: 'A' },
+                { label: 'Мне нужна вариативность, чтобы не скучать', value: 'B' },
+                { label: 'Готов терпеть ради интересных сложных случаев', value: 'C' },
+                { label: 'Рутина — часть контроля качества, я к ней готов', value: 'D' }
+            ]
+        },
+        // БЛОК 4: Твои интересы (11–13)
+        {
+            block: '🔍 Твои интересы',
+            text: 'Какую тему ты с большим интересом изучал бы в свободное время?',
+            options: [
+                { label: 'Поведенческая медицина, зоопсихология, общение с животными', value: 'A' },
+                { label: 'Новые методы диагностики, генетика, биохимия', value: 'B' },
+                { label: 'Анатомия, хирургические доступы, работа с инструментами', value: 'C' },
+                { label: 'Эпизоотология, инфекционные болезни, пищевая безопасность', value: 'D' }
+            ]
+        },
+        {
+            block: '🔍 Твои интересы',
+            text: 'Что тебе больше нравится делать руками?',
+            options: [
+                { label: 'Ухаживать, кормить, гладить, успокаивать животных, стричь, мыть', value: 'A' },
+                { label: 'Проводить заборы крови, ставить катетеры, делать УЗИ', value: 'B' },
+                { label: 'Шить, накладывать повязки, выполнять операции', value: 'C' },
+                { label: 'Отбирать пробы, проводить осмотры туш, работать с документами', value: 'D' }
+            ]
+        },
+        {
+            block: '🔍 Твои интересы',
+            text: 'Какой тип «пациентов» тебе ближе?',
+            options: [
+                { label: 'Мелкие домашние животные (кошки, собаки, грызуны) и их владельцы', value: 'A' },
+                { label: 'Пробы биоматериала, анализы, микроскопия', value: 'B' },
+                { label: 'Крупные животные (лошади, коровы, свиньи) или экзотика', value: 'C' },
+                { label: 'Продукты питания (мясо, молоко, яйца, рыба) — контроль качества', value: 'D' }
+            ]
+        },
+        // БЛОК 5: Твоя реакция в сложной ситуации (14–15)
+        {
+            block: '⚡ Твоя реакция в сложной ситуации',
+            text: 'На приёме у тебя тяжёлый случай. Диагноз неясен, время поджимает. Что ты чувствуешь?',
+            options: [
+                { label: 'Ответственность и желание успокоить владельца', value: 'A' },
+                { label: 'Азарт, это вызов для моего ума', value: 'B' },
+                { label: 'Спокойствие, у меня есть план действий', value: 'C' },
+                { label: 'Тревогу, но я должен защитить людей от возможной угрозы', value: 'D' }
+            ]
+        },
+        {
+            block: '⚡ Твоя реакция в сложной ситуации',
+            text: 'Если бы ты мог выбрать суперспособность ветеринара, это была бы:',
+            options: [
+                { label: 'Понимать язык животных', value: 'A' },
+                { label: 'Видеть болезни изнутри (как рентгеновское зрение)', value: 'B' },
+                { label: 'Идеальная точность рук', value: 'C' },
+                { label: 'Мгновенно выявлять опасные инфекции и токсины', value: 'D' }
+            ]
+        }
+    ];
+
+    // ============================================================
+    // СПЕЦИАЛИЗАЦИИ (12 штук)
+    // ============================================================
+    const specializations = [
+        {
+            id: 'therapist',
+            name: 'Клинический терапевт',
+            icon: '🩺',
+            desc: 'Диагностика и лечение внутренних болезней мелких животных, работа с владельцами, долгосрочное наблюдение.',
+            skills: 'Осмотр, интерпретация анализов, УЗИ, эндоскопия, работа с кардиологическими и нефрологическими пациентами.',
+            where: 'Городские клиники, приёмное отделение, терапевтический стационар.',
+            path: 'Ординатура по терапии, курсы по кардиологии, нефрологии, эндокринологии.',
+            pros: 'Глубокое погружение в патологии, постоянное обучение, контакт с людьми.',
+            cons: 'Высокая эмоциональная нагрузка, сложные случаи без гарантий.'
+        },
+        {
+            id: 'surgeon',
+            name: 'Ветеринарный хирург',
+            icon: '🔪',
+            desc: 'Оперативные вмешательства, работа с костями, суставами, мягкими тканями.',
+            skills: 'Асептика и антисептика, владение инструментами, работа с имплантами.',
+            where: 'Хирургические отделения, травматология, ортопедия, нейрохирургия.',
+            path: 'Ординатура по хирургии, курсы по травматологии, артроскопии, офтальмологии.',
+            pros: 'Видимый результат, адреналин, востребованность.',
+            cons: 'Высокая ответственность, длительные операции, физическая усталость.'
+        },
+        {
+            id: 'lab',
+            name: 'Врач лабораторной диагностики',
+            icon: '🔬',
+            desc: 'Работа с пробами, микроскопия, биохимия, цитология, гистология, ПЦР.',
+            skills: 'Работа с микроскопом, интерпретация результатов, знание лабораторных норм.',
+            where: 'Ветеринарные лаборатории, диагностические центры, патологоанатомические бюро.',
+            path: 'Курсы по лабораторной диагностике, цитологии, гистологии.',
+            pros: 'Спокойная среда, интеллектуальная работа, минимальный контакт с владельцами.',
+            cons: 'Рутина, мало живого общения, кабинетный труд.'
+        },
+        {
+            id: 'expert',
+            name: 'Ветеринарно-санитарный эксперт',
+            icon: '🥩',
+            desc: 'Контроль качества продукции животного происхождения, ветеринарно-санитарная экспертиза мяса, молока, яиц, рыбы.',
+            skills: 'Органолептика, отбор проб, бактериология, знание ГОСТов и СанПиНов.',
+            where: 'Рынки, мясокомбинаты, молочные заводы, птицефабрики, лаборатории ветсанэкспертизы.',
+            path: 'Ординатура по ветсанэкспертизе, курсы по пищевой безопасности.',
+            pros: 'Стабильная работа, востребованность, отсутствие ночных смен.',
+            cons: 'Работа с продуктами, часто в холоде, бюрократия.'
+        },
+        {
+            id: 'inspector',
+            name: 'Государственный ветеринарный инспектор',
+            icon: '🏛️',
+            desc: 'Контроль эпизоотической ситуации, оформление ветеринарных документов, надзор за соблюдением ветзаконодательства.',
+            skills: 'Знание законов, оформление документов, проведение проверок, эпизоотология.',
+            where: 'Районные и городские ветстанции, Россельхознадзор, пограничные пункты.',
+            path: 'Работа в госветучреждениях, курсы по эпизоотологии, повышение квалификации.',
+            pros: 'Государственная гарантия занятости, пенсия, стабильность.',
+            cons: 'Бюрократия, бумажная работа, низкая зарплата на старте.'
+        },
+        {
+            id: 'epizoot',
+            name: 'Эпизоотолог',
+            icon: '🦠',
+            desc: 'Мониторинг инфекционных болезней, разработка противоэпизоотических мероприятий, работа с особо опасными инфекциями.',
+            skills: 'Эпизоотология, микробиология, знание карантинных заболеваний, отбор проб.',
+            where: 'Санэпидемстанции, лаборатории особо опасных инфекций, научные институты.',
+            path: 'Ординатура по эпизоотологии, курсы по особо опасным инфекциям.',
+            pros: 'Интеллектуальная работа, общественная значимость, работа в команде.',
+            cons: 'Высокий риск, строгие нормы, командировки в очаги.'
+        },
+        {
+            id: 'groomer',
+            name: 'Грумер',
+            icon: '✂️',
+            desc: 'Гигиенический уход: стрижка, мытьё, обработка шерсти, когтей, ушей.',
+            skills: 'Работа с инструментами, знание породных стандартов, терпение, аккуратность.',
+            where: 'Груминг-салоны, зоосалон при клинике, частная практика.',
+            path: 'Курсы груминга, стажировка в салонах.',
+            pros: 'Творческая работа, востребованность, гибкий график, быстрый доход.',
+            cons: 'Физическая нагрузка, аллергия, нестабильность, работа с трудными владельцами.'
+        },
+        {
+            id: 'dermatologist',
+            name: 'Ветеринарный дерматолог',
+            icon: '🧴',
+            desc: 'Лечение кожных заболеваний: аллергии, дерматиты, аутоиммунные болезни.',
+            skills: 'Трихоскопия, цитология, интерпретация кожных проб.',
+            where: 'Дерматологические кабинеты, аллергологические центры.',
+            path: 'Курсы по дерматологии, аллергологии.',
+            pros: 'Хорошая оплата, минимальные риски для жизни пациента.',
+            cons: 'Частые хронические случаи, психологически сложные владельцы.'
+        },
+        {
+            id: 'ophthalmologist',
+            name: 'Ветеринарный офтальмолог',
+            icon: '👁️',
+            desc: 'Лечение глазных болезней: катаракта, глаукома, язвы роговицы.',
+            skills: 'Офтальмоскопия, тонометрия, микрохирургия глаза.',
+            where: 'Офтальмологические кабинеты, специализированные клиники.',
+            path: 'Курсы по офтальмологии, микрохирургии глаза.',
+            pros: 'Высокая востребованность, хорошая оплата.',
+            cons: 'Сложное оборудование, риск потери зрения пациента.'
+        },
+        {
+            id: 'zoopsychologist',
+            name: 'Зоопсихолог',
+            icon: '🧠',
+            desc: 'Коррекция поведения, работа с агрессией, страхами, тревожностью.',
+            skills: 'Наблюдательность, терпение, знание этологии.',
+            where: 'Поведенческие клиники, частная практика, приюты.',
+            path: 'Курсы по зоопсихологии, поведенческой медицине.',
+            pros: 'Уникальная ниша, глубокий контакт с животными.',
+            cons: 'Медленный прогресс, сложные случаи.'
+        },
+        {
+            id: 'rehab',
+            name: 'Ветеринарный реабилитолог',
+            icon: '💪',
+            desc: 'Восстановление пациентов после травм и операций, физиотерапия, массаж, ЛФК.',
+            skills: 'Массаж, кинезиотейпирование, работа с лазером и магнитными полями.',
+            where: 'Реабилитационные центры, клиники с физиотерапией.',
+            path: 'Курсы по физиотерапии, реабилитации, кинезиологии.',
+            pros: 'Видимый прогресс, благодарные владельцы, минимум стресса.',
+            cons: 'Трудоёмкость, требует терпения, пока не очень широко развито в РФ.'
+        },
+        {
+            id: 'pharmacologist',
+            name: 'Ветеринарный фармаколог',
+            icon: '💊',
+            desc: 'Разработка схем лечения, подбор препаратов, работа с ядами и противоядиями.',
+            skills: 'Знание лекарств, расчёт доз, анализ побочных эффектов.',
+            where: 'Фармкомпании, токсикологические центры, исследовательские лаборатории.',
+            path: 'Ординатура по фармакологии, курсы по клинической фармакологии.',
+            pros: 'Интеллектуальная работа, высокий доход в фарминдустрии.',
+            cons: 'Мало работы с живыми животными, кабинетный труд.'
+        }
+    ];
+
+    // ============================================================
+    // ТАБЛИЦА БАЛЛОВ (12 специализаций x 4 ответа)
+    // ============================================================
+    const scoreMap = {
+        therapist: { A: 3, B: 3, C: 1, D: 1 },
+        surgeon: { A: 1, B: 2, C: 5, D: 1 },
+        lab: { A: 1, B: 5, C: 1, D: 2 },
+        expert: { A: 1, B: 3, C: 2, D: 4 },
+        inspector: { A: 1, B: 3, C: 1, D: 4 },
+        epizoot: { A: 1, B: 4, C: 1, D: 4 },
+        groomer: { A: 3, B: 1, C: 4, D: 1 },
+        dermatologist: { A: 3, B: 3, C: 1, D: 2 },
+        ophthalmologist: { A: 2, B: 4, C: 4, D: 1 },
+        zoopsychologist: { A: 5, B: 1, C: 1, D: 2 },
+        rehab: { A: 4, B: 1, C: 1, D: 3 },
+        pharmacologist: { A: 1, B: 4, C: 1, D: 3 }
+    };
+
+    const specIds = Object.keys(scoreMap);
+
+    // ============================================================
+    // СОСТОЯНИЕ
+    // ============================================================
+    let currentQuestionIndex = 0;
+    let answers = []; // массив значений 'A','B','C','D'
+    let scores = {};
+
+    // DOM
+    const startScreen = document.getElementById('startScreen');
+    const questionScreen = document.getElementById('questionScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const startBtn = document.getElementById('startBtn');
+    const qCounter = document.getElementById('qCounter');
+    const blockLabel = document.getElementById('blockLabel');
+    const progressFill = document.getElementById('progressFill');
+    const qNumber = document.getElementById('qNumber');
+    const qText = document.getElementById('qText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const resultCards = document.getElementById('resultCards');
+    const restartBtn = document.getElementById('restartBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    // ============================================================
+    // ФУНКЦИИ
+    // ============================================================
+    function initScores() {
+        scores = {};
+        specIds.forEach(id => { scores[id] = 0; });
+    }
+
+    function showScreen(screen) {
+        startScreen.classList.add('hidden');
+        questionScreen.classList.add('hidden');
+        resultScreen.classList.add('hidden');
+        screen.classList.remove('hidden');
+    }
+
+    function renderQuestion(index) {
+        const q = questions[index];
+        if (!q) return;
+
+        qCounter.textContent = `${index + 1} / ${questions.length}`;
+        blockLabel.textContent = q.block;
+        progressFill.style.width = `${((index) / questions.length) * 100}%`;
+        qNumber.textContent = `Вопрос ${index + 1}`;
+        qText.textContent = q.text;
+
+        optionsContainer.innerHTML = '';
+        const letters = ['А', 'Б', 'В', 'Г'];
+        q.options.forEach((opt, i) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span class="marker">${letters[i]}</span> ${opt.label}`;
+            btn.dataset.value = opt.value;
+            btn.addEventListener('click', () => selectAnswer(btn, opt.value));
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function selectAnswer(btn, value) {
+        // Блокируем повторный выбор
+        const allBtns = optionsContainer.querySelectorAll('.option-btn');
+        if (allBtns[0].classList.contains('selected')) return;
+
+        // Подсветка выбранного
+        allBtns.forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+
+        // Сохраняем ответ
+        answers[currentQuestionIndex] = value;
+
+        // Переход к следующему вопросу через паузу
+        setTimeout(() => {
+            if (currentQuestionIndex + 1 < questions.length) {
+                currentQuestionIndex++;
+                renderQuestion(currentQuestionIndex);
+            } else {
+                calculateResults();
+            }
+        }, 350);
+    }
+
+    function calculateResults() {
+        // Инициализация баллов
+        initScores();
+
+        // Проходим по всем ответам
+        answers.forEach((val, idx) => {
+            if (!val) return;
+            specIds.forEach(specId => {
+                const map = scoreMap[specId];
+                if (map && map[val] !== undefined) {
+                    scores[specId] += map[val];
+                }
+            });
+        });
+
+        // Сортируем специализации по баллам
+        const sorted = specIds
+            .map(id => ({ id, score: scores[id] }))
+            .sort((a, b) => b.score - a.score);
+
+        // Берём топ-3
+        const top3 = sorted.slice(0, 3);
+
+        // Показываем результат
+        showResult(top3);
+    }
+
+    function showResult(top3) {
+        showScreen(resultScreen);
+
+        // Добавляем небольшой скролл к результатам
+        const container = document.getElementById('resultCards');
+        container.innerHTML = '';
+
+        top3.forEach((item, idx) => {
+            const spec = specializations.find(s => s.id === item.id);
+            if (!spec) return;
+
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            card.innerHTML = `
+                <div class="spec-title">${spec.icon} ${spec.name}</div>
+                <div class="spec-desc">${spec.desc}</div>
+                <div class="spec-details">
+                    <div><span class="label">🔧 Ключевые навыки:</span><br>${spec.skills}</div>
+                    <div><span class="label">📍 Где работать:</span><br>${spec.where}</div>
+                    <div><span class="label">📚 Путь развития:</span><br>${spec.path}</div>
+                    <div class="pros-cons">
+                        <div class="pros">✅ ${spec.pros}</div>
+                        <div class="cons">⚠️ ${spec.cons}</div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        // Обновляем прогресс на 100%
+        progressFill.style.width = '100%';
+    }
+
+    function resetTest() {
+        currentQuestionIndex = 0;
+        answers = [];
+        initScores();
+        showScreen(startScreen);
+        progressFill.style.width = '0%';
+        // Сброс подсветки
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    }
+
+    function downloadResult() {
+        const top3 = getTop3();
+        if (!top3 || top3.length === 0) {
+            alert('Сначала пройдите тест!');
+            return;
+        }
+
+        let text = '🧠 ВетСим-Навигатор: Кто ты в ветеринарии?\n';
+        text += '='.repeat(50) + '\n\n';
+        text += '🎉 Твой ветеринарный профиль:\n\n';
+
+        top3.forEach((item, idx) => {
+            const spec = specializations.find(s => s.id === item.id);
+            if (!spec) return;
+            text += `${idx+1}. ${spec.icon} ${spec.name}\n`;
+            text += `   ${spec.desc}\n`;
+            text += `   Навыки: ${spec.skills}\n`;
+            text += `   Где работать: ${spec.where}\n`;
+            text += `   Путь: ${spec.path}\n`;
+            text += `   ✅ ${spec.pros}\n`;
+            text += `   ⚠️ ${spec.cons}\n\n`;
+        });
+
+        text += '='.repeat(50) + '\n';
+        text += '🐾 ВетСим — ветеринарное просвещение\n';
+        text += 'https://vet-sim.github.io\n';
+        text += 'https://vk.com/VetSimPros';
+
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'vetsim_navigator_result.txt';
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+
+    function getTop3() {
+        if (!scores || Object.keys(scores).length === 0) return null;
+        const sorted = specIds
+            .map(id => ({ id, score: scores[id] }))
+            .sort((a, b) => b.score - a.score);
+        return sorted.slice(0, 3);
+    }
+
+    // ============================================================
+    // СОБЫТИЯ
+    // ============================================================
+    startBtn.addEventListener('click', () => {
+        resetTest();
+        showScreen(questionScreen);
+        renderQuestion(0);
+    });
+
+    restartBtn.addEventListener('click', resetTest);
+    downloadBtn.addEventListener('click', downloadResult);
+
+    // ============================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ============================================================
+    initScores();
+    showScreen(startScreen);
+</script>
+</body>
+</html>

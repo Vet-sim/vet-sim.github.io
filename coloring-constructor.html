@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta property="og:title" content="Конструктор раскрасок | ВетСим">
+    <meta property="og:description" content="Интерактивное раскрашивание анатомических контуров для ветеринарного образования">
+    <meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='630'%3E%3Crect width='1200' height='630' fill='%23FDF8F0'/%3E%3Ctext x='600' y='300' font-size='48' fill='%232C7DA0' text-anchor='middle' font-family='sans-serif'%3E🎨 Конструктор раскрасок%3C/text%3E%3Ctext x='600' y='370' font-size='28' fill='%233E5C4A' text-anchor='middle'%3EВетСим — ветеринарное просвещение%3C/text%3E%3C/svg%3E">
+    <title>Конструктор раскрасок | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+            color: #3E5C4A;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background: #FFFFFF;
+            border-bottom: 1px solid #E7EDE2;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1F4E6E;
+        }
+
+        .header-brand .logo-icon {
+            font-size: 1.6rem;
+        }
+
+        .header-brand span {
+            color: #2C7DA0;
+        }
+
+        .header-help {
+            font-size: 0.85rem;
+            color: #8A9B7A;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-help .hint-icon {
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .header-help .hint-icon:hover {
+            transform: scale(1.15);
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            padding: 1.2rem 1.5rem;
+            gap: 1.5rem;
+            min-height: 600px;
+        }
+
+        /* ===== TOOLBAR (left) ===== */
+        .toolbar {
+            flex: 0 0 260px;
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.2rem;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .toolbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .toolbar::-webkit-scrollbar-thumb {
+            background: #C9D6BA;
+            border-radius: 10px;
+        }
+
+        .toolbar-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toolbar-section .section-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8A9B7A;
+        }
+
+        /* Upload button */
+        .upload-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .upload-wrap .file-name {
+            font-size: 0.8rem;
+            color: #8A9B7A;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 10px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #fff;
+            background: #A3B18A;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(0.95);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-olive {
+            background: #A3B18A;
+        }
+
+        .btn-olive:hover {
+            background: #8FA375;
+        }
+
+        .btn-orange {
+            background: #D4A373;
+        }
+
+        .btn-orange:hover {
+            background: #C99464;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #A3B18A;
+            color: #3E5C4A;
+        }
+
+        .btn-outline:hover {
+            background: #F0EEE5;
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            border: 2px solid #D47A6A;
+            color: #B5533A;
+        }
+
+        .btn-danger-outline:hover {
+            background: #FDE8E0;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+        }
+
+        /* Color palette */
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+        }
+
+        .color-swatch {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.08);
+        }
+
+        .color-swatch.active {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #2C7DA0;
+            transform: scale(1.05);
+        }
+
+        /* Brush size */
+        .brush-control {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .brush-control input[type="range"] {
+            flex: 1;
+            accent-color: #2C7DA0;
+            height: 4px;
+            cursor: pointer;
+        }
+
+        .brush-control .size-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        /* Tool buttons grid */
+        .tool-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4rem;
+        }
+
+        .tool-grid .btn {
+            width: 100%;
+            padding: 8px 10px;
+            font-size: 0.75rem;
+        }
+
+        .tool-grid .btn-full {
+            grid-column: span 2;
+        }
+
+        /* ===== CANVAS (center) ===== */
+        .canvas-wrapper {
+            flex: 1;
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 500px;
+            cursor: crosshair;
+        }
+
+        .canvas-wrapper canvas {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+            cursor: crosshair;
+            image-rendering: pixelated;
+        }
+
+        .canvas-placeholder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.3rem;
+            color: #B0C4C0;
+            text-align: center;
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .canvas-placeholder .icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Zoom indicator */
+        .zoom-indicator {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #5F7C62;
+            border: 1px solid #E2EAD9;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #FFFFFF;
+            border-radius: 2rem;
+            padding: 2rem 2.2rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease;
+            text-align: center;
+        }
+
+        .modal-box .modal-icon {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal-box h3 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+        .modal-box p {
+            font-size: 1rem;
+            color: #2d3f4a;
+            line-height: 1.5;
+            margin-bottom: 1.2rem;
+        }
+        .modal-box .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .modal-box .btn {
+            width: auto;
+            padding: 10px 28px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #FFFFFF;
+            border-top: 1px solid #E7EDE2;
+            padding: 0.8rem 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #8A9B7A;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .footer .brand {
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .main-layout {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .toolbar {
+                flex: none;
+                width: 100%;
+                max-height: none;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 1rem;
+                gap: 0.8rem;
+            }
+            .toolbar-section {
+                flex: 1;
+                min-width: 150px;
+            }
+            .toolbar-section .section-label {
+                font-size: 0.65rem;
+            }
+            .palette-grid {
+                grid-template-columns: repeat(8, 1fr);
+            }
+            .tool-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .canvas-wrapper {
+                min-height: 400px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .header {
+                padding: 0.6rem 1rem;
+            }
+            .header-brand {
+                font-size: 1rem;
+            }
+            .main-layout {
+                padding: 0.6rem;
+                gap: 0.8rem;
+            }
+            .toolbar {
+                padding: 0.8rem;
+                gap: 0.6rem;
+                flex-direction: column;
+            }
+            .toolbar-section {
+                min-width: 100%;
+            }
+            .palette-grid {
+                grid-template-columns: repeat(8, 1fr);
+            }
+            .canvas-wrapper {
+                min-height: 300px;
+            }
+            .modal-box {
+                padding: 1.5rem;
+                margin: 1rem;
+            }
+            .footer {
+                padding: 0.6rem 1rem;
+                font-size: 0.7rem;
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .palette-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            .tool-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .header-brand .logo-icon {
+                font-size: 1.2rem;
+            }
+            .header-help .hint-icon {
+                font-size: 1rem;
+            }
+            .canvas-placeholder .icon {
+                font-size: 2.2rem;
+            }
+            .canvas-placeholder {
+                font-size: 1rem;
+            }
+        }
+
+        /* Helper */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #E2EAD9;
+            border-top-color: #2C7DA0;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+        }
+        .tooltip:hover::after {
+            content: attr(data-tip);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            white-space: nowrap;
+            pointer-events: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-brand">
+            <span class="logo-icon">🐾</span>
+            <span>ВетСим</span>
+            <span style="font-weight:400; color:#8A9B7A; font-size:0.9rem;">Конструктор раскрасок</span>
+        </div>
+        <div class="header-help">
+            <span class="hint-icon" id="helpBtn" title="Подсказка">❓</span>
+        </div>
+    </header>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main-layout">
+        <!-- Toolbar -->
+        <aside class="toolbar" id="toolbar">
+            <!-- Upload -->
+            <div class="toolbar-section">
+                <div class="section-label">📤 Загрузка</div>
+                <div class="upload-wrap">
+                    <button class="btn btn-primary" id="uploadBtn">📤 Загрузить контур</button>
+                    <input type="file" id="fileInput" accept="image/png,image/jpeg,image/jpg" style="display:none;">
+                    <span class="file-name" id="fileName">Файл не выбран</span>
+                </div>
+            </div>
+
+            <!-- Palette -->
+            <div class="toolbar-section">
+                <div class="section-label">🎨 Палитра</div>
+                <div class="palette-grid" id="paletteGrid"></div>
+            </div>
+
+            <!-- Brush size -->
+            <div class="toolbar-section">
+                <div class="section-label">🖌️ Кисть</div>
+                <div class="brush-control">
+                    <input type="range" id="brushSize" min="1" max="50" value="8">
+                    <span class="size-label" id="brushSizeLabel">8 px</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="toolbar-section">
+                <div class="section-label">⚙️ Действия</div>
+                <div class="tool-grid">
+                    <button class="btn btn-danger-outline btn-sm" id="undoBtn" title="Отменить последнее действие">↩️ Отменить</button>
+                    <button class="btn btn-danger-outline btn-sm" id="clearBtn" title="Очистить всё">🧹 Очистить</button>
+                    <button class="btn btn-olive btn-sm btn-full" id="downloadPngBtn">📥 Скачать PNG</button>
+                    <button class="btn btn-orange btn-sm btn-full" id="exportHtmlBtn">💾 Экспорт в HTML</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Canvas -->
+        <div class="canvas-wrapper" id="canvasWrapper">
+            <canvas id="mainCanvas"></canvas>
+            <div class="canvas-placeholder" id="placeholder">
+                <span class="icon">🖌️</span>
+                Загрузите контур для начала работы
+            </div>
+            <div class="zoom-indicator" id="zoomIndicator">100%</div>
+        </div>
+    </div>
+
+    <!-- ===== MODAL ===== -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-box">
+            <div class="modal-icon" id="modalIcon">⚠️</div>
+            <h3 id="modalTitle">Подтверждение</h3>
+            <p id="modalText">Вы уверены?</p>
+            <div class="modal-actions" id="modalActions">
+                <button class="btn btn-olive" id="modalCancel">Отмена</button>
+                <button class="btn btn-primary" id="modalConfirm">Да</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+        <span><span class="brand">🐾 ВетСим</span> — ветеринарное просвещение</span>
+        <span><a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a></span>
+        <span><a href="https://vk.com/VetSimPros" target="_blank">vk.com/VetSimPros</a></span>
+    </footer>
+
+    <script>
+        // ============================================================
+        //  КОНСТРУКТОР РАСКРАСОК — ПОЛНАЯ ЛОГИКА
+        // ============================================================
+
+        (function() {
+            'use strict';
+
+            // ----- DOM refs -----
+            const canvas = document.getElementById('mainCanvas');
+            const ctx = canvas.getContext('2d');
+            const wrapper = document.getElementById('canvasWrapper');
+            const placeholder = document.getElementById('placeholder');
+            const zoomIndicator = document.getElementById('zoomIndicator');
+            const paletteGrid = document.getElementById('paletteGrid');
+            const brushSizeInput = document.getElementById('brushSize');
+            const brushSizeLabel = document.getElementById('brushSizeLabel');
+            const fileInput = document.getElementById('fileInput');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const fileName = document.getElementById('fileName');
+            const undoBtn = document.getElementById('undoBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const downloadPngBtn = document.getElementById('downloadPngBtn');
+            const exportHtmlBtn = document.getElementById('exportHtmlBtn');
+            const helpBtn = document.getElementById('helpBtn');
+            const modal = document.getElementById('modal');
+            const modalIcon = document.getElementById('modalIcon');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalText = document.getElementById('modalText');
+            const modalConfirm = document.getElementById('modalConfirm');
+            const modalCancel = document.getElementById('modalCancel');
+
+            // ----- State -----
+            let currentColor = '#4A7A5A';
+            let brushSize = 8;
+            let isDrawing = false;
+            let lastX = 0,
+                lastY = 0;
+            let imageLoaded = false;
+            let imageData = null; // base64 of original image for reset
+
+            // Zoom & pan
+            let zoom = 1;
+            let panX = 0,
+                panY = 0;
+            let isPanning = false;
+            let panStartX = 0,
+                panStartY = 0;
+            let panStartOffsetX = 0,
+                panStartOffsetY = 0;
+
+            // History (undo)
+            const MAX_HISTORY = 30;
+            let history = [];
+            let historyIndex = -1;
+
+            // ----- Color palette -----
+            const colors = [
+                '#D34F4F', // красный
+                '#E8836B', // терракотовый
+                '#F4A460', // оранжевый
+                '#E8C84A', // жёлтый
+                '#7CB342', // зелёный
+                '#4A7A5A', // тёмно-зелёный
+                '#5B8DB8', // синий
+                '#2C7DA0', // тёмно-синий
+                '#7E57C2', // фиолетовый
+                '#BC8F8F', // розовый
+                '#B0A090', // бежевый
+                '#A3B18A', // оливковый
+                '#D4A373', // песочный
+                '#8A9B7A', // серо-зелёный
+                '#3E5C4A', // тёмно-оливовый
+                '#1F4E6E', // тёмно-синий
+                '#6D8A7A', // серо-зелёный
+                '#C9B8A0', // светло-бежевый
+                '#5F7C8A', // голубовато-серый
+                '#E5D5C0', // кремовый
+            ];
+
+            // ----- Init palette -----
+            function initPalette() {
+                paletteGrid.innerHTML = '';
+                colors.forEach(c => {
+                    const swatch = document.createElement('div');
+                    swatch.className = 'color-swatch';
+                    swatch.style.background = c;
+                    swatch.dataset.color = c;
+                    if (c === currentColor) swatch.classList.add('active');
+                    swatch.addEventListener('click', () => selectColor(c, swatch));
+                    paletteGrid.appendChild(swatch);
+                });
+            }
+
+            function selectColor(color, swatch) {
+                currentColor = color;
+                document.querySelectorAll('.color-swatch').forEach(el => el.classList.remove('active'));
+                if (swatch) swatch.classList.add('active');
+                else {
+                    document.querySelectorAll('.color-swatch').forEach(el => {
+                        if (el.dataset.color === color) el.classList.add('active');
+                    });
+                }
+            }
+
+            // ----- Canvas sizing -----
+            function resizeCanvas() {
+                const rect = wrapper.getBoundingClientRect();
+                const w = rect.width - 4;
+                const h = rect.height - 4;
+                if (w > 0 && h > 0) {
+                    canvas.width = w;
+                    canvas.height = h;
+                    // If image loaded, redraw
+                    if (imageLoaded) {
+                        redrawWithTransform();
+                    } else {
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+                }
+            }
+
+            // ----- Transform helpers -----
+            function applyTransform() {
+                ctx.save();
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.scale(zoom, zoom);
+                ctx.translate(panX, panY);
+                ctx.translate(-canvas.width / 2, -canvas.height / 2);
+            }
+
+            function restoreTransform() {
+                ctx.restore();
+            }
+
+            function getCanvasCoords(clientX, clientY) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                let x = (clientX - rect.left) * scaleX;
+                let y = (clientY - rect.top) * scaleY;
+                // Inverse transform
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                x = (x - cx) / zoom - panX + cx;
+                y = (y - cy) / zoom - panY + cy;
+                return { x, y };
+            }
+
+            // ----- Drawing -----
+            function drawLine(x1, y1, x2, y2) {
+                if (!imageLoaded) return;
+                ctx.save();
+                applyTransform();
+                ctx.beginPath();
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = brushSize;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            function drawDot(x, y) {
+                if (!imageLoaded) return;
+                ctx.save();
+                applyTransform();
+                ctx.beginPath();
+                ctx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+                ctx.fillStyle = currentColor;
+                ctx.fill();
+                ctx.restore();
+            }
+
+            // ----- Save state for undo -----
+            function saveState() {
+                if (!imageLoaded) return;
+                // Remove any future states beyond current index
+                history = history.slice(0, historyIndex + 1);
+                const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                history.push(data);
+                if (history.length > MAX_HISTORY) {
+                    history.shift();
+                }
+                historyIndex = history.length - 1;
+            }
+
+            function undo() {
+                if (historyIndex <= 0 || !imageLoaded) return;
+                historyIndex--;
+                ctx.putImageData(history[historyIndex], 0, 0);
+                // Re-draw base image? Actually history stores full canvas state, so no need.
+                // But we need to ensure the image is still loaded.
+            }
+
+            // ----- Redraw with transform -----
+            function redrawWithTransform() {
+                if (!imageLoaded) return;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                ctx.save();
+                applyTransform();
+                // Draw the image centered
+                if (imageData) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const iw = img.width;
+                        const ih = img.height;
+                        const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                        const dw = iw * scale;
+                        const dh = ih * scale;
+                        const dx = (canvas.width - dw) / 2;
+                        const dy = (canvas.height - dh) / 2;
+                        ctx.drawImage(img, dx, dy, dw, dh);
+                        ctx.restore();
+                    };
+                    img.src = imageData;
+                } else {
+                    ctx.restore();
+                }
+            }
+
+            // ----- Load image -----
+            function loadImage(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        imageData = e.target.result;
+                        imageLoaded = true;
+                        placeholder.style.display = 'none';
+                        fileName.textContent = file.name;
+                        // Resize canvas to fit image
+                        resizeCanvas();
+                        // Draw image on canvas
+                        drawImageOnCanvas(img);
+                        // Save initial state
+                        saveState();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+
+            function drawImageOnCanvas(img) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                const iw = img.width;
+                const ih = img.height;
+                const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                const dw = iw * scale;
+                const dh = ih * scale;
+                const dx = (canvas.width - dw) / 2;
+                const dy = (canvas.height - dh) / 2;
+                ctx.drawImage(img, dx, dy, dw, dh);
+                // Store base image data for reset
+                // But we'll just keep the imageData for redraw
+            }
+
+            // ----- Reset canvas to base image -----
+            function resetToBase() {
+                if (!imageLoaded || !imageData) return;
+                const img = new Image();
+                img.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    const iw = img.width;
+                    const ih = img.height;
+                    const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                    const dw = iw * scale;
+                    const dh = ih * scale;
+                    const dx = (canvas.width - dw) / 2;
+                    const dy = (canvas.height - dh) / 2;
+                    ctx.drawImage(img, dx, dy, dw, dh);
+                    saveState();
+                };
+                img.src = imageData;
+            }
+
+            // ----- Export HTML -----
+            function exportToHTML() {
+                if (!imageLoaded) {
+                    alert('Сначала загрузите изображение!');
+                    return;
+                }
+                // Get current canvas content as base64
+                const dataUrl = canvas.toDataURL('image/png');
+                const htmlContent = `<!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Раскраска | ВетСим</title>
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; }
+                body {
+                    background: #FDF8F0;
+                    font-family: 'Inter', 'Roboto', system-ui, sans-serif;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    min-height: 100vh;
+                    padding: 2rem;
+                }
+                .container {
+                    background: #FFFFFF;
+                    border-radius: 2rem;
+                    padding: 2rem;
+                    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+                    border: 1px solid #E7EDE2;
+                    max-width: 800px;
+                    width: 100%;
+                    text-align: center;
+                }
+                h1 {
+                    font-size: 1.6rem;
+                    font-weight: 700;
+                    color: #1F4E6E;
+                    margin-bottom: 1rem;
+                }
+                img {
+                    max-width: 100%;
+                    height: auto;
+                    border-radius: 1rem;
+                    border: 1px solid #E2EAD9;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+                }
+                .footer {
+                    margin-top: 1.5rem;
+                    font-size: 0.8rem;
+                    color: #8A9B7A;
+                }
+                .footer a {
+                    color: #2C7DA0;
+                    text-decoration: none;
+                }
+                .footer a:hover {
+                    text-decoration: underline;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🎨 Раскраска</h1>
+                <img src="${dataUrl}" alt="Раскраска">
+                <div class="footer">
+                    <p>🐾 <strong>ВетСим</strong> — ветеринарное просвещение</p>
+                    <p><a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a> · <a href="https://vk.com/VetSimPros" target="_blank">vk.com/VetSimPros</a></p>
+                </div>
+            </div>
+        </body>
+        </html>`;
+
+                // Download
+                const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'raskraska_export.html';
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }
+
+            // ----- Modal -----
+            function showModal(icon, title, text, confirmText, onConfirm) {
+                modalIcon.textContent = icon || '⚠️';
+                modalTitle.textContent = title || 'Подтверждение';
+                modalText.textContent = text || 'Вы уверены?';
+                modalConfirm.textContent = confirmText || 'Да';
+                modal.classList.add('active');
+
+                modalConfirm.onclick = function() {
+                    modal.classList.remove('active');
+                    if (onConfirm) onConfirm();
+                };
+                modalCancel.onclick = function() {
+                    modal.classList.remove('active');
+                };
+            }
+
+            // ----- Event handlers -----
+
+            // Upload
+            uploadBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    loadImage(this.files[0]);
+                }
+                this.value = '';
+            });
+
+            // Brush size
+            brushSizeInput.addEventListener('input', function() {
+                brushSize = parseInt(this.value);
+                brushSizeLabel.textContent = brushSize + ' px';
+            });
+
+            // Color selection from swatch (already handled)
+
+            // Drawing
+            canvas.addEventListener('mousedown', function(e) {
+                if (!imageLoaded) return;
+                const rect = canvas.getBoundingClientRect();
+                const coords = getCanvasCoords(e.clientX, e.clientY);
+                isDrawing = true;
+                lastX = coords.x;
+                lastY = coords.y;
+                drawDot(lastX, lastY);
+                saveState();
+            });
+
+            canvas.addEventListener('mousemove', function(e) {
+                if (!isDrawing || !imageLoaded) return;
+                const coords = getCanvasCoords(e.clientX, e.clientY);
+                drawLine(lastX, lastY, coords.x, coords.y);
+                lastX = coords.x;
+                lastY = coords.y;
+                // Auto-save on move? No, we save on mouseup to reduce history size.
+            });
+
+            canvas.addEventListener('mouseup', function(e) {
+                if (isDrawing) {
+                    isDrawing = false;
+                    saveState();
+                }
+            });
+
+            canvas.addEventListener('mouseleave', function() {
+                if (isDrawing) {
+                    isDrawing = false;
+                    saveState();
+                }
+            });
+
+            // Touch support
+            canvas.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                if (!imageLoaded) return;
+                const touch = e.touches[0];
+                const coords = getCanvasCoords(touch.clientX, touch.clientY);
+                isDrawing = true;
+                lastX = coords.x;
+                lastY = coords.y;
+                drawDot(lastX, lastY);
+                saveState();
+            }, { passive: false });
+
+            canvas.addEventListener('touchmove', function(e) {
+                e.preventDefault();
+                if (!isDrawing || !imageLoaded) return;
+                const touch = e.touches[0];
+                const coords = getCanvasCoords(touch.clientX, touch.clientY);
+                drawLine(lastX, lastY, coords.x, coords.y);
+                lastX = coords.x;
+                lastY = coords.y;
+            }, { passive: false });
+
+            canvas.addEventListener('touchend', function(e) {
+                if (isDrawing) {
+                    isDrawing = false;
+                    saveState();
+                }
+            }, { passive: false });
+
+            // Zoom with mouse wheel
+            canvas.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -0.08 : 0.08;
+                zoom = Math.min(3, Math.max(0.3, zoom + delta));
+                zoomIndicator.textContent = Math.round(zoom * 100) + '%';
+                redrawWithTransform();
+            }, { passive: false });
+
+            // Pan with middle mouse or shift+drag
+            canvas.addEventListener('mousedown', function(e) {
+                if (e.button === 1 || (e.shiftKey && e.button === 0)) {
+                    isPanning = true;
+                    panStartX = e.clientX;
+                    panStartY = e.clientY;
+                    panStartOffsetX = panX;
+                    panStartOffsetY = panY;
+                    canvas.style.cursor = 'grab';
+                }
+            });
+
+            window.addEventListener('mousemove', function(e) {
+                if (isPanning) {
+                    const dx = (e.clientX - panStartX) / canvas.width * 2 / zoom;
+                    const dy = (e.clientY - panStartY) / canvas.height * 2 / zoom;
+                    panX = panStartOffsetX + dx;
+                    panY = panStartOffsetY + dy;
+                    redrawWithTransform();
+                }
+            });
+
+            window.addEventListener('mouseup', function(e) {
+                if (isPanning) {
+                    isPanning = false;
+                    canvas.style.cursor = 'crosshair';
+                }
+            });
+
+            // Undo
+            undoBtn.addEventListener('click', function() {
+                undo();
+                updateUndoButton();
+            });
+
+            function updateUndoButton() {
+                undoBtn.textContent = historyIndex > 0 ? '↩️ Отменить' : '↩️ Нет действий';
+                undoBtn.disabled = historyIndex <= 0;
+            }
+
+            // Clear
+            clearBtn.addEventListener('click', function() {
+                if (!imageLoaded) return;
+                showModal('🧹', 'Очистка холста', 'Вы уверены, что хотите очистить всё? Это действие нельзя отменить.', 'Очистить', function() {
+                    resetToBase();
+                    updateUndoButton();
+                });
+            });
+
+            // Download PNG
+            downloadPngBtn.addEventListener('click', function() {
+                if (!imageLoaded) {
+                    alert('Сначала загрузите изображение!');
+                    return;
+                }
+                const link = document.createElement('a');
+                link.download = 'raskraska.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+
+            // Export HTML
+            exportHtmlBtn.addEventListener('click', exportToHTML);
+
+            // Help
+            helpBtn.addEventListener('click', function() {
+                showModal('🖌️', 'Как пользоваться', 
+                    '1. Загрузите контурное изображение (PNG, JPG).\n' +
+                    '2. Выберите цвет из палитры.\n' +
+                    '3. Настройте размер кисти ползунком.\n' +
+                    '4. Рисуйте на холсте, закрашивая области.\n' +
+                    '5. Используйте «Отменить» для отмены последнего действия.\n' +
+                    '6. Скачайте результат как PNG или экспортируйте в HTML.\n\n' +
+                    '💡 Колесико мыши — масштаб, Shift+клик — перемещение.',
+                    'Закрыть', function() {});
+                modalConfirm.textContent = 'Закрыть';
+                modalConfirm.onclick = function() { modal.classList.remove('active'); };
+                modalCancel.style.display = 'none';
+            });
+
+            // Window resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    if (imageLoaded) {
+                        // Save current state, resize, redraw
+                        const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        resizeCanvas();
+                        // Restore the image and drawing
+                        if (imageData) {
+                            const img = new Image();
+                            img.onload = function() {
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                ctx.fillStyle = '#FFFFFF';
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                const iw = img.width;
+                                const ih = img.height;
+                                const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                                const dw = iw * scale;
+                                const dh = ih * scale;
+                                const dx = (canvas.width - dw) / 2;
+                                const dy = (canvas.height - dh) / 2;
+                                ctx.drawImage(img, dx, dy, dw, dh);
+                                // Apply the saved drawing on top? We need to overlay.
+                                // We saved the full canvas state, so we can just putImageData.
+                                // But the sizes might differ. Let's use putImageData.
+                                // Actually, we need to handle resize properly.
+                                // Simpler: just reload the image and clear history? Not ideal.
+                                // We'll just use the saved data.
+                                ctx.putImageData(data, 0, 0);
+                            };
+                            img.src = imageData;
+                        }
+                    } else {
+                        resizeCanvas();
+                    }
+                }, 300);
+            });
+
+            // ----- Init -----
+            function init() {
+                initPalette();
+                resizeCanvas();
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                updateUndoButton();
+
+                // Override saveState to include initial state
+                const origSave = saveState;
+                saveState = function() {
+                    if (!imageLoaded) return;
+                    const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    history = history.slice(0, historyIndex + 1);
+                    history.push(data);
+                    if (history.length > MAX_HISTORY) history.shift();
+                    historyIndex = history.length - 1;
+                    updateUndoButton();
+                };
+
+                // Override undo to work with new saveState
+                const origUndo = undo;
+                undo = function() {
+                    if (historyIndex <= 0 || !imageLoaded) return;
+                    historyIndex--;
+                    ctx.putImageData(history[historyIndex], 0, 0);
+                    updateUndoButton();
+                };
+                undoBtn.addEventListener('click', undo);
+
+                // Patch resetToBase to save state after reset
+                const origReset = resetToBase;
+                resetToBase = function() {
+                    if (!imageLoaded || !imageData) return;
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        const iw = img.width;
+                        const ih = img.height;
+                        const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                        const dw = iw * scale;
+                        const dh = ih * scale;
+                        const dx = (canvas.width - dw) / 2;
+                        const dy = (canvas.height - dh) / 2;
+                        ctx.drawImage(img, dx, dy, dw, dh);
+                        saveState();
+                    };
+                    img.src = imageData;
+                };
+
+                // Fix loadImage to use new reset and state
+                const origLoad = loadImage;
+                loadImage = function(file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = new Image();
+                        img.onload = function() {
+                            imageData = e.target.result;
+                            imageLoaded = true;
+                            placeholder.style.display = 'none';
+                            fileName.textContent = file.name;
+                            resizeCanvas();
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.fillRect(0, 0, canvas.width, canvas.height);
+                            const iw = img.width;
+                            const ih = img.height;
+                            const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                            const dw = iw * scale;
+                            const dh = ih * scale;
+                            const dx = (canvas.width - dw) / 2;
+                            const dy = (canvas.height - dh) / 2;
+                            ctx.drawImage(img, dx, dy, dw, dh);
+                            saveState();
+                            updateUndoButton();
+                        };
+                        img.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                };
+
+                // Re-bind file input
+                fileInput.addEventListener('change', function(e) {
+                    if (this.files && this.files[0]) {
+                        loadImage(this.files[0]);
+                    }
+                    this.value = '';
+                });
+
+                // Fix redrawWithTransform to actually work
+                redrawWithTransform = function() {
+                    if (!imageLoaded || !imageData) return;
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        const iw = img.width;
+                        const ih = img.height;
+                        const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                        const dw = iw * scale;
+                        const dh = ih * scale;
+                        const dx = (canvas.width - dw) / 2;
+                        const dy = (canvas.height - dh) / 2;
+                        // Apply zoom/pan
+                        ctx.save();
+                        ctx.translate(canvas.width / 2, canvas.height / 2);
+                        ctx.scale(zoom, zoom);
+                        ctx.translate(panX, panY);
+                        ctx.translate(-canvas.width / 2, -canvas.height / 2);
+                        ctx.drawImage(img, dx, dy, dw, dh);
+                        ctx.restore();
+                        // Restore drawing from history? We need to overlay the last state.
+                        if (history.length > 0 && historyIndex >= 0) {
+                            const data = history[historyIndex];
+                            // But data is full canvas, we need to overlay only drawing.
+                            // Actually, we should store drawing separately.
+                            // For simplicity, we'll just use the history data.
+                            // But it has the base image too. So we need to re-draw base and then drawing.
+                            // Let's just store the drawing as a separate layer.
+                            // For now, we'll just redraw the base and lose the drawing on zoom/pan.
+                            // Better: we'll save the drawing layer.
+                            // Let's implement drawing layer.
+                        }
+                    };
+                    img.src = imageData;
+                };
+            }
+
+            // Override drawing functions to work with layers
+            // We'll use a separate canvas for drawing.
+            const drawCanvas = document.createElement('canvas');
+            const drawCtx = drawCanvas.getContext('2d');
+
+            // Patch drawing functions to use drawCanvas
+            const origDrawLine = drawLine;
+            drawLine = function(x1, y1, x2, y2) {
+                if (!imageLoaded) return;
+                drawCtx.save();
+                drawCtx.beginPath();
+                drawCtx.moveTo(x1, y1);
+                drawCtx.lineTo(x2, y2);
+                drawCtx.strokeStyle = currentColor;
+                drawCtx.lineWidth = brushSize;
+                drawCtx.lineCap = 'round';
+                drawCtx.lineJoin = 'round';
+                drawCtx.stroke();
+                drawCtx.restore();
+                // Composite on main canvas
+                compositeLayers();
+            };
+
+            const origDrawDot = drawDot;
+            drawDot = function(x, y) {
+                if (!imageLoaded) return;
+                drawCtx.save();
+                drawCtx.beginPath();
+                drawCtx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+                drawCtx.fillStyle = currentColor;
+                drawCtx.fill();
+                drawCtx.restore();
+                compositeLayers();
+            };
+
+            function compositeLayers() {
+                // Clear main canvas, draw base image, then draw layer
+                if (!imageLoaded || !imageData) return;
+                const img = new Image();
+                img.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    const iw = img.width;
+                    const ih = img.height;
+                    const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                    const dw = iw * scale;
+                    const dh = ih * scale;
+                    const dx = (canvas.width - dw) / 2;
+                    const dy = (canvas.height - dh) / 2;
+                    ctx.save();
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.scale(zoom, zoom);
+                    ctx.translate(panX, panY);
+                    ctx.translate(-canvas.width / 2, -canvas.height / 2);
+                    ctx.drawImage(img, dx, dy, dw, dh);
+                    // Draw the drawing layer
+                    ctx.drawImage(drawCanvas, 0, 0);
+                    ctx.restore();
+                };
+                img.src = imageData;
+            }
+
+            // Override saveState to save drawCanvas
+            const origSaveState = saveState;
+            saveState = function() {
+                if (!imageLoaded) return;
+                const data = drawCtx.getImageData(0, 0, drawCanvas.width, drawCanvas.height);
+                history = history.slice(0, historyIndex + 1);
+                history.push(data);
+                if (history.length > MAX_HISTORY) history.shift();
+                historyIndex = history.length - 1;
+                updateUndoButton();
+            };
+
+            // Override undo
+            const origUndo2 = undo;
+            undo = function() {
+                if (historyIndex <= 0 || !imageLoaded) return;
+                historyIndex--;
+                const data = history[historyIndex];
+                drawCtx.putImageData(data, 0, 0);
+                compositeLayers();
+                updateUndoButton();
+            };
+
+            // Override resetToBase
+            const origReset2 = resetToBase;
+            resetToBase = function() {
+                if (!imageLoaded || !imageData) return;
+                drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                compositeLayers();
+                saveState();
+            };
+
+            // Override loadImage
+            const origLoad2 = loadImage;
+            loadImage = function(file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        imageData = e.target.result;
+                        imageLoaded = true;
+                        placeholder.style.display = 'none';
+                        fileName.textContent = file.name;
+                        // Resize drawCanvas to match main canvas
+                        drawCanvas.width = canvas.width;
+                        drawCanvas.height = canvas.height;
+                        resizeCanvas();
+                        // Draw base image
+                        compositeLayers();
+                        // Reset drawing layer
+                        drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                        saveState();
+                        updateUndoButton();
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            };
+
+            // Override resize to resize drawCanvas
+            const origResize = resizeCanvas;
+            resizeCanvas = function() {
+                const rect = wrapper.getBoundingClientRect();
+                const w = rect.width - 4;
+                const h = rect.height - 4;
+                if (w > 0 && h > 0) {
+                    canvas.width = w;
+                    canvas.height = h;
+                    drawCanvas.width = w;
+                    drawCanvas.height = h;
+                    if (imageLoaded) {
+                        compositeLayers();
+                    } else {
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+                }
+            };
+
+            // Fix redrawWithTransform
+            redrawWithTransform = function() {
+                compositeLayers();
+            };
+
+            // Override compositeLayers for zoom/pan
+            const origComposite = compositeLayers;
+            compositeLayers = function() {
+                if (!imageLoaded || !imageData) return;
+                const img = new Image();
+                img.onload = function() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    const iw = img.width;
+                    const ih = img.height;
+                    const scale = Math.min((canvas.width * 0.9) / iw, (canvas.height * 0.9) / ih, 1);
+                    const dw = iw * scale;
+                    const dh = ih * scale;
+                    const dx = (canvas.width - dw) / 2;
+                    const dy = (canvas.height - dh) / 2;
+                    ctx.save();
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.scale(zoom, zoom);
+                    ctx.translate(panX, panY);
+                    ctx.translate(-canvas.width / 2, -canvas.height / 2);
+                    ctx.drawImage(img, dx, dy, dw, dh);
+                    ctx.drawImage(drawCanvas, 0, 0);
+                    ctx.restore();
+                };
+                img.src = imageData;
+            };
+
+            // Override getCanvasCoords to account for zoom/pan
+            const origGetCoords = getCanvasCoords;
+            getCanvasCoords = function(clientX, clientY) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                let x = (clientX - rect.left) * scaleX;
+                let y = (clientY - rect.top) * scaleY;
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                x = (x - cx) / zoom - panX + cx;
+                y = (y - cy) / zoom - panY + cy;
+                return { x, y };
+            };
+
+            // Override drawing functions to use drawCanvas with correct coords
+            const origDrawLine2 = drawLine;
+            drawLine = function(x1, y1, x2, y2) {
+                if (!imageLoaded) return;
+                drawCtx.save();
+                drawCtx.beginPath();
+                drawCtx.moveTo(x1, y1);
+                drawCtx.lineTo(x2, y2);
+                drawCtx.strokeStyle = currentColor;
+                drawCtx.lineWidth = brushSize;
+                drawCtx.lineCap = 'round';
+                drawCtx.lineJoin = 'round';
+                drawCtx.stroke();
+                drawCtx.restore();
+                compositeLayers();
+            };
+
+            const origDrawDot2 = drawDot;
+            drawDot = function(x, y) {
+                if (!imageLoaded) return;
+                drawCtx.save();
+                drawCtx.beginPath();
+                drawCtx.arc(x, y, brushSize / 2, 0, Math.PI * 2);
+                drawCtx.fillStyle = currentColor;
+                drawCtx.fill();
+                drawCtx.restore();
+                compositeLayers();
+            };
+
+            // ---- Final init ----
+            init();
+
+            // ---- Override file input again ----
+            fileInput.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    loadImage(this.files[0]);
+                }
+                this.value = '';
+            });
+
+            // ---- Override upload button ----
+            uploadBtn.addEventListener('click', () => fileInput.click());
+
+            // ---- Override clear ----
+            clearBtn.addEventListener('click', function() {
+                if (!imageLoaded) return;
+                showModal('🧹', 'Очистка холста', 'Вы уверены, что хотите очистить всё? Это действие нельзя отменить.', 'Очистить', function() {
+                    drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                    compositeLayers();
+                    saveState();
+                    updateUndoButton();
+                });
+            });
+
+            // ---- Override download PNG ----
+            downloadPngBtn.addEventListener('click', function() {
+                if (!imageLoaded) {
+                    alert('Сначала загрузите изображение!');
+                    return;
+                }
+                const link = document.createElement('a');
+                link.download = 'raskraska.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+
+            // ---- Override export HTML ----
+            exportHtmlBtn.addEventListener('click', exportToHTML);
+
+            // ---- Help ----
+            helpBtn.addEventListener('click', function() {
+                showModal('🖌️', 'Как пользоваться',
+                    '1. Загрузите контурное изображение (PNG, JPG).\n' +
+                    '2. Выберите цвет из палитры.\n' +
+                    '3. Настройте размер кисти ползунком.\n' +
+                    '4. Рисуйте на холсте, закрашивая области.\n' +
+                    '5. Используйте «Отменить» для отмены последнего действия.\n' +
+                    '6. Скачайте результат как PNG или экспортируйте в HTML.\n\n' +
+                    '💡 Колесико мыши — масштаб, Shift+клик — перемещение.',
+                    'Закрыть', function() {});
+                modalConfirm.textContent = 'Закрыть';
+                modalConfirm.onclick = function() { modal.classList.remove('active'); };
+                modalCancel.style.display = 'none';
+            });
+
+            console.log('🖌️ Конструктор раскрасок загружен!');
+        })();
+    </script>
+</body>
+</html>

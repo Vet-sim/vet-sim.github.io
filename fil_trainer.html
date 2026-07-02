@@ -37,9 +37,9 @@
         .toolbar {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
             background: white;
-            padding: 0.8rem 1.2rem;
+            padding: 1rem;
             border-radius: 2rem;
             margin-bottom: 1.5rem;
             align-items: center;
@@ -48,69 +48,35 @@
         .btn {
             background: #EBE3D2;
             border: none;
-            padding: 8px 16px;
+            padding: 8px 18px;
             border-radius: 2rem;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
-            font-size: 0.85rem;
-            white-space: nowrap;
         }
         .btn-primary {
             background: #A3B18A;
             color: #2C4027;
         }
-        .btn-primary:hover {
-            background: #8FA375;
-        }
         .btn-accent {
             background: #2C7DA0;
             color: white;
         }
-        .btn-accent:hover {
-            background: #236B8A;
-        }
         .btn-danger {
             background: #D4A373;
         }
-        .btn-danger:hover {
-            background: #C99464;
-        }
-        .btn-success {
-            background: #6B9E6B;
-            color: white;
-        }
-        .btn-success:hover {
-            background: #5A865A;
-        }
-        .btn-warning {
-            background: #E2CFB0;
-            color: #4D3E2A;
-        }
-        .btn-warning:hover {
-            background: #D6C09B;
-        }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 0.8rem;
-        }
         .file-label {
             background: #D9CFB8;
-            padding: 8px 16px;
+            padding: 8px 18px;
             border-radius: 2rem;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.85rem;
-        }
-        .file-label:hover {
-            background: #CABF9E;
         }
         select, input {
             background: #FEFAF2;
             border: 1px solid #D9D0BD;
             padding: 6px 12px;
             border-radius: 2rem;
-            font-size: 0.85rem;
         }
         .workspace {
             display: flex;
@@ -135,75 +101,25 @@
             background: white;
             border-radius: 1.8rem;
             padding: 1.2rem;
-            min-width: 240px;
         }
         .word-list {
             max-height: 300px;
             overflow-y: auto;
             background: #FEFAF2;
             border-radius: 1.2rem;
-            padding: 0.4rem 0.2rem;
-            margin: 0.6rem 0;
+            padding: 0.6rem;
+            margin: 1rem 0;
         }
         .word-item {
-            padding: 6px 12px;
-            margin: 3px 4px;
+            padding: 5px 10px;
+            margin: 4px 0;
             background: #F4EFE4;
             border-radius: 2rem;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.15s;
-            border: 2px solid transparent;
-            font-size: 0.9rem;
         }
-        .word-item:hover {
-            background: #ECE3D2;
-            transform: translateX(2px);
-        }
-        .word-item.unplaced {
-            background: #EFEBE2;
-            color: #B0B0A0;
-            cursor: default;
-            opacity: 0.6;
-        }
-        .word-item.unplaced:hover {
-            transform: none;
-            background: #EFEBE2;
-        }
-        .word-item.found {
-            background: #CBE0C0;
-            border-color: #6B9E6B;
-        }
-        .word-item.highlighted {
-            background: #D4E8CA;
-            border-color: #2C7DA0;
-            border-style: solid;
-        }
-        .word-item .word-status {
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-        .word-item .word-text {
-            flex: 1;
-        }
-        .word-item .word-check {
-            margin-left: 8px;
-        }
-        .progress-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.3rem 0.5rem;
-            background: #F0EEE5;
-            border-radius: 2rem;
-            font-weight: 600;
-            font-size: 0.85rem;
-        }
-        .progress-row .found-count {
-            color: #2C7DA0;
-        }
+        .word-placed { background: #CBE0C0; }
+        .word-unplaced { background: #F2E0D0; }
         footer {
             text-align: center;
             margin-top: 2rem;
@@ -211,13 +127,6 @@
             color: #B0BC9C;
             border-top: 1px solid #E5DDCF;
             padding-top: 1rem;
-        }
-        @media (max-width: 700px) {
-            .toolbar { gap: 6px; padding: 0.6rem; }
-            .btn { padding: 6px 12px; font-size: 0.75rem; }
-            .file-label { padding: 6px 12px; font-size: 0.75rem; }
-            .word-item { font-size: 0.8rem; padding: 4px 10px; }
-            .side-panel { min-width: 180px; }
         }
     </style>
 </head>
@@ -227,17 +136,15 @@
     <div class="sub">Венгерский кроссворд — слова могут изгибаться под 90°</div>
 
     <div class="toolbar">
-        <label class="file-label">📂 Загрузить слова (txt)<input type="file" id="wordsFile" accept=".txt" style="display:none"></label>
+        <label class="file-label">📂 Загрузить слова (txt, по одному слову в строке)<input type="file" id="wordsFile" accept=".txt" style="display:none"></label>
         <select id="gridShapeSelect">
             <option value="rect">Прямоугольник 12x12</option>
             <option value="romb">Ромб 13x13</option>
             <option value="circle">Круг 13x13</option>
         </select>
         <button id="autoPlaceBtn" class="btn btn-primary">🤖 Авторасстановка</button>
-        <button id="exportBtn" class="btn btn-accent">📥 Экспорт</button>
-        <button id="resetBtn" class="btn btn-danger">🗑️ Очистить</button>
-        <button id="checkAllBtn" class="btn btn-success">✅ Проверить всё</button>
-        <button id="resetProgressBtn" class="btn btn-warning">🔄 Сбросить прогресс</button>
+        <button id="exportBtn" class="btn btn-accent">📥 Экспорт филворда</button>
+        <button id="resetBtn" class="btn btn-danger">🗑️ Очистить сетку</button>
     </div>
 
     <div class="workspace">
@@ -245,19 +152,14 @@
             <canvas id="wordCanvas" width="500" height="500" style="width:100%; height:auto; background:#FDF8F0; border-radius:16px"></canvas>
         </div>
         <div class="side-panel">
-            <div class="progress-row">
-                <span>📊 Прогресс</span>
-                <span class="found-count" id="progressCounter">Найдено: 0 из 0</span>
-            </div>
-            <div style="margin-top:0.8rem;"><strong>📖 Список слов</strong> <span id="statsWords"></span></div>
+            <div><strong>📖 Список слов</strong> <span id="statsWords"></span></div>
             <div id="wordListContainer" class="word-list"></div>
-            <div style="display:flex; gap:8px; margin-top:0.6rem;">
-                <input type="text" id="newWordInput" placeholder="Новое слово" style="flex:1;">
+            <div style="margin-top:1rem">
+                <input type="text" id="newWordInput" placeholder="Новое слово" style="width:70%">
                 <button id="addWordBtn" class="btn">➕</button>
             </div>
-            <div class="info-msg" style="font-size:0.7rem; margin-top:0.8rem; background:#F4EFE4; padding:8px; border-radius:1rem;">
-                💡 Кликните по слову в списке — подсветится его путь на сетке.
-                <br>Найденные слова отмечаются зелёным ✅.
+            <div class="info-msg" style="font-size:0.7rem; margin-top:1rem; background:#F4EFE4; padding:8px; border-radius:1rem;">
+                💡 Авторасстановка: слова размещаются по горизонтали, вертикали или с одним изгибом (L-образно). Пересечения букв допускаются.
             </div>
         </div>
     </div>
@@ -265,85 +167,68 @@
 </div>
 
 <script>
-    // ================================================================
-    // ФИЛВОРД — ЯДРО
-    // ================================================================
+    // ----------------------------------------------------------
+    // ФИЛВОРД: сетка без чёрных клеток, слова с возможностью изгиба (только один изгиб, L-форма)
+    // ----------------------------------------------------------
     let currentShape = 'rect';
-    let gridSize = 12;
-    let grid = [];
-    let letters = [];
-    let words = [];              // { text, placed, path: [{row,col}] }
+    let gridSize = 12;      // для прямоугольника 12x12, для ромба/круга 13x13
+    let grid = [];          // bool: true — клетка доступна (всегда true для филворда, но для форм есть маска)
+    let letters = [];       // буквы (заполненные)
+    let words = [];         // {text, placed, path: [{row,col}] }
     let termList = [];
     let cellSize = 40;
-    const canvas = document.getElementById('wordCanvas');
-    const ctx = canvas.getContext('2d');
+    let canvas = document.getElementById('wordCanvas');
+    let ctx = canvas.getContext('2d');
 
-    // ================================================================
-    // НОВЫЕ СОСТОЯНИЯ ДЛЯ ИНТЕРАКТИВА
-    // ================================================================
-    // wordStates[word] = { found: bool, highlighted: bool }
-    let wordStates = {};
-    let selectedWord = null;        // слово, которое сейчас подсвечено (для unfound)
-
-    // ================================================================
-    // ФОРМЫ СЕТКИ
-    // ================================================================
+    // ----------------------------------------------------------
+    // Генерация масок для форм
+    // ----------------------------------------------------------
     function generateRectMask(size) {
-        return Array(size).fill().map(() => Array(size).fill(true));
+        let mask = Array(size).fill().map(() => Array(size).fill(true));
+        return mask;
     }
     function generateRombMask(size) {
-        const mask = Array(size).fill().map(() => Array(size).fill(false));
-        const center = Math.floor(size/2);
+        let mask = Array(size).fill().map(() => Array(size).fill(false));
+        let center = Math.floor(size/2);
         for(let i=0; i<size; i++){
-            const offset = Math.abs(i-center);
-            const start = offset;
-            const end = size-1-offset;
+            let offset = Math.abs(i-center);
+            let start = offset;
+            let end = size-1-offset;
             for(let j=start; j<=end; j++) mask[i][j]=true;
         }
         return mask;
     }
     function generateCircleMask(size) {
-        const mask = Array(size).fill().map(() => Array(size).fill(false));
-        const center = Math.floor(size/2);
-        const radius = Math.floor(size/2) - 1;
+        let mask = Array(size).fill().map(() => Array(size).fill(false));
+        let center = Math.floor(size/2);
+        let radius = Math.floor(size/2) - 1;
         for(let i=0; i<size; i++){
             for(let j=0; j<size; j++){
-                const dx = i-center, dy = j-center;
+                let dx = i-center, dy = j-center;
                 if(dx*dx + dy*dy <= radius*radius) mask[i][j]=true;
             }
         }
         return mask;
     }
 
-    // ================================================================
-    // ЗАГРУЗКА ФОРМЫ
-    // ================================================================
     function loadShape(shape) {
         currentShape = shape;
-        if(shape === 'rect')   { gridSize=12; grid = generateRectMask(12); }
-        else if(shape === 'romb')  { gridSize=13; grid = generateRombMask(13); }
-        else if(shape === 'circle'){ gridSize=13; grid = generateCircleMask(13); }
+        if(shape === 'rect') { gridSize=12; grid = generateRectMask(12); }
+        else if(shape === 'romb') { gridSize=13; grid = generateRombMask(13); }
+        else if(shape === 'circle') { gridSize=13; grid = generateCircleMask(13); }
         letters = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
         words = [];
-        wordStates = {};
-        selectedWord = null;
         drawGrid();
         updateWordListUI();
-        updateProgress();
     }
 
-    // ================================================================
-    // ОТРИСОВКА СЕТКИ + ПОДСВЕТКА
-    // ================================================================
     function drawGrid() {
         canvas.width = gridSize * cellSize;
         canvas.height = gridSize * cellSize;
         ctx.clearRect(0,0,canvas.width,canvas.height);
-
-        // 1. Базовые клетки
-        for(let i=0; i<gridSize; i++){
-            for(let j=0; j<gridSize; j++){
-                const x = j*cellSize, y = i*cellSize;
+        for(let i=0;i<gridSize;i++){
+            for(let j=0;j<gridSize;j++){
+                let x=j*cellSize, y=i*cellSize;
                 if(grid[i][j]){
                     ctx.fillStyle = "#FFFFFF";
                     ctx.fillRect(x,y,cellSize,cellSize);
@@ -352,11 +237,7 @@
                     if(letters[i][j]){
                         ctx.fillStyle = "#3E5C4A";
                         ctx.font = `bold ${Math.floor(cellSize*0.5)}px system-ui`;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(letters[i][j], x+cellSize/2, y+cellSize/2);
-                        ctx.textAlign = 'left';
-                        ctx.textBaseline = 'alphabetic';
+                        ctx.fillText(letters[i][j], x+cellSize*0.35, y+cellSize*0.65);
                     }
                 } else {
                     ctx.fillStyle = "#D9D2B0";
@@ -364,274 +245,33 @@
                 }
             }
         }
-
-        // 2. Подсветка путей
-        drawHighlights();
     }
 
-    // ================================================================
-    // ПОДСВЕТКА ПУТЕЙ (на основе wordStates)
-    // ================================================================
-    function drawHighlights() {
-        if (!words.length) return;
-
-        const highlightColor = 'rgba(203, 224, 192, 0.55)';
-        const foundColor = 'rgba(107, 158, 107, 0.30)';
-        const selectedColor = 'rgba(44, 125, 160, 0.25)';
-
-        // Собираем все слова, которые нужно подсветить
-        const toHighlight = [];
-
-        for (const w of words) {
-            if (!w.placed || !w.path) continue;
-            const state = wordStates[w.text];
-            if (!state) continue;
-            if (state.highlighted) {
-                toHighlight.push({ word: w, type: state.found ? 'found' : 'selected' });
-            }
-        }
-
-        // Рисуем подсветку (слоями: сначала найденные, потом выбранные)
-        for (const item of toHighlight) {
-            const color = item.type === 'found' ? foundColor : selectedColor;
-            const path = item.word.path;
-            for (const p of path) {
-                if (p.row >= 0 && p.row < gridSize && p.col >= 0 && p.col < gridSize) {
-                    const x = p.col * cellSize, y = p.row * cellSize;
-                    ctx.fillStyle = color;
-                    ctx.fillRect(x, y, cellSize, cellSize);
-                    // Перерисовываем букву поверх
-                    if (letters[p.row][p.col]) {
-                        ctx.fillStyle = "#3E5C4A";
-                        ctx.font = `bold ${Math.floor(cellSize*0.5)}px system-ui`;
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        ctx.fillText(letters[p.row][p.col], x+cellSize/2, y+cellSize/2);
-                        ctx.textAlign = 'left';
-                        ctx.textBaseline = 'alphabetic';
-                    }
-                }
-            }
-        }
-
-        // Дополнительная обводка для выбранного слова (чтобы выделить сильнее)
-        const selectedWordObj = words.find(w => w.text === selectedWord && w.placed && w.path);
-        if (selectedWordObj && wordStates[selectedWord]?.highlighted) {
-            const path = selectedWordObj.path;
-            for (const p of path) {
-                if (p.row >= 0 && p.row < gridSize && p.col >= 0 && p.col < gridSize) {
-                    const x = p.col * cellSize, y = p.row * cellSize;
-                    ctx.strokeStyle = "#2C7DA0";
-                    ctx.lineWidth = 3;
-                    ctx.strokeRect(x+1, y+1, cellSize-2, cellSize-2);
-                }
-            }
-        }
-    }
-
-    // ================================================================
-    // СОСТОЯНИЯ СЛОВ
-    // ================================================================
-    function initWordStates() {
-        const newStates = {};
-        for (const w of words) {
-            if (w.placed) {
-                newStates[w.text] = { found: false, highlighted: false };
-            }
-        }
-        // Сохраняем старые состояния, если они есть
-        for (const key in wordStates) {
-            if (newStates[key]) {
-                newStates[key].found = wordStates[key].found || false;
-                newStates[key].highlighted = wordStates[key].highlighted || false;
-            }
-        }
-        wordStates = newStates;
-        selectedWord = null;
-    }
-
-    function getPlacedWords() {
-        return words.filter(w => w.placed);
-    }
-
-    function getPlacedCount() {
-        return getPlacedWords().length;
-    }
-
-    function getFoundCount() {
-        let count = 0;
-        for (const w of getPlacedWords()) {
-            if (wordStates[w.text]?.found) count++;
-        }
-        return count;
-    }
-
-    function updateProgress() {
-        const placed = getPlacedCount();
-        const found = getFoundCount();
-        document.getElementById('progressCounter').textContent = `Найдено: ${found} из ${placed}`;
-    }
-
-    // ================================================================
-    // ПЕРЕКЛЮЧЕНИЕ ПОДСВЕТКИ СЛОВА
-    // ================================================================
-    function toggleWord(wordText) {
-        const wordObj = words.find(w => w.text === wordText && w.placed);
-        if (!wordObj) return;
-
-        const state = wordStates[wordText];
-        if (!state) return;
-
-        // Если слово уже найдено — просто переключаем подсветку
-        if (state.found) {
-            state.highlighted = !state.highlighted;
-            drawGrid();
-            updateWordListUI();
-            return;
-        }
-
-        // Для ненайденных: только одно может быть подсвечено
-        if (state.highlighted) {
-            // Снимаем подсветку
-            state.highlighted = false;
-            selectedWord = null;
-        } else {
-            // Снимаем подсветку со всех остальных ненайденных
-            for (const w of getPlacedWords()) {
-                const s = wordStates[w.text];
-                if (s && !s.found) {
-                    s.highlighted = false;
-                }
-            }
-            state.highlighted = true;
-            selectedWord = wordText;
-        }
-
-        drawGrid();
-        updateWordListUI();
-    }
-
-    function markWordFound(wordText) {
-        const state = wordStates[wordText];
-        if (!state) return;
-        if (state.found) return; // уже найдено
-        state.found = true;
-        state.highlighted = true; // подсвечиваем автоматически
-        updateProgress();
-        drawGrid();
-        updateWordListUI();
-    }
-
-    function checkAllWords() {
-        let anyMarked = false;
-        for (const w of getPlacedWords()) {
-            const state = wordStates[w.text];
-            if (state && !state.found) {
-                state.found = true;
-                state.highlighted = true;
-                anyMarked = true;
-            }
-        }
-        if (anyMarked) {
-            updateProgress();
-            drawGrid();
-            updateWordListUI();
-        }
-    }
-
-    function resetProgress() {
-        for (const w of getPlacedWords()) {
-            const state = wordStates[w.text];
-            if (state) {
-                state.found = false;
-                state.highlighted = false;
-            }
-        }
-        selectedWord = null;
-        updateProgress();
-        drawGrid();
-        updateWordListUI();
-    }
-
-    // ================================================================
-    // ОБНОВЛЕНИЕ СПИСКА СЛОВ (С СОСТОЯНИЯМИ)
-    // ================================================================
-    function updateWordListUI() {
+    function updateWordListUI(){
         const container = document.getElementById('wordListContainer');
-        if (!container) return;
+        if(!container) return;
         container.innerHTML = '';
-
         let placedCount = 0;
-        const allWords = [...termList];
-
-        // Сначала инициализируем состояния для новых слов
-        for (const w of words) {
-            if (w.placed && !wordStates[w.text]) {
-                wordStates[w.text] = { found: false, highlighted: false };
-            }
-        }
-
-        for (const term of allWords) {
+        termList.forEach(term => {
             const placed = words.some(w => w.text === term && w.placed);
-            if (placed) placedCount++;
-
-            const state = wordStates[term];
-            const isFound = state?.found || false;
-            const isHighlighted = state?.highlighted || false;
-
+            if(placed) placedCount++;
             const div = document.createElement('div');
-            div.className = 'word-item';
-
-            if (!placed) {
-                div.classList.add('unplaced');
-                div.innerHTML = `<span class="word-text">${term}</span> <span class="word-status">❌</span>`;
-            } else {
-                let statusText = '';
-                let statusClass = '';
-                if (isFound) {
-                    statusClass = 'found';
-                    statusText = '✅';
-                } else if (isHighlighted) {
-                    statusClass = 'highlighted';
-                    statusText = '🔍';
-                } else {
-                    statusText = '⬜';
-                }
-                div.classList.add(statusClass);
-                div.innerHTML = `
-                    <span class="word-text">${term}</span>
-                    <span class="word-check">${statusText}</span>
-                `;
-                if (placed) {
-                    div.style.cursor = 'pointer';
-                    div.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        toggleWord(term);
-                    });
-                    // Двойной клик — отметить как найденное
-                    div.addEventListener('dblclick', (e) => {
-                        e.stopPropagation();
-                        markWordFound(term);
-                    });
-                }
-            }
+            div.className = `word-item ${placed ? 'word-placed' : 'word-unplaced'}`;
+            div.innerHTML = `<span>${term}</span> ${placed ? '✅' : '❌'}`;
             container.appendChild(div);
-        }
-
-        document.getElementById('statsWords').innerText = `(${placedCount}/${allWords.length})`;
-        updateProgress();
+        });
+        document.getElementById('statsWords').innerText = `(${placedCount}/${termList.length})`;
     }
 
-    // ================================================================
-    // АВТОРАССТАНОВКА (без изменений)
-    // ================================================================
+    // Проверка возможности размещения слова с L-изгибом (горизонталь+вертикаль) или прямой
     function canPlaceWord(word, startRow, startCol, dir) {
-        const len = word.length;
+        // dir: 'h' - горизонталь, 'v' - вертикаль, 'lh' - горизонталь затем вертикаль (L), 'lv' - вертикаль затем горизонталь
+        let len = word.length;
         if(dir === 'h'){
             if(startCol+len > gridSize) return false;
             for(let k=0;k<len;k++){
                 if(!grid[startRow][startCol+k]) return false;
-                const ch = letters[startRow][startCol+k];
+                let ch = letters[startRow][startCol+k];
                 if(ch !== '' && ch !== word[k]) return false;
             }
             return true;
@@ -640,52 +280,57 @@
             if(startRow+len > gridSize) return false;
             for(let k=0;k<len;k++){
                 if(!grid[startRow+k][startCol]) return false;
-                const ch = letters[startRow+k][startCol];
+                let ch = letters[startRow+k][startCol];
                 if(ch !== '' && ch !== word[k]) return false;
             }
             return true;
         }
+        // L-образные: сначала горизонталь, потом вертикаль (поворот после некоторой позиции)
         if(dir === 'lh'){
+            // ищем точку изгиба (поворот после 1 .. len-2)
             for(let turnAt=1; turnAt<len-1; turnAt++){
-                const horizLen = turnAt+1;
-                const vertLen = len - horizLen;
+                let horizLen = turnAt+1;  // кол-во букв по горизонтали
+                let vertLen = len - horizLen;
                 if(startCol+horizLen > gridSize) continue;
                 if(startRow+vertLen > gridSize) continue;
                 let ok=true;
+                // горизонтальный участок
                 for(let k=0;k<horizLen;k++){
                     if(!grid[startRow][startCol+k]) { ok=false; break; }
-                    const ch=letters[startRow][startCol+k];
+                    let ch=letters[startRow][startCol+k];
                     if(ch!=='' && ch!==word[k]) { ok=false; break; }
                 }
                 if(!ok) continue;
+                // вертикальный участок (начиная с turnAt)
                 for(let k=0;k<vertLen;k++){
-                    const r = startRow+k;
-                    const c = startCol+turnAt;
+                    let r = startRow+k;
+                    let c = startCol+turnAt;
                     if(!grid[r][c]) { ok=false; break; }
-                    const ch=letters[r][c];
+                    let ch=letters[r][c];
                     if(ch!=='' && ch!==word[turnAt+k]) { ok=false; break; }
                 }
                 if(ok) return true;
             }
         }
         if(dir === 'lv'){
+            // сначала вертикаль, потом горизонталь
             for(let turnAt=1; turnAt<len-1; turnAt++){
-                const vertLen = turnAt+1;
-                const horizLen = len - vertLen;
+                let vertLen = turnAt+1;
+                let horizLen = len - vertLen;
                 if(startRow+vertLen > gridSize) continue;
                 if(startCol+horizLen > gridSize) continue;
                 let ok=true;
                 for(let k=0;k<vertLen;k++){
                     if(!grid[startRow+k][startCol]) { ok=false; break; }
-                    const ch=letters[startRow+k][startCol];
+                    let ch=letters[startRow+k][startCol];
                     if(ch!=='' && ch!==word[k]) { ok=false; break; }
                 }
                 if(!ok) continue;
                 for(let k=0;k<horizLen;k++){
-                    const r = startRow+turnAt;
-                    const c = startCol+k;
+                    let r = startRow+turnAt;
+                    let c = startCol+k;
                     if(!grid[r][c]) { ok=false; break; }
-                    const ch=letters[r][c];
+                    let ch=letters[r][c];
                     if(ch!=='' && ch!==word[turnAt+k]) { ok=false; break; }
                 }
                 if(ok) return true;
@@ -694,15 +339,16 @@
         return false;
     }
 
+    // Реальное размещение слова с заданным путём
     function placeWord(word, startRow, startCol, dir) {
-        const len = word.length;
-        const path = [];
+        let len = word.length;
+        let path = [];
         if(dir === 'h'){
             for(let k=0;k<len;k++){
                 letters[startRow][startCol+k] = word[k];
                 path.push({row:startRow, col:startCol+k});
             }
-            words.push({text:word, placed:true, path});
+            words.push({text:word, placed:true, path:path});
             return true;
         }
         if(dir === 'v'){
@@ -710,13 +356,13 @@
                 letters[startRow+k][startCol] = word[k];
                 path.push({row:startRow+k, col:startCol});
             }
-            words.push({text:word, placed:true, path});
+            words.push({text:word, placed:true, path:path});
             return true;
         }
         if(dir === 'lh'){
             for(let turnAt=1; turnAt<len-1; turnAt++){
-                const horizLen = turnAt+1;
-                const vertLen = len - horizLen;
+                let horizLen = turnAt+1;
+                let vertLen = len - horizLen;
                 if(startCol+horizLen <= gridSize && startRow+vertLen <= gridSize){
                     let ok=true;
                     for(let k=0;k<horizLen;k++) if(!grid[startRow][startCol+k]) ok=false;
@@ -726,7 +372,7 @@
                         for(let k=0;k<vertLen;k++) letters[startRow+k][startCol+turnAt] = word[turnAt+k];
                         for(let k=0;k<horizLen;k++) path.push({row:startRow, col:startCol+k});
                         for(let k=1;k<vertLen;k++) path.push({row:startRow+k, col:startCol+turnAt});
-                        words.push({text:word, placed:true, path});
+                        words.push({text:word, placed:true, path:path});
                         return true;
                     }
                 }
@@ -734,8 +380,8 @@
         }
         if(dir === 'lv'){
             for(let turnAt=1; turnAt<len-1; turnAt++){
-                const vertLen = turnAt+1;
-                const horizLen = len - vertLen;
+                let vertLen = turnAt+1;
+                let horizLen = len - vertLen;
                 if(startRow+vertLen <= gridSize && startCol+horizLen <= gridSize){
                     let ok=true;
                     for(let k=0;k<vertLen;k++) if(!grid[startRow+k][startCol]) ok=false;
@@ -745,7 +391,7 @@
                         for(let k=0;k<horizLen;k++) letters[startRow+turnAt][startCol+k] = word[turnAt+k];
                         for(let k=0;k<vertLen;k++) path.push({row:startRow+k, col:startCol});
                         for(let k=1;k<horizLen;k++) path.push({row:startRow+turnAt, col:startCol+k});
-                        words.push({text:word, placed:true, path});
+                        words.push({text:word, placed:true, path:path});
                         return true;
                     }
                 }
@@ -754,18 +400,22 @@
         return false;
     }
 
+    // Авторасстановка слов (сортировка по длине, перебор позиций и направлений)
     function autoPlaceWords() {
+        // очистка
         letters = Array(gridSize).fill().map(()=>Array(gridSize).fill(''));
         words = [];
-        const sorted = [...termList].sort((a,b)=>b.length - a.length);
-        let placedCount = 0;
-        for(const word of sorted){
+        let sorted = [...termList].sort((a,b)=>b.length - a.length);
+        let placedWords = [];
+        for(let word of sorted){
             let placed = false;
+            // перебираем все ячейки
             for(let i=0;i<gridSize && !placed;i++){
                 for(let j=0;j<gridSize && !placed;j++){
                     if(!grid[i][j]) continue;
-                    const dirs = ['h','v','lh','lv'];
-                    for(const d of dirs){
+                    // направления: h, v, lh, lv
+                    let dirs = ['h','v','lh','lv'];
+                    for(let d of dirs){
                         if(canPlaceWord(word, i, j, d)){
                             placeWord(word, i, j, d);
                             placed = true;
@@ -774,60 +424,29 @@
                     }
                 }
             }
-            if(placed) placedCount++;
+            if(!placed){
+                placedWords.push({text:word, placed:false});
+            } else {
+                placedWords.push({text:word, placed:true});
+            }
         }
-        // Инициализируем состояния для размещённых слов
-        initWordStates();
+        // обновим глобальный массив words (уже есть) и termList не меняем, просто синхронизируем отображение
         drawGrid();
         updateWordListUI();
-        updateProgress();
     }
 
-    // ================================================================
-    // ОЧИСТКА СЕТКИ
-    // ================================================================
+    // Очистка сетки
     function clearGrid(){
         letters = Array(gridSize).fill().map(()=>Array(gridSize).fill(''));
         words = [];
-        wordStates = {};
-        selectedWord = null;
         drawGrid();
         updateWordListUI();
-        updateProgress();
     }
 
-    // ================================================================
-    // ЗАГРУЗКА / ДОБАВЛЕНИЕ СЛОВ
-    // ================================================================
-    function loadWordsFromFile(file){
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const content = e.target.result;
-            const lines = content.split(/\r?\n/).filter(l=>l.trim().length>0);
-            termList = lines.map(l=>l.trim());
-            updateWordListUI();
-            clearGrid();
-        };
-        reader.readAsText(file, 'UTF-8');
-    }
-
-    function addWordManually(){
-        const newWord = document.getElementById('newWordInput').value.trim();
-        if(newWord && !termList.includes(newWord)){
-            termList.push(newWord);
-            updateWordListUI();
-            document.getElementById('newWordInput').value = '';
-            clearGrid();
-        } else {
-            alert("Слово уже есть или пустое");
-        }
-    }
-
-    // ================================================================
-    // ЭКСПОРТ В HTML (без изменений — студенческая версия)
-    // ================================================================
+    // Экспорт в готовый филворд (HTML для студентов)
     function exportFillword() {
         if(termList.length===0){ alert("Добавьте слова"); return; }
+        // собираем массив слов и их координаты для ответов, но в экспорте нужна сетка и список слов
         const shapeMask = grid;
         const gridLetters = letters;
         const wordListForExport = termList;
@@ -866,6 +485,7 @@ document.getElementById('showAnswersBtn').addEventListener('click',()=>{
     }
     answersDiv.innerHTML=html;
     answersDiv.style.display='block';
+    // подсветка на canvas (можно не делать)
   }
 });
 <\/script></body></html>`;
@@ -878,16 +498,36 @@ document.getElementById('showAnswersBtn').addEventListener('click',()=>{
         alert("Филворд экспортирован как fillword_ready.html");
     }
 
-    // ================================================================
-    // СОБЫТИЯ
-    // ================================================================
+    // Загрузка слов из TXT (одно слово на строку)
+    function loadWordsFromFile(file){
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const content = e.target.result;
+            const lines = content.split(/\r?\n/).filter(l=>l.trim().length>0);
+            termList = lines.map(l=>l.trim());
+            updateWordListUI();
+            clearGrid();
+        };
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    // Добавление слова вручную
+    function addWordManually(){
+        let newWord = document.getElementById('newWordInput').value.trim();
+        if(newWord && !termList.includes(newWord)){
+            termList.push(newWord);
+            updateWordListUI();
+            document.getElementById('newWordInput').value='';
+            clearGrid();
+        } else alert("Слово уже есть или пустое");
+    }
+
+    // Инициализация событий
     document.getElementById('wordsFile').addEventListener('change', (e)=>{
         if(e.target.files[0]) loadWordsFromFile(e.target.files[0]);
-        e.target.value = '';
     });
     document.getElementById('gridShapeSelect').addEventListener('change', (e)=>{
         loadShape(e.target.value);
-        if(termList.length) autoPlaceWords();
     });
     document.getElementById('autoPlaceBtn').addEventListener('click', ()=>{
         if(termList.length===0){ alert("Загрузите или добавьте слова"); return; }
@@ -897,19 +537,11 @@ document.getElementById('showAnswersBtn').addEventListener('click',()=>{
     document.getElementById('resetBtn').addEventListener('click', clearGrid);
     document.getElementById('addWordBtn').addEventListener('click', addWordManually);
 
-    // НОВЫЕ КНОПКИ
-    document.getElementById('checkAllBtn').addEventListener('click', checkAllWords);
-    document.getElementById('resetProgressBtn').addEventListener('click', resetProgress);
-
-    // ================================================================
-    // ИНИЦИАЛИЗАЦИЯ (демо)
-    // ================================================================
+    // Демо-слова
     termList = ["Лопатка","Плечевая","Лучевая","Локтевая","Запястье","Пясть","Фаланга"];
     loadShape('rect');
     updateWordListUI();
     clearGrid();
-    // Авторасстановка после загрузки
-    setTimeout(autoPlaceWords, 50);
 </script>
 </body>
 </html>

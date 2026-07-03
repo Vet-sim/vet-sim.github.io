@@ -128,6 +128,30 @@
             text-align: center;
             border: 2px dashed #A3B18A;
             transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider-image img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;   /* сохраняет пропорции */
+            background: #E2EAD9;
+            border-radius: 1rem;
+            display: none;
+        }
+
+        .slider-image .placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            padding: 1.5rem;
         }
 
         .slider-image .slide-icon {
@@ -412,7 +436,7 @@
 <div class="container" id="app">
     <!-- Заголовок -->
     <h1>🩺 Клинический кейс: Поликистоз яичников и эндометрит у американского булли</h1>
-    <div class="clinic-name">🏥 Ветклиника «Возрождение», г. Вологда</div>
+    <div class="clinic-name">🏥 Сеть ветеринарных клиник «Возрождение», г. Вологда</div>
     <div class="surgeon">👨‍⚕️ Хирург: Дедечкина А.Ю.</div>
 
     <!-- Вводная -->
@@ -432,9 +456,14 @@
     <div class="slider-section">
         <div class="slider-container">
             <div class="slider-image" id="slideImage">
-                <div class="slide-icon" id="slideIcon">📷</div>
-                <div class="slide-label" id="slideLabel">Слайд 1</div>
-                <div class="slide-desc" id="slideDesc">Описание изображения</div>
+                <!-- Изображение (по умолчанию скрыто) -->
+                <img id="slideImg" src="" alt="Слайд" />
+                <!-- Плейсхолдер (показывается, если нет изображения) -->
+                <div class="placeholder" id="slidePlaceholder">
+                    <div class="slide-icon" id="slideIcon">📷</div>
+                    <div class="slide-label" id="slideLabel">Слайд 1</div>
+                    <div class="slide-desc" id="slideDesc">Описание изображения</div>
+                </div>
             </div>
             <div class="slider-controls">
                 <button class="btn-slide" id="prevSlideBtn">◀ Предыдущий</button>
@@ -484,43 +513,50 @@
 <script>
     // ============================================================
     // ДАННЫЕ СЛАЙДОВ (6 штук)
+    // Добавлено поле image — путь к файлу (пока заглушки)
     // ============================================================
     const slides = [
         {
             id: 1,
             icon: '📷',
             label: 'Слайд 1. УЗИ брюшной полости (первичный снимок)',
-            desc: 'На снимке видны увеличенные яичники с множественными анехогенными структурами (кистами). Матка увеличена, стенка утолщена.'
+            desc: 'На снимке видны увеличенные яичники с множественными анехогенными структурами (кистами). Матка увеличена, стенка утолщена.',
+            image: ''  // ← сюда впишите путь, например "image/1.jpg"
         },
         {
             id: 2,
             icon: '📷',
             label: 'Слайд 2. УЗИ (дополнительный снимок)',
-            desc: 'Визуализируются множественные кисты в обоих яичниках (диаметр от 5 до 15 мм).'
+            desc: 'Визуализируются множественные кисты в обоих яичниках (диаметр от 5 до 15 мм).',
+            image: ''  // "image/2.jpg"
         },
         {
             id: 3,
             icon: '🔬',
             label: 'Слайд 3. Интраоперационное фото (яичники)',
-            desc: 'Яичники с множественными кистами (поликистоз). Ткань яичников деформирована, видны кистозные образования.'
+            desc: 'Яичники с множественными кистами (поликистоз). Ткань яичников деформирована, видны кистозные образования.',
+            image: ''  // "image/3.jpg"
         },
         {
             id: 4,
             icon: '🔬',
             label: 'Слайд 4. Интраоперационное фото (матка)',
-            desc: 'Увеличенная матка с признаками эндометрита, отёк стенки, наличие сгустков крови.'
+            desc: 'Увеличенная матка с признаками эндометрита, отёк стенки, наличие сгустков крови.',
+            image: ''  // "image/4.jpg"
         },
         {
             id: 5,
             icon: '🔬',
             label: 'Слайд 5. Интраоперационное фото (сгустки крови)',
-            desc: 'Сгустки крови и участки отслойки эндометрия (отрыв эндометрия).'
+            desc: 'Сгустки крови и участки отслойки эндометрия (отрыв эндометрия).',
+            image: ''  // "image/5.jpg"
         },
         {
             id: 6,
             icon: '🐕',
             label: 'Слайд 6. Пациент на 7-е сутки после операции',
-            desc: 'Собака активна, аппетит восстановлен, выделения из вульвы отсутствуют.'
+            desc: 'Собака активна, аппетит восстановлен, выделения из вульвы отсутствуют.',
+            image: ''  // "image/6.jpg"
         }
     ];
 
@@ -612,6 +648,8 @@
 
     // DOM
     const slideImage = document.getElementById('slideImage');
+    const slideImg = document.getElementById('slideImg');
+    const slidePlaceholder = document.getElementById('slidePlaceholder');
     const slideIcon = document.getElementById('slideIcon');
     const slideLabel = document.getElementById('slideLabel');
     const slideDesc = document.getElementById('slideDesc');
@@ -640,10 +678,23 @@
     function renderSlide(index) {
         const slide = slides[index];
         if (!slide) return;
+
+        // Обновляем данные плейсхолдера (на случай, если изображение не загружено)
         slideIcon.textContent = slide.icon;
         slideLabel.textContent = slide.label;
         slideDesc.textContent = slide.desc;
         slideCounter.textContent = `${index + 1} / ${slides.length}`;
+
+        // Работа с изображением
+        if (slide.image && slide.image.trim() !== '') {
+            slideImg.src = slide.image;
+            slideImg.style.display = 'block';
+            slidePlaceholder.style.display = 'none';
+        } else {
+            slideImg.style.display = 'none';
+            slidePlaceholder.style.display = 'flex';
+        }
+
         prevSlideBtn.disabled = (index === 0);
         nextSlideBtn.disabled = (index === slides.length - 1);
     }

@@ -138,10 +138,27 @@
             left: 0;
             width: 100%;
             height: 100%;
-            object-fit: contain;   /* сохраняет пропорции */
+            object-fit: contain;
             background: #E2EAD9;
             border-radius: 1rem;
             display: none;
+        }
+
+        .slider-image .embed-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1rem;
+            overflow: hidden;
+            display: none;
+        }
+
+        .slider-image .embed-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .slider-image .placeholder {
@@ -456,9 +473,11 @@
     <div class="slider-section">
         <div class="slider-container">
             <div class="slider-image" id="slideImage">
-                <!-- Изображение (по умолчанию скрыто) -->
+                <!-- Изображение -->
                 <img id="slideImg" src="" alt="Слайд" />
-                <!-- Плейсхолдер (показывается, если нет изображения) -->
+                <!-- Контейнер для embed (iframe) -->
+                <div class="embed-container" id="slideEmbed"></div>
+                <!-- Плейсхолдер -->
                 <div class="placeholder" id="slidePlaceholder">
                     <div class="slide-icon" id="slideIcon">📷</div>
                     <div class="slide-label" id="slideLabel">Слайд 1</div>
@@ -513,7 +532,6 @@
 <script>
     // ============================================================
     // ДАННЫЕ СЛАЙДОВ (6 штук)
-    // Добавлено поле image — путь к файлу (пока заглушки)
     // ============================================================
     const slides = [
         {
@@ -521,45 +539,51 @@
             icon: '📷',
             label: 'Слайд 1. УЗИ брюшной полости (первичный снимок)',
             desc: 'На снимке видны увеличенные яичники с множественными анехогенными структурами (кистами). Матка увеличена, стенка утолщена.',
-            image: ''  // "image/p2.jpg"
+            image: 'image/p2.jpg',
+            embed: ''
         },
         {
             id: 2,
             icon: '📷',
             label: 'Слайд 2. УЗИ (дополнительный снимок)',
             desc: 'Визуализируются множественные кисты в обоих яичниках (диаметр от 5 до 15 мм).',
-            image: ''  // "image/p3.jpg"
+            image: 'image/p3.jpg',
+            embed: ''
         },
         {
             id: 3,
             icon: '🔬',
             label: 'Слайд 3. Интраоперационное фото (яичники)',
             desc: 'Яичники с множественными кистами (поликистоз). Ткань яичников деформирована, видны кистозные образования.',
-            image: ''  // "image/p1.jpg"
+            image: 'image/p1.jpg',
+            embed: ''
         },
         {
             id: 4,
             icon: '🔬',
             label: 'Слайд 4. Интраоперационное фото (матка)',
             desc: 'Увеличенная матка с признаками эндометрита, отёк стенки, наличие сгустков крови.',
-            image: ''  // "image/p4.jpg"
+            image: 'image/p4.jpg',
+            embed: ''
         },
         {
             id: 5,
             icon: '🎥',
             label: 'Слайд 5. Интраоперационное видео',
             desc: 'Сгустки крови и участки отслойки эндометрия (отрыв эндометрия).',
-            image: ''  //
-            embed: '<iframe src="https://vk.com/video_ext.php?oid=541771632&id=456239268&hash=8446918f0d360bcc" 
-            width="100%" height="100%" frameborder="0" allowfullscreen="1" style="background-color: #000" allow="autoplay;
-            encrypted-media; fullscreen; picture-in-picture"></iframe>'
+            image: '',
+            embed: `<iframe src="https://vk.com/video_ext.php?oid=541771632&id=456239268&hash=8446918f0d360bcc" 
+                     width="100%" height="100%" frameborder="0" allowfullscreen="1" 
+                     style="background-color: #000" 
+                     allow="autoplay; encrypted-media; fullscreen; picture-in-picture"></iframe>`
         },
         {
             id: 6,
             icon: '🐕',
             label: 'Слайд 6. Пациент на 7-е сутки после операции',
             desc: 'Собака активна, аппетит восстановлен, выделения из вульвы отсутствуют.',
-            image: ''  // "image/p6.jpg"
+            image: 'image/p6.jpg',
+            embed: ''
         }
     ];
 
@@ -650,8 +674,8 @@
     let isAnswered = false;
 
     // DOM
-    const slideImage = document.getElementById('slideImage');
     const slideImg = document.getElementById('slideImg');
+    const slideEmbed = document.getElementById('slideEmbed');
     const slidePlaceholder = document.getElementById('slidePlaceholder');
     const slideIcon = document.getElementById('slideIcon');
     const slideLabel = document.getElementById('slideLabel');
@@ -682,19 +706,30 @@
         const slide = slides[index];
         if (!slide) return;
 
-        // Обновляем данные плейсхолдера (на случай, если изображение не загружено)
+        // Обновляем текст
         slideIcon.textContent = slide.icon;
         slideLabel.textContent = slide.label;
         slideDesc.textContent = slide.desc;
         slideCounter.textContent = `${index + 1} / ${slides.length}`;
 
-        // Работа с изображением
-        if (slide.image && slide.image.trim() !== '') {
+        // Скрываем все элементы
+        slideImg.style.display = 'none';
+        slideEmbed.style.display = 'none';
+        slideEmbed.innerHTML = '';
+        slidePlaceholder.style.display = 'none';
+
+        // Проверяем embed
+        if (slide.embed && slide.embed.trim() !== '') {
+            slideEmbed.innerHTML = slide.embed;
+            slideEmbed.style.display = 'block';
+        } 
+        // Проверяем изображение
+        else if (slide.image && slide.image.trim() !== '') {
             slideImg.src = slide.image;
             slideImg.style.display = 'block';
-            slidePlaceholder.style.display = 'none';
-        } else {
-            slideImg.style.display = 'none';
+        } 
+        // Иначе плейсхолдер
+        else {
             slidePlaceholder.style.display = 'flex';
         }
 

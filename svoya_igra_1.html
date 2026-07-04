@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Своя игра | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #1F3B3A;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #F4E9D8;
+            padding: 1rem;
+        }
+        .game-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 0 #0F2A28;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .theme-col {
+            background: #2C5F5A;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+        .theme-title {
+            background: #1F4E4A;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #3D807A;
+        }
+        .question-cell {
+            background: #3A7C76;
+            margin: 0.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            padding: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+            font-size: 1.3rem;
+        }
+        .question-cell.used {
+            background: #5C9E97;
+            cursor: default;
+            opacity: 0.6;
+            text-decoration: line-through;
+        }
+        .question-cell:hover:not(.used) {
+            background: #4F958D;
+            transform: scale(1.02);
+        }
+        .question-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: #FDF8F0;
+            color: #2C3E2F;
+            max-width: 600px;
+            width: 90%;
+            border-radius: 2rem;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        .modal-question {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+        }
+        .modal-answer {
+            background: #E2EAD9;
+            border-radius: 2rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+            font-size: 1.1rem;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        button {
+            background: #2C7DA0;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn {
+            background: #A3B18A;
+        }
+        .score-board {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            background: #1F4E4A;
+            padding: 0.5rem;
+            border-radius: 2rem;
+            display: inline-block;
+            width: auto;
+        }
+        .reset-game {
+            background: #D4A373;
+            margin-left: 1rem;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+        @media (max-width: 700px) {
+            .game-board { grid-template-columns: 1fr; }
+            .theme-title { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <h1>🎲 СВОЯ ИГРА</h1>
+        <div><span class="score-board">💰 Счёт: <span id="score">0</span></span>
+        <button id="resetAllBtn" class="reset-game">🔄 Начать заново</button></div>
+    </div>
+    <div id="gameBoard" class="game-board"></div>
+    <footer>© ВетСим — образовательная игра. Вопросы создал автор проекта, преподаватель Алла Сергеевна Тераевич.</footer>
+</div>
+<script>
+    const gameData = {"themes":[{"name":"КАТЕГОРИЯ 1: ВЕТЕРИНАРНЫЙ ВРАЧ","questions":[{"points":100,"question":"Кто из знаменитых литературных персонажей был ветеринарным врачом по образованию?","answer":"Михаил Булгаков. (Окончил медицинский факультет Киевского университета, работал ветеринарным врачом в Смоленской губернии, что описано в его «Записках юного врача»)"},{"points":200,"question":"Какое заболевание у лошадей, вызываемое бактерией Rhodococcus equi, особенно опасно для жеребят и часто требует специфической антибиотикотерапии?","answer":"Родококкоз (или Rhodococcus equi pneumonia)"},{"points":300,"question":"В какой стране и в каком году был разработан и впервые применён тест на аллергию для диагностики туберкулёза у крупного рогатого скота?","answer":"В России, в 1924 году, профессором Р.Э. Шустером был предложен и внедрён туберкулиновый тест (проба) для крупного рогатого скота, который используется до сих пор"},{"points":400,"question":"Какой фермент, вырабатываемый бактерией Clostridium chauvoei, является основным фактором патогенности при эмфизематозном карбункуле (эмкаре) у крупного рогатого скота, и какое его действие?","answer":"Лецитиназа (альфа-токсин). Она разрушает клеточные мембраны, вызывая некроз мышц и отёк"},{"points":500,"question":"Для лечения какого распространённого заболевания у собак, характеризующегося избыточной выработкой кортизола, используется препарат \"Трилостан\", и какова основная цель терапии?","answer":"Синдром Кушинга (гиперадренокортицизм). Основная цель терапии — нормализовать уровень кортизола в крови и уменьшить клинические проявления (полиурия, полидипсия, алопеция), а не полностью вылечить опухоль гипофиза или надпочечников"}]},{"name":"КАТЕГОРИЯ 2: ВЕТЕРИНАРНО-САНИТАРНЫЙ ЭКСПЕРТ (ГВЭ)","questions":[{"points":100,"question":"При ветеринарно-санитарной экспертизе туши, какой патологический процесс в лимфоузлах является абсолютным признаком для её утилизации из-за риска генерализованной инфекции?","answer":"Гнойное воспаление (абсцедирующий лимфаденит) или наличие в лимфоузлах творожистых масс, характерных для туберкулёза. Это указывает на системный инфекционный процесс"},{"points":200,"question":"Какой специфический запах является характерным признаком порчи мяса и является основанием для его отбраковки (условно- или абсолютно непригодного)?","answer":"Запах аммиака или сероводорода (гнилостный запах). Он свидетельствует о глубоком разложении белков"},{"points":300,"question":"Как называется обязательный ветеринарный сопроводительный документ, который оформляется на партию продуктов животного происхождения, перевозимую внутри одного региона Российской Федерации?","answer":"Элетронный ветеринарный сопроводительный документ (эВСД) форма № 2"},{"points":400,"question":"Какое опасное для человека паразитарное заболевание, передающееся через сырое или недостаточно обработанное мясо крупного рогатого скота, чаще всего выявляется при микроскопии \"трихинеллоскопом\"?","answer":" Цистицеркоз (или финноз) — заражение личиночной стадией цепня Taenia saginata"},{"points":500,"question":"Какой метод является наиболее чувствительным для выявления в мясе остаточных количеств антибиотиков, используемых для лечения животных, и почему он важен для экспортных поставок?","answer":"Высокоэффективная жидкостная хроматография с масс-спектрометрией (ВЭЖХ-МС/МС). Это современный лабораторный метод, позволяющий обнаружить даже микроколичества веществ, что критично для соблюдения стандартов стран-импортёров"}]},{"name":"КАТЕГОРИЯ 3: ВЕТЕРИНАРНЫЙ ФЕЛЬДШЕР","questions":[{"points":100,"question":"Для профилактики какого заболевания, вызываемого простейшими, ветеринарный фельдшер проводит массовую обработку крупного рогатого скота специальными препаратами (например, \"Бутокс 50\") в весенне-летний период?","answer":"Для профилактики гиродерматоза, пироплазмоза и других паразитарных заболеваний, передающихся через укусы насекомых и клещей"},{"points":200,"question":"Какой инструмент используется фельдшером для фиксации языка у крупного рогатого скота при осмотре ротовой полости или введении зонда? (Ответьте одним словом)","answer":"Закрутка (или закрутка для языка)"},{"points":300,"question":" При оказании неотложной помощи при тимпании (вздутии) рубца у коровы, какой основной манипуляцией должен владеть фельдшер для удаления газов?","answer":"Прокол рубца троакаром (руминоцентез) для экстренной декомпрессии"},{"points":400,"question":"В каких единицах измеряется и какой метод (прямой или непрямой) чаще всего используется фельдшером для оценки общего белка в сыворотке крови с помощью рефрактометра?","answer":"В г/л (граммах на литр). Используется непрямой метод, так как рефрактометр измеряет показатель преломления света, который коррелирует с концентрацией белка"},{"points":500,"question":"При акушерской помощи собаке, как правильно называется процедура механического перемещения плода в матке для исправления неправильного предлежания, и какое основное правило должно соблюдаться?","answer":"Коррекция предлежания плода. Основное правило — перемещать плод только в период отсутствия схваток (в паузу между потугами) и исключительно по направлению к выходу из матки"}]},{"name":"КАТЕГОРИЯ 4: АССИСТЕНТ ВЕТЕРИНАРНОГО ВРАЧА","questions":[{"points":100,"question":"ак называется специальная система для внутривенного введения лекарств с регулируемой скоростью, которую ассистент готовит и контролирует?","answer":"Инфузионная система (капельница) или инфузионный насос (инфузиомат)"},{"points":200,"question":"Для какого метода диагностики ассистент готовит специальный \"сэндвич\": предметное стекло, образец (мазок), покровное стекло?","answer":"Для микроскопии (например, для цитологического или бактериологического исследования)"},{"points":300,"question":"Какой обязательный этап подготовки операционного поля к хирургической операции входит в обязанности ассистента?","answer":"Асептическая подготовка: удаление шерсти (выбривание), обработка кожи антисептиком (например, хлоргексидином или раствором йода) и изоляция операционного поля стерильной тканью (перед операцией)"},{"points":400,"question":"Каким образом ассистент должен правильно держать скальпель, чтобы обеспечить максимальный контроль и безопасность во время разреза, и как называется этот захват?","answer":"Захват скальпеля «писчим пером» (как ручку). Это обеспечивает точный контроль движений"},{"points":500,"question":"Какие три основных параметра жизнедеятельности (витальные признаки) ассистент обязан регулярно контролировать и фиксировать во время амбулаторного приёма или стационарного наблюдения за животным?","answer":"Частота дыхательных движений (ЧДД), частота сердечных сокращений (ЧСС/пульс) и температура тела (Т)."}]},{"name":"КАТЕГОРИЯ 5: РАБОТНИК ВЕТЕРИНАРНОЙ ЛАБОРАТОРИИ ","questions":[{"points":100,"question":"Какой самый распространённый метод выявления антител к вирусу лейкоза кошек (FeLV) используется в ветеринарных лабораториях?","answer":"Иммуноферментный анализ (ИФА) или экспресс-тесты на основе иммунохроматографии"},{"points":200,"question":"Для какого лабораторного исследования проба крови должна доставляться в лабораторию исключительно в тёплом виде (при температуре тела)?","answer":"Для исследования на микрофилярии (дирофиляриоз) или для некоторых тестов на гемопаразитов, так как возбудители могут погибнуть при охлаждении"},{"points":300,"question":"Как называется питательная среда, которая является универсальной для выделения большинства патогенных бактерий (включая стафилококки и стрептококки) и имеет характерный кроваво-красный цвет?","answer":"Кровяной агар (или 5% кровяной агар)"},{"points":400,"question":"Какой прибор используется для точного подсчёта форменных элементов крови (эритроцитов, лейкоцитов, тромбоцитов) в гематологическом анализаторе?","answer":"Проточный цитофлуориметр. Он лежит в основе работы современных автоматических гематологических анализаторов"},{"points":500,"question":"Какой метод молекулярной диагностики является \"золотым стандартом\" для выявления генетического материала возбудителя (например, вируса бешенства или чумы плотоядных) в исследуемом материале, и как он расшифровывается?","answer":"ПЦР (Полимеразная цепная реакция). Это высокочувствительный метод, позволяющий обнаружить даже единичные копии ДНК или РНК патогена"}]}]};
+    let scores = 0;
+    let usedQuestions = []; // массив {themeIdx, qIdx}
+
+    function renderBoard() {
+        const board = document.getElementById('gameBoard');
+        board.innerHTML = '';
+        gameData.themes.forEach((theme, tIdx) => {
+            const col = document.createElement('div');
+            col.className = 'theme-col';
+            col.innerHTML = `<div class="theme-title">${escapeHtml(theme.name)}</div>`;
+            theme.questions.forEach((q, qIdx) => {
+                const isUsed = usedQuestions.some(u => u.themeIdx === tIdx && u.qIdx === qIdx);
+                const cell = document.createElement('div');
+                cell.className = 'question-cell' + (isUsed ? ' used' : '');
+                cell.textContent = q.points;
+                if (!isUsed) {
+                    cell.addEventListener('click', () => openQuestion(tIdx, qIdx));
+                }
+                col.appendChild(cell);
+            });
+            board.appendChild(col);
+        });
+    }
+
+    function openQuestion(themeIdx, qIdx) {
+        const q = gameData.themes[themeIdx].questions[qIdx];
+        const modal = document.createElement('div');
+        modal.className = 'question-modal';
+        modal.innerHTML = `
+            <div class="modal-card">
+                <div class="modal-question">❓ ${escapeHtml(q.question)}</div>
+                <div class="modal-buttons">
+                    <button class="show-answer-btn">Показать ответ</button>
+                    <button class="correct-btn">✅ Верно (+ ${q.points})</button>
+                    <button class="wrong-btn">❌ Неверно (0)</button>
+                    <button class="close-btn">✖ Закрыть</button>
+                </div>
+                <div class="modal-answer">📖 Ответ: ${escapeHtml(q.answer)}</div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const showAnswerBtn = modal.querySelector('.show-answer-btn');
+        const answerDiv = modal.querySelector('.modal-answer');
+        showAnswerBtn.addEventListener('click', () => {
+            answerDiv.style.display = 'block';
+        });
+        const correctBtn = modal.querySelector('.correct-btn');
+        const wrongBtn = modal.querySelector('.wrong-btn');
+        const closeBtn = modal.querySelector('.close-btn');
+
+        function closeModal(addScore) {
+            if (addScore !== undefined) {
+                scores += addScore;
+                document.getElementById('score').textContent = scores;
+                // отметить вопрос использованным
+                if (!usedQuestions.some(u => u.themeIdx === themeIdx && u.qIdx === qIdx)) {
+                    usedQuestions.push({ themeIdx, qIdx });
+                }
+                renderBoard();
+            }
+            modal.remove();
+        }
+
+        correctBtn.addEventListener('click', () => closeModal(q.points));
+        wrongBtn.addEventListener('click', () => closeModal(0));
+        closeBtn.addEventListener('click', () => closeModal());
+    }
+
+    function resetGame() {
+        scores = 0;
+        usedQuestions = [];
+        document.getElementById('score').textContent = scores;
+        renderBoard();
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+    }
+
+    document.getElementById('resetAllBtn').addEventListener('click', resetGame);
+    renderBoard();
+</script>
+</body>
+</html>

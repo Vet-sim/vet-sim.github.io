@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Клинический кейс: Воспалительная карцинома молочной железы у кошки</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 820px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .clinic-name {
+            color: #7C8F7C;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+            border-left: 4px solid #A3B18A;
+            padding-left: 12px;
+        }
+
+        .surgeon {
+            color: #5F7C62;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            padding-left: 16px;
+        }
+
+        .case-intro {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0 1.2rem;
+            border: 1px solid #E2EAD9;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .case-intro strong {
+            color: #1F4E6E;
+        }
+        .case-intro .highlight {
+            background: #E9F0E3;
+            padding: 0.1rem 0.4rem;
+            border-radius: 6px;
+        }
+        .case-intro .badge {
+            display: inline-block;
+            background: #E2CFB0;
+            padding: 0.1rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #4D3E2A;
+        }
+        .case-intro::-webkit-scrollbar {
+            width: 4px;
+        }
+        .case-intro::-webkit-scrollbar-thumb {
+            background: #C9D6BA;
+            border-radius: 10px;
+        }
+        .case-intro::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        /* Слайд */
+        .slider-section {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1rem;
+            border: 1px solid #E2EAD9;
+            margin-bottom: 1.2rem;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .slider-image {
+            width: 100%;
+            max-width: 600px;
+            aspect-ratio: 16/9;
+            background: #E2EAD9;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px dashed #A3B18A;
+            transition: 0.2s;
+        }
+
+        .slider-image .slide-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .slider-image .slide-label {
+            font-weight: 700;
+            color: #1F4E6E;
+            font-size: 1.1rem;
+        }
+        .slider-image .slide-desc {
+            font-size: 0.85rem;
+            color: #5F7C62;
+            margin-top: 0.3rem;
+            max-width: 90%;
+        }
+
+        /* Прогресс */
+        .progress-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.8rem 0 1.2rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .progress-text {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #2C7DA0;
+        }
+        .progress-track {
+            flex: 1;
+            min-width: 100px;
+            height: 6px;
+            background: #E2EAD9;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #2C7DA0;
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        /* Вопросы */
+        .question-block {
+            margin: 1.2rem 0;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-bottom: 1.2rem;
+        }
+        .option-btn {
+            background: #F9F6EF;
+            border: 2px solid #E2EAD9;
+            border-radius: 60px;
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #3E5C4A;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .option-btn .marker {
+            width: 28px;
+            height: 28px;
+            background: #E2EAD9;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #5F7C62;
+            flex-shrink: 0;
+        }
+        .option-btn:hover:not(.disabled) {
+            background: #E9F0E3;
+            border-color: #A3B18A;
+            transform: translateY(-1px);
+        }
+        .option-btn:active:not(.disabled) {
+            transform: translateY(1px);
+        }
+        .option-btn.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+        .option-btn.correct {
+            background: #CBE0C0;
+            border-color: #6B9E6B;
+        }
+        .option-btn.wrong {
+            background: #F2D9CB;
+            border-color: #D47A6A;
+        }
+
+        .feedback-area {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0 1.2rem;
+            border-left: 5px solid #A3B18A;
+            display: none;
+        }
+        .feedback-area.show {
+            display: block;
+        }
+        .feedback-area .verdict {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        .feedback-area .verdict.correct {
+            color: #3A7A3A;
+        }
+        .feedback-area .verdict.wrong {
+            color: #B5533A;
+        }
+        .feedback-area .explanation {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            line-height: 1.5;
+        }
+
+        .action-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        .final-screen {
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+        .final-screen .score {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1F4E6E;
+        }
+        .final-screen .message {
+            font-size: 1.2rem;
+            margin: 0.8rem 0 1.5rem;
+            color: #3E5C4A;
+        }
+        .final-screen .icon {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .reference-note {
+            font-size: 0.75rem;
+            color: #8A9B7A;
+            margin-top: 0.3rem;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.2rem 1rem;
+            }
+            h1 {
+                font-size: 1.4rem;
+            }
+            .question-text {
+                font-size: 1rem;
+            }
+            .option-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+            .action-row {
+                justify-content: stretch;
+            }
+            .action-row .btn {
+                flex: 1;
+                text-align: center;
+            }
+            .feedback-area {
+                padding: 0.8rem 1rem;
+            }
+            .slider-image {
+                aspect-ratio: 4/3;
+                padding: 1rem;
+            }
+            .slider-image .slide-label {
+                font-size: 0.95rem;
+            }
+            .slider-image .slide-desc {
+                font-size: 0.8rem;
+            }
+            .case-intro {
+                max-height: 160px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <!-- Заголовок -->
+    <h1>🩺 Клинический кейс: Воспалительная карцинома молочной железы у кошки</h1>
+    <div class="clinic-name">🏥 Ветклиника «Возрождение», г. Севастополь</div>
+    <div class="surgeon">👨‍⚕️ Врач-онколог: Петрова Е.Ю.</div>
+
+    <!-- Вводная -->
+    <div class="case-intro" id="caseIntro">
+        <strong>📋 Вводная:</strong> В клинику поступила кошка, 6 лет, самка, порода бурма, стерилизована. 
+        Владельцы заметили <span class="highlight">новообразование</span> в области молочной железы (похоже на абсцесс). 
+        Кошка отсутствовала дома несколько дней (выгул на улице). 
+        При осмотре: новообразование в области 1 соска размером 2 см, <span class="highlight">миллиарные очаги</span> в округе, 
+        увеличен подмышечный лимфатический узел, кожа гиперемирована и отёчна, гнойное содержимое.
+        <br><br>
+        <strong>Диагноз:</strong> <span class="highlight">Воспалительная карцинома</span> молочной железы с инвазией в лимфатический узел (4 стадия).
+        <br><br>
+        <strong>Лечение:</strong> 3 курса химиотерапии (Доцетаксел) → унилатеральная мастэктомия с лимфадиссекцией. 
+        Пациент проходит <span class="highlight">онкопоиски</span> каждые 3 месяца.
+        <br><br>
+        <span style="font-size: 0.8rem; color: #8A9B7A;">📚 Клинический случай из практики клиники «Возрождение».</span>
+    </div>
+
+    <!-- Слайдер (1 слайд) -->
+    <div class="slider-section">
+        <div class="slider-container">
+            <div class="slider-image" id="slideImage">
+                <div class="slide-icon">📷</div>
+                <div class="slide-label">Слайд 1. Клинический вид новообразования</div>
+                <div class="slide-desc">
+                    На фото: область молочной железы кошки с новообразованием 2 см, гиперемия (покраснение) и отёк кожи вокруг, миллиарные очаги в округе, увеличенный подмышечный лимфатический узел.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Прогресс -->
+    <div class="progress-area">
+        <span class="progress-text" id="progressLabel">Вопрос 1 из 6</span>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span class="reference-note">🔬 Онкология</span>
+    </div>
+
+    <!-- Блок вопроса -->
+    <div id="questionBlock">
+        <div class="question-block">
+            <div class="question-text" id="questionText">Загрузка вопроса...</div>
+            <div class="options" id="optionsContainer"></div>
+            <div class="feedback-area" id="feedbackArea">
+                <div class="verdict" id="verdictText"></div>
+                <div class="explanation" id="explanationText"></div>
+            </div>
+            <div class="action-row">
+                <button class="btn btn-primary" id="nextBtn" disabled>➡️ Следующий</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Итог -->
+    <div id="finalScreen" class="final-screen hidden">
+        <div class="icon">🐱🩺</div>
+        <div class="score" id="finalScore">0%</div>
+        <div class="message" id="finalMessage">Отличный результат!</div>
+        <div style="margin-bottom: 1rem; font-size: 0.95rem; color: #5F7C62;" id="finalDetails"></div>
+        <button class="btn btn-success" id="restartBtn">🔄 Пройти заново</button>
+        <div style="margin-top: 1rem; font-size: 0.7rem; color: #8A9B7A;">
+            📚 Случай из практики: ветклиника «Возрождение», г. Севастополь.
+        </div>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // ДАННЫЕ ВОПРОСОВ (6)
+    // ============================================================
+    const questions = [
+        {
+            id: 1,
+            question: 'Почему воспалительную карциному молочной железы у кошек врач-онколог может диагностировать уже на этапе клинического осмотра?',
+            options: [
+                'Потому что у кошки есть гнойные выделения',
+                'Потому что есть характерные клинические признаки (отёк, гиперемия, миллиарные очаги)',
+                'Потому что кошка стерилизована',
+                'Потому что опухоль болезненна при пальпации'
+            ],
+            correct: 1,
+            explanation: 'Воспалительная карцинома имеет характерную клиническую картину: отёк, гиперемия, быстрое распространение по молочной железе, увеличение регионарных лимфоузлов. Это один из редких случаев, когда диагноз можно поставить уже по результату осмотра.'
+        },
+        {
+            id: 2,
+            question: 'Почему при воспалительной карциноме нельзя сразу проводить хирургическое удаление опухоли?',
+            options: [
+                'Это слишком дорого',
+                'Опухоль не имеет чётких границ и распределена по большому участку',
+                'Хирургия противопоказана при любых опухолях молочной железы',
+                'Кошка слишком старая для наркоза'
+            ],
+            correct: 1,
+            explanation: 'При воспалительной карциноме опухолевые клетки инфильтрируют ткани молочной железы диффузно, без чётких границ. Хирургия на первом этапе может спровоцировать метастазирование и ухудшить прогноз.'
+        },
+        {
+            id: 3,
+            question: 'Какой препарат использовался для химиотерапии в данном случае?',
+            options: [
+                'Цисплатин',
+                'Доцетаксел',
+                'Доксорубицин',
+                'Винкристин'
+            ],
+            correct: 1,
+            explanation: 'В данном клиническом случае проведено 3 курса химиотерапии препаратом Доцетаксел (таксан). Это препарат, который часто используется при лечении воспалительной карциномы молочной железы.'
+        },
+        {
+            id: 4,
+            question: 'Что такое унилатеральная мастэктомия с лимфадиссекцией?',
+            options: [
+                'Удаление всех молочных желез с одной стороны с удалением регионарных лимфоузлов',
+                'Удаление только опухоли',
+                'Удаление всех молочных желез с обеих сторон',
+                'Лучевая терапия'
+            ],
+            correct: 0,
+            explanation: 'Унилатеральная мастэктомия — удаление всех молочных желез с одной стороны (левой или правой). Лимфадиссекция — удаление регионарных лимфатических узлов (в данном случае подмышечных).'
+        },
+        {
+            id: 5,
+            question: 'Какая стадия рака была диагностирована у кошки?',
+            options: [
+                '1 стадия',
+                '2 стадия',
+                '3 стадия',
+                '4 стадия (из 4)'
+            ],
+            correct: 3,
+            explanation: 'Воспалительная карцинома с инвазией в лимфатический узел соответствует 4 стадии рака молочной железы — самой тяжёлой, с высоким риском метастазирования.'
+        },
+        {
+            id: 6,
+            question: 'С какой периодичностью пациент проходит обследование на отдалённые метастазы (онкопоиски)?',
+            options: [
+                'Каждый месяц',
+                'Каждые 3 месяца',
+                'Каждые 6 месяцев',
+                '1 раз в год'
+            ],
+            correct: 1,
+            explanation: 'После лечения пациент проходит онкопоиски каждые 3 месяца для раннего выявления возможных метастазов. Это позволяет вовремя скорректировать терапию.'
+        }
+    ];
+
+    // ============================================================
+    // СОСТОЯНИЕ И ЛОГИКА
+    // ============================================================
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let isAnswered = false;
+
+    const questionText = document.getElementById('questionText');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const feedbackArea = document.getElementById('feedbackArea');
+    const verdictText = document.getElementById('verdictText');
+    const explanationText = document.getElementById('explanationText');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressFill = document.getElementById('progressFill');
+    const questionBlock = document.getElementById('questionBlock');
+    const finalScreen = document.getElementById('finalScreen');
+    const finalScore = document.getElementById('finalScore');
+    const finalMessage = document.getElementById('finalMessage');
+    const finalDetails = document.getElementById('finalDetails');
+    const restartBtn = document.getElementById('restartBtn');
+
+    // Инициализация
+    function init() {
+        currentQuestionIndex = 0;
+        correctCount = 0;
+        isAnswered = false;
+        finalScreen.classList.add('hidden');
+        questionBlock.classList.remove('hidden');
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const q = questions[currentQuestionIndex];
+        if (!q) return;
+        progressLabel.textContent = `Вопрос ${currentQuestionIndex + 1} из ${questions.length}`;
+        progressFill.style.width = `${((currentQuestionIndex + 1) / questions.length) * 100}%`;
+
+        questionText.textContent = q.question;
+        optionsContainer.innerHTML = '';
+        const letters = ['А', 'Б', 'В', 'Г'];
+        q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span class="marker">${letters[idx]}</span> ${opt}`;
+            btn.dataset.index = idx;
+            btn.addEventListener('click', () => handleOptionClick(btn, idx));
+            optionsContainer.appendChild(btn);
+        });
+
+        feedbackArea.classList.remove('show');
+        feedbackArea.style.display = 'none';
+        nextBtn.disabled = true;
+        isAnswered = false;
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('correct', 'wrong', 'disabled'));
+    }
+
+    function handleOptionClick(btn, selectedIdx) {
+        if (isAnswered) return;
+        const q = questions[currentQuestionIndex];
+        const isCorrect = (selectedIdx === q.correct);
+
+        document.querySelectorAll('.option-btn').forEach(b => b.classList.add('disabled'));
+
+        document.querySelectorAll('.option-btn').forEach((b, idx) => {
+            if (idx === q.correct) b.classList.add('correct');
+            else if (idx === selectedIdx && !isCorrect) b.classList.add('wrong');
+        });
+
+        feedbackArea.style.display = 'block';
+        feedbackArea.classList.add('show');
+        if (isCorrect) {
+            verdictText.className = 'verdict correct';
+            verdictText.textContent = '✅ Правильно!';
+            correctCount++;
+        } else {
+            verdictText.className = 'verdict wrong';
+            verdictText.textContent = '❌ Неправильно!';
+        }
+        explanationText.textContent = q.explanation;
+
+        isAnswered = true;
+        nextBtn.disabled = false;
+    }
+
+    function goToNext() {
+        if (!isAnswered) return;
+        if (currentQuestionIndex + 1 < questions.length) {
+            currentQuestionIndex++;
+            renderQuestion();
+        } else {
+            showFinalScreen();
+        }
+    }
+
+    function showFinalScreen() {
+        questionBlock.classList.add('hidden');
+        finalScreen.classList.remove('hidden');
+        const total = questions.length;
+        const percent = Math.round((correctCount / total) * 100);
+        finalScore.textContent = `${percent}%`;
+        finalDetails.textContent = `Правильных ответов: ${correctCount} из ${total}`;
+
+        let message = '';
+        if (percent === 100) message = '🌟 Отлично! Вы отлично разобрались в сложном онкологическом случае!';
+        else if (percent >= 80) message = '🎉 Хороший результат! Вы понимаете ключевые аспекты диагностики и лечения.';
+        else if (percent >= 60) message = '😊 Неплохо, стоит повторить материал по онкологии молочной железы.';
+        else message = '📖 Рекомендуем перечитать раздел об онкологических заболеваниях кошек. Попробуйте ещё раз!';
+        finalMessage.textContent = message;
+    }
+
+    function restartQuiz() {
+        init();
+    }
+
+    // ============================================================
+    // ПОДКЛЮЧЕНИЕ СОБЫТИЙ
+    // ============================================================
+    nextBtn.addEventListener('click', goToNext);
+    restartBtn.addEventListener('click', restartQuiz);
+
+    // Запуск
+    init();
+</script>
+</body>
+</html>

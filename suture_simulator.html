@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>2D-симулятор хирургических швов | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            margin-bottom: 0.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .sub {
+            color: #7C8F7C;
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 1.2rem;
+            align-items: center;
+            justify-content: space-between;
+            background: #F9F6EF;
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+        }
+        .toolbar .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+            white-space: nowrap;
+        }
+        .btn-active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-active:hover {
+            background: #236B8A;
+        }
+        .btn-primary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #8FA375;
+        }
+        .btn-danger {
+            background: #F2D9CB;
+            color: #B5533A;
+        }
+        .btn-danger:hover {
+            background: #EDC8B7;
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .canvas-wrapper {
+            position: relative;
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            border: 1px solid #E2EAD9;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            background: #FFFCF7;
+            cursor: crosshair;
+            touch-action: none;
+        }
+        .info-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            background: #F9F6EF;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+        }
+        .info-bar .stitch-count {
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .info-bar .mode-label {
+            font-weight: 600;
+        }
+        .footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #8A9B7A;
+            border-top: 1px solid #E2EAD9;
+            padding-top: 1rem;
+        }
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+        @media (max-width: 700px) {
+            .container { padding: 1rem; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .toolbar .btn-group { justify-content: center; }
+            .btn { padding: 6px 12px; font-size: 0.8rem; }
+        }
+        @media (max-width: 480px) {
+            .btn { padding: 4px 10px; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🪡 Симулятор хирургических швов</h1>
+    <div class="sub">2D-тренажёр для отработки навыков наложения стежков</div>
+
+    <div class="toolbar">
+        <div class="btn-group">
+            <button class="btn btn-active" id="modeSimple">🧵 Узловой</button>
+            <button class="btn" id="modeContinuous">🌀 Непрерывный</button>
+            <button class="btn" id="modeIntradermal">✨ Внутрикожный</button>
+        </div>
+        <div class="btn-group">
+            <button class="btn btn-danger" id="undoBtn">↩️ Отменить</button>
+            <button class="btn btn-danger" id="clearBtn">🗑️ Очистить всё</button>
+        </div>
+    </div>
+
+    <div class="canvas-wrapper">
+        <canvas id="sutureCanvas" width="800" height="450"></canvas>
+    </div>
+
+    <div class="info-bar">
+        <span class="mode-label" id="modeLabel">Режим: Узловой шов</span>
+        <span class="stitch-count" id="stitchCounter">Стежков: 0</span>
+        <span id="hintText">Кликните на левом крае раны, затем на правом — для стежка</span>
+    </div>
+
+    <div class="footer">
+        <span>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</span>
+        <span> · </span>
+        <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a>
+    </div>
+</div>
+
+<script>
+    (function() {
+        'use strict';
+
+        // ============================================================
+        // КОНФИГУРАЦИЯ
+        // ============================================================
+        const canvas = document.getElementById('sutureCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Реальные размеры canvas (фиксированные)
+        const CW = 800;
+        const CH = 450;
+        canvas.width = CW;
+        canvas.height = CH;
+
+        // ============================================================
+        // СОСТОЯНИЕ
+        // ============================================================
+        let mode = 'simple';          // 'simple', 'continuous', 'intradermal'
+        let stitches = [];            // массив стежков, каждый стежок: { p1: {x,y}, p2: {x,y} }
+        let currentPoints = [];       // временные точки для текущего стежка (при непрерывном может хранить последнюю точку)
+
+        // Для непрерывного шва: храним последнюю точку, чтобы начать новый стежок от неё
+        let lastPoint = null;
+
+        // ============================================================
+        // ДАННЫЕ РАНЫ (для отрисовки)
+        // ============================================================
+        // Рана – область в центре canvas
+        const wound = {
+            // Левая сторона раны – эллипс (края)
+            left: { cx: 300, cy: 220, rx: 30, ry: 60 },
+            right: { cx: 500, cy: 220, rx: 30, ry: 60 }
+        };
+
+        // ============================================================
+        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+        // ============================================================
+        function getClosestEdgePoint(x, y) {
+            // Определяем, к какой стороне раны ближе точка (левой или правой)
+            // И возвращаем ближайшую точку на крае раны (проекция на эллипс)
+            // Для упрощения: возвращаем точку с той же y, но на границе эллипса по x
+            // Но лучше просто вернуть точку на линии разреза — мы будем использовать два эллипса.
+            // Проекция точки на эллипс – сложно, поэтому поступим проще:
+            // Пусть разреза – вертикальная линия между двумя эллипсами? Нет, мы хотим реалистичнее.
+            // Сделаем: рана – это овал (разрез) с центром (400, 220), шириной 200, высотой 120.
+            // Левый край – x = 300, правый – x = 500. y – любое.
+            // Будем считать, что пользователь кликает на левый или правый край, и мы привязываем точку к краю.
+            // Определим, к какой стороне ближе.
+            const distLeft = Math.hypot(x - 300, y - 220);
+            const distRight = Math.hypot(x - 500, y - 220);
+            if (distLeft < distRight) {
+                // Левая сторона: фиксируем x = 300, y оставляем (но ограничим по вертикали в пределах раны)
+                let yy = Math.min(Math.max(y, 160), 280); // диапазон высоты раны
+                return { x: 300, y: yy };
+            } else {
+                let yy = Math.min(Math.max(y, 160), 280);
+                return { x: 500, y: yy };
+            }
+        }
+
+        // Отрисовка всего
+        function draw() {
+            ctx.clearRect(0, 0, CW, CH);
+
+            // 1. Фон кожи
+            const grad = ctx.createRadialGradient(400, 220, 50, 400, 220, 300);
+            grad.addColorStop(0, '#FDF5E6');
+            grad.addColorStop(1, '#F0E8D8');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, CW, CH);
+
+            // 2. Рисуем рану (разрез)
+            ctx.save();
+            // Тень
+            ctx.shadowColor = 'rgba(0,0,0,0.1)';
+            ctx.shadowBlur = 12;
+            // Тело раны – овал
+            ctx.beginPath();
+            ctx.ellipse(400, 220, 120, 70, 0, 0, Math.PI * 2);
+            ctx.fillStyle = '#E8C8B0';
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#B08060';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Линия разреза (по центру)
+            ctx.beginPath();
+            ctx.moveTo(300, 160);
+            ctx.lineTo(300, 280);
+            ctx.strokeStyle = '#B08060';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+
+            // Края раны (слева и справа) – для наглядности
+            ctx.fillStyle = '#D4A373';
+            ctx.font = '14px system-ui';
+            ctx.fillText('◀ Левая сторона', 230, 150);
+            ctx.fillText('Правая сторона ▶', 560, 150);
+
+            // 3. Рисуем все стежки
+            stitches.forEach((stitch) => {
+                drawStitch(stitch.p1, stitch.p2);
+            });
+
+            // 4. Если есть текущий стежок (для узлового – две точки, для непрерывного – текущая линия)
+            if (currentPoints.length === 1 && mode === 'simple') {
+                // Показываем первую точку как маркер
+                const p = currentPoints[0];
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+                ctx.fillStyle = '#2C7DA0';
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.fillStyle = '#2C7DA0';
+                ctx.font = '12px system-ui';
+                ctx.fillText('Вход', p.x + 10, p.y - 6);
+            }
+
+            // Если есть последняя точка (для непрерывного) – показываем маркер
+            if (lastPoint && (mode === 'continuous' || mode === 'intradermal')) {
+                ctx.beginPath();
+                ctx.arc(lastPoint.x, lastPoint.y, 6, 0, 2 * Math.PI);
+                ctx.fillStyle = '#D4A373';
+                ctx.fill();
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.fillStyle = '#D4A373';
+                ctx.font = '12px system-ui';
+                ctx.fillText('Последний', lastPoint.x + 10, lastPoint.y - 6);
+            }
+
+            // Обновляем счётчик
+            document.getElementById('stitchCounter').textContent = 'Стежков: ' + stitches.length;
+        }
+
+        function drawStitch(p1, p2) {
+            // Рисуем нить
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            // Нить может быть немного изогнутой (саг) – добавим небольшую кривизну
+            const midX = (p1.x + p2.x) / 2;
+            const midY = (p1.y + p2.y) / 2 - 8; // небольшой провис
+            ctx.quadraticCurveTo(midX, midY, p2.x, p2.y);
+            ctx.strokeStyle = '#4A6A5A';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // Узлы (точки прокола)
+            ctx.beginPath();
+            ctx.arc(p1.x, p1.y, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#D4A373';
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(p2.x, p2.y, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#D4A373';
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // Для внутрикожного шва добавим точечные стежки внутри
+            if (mode === 'intradermal') {
+                // Рисуем пунктирную линию чуть ниже или выше? Можно просто по-другому отобразить.
+                // Пока оставим как есть.
+            }
+            ctx.restore();
+        }
+
+        // ============================================================
+        // ЛОГИКА ДОБАВЛЕНИЯ СТЕЖКОВ
+        // ============================================================
+        function addStitch(p1, p2) {
+            // Проверка минимального расстояния, чтобы не было слишком коротких стежков
+            const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+            if (dist < 20) {
+                document.getElementById('hintText').textContent = '⚠️ Стежок слишком короткий! Попробуйте ещё.';
+                return false;
+            }
+            stitches.push({ p1: p1, p2: p2 });
+            // Обновляем последнюю точку для непрерывного шва
+            if (mode === 'continuous' || mode === 'intradermal') {
+                lastPoint = p2;
+            }
+            document.getElementById('hintText').textContent = '✅ Стежок добавлен!';
+            draw();
+            return true;
+        }
+
+        function handleCanvasClick(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+                e.preventDefault();
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            const x = (clientX - rect.left) * scaleX;
+            const y = (clientY - rect.top) * scaleY;
+
+            // Получаем ближайшую точку на крае раны
+            const point = getClosestEdgePoint(x, y);
+            // Проверяем, что точка попадает в область раны (по y)
+            if (point.y < 160 || point.y > 280) {
+                document.getElementById('hintText').textContent = '⚠️ Кликните ближе к центру раны.';
+                return;
+            }
+
+            // Режим узлового шва
+            if (mode === 'simple') {
+                if (currentPoints.length === 0) {
+                    // Первая точка
+                    currentPoints.push(point);
+                    document.getElementById('hintText').textContent = 'Теперь кликните на противоположном крае для завершения стежка.';
+                    draw();
+                } else {
+                    // Вторая точка — завершаем стежок
+                    const p1 = currentPoints[0];
+                    // Проверяем, что вторая точка не с той же стороны
+                    if (Math.abs(p1.x - point.x) < 30) {
+                        document.getElementById('hintText').textContent = '⚠️ Стежок должен соединять разные стороны раны!';
+                        currentPoints = [];
+                        draw();
+                        return;
+                    }
+                    addStitch(p1, point);
+                    currentPoints = [];
+                    draw();
+                }
+            }
+            // Режим непрерывного шва
+            else if (mode === 'continuous' || mode === 'intradermal') {
+                if (!lastPoint) {
+                    // Первый стежок: нужна пара точек
+                    if (currentPoints.length === 0) {
+                        currentPoints.push(point);
+                        document.getElementById('hintText').textContent = 'Кликните на противоположном крае для первого стежка.';
+                        draw();
+                        return;
+                    } else {
+                        const p1 = currentPoints[0];
+                        // Проверяем, что это разные стороны
+                        if (Math.abs(p1.x - point.x) < 30) {
+                            document.getElementById('hintText').textContent = '⚠️ Стежок должен соединять разные стороны!';
+                            currentPoints = [];
+                            draw();
+                            return;
+                        }
+                        addStitch(p1, point);
+                        currentPoints = [];
+                        draw();
+                        return;
+                    }
+                } else {
+                    // Уже есть последняя точка – начинаем новый стежок от неё
+                    // Точка входа – последняя точка, точка выхода – новая (но с другой стороны)
+                    // Нужно определить, с какой стороны последняя точка, и выбрать противоположную сторону для выхода.
+                    const lastSide = (lastPoint.x < 400) ? 'left' : 'right';
+                    // Вычисляем точку на противоположной стороне с той же y (или близкой)
+                    const targetX = (lastSide === 'left') ? 500 : 300;
+                    // Но мы можем использовать точку, куда кликнул пользователь, и привязать её к краю
+                    const newPoint = getClosestEdgePoint(point.x, point.y);
+                    // Проверяем, что новая точка действительно с другой стороны
+                    const newSide = (newPoint.x < 400) ? 'left' : 'right';
+                    if (newSide === lastSide) {
+                        document.getElementById('hintText').textContent = '⚠️ Стежок должен переходить на другую сторону!';
+                        draw();
+                        return;
+                    }
+                    addStitch(lastPoint, newPoint);
+                    draw();
+                }
+            }
+        }
+
+        // ============================================================
+        // УПРАВЛЕНИЕ
+        // ============================================================
+        function undoLastStitch() {
+            if (stitches.length === 0) return;
+            stitches.pop();
+            // Если есть последняя точка для непрерывного шва, корректируем
+            if (mode === 'continuous' || mode === 'intradermal') {
+                if (stitches.length === 0) {
+                    lastPoint = null;
+                    currentPoints = [];
+                } else {
+                    // Восстанавливаем последнюю точку из последнего стежка
+                    const last = stitches[stitches.length - 1];
+                    lastPoint = last.p2;
+                }
+            } else {
+                // Для узлового просто сбрасываем текущие точки
+                currentPoints = [];
+            }
+            document.getElementById('hintText').textContent = '↩️ Стежок отменён.';
+            draw();
+        }
+
+        function clearAll() {
+            if (stitches.length === 0 && currentPoints.length === 0) return;
+            if (!confirm('Очистить все стежки?')) return;
+            stitches = [];
+            currentPoints = [];
+            lastPoint = null;
+            document.getElementById('hintText').textContent = '🗑️ Все стежки удалены.';
+            draw();
+        }
+
+        function setMode(newMode) {
+            mode = newMode;
+            // Сброс временных точек и последней точки
+            currentPoints = [];
+            lastPoint = null;
+            // Обновляем активные кнопки
+            document.querySelectorAll('.btn-group button').forEach(btn => btn.classList.remove('btn-active'));
+            if (mode === 'simple') document.getElementById('modeSimple').classList.add('btn-active');
+            else if (mode === 'continuous') document.getElementById('modeContinuous').classList.add('btn-active');
+            else if (mode === 'intradermal') document.getElementById('modeIntradermal').classList.add('btn-active');
+
+            document.getElementById('modeLabel').textContent = 'Режим: ' + (mode === 'simple' ? 'Узловой шов' : mode === 'continuous' ? 'Непрерывный шов' : 'Внутрикожный шов');
+            document.getElementById('hintText').textContent = 'Режим изменён. Начните накладывать швы.';
+            draw();
+        }
+
+        // ============================================================
+        // ОБРАБОТЧИКИ СОБЫТИЙ
+        // ============================================================
+        canvas.addEventListener('click', handleCanvasClick);
+        canvas.addEventListener('touchstart', handleCanvasClick, { passive: false });
+
+        document.getElementById('modeSimple').addEventListener('click', () => setMode('simple'));
+        document.getElementById('modeContinuous').addEventListener('click', () => setMode('continuous'));
+        document.getElementById('modeIntradermal').addEventListener('click', () => setMode('intradermal'));
+
+        document.getElementById('undoBtn').addEventListener('click', undoLastStitch);
+        document.getElementById('clearBtn').addEventListener('click', clearAll);
+
+        // ============================================================
+        // ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+        setMode('simple');
+        draw();
+
+        // Адаптация canvas под размер окна
+        function resizeCanvas() {
+            // Canvas уже имеет фиксированные размеры, просто масштабируем через CSS
+            const wrapper = canvas.parentElement;
+            const width = wrapper.clientWidth;
+            const ratio = CH / CW;
+            canvas.style.width = width + 'px';
+            canvas.style.height = (width * ratio) + 'px';
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // Дополнительная подсказка: при первом запуске
+        setTimeout(() => {
+            document.getElementById('hintText').textContent = 'Кликните на левом крае раны, затем на правом — для стежка.';
+        }, 500);
+    })();
+</script>
+</body>
+</html>

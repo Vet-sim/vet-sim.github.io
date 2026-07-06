@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Таблица «Характеристика заразных болезней животных»  | ВетСим</title>
+    <style>
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:20px;}
+        .container{max-width:1200px;margin:0 auto;}
+        h1{color:#1F4E6E;text-align:center;}
+        .score{background:#F3F6EF;padding:8px 16px;border-radius:40px;text-align:center;margin:15px 0;}
+        table{width:100%;border-collapse:collapse;background:white;margin:20px 0;}
+        th,td{border:1px solid #D1DEC2;padding:12px;vertical-align:top;}
+        th{background:#F0F5EA;font-weight:bold;}
+        select,input{width:100%;padding:6px;border-radius:20px;border:1px solid #A3B18A;}
+        .static-text{font-weight:600;color:#1F4E6E;}
+        .btn{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:10px;}
+        .reset-btn{background:#E2CFB0;margin-left:12px;}
+        footer{text-align:center;margin-top:30px;font-size:0.7rem;}
+        .flex{display:flex;gap:10px;justify-content:center;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Таблица «Характеристика заразных болезней животных» </h1>
+    <div class="score" id="scoreArea">✅ Результат: <span id="scoreValue">0</span> / <span id="totalPoints">0</span></div>
+    <div id="taskTable"></div>
+    <div class="flex">
+        <button id="checkBtn" class="btn">Проверить</button>
+        <button id="resetBtn" class="btn reset-btn">Сбросить всё</button>
+    </div>
+    <footer>© ВетСим — интерактивное задание</footer>
+</div>
+<script>
+    const tableData = [[{"type":"static","value":"Эхинококкоз"},{"type":"dropdown","options":["Гельминтоз","Вирусное","Бактериальное","Протозооноз","Гемопаразитарное"]},{"type":"dropdown","options":["Хроническое","Острое","Подострое","Латентное"]},{"type":"static","value":"Печень, лёгкие"}],[{"type":"static","value":"Туберкулёз"},{"type":"input","value":"Бактериальное"},{"type":"input","value":"Хроническое"},{"type":"static","value":"Дыхательная система, лимфоузлы"}],[{"type":"static","value":"Актиномикоз"},{"type":"input","value":"Микоз (грибковое)"},{"type":"input","value":"Хроническое"},{"type":"static","value":"Кости, мягкие ткани (голова, челюсть)"}],[{"type":"static","value":"Сибирская язва"},{"type":"input","value":"Бактериальное"},{"type":"static","value":"Молниеносное, острое"},{"type":"static","value":"Системное (септицемия)"}],[{"type":"static","value":"Лейшманиоз"},{"type":"static","value":"Протозооноз"},{"type":"static","value":"Хроническое, подострое"},{"type":"static","value":"Кожа, внутренние органы"}],[{"type":"static","value":"Дерматофитоз (стригущий лишай)"},{"type":"static","value":"Микоз (грибковое)"},{"type":"input","value":"Хроническое"},{"type":"static","value":"Кожа, волосы"}],[{"type":"static","value":"Трихинеллёз"},{"type":"static","value":"Гельминтоз"},{"type":"input","value":"Хроническое"},{"type":"dropdown","options":["Мышечная система","Нервная система","Система кроволимфообращения"]}],[{"type":"static","value":"Токсоплазмоз"},{"type":"input","value":"Протозооноз"},{"type":"static","value":"Хроническое, латентное"},{"type":"static","value":"Нервная система, лимфоузлы, мышцы"}],[{"type":"static","value":"Тейлериоз"},{"type":"static","value":"Гемопаразитарное"},{"type":"static","value":"Острое, подострое"},{"type":"dropdown","options":["Система кроволимфообращения","Нервная система","Мышечная система"]}],[{"type":"static","value":"Чума плотоядных"},{"type":"input","value":"Вирусное"},{"type":"static","value":"Острое, подострое"},{"type":"dropdown","options":["Нервная система","Система кроволимфообращения. Мышечная система"]}],[{"type":"static","value":"Бешенство"},{"type":"input","value":"Вирусное"},{"type":"static","value":"Острое (летальное)"},{"type":"dropdown","options":["Нервная система","Мыщечная система","Система кроволимфооборащуния"]}],[{"type":"static","value":"Пироплазмоз (бабезиоз)"},{"type":"input","value":"Гемопаразитарное"},{"type":"static","value":"Острое, хроническое"},{"type":"dropdown","options":["Система кроволимфообращения","Нервная система","Мышечная система"]}]];
+    const rows = 12;
+    const cols = 4;
+    const headers = ["Заболевание","Этиологическая группа","Течение","Основная поражаемая система"];
+    let userAnswers = Array(rows).fill().map(() => Array(cols).fill(""));
+
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    function render() {
+        let html = '<table><thead><tr><th>#</th>';
+        for(let j=0; j<cols; j++) html += '<th>'+escapeHtml(headers[j])+'</th>';
+        html += '</thead><tbody>';
+        for(let i=0; i<rows; i++) {
+            html += '<tr><td style="background:#F0F5EA; font-weight:bold;">'+(i+1)+'</td>';
+            for(let j=0; j<cols; j++) {
+                const cell = tableData[i][j];
+                if(cell.type === 'static') {
+                    html += '<td><span class="static-text">'+escapeHtml(cell.value)+'</span></td>';
+                } else if(cell.type === 'dropdown') {
+                    let sel = '<select data-row="'+i+'" data-col="'+j+'"><option value="">— выберите —</option>';
+                    cell.options.forEach(opt => {
+                        let selected = (userAnswers[i][j] === opt) ? 'selected' : '';
+                        sel += '<option value="'+escapeHtml(opt)+'" '+selected+'>'+escapeHtml(opt)+'</option>';
+                    });
+                    sel += '</select>';
+                    html += '<td>'+sel+'</td>';
+                } else { // input
+                    let val = userAnswers[i][j] || '';
+                    html += '<td><input type="text" data-row="'+i+'" data-col="'+j+'" value="'+escapeHtml(val)+'" placeholder="Введите ответ"></td>';
+                }
+            }
+            html += '</tr>';
+        }
+        html += '</tbody></table>';
+        document.getElementById('taskTable').innerHTML = html;
+        attachEvents();
+    }
+
+    function attachEvents() {
+        document.querySelectorAll('select').forEach(s => {
+            s.addEventListener('change', (e) => {
+                let row = parseInt(s.getAttribute('data-row'));
+                let col = parseInt(s.getAttribute('data-col'));
+                userAnswers[row][col] = s.value;
+            });
+        });
+        document.querySelectorAll('input').forEach(inp => {
+            inp.addEventListener('input', (e) => {
+                let row = parseInt(inp.getAttribute('data-row'));
+                let col = parseInt(inp.getAttribute('data-col'));
+                userAnswers[row][col] = inp.value;
+            });
+        });
+    }
+
+    function checkAnswers() {
+        let correct = 0, total = 0;
+        for(let i=0; i<rows; i++) {
+            for(let j=0; j<cols; j++) {
+                const cell = tableData[i][j];
+                if(cell.type === 'static') continue; // пропускаем статические ячейки
+                let expected = '';
+                if(cell.type === 'dropdown') {
+                    expected = cell.options[0] || '';
+                } else { // input
+                    expected = cell.value || '';
+                }
+                let user = userAnswers[i][j] || '';
+                total++;
+                if(user.trim().toLowerCase() === expected.trim().toLowerCase()) correct++;
+            }
+        }
+        document.getElementById('scoreValue').innerText = correct;
+        document.getElementById('totalPoints').innerText = total;
+        if(correct === total && total>0) alert('🎉 Поздравляем! Все ответы верны.');
+    }
+
+    function resetAll() {
+        for(let i=0; i<rows; i++) for(let j=0; j<cols; j++) userAnswers[i][j] = '';
+        render();
+        document.getElementById('scoreValue').innerText = '0';
+        document.getElementById('totalPoints').innerText = '0';
+    }
+
+    render();
+    document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+</script>
+</body>
+</html>

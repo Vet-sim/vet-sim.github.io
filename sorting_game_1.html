@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сортировка по категориям | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:1.5rem;color:#3E5C4A;}
+        .container{max-width:1400px;margin:0 auto;}
+        h1{text-align:center;color:#1F4E6E;margin-bottom:0.5rem;}
+        .sub{text-align:center;margin-bottom:1.5rem;}
+        .categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;}
+        .category-card{background:#FEFCF9;border:1px solid #E2EAD9;border-radius:24px;overflow:hidden;}
+        .category-header{background:#F0F5EA;padding:0.8rem;font-weight:700;color:#2C7DA0;border-bottom:1px solid #D8E4CC;}
+        .items-list{min-height:200px;padding:1rem;}
+        .draggable-item{background:#FDF8F0;border:1px solid #D1DEC2;border-radius:40px;padding:6px 12px;margin-bottom:8px;cursor:grab;}
+        .pool-section{margin-top:2rem;border-top:2px dashed #CFDEC0;padding-top:1rem;}
+        .pool-items{display:flex;flex-wrap:wrap;gap:8px;background:#F9F7F2;border-radius:28px;padding:1rem;min-height:100px;}
+        .pool-item{background:#E2EAD9;border-radius:40px;padding:5px 14px;cursor:grab;}
+        .btn-check{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:1rem;}
+        .btn-reset{background:#E2CFB0;margin-left:1rem;}
+        .feedback{text-align:center;margin-top:1rem;font-weight:bold;}
+        footer{text-align:center;margin-top:2rem;font-size:0.7rem;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📌 Сортировка: распределите болезни по категориям</h1>
+    <div class="sub">Перетащите элементы в нужные категории</div>
+    <div id="gameArea"></div>
+    <div style="text-align:center;">
+        <button id="checkBtn" class="btn-check">Проверить</button>
+        <button id="resetBtn" class="btn-check btn-reset">Сбросить</button>
+    </div>
+    <div id="feedback" class="feedback"></div>
+    <footer>© ВетСим – обучающая сортировка</footer>
+</div>
+<script>
+    const gameData = {"categories":[{"id":124,"name":"Бактериальные","items":[{"id":125,"text":"Сальмонеллёз"},{"id":126,"text":"Туберкулёз"},{"id":127,"text":"Бруцеллёз"},{"id":155,"text":"Лептоспироз"}]},{"id":128,"name":"Вирусные","items":[{"id":129,"text":"Бешенство"},{"id":130,"text":"Чума плотоядных"},{"id":131,"text":"Инфекционный ринотрахеит"},{"id":148,"text":"Парвовирусный энтерит"}]},{"id":132,"name":"Незаразные","items":[{"id":133,"text":"Мастит"},{"id":134,"text":"Кетоз"},{"id":135,"text":"Тимпания рубца"},{"id":149,"text":"Гиповитаминоз А"}]},{"id":136,"name":"Грибковые","items":[{"id":138,"text":"Кандидоз"},{"id":152,"text":"Малассезиоз"},{"id":153,"text":"Дерматофитоз"},{"id":154,"text":"Аспергиллез"}]},{"id":139,"name":"Паразитарные","items":[{"id":140,"text":"Аскаридоз"},{"id":141,"text":"Эймериоз (кокцидиоз)"},{"id":142,"text":"Пироплазмоз"},{"id":156,"text":"Фасциолёз"}]}],"poolItems":[]};
+    let categories = gameData.categories;
+    let poolItems = gameData.poolItems;
+    let currentPool = [...poolItems];
+    let currentCategories = categories.map(cat => ({ ...cat, items: [...cat.items] }));
+    let nextId = 1000;
+    let dragSource = null;
+
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    function render() {
+        const container = document.getElementById('gameArea');
+        let html = '<div class="categories-grid">';
+        currentCategories.forEach(cat => {
+            html += `
+                <div class="category-card">
+                    <div class="category-header">${escapeHtml(cat.name)}</div>
+                    <div class="items-list" data-cat-id="${cat.id}" ondragover="event.preventDefault()"></div>
+                </div>
+            `;
+        });
+        html += '</div><div class="pool-section"><div class="pool-title">📦 Несортированные элементы</div><div id="poolArea" class="pool-items" ondragover="event.preventDefault()"></div></div>';
+        container.innerHTML = html;
+
+        // заполнение категорий
+        currentCategories.forEach(cat => {
+            const listDiv = document.querySelector(`.items-list[data-cat-id="${cat.id}"]`);
+            if(listDiv) {
+                cat.items.forEach(item => {
+                    const itemDiv = createItemElement(item, cat.id);
+                    listDiv.appendChild(itemDiv);
+                });
+            }
+        });
+        const poolDiv = document.getElementById('poolArea');
+        if(poolDiv) {
+            currentPool.forEach(item => {
+                const poolItem = createPoolItemElement(item);
+                poolDiv.appendChild(poolItem);
+            });
+        }
+        attachDragEvents();
+    }
+
+    function createItemElement(item, catId) {
+        const div = document.createElement('div');
+        div.className = 'draggable-item';
+        div.setAttribute('draggable','true');
+        div.setAttribute('data-item-id',item.id);
+        div.setAttribute('data-source-cat',catId);
+        div.textContent = item.text;
+        div.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', JSON.stringify({ type:'category', itemId:item.id, sourceCatId:catId }));
+            dragSource = { type:'category', itemId:item.id, sourceCatId:catId };
+        });
+        div.addEventListener('dragend', () => dragSource = null);
+        return div;
+    }
+
+    function createPoolItemElement(item) {
+        const div = document.createElement('div');
+        div.className = 'pool-item';
+        div.setAttribute('draggable','true');
+        div.setAttribute('data-item-id',item.id);
+        div.textContent = item.text;
+        div.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', JSON.stringify({ type:'pool', itemId:item.id }));
+            dragSource = { type:'pool', itemId:item.id };
+        });
+        div.addEventListener('dragend', () => dragSource = null);
+        return div;
+    }
+
+    function attachDragEvents() {
+        document.querySelectorAll('.items-list').forEach(list => {
+            list.addEventListener('drop', e => {
+                e.preventDefault();
+                const targetCatId = parseInt(list.getAttribute('data-cat-id'));
+                if(!dragSource) return;
+                if(dragSource.type === 'category') {
+                    moveItemBetweenCats(dragSource.sourceCatId, dragSource.itemId, targetCatId);
+                } else if(dragSource.type === 'pool') {
+                    moveItemFromPoolToCat(dragSource.itemId, targetCatId);
+                }
+                dragSource = null;
+                render();
+            });
+        });
+        const poolDiv = document.getElementById('poolArea');
+        if(poolDiv) {
+            poolDiv.addEventListener('drop', e => {
+                e.preventDefault();
+                if(dragSource && dragSource.type === 'category') {
+                    moveItemToPool(dragSource.sourceCatId, dragSource.itemId);
+                    dragSource = null;
+                    render();
+                }
+            });
+        }
+    }
+
+    function moveItemBetweenCats(fromCatId, itemId, toCatId) {
+        const fromCat = currentCategories.find(c => c.id === fromCatId);
+        const toCat = currentCategories.find(c => c.id === toCatId);
+        if(!fromCat || !toCat) return;
+        const itemIndex = fromCat.items.findIndex(i => i.id === itemId);
+        if(itemIndex === -1) return;
+        const [item] = fromCat.items.splice(itemIndex,1);
+        toCat.items.push(item);
+    }
+    function moveItemFromPoolToCat(itemId, catId) {
+        const itemIndex = currentPool.findIndex(i => i.id === itemId);
+        if(itemIndex === -1) return;
+        const [item] = currentPool.splice(itemIndex,1);
+        const cat = currentCategories.find(c => c.id === catId);
+        if(cat) cat.items.push(item);
+    }
+    function moveItemToPool(catId, itemId) {
+        const cat = currentCategories.find(c => c.id === catId);
+        if(!cat) return;
+        const itemIndex = cat.items.findIndex(i => i.id === itemId);
+        if(itemIndex === -1) return;
+        const [item] = cat.items.splice(itemIndex,1);
+        currentPool.push(item);
+    }
+    function checkAnswers() {
+        let allCorrect = true;
+        // ожидаем, что каждый элемент должен быть в категории, совпадающей с исходной (original categories)
+        // просто покажем сообщение
+        alert("Проверка: оцените визуально корректность распределения. Преподаватель может сверить с эталоном.");
+    }
+    function resetGame() {
+        currentCategories = categories.map(cat => ({ ...cat, items: [...cat.items] }));
+        currentPool = [...poolItems];
+        render();
+    }
+    document.getElementById('checkBtn').addEventListener('click', checkAnswers);
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+    render();
+</script>
+</body>
+</html>

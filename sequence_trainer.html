@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Восстанови последовательность | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:1.5rem;color:#3E5C4A;}
+        .container{max-width:1000px;margin:0 auto;}
+        h1{text-align:center;color:#1F4E6E;margin-bottom:0.5rem;}
+        .sub{text-align:center;margin-bottom:1.5rem;}
+        .steps-list{display:flex;flex-direction:column;gap:1rem;margin:1rem 0;}
+        .step-card{background:#FEFCF9;border:1px solid #E2EAD9;border-radius:24px;padding:1rem;display:flex;align-items:center;gap:1rem;cursor:grab;transition:0.1s;}
+        .step-card.dragging{opacity:0.5;}
+        .step-order{background:#F0F5EA;border-radius:40px;padding:0.3rem 0.8rem;font-weight:bold;min-width:60px;text-align:center;}
+        .step-content{flex:1;}
+        .step-image{max-width:100px; max-height:60px; margin-top:5px; object-fit:contain;}
+        .btn{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:1rem;}
+        .reset-btn{background:#E2CFB0;margin-left:1rem;}
+        .feedback{text-align:center;margin-top:1rem;font-weight:bold;padding:0.5rem;border-radius:40px;}
+        .correct-feedback{background:#DAF1D8;color:#2A6B2F;}
+        .wrong-feedback{background:#FFE4DE;color:#BC5A3C;}
+        footer{text-align:center;margin-top:2rem;font-size:0.7rem;}
+        @media (max-width:700px){.step-card{flex-direction:column;align-items:stretch;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>⏳ Расположите шаги в правильном порядке</h1>
+    <div class="sub">Перетаскивайте карточки, чтобы восстановить последовательность</div>
+    <div id="gameArea"></div>
+    <div style="text-align:center;">
+        <button id="checkBtn" class="btn">Проверить порядок</button>
+        <button id="resetBtn" class="btn reset-btn">Сбросить</button>
+    </div>
+    <div id="feedback" class="feedback"></div>
+    <footer>© ВетСим – интерактивная хронология</footer>
+</div>
+<script>
+    const correctSteps = [{"id":1,"text":"Ротовая полость (Cavum oris)","imageUrl":""},{"id":2,"text":"Глотка (Pharynx)","imageUrl":""},{"id":3,"text":"Пищевод (Oesophagus)","imageUrl":""},{"id":4,"text":"Рубец (Rumen)","imageUrl":""},{"id":5,"text":"Сетка (Reticulum)","imageUrl":""},{"id":6,"text":"Книжка (Omasum)","imageUrl":""},{"id":7,"text":"Сычуг (Abomasum)","imageUrl":""},{"id":8,"text":"Двенадцатиперстная кишка (Duodenum)","imageUrl":""},{"id":9,"text":"Тощая кишка (Jejunum)","imageUrl":""},{"id":10,"text":"Подвздошная кишка (Ileum)","imageUrl":""},{"id":11,"text":"Слепая кишка (Caecum)","imageUrl":""},{"id":12,"text":"Ободочная кишка (Colon)","imageUrl":""},{"id":13,"text":"Прямая кишка (Rectum)","imageUrl":""}];
+    let currentSteps = [];
+    let dragIndex = null;
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function init() {
+        currentSteps = shuffleArray([...correctSteps]);
+        render();
+    }
+
+    function render() {
+        const container = document.getElementById('gameArea');
+        let html = '<div class="steps-list">';
+        currentSteps.forEach((step, idx) => {
+            html += `
+                <div class="step-card" draggable="true" data-index="${idx}">
+                    <div class="step-order">Шаг ${idx+1}</div>
+                    <div class="step-content">
+                        <div>${escapeHtml(step.text)}</div>
+                        ${step.imageUrl ? `<img src="${step.imageUrl}" class="step-image" onerror="this.style.display='none'">` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        container.innerHTML = html;
+        attachDragEvents();
+    }
+
+    function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    function attachDragEvents() {
+        const items = document.querySelectorAll('.step-card');
+        items.forEach((item, idx) => {
+            item.setAttribute('draggable', 'true');
+            item.addEventListener('dragstart', (e) => {
+                dragIndex = idx;
+                e.dataTransfer.setData('text/plain', idx);
+                item.classList.add('dragging');
+            });
+            item.addEventListener('dragend', (e) => {
+                item.classList.remove('dragging');
+                dragIndex = null;
+            });
+            item.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+            item.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const targetIndex = idx;
+                if (dragIndex !== null && dragIndex !== targetIndex) {
+                    const moved = currentSteps[dragIndex];
+                    currentSteps.splice(dragIndex, 1);
+                    currentSteps.splice(targetIndex, 0, moved);
+                    render();
+                }
+            });
+        });
+    }
+
+    function checkOrder() {
+        let correct = true;
+        for (let i = 0; i < currentSteps.length; i++) {
+            if (currentSteps[i].id !== correctSteps[i].id) {
+                correct = false;
+                break;
+            }
+        }
+        const feedbackDiv = document.getElementById('feedback');
+        if (correct) {
+            feedbackDiv.innerHTML = '✅ Поздравляем! Порядок абсолютно верный.';
+            feedbackDiv.className = 'feedback correct-feedback';
+        } else {
+            feedbackDiv.innerHTML = '❌ Неправильный порядок. Попробуйте ещё раз.';
+            feedbackDiv.className = 'feedback wrong-feedback';
+        }
+    }
+
+    function resetGame() {
+        init();
+        document.getElementById('feedback').innerHTML = '';
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', checkOrder);
+    document.getElementById('resetBtn').addEventListener('click', resetGame);
+    init();
+</script>
+</body>
+</html>

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Методическая мастерская | ВетСим</title>
+    <style>
+        /* ─── Общие стили (как на главной) ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #FDF8F0;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ─── Шапка ─── */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: #A3B18A;
+        }
+        .logo small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #A3B18A;
+            margin-left: 0.5rem;
+        }
+
+        .back-link {
+            background: #F4EFE4;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .back-link:hover {
+            background: #E5DDCF;
+        }
+
+        /* ─── Заголовок страницы ─── */
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .page-title h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .page-title p {
+            font-size: 1.1rem;
+            color: #A3B18A;
+            margin-top: 0.3rem;
+        }
+
+        /* ─── Сетка карточек ─── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .card-link {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            text-decoration: none;
+            color: #3E5C4A;
+            transition: 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid transparent;
+        }
+        .card-link:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(44, 125, 160, 0.08);
+            border-color: #A3B18A;
+        }
+
+        .card-icon {
+            font-size: 2.6rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            margin-bottom: 0.4rem;
+        }
+
+        .card-description {
+            font-size: 0.92rem;
+            color: #5D7A6A;
+            line-height: 1.5;
+            flex: 1;
+            margin-bottom: 1rem;
+        }
+
+        .card-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            font-weight: 600;
+            color: #A3B18A;
+            border-top: 1px solid #F4EFE4;
+            padding-top: 0.8rem;
+        }
+        .card-action .arrow {
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+        .card-link:hover .arrow {
+            transform: translateX(4px);
+            color: #2C7DA0;
+        }
+
+        /* ─── Футер ─── */
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.75rem;
+            color: #B0BC9C;
+            border-top: 1px solid #E5DDCF;
+            padding-top: 1.5rem;
+        }
+
+        /* ─── Адаптив ─── */
+        @media (max-width: 640px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                gap: 0.8rem;
+                padding: 1rem;
+            }
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+            .card-link {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ШАПКА -->
+    <div class="header">
+        <div class="logo">
+            🐾 Вет<span>Сим</span>
+            <small>методическая мастерская</small>
+        </div>
+        <a href="index.html" class="back-link">← На главную</a>
+    </div>
+
+    <!-- ЗАГОЛОВОК -->
+    <div class="page-title">
+        <h1>🧰 Методическая мастерская</h1>
+        <p>Вспомогательные инструменты для преподавателя и студентов</p>
+    </div>
+
+    <!-- СЕТКА КАРТОЧЕК -->
+    <div class="cards-grid">
+
+        <!-- 1. Цифровой планер -->
+        <a href="tools/vetsim-tracker.html" class="card-link">
+            <div class="card-icon">📋</div>
+            <div class="card-title">Цифровой планер</div>
+            <div class="card-description">
+                Еженедельный трекер задач, целей и привычек. Планируйте рабочую неделю с удовольствием.
+            </div>
+            <div class="card-action">
+                <span>Перейти</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- 2. Дневник преподавателя -->
+        <a href="tools/vetsim-teacher-diary.html" class="card-link">
+            <div class="card-icon">📔</div>
+            <div class="card-title">Дневник преподавателя</div>
+            <div class="card-description">
+                Расписание занятий, рефлексия, клинические кейсы и планирование рабочей недели.
+            </div>
+            <div class="card-action">
+                <span>Перейти</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- 3. Дневник студента-ветеринара -->
+        <a href="tools/vetsim-student-diary.html" class="card-link">
+            <div class="card-icon">📖</div>
+            <div class="card-title">Дневник студента-ветеринара</div>
+            <div class="card-description">
+                Расписание, здоровые привычки, клинические кейсы, этика, рефлексия и творческие задания.
+            </div>
+            <div class="card-action">
+                <span>Перейти</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- 4. Конструктор промптов -->
+        <a href="tools/vetsim-prompt-constructor.html" class="card-link">
+            <div class="card-icon">📝</div>
+            <div class="card-title">Конструктор промптов</div>
+            <div class="card-description">
+                Готовые шаблоны запросов для работы с нейросетями. Экономьте время на подготовку материалов.
+            </div>
+            <div class="card-action">
+                <span>Перейти</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- 5. Книга идей и предложений -->
+        <a href="tools/vetsim-ideas-book.html" class="card-link">
+            <div class="card-icon">💡</div>
+            <div class="card-title">Книга идей и предложений</div>
+            <div class="card-description">
+                Студенты делятся идеями по улучшению занятий, мероприятий и кабинета. Лучшие — реализуются!
+            </div>
+            <div class="card-action">
+                <span>Перейти</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- 6. Место для будущих инструментов -->
+        <div class="card-link" style="border: 2px dashed #DDE5E9; background: #FAF8F2; cursor: default;">
+            <div class="card-icon">🔄</div>
+            <div class="card-title" style="color: #A3B18A;">В разработке</div>
+            <div class="card-description" style="color: #B0BC9C;">
+                Здесь появятся новые полезные инструменты. Следите за обновлениями!
+            </div>
+            <div class="card-action" style="color: #B0BC9C; border-top-color: #E5DDCF;">
+                <span>Скоро</span>
+                <span class="arrow">⏳</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ФУТЕР -->
+    <div class="footer">
+        © ВетСим — ветеринарное просвещение · Методическая мастерская
+    </div>
+
+</div>
+
+</body>
+</html>

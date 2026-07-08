@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ВетСим-Дневник студента-ветеринара</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Segoe UI', 'Roboto', system-ui, Arial, sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 1rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .header-top {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .logo span {
+            color: #2C7DA0;
+        }
+
+        .subtitle {
+            color: #5F7C62;
+            font-size: 0.9rem;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .week-label {
+            background: #F9F6EF;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #2C7DA0;
+            white-space: nowrap;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(0.95);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-olive {
+            background: #A3B18A;
+            color: #fff;
+        }
+        .btn-olive:hover {
+            background: #8FA375;
+        }
+
+        .btn-orange {
+            background: #D4A373;
+            color: #fff;
+        }
+        .btn-orange:hover {
+            background: #C99464;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #A3B18A;
+        }
+        .btn-outline:hover {
+            background: #F0EEE5;
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            border: 2px solid #D47A6A;
+            color: #B5533A;
+        }
+        .btn-danger-outline:hover {
+            background: #FDE8E0;
+        }
+
+        /* ===== SECTION CARDS ===== */
+        .section {
+            background: #FFFFFF;
+            border-radius: 1.2rem;
+            border: 1px solid #E2EAD9;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid #E2EAD9;
+            padding-bottom: 0.5rem;
+        }
+
+        .section-title .icon {
+            font-size: 1.4rem;
+        }
+
+        /* ===== SCHEDULE TABLE ===== */
+        .schedule-wrap {
+            overflow-x: auto;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 650px;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+            border: 1px solid #E2EAD9;
+            padding: 6px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .schedule-table th {
+            background: #F9F6EF;
+            font-weight: 600;
+            color: #1F4E6E;
+        }
+
+        .schedule-table .time-col {
+            font-weight: 600;
+            color: #2C7DA0;
+            min-width: 70px;
+        }
+
+        .schedule-table input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 0.85rem;
+            font-family: inherit;
+            color: #3E5C4A;
+            padding: 2px 0;
+            outline: none;
+        }
+
+        .schedule-table input:focus {
+            background: #F9F6EF;
+            border-radius: 4px;
+        }
+
+        .schedule-table .sub-input {
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        /* ===== HABITS TRACKER ===== */
+        .habits-wrap {
+            overflow-x: auto;
+        }
+
+        .habits-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 500px;
+        }
+
+        .habits-table th,
+        .habits-table td {
+            border: 1px solid #E2EAD9;
+            padding: 6px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .habits-table th {
+            background: #F9F6EF;
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.8rem;
+        }
+
+        .habits-table .habit-label {
+            text-align: left;
+            font-weight: 500;
+            padding-left: 12px;
+            white-space: nowrap;
+        }
+
+        .habits-table .habit-label .icon {
+            margin-right: 6px;
+        }
+
+        .habit-check {
+            width: 24px;
+            height: 24px;
+            accent-color: #A3B18A;
+            cursor: pointer;
+        }
+
+        .habit-check:checked {
+            accent-color: #2C7DA0;
+        }
+
+        .habit-select {
+            font-size: 0.8rem;
+            padding: 2px 4px;
+            border-radius: 20px;
+            border: 1px solid #D1DEC2;
+            background: #fff;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+
+        /* ===== TEXT FIELDS ===== */
+        .field-group {
+            margin-bottom: 0.8rem;
+        }
+
+        .field-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1F4E6E;
+            margin-bottom: 0.2rem;
+        }
+
+        .field-group textarea,
+        .field-group input[type="text"] {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 1rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+            background: #FEFCF9;
+            resize: vertical;
+            transition: 0.15s;
+            min-height: 50px;
+        }
+
+        .field-group textarea:focus,
+        .field-group input[type="text"]:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44, 125, 160, 0.1);
+        }
+
+        .field-group textarea {
+            min-height: 60px;
+        }
+
+        .prompt-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+            border-left: 4px solid #D4A373;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+            line-height: 1.5;
+        }
+
+        .prompt-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 0.2rem;
+        }
+
+        /* ===== GRID FOR 3 COLUMNS ===== */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .header-top {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .header-actions {
+                justify-content: center;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .section {
+                padding: 1rem;
+            }
+            .schedule-table {
+                font-size: 0.8rem;
+                min-width: 500px;
+            }
+            .schedule-table input {
+                font-size: 0.75rem;
+            }
+            .habits-table {
+                font-size: 0.75rem;
+                min-width: 400px;
+            }
+            .logo {
+                font-size: 1.4rem;
+            }
+            .btn {
+                padding: 6px 14px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.8rem;
+            }
+            .container {
+                padding: 0.8rem;
+            }
+            .schedule-table {
+                font-size: 0.7rem;
+                min-width: 400px;
+            }
+            .habits-table {
+                font-size: 0.7rem;
+                min-width: 350px;
+            }
+            .habit-check {
+                width: 18px;
+                height: 18px;
+            }
+            .section-title {
+                font-size: 1rem;
+            }
+        }
+
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .header-actions .btn {
+                display: none !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .section {
+                break-inside: avoid;
+                box-shadow: none;
+                border-color: #ddd;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0.5rem;
+            }
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+            .schedule-table input,
+            .field-group textarea,
+            .field-group input[type="text"] {
+                border: 1px solid #ccc;
+                background: #fff;
+            }
+            .habits-table .habit-select {
+                border: 1px solid #ccc;
+            }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E2EAD9;
+            font-size: 0.75rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="header-top">
+            <div>
+                <div class="logo">🐾 <span>ВетСим</span> — Дневник студента-ветеринара</div>
+                <div class="subtitle">Воспитываем профессионала с сердцем и умом</div>
+            </div>
+            <div class="header-actions">
+                <span class="week-label" id="weekLabel">📅 Неделя 1</span>
+                <button class="btn btn-primary" id="newDayBtn">🌅 Новый день</button>
+                <button class="btn btn-olive" id="resetWeekBtn">🔄 Сбросить неделю</button>
+                <button class="btn btn-outline no-print" id="printBtn">🖨️ Печать</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SCHEDULE ===== -->
+    <div class="section">
+        <div class="section-title"><span class="icon">📅</span> Расписание занятий</div>
+        <div class="schedule-wrap">
+            <table class="schedule-table" id="scheduleTable">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>ПН</th>
+                        <th>ВТ</th>
+                        <th>СР</th>
+                        <th>ЧТ</th>
+                        <th>ПТ</th>
+                    </tr>
+                </thead>
+                <tbody id="scheduleBody">
+                    <!-- генерируется JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== HABITS ===== -->
+    <div class="section">
+        <div class="section-title"><span class="icon">🌿</span> Здоровые привычки (чек-лист на неделю)</div>
+        <div class="habits-wrap">
+            <table class="habits-table" id="habitsTable">
+                <thead>
+                    <tr>
+                        <th>Привычка</th>
+                        <th>ПН</th>
+                        <th>ВТ</th>
+                        <th>СР</th>
+                        <th>ЧТ</th>
+                        <th>ПТ</th>
+                        <th>СБ</th>
+                        <th>ВС</th>
+                    </tr>
+                </thead>
+                <tbody id="habitsBody">
+                    <!-- генерируется JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ===== 3-COLUMN GRID: REFLECTION + EMOTIONAL + GRATITUDE ===== -->
+    <div class="grid-3">
+        <!-- REFLECTION -->
+        <div class="section">
+            <div class="section-title"><span class="icon">🧠</span> Рефлексия дня</div>
+            <div class="field-group">
+                <label>Что нового я узнал сегодня?</label>
+                <textarea id="reflectionNew" rows="2"></textarea>
+            </div>
+            <div class="field-group">
+                <label>Что было самым сложным? Почему?</label>
+                <textarea id="reflectionHard" rows="2"></textarea>
+            </div>
+            <div class="field-group">
+                <label>Что меня удивило или вдохновило?</label>
+                <textarea id="reflectionInspire" rows="2"></textarea>
+            </div>
+        </div>
+
+        <!-- EMOTIONAL -->
+        <div class="section">
+            <div class="section-title"><span class="icon">🧠</span> Эмоциональная устойчивость</div>
+            <div class="field-group">
+                <label>Какое событие сегодня вызвало у меня стресс? Как я справился? Что могу сделать в следующий раз?</label>
+                <textarea id="emotionalStress" rows="6"></textarea>
+            </div>
+        </div>
+
+        <!-- GRATITUDE -->
+        <div class="section">
+            <div class="section-title"><span class="icon">✨</span> Благодарность</div>
+            <div class="field-group">
+                <label>Сегодня я благодарен себе за…</label>
+                <textarea id="gratitude" rows="6"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CLINICAL CASE + ETHICS + CREATIVE ===== -->
+    <div class="grid-3">
+        <!-- CLINICAL CASE -->
+        <div class="section">
+            <div class="section-title"><span class="icon">🩺</span> Клинический кейс дня</div>
+            <div class="prompt-box">
+                <span class="label">📋 Кейс:</span>
+                <span id="clinicalCaseText">Загрузка...</span>
+            </div>
+            <div class="field-group">
+                <label>Ваш ответ / размышление:</label>
+                <textarea id="clinicalAnswer" rows="4"></textarea>
+            </div>
+        </div>
+
+        <!-- ETHICS -->
+        <div class="section">
+            <div class="section-title"><span class="icon">💭</span> Этика и эмпатия</div>
+            <div class="prompt-box">
+                <span class="label">🤔 Вопрос для размышления:</span>
+                <span id="ethicsText">Загрузка...</span>
+            </div>
+            <div class="field-group">
+                <label>Ваш ответ:</label>
+                <textarea id="ethicsAnswer" rows="4"></textarea>
+            </div>
+        </div>
+
+        <!-- CREATIVE -->
+        <div class="section">
+            <div class="section-title"><span class="icon">🎨</span> Творческое задание</div>
+            <div class="prompt-box">
+                <span class="label">🎯 Задание:</span>
+                <span id="creativeText">Загрузка...</span>
+            </div>
+            <div class="field-group">
+                <label>Ваш ответ / описание:</label>
+                <textarea id="creativeAnswer" rows="4"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        <span>🐾 <strong>ВетСим</strong> — ветеринарное просвещение · Воспитываем профессионала с душой</span>
+        <span style="margin:0 0.5rem;">·</span>
+        <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a>
+        <span style="margin:0 0.5rem;">·</span>
+        <a href="https://vk.com/VetSimPros" target="_blank">vk.com/VetSimPros</a>
+    </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ================================================================
+    // ДАННЫЕ
+    // ================================================================
+
+    // Клинические кейсы (15 шт)
+    const clinicalCases = [
+        "У собаки внезапная хромота на левую тазовую конечность. Пальпация болезненна, отёка нет. Ваш первый шаг диагностики?",
+        "Корова перестала жевать, угнетена, температура 39,8°C. При перкуссии в области рубца — тимпанический звук. Ваш диагноз?",
+        "Кошка с трудом дышит, слизистые синюшные. На рентгене — затемнение в грудной полости. Ваши действия?",
+        "У лошади — обильное истечение из носа с гнилостным запахом, кашель. Что вы исключаете в первую очередь?",
+        "Собака подавилась костью, сильное слюнотечение, беспокойство. Ваш план действий?",
+        "У телёнка диарея, слабость, глаза запавшие. Ваша первая помощь?",
+        "Кошка — внезапная слабость задних конечностей, беспокойство, температура 39°C. Что вы подозреваете?",
+        "У свиньи — отказ от корма, кашель, одышка, носовое истечение. Ваш дифференциальный диагноз?",
+        "Собака сбита машиной, шок, открытый перелом бедра. Ваши действия?",
+        "У коровы — задержание последа на 12 часов. Ваш план лечения?",
+        "Кролик не ест, угнетён, живот вздут. При пальпации — твёрдое содержимое в желудке. Ваш диагноз?",
+        "У попугая — выпадение клоаки, беспокойство. Ваши действия?",
+        "Собака с рвотой, диареей, анорексией 2 дня. Вялая, слизистые сухие. Ваш диагноз и первая помощь?",
+        "У кошки — гнойные выделения из глаз, чихание, температура 39,5°C. Что вы исключаете?",
+        "Лошадь — колики, беспокойство, потливость, отсутствие дефекации. Ваш план?"
+    ];
+
+    // Этические вопросы (15 шт)
+    const ethicsQuestions = [
+        "Представьте, что владелец не может оплатить лечение, но животное в критическом состоянии. Как вы поступите?",
+        "Как вы скажете владельцу, что его питомец неизлечимо болен? Подберите слова.",
+        "Владелец просит усыпить здоровое животное по личным причинам. Как вы поступите?",
+        "Вы допустили ошибку в диагнозе. Как вы скажете об этом владельцу и коллегам?",
+        "Как вы отнесётесь к коллеге, который критикует ваше лечение в присутствии владельца?",
+        "Что делать, если владелец агрессивно настроен и не доверяет вашим назначениям?",
+        "Можно ли брать деньги с владельца за неэффективное лечение?",
+        "Как вы объясните владельцу, что лучший вариант — операция, если он её боится?",
+        "Должен ли ветеринарный врач соблюдать тайну о состоянии животного?",
+        "Что важнее — точный диагноз или поддержка владельца в трудный момент?",
+        "Как вы поступите, если коллега сознательно завышает стоимость лечения?",
+        "Владелец просит провести неоправданное исследование. Как вы ответите?",
+        "Как вы поддерживаете себя эмоционально после потери пациента?",
+        "Можно ли давать советы по лечению в соцсетях без осмотра?",
+        "Как вы сохраняете эмпатию, работая с десятками пациентов каждый день?"
+    ];
+
+    // Творческие задания (15 шт)
+    const creativeTasks = [
+        "Нарисуйте схему работы сердца собаки (можно схематично).",
+        "Опишите, каким вы видите идеальный ветеринарный кабинет через 10 лет.",
+        "Представьте, что вы — рентгеновский луч. Что вы увидите внутри пациента?",
+        "Придумайте слоган для ветеринарной клиники будущего.",
+        "Нарисуйте эскиз 'Термометр профессии' — шкалу, отображающую этапы становления ветеринара.",
+        "Напишите короткое письмо самому себе через 5 лет.",
+        "Придумайте необычное название для новой вакцины (и объясните, от чего она).",
+        "Опишите одну фразу, которую вы бы хотели услышать от благодарного владельца.",
+        "Нарисуйте (опишите) 'Портрет клинического мышления' — как вы его видите.",
+        "Придумайте ритуал для снятия стресса после сложного дежурства.",
+        "Опишите, как выглядит 'Идеальный день ветеринарного студента'.",
+        "Придумайте 5 правил для начинающего врача (в стиле 'Заповеди ветеринара').",
+        "Нарисуйте схему взаимодействия врача, пациента и владельца.",
+        "Опишите, каким вы видите 'Памятник первой операции'.",
+        "Придумайте диалог между студентом и профессором в операционной."
+    ];
+
+    // Привычки (7 пунктов)
+    const habits = [
+        { id: 'wake', label: '☀️ Подъём до 7:00', type: 'checkbox' },
+        { id: 'breakfast', label: '🥣 Завтрак', type: 'checkbox' },
+        { id: 'water', label: '💧 Вода (8 стаканов)', type: 'checkbox' },
+        { id: 'walk', label: '🚶 Прогулка / физминутка', type: 'checkbox' },
+        { id: 'reading', label: '📖 Чтение вне учебы (10 мин)', type: 'checkbox' },
+        { id: 'sleep', label: '🌙 Сон до 23:00', type: 'checkbox' },
+        { id: 'selfcare', label: '🌿 Забота о себе сегодня', type: 'select', options: ['—', 'сделал паузу', 'вышел на улицу', 'сделал гимнастику для глаз', 'переключил внимание'] }
+    ];
+
+    // Дни недели
+    const dayNames = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+    const dayKeys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+    // Пары (время)
+    const scheduleTimes = ['8:30', '10:15', '12:45', '14:30', '16:15', '17:55'];
+    const scheduleDays = ['mon', 'tue', 'wed', 'thu', 'fri'];
+
+    // ================================================================
+    // СОСТОЯНИЕ И ХРАНЕНИЕ
+    // ================================================================
+
+    // Генерация ID недели (сброс при новой неделе)
+    let weekId = localStorage.getItem('vetsim_week_id') || 'week1';
+    let weekNumber = parseInt(localStorage.getItem('vetsim_week_number') || '1');
+
+    // Данные расписания: { mon: { 0: { subject, teacher, room }, ... }, ... }
+    let scheduleData = {};
+    // Данные привычек: { mon: { wake: false, ... }, ... }
+    let habitsData = {};
+    // Текстовые поля
+    let textData = {};
+
+    // Текущие кейсы
+    let currentClinicalIndex = 0;
+    let currentEthicsIndex = 0;
+    let currentCreativeIndex = 0;
+
+    // ================================================================
+    // ИНИЦИАЛИЗАЦИЯ ДАННЫХ
+    // ================================================================
+
+    function initData() {
+        // Расписание
+        const savedSchedule = localStorage.getItem('vetsim_schedule_' + weekId);
+        if (savedSchedule) {
+            scheduleData = JSON.parse(savedSchedule);
+        } else {
+            scheduleData = {};
+            scheduleDays.forEach(day => {
+                scheduleData[day] = {};
+                scheduleTimes.forEach((time, idx) => {
+                    scheduleData[day][idx] = { subject: '', teacher: '', room: '' };
+                });
+            });
+        }
+
+        // Привычки
+        const savedHabits = localStorage.getItem('vetsim_habits_' + weekId);
+        if (savedHabits) {
+            habitsData = JSON.parse(savedHabits);
+        } else {
+            habitsData = {};
+            dayKeys.forEach(day => {
+                habitsData[day] = {};
+                habits.forEach(h => {
+                    if (h.type === 'checkbox') {
+                        habitsData[day][h.id] = false;
+                    } else {
+                        habitsData[day][h.id] = '';
+                    }
+                });
+            });
+        }
+
+        // Текстовые поля
+        const savedText = localStorage.getItem('vetsim_text_' + weekId);
+        if (savedText) {
+            textData = JSON.parse(savedText);
+        } else {
+            textData = {
+                reflectionNew: '',
+                reflectionHard: '',
+                reflectionInspire: '',
+                emotionalStress: '',
+                gratitude: '',
+                clinicalAnswer: '',
+                ethicsAnswer: '',
+                creativeAnswer: ''
+            };
+        }
+
+        // Кейсы
+        const savedCases = localStorage.getItem('vetsim_cases_' + weekId);
+        if (savedCases) {
+            const cases = JSON.parse(savedCases);
+            currentClinicalIndex = cases.clinical || 0;
+            currentEthicsIndex = cases.ethics || 0;
+            currentCreativeIndex = cases.creative || 0;
+        } else {
+            // Случайные индексы при старте
+            currentClinicalIndex = Math.floor(Math.random() * clinicalCases.length);
+            currentEthicsIndex = Math.floor(Math.random() * ethicsQuestions.length);
+            currentCreativeIndex = Math.floor(Math.random() * creativeTasks.length);
+        }
+
+        // Номер недели
+        const savedWeek = localStorage.getItem('vetsim_week_number');
+        if (savedWeek) weekNumber = parseInt(savedWeek);
+
+        updateWeekLabel();
+    }
+
+    // ================================================================
+    // СОХРАНЕНИЕ
+    // ================================================================
+
+    function saveAll() {
+        localStorage.setItem('vetsim_schedule_' + weekId, JSON.stringify(scheduleData));
+        localStorage.setItem('vetsim_habits_' + weekId, JSON.stringify(habitsData));
+        localStorage.setItem('vetsim_text_' + weekId, JSON.stringify(textData));
+        localStorage.setItem('vetsim_cases_' + weekId, JSON.stringify({
+            clinical: currentClinicalIndex,
+            ethics: currentEthicsIndex,
+            creative: currentCreativeIndex
+        }));
+        localStorage.setItem('vetsim_week_id', weekId);
+        localStorage.setItem('vetsim_week_number', String(weekNumber));
+        showToast('✅ Данные сохранены');
+    }
+
+    // ================================================================
+    // ОТРИСОВКА
+    // ================================================================
+
+    function renderSchedule() {
+        const tbody = document.getElementById('scheduleBody');
+        tbody.innerHTML = '';
+        scheduleTimes.forEach((time, idx) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="time-col">${time}</td>`;
+            scheduleDays.forEach(day => {
+                const cell = document.createElement('td');
+                const data = scheduleData[day][idx] || { subject: '', teacher: '', room: '' };
+                cell.innerHTML = `
+                    <input type="text" class="schedule-subject" value="${escapeHtml(data.subject)}" placeholder="Предмет" data-day="${day}" data-idx="${idx}" data-field="subject">
+                    <input type="text" class="schedule-teacher sub-input" value="${escapeHtml(data.teacher)}" placeholder="Преподаватель" data-day="${day}" data-idx="${idx}" data-field="teacher">
+                    <input type="text" class="schedule-room sub-input" value="${escapeHtml(data.room)}" placeholder="Ауд." data-day="${day}" data-idx="${idx}" data-field="room">
+                `;
+                tr.appendChild(cell);
+            });
+            tbody.appendChild(tr);
+        });
+
+        // События для автосохранения
+        document.querySelectorAll('.schedule-subject, .schedule-teacher, .schedule-room').forEach(el => {
+            el.addEventListener('input', function() {
+                const day = this.dataset.day;
+                const idx = parseInt(this.dataset.idx);
+                const field = this.dataset.field;
+                if (!scheduleData[day]) scheduleData[day] = {};
+                if (!scheduleData[day][idx]) scheduleData[day][idx] = { subject: '', teacher: '', room: '' };
+                scheduleData[day][idx][field] = this.value;
+                saveAll();
+            });
+        });
+    }
+
+    function renderHabits() {
+        const tbody = document.getElementById('habitsBody');
+        tbody.innerHTML = '';
+        habits.forEach((habit, hi) => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td class="habit-label">${habit.label}</td>`;
+            dayKeys.forEach((day, di) => {
+                const td = document.createElement('td');
+                const val = habitsData[day]?.[habit.id] ?? (habit.type === 'checkbox' ? false : '');
+                if (habit.type === 'checkbox') {
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.className = 'habit-check';
+                    cb.checked = !!val;
+                    cb.addEventListener('change', function() {
+                        if (!habitsData[day]) habitsData[day] = {};
+                        habitsData[day][habit.id] = this.checked;
+                        saveAll();
+                    });
+                    td.appendChild(cb);
+                } else {
+                    const sel = document.createElement('select');
+                    sel.className = 'habit-select';
+                    habit.options.forEach(opt => {
+                        const option = document.createElement('option');
+                        option.value = opt;
+                        option.textContent = opt;
+                        if (val === opt) option.selected = true;
+                        sel.appendChild(option);
+                    });
+                    sel.addEventListener('change', function() {
+                        if (!habitsData[day]) habitsData[day] = {};
+                        habitsData[day][habit.id] = this.value;
+                        saveAll();
+                    });
+                    td.appendChild(sel);
+                }
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+    }
+
+    function renderTextFields() {
+        document.getElementById('reflectionNew').value = textData.reflectionNew || '';
+        document.getElementById('reflectionHard').value = textData.reflectionHard || '';
+        document.getElementById('reflectionInspire').value = textData.reflectionInspire || '';
+        document.getElementById('emotionalStress').value = textData.emotionalStress || '';
+        document.getElementById('gratitude').value = textData.gratitude || '';
+        document.getElementById('clinicalAnswer').value = textData.clinicalAnswer || '';
+        document.getElementById('ethicsAnswer').value = textData.ethicsAnswer || '';
+        document.getElementById('creativeAnswer').value = textData.creativeAnswer || '';
+
+        // Кейсы
+        document.getElementById('clinicalCaseText').textContent = clinicalCases[currentClinicalIndex] || 'Кейс не найден';
+        document.getElementById('ethicsText').textContent = ethicsQuestions[currentEthicsIndex] || 'Вопрос не найден';
+        document.getElementById('creativeText').textContent = creativeTasks[currentCreativeIndex] || 'Задание не найдено';
+
+        // События для автосохранения
+        const fields = [
+            'reflectionNew', 'reflectionHard', 'reflectionInspire',
+            'emotionalStress', 'gratitude', 'clinicalAnswer', 'ethicsAnswer', 'creativeAnswer'
+        ];
+        fields.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.removeEventListener('input', textInputHandler);
+                el.addEventListener('input', textInputHandler);
+            }
+        });
+    }
+
+    function textInputHandler(e) {
+        textData[e.target.id] = e.target.value;
+        saveAll();
+    }
+
+    function updateWeekLabel() {
+        document.getElementById('weekLabel').textContent = `📅 Неделя ${weekNumber}`;
+    }
+
+    // ================================================================
+    // ДЕЙСТВИЯ
+    // ================================================================
+
+    function newDay() {
+        // Очищаем рефлексию, эмоции, благодарность, ответы на кейсы
+        textData.reflectionNew = '';
+        textData.reflectionHard = '';
+        textData.reflectionInspire = '';
+        textData.emotionalStress = '';
+        textData.gratitude = '';
+        textData.clinicalAnswer = '';
+        textData.ethicsAnswer = '';
+        textData.creativeAnswer = '';
+
+        // Новые кейсы (следующие по кругу)
+        currentClinicalIndex = (currentClinicalIndex + 1) % clinicalCases.length;
+        currentEthicsIndex = (currentEthicsIndex + 1) % ethicsQuestions.length;
+        currentCreativeIndex = (currentCreativeIndex + 1) % creativeTasks.length;
+
+        renderTextFields();
+        saveAll();
+        showToast('🌅 Новый день начат! Кейсы и задания обновлены.');
+    }
+
+    function resetWeek() {
+        if (!confirm('Сбросить все данные за неделю? Расписание, привычки и все записи будут удалены.')) return;
+
+        weekNumber++;
+        weekId = 'week' + weekNumber;
+
+        // Очищаем данные
+        scheduleData = {};
+        scheduleDays.forEach(day => {
+            scheduleData[day] = {};
+            scheduleTimes.forEach((time, idx) => {
+                scheduleData[day][idx] = { subject: '', teacher: '', room: '' };
+            });
+        });
+
+        habitsData = {};
+        dayKeys.forEach(day => {
+            habitsData[day] = {};
+            habits.forEach(h => {
+                if (h.type === 'checkbox') {
+                    habitsData[day][h.id] = false;
+                } else {
+                    habitsData[day][h.id] = '';
+                }
+            });
+        });
+
+        textData = {
+            reflectionNew: '',
+            reflectionHard: '',
+            reflectionInspire: '',
+            emotionalStress: '',
+            gratitude: '',
+            clinicalAnswer: '',
+            ethicsAnswer: '',
+            creativeAnswer: ''
+        };
+
+        currentClinicalIndex = Math.floor(Math.random() * clinicalCases.length);
+        currentEthicsIndex = Math.floor(Math.random() * ethicsQuestions.length);
+        currentCreativeIndex = Math.floor(Math.random() * creativeTasks.length);
+
+        localStorage.setItem('vetsim_week_number', String(weekNumber));
+        localStorage.setItem('vetsim_week_id', weekId);
+
+        renderAll();
+        saveAll();
+        updateWeekLabel();
+        showToast('🔄 Новая неделя начата!');
+    }
+
+    function printPage() {
+        window.print();
+    }
+
+    // ================================================================
+    // ОБЩАЯ ОТРИСОВКА
+    // ================================================================
+
+    function renderAll() {
+        renderSchedule();
+        renderHabits();
+        renderTextFields();
+        updateWeekLabel();
+    }
+
+    // ================================================================
+    // УТИЛИТЫ
+    // ================================================================
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            if (m === '"') return '&quot;';
+            return m;
+        });
+    }
+
+    let toastTimeout = null;
+
+    function showToast(message, duration = 2500) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, duration);
+    }
+
+    // ================================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+
+    function init() {
+        initData();
+        renderAll();
+
+        document.getElementById('newDayBtn').addEventListener('click', newDay);
+        document.getElementById('resetWeekBtn').addEventListener('click', resetWeek);
+        document.getElementById('printBtn').addEventListener('click', printPage);
+
+        // Сохранение при закрытии страницы
+        window.addEventListener('beforeunload', saveAll);
+
+        showToast('🐾 Дневник готов! Заполняйте и сохраняйте.', 2000);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

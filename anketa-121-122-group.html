@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкета студента | ВетСим</title>
+    <style>
+        /* ─── Общие стили ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #FDF8F0;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* ─── Заголовок ─── */
+        .header {
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: #A3B18A;
+        }
+        .logo small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #A3B18A;
+            margin-left: 0.5rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            margin-top: 0.5rem;
+        }
+        .header p {
+            color: #A3B18A;
+            margin-top: 0.2rem;
+        }
+
+        /* ─── Карточки с вопросами ─── */
+        .card {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: #F4EFE4;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            text-align: center;
+            line-height: 28px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #3E5C4A;
+            margin-right: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
+            color: #3E5C4A;
+        }
+
+        .form-group .hint {
+            font-size: 0.8rem;
+            color: #A3B18A;
+            font-weight: 400;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border: 1px solid #E5DDCF;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            background: #FEFAF2;
+            transition: 0.2s;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #A3B18A;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(163, 177, 138, 0.2);
+        }
+
+        textarea {
+            border-radius: 1.2rem;
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-top: 0.3rem;
+        }
+
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 400;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #A3B18A;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-top: 0.3rem;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-weight: 400;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #A3B18A;
+        }
+
+        /* ─── Кнопки ─── */
+        .btn-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.7rem 2rem;
+            border: none;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #8FA076;
+        }
+
+        .btn-accent {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-accent:hover {
+            background: #236885;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #D4A373;
+            color: #D4A373;
+        }
+        .btn-outline:hover {
+            background: #D4A373;
+            color: white;
+        }
+
+        /* ─── Сообщение о сохранении ─── */
+        .save-notice {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #A3B18A;
+            margin-top: 0.5rem;
+        }
+
+        /* ─── Футер ─── */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #B0BC9C;
+            border-top: 1px solid #E5DDCF;
+            padding-top: 1.5rem;
+        }
+
+        /* ─── Адаптив ─── */
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+            .header {
+                padding: 1.2rem;
+            }
+            .header h1 {
+                font-size: 1.4rem;
+            }
+            .card {
+                padding: 1.2rem;
+            }
+            .btn-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ЗАГОЛОВОК -->
+    <div class="header">
+        <div class="logo">
+            🐾 Вет<span>Сим</span>
+            <small>анкета студента</small>
+        </div>
+        <h1>Привет, группа! 👋</h1>
+        <p>Заполните анкету, чтобы я лучше узнала вас до начала учебного года.</p>
+        <p style="font-size:0.85rem; margin-top:0.3rem; color:#B0BC9C;">Ответы сохраняются автоматически</p>
+    </div>
+
+    <form id="anketaForm" autocomplete="off">
+
+        <!-- БЛОК 1: Знакомство -->
+        <div class="card">
+            <div class="card-title"><span class="question-number">1</span> Знакомство</div>
+
+            <div class="form-group">
+                <label for="name">Как к вам обращаться? (имя)</label>
+                <input type="text" id="name" placeholder="Например, Анастасия" data-save="name">
+            </div>
+
+            <div class="form-group">
+                <label for="group">Ваша группа</label>
+                <select id="group" data-save="group">
+                    <option value="">Выберите...</option>
+                    <option value="121">121 группа</option>
+                    <option value="122">122 группа</option>
+                    <option value="other">Другая</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="otherGroupBlock" style="display:none;">
+                <label for="otherGroup">Укажите вашу группу</label>
+                <input type="text" id="otherGroup" placeholder="Например, 124" data-save="otherGroup">
+            </div>
+        </div>
+
+        <!-- БЛОК 2: Интересы -->
+        <div class="card">
+            <div class="card-title"><span class="question-number">2</span> Ваши интересы в профессии</div>
+
+            <div class="form-group">
+                <label>Что вас привлекает в ветеринарии? (можно выбрать 1–2 варианта)</label>
+                <div class="checkbox-group" id="interestsGroup">
+                    <label><input type="checkbox" value="Хирургия" data-save="interests"> Хирургия</label>
+                    <label><input type="checkbox" value="Диагностика (анализы, УЗИ, рентген)" data-save="interests"> Диагностика (анализы, УЗИ, рентген)</label>
+                    <label><input type="checkbox" value="Лечение внутренних болезней (терапия)" data-save="interests"> Лечение внутренних болезней (терапия)</label>
+                    <label><input type="checkbox" value="Анатомия и физиология" data-save="interests"> Анатомия и физиология</label>
+                    <label><input type="checkbox" value="Работа с лабораторными животными" data-save="interests"> Работа с лабораторными животными</label>
+                    <label><input type="checkbox" value="Ветеринарно-санитарная экспертиза" data-save="interests"> Ветеринарно-санитарная экспертиза</label>
+                    <label><input type="checkbox" value="Экзотические животные" data-save="interests"> Экзотические животные</label>
+                    <label><input type="checkbox" value="Пока не знаю, хочу разобраться" data-save="interests"> Пока не знаю, хочу разобраться</label>
+                    <label><input type="checkbox" value="Другое" data-save="interests"> Другое</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="otherInterests">Если выбрали «Другое» или хотите дополнить — напишите здесь</label>
+                <input type="text" id="otherInterests" placeholder="Что именно?" data-save="otherInterests">
+            </div>
+
+            <div class="form-group">
+                <label for="hobbies">А что вам интересно вне учёбы? (хобби, увлечения)</label>
+                <input type="text" id="hobbies" placeholder="Спорт, музыка, рисование, программирование..." data-save="hobbies">
+            </div>
+        </div>
+
+        <!-- БЛОК 3: Стиль обучения -->
+        <div class="card">
+            <div class="card-title"><span class="question-number">3</span> Как вам легче запоминать?</div>
+
+            <div class="form-group">
+                <label>Как вам легче запоминать материал?</label>
+                <div class="radio-group" id="modalityGroup">
+                    <label><input type="radio" name="modality" value="Аудиал (когда слушаю объяснение)" data-save="modality"> Когда слушаю объяснение (аудиал)</label>
+                    <label><input type="radio" name="modality" value="Визуал (когда вижу схемы, таблицы, видео)" data-save="modality"> Когда вижу схемы, таблицы, видео (визуал)</label>
+                    <label><input type="radio" name="modality" value="Кинестетик (когда делаю руками, пишу, рисую)" data-save="modality"> Когда делаю руками, пишу, рисую (кинестетик)</label>
+                    <label><input type="radio" name="modality" value="Дигитал (когда читаю и разбираюсь сам)" data-save="modality"> Когда читаю и разбираюсь сам (дигитал)</label>
+                    <label><input type="radio" name="modality" value="Не знаю, не задумывался" data-save="modality"> Не знаю, не задумывался</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 4: Мотивация -->
+        <div class="card">
+            <div class="card-title"><span class="question-number">4</span> Что для вас важно?</div>
+
+            <div class="form-group">
+                <label>Что для вас важно в учёбе и профессии? (можно выбрать 1–2 варианта)</label>
+                <div class="checkbox-group" id="valuesGroup">
+                    <label><input type="checkbox" value="Помогать животным и их владельцам" data-save="values"> Помогать животным и их владельцам</label>
+                    <label><input type="checkbox" value="Постоянно узнавать новое" data-save="values"> Постоянно узнавать новое</label>
+                    <label><input type="checkbox" value="Стать экспертом в узкой области" data-save="values"> Стать экспертом в узкой области</label>
+                    <label><input type="checkbox" value="Хорошо зарабатывать" data-save="values"> Хорошо зарабатывать</label>
+                    <label><input type="checkbox" value="Работать в команде с коллегами" data-save="values"> Работать в команде с коллегами</label>
+                    <label><input type="checkbox" value="Иметь стабильность и уверенность в завтрашнем дне" data-save="values"> Иметь стабильность и уверенность в завтрашнем дне</label>
+                    <label><input type="checkbox" value="Другое" data-save="values"> Другое</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="otherValues">Если выбрали «Другое» — напишите, что именно</label>
+                <input type="text" id="otherValues" placeholder="Например, свобода и путешествия" data-save="otherValues">
+            </div>
+        </div>
+
+        <!-- БЛОК 5: Проект "ВетСим" -->
+        <div class="card">
+            <div class="card-title"><span class="question-number">5</span> Проект «ВетСим»</div>
+
+            <div class="form-group">
+                <label>Хотели бы вы участвовать в развитии проекта «ВетСим»?</label>
+                <div class="radio-group" id="participationGroup">
+                    <label><input type="radio" name="participation" value="Да, с удовольствием" data-save="participation"> Да, с удовольствием</label>
+                    <label><input type="radio" name="participation" value="Может быть, надо посмотреть" data-save="participation"> Может быть, надо посмотреть</label>
+                    <label><input type="radio" name="participation" value="Пока не готов" data-save="participation"> Пока не готов</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="helpIdea">Какую помощь вы могли бы предложить проекту? (можно просто идею)</label>
+                <textarea id="helpIdea" rows="2" placeholder="Например, помочь с дизайном, тестированием, идеями для контента..." data-save="helpIdea"></textarea>
+            </div>
+        </div>
+
+        <!-- БЛОК 6: Завершение -->
+        <div class="card">
+            <div class="card-title"><span class="question-number">6</span> Завершение</div>
+
+            <div class="form-group">
+                <label for="wishes">Что вы хотели бы пожелать нашей группе или проекту?</label>
+                <textarea id="wishes" rows="2" placeholder="Ваши пожелания, мечты, идеи..." data-save="wishes"></textarea>
+            </div>
+        </div>
+
+        <!-- КНОПКИ -->
+        <div class="btn-row">
+            <button type="button" class="btn btn-primary" id="saveBtn">💾 Сохранить ответы</button>
+            <button type="button" class="btn btn-outline" id="clearBtn">🗑️ Очистить всё</button>
+        </div>
+        <div class="save-notice" id="saveNotice">Все изменения сохраняются автоматически</div>
+
+    </form>
+
+    <div class="footer">
+        © ВетСим — ветеринарное просвещение · Спасибо за искренние ответы!
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        // ─── КЛЮЧ ДЛЯ ХРАНЕНИЯ ───
+        const STORAGE_KEY = 'vetsim_anketa_122';
+
+        // ─── СОХРАНЕНИЕ ───
+        function saveAll() {
+            const data = {};
+
+            // Текстовые поля и select
+            document.querySelectorAll('[data-save]').forEach(el => {
+                const key = el.dataset.save;
+                if (el.type === 'checkbox') {
+                    // для чекбоксов — собираем все значения в массив
+                    const group = el.closest('.checkbox-group');
+                    if (group) {
+                        const checks = group.querySelectorAll('input[type="checkbox"]');
+                        const values = [];
+                        checks.forEach(cb => {
+                            if (cb.checked) values.push(cb.value);
+                        });
+                        data[key] = values;
+                    }
+                } else if (el.type === 'radio') {
+                    // радиокнопки сохраняем только выбранную
+                    if (el.checked) {
+                        data[key] = el.value;
+                    }
+                } else {
+                    data[key] = el.value;
+                }
+            });
+
+            // Дополнительно: для радиокнопок modality и participation сохраняем
+            const modalitySelected = document.querySelector('input[name="modality"]:checked');
+            if (modalitySelected) data.modality = modalitySelected.value;
+
+            const participationSelected = document.querySelector('input[name="participation"]:checked');
+            if (participationSelected) data.participation = participationSelected.value;
+
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            showNotice('✅ Ответы сохранены');
+        }
+
+        // ─── ЗАГРУЗКА ───
+        function loadAll() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return;
+
+            try {
+                const data = JSON.parse(raw);
+
+                // текстовые поля и select
+                document.querySelectorAll('[data-save]').forEach(el => {
+                    const key = el.dataset.save;
+                    if (key === 'interests' || key === 'values') {
+                        // чекбоксы
+                        const group = el.closest('.checkbox-group');
+                        if (group && Array.isArray(data[key])) {
+                            const checks = group.querySelectorAll('input[type="checkbox"]');
+                            checks.forEach(cb => {
+                                cb.checked = data[key].includes(cb.value);
+                            });
+                        }
+                    } else if (el.type === 'radio') {
+                        // радиокнопки
+                        if (data[key] && el.value === data[key]) {
+                            el.checked = true;
+                        }
+                    } else {
+                        if (data[key] !== undefined) {
+                            el.value = data[key];
+                        }
+                    }
+                });
+
+                // отдельно для modality
+                if (data.modality) {
+                    const el = document.querySelector(`input[name="modality"][value="${data.modality}"]`);
+                    if (el) el.checked = true;
+                }
+                if (data.participation) {
+                    const el = document.querySelector(`input[name="participation"][value="${data.participation}"]`);
+                    if (el) el.checked = true;
+                }
+
+                // Показать блок "Другая группа", если выбрано
+                const groupSelect = document.getElementById('group');
+                if (groupSelect.value === 'other') {
+                    document.getElementById('otherGroupBlock').style.display = 'block';
+                }
+
+            } catch(e) {
+                console.warn('Ошибка загрузки данных:', e);
+            }
+        }
+
+        // ─── УВЕДОМЛЕНИЕ ───
+        function showNotice(text) {
+            const notice = document.getElementById('saveNotice');
+            notice.textContent = text;
+            setTimeout(() => {
+                notice.textContent = 'Все изменения сохраняются автоматически';
+            }, 2000);
+        }
+
+        // ─── ОЧИСТКА ───
+        function clearAll() {
+            if (!confirm('Удалить все введённые данные?')) return;
+            localStorage.removeItem(STORAGE_KEY);
+            location.reload();
+        }
+
+        // ─── ПОКАЗАТЬ/СКРЫТЬ БЛОК «ДРУГАЯ ГРУППА» ───
+        document.getElementById('group').addEventListener('change', function() {
+            const block = document.getElementById('otherGroupBlock');
+            if (this.value === 'other') {
+                block.style.display = 'block';
+            } else {
+                block.style.display = 'none';
+            }
+            saveAll();
+        });
+
+        // ─── АВТОСОХРАНЕНИЕ ПРИ ИЗМЕНЕНИЯХ ───
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('change', saveAll);
+            el.addEventListener('input', saveAll);
+        });
+
+        // ─── КНОПКИ ───
+        document.getElementById('saveBtn').addEventListener('click', saveAll);
+        document.getElementById('clearBtn').addEventListener('click', clearAll);
+
+        // ─── ЗАГРУЗКА ПРИ СТАРТЕ ───
+        document.addEventListener('DOMContentLoaded', loadAll);
+
+        // Автосохранение при выходе
+        window.addEventListener('beforeunload', saveAll);
+
+    })();
+</script>
+
+</body>
+</html>

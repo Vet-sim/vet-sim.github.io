@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Восстанови последовательность | ВетСим</title>
+    <title>Желудочно-кишечный тракт жвачных животных | ВетСим</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
         body{background:#FDF8F0;font-family:system-ui,Roboto;padding:1.5rem;color:#3E5C4A;}
@@ -26,7 +26,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>⏳ Расположите шаги в правильном порядке</h1>
+    <h1>⏳ Расположите органы в правильном порядке</h1>
     <div class="sub">Перетаскивайте карточки, чтобы восстановить последовательность</div>
     <div id="gameArea"></div>
     <div style="text-align:center;">
@@ -34,10 +34,10 @@
         <button id="resetBtn" class="btn reset-btn">Сбросить</button>
     </div>
     <div id="feedback" class="feedback"></div>
-    <footer>© ВетСим – интерактивная хронология</footer>
+    <footer>© © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин – интерактивная последовательность</footer>
 </div>
 <script>
-    const correctSteps = [{"id":1,"text":"Ротовая полость (Cavum oris)","imageUrl":""},{"id":2,"text":"Глотка (Pharynx)","imageUrl":""},{"id":3,"text":"Пищевод (Oesophagus)","imageUrl":""},{"id":4,"text":"Рубец (Rumen)","imageUrl":""},{"id":5,"text":"Сетка (Reticulum)","imageUrl":""},{"id":6,"text":"Книжка (Omasum)","imageUrl":""},{"id":7,"text":"Сычуг (Abomasum)","imageUrl":""},{"id":8,"text":"Двенадцатиперстная кишка (Duodenum)","imageUrl":""},{"id":9,"text":"Тощая кишка (Jejunum)","imageUrl":""},{"id":10,"text":"Подвздошная кишка (Ileum)","imageUrl":""},{"id":11,"text":"Слепая кишка (Caecum)","imageUrl":""},{"id":12,"text":"Ободочная кишка (Colon)","imageUrl":""},{"id":13,"text":"Прямая кишка (Rectum)","imageUrl":""}];
+    const correctSteps = [{"id":1,"text":"Ротовая полость (Cavum oris)","imageUrl":""},{"id":2,"text":"Глотка (Pharynx)","imageUrl":""},{"id":3,"text":"Пищевод (Oesophagus)","imageUrl":""},{"id":4,"text":"Рубец (Rumen)","imageUrl":""},{"id":5,"text":"Сетка (Reticulum)","imageUrl":""},{"id":6,"text":"Книжка (Omasum)","imageUrl":""},{"id":7,"text":"Сычуг (Abomasum)","imageUrl":""},{"id":8,"text":"Двенадцатиперстная кишка (Intestinum duodenum)","imageUrl":""},{"id":9,"text":"Тощая кишка (Intestinum jejunum)","imageUrl":""},{"id":10,"text":"Подвздошная кишка (Intestinum ileum)","imageUrl":""},{"id":11,"text":"Слепая кишка (Intestinum caecum)","imageUrl":""},{"id":12,"text":"Ободочная кишка (Intestinum colon)","imageUrl":""},{"id":13,"text":"Прямая кишка (Intestinum rectum)","imageUrl":""}];
     let currentSteps = [];
     let dragIndex = null;
 

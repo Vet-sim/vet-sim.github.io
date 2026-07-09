@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Дневник практикующего ветеринара | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.2rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ШАПКА */
+        .header {
+            background: white;
+            padding: 1.2rem 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+        }
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .logo span {
+            color: #A3B18A;
+        }
+        .logo small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #A3B18A;
+            margin-left: 0.5rem;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .btn:hover { opacity: 0.85; }
+        .btn-primary { background: #A3B18A; color: #2C4027; }
+        .btn-accent { background: #2C7DA0; color: white; }
+        .btn-danger { background: #D4A373; color: white; }
+        .btn-outline { background: transparent; border: 2px solid #D4A373; color: #D4A373; }
+        .btn-outline:hover { background: #D4A373; color: white; }
+
+        .week-badge {
+            background: #F4EFE4;
+            padding: 0.3rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+        }
+
+        /* КАРТОЧКИ-БЛОКИ */
+        .card {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 1.2rem;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card-title .icon {
+            font-size: 1.3rem;
+        }
+
+        /* СЕТКИ */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.8rem;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.8rem;
+        }
+
+        /* ПОЛЯ ВВОДА */
+        input[type="text"], textarea, select {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #E5DDCF;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FEFAF2;
+            transition: 0.2s;
+        }
+        input[type="text"]:focus, textarea:focus, select:focus {
+            border-color: #A3B18A;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(163, 177, 138, 0.2);
+        }
+        textarea {
+            border-radius: 1.2rem;
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .field-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 0.2rem;
+            color: #3E5C4A;
+        }
+
+        .inline-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .inline-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+        .inline-group input[type="number"] {
+            width: 70px;
+            padding: 0.4rem 0.6rem;
+            border: 1px solid #E5DDCF;
+            border-radius: 2rem;
+            font-family: inherit;
+            text-align: center;
+            background: #FEFAF2;
+        }
+
+        /* ЧЕК-ЛИСТ ПРИВЫЧЕК */
+        .habit-grid {
+            display: grid;
+            grid-template-columns: 1fr repeat(7, 1fr);
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            align-items: center;
+        }
+        .habit-grid .label {
+            font-weight: 600;
+            color: #3E5C4A;
+            padding-right: 0.5rem;
+        }
+        .habit-grid .day-label {
+            text-align: center;
+            font-weight: 600;
+            color: #A3B18A;
+            font-size: 0.7rem;
+        }
+        .habit-grid input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #A3B18A;
+            cursor: pointer;
+            justify-self: center;
+        }
+
+        /* ПРОГРЕСС-БАР */
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #F4EFE4;
+            border-radius: 1rem;
+            overflow: hidden;
+            min-width: 100px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #A3B18A, #2C7DA0);
+            border-radius: 1rem;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+        .progress-text {
+            font-weight: 700;
+            color: #2C7DA0;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        /* БЕЙДЖИ */
+        .badge {
+            display: inline-block;
+            background: #E2E9DA;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #3E5C4A;
+        }
+        .badge-success { background: #CBE0C0; color: #2C4027; }
+        .badge-warning { background: #F4EFE4; color: #7B6A4A; }
+
+        /* МОДАЛЬНОЕ ОКНО */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .modal h2 { margin-bottom: 0.5rem; color: #3E5C4A; }
+        .modal .close-btn {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #7B8D6E;
+        }
+        .modal .close-btn:hover { color: #3E5C4A; }
+        .modal .modal-body { margin-top: 0.5rem; }
+
+        /* ФУТЕР */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #B0BC9C;
+            border-top: 1px solid #E5DDCF;
+            padding-top: 1rem;
+        }
+
+        /* ПЕЧАТЬ */
+        @media print {
+            body { background: white !important; padding: 0.3in !important; }
+            .no-print { display: none !important; }
+            .card { box-shadow: none !important; border: 1px solid #eee; page-break-inside: avoid; }
+            .header { box-shadow: none !important; border: 1px solid #eee; }
+            input, textarea { border: 1px solid #ccc !important; background: #fefefe !important; }
+            .habit-grid { font-size: 0.7rem; }
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 0.8rem; }
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-actions { justify-content: center; }
+            .habit-grid { font-size: 0.65rem; grid-template-columns: 1fr repeat(7, 1fr); }
+            .habit-grid .day-label { font-size: 0.6rem; }
+            .habit-grid input[type="checkbox"] { width: 16px; height: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ШАПКА -->
+    <div class="header">
+        <div class="logo">
+            🐾 Вет<span>Сим</span>
+            <small>дневник практикующего ветеринара</small>
+        </div>
+        <div class="week-badge" id="weekBadge">Неделя 27–33</div>
+        <div class="header-actions no-print">
+            <button class="btn btn-primary" id="saveBtn">💾 Сохранить</button>
+            <button class="btn btn-accent" onclick="window.print()">🖨️ Печать</button>
+            <button class="btn btn-danger" id="resetBtn">🔄 Сбросить неделю</button>
+        </div>
+    </div>
+
+    <!-- БЛОК 1: КЛИНИЧЕСКИЙ ДЕНЬ -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🩺</span> Клинический день</div>
+        <div class="grid-3">
+            <div>
+                <label class="field-label">📋 Количество приёмов</label>
+                <input type="number" id="appointments" min="0" value="0">
+            </div>
+            <div>
+                <label class="field-label">🐾 Сложных случаев</label>
+                <input type="number" id="hardCases" min="0" value="0">
+            </div>
+            <div>
+                <label class="field-label">✅ Успешных исходов</label>
+                <input type="number" id="successCases" min="0" value="0">
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 2: ЗАПИСЬ ДНЯ -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📝</span> Запись дня</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            <div>
+                <label class="field-label">💭 Самый сложный случай сегодня</label>
+                <textarea id="hardCaseDesc" rows="2" placeholder="Кратко опишите случай, который вызвал затруднения или эмоции..."></textarea>
+            </div>
+            <div>
+                <label class="field-label">🌟 Успех дня</label>
+                <textarea id="successDesc" rows="2" placeholder="Что получилось, за что вы себя благодарите..."></textarea>
+            </div>
+            <div>
+                <label class="field-label">📌 Заметки на завтра</label>
+                <textarea id="tomorrowNotes" rows="2" placeholder="Что важно не забыть, кого проконсультировать..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 3: ПРОФИЛАКТИКА ВЫГОРАНИЯ -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🌿</span> Забота о себе сегодня</div>
+        <div class="grid-2">
+            <div>
+                <label class="field-label">🧘 Микропаузы (перерывы 3-5 мин)</label>
+                <input type="number" id="microPauses" min="0" value="0" placeholder="Количество">
+            </div>
+            <div>
+                <label class="field-label">💪 Что я сделал(а) для себя сегодня?</label>
+                <input type="text" id="selfCare" placeholder="Прогулка, спорт, хобби, чтение, тишина...">
+            </div>
+        </div>
+        <div style="margin-top: 0.8rem;">
+            <label class="field-label">🎯 Уровень стресса за день (от 1 до 10)</label>
+            <div class="inline-group">
+                <span>1 (спокойствие)</span>
+                <input type="range" id="stressLevel" min="1" max="10" value="5" style="flex:1; max-width:300px;">
+                <span id="stressValue">5</span>
+                <span>10 (максимальный стресс)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 4: ТРЕКЕР ПРИВЫЧЕК (на неделю) -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🔄</span> Трекер здоровых привычек</div>
+        <div class="habit-grid" id="habitGrid">
+            <!-- заполняется JS -->
+        </div>
+    </div>
+
+    <!-- БЛОК 5: РЕФЛЕКСИЯ И БЛАГОДАРНОСТЬ -->
+    <div class="card">
+        <div class="card-title"><span class="icon">✨</span> Рефлексия дня</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            <div>
+                <label class="field-label">🌱 Что я сегодня понял(а) важного?</label>
+                <textarea id="insight" rows="2" placeholder="Инсайт, осознание, профессиональное открытие..."></textarea>
+            </div>
+            <div>
+                <label class="field-label">🙏 За что я благодарен(на) сегодня?</label>
+                <textarea id="gratitude" rows="2" placeholder="Благодарность себе, коллегам, пациентам, жизни..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 6: ПРОГРЕСС -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📊</span> Прогресс недели</div>
+        <div class="progress-wrapper">
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-text" id="progressText">0%</div>
+        </div>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; font-size: 0.85rem;">
+            <span>📋 Приёмов: <strong id="totalAppointments">0</strong></span>
+            <span>🐾 Сложных: <strong id="totalHard">0</strong></span>
+            <span>✅ Успехов: <strong id="totalSuccess">0</strong></span>
+            <span>🧘 Микропауз: <strong id="totalPauses">0</strong></span>
+        </div>
+    </div>
+
+    <div class="footer">
+        © ВетСим — ветеринарное просвещение · Забота о себе — основа профессии
+    </div>
+
+</div>
+
+<!-- Модальное окно подтверждения сброса -->
+<div class="modal-overlay" id="resetModal">
+    <div class="modal">
+        <button class="close-btn" id="resetModalClose">&times;</button>
+        <h2>🔄 Сбросить неделю</h2>
+        <div class="modal-body">
+            <p>Вы уверены, что хотите очистить все данные текущей недели? Это действие необратимо.</p>
+            <div style="display: flex; gap: 0.8rem; margin-top: 1.2rem; justify-content: flex-end;">
+                <button class="btn btn-outline" id="resetModalCancel">Отмена</button>
+                <button class="btn btn-danger" id="resetModalConfirm">Сбросить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const STORAGE_KEY = 'vet_diary_data';
+
+        // Дни недели для трекера привычек
+        const DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+        const HABITS = [
+            { id: 'sleep', label: '😴 Сон 7–8 ч' },
+            { id: 'water', label: '💧 Вода 1.5 л' },
+            { id: 'meal', label: '🥗 Регулярное питание' },
+            { id: 'break', label: '☕ Перерыв в работе' },
+            { id: 'walk', label: '🚶 Прогулка / движение' },
+            { id: 'screen', label: '📱 Экранное время < 2 ч' },
+            { id: 'gratitude', label: '🙏 Благодарность (запись)' }
+        ];
+
+        // DOM-элементы
+        const elements = {
+            appointments: document.getElementById('appointments'),
+            hardCases: document.getElementById('hardCases'),
+            successCases: document.getElementById('successCases'),
+            hardCaseDesc: document.getElementById('hardCaseDesc'),
+            successDesc: document.getElementById('successDesc'),
+            tomorrowNotes: document.getElementById('tomorrowNotes'),
+            microPauses: document.getElementById('microPauses'),
+            selfCare: document.getElementById('selfCare'),
+            stressLevel: document.getElementById('stressLevel'),
+            stressValue: document.getElementById('stressValue'),
+            insight: document.getElementById('insight'),
+            gratitude: document.getElementById('gratitude'),
+            habitGrid: document.getElementById('habitGrid'),
+            progressFill: document.getElementById('progressFill'),
+            progressText: document.getElementById('progressText'),
+            totalAppointments: document.getElementById('totalAppointments'),
+            totalHard: document.getElementById('totalHard'),
+            totalSuccess: document.getElementById('totalSuccess'),
+            totalPauses: document.getElementById('totalPauses'),
+            saveBtn: document.getElementById('saveBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            resetModal: document.getElementById('resetModal'),
+            resetModalClose: document.getElementById('resetModalClose'),
+            resetModalCancel: document.getElementById('resetModalCancel'),
+            resetModalConfirm: document.getElementById('resetModalConfirm'),
+            weekBadge: document.getElementById('weekBadge')
+        };
+
+        // Состояние
+        let data = {
+            appointments: 0,
+            hardCases: 0,
+            successCases: 0,
+            hardCaseDesc: '',
+            successDesc: '',
+            tomorrowNotes: '',
+            microPauses: 0,
+            selfCare: '',
+            stressLevel: 5,
+            insight: '',
+            gratitude: '',
+            habits: {} // { habitId: { 'ПН': true/false, ... } }
+        };
+
+        // --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
+        function getWeekNumber() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 1);
+            const diff = (now - start) / 86400000;
+            return Math.ceil((diff + start.getDay() + 1) / 7);
+        }
+
+        function getWeekDates() {
+            const now = new Date();
+            const day = now.getDay() || 7;
+            const diff = day - 1;
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - diff);
+            const dates = [];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(monday);
+                d.setDate(monday.getDate() + i);
+                dates.push(d);
+            }
+            return dates;
+        }
+
+        function formatDate(d) {
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            return `${dd}.${mm}`;
+        }
+
+        // --- ЗАГРУЗКА И СОХРАНЕНИЕ ---
+        function saveData() {
+            const save = {
+                appointments: parseInt(elements.appointments.value) || 0,
+                hardCases: parseInt(elements.hardCases.value) || 0,
+                successCases: parseInt(elements.successCases.value) || 0,
+                hardCaseDesc: elements.hardCaseDesc.value,
+                successDesc: elements.successDesc.value,
+                tomorrowNotes: elements.tomorrowNotes.value,
+                microPauses: parseInt(elements.microPauses.value) || 0,
+                selfCare: elements.selfCare.value,
+                stressLevel: parseInt(elements.stressLevel.value) || 5,
+                insight: elements.insight.value,
+                gratitude: elements.gratitude.value,
+                habits: data.habits || {}
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(save));
+            updateProgress();
+        }
+
+        function loadData() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return false;
+            try {
+                const loaded = JSON.parse(raw);
+                Object.assign(data, loaded);
+                // Обновляем UI
+                elements.appointments.value = data.appointments || 0;
+                elements.hardCases.value = data.hardCases || 0;
+                elements.successCases.value = data.successCases || 0;
+                elements.hardCaseDesc.value = data.hardCaseDesc || '';
+                elements.successDesc.value = data.successDesc || '';
+                elements.tomorrowNotes.value = data.tomorrowNotes || '';
+                elements.microPauses.value = data.microPauses || 0;
+                elements.selfCare.value = data.selfCare || '';
+                elements.stressLevel.value = data.stressLevel || 5;
+                elements.stressValue.textContent = data.stressLevel || 5;
+                elements.insight.value = data.insight || '';
+                elements.gratitude.value = data.gratitude || '';
+                // habits: обновляем чекбоксы
+                if (data.habits) {
+                    for (const habitId in data.habits) {
+                        const dayData = data.habits[habitId];
+                        for (const day in dayData) {
+                            const checkbox = document.querySelector(`.habit-check[data-habit="${habitId}"][data-day="${day}"]`);
+                            if (checkbox) {
+                                checkbox.checked = dayData[day] === true;
+                            }
+                        }
+                    }
+                }
+                updateProgress();
+                return true;
+            } catch (e) {
+                console.warn('Ошибка загрузки данных', e);
+                return false;
+            }
+        }
+
+        // --- ОТРИСОВКА ТРЕКЕРА ПРИВЫЧЕК ---
+        function renderHabits() {
+            const grid = elements.habitGrid;
+            const dates = getWeekDates();
+            let html = `<div class="label"></div>`;
+            for (let i = 0; i < 7; i++) {
+                html += `<div class="day-label">${DAYS[i]}<br><small>${formatDate(dates[i])}</small></div>`;
+            }
+            for (const habit of HABITS) {
+                html += `<div class="label">${habit.label}</div>`;
+                for (let d = 0; d < 7; d++) {
+                    const day = DAYS[d];
+                    const id = `habit-${habit.id}-${day}`;
+                    html += `<input type="checkbox" id="${id}" class="habit-check" data-habit="${habit.id}" data-day="${day}">`;
+                }
+            }
+            grid.innerHTML = html;
+
+            // События для автосохранения
+            grid.querySelectorAll('.habit-check').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const habitId = this.dataset.habit;
+                    const day = this.dataset.day;
+                    if (!data.habits[habitId]) data.habits[habitId] = {};
+                    data.habits[habitId][day] = this.checked;
+                    saveData();
+                });
+            });
+        }
+
+        // --- ПРОГРЕСС ---
+        function updateProgress() {
+            const totalItems = 7; // количество метрик
+            let completed = 0;
+
+            // 1. Базовые числовые показатели
+            const appointments = parseInt(elements.appointments.value) || 0;
+            const hardCases = parseInt(elements.hardCases.value) || 0;
+            const successCases = parseInt(elements.successCases.value) || 0;
+            const microPauses = parseInt(elements.microPauses.value) || 0;
+
+            // 2. Заполненные текстовые поля
+            const fields = [
+                elements.hardCaseDesc.value.trim(),
+                elements.successDesc.value.trim(),
+                elements.tomorrowNotes.value.trim(),
+                elements.selfCare.value.trim(),
+                elements.insight.value.trim(),
+                elements.gratitude.value.trim()
+            ];
+            const filledTexts = fields.filter(t => t.length > 0).length;
+
+            // 3. Привычки (чекбоксы)
+            let habitsDone = 0;
+            let habitsTotal = 0;
+            for (const habit of HABITS) {
+                const dayData = data.habits[habit.id] || {};
+                for (const day of DAYS) {
+                    habitsTotal++;
+                    if (dayData[day] === true) habitsDone++;
+                }
+            }
+
+            // Общая оценка (макс 7 пунктов)
+            let score = 0;
+            if (appointments > 0) score++;
+            if (hardCases > 0 || successCases > 0) score++;
+            if (microPauses > 0) score++;
+            if (filledTexts >= 2) score++;
+            if (filledTexts >= 4) score++;
+            if (habitsTotal > 0 && habitsDone / habitsTotal > 0.5) score++;
+            if (habitsTotal > 0 && habitsDone / habitsTotal > 0.7) score++;
+
+            const percent = Math.min(100, Math.round((score / 7) * 100));
+            elements.progressFill.style.width = percent + '%';
+            elements.progressText.textContent = percent + '%';
+
+            // Обновляем итоговые цифры
+            elements.totalAppointments.textContent = appointments;
+            elements.totalHard.textContent = hardCases;
+            elements.totalSuccess.textContent = successCases;
+            elements.totalPauses.textContent = microPauses;
+        }
+
+        // --- СБРОС НЕДЕЛИ ---
+        function resetWeek() {
+            // Очищаем данные в localStorage
+            localStorage.removeItem(STORAGE_KEY);
+            // Сбрасываем состояние
+            data = { habits: {} };
+            // Очищаем поля
+            elements.appointments.value = 0;
+            elements.hardCases.value = 0;
+            elements.successCases.value = 0;
+            elements.hardCaseDesc.value = '';
+            elements.successDesc.value = '';
+            elements.tomorrowNotes.value = '';
+            elements.microPauses.value = 0;
+            elements.selfCare.value = '';
+            elements.stressLevel.value = 5;
+            elements.stressValue.textContent = '5';
+            elements.insight.value = '';
+            elements.gratitude.value = '';
+            // Сбрасываем чекбоксы привычек
+            document.querySelectorAll('.habit-check').forEach(cb => cb.checked = false);
+            data.habits = {};
+            // Обновляем прогресс
+            updateProgress();
+            // Сохраняем
+            saveData();
+            elements.resetModal.classList.remove('active');
+        }
+
+        // --- ИНИЦИАЛИЗАЦИЯ ---
+        function init() {
+            // Неделя
+            const weekNum = getWeekNumber();
+            elements.weekBadge.textContent = `Неделя ${weekNum}`;
+
+            // Рендерим трекер привычек
+            renderHabits();
+
+            // Загружаем данные
+            const loaded = loadData();
+            if (!loaded) {
+                // Если данных нет — создаём пустую структуру
+                data.habits = {};
+                for (const habit of HABITS) {
+                    data.habits[habit.id] = {};
+                }
+                saveData();
+            }
+
+            // События для автосохранения
+            const inputs = [
+                elements.appointments, elements.hardCases, elements.successCases,
+                elements.hardCaseDesc, elements.successDesc, elements.tomorrowNotes,
+                elements.microPauses, elements.selfCare, elements.insight, elements.gratitude
+            ];
+            inputs.forEach(el => {
+                el.addEventListener('input', saveData);
+                el.addEventListener('change', saveData);
+            });
+
+            // Ползунок стресса
+            elements.stressLevel.addEventListener('input', function() {
+                elements.stressValue.textContent = this.value;
+                saveData();
+            });
+
+            // Кнопка сохранения (дополнительная)
+            elements.saveBtn.addEventListener('click', function() {
+                saveData();
+                alert('Дневник сохранён! ✅');
+            });
+
+            // Кнопка сброса
+            elements.resetBtn.addEventListener('click', function() {
+                elements.resetModal.classList.add('active');
+            });
+            elements.resetModalClose.addEventListener('click', function() {
+                elements.resetModal.classList.remove('active');
+            });
+            elements.resetModalCancel.addEventListener('click', function() {
+                elements.resetModal.classList.remove('active');
+            });
+            elements.resetModalConfirm.addEventListener('click', resetWeek);
+            elements.resetModal.addEventListener('click', function(e) {
+                if (e.target === this) elements.resetModal.classList.remove('active');
+            });
+
+            // Обновить прогресс при загрузке
+            updateProgress();
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    })();
+</script>
+
+</body>
+</html>

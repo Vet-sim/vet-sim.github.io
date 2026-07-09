@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Виртуальный музей — Конструктор VetSim</title>
+    <style>
+        /* ----- Общий сброс и фирменные шрифты (как на matching_constructor) ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ----- Заголовок ----- */
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+
+        .sub {
+            text-align: center;
+            color: #7C8F7C;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ----- Вкладки (экспонаты) ----- */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .tab-btn .remove-tab {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: 0.2s;
+            padding: 0 2px;
+        }
+
+        .tab-btn .remove-tab:hover {
+            opacity: 1;
+        }
+
+        .add-tab-btn {
+            background: transparent;
+            border: 2px dashed #C0CFAF;
+            padding: 0.6rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #3E5C4A;
+        }
+
+        .add-tab-btn:hover {
+            border-color: #2C7DA0;
+            background: #EEF2E9;
+        }
+
+        /* ----- Основная карточка экспоната ----- */
+        .exhibit-pane {
+            background: white;
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ----- Панель инструментов ----- */
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2EAD9;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #C0CFAF;
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            border: 1px solid #E2D0D0;
+            color: #B45F4B;
+        }
+
+        .btn-sm {
+            padding: 0.3rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        /* ----- Загрузка изображения ----- */
+        .upload-area {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem 1.5rem;
+            background: #FEFCF9;
+            padding: 1rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid #E2EAD9;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .upload-area input[type="file"] {
+            display: none;
+        }
+
+        .upload-area .file-name {
+            color: #8BA47B;
+            font-size: 0.85rem;
+        }
+
+        /* ----- Превью изображения с метками ----- */
+        .image-preview-wrapper {
+            position: relative;
+            background: #FEFCF9;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .image-preview-wrapper img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 24px;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .hotspot-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hotspot-marker {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            pointer-events: all;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hotspot-marker:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+            z-index: 10;
+        }
+
+        .placeholder-text {
+            color: #A7B89A;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        /* ----- Панель управления меткой ----- */
+        .editor-panel {
+            background: #FEFCF9;
+            border-radius: 24px;
+            padding: 1.2rem 1.5rem;
+            border: 1px solid #E2EAD9;
+            margin-top: 1rem;
+        }
+
+        .editor-panel .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .editor-panel .editor-header h3 {
+            font-weight: 500;
+            font-size: 1rem;
+            color: #3E5C4A;
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem 1.5rem;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .field-group label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #5A7A5A;
+        }
+
+        .field-group input,
+        .field-group select,
+        .field-group textarea {
+            padding: 8px 14px;
+            border: 1px solid #D1DEC2;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            background: white;
+            transition: 0.15s;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        .field-group input:focus,
+        .field-group select:focus,
+        .field-group textarea:focus {
+            border-color: #2C7DA0;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1);
+        }
+
+        .field-group textarea {
+            resize: vertical;
+            min-height: 50px;
+            border-radius: 16px;
+        }
+
+        .field-group .file-input-wrapper {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .field-group .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .field-group .file-input-wrapper .file-label {
+            background: #EEF2E9;
+            padding: 6px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .field-group .file-input-wrapper .file-label:hover {
+            background: #D1DEC2;
+        }
+
+        /* ----- Список меток ----- */
+        .hotspot-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E2EAD9;
+        }
+
+        .hotspot-tag {
+            background: white;
+            border: 1px solid #D1DEC2;
+            border-radius: 40px;
+            padding: 4px 14px 4px 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .hotspot-tag:hover {
+            border-color: #2C7DA0;
+        }
+
+        .hotspot-tag .color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            flex-shrink: 0;
+        }
+
+        .hotspot-tag .remove-hotspot {
+            background: none;
+            border: none;
+            color: #A7B89A;
+            cursor: pointer;
+            font-size: 1.1rem;
+            line-height: 1;
+            padding: 0 4px;
+        }
+
+        .hotspot-tag .remove-hotspot:hover {
+            color: #B45F4B;
+        }
+
+        .empty-state {
+            color: #A7B89A;
+            font-size: 0.85rem;
+            padding: 4px 0;
+        }
+
+        /* ----- Модальное окно ----- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            padding: 20px;
+        }
+
+        .modal-box {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 28px;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-box .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #A7B89A;
+            transition: 0.2s;
+        }
+
+        .modal-box .modal-close:hover {
+            color: #3E5C4A;
+        }
+
+        .modal-box h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: #1F4E6E;
+        }
+
+        .modal-box .modal-body {
+            margin-top: 0.5rem;
+        }
+
+        .modal-box .modal-body iframe,
+        .modal-box .modal-body video,
+        .modal-box .modal-body img {
+            max-width: 100%;
+            border-radius: 16px;
+        }
+
+        .modal-box .modal-body audio {
+            width: 100%;
+            margin-top: 8px;
+        }
+
+        /* ----- Подвал ----- */
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #A7B89A;
+        }
+
+        /* ----- Адаптив ----- */
+        @media (max-width: 700px) {
+            body {
+                padding: 1rem;
+            }
+
+            .upload-area {
+                flex-direction: column;
+                align-items: stretch;
+                border-radius: 28px;
+            }
+
+            .editor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                gap: 0.6rem;
+            }
+
+            .tab-btn {
+                padding: 0.4rem 1.2rem;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🖼️ Виртуальный музей</h1>
+        <div class="sub">Создайте интерактивные экспонаты с метками, звуком и изображениями</div>
+
+        <!-- Вкладки экспонатов -->
+        <div class="tabs" id="tabsContainer">
+            <!-- будут добавлены скриптом -->
+            <button class="add-tab-btn" id="addTabBtn">➕ Новый экспонат</button>
+        </div>
+
+        <!-- Карточка текущего экспоната -->
+        <div class="exhibit-pane" id="exhibitPane">
+
+            <!-- Загрузка изображения -->
+            <div class="upload-area">
+                <label>
+                    🖼️ Загрузить изображение
+                    <input type="file" id="imageUpload" accept="image/*" />
+                </label>
+                <span class="file-name" id="imageNameDisplay">(изображение не выбрано)</span>
+            </div>
+
+            <!-- Превью -->
+            <div class="image-preview-wrapper" id="imagePreviewWrapper">
+                <img id="exhibitImage" src="" alt="Экспонат" style="display:none;" />
+                <div class="hotspot-layer" id="hotspotLayer"></div>
+                <div class="placeholder-text" id="placeholderText">
+                    Загрузите изображение, чтобы начать<br />
+                    <span style="font-size:0.8rem;">Кликните на изображение — добавите метку</span>
+                </div>
+            </div>
+
+            <!-- Панель редактора меток -->
+            <div class="editor-panel">
+                <div class="editor-header">
+                    <h3>📍 Редактор меток</h3>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <button class="btn btn-sm btn-danger-outline" id="clearHotspotsBtn">✖️ Удалить все</button>
+                    </div>
+                </div>
+
+                <div class="editor-grid" id="hotspotEditor">
+                    <div class="field-group">
+                        <label>Название метки</label>
+                        <input type="text" id="hotspotTitle" placeholder="Например: Сердце" />
+                    </div>
+                    <div class="field-group">
+                        <label>Цвет</label>
+                        <input type="color" id="hotspotColor" value="#2C7DA0" />
+                    </div>
+                    <div class="field-group">
+                        <label>Прозрачность</label>
+                        <input type="range" id="hotspotOpacity" min="0.2" max="1" step="0.05" value="0.85" />
+                        <span style="font-size:0.8rem; color:#8BA47B;" id="opacityValue">0.85</span>
+                    </div>
+                    <div class="field-group">
+                        <label>Дополнительный текст</label>
+                        <textarea id="hotspotText" placeholder="Текст, который увидит посетитель..."></textarea>
+                    </div>
+                    <div class="field-group">
+                        <label>🔊 Аудио</label>
+                        <div class="file-input-wrapper">
+                            <input type="text" id="hotspotAudioUrl" placeholder="Или вставьте URL..." />
+                            <label class="file-label" for="hotspotAudioFile">📂 Загрузить</label>
+                            <input type="file" id="hotspotAudioFile" accept="audio/*" />
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <label>🎬 Видео (URL)</label>
+                        <input type="text" id="hotspotVideo" placeholder="https://example.com/video.mp4" />
+                    </div>
+                    <div class="field-group">
+                        <label>🌐 Сайт (iframe URL)</label>
+                        <input type="text" id="hotspotIframe" placeholder="https://example.com" />
+                    </div>
+                    <div class="field-group">
+                        <label>🖼️ Доп. изображение</label>
+                        <div class="file-input-wrapper">
+                            <input type="text" id="hotspotImageUrl" placeholder="Или вставьте URL..." />
+                            <label class="file-label" for="hotspotImageFile">📂 Загрузить</label>
+                            <input type="file" id="hotspotImageFile" accept="image/*" />
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:12px; margin-top:1rem; flex-wrap:wrap; align-items:center;">
+                    <button class="btn btn-primary btn-sm" id="updateHotspotBtn">💾 Сохранить метку</button>
+                    <button class="btn btn-outline btn-sm" id="deselectHotspotBtn">Отменить выбор</button>
+                    <span style="font-size:0.8rem; color:#8BA47B;" id="selectedHotspotId">ничего не выбрано</span>
+                </div>
+
+                <!-- Список меток -->
+                <div class="hotspot-list" id="hotspotList"></div>
+            </div>
+        </div>
+
+        <!-- Нижняя панель с экспортом -->
+        <div style="display:flex; flex-wrap:wrap; gap:0.8rem; margin-top:1.5rem; justify-content:center;">
+            <button class="btn btn-secondary" id="exportHtmlBtn">⬇️ Экспорт HTML</button>
+            <button class="btn btn-primary" id="saveProjectBtn">💾 Сохранить проект (JSON)</button>
+            <button class="btn btn-outline" id="loadProjectBtn">📂 Загрузить проект</button>
+            <input type="file" id="loadProjectInput" accept=".json" style="display:none" />
+        </div>
+
+        <footer>ВетСим · Виртуальный музей · Открытая образовательная платформа</footer>
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ---- Модель данных ----
+            let exhibits = [];
+            let currentExhibitIndex = 0;
+            let selectedHotspotId = null;
+
+            // DOM-ссылки
+            const tabsContainer = document.getElementById('tabsContainer');
+            const addTabBtn = document.getElementById('addTabBtn');
+            const imageUpload = document.getElementById('imageUpload');
+            const exhibitImage = document.getElementById('exhibitImage');
+            const hotspotLayer = document.getElementById('hotspotLayer');
+            const placeholderText = document.getElementById('placeholderText');
+            const imageNameDisplay = document.getElementById('imageNameDisplay');
+            const hotspotList = document.getElementById('hotspotList');
+            const selectedHotspotIdSpan = document.getElementById('selectedHotspotId');
+
+            const titleInput = document.getElementById('hotspotTitle');
+            const colorInput = document.getElementById('hotspotColor');
+            const opacityInput = document.getElementById('hotspotOpacity');
+            const opacityValue = document.getElementById('opacityValue');
+            const textInput = document.getElementById('hotspotText');
+            const audioUrlInput = document.getElementById('hotspotAudioUrl');
+            const audioFileInput = document.getElementById('hotspotAudioFile');
+            const videoInput = document.getElementById('hotspotVideo');
+            const iframeInput = document.getElementById('hotspotIframe');
+            const imageUrlInput = document.getElementById('hotspotImageUrl');
+            const imageFileInput = document.getElementById('hotspotImageFile');
+
+            const updateBtn = document.getElementById('updateHotspotBtn');
+            const deselectBtn = document.getElementById('deselectHotspotBtn');
+            const clearHotspotsBtn = document.getElementById('clearHotspotsBtn');
+            const exportHtmlBtn = document.getElementById('exportHtmlBtn');
+            const saveProjectBtn = document.getElementById('saveProjectBtn');
+            const loadProjectBtn = document.getElementById('loadProjectBtn');
+            const loadProjectInput = document.getElementById('loadProjectInput');
+
+            // ---- Вспомогательные функции ----
+            function generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+            }
+
+            function getCurrentExhibit() {
+                if (exhibits.length === 0) return null;
+                return exhibits[currentExhibitIndex] || null;
+            }
+
+            function getHotspots() {
+                const ex = getCurrentExhibit();
+                return ex ? ex.hotspots : [];
+            }
+
+            function setHotspots(hotspots) {
+                const ex = getCurrentExhibit();
+                if (ex) ex.hotspots = hotspots;
+            }
+
+            // ---- Конвертация файла в base64 ----
+            function fileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // ---- Рендеринг вкладок ----
+            function renderTabs() {
+                const tabBtns = tabsContainer.querySelectorAll('.tab-btn');
+                tabBtns.forEach(btn => btn.remove());
+
+                exhibits.forEach((ex, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'tab-btn' + (index === currentExhibitIndex ? ' active' : '');
+                    btn.textContent = ex.name || `Экспонат ${index + 1}`;
+                    btn.dataset.index = index;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-tab';
+                    removeBtn.textContent = '×';
+                    removeBtn.title = 'Удалить экспонат';
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (exhibits.length <= 1) {
+                            alert('Нельзя удалить единственный экспонат.');
+                            return;
+                        }
+                        if (!confirm(`Удалить "${ex.name || 'Экспонат'}"?`)) return;
+                        exhibits.splice(index, 1);
+                        if (currentExhibitIndex >= exhibits.length) currentExhibitIndex = exhibits.length - 1;
+                        if (currentExhibitIndex === index && index > 0) currentExhibitIndex = index - 1;
+                        renderAll();
+                    });
+
+                    btn.appendChild(removeBtn);
+                    btn.addEventListener('click', () => {
+                        currentExhibitIndex = index;
+                        renderAll();
+                    });
+
+                    tabsContainer.insertBefore(btn, addTabBtn);
+                });
+
+                if (exhibits.length >= 10) {
+                    addTabBtn.style.display = 'none';
+                } else {
+                    addTabBtn.style.display = 'inline-flex';
+                }
+            }
+
+            // ---- Рендеринг меток на изображении ----
+            function renderHotspots() {
+                const ex = getCurrentExhibit();
+                hotspotLayer.innerHTML = '';
+                if (!ex) return;
+
+                ex.hotspots.forEach((h, idx) => {
+                    const marker = document.createElement('div');
+                    marker.className = 'hotspot-marker';
+                    const color = h.color || '#2C7DA0';
+                    const opacity = parseFloat(h.opacity) || 0.85;
+                    marker.style.backgroundColor = color;
+                    marker.style.opacity = opacity;
+                    marker.style.left = (h.x * 100) + '%';
+                    marker.style.top = (h.y * 100) + '%';
+                    marker.textContent = idx + 1;
+                    marker.dataset.id = h.id;
+                    marker.title = h.title || 'Метка';
+
+                    marker.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        selectHotspot(h.id);
+                    });
+
+                    marker.addEventListener('dblclick', (e) => {
+                        e.stopPropagation();
+                        showHotspotDetail(h.id);
+                    });
+
+                    hotspotLayer.appendChild(marker);
+                });
+            }
+
+            // ---- Рендеринг списка меток ----
+            function renderHotspotList() {
+                const hotspots = getHotspots();
+                hotspotList.innerHTML = '';
+                if (!hotspots || hotspots.length === 0) {
+                    hotspotList.innerHTML = '<span class="empty-state">Нет меток. Кликните на изображение, чтобы добавить.</span>';
+                    return;
+                }
+
+                hotspots.forEach(h => {
+                    const tag = document.createElement('span');
+                    tag.className = 'hotspot-tag';
+                    const dot = document.createElement('span');
+                    dot.className = 'color-dot';
+                    dot.style.backgroundColor = h.color || '#2C7DA0';
+                    tag.appendChild(dot);
+                    const label = document.createElement('span');
+                    label.textContent = h.title || 'Без названия';
+                    tag.appendChild(label);
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-hotspot';
+                    removeBtn.textContent = '×';
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (!confirm(`Удалить метку "${h.title || 'без названия'}"?`)) return;
+                        const hotspots2 = getHotspots();
+                        const idx = hotspots2.findIndex(item => item.id === h.id);
+                        if (idx !== -1) {
+                            hotspots2.splice(idx, 1);
+                            setHotspots(hotspots2);
+                            if (selectedHotspotId === h.id) selectedHotspotId = null;
+                            renderAll();
+                        }
+                    });
+                    tag.appendChild(removeBtn);
+
+                    tag.addEventListener('click', () => {
+                        selectHotspot(h.id);
+                    });
+
+                    hotspotList.appendChild(tag);
+                });
+            }
+
+            // ---- Выбор метки ----
+            function selectHotspot(id) {
+                selectedHotspotId = id;
+                const hotspots = getHotspots();
+                const h = hotspots.find(item => item.id === id);
+                if (h) {
+                    titleInput.value = h.title || '';
+                    colorInput.value = h.color || '#2C7DA0';
+                    opacityInput.value = h.opacity || 0.85;
+                    opacityValue.textContent = (h.opacity || 0.85).toFixed(2);
+                    textInput.value = h.text || '';
+                    audioUrlInput.value = h.audio || '';
+                    videoInput.value = h.video || '';
+                    iframeInput.value = h.iframe || '';
+                    imageUrlInput.value = h.image || '';
+                    selectedHotspotIdSpan.textContent = `выбрана: ${h.title || 'Без названия'}`;
+                } else {
+                    selectedHotspotId = null;
+                    selectedHotspotIdSpan.textContent = 'ничего не выбрано';
+                }
+                renderAll();
+            }
+
+            // ---- Просмотр метки (модалка) ----
+            function showHotspotDetail(id) {
+                const hotspots = getHotspots();
+                const h = hotspots.find(item => item.id === id);
+                if (!h) return;
+
+                let bodyHtml = `<p><strong>${h.title || 'Без названия'}</strong></p>`;
+                if (h.text) bodyHtml += `<p>${h.text}</p>`;
+                if (h.image) bodyHtml += `<p><img src="${h.image}" alt="доп. изображение" style="max-width:100%;border-radius:12px;" /></p>`;
+                if (h.audio) bodyHtml += `<p><audio controls src="${h.audio}"></audio></p>`;
+                if (h.video) bodyHtml +=
+                    `<p><video controls src="${h.video}" style="max-width:100%;border-radius:12px;"></video></p>`;
+                if (h.iframe) bodyHtml +=
+                    `<p><iframe src="${h.iframe}" style="width:100%;height:300px;border:none;border-radius:12px;"></iframe></p>`;
+
+                const overlay = document.createElement('div');
+                overlay.className = 'modal-overlay';
+                overlay.innerHTML = `
+                            <div class="modal-box">
+                                <button class="modal-close">✕</button>
+                                <h3>🔍 Детали метки</h3>
+                                <div class="modal-body">${bodyHtml}</div>
+                            </div>
+                        `;
+                document.body.appendChild(overlay);
+                overlay.querySelector('.modal-close').addEventListener('click', () => overlay.remove());
+                overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+            }
+
+            // ---- Общий рендер ----
+            function renderAll() {
+                renderTabs();
+                const ex = getCurrentExhibit();
+                if (ex && ex.imageData) {
+                    exhibitImage.src = ex.imageData;
+                    exhibitImage.style.display = 'block';
+                    placeholderText.style.display = 'none';
+                    imageNameDisplay.textContent = ex.imageName || 'изображение загружено';
+                } else {
+                    exhibitImage.src = '';
+                    exhibitImage.style.display = 'none';
+                    placeholderText.style.display = 'block';
+                    imageNameDisplay.textContent = '(изображение не выбрано)';
+                }
+                renderHotspots();
+                renderHotspotList();
+
+                if (selectedHotspotId) {
+                    const hotspots = getHotspots();
+                    if (!hotspots.find(h => h.id === selectedHotspotId)) {
+                        selectedHotspotId = null;
+                        selectedHotspotIdSpan.textContent = 'ничего не выбрано';
+                    }
+                }
+
+                if (selectedHotspotId) {
+                    const h = getHotspots().find(item => item.id === selectedHotspotId);
+                    if (h) {
+                        titleInput.value = h.title || '';
+                        colorInput.value = h.color || '#2C7DA0';
+                        opacityInput.value = h.opacity || 0.85;
+                        opacityValue.textContent = (h.opacity || 0.85).toFixed(2);
+                        textInput.value = h.text || '';
+                        audioUrlInput.value = h.audio || '';
+                        videoInput.value = h.video || '';
+                        iframeInput.value = h.iframe || '';
+                        imageUrlInput.value = h.image || '';
+                        selectedHotspotIdSpan.textContent = `выбрана: ${h.title || 'Без названия'}`;
+                    }
+                } else {
+                    selectedHotspotIdSpan.textContent = 'ничего не выбрано';
+                }
+            }
+
+            // ---- Добавление экспоната ----
+            function addExhibit() {
+                if (exhibits.length >= 10) {
+                    alert('Достигнут лимит — 10 экспонатов.');
+                    return;
+                }
+                const newEx = {
+                    id: generateId(),
+                    name: `Экспонат ${exhibits.length + 1}`,
+                    imageData: '',
+                    imageName: '',
+                    hotspots: []
+                };
+                exhibits.push(newEx);
+                currentExhibitIndex = exhibits.length - 1;
+                selectedHotspotId = null;
+                renderAll();
+            }
+
+            // ---- Добавление метки по клику ----
+            function handleImageClick(e) {
+                const ex = getCurrentExhibit();
+                if (!ex || !ex.imageData) {
+                    alert('Сначала загрузите изображение для текущего экспоната.');
+                    return;
+                }
+                const wrapper = document.getElementById('imagePreviewWrapper');
+                const rect = wrapper.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width;
+                const y = (e.clientY - rect.top) / rect.height;
+                const clampedX = Math.min(1, Math.max(0, x));
+                const clampedY = Math.min(1, Math.max(0, y));
+
+                const newHotspot = {
+                    id: generateId(),
+                    title: 'Новая метка',
+                    x: clampedX,
+                    y: clampedY,
+                    color: '#2C7DA0',
+                    opacity: 0.85,
+                    text: '',
+                    audio: '',
+                    video: '',
+                    iframe: '',
+                    image: ''
+                };
+                const hotspots = getHotspots();
+                hotspots.push(newHotspot);
+                setHotspots(hotspots);
+                selectHotspot(newHotspot.id);
+                renderAll();
+            }
+
+            // ---- Сохранить метку ----
+            function updateHotspot() {
+                if (!selectedHotspotId) {
+                    alert('Сначала выберите метку на изображении или в списке.');
+                    return;
+                }
+                const hotspots = getHotspots();
+                const h = hotspots.find(item => item.id === selectedHotspotId);
+                if (!h) {
+                    alert('Метка не найдена.');
+                    return;
+                }
+                h.title = titleInput.value.trim() || 'Без названия';
+                h.color = colorInput.value;
+                h.opacity = parseFloat(opacityInput.value);
+                h.text = textInput.value;
+                // audio: если загружен файл, он уже записан в h.audio через обработчик
+                // но также сохраняем из поля URL
+                if (audioUrlInput.value) h.audio = audioUrlInput.value;
+                h.video = videoInput.value;
+                h.iframe = iframeInput.value;
+                if (imageUrlInput.value) h.image = imageUrlInput.value;
+                setHotspots(hotspots);
+                renderAll();
+            }
+
+            // ---- Очистка меток ----
+            function clearHotspots() {
+                if (!confirm('Удалить все метки на этом экспонате?')) return;
+                setHotspots([]);
+                selectedHotspotId = null;
+                renderAll();
+            }
+
+            // ---- Загрузка изображения экспоната ----
+            function handleImageUpload(file) {
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const ex = getCurrentExhibit();
+                    if (!ex) return;
+                    ex.imageData = e.target.result;
+                    ex.imageName = file.name;
+                    if (ex.name === `Экспонат ${exhibits.indexOf(ex) + 1}` || !ex.name) {
+                        const base = file.name.replace(/\.[^.]+$/, '');
+                        ex.name = base || `Экспонат ${exhibits.indexOf(ex) + 1}`;
+                    }
+                    renderAll();
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // ---- Загрузка аудио для метки ----
+            async function handleAudioUpload(file) {
+                if (!file || !selectedHotspotId) return;
+                try {
+                    const base64 = await fileToBase64(file);
+                    const hotspots = getHotspots();
+                    const h = hotspots.find(item => item.id === selectedHotspotId);
+                    if (h) {
+                        h.audio = base64;
+                        // Очищаем поле URL, чтобы не путать
+                        audioUrlInput.value = '';
+                        renderAll();
+                    }
+                } catch (err) {
+                    alert('Ошибка загрузки аудио: ' + err.message);
+                }
+            }
+
+            // ---- Загрузка изображения для метки ----
+            async function handleImageUploadForHotspot(file) {
+                if (!file || !selectedHotspotId) return;
+                try {
+                    const base64 = await fileToBase64(file);
+                    const hotspots = getHotspots();
+                    const h = hotspots.find(item => item.id === selectedHotspotId);
+                    if (h) {
+                        h.image = base64;
+                        imageUrlInput.value = '';
+                        renderAll();
+                    }
+                } catch (err) {
+                    alert('Ошибка загрузки изображения: ' + err.message);
+                }
+            }
+
+            // ---- Экспорт HTML ----
+            function exportHtml() {
+                const data = {
+                    exhibits: exhibits.map(ex => ({
+                        name: ex.name,
+                        imageData: ex.imageData,
+                        imageName: ex.imageName,
+                        hotspots: ex.hotspots.map(h => ({ ...h }))
+                    })),
+                    version: '1.0'
+                };
+                const htmlContent = generateStandaloneHtml(data);
+                downloadFile(htmlContent, 'museum_exhibit.html', 'text/html');
+            }
+
+            function generateStandaloneHtml(data) {
+                const jsonStr = JSON.stringify(data).replace(/</g, '\\u003c');
+                return `<!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Виртуальный музей — VetSim</title>
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; }
+                body { background:#FDF8F0; font-family:system-ui,'Segoe UI','Roboto',sans-serif; color:#3E5C4A; padding:1.5rem; }
+                .container { max-width:1200px; margin:0 auto; }
+                h1 { font-size:1.8rem; font-weight:600; color:#1F4E6E; text-align:center; margin-bottom:0.3rem; }
+                .sub { text-align:center; color:#7C8F7C; margin-bottom:1.5rem; }
+                .tabs { display:flex; gap:1rem; justify-content:center; margin-bottom:2rem; flex-wrap:wrap; }
+                .tab-btn { background:#EEF2E9; border:none; padding:0.6rem 1.8rem; border-radius:40px; font-weight:600; cursor:pointer; transition:0.2s; }
+                .tab-btn.active { background:#2C7DA0; color:white; }
+                .exhibit-pane { background:white; border-radius:28px; padding:1.5rem; border:1px solid #E7EDE2; }
+                .image-wrap { position:relative; background:#FEFCF9; border-radius:24px; overflow:hidden; border:1px solid #E2EAD9; min-height:300px; display:flex; align-items:center; justify-content:center; margin-bottom:1.5rem; }
+                .image-wrap img { display:block; max-width:100%; height:auto; border-radius:24px; }
+                .hotspot-layer { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+                .hotspot-marker { position:absolute; width:32px; height:32px; border-radius:50%; transform:translate(-50%,-50%); border:2px solid white; box-shadow:0 4px 12px rgba(0,0,0,0.2); cursor:pointer; pointer-events:all; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:white; text-shadow:0 1px 4px rgba(0,0,0,0.3); transition:0.15s; }
+                .hotspot-marker:hover { transform:translate(-50%,-50%) scale(1.15); z-index:10; }
+                .placeholder-text { color:#A7B89A; padding:2rem; text-align:center; }
+                .info-panel { background:#FEFCF9; border-radius:24px; padding:1.2rem 1.5rem; border:1px solid #E2EAD9; margin-top:1rem; }
+                .info-panel h3 { font-weight:500; font-size:1rem; color:#3E5C4A; margin-bottom:0.8rem; }
+                .hotspot-tag { display:inline-block; background:white; border:1px solid #D1DEC2; border-radius:40px; padding:4px 14px; margin:4px 6px 4px 0; font-size:0.85rem; cursor:pointer; }
+                .hotspot-tag .dot { display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:6px; vertical-align:middle; border:1px solid rgba(0,0,0,0.06); }
+                .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.3); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; z-index:999; padding:20px; }
+                .modal-box { max-width:600px; width:100%; background:white; border-radius:28px; padding:1.8rem 2rem; max-height:90vh; overflow-y:auto; }
+                .modal-box .close { float:right; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#A7B89A; }
+                .modal-box .close:hover { color:#3E5C4A; }
+                .modal-box iframe, .modal-box video, .modal-box img { max-width:100%; border-radius:16px; }
+                .modal-box audio { width:100%; margin-top:8px; }
+                footer { margin-top:2rem; text-align:center; font-size:0.7rem; color:#A7B89A; }
+            </style>
+        </head>
+        <body>
+        <div class="container">
+            <h1>🖼️ Виртуальный музей</h1>
+            <div class="sub">Интерактивный экспонат</div>
+            <div class="tabs" id="tabs"></div>
+            <div class="exhibit-pane" id="pane">
+                <div class="image-wrap" id="imageWrap">
+                    <img id="mainImage" src="" style="display:none;" />
+                    <div class="hotspot-layer" id="hotspotLayer"></div>
+                    <div class="placeholder-text" id="ph">Нет изображения</div>
+                </div>
+                <div class="info-panel">
+                    <h3>📍 Метки</h3>
+                    <div id="hotspotList"></div>
+                </div>
+            </div>
+            <footer>ВетСим · Виртуальный музей</footer>
+        </div>
+        <script>
+            const DATA = ${jsonStr};
+            let currentIdx = 0;
+
+            function render() {
+                const ex = DATA.exhibits[currentIdx];
+                if (!ex) return;
+                const tabs = document.getElementById('tabs');
+                tabs.innerHTML = '';
+                DATA.exhibits.forEach((e, i) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'tab-btn' + (i === currentIdx ? ' active' : '');
+                    btn.textContent = e.name || 'Экспонат';
+                    btn.onclick = () => { currentIdx = i; render(); };
+                    tabs.appendChild(btn);
+                });
+                const img = document.getElementById('mainImage');
+                const ph = document.getElementById('ph');
+                if (ex.imageData) {
+                    img.src = ex.imageData;
+                    img.style.display = 'block';
+                    ph.style.display = 'none';
+                } else {
+                    img.style.display = 'none';
+                    ph.style.display = 'block';
+                }
+                const layer = document.getElementById('hotspotLayer');
+                layer.innerHTML = '';
+                ex.hotspots.forEach((h, idx) => {
+                    const m = document.createElement('div');
+                    m.className = 'hotspot-marker';
+                    m.style.backgroundColor = h.color || '#2C7DA0';
+                    m.style.opacity = h.opacity || 0.85;
+                    m.style.left = (h.x * 100) + '%';
+                    m.style.top = (h.y * 100) + '%';
+                    m.textContent = idx + 1;
+                    m.title = h.title || 'Метка';
+                    m.addEventListener('click', () => showDetail(h));
+                    layer.appendChild(m);
+                });
+                const list = document.getElementById('hotspotList');
+                list.innerHTML = '';
+                if (ex.hotspots.length === 0) {
+                    list.innerHTML = '<span style="color:#A7B89A;">Нет меток</span>';
+                } else {
+                    ex.hotspots.forEach(h => {
+                        const tag = document.createElement('span');
+                        tag.className = 'hotspot-tag';
+                        const dot = document.createElement('span');
+                        dot.className = 'dot';
+                        dot.style.backgroundColor = h.color || '#2C7DA0';
+                        tag.appendChild(dot);
+                        tag.appendChild(document.createTextNode(h.title || 'Без названия'));
+                        tag.addEventListener('click', () => showDetail(h));
+                        list.appendChild(tag);
+                    });
+                }
+            }
+
+            function showDetail(h) {
+                let body = '<p><strong>' + (h.title || 'Без названия') + '</strong></p>';
+                if (h.text) body += '<p>' + h.text + '</p>';
+                if (h.image) body += '<p><img src="' + h.image + '" style="max-width:100%;border-radius:12px;" /></p>';
+                if (h.audio) body += '<p><audio controls src="' + h.audio + '"></audio></p>';
+                if (h.video) body += '<p><video controls src="' + h.video + '" style="max-width:100%;border-radius:12px;"></video></p>';
+                if (h.iframe) body += '<p><iframe src="' + h.iframe + '" style="width:100%;height:300px;border:none;border-radius:12px;"></iframe></p>';
+                const overlay = document.createElement('div');
+                overlay.className = 'modal-overlay';
+                overlay.innerHTML = '<div class="modal-box"><button class="close">✕</button><h3>🔍 Детали</h3><div>' + body + '</div></div>';
+                document.body.appendChild(overlay);
+                overlay.querySelector('.close').onclick = () => overlay.remove();
+                overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
+            }
+
+            render();
+        <\/script>
+        </body>
+        </html>`;
+            }
+
+            // ---- Сохранить проект ----
+            function saveProject() {
+                const data = {
+                    exhibits: exhibits.map(ex => ({
+                        name: ex.name,
+                        imageData: ex.imageData,
+                        imageName: ex.imageName,
+                        hotspots: ex.hotspots.map(h => ({ ...h }))
+                    })),
+                    version: '1.0'
+                };
+                const json = JSON.stringify(data, null, 2);
+                downloadFile(json, 'museum_project.json', 'application/json');
+            }
+
+            // ---- Загрузить проект ----
+            function loadProject(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        if (!data.exhibits || !Array.isArray(data.exhibits) || data.exhibits.length === 0) {
+                            alert('Неверный формат проекта.');
+                            return;
+                        }
+                        exhibits = data.exhibits.map(ex => ({
+                            ...ex,
+                            hotspots: (ex.hotspots || []).map(h => ({ ...h }))
+                        }));
+                        currentExhibitIndex = 0;
+                        selectedHotspotId = null;
+                        renderAll();
+                        alert('Проект загружен!');
+                    } catch (err) {
+                        alert('Ошибка при загрузке: ' + err.message);
+                    }
+                };
+                reader.readAsText(file);
+            }
+
+            // ---- Скачивание файла ----
+            function downloadFile(content, filename, mimeType) {
+                const blob = new Blob([content], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            // ---- Инициализация ----
+            function init() {
+                exhibits.push({
+                    id: generateId(),
+                    name: 'Экспонат 1',
+                    imageData: '',
+                    imageName: '',
+                    hotspots: []
+                });
+                currentExhibitIndex = 0;
+                renderAll();
+
+                // События
+                addTabBtn.addEventListener('click', addExhibit);
+
+                imageUpload.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        handleImageUpload(e.target.files[0]);
+                    }
+                    e.target.value = '';
+                });
+
+                document.getElementById('imagePreviewWrapper').addEventListener('click', (e) => {
+                    const target = e.target;
+                    if (target.id === 'imagePreviewWrapper' || target.id === 'placeholderText' || target
+                        .tagName === 'IMG') {
+                        handleImageClick(e);
+                    }
+                });
+
+                updateBtn.addEventListener('click', updateHotspot);
+
+                deselectBtn.addEventListener('click', () => {
+                    selectedHotspotId = null;
+                    selectedHotspotIdSpan.textContent = 'ничего не выбрано';
+                    renderAll();
+                });
+
+                clearHotspotsBtn.addEventListener('click', clearHotspots);
+
+                opacityInput.addEventListener('input', () => {
+                    opacityValue.textContent = parseFloat(opacityInput.value).toFixed(2);
+                });
+
+                // Загрузка аудио для метки
+                audioFileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        handleAudioUpload(e.target.files[0]);
+                    }
+                    e.target.value = '';
+                });
+
+                // Загрузка изображения для метки
+                imageFileInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        handleImageUploadForHotspot(e.target.files[0]);
+                    }
+                    e.target.value = '';
+                });
+
+                // Экспорт / сохранение
+                exportHtmlBtn.addEventListener('click', exportHtml);
+                saveProjectBtn.addEventListener('click', saveProject);
+
+                loadProjectBtn.addEventListener('click', () => {
+                    loadProjectInput.click();
+                });
+                loadProjectInput.addEventListener('change', (e) => {
+                    if (e.target.files && e.target.files[0]) {
+                        loadProject(e.target.files[0]);
+                    }
+                    e.target.value = '';
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', init);
+        })();
+    </script>
+
+</body>
+</html>

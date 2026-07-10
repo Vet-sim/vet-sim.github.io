@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Анатомический тренажёр | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ VetSim
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.2rem;
+            overflow: hidden;
+            height: 100vh;
+        }
+        .main-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Верхняя панель --- */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3E5C4A;
+            white-space: nowrap;
+        }
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            font-family: inherit;
+            color: #3E5C4A;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            opacity: 0.85;
+        }
+        .btn-primary {
+            background: #A3B18A;
+            color: #2C4027;
+        }
+        .btn-accent {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-danger {
+            background: #D4A373;
+            color: white;
+        }
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+        .btn-warning {
+            background: #E2CFB0;
+            color: #4D3E2A;
+        }
+        .mode-toggle {
+            display: flex;
+            background: #F0EEE5;
+            border-radius: 2rem;
+            padding: 3px;
+            gap: 3px;
+        }
+        .mode-toggle .btn {
+            border-radius: 2rem;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            background: transparent;
+        }
+        .mode-toggle .btn.active {
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- Рабочая область --- */
+        .workspace {
+            display: flex;
+            flex: 1;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            min-height: 0;
+        }
+
+        /* --- Холст --- */
+        .canvas-wrapper {
+            flex: 1;
+            background: white;
+            border-radius: 1.8rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+            min-height: 400px;
+        }
+        #canvasContainer {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: auto;
+            cursor: default;
+            background: #f5f0e8;
+        }
+        #mainCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #f5f0e8;
+            border-radius: 1.8rem;
+        }
+
+        /* --- Точки на холсте --- */
+        .point-marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(44, 125, 160, 0.9);
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            z-index: 20;
+            transition: transform 0.2s;
+            pointer-events: auto;
+        }
+        .point-marker:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+        }
+        .point-marker .point-label {
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 1px 8px;
+            border-radius: 10px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        /* --- Боковая панель --- */
+        .side-panel {
+            width: 320px;
+            min-width: 260px;
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+            max-height: 100%;
+            gap: 8px;
+        }
+        .side-panel h3 {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            margin-bottom: 2px;
+        }
+        .panel-section {
+            border-bottom: 1px solid #EDE8DC;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .panel-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* --- Список слоёв --- */
+        .layer-list {
+            max-height: 200px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .layer-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #F4EFE4;
+            padding: 4px 8px;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .layer-item .layer-name {
+            flex: 1;
+            min-width: 60px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .layer-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .layer-item input[type="range"] {
+            width: 60px;
+            flex-shrink: 0;
+            cursor: pointer;
+            background: transparent;
+        }
+        .layer-item .opacity-label {
+            font-size: 0.7rem;
+            min-width: 30px;
+            text-align: center;
+            color: #7B8D6E;
+        }
+        .layer-item .layer-actions {
+            display: flex;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+        .layer-item .layer-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 0 2px;
+            transition: 0.2s;
+            color: #3E5C4A;
+        }
+        .layer-item .layer-actions button:hover {
+            transform: scale(1.1);
+        }
+        .layer-item .layer-actions .del-btn {
+            color: #D4A373;
+        }
+
+        /* --- Форма добавления точки --- */
+        .point-form {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        .point-form .form-row {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .point-form .form-row input,
+        .point-form .form-row select {
+            flex: 1;
+            min-width: 60px;
+            background: #FEFAF2;
+            border: 1px solid #D9D0BD;
+            padding: 3px 8px;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .point-form .form-row .btn {
+            padding: 3px 10px;
+            font-size: 0.7rem;
+        }
+
+        /* --- Список точек --- */
+        .point-list {
+            max-height: 120px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .point-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F4EFE4;
+            padding: 3px 8px;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+        }
+        .point-item .point-info {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex: 1;
+            overflow: hidden;
+        }
+        .point-item .point-info .p-name {
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .point-item .point-info .p-layer {
+            font-size: 0.65rem;
+            color: #7B8D6E;
+            flex-shrink: 0;
+        }
+        .point-item .del-btn {
+            background: none;
+            border: none;
+            color: #D4A373;
+            cursor: pointer;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .empty-msg {
+            color: #7B8D6E;
+            font-size: 0.8rem;
+            padding: 4px 0;
+        }
+
+        /* --- Модальное окно --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+        .modal h2 {
+            margin-bottom: 0.5rem;
+            color: #3E5C4A;
+            font-size: 1.3rem;
+        }
+        .modal .close-btn {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #7B8D6E;
+        }
+        .modal .close-btn:hover {
+            color: #3E5C4A;
+        }
+        .modal .modal-body {
+            margin-top: 0.5rem;
+        }
+        .modal .modal-body .info-row {
+            margin-bottom: 6px;
+        }
+        .modal .modal-body .info-row strong {
+            color: #2C7DA0;
+        }
+
+        /* --- Адаптивность --- */
+        @media (max-width: 900px) {
+            .workspace {
+                flex-direction: column;
+            }
+            .side-panel {
+                width: 100%;
+                min-width: unset;
+                max-height: 300px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .side-panel .panel-section {
+                flex: 1;
+                min-width: 180px;
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .header-actions {
+                justify-content: center;
+            }
+            .layer-item input[type="range"] {
+                width: 40px;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 0.6rem;
+            }
+            .logo {
+                font-size: 1rem;
+            }
+            .side-panel {
+                max-height: 200px;
+            }
+            .side-panel .panel-section {
+                min-width: 140px;
+            }
+            .layer-item {
+                font-size: 0.7rem;
+            }
+            .layer-item input[type="range"] {
+                width: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Верхняя панель -->
+        <header class="header">
+            <div class="logo">🐾 <span>ВетСим</span> — Анатомический тренажёр</div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="saveBtn">💾 Сохранить</button>
+                <button class="btn btn-accent" id="exportBtn">📤 Экспорт HTML</button>
+                <button class="btn btn-warning" id="loadExampleBtn">📂 Загрузить пример</button>
+                <button class="btn btn-danger" id="resetBtn">🔄 Сбросить</button>
+                <div class="mode-toggle">
+                    <button class="btn active" data-mode="editor" id="modeEditor">✏️ Редактор</button>
+                    <button class="btn" data-mode="view" id="modeView">👁️ Просмотр</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Рабочая область -->
+        <div class="workspace">
+            <!-- Холст -->
+            <div class="canvas-wrapper">
+                <div id="canvasContainer">
+                    <canvas id="mainCanvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Боковая панель -->
+            <div class="side-panel" id="sidePanel">
+                <!-- Управление слоями -->
+                <div class="panel-section">
+                    <h3>📂 Слои</h3>
+                    <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:4px;">
+                        <input type="file" id="layerFileInput" accept="image/*" style="display:none;" multiple>
+                        <button class="btn btn-primary" id="uploadLayerBtn">📤 Загрузить слой</button>
+                        <input type="text" id="layerNameInput" placeholder="Название слоя" style="flex:1; min-width:80px; background:#FEFAF2; border:1px solid #D9D0BD; padding:3px 8px; border-radius:2rem; font-size:0.75rem; font-family:inherit;">
+                    </div>
+                    <div class="layer-list" id="layerList">
+                        <span class="empty-msg">Нет слоёв. Загрузите изображения.</span>
+                    </div>
+                </div>
+
+                <!-- Добавление точек (только в редакторе) -->
+                <div class="panel-section" id="pointSection">
+                    <h3>📍 Добавить точку</h3>
+                    <div class="point-form">
+                        <div class="form-row">
+                            <select id="pointLayerSelect"><option value="">Выберите слой</option></select>
+                            <input type="text" id="pointNameInput" placeholder="Название структуры">
+                        </div>
+                        <div class="form-row">
+                            <input type="text" id="pointDescInput" placeholder="Описание структуры" style="flex:2;">
+                            <button class="btn btn-success" id="addPointBtn">➕ Добавить</button>
+                        </div>
+                        <div style="font-size:0.7rem; color:#7B8D6E;">💡 Кликните на холст, чтобы разместить точку</div>
+                    </div>
+                    <div class="point-list" id="pointList">
+                        <span class="empty-msg">Нет точек</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для просмотра точки -->
+    <div class="modal-overlay" id="pointModal">
+        <div class="modal">
+            <button class="close-btn" id="modalCloseBtn">&times;</button>
+            <h2 id="modalTitle">📍 Информация</h2>
+            <div class="modal-body" id="modalBody">
+                <div class="info-row"><strong>Название:</strong> <span id="modalPointName"></span></div>
+                <div class="info-row"><strong>Описание:</strong> <span id="modalPointDesc"></span></div>
+                <div class="info-row"><strong>Слой:</strong> <span id="modalPointLayer"></span></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  ОСНОВНАЯ ЛОГИКА АНАТОМИЧЕСКОГО ТРЕНАЖЁРА
+        // ================================================================
+
+        // --- Состояние ---
+        let layers = [];
+        let points = [];
+        let currentMode = 'editor';
+        let nextLayerId = 1;
+        let nextPointId = 1;
+        let isAddingPoint = false;
+
+        // DOM-элементы
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('canvasContainer');
+        const layerListEl = document.getElementById('layerList');
+        const pointListEl = document.getElementById('pointList');
+        const pointLayerSelect = document.getElementById('pointLayerSelect');
+        const pointNameInput = document.getElementById('pointNameInput');
+        const pointDescInput = document.getElementById('pointDescInput');
+        const addPointBtn = document.getElementById('addPointBtn');
+        const layerFileInput = document.getElementById('layerFileInput');
+        const uploadLayerBtn = document.getElementById('uploadLayerBtn');
+        const layerNameInput = document.getElementById('layerNameInput');
+        const saveBtn = document.getElementById('saveBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const loadExampleBtn = document.getElementById('loadExampleBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const modeEditor = document.getElementById('modeEditor');
+        const modeView = document.getElementById('modeView');
+        const modalOverlay = document.getElementById('pointModal');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const modalPointName = document.getElementById('modalPointName');
+        const modalPointDesc = document.getElementById('modalPointDesc');
+        const modalPointLayer = document.getElementById('modalPointLayer');
+        const pointSection = document.getElementById('pointSection');
+
+        // ================================================================
+        //  УПРАВЛЕНИЕ ХОЛСТОМ
+        // ================================================================
+
+        function resizeCanvas() {
+            const rect = container.getBoundingClientRect();
+            if (rect.width === 0 || rect.height === 0) {
+                setTimeout(resizeCanvas, 100);
+                return;
+            }
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+            ctx.scale(dpr, dpr);
+            render();
+        }
+
+        function render() {
+            const rect = container.getBoundingClientRect();
+            const w = rect.width || 600;
+            const h = rect.height || 400;
+            ctx.clearRect(0, 0, w, h);
+
+            const sorted = [...layers].sort((a, b) => (a.order || 0) - (b.order || 0));
+
+            for (const layer of sorted) {
+                if (!layer.visible || !layer.img || !layer.img.complete) continue;
+                const img = layer.img;
+                const opacity = (layer.opacity || 100) / 100;
+                ctx.globalAlpha = opacity;
+
+                const imgRatio = img.width / img.height;
+                const canvasRatio = w / h;
+                let drawW, drawH, dx, dy;
+                if (imgRatio > canvasRatio) {
+                    drawW = w;
+                    drawH = w / imgRatio;
+                    dx = 0;
+                    dy = (h - drawH) / 2;
+                } else {
+                    drawH = h;
+                    drawW = h * imgRatio;
+                    dx = (w - drawW) / 2;
+                    dy = 0;
+                }
+                ctx.drawImage(img, dx, dy, drawW, drawH);
+            }
+            ctx.globalAlpha = 1;
+            renderPoints();
+        }
+
+        // ================================================================
+        //  ТОЧКИ
+        // ================================================================
+
+        function renderPoints() {
+            container.querySelectorAll('.point-marker').forEach(el => el.remove());
+            const rect = container.getBoundingClientRect();
+            const w = rect.width || 600;
+            const h = rect.height || 400;
+
+            for (let i = 0; i < points.length; i++) {
+                const point = points[i];
+                const layer = layers.find(l => l.id === point.layerId);
+                if (!layer) continue;
+
+                const x = (point.x / 100) * w;
+                const y = (point.y / 100) * h;
+
+                const marker = document.createElement('div');
+                marker.className = 'point-marker';
+                marker.style.left = x + 'px';
+                marker.style.top = y + 'px';
+                marker.style.background = currentMode === 'editor' ? 'rgba(212, 163, 115, 0.9)' : 'rgba(44, 125, 160, 0.9)';
+                marker.textContent = i + 1;
+
+                const label = document.createElement('span');
+                label.className = 'point-label';
+                label.textContent = point.name || 'Точка';
+                marker.appendChild(label);
+
+                marker.dataset.pointId = point.id;
+                marker.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (currentMode === 'view') {
+                        showPointInfo(parseInt(this.dataset.pointId));
+                    } else {
+                        if (confirm('Удалить точку "' + point.name + '"?')) {
+                            deletePoint(parseInt(this.dataset.pointId));
+                        }
+                    }
+                });
+
+                container.appendChild(marker);
+            }
+        }
+
+        function showPointInfo(id) {
+            const point = points.find(p => p.id === id);
+            if (!point) return;
+            const layer = layers.find(l => l.id === point.layerId);
+            modalPointName.textContent = point.name || 'Без названия';
+            modalPointDesc.textContent = point.description || '(описание не добавлено)';
+            modalPointLayer.textContent = layer ? layer.name : 'Слой удалён';
+            modalOverlay.classList.add('active');
+        }
+
+        function deletePoint(id) {
+            points = points.filter(p => p.id !== id);
+            updatePointUI();
+            render();
+            saveToLocalStorage();
+        }
+
+        // ================================================================
+        //  УПРАВЛЕНИЕ СЛОЯМИ
+        // ================================================================
+
+        function loadLayerImage(file, name) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const layer = {
+                        id: nextLayerId++,
+                        name: name || file.name.replace(/\.[^/.]+$/, '') || 'Слой ' + (layers.length + 1),
+                        dataURL: e.target.result,
+                        visible: true,
+                        opacity: 100,
+                        order: layers.length,
+                        img: img
+                    };
+                    layers.push(layer);
+                    updateLayerUI();
+                    render();
+                    saveToLocalStorage();
+                    layerNameInput.value = '';
+                    layerFileInput.value = '';
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function deleteLayer(id) {
+            layers = layers.filter(l => l.id !== id);
+            points = points.filter(p => p.layerId !== id);
+            updateLayerUI();
+            updatePointUI();
+            render();
+            saveToLocalStorage();
+        }
+
+        function moveLayer(id, direction) {
+            const index = layers.findIndex(l => l.id === id);
+            if (index === -1) return;
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= layers.length) return;
+            // Меняем order
+            const tempOrder = layers[index].order;
+            layers[index].order = layers[newIndex].order;
+            layers[newIndex].order = tempOrder;
+            // Меняем местами в массиве
+            [layers[index], layers[newIndex]] = [layers[newIndex], layers[index]];
+            layers.sort((a, b) => a.order - b.order);
+            updateLayerUI();
+            render();
+            saveToLocalStorage();
+        }
+
+        // ================================================================
+        //  ОБНОВЛЕНИЕ UI
+        // ================================================================
+
+        function updateLayerUI() {
+            layerListEl.innerHTML = '';
+            if (layers.length === 0) {
+                layerListEl.innerHTML = '<span class="empty-msg">Нет слоёв. Загрузите изображения.</span>';
+                return;
+            }
+            const sorted = [...layers].sort((a, b) => a.order - b.order);
+            for (const layer of sorted) {
+                const div = document.createElement('div');
+                div.className = 'layer-item';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = layer.visible;
+                checkbox.addEventListener('change', function() {
+                    layer.visible = this.checked;
+                    render();
+                    saveToLocalStorage();
+                });
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'layer-name';
+                nameSpan.textContent = layer.name;
+                nameSpan.title = layer.name;
+
+                const range = document.createElement('input');
+                range.type = 'range';
+                range.min = 10;
+                range.max = 100;
+                range.value = layer.opacity;
+                range.addEventListener('input', function() {
+                    layer.opacity = parseInt(this.value);
+                    opacityLabel.textContent = layer.opacity + '%';
+                    render();
+                    saveToLocalStorage();
+                });
+
+                const opacityLabel = document.createElement('span');
+                opacityLabel.className = 'opacity-label';
+                opacityLabel.textContent = layer.opacity + '%';
+
+                const actions = document.createElement('span');
+                actions.className = 'layer-actions';
+
+                const upBtn = document.createElement('button');
+                upBtn.textContent = '⬆️';
+                upBtn.title = 'Поднять слой';
+                upBtn.addEventListener('click', function() {
+                    moveLayer(layer.id, -1);
+                });
+
+                const downBtn = document.createElement('button');
+                downBtn.textContent = '⬇️';
+                downBtn.title = 'Опустить слой';
+                downBtn.addEventListener('click', function() {
+                    moveLayer(layer.id, 1);
+                });
+
+                const delBtn = document.createElement('button');
+                delBtn.className = 'del-btn';
+                delBtn.textContent = '🗑️';
+                delBtn.title = 'Удалить слой';
+                delBtn.addEventListener('click', function() {
+                    if (confirm('Удалить слой "' + layer.name + '"?')) {
+                        deleteLayer(layer.id);
+                    }
+                });
+
+                actions.appendChild(upBtn);
+                actions.appendChild(downBtn);
+                actions.appendChild(delBtn);
+
+                div.appendChild(checkbox);
+                div.appendChild(nameSpan);
+                div.appendChild(range);
+                div.appendChild(opacityLabel);
+                div.appendChild(actions);
+
+                layerListEl.appendChild(div);
+            }
+            updateLayerSelect();
+        }
+
+        function updateLayerSelect() {
+            const currentVal = pointLayerSelect.value;
+            pointLayerSelect.innerHTML = '<option value="">Выберите слой</option>';
+            for (const layer of layers) {
+                const opt = document.createElement('option');
+                opt.value = layer.id;
+                opt.textContent = layer.name;
+                pointLayerSelect.appendChild(opt);
+            }
+            if (currentVal && layers.some(l => l.id == currentVal)) {
+                pointLayerSelect.value = currentVal;
+            }
+        }
+
+        function updatePointUI() {
+            pointListEl.innerHTML = '';
+            if (points.length === 0) {
+                pointListEl.innerHTML = '<span class="empty-msg">Нет точек</span>';
+                return;
+            }
+            for (const point of points) {
+                const layer = layers.find(l => l.id === point.layerId);
+                const div = document.createElement('div');
+                div.className = 'point-item';
+                div.innerHTML = `
+                    <span class="point-info">
+                        <span class="p-name">${point.name || 'Точка'}</span>
+                        <span class="p-layer">${layer ? layer.name : '—'}</span>
+                    </span>
+                    <button class="del-btn" data-id="${point.id}">🗑️</button>
+                `;
+                div.querySelector('.del-btn').addEventListener('click', function() {
+                    deletePoint(parseInt(this.dataset.id));
+                });
+                pointListEl.appendChild(div);
+            }
+        }
+
+        // ================================================================
+        //  РЕЖИМЫ РАБОТЫ
+        // ================================================================
+
+        function setMode(mode) {
+            currentMode = mode;
+            modeEditor.classList.toggle('active', mode === 'editor');
+            modeView.classList.toggle('active', mode === 'view');
+            pointSection.style.display = (mode === 'editor') ? 'block' : 'none';
+            render();
+
+            const inputs = [layerNameInput, pointNameInput, pointDescInput, pointLayerSelect];
+            const btns = [uploadLayerBtn, addPointBtn];
+            for (const el of inputs) el.disabled = (mode === 'view');
+            for (const el of btns) el.style.opacity = (mode === 'view') ? '0.5' : '1';
+
+            localStorage.setItem('anatomy_mode', mode);
+        }
+
+        // ================================================================
+        //  СОХРАНЕНИЕ И ЗАГРУЗКА
+        // ================================================================
+
+        function saveToLocalStorage() {
+            const data = {
+                layers: layers.map(l => ({
+                    id: l.id,
+                    name: l.name,
+                    dataURL: l.dataURL,
+                    visible: l.visible,
+                    opacity: l.opacity,
+                    order: l.order
+                })),
+                points: points,
+                nextLayerId: nextLayerId,
+                nextPointId: nextPointId
+            };
+            try {
+                localStorage.setItem('anatomy_data', JSON.stringify(data));
+            } catch (e) {
+                console.warn('Не удалось сохранить', e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const raw = localStorage.getItem('anatomy_data');
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                layers = data.layers.map(l => {
+                    const img = new Image();
+                    img.src = l.dataURL;
+                    return { ...l, img: img };
+                });
+                points = data.points || [];
+                nextLayerId = data.nextLayerId || 1;
+                nextPointId = data.nextPointId || 1;
+                updateLayerUI();
+                updatePointUI();
+                render();
+                return true;
+            } catch (e) {
+                console.warn('Не удалось загрузить', e);
+                return false;
+            }
+        }
+
+        // ================================================================
+        //  ЗАГРУЗКА ПРИМЕРА
+        // ================================================================
+
+        function loadExample() {
+            // Очищаем
+            layers = [];
+            points = [];
+            nextLayerId = 1;
+            nextPointId = 1;
+
+            // Создаём слои-заглушки с цветными градиентами
+            const exampleLayers = [
+                { name: 'Кожа', color: '#F5D6B8' },
+                { name: 'Мышцы', color: '#D4A373' },
+                { name: 'Сосуды и нервы', color: '#2C7DA0' },
+                { name: 'Кости', color: '#E8E0D5' }
+            ];
+
+            const canvasTemp = document.createElement('canvas');
+            canvasTemp.width = 800;
+            canvasTemp.height = 600;
+            const ctxTemp = canvasTemp.getContext('2d');
+
+            for (let i = 0; i < exampleLayers.length; i++) {
+                const el = exampleLayers[i];
+                ctxTemp.clearRect(0, 0, 800, 600);
+
+                const grad = ctxTemp.createRadialGradient(400, 300, 50, 400, 300, 350);
+                const alpha = 0.3 + (i / exampleLayers.length) * 0.5;
+                grad.addColorStop(0, el.color + '99');
+                grad.addColorStop(0.5, el.color + '66');
+                grad.addColorStop(1, el.color + '22');
+                ctxTemp.fillStyle = grad;
+                ctxTemp.fillRect(0, 0, 800, 600);
+
+                ctxTemp.strokeStyle = el.color;
+                ctxTemp.lineWidth = 2 + i * 0.5;
+                ctxTemp.strokeRect(100 + i * 30, 80 + i * 20, 600 - i * 60, 440 - i * 40);
+
+                ctxTemp.fillStyle = '#3E5C4A';
+                ctxTemp.font = 'bold 28px Montserrat, sans-serif';
+                ctxTemp.textAlign = 'center';
+                ctxTemp.textBaseline = 'middle';
+                ctxTemp.fillText(el.name, 400, 300);
+
+                ctxTemp.fillStyle = '#3E5C4A';
+                ctxTemp.font = '14px Montserrat, sans-serif';
+                const details = [
+                    ['Кожа', '● ● ● ● ●', 200, 400],
+                    ['Мышцы', '≈ ≈ ≈ ≈ ≈', 600, 150],
+                    ['Сосуды и нервы', '≋ ≋ ≋ ≋', 200, 150],
+                    ['Кости', '▢ ▢ ▢ ▢', 600, 400]
+                ];
+                for (const d of details) {
+                    if (el.name === d[0]) {
+                        ctxTemp.fillStyle = '#5A7A6A';
+                        ctxTemp.fillText(d[1], d[2], d[3]);
+                    }
+                }
+
+                const dataURL = canvasTemp.toDataURL('image/png');
+                const img = new Image();
+                img.src = dataURL;
+                const layer = {
+                    id: nextLayerId++,
+                    name: el.name,
+                    dataURL: dataURL,
+                    visible: true,
+                    opacity: 100,
+                    order: i,
+                    img: img
+                };
+                layers.push(layer);
+            }
+
+            // Добавляем примеры точек
+            const examplePoints = [
+                { layerId: 1, x: 45, y: 30, name: 'Лобная кость', description: 'Парная кость, образующая лобную часть черепа.' },
+                { layerId: 1, x: 55, y: 40, name: 'Носовая кость', description: 'Парная кость, образующая спинку носа.' },
+                { layerId: 2, x: 35, y: 50, name: 'Жевательная мышца', description: 'Основная мышца, обеспечивающая подъем нижней челюсти.' },
+                { layerId: 2, x: 65, y: 50, name: 'Височная мышца', description: 'Мышца, участвующая в жевании и движении челюсти.' },
+                { layerId: 3, x: 50, y: 35, name: 'Лицевой нерв', description: 'VII пара черепных нервов, иннервирует мимические мышцы.' },
+                { layerId: 3, x: 40, y: 60, name: 'Сонная артерия', description: 'Основная артерия, кровоснабжающая голову и мозг.' },
+                { layerId: 4, x: 50, y: 55, name: 'Нижнечелюстная кость', description: 'Подвижная кость черепа, несущая нижний зубной ряд.' }
+            ];
+
+            for (const ep of examplePoints) {
+                points.push({
+                    id: nextPointId++,
+                    layerId: ep.layerId,
+                    x: ep.x,
+                    y: ep.y,
+                    name: ep.name,
+                    description: ep.description
+                });
+            }
+
+            updateLayerUI();
+            updatePointUI();
+            render();
+            saveToLocalStorage();
+            alert('Пример «Анатомия головы коровы» загружен!');
+        }
+
+        // ================================================================
+        //  ЭКСПОРТ В HTML (ИСПРАВЛЕННЫЙ)
+        // ================================================================
+
+        function exportHTML() {
+            if (layers.length === 0) {
+                alert('Добавьте хотя бы один слой.');
+                return;
+            }
+
+            // Подготавливаем данные для экспорта
+            const exportData = {
+                layers: layers.map(l => ({
+                    id: l.id,
+                    name: l.name,
+                    dataURL: l.dataURL,
+                    visible: l.visible,
+                    opacity: l.opacity,
+                    order: l.order
+                })),
+                points: points,
+                nextLayerId: nextLayerId,
+                nextPointId: nextPointId
+            };
+
+            const jsonStr = JSON.stringify(exportData);
+            // Безопасное экранирование для вставки в script
+            const safeJson = jsonStr.replace(/<\/script>/g, '<\\/script>');
+
+            const html = `<!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+            <title>Анатомический тренажёр | ВетСим</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body { background: #FDF8F0; font-family: 'Montserrat', system-ui, sans-serif; color: #3E5C4A; padding: 1.2rem; overflow: hidden; height: 100vh; }
+                .container { max-width: 1500px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; }
+                .header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; background: white; padding: 0.6rem 1.2rem; border-radius: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); flex-shrink: 0; }
+                .logo { font-size: 1.2rem; font-weight: 700; color: #3E5C4A; }
+                .logo span { background: linear-gradient(135deg, #6B8C5C, #A38B60); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+                .canvas-wrapper { flex: 1; background: white; border-radius: 1.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; position: relative; margin-top: 0.8rem; }
+                #canvasContainer { width: 100%; height: 100%; position: relative; overflow: auto; background: #f5f0e8; }
+                #mainCanvas { display: block; width: 100%; height: 100%; background: #f5f0e8; border-radius: 1.8rem; }
+                .point-marker { position: absolute; transform: translate(-50%, -50%); width: 28px; height: 28px; border-radius: 50%; background: rgba(44, 125, 160, 0.9); border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 700; z-index: 20; transition: transform 0.2s; pointer-events: auto; }
+                .point-marker:hover { transform: translate(-50%, -50%) scale(1.15); }
+                .point-marker .point-label { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 600; color: #fff; background: rgba(0,0,0,0.7); padding: 1px 8px; border-radius: 10px; white-space: nowrap; pointer-events: none; }
+                .side-panel { width: 320px; min-width: 260px; background: white; border-radius: 1.8rem; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; max-height: 100%; gap: 8px; position: fixed; right: 1.2rem; top: 5rem; bottom: 1.2rem; }
+                .side-panel h3 { font-size: 0.95rem; color: #3E5C4A; margin-bottom: 2px; }
+                .panel-section { border-bottom: 1px solid #EDE8DC; padding-bottom: 10px; margin-bottom: 10px; }
+                .panel-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+                .layer-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 4px; }
+                .layer-item { display: flex; align-items: center; gap: 4px; background: #F4EFE4; padding: 4px 8px; border-radius: 2rem; font-size: 0.8rem; flex-wrap: wrap; }
+                .layer-item .layer-name { flex: 1; min-width: 60px; font-weight: 600; font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+                .layer-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+                .layer-item input[type="range"] { width: 60px; flex-shrink: 0; cursor: pointer; background: transparent; }
+                .layer-item .opacity-label { font-size: 0.7rem; min-width: 30px; text-align: center; color: #7B8D6E; }
+                .point-list { max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 3px; }
+                .point-item { display: flex; justify-content: space-between; align-items: center; background: #F4EFE4; padding: 3px 8px; border-radius: 2rem; font-size: 0.75rem; }
+                .point-item .point-info { display: flex; gap: 6px; align-items: center; flex: 1; overflow: hidden; }
+                .point-item .point-info .p-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+                .point-item .point-info .p-layer { font-size: 0.65rem; color: #7B8D6E; flex-shrink: 0; }
+                .empty-msg { color: #7B8D6E; font-size: 0.8rem; padding: 4px 0; }
+                .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 1000; justify-content: center; align-items: center; }
+                .modal-overlay.active { display: flex; }
+                .modal { background: white; border-radius: 2rem; padding: 1.5rem 2rem; max-width: 420px; width: 90%; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+                .modal h2 { margin-bottom: 0.5rem; color: #3E5C4A; font-size: 1.3rem; }
+                .modal .close-btn { float: right; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #7B8D6E; }
+                .modal .close-btn:hover { color: #3E5C4A; }
+                .modal .modal-body { margin-top: 0.5rem; }
+                .modal .modal-body .info-row { margin-bottom: 6px; }
+                .modal .modal-body .info-row strong { color: #2C7DA0; }
+                .btn { background: #EBE3D2; border: none; padding: 5px 12px; border-radius: 2rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.8rem; font-family: inherit; color: #3E5C4A; white-space: nowrap; }
+                .btn:hover { opacity: 0.85; }
+                .btn-primary { background: #A3B18A; color: #2C4027; }
+                .btn-accent { background: #2C7DA0; color: white; }
+                .btn-danger { background: #D4A373; color: white; }
+                .btn-success { background: #6B9E6B; color: white; }
+                footer { text-align: center; margin-top: 1rem; font-size: 0.7rem; color: #B0BC9C; }
+                @media (max-width: 900px) { .side-panel { position: static; width: 100%; min-width: unset; max-height: 300px; flex-direction: row; flex-wrap: wrap; gap: 6px; margin-top: 0.8rem; } .side-panel .panel-section { flex: 1; min-width: 180px; border-bottom: none; } .header { flex-direction: column; align-items: stretch; } }
+                @media (max-width: 600px) { body { padding: 0.6rem; } .logo { font-size: 1rem; } .side-panel { max-height: 200px; } .side-panel .panel-section { min-width: 140px; } .layer-item input[type="range"] { width: 40px; } }
+            </style>
+        </head>
+        <body>
+        <div class="container">
+            <header class="header">
+                <div class="logo">🐾 <span>ВетСим</span> — Анатомический тренажёр</div>
+                <div style="font-size:0.85rem; color:#7B8D6E;">👁️ Режим просмотра — кликните по точке для информации</div>
+            </header>
+            <div style="display:flex; flex:1; gap:1rem; min-height:0;">
+                <div class="canvas-wrapper" style="flex:1;">
+                    <div id="canvasContainer">
+                        <canvas id="mainCanvas"></canvas>
+                    </div>
+                </div>
+                <div class="side-panel" id="sidePanel">
+                    <div class="panel-section">
+                        <h3>📂 Слои</h3>
+                        <div class="layer-list" id="layerList"></div>
+                    </div>
+                    <div class="panel-section">
+                        <h3>📍 Точки</h3>
+                        <div class="point-list" id="pointList"></div>
+                    </div>
+                </div>
+            </div>
+            <footer>© ВетСим — образовательная платформа</footer>
+        </div>
+        <div class="modal-overlay" id="pointModal">
+            <div class="modal">
+                <button class="close-btn" id="modalCloseBtn">&times;</button>
+                <h2 id="modalTitle">📍 Информация</h2>
+                <div class="modal-body" id="modalBody">
+                    <div class="info-row"><strong>Название:</strong> <span id="modalPointName"></span></div>
+                    <div class="info-row"><strong>Описание:</strong> <span id="modalPointDesc"></span></div>
+                    <div class="info-row"><strong>Слой:</strong> <span id="modalPointLayer"></span></div>
+                </div>
+            </div>
+        </div>
+        <script>
+            // Данные для экспорта
+            const data = ${safeJson};
+
+            // Инициализация данных с загрузкой изображений
+            const layers = [];
+            let points = [];
+            let loadedImages = 0;
+            let totalImages = data.layers.length;
+
+            function initData() {
+                if (totalImages === 0) {
+                    startApp();
+                    return;
+                }
+                for (const l of data.layers) {
+                    const img = new Image();
+                    img.onload = function() {
+                        loadedImages++;
+                        if (loadedImages === totalImages) {
+                            startApp();
+                        }
+                    };
+                    img.onerror = function() {
+                        loadedImages++;
+                        if (loadedImages === totalImages) {
+                            startApp();
+                        }
+                    };
+                    img.src = l.dataURL;
+                    layers.push({
+                        id: l.id,
+                        name: l.name,
+                        dataURL: l.dataURL,
+                        visible: l.visible !== undefined ? l.visible : true,
+                        opacity: l.opacity || 100,
+                        order: l.order || 0,
+                        img: img
+                    });
+                }
+                points = data.points || [];
+            }
+
+            // DOM-элементы
+            const canvas = document.getElementById('mainCanvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('canvasContainer');
+            const layerListEl = document.getElementById('layerList');
+            const pointListEl = document.getElementById('pointList');
+            const modalOverlay = document.getElementById('pointModal');
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            const modalPointName = document.getElementById('modalPointName');
+            const modalPointDesc = document.getElementById('modalPointDesc');
+            const modalPointLayer = document.getElementById('modalPointLayer');
+
+            function resizeCanvas() {
+                const rect = container.getBoundingClientRect();
+                if (rect.width === 0 || rect.height === 0) {
+                    setTimeout(resizeCanvas, 100);
+                    return;
+                }
+                const dpr = window.devicePixelRatio || 1;
+                canvas.width = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                canvas.style.width = rect.width + 'px';
+                canvas.style.height = rect.height + 'px';
+                ctx.scale(dpr, dpr);
+                render();
+            }
+
+            function render() {
+                const rect = container.getBoundingClientRect();
+                const w = rect.width || 600;
+                const h = rect.height || 400;
+                ctx.clearRect(0, 0, w, h);
+                const sorted = [...layers].sort(function(a, b) { return (a.order || 0) - (b.order || 0); });
+                for (const layer of sorted) {
+                    if (!layer.visible || !layer.img || !layer.img.complete) continue;
+                    const img = layer.img;
+                    const opacity = (layer.opacity || 100) / 100;
+                    ctx.globalAlpha = opacity;
+                    const imgRatio = img.width / img.height;
+                    const canvasRatio = w / h;
+                    let drawW, drawH, dx, dy;
+                    if (imgRatio > canvasRatio) { drawW = w; drawH = w / imgRatio; dx = 0; dy = (h - drawH) / 2; }
+                    else { drawH = h; drawW = h * imgRatio; dx = (w - drawW) / 2; dy = 0; }
+                    ctx.drawImage(img, dx, dy, drawW, drawH);
+                }
+                ctx.globalAlpha = 1;
+                renderPoints();
+            }
+
+            function renderPoints() {
+                container.querySelectorAll('.point-marker').forEach(function(el) { el.remove(); });
+                const rect = container.getBoundingClientRect();
+                const w = rect.width || 600;
+                const h = rect.height || 400;
+                for (let i = 0; i < points.length; i++) {
+                    const point = points[i];
+                    const layer = layers.find(function(l) { return l.id === point.layerId; });
+                    if (!layer) continue;
+                    const x = (point.x / 100) * w;
+                    const y = (point.y / 100) * h;
+                    const marker = document.createElement('div');
+                    marker.className = 'point-marker';
+                    marker.style.left = x + 'px';
+                    marker.style.top = y + 'px';
+                    marker.style.background = 'rgba(44, 125, 160, 0.9)';
+                    marker.textContent = i + 1;
+                    const label = document.createElement('span');
+                    label.className = 'point-label';
+                    label.textContent = point.name || 'Точка';
+                    marker.appendChild(label);
+                    marker.dataset.pointId = point.id;
+                    marker.addEventListener('click', function(e) { e.stopPropagation(); showPointInfo(parseInt(this.dataset.pointId)); });
+                    container.appendChild(marker);
+                }
+            }
+
+            function showPointInfo(id) {
+                const point = points.find(function(p) { return p.id === id; });
+                if (!point) return;
+                const layer = layers.find(function(l) { return l.id === point.layerId; });
+                modalPointName.textContent = point.name || 'Без названия';
+                modalPointDesc.textContent = point.description || '(описание не добавлено)';
+                modalPointLayer.textContent = layer ? layer.name : 'Слой удалён';
+                modalOverlay.classList.add('active');
+            }
+
+            function updateLayerUI() {
+                layerListEl.innerHTML = '';
+                if (layers.length === 0) { layerListEl.innerHTML = '<span class="empty-msg">Нет слоёв</span>'; return; }
+                const sorted = [...layers].sort(function(a, b) { return (a.order || 0) - (b.order || 0); });
+                for (const layer of sorted) {
+                    const div = document.createElement('div');
+                    div.className = 'layer-item';
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.checked = layer.visible !== false;
+                    checkbox.addEventListener('change', function() { layer.visible = this.checked; render(); });
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'layer-name';
+                    nameSpan.textContent = layer.name;
+                    const range = document.createElement('input');
+                    range.type = 'range';
+                    range.min = 10;
+                    range.max = 100;
+                    range.value = layer.opacity || 100;
+                    range.addEventListener('input', function() { layer.opacity = parseInt(this.value); opacityLabel.textContent = layer.opacity + '%'; render(); });
+                    const opacityLabel = document.createElement('span');
+                    opacityLabel.className = 'opacity-label';
+                    opacityLabel.textContent = (layer.opacity || 100) + '%';
+                    div.appendChild(checkbox);
+                    div.appendChild(nameSpan);
+                    div.appendChild(range);
+                    div.appendChild(opacityLabel);
+                    layerListEl.appendChild(div);
+                }
+            }
+
+            function updatePointUI() {
+                pointListEl.innerHTML = '';
+                if (points.length === 0) { pointListEl.innerHTML = '<span class="empty-msg">Нет точек</span>'; return; }
+                for (const point of points) {
+                    const layer = layers.find(function(l) { return l.id === point.layerId; });
+                    const div = document.createElement('div');
+                    div.className = 'point-item';
+                    div.innerHTML = '<span class="point-info"><span class="p-name">' + (point.name || 'Точка') + '</span><span class="p-layer">' + (layer ? layer.name : '—') + '</span></span>';
+                    pointListEl.appendChild(div);
+                }
+            }
+
+            function startApp() {
+                updateLayerUI();
+                updatePointUI();
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+                container.addEventListener('scroll', render);
+            }
+
+            modalCloseBtn.addEventListener('click', function() { modalOverlay.classList.remove('active'); });
+            modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); });
+
+            initData();
+        <\/script>
+        </body>
+        </html>`;
+
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'anatomy_trainer.html';
+            link.click();
+            URL.revokeObjectURL(link.href);
+            alert('Тренажёр экспортирован как anatomy_trainer.html');
+        }
+
+        // ================================================================
+        //  ИНИЦИАЛИЗАЦИЯ И СОБЫТИЯ
+        // ================================================================
+
+        function init() {
+            // Загружаем данные
+            if (!loadFromLocalStorage()) {
+                setTimeout(loadExample, 200);
+            }
+
+            // Восстанавливаем режим
+            const savedMode = localStorage.getItem('anatomy_mode');
+            if (savedMode === 'view') {
+                setMode('view');
+            } else {
+                setMode('editor');
+            }
+
+            // Настройка размера холста
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            container.addEventListener('scroll', render);
+
+            // События
+            modeEditor.addEventListener('click', function() { setMode('editor'); });
+            modeView.addEventListener('click', function() { setMode('view'); });
+
+            uploadLayerBtn.addEventListener('click', function() {
+                layerFileInput.click();
+            });
+
+            layerFileInput.addEventListener('change', function() {
+                const files = this.files;
+                const name = layerNameInput.value.trim();
+                for (const file of files) {
+                    loadLayerImage(file, name || undefined);
+                }
+                this.value = '';
+            });
+
+            saveBtn.addEventListener('click', function() {
+                saveToLocalStorage();
+                alert('Проект сохранён!');
+            });
+
+            exportBtn.addEventListener('click', exportHTML);
+
+            loadExampleBtn.addEventListener('click', function() {
+                if (layers.length > 0) {
+                    if (!confirm('Загрузить пример? Текущая схема будет заменена.')) return;
+                }
+                loadExample();
+            });
+
+            resetBtn.addEventListener('click', function() {
+                if (!confirm('Удалить все слои и точки?')) return;
+                layers = [];
+                points = [];
+                nextLayerId = 1;
+                nextPointId = 1;
+                updateLayerUI();
+                updatePointUI();
+                render();
+                saveToLocalStorage();
+                localStorage.removeItem('anatomy_data');
+            });
+
+            // Добавление точки кликом на холст
+            container.addEventListener('click', function(e) {
+                if (currentMode !== 'editor') return;
+                const rect = container.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+                const layerId = parseInt(pointLayerSelect.value);
+                if (!layerId) {
+                    alert('Выберите слой для добавления точки.');
+                    return;
+                }
+                const name = pointNameInput.value.trim() || 'Структура ' + (points.length + 1);
+                const description = pointDescInput.value.trim() || '';
+
+                const point = {
+                    id: nextPointId++,
+                    layerId: layerId,
+                    x: Math.max(0, Math.min(100, x)),
+                    y: Math.max(0, Math.min(100, y)),
+                    name: name,
+                    description: description
+                };
+                points.push(point);
+                pointNameInput.value = '';
+                pointDescInput.value = '';
+                updatePointUI();
+                render();
+                saveToLocalStorage();
+            });
+
+            // Добавление точки через кнопку (в центр холста)
+            addPointBtn.addEventListener('click', function() {
+                if (currentMode !== 'editor') return;
+                const layerId = parseInt(pointLayerSelect.value);
+                if (!layerId) { alert('Выберите слой.'); return; }
+                const name = pointNameInput.value.trim() || 'Структура ' + (points.length + 1);
+                const description = pointDescInput.value.trim() || '';
+                const point = {
+                    id: nextPointId++,
+                    layerId: layerId,
+                    x: 50,
+                    y: 50,
+                    name: name,
+                    description: description
+                };
+                points.push(point);
+                pointNameInput.value = '';
+                pointDescInput.value = '';
+                updatePointUI();
+                render();
+                saveToLocalStorage();
+            });
+
+            // Закрытие модального окна
+            modalCloseBtn.addEventListener('click', function() {
+                modalOverlay.classList.remove('active');
+            });
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) modalOverlay.classList.remove('active');
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>

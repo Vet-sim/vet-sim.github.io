@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ВетСим-Трекер | Планер недели</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #FDF8F0;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- ШАПКА --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background: white;
+            padding: 1rem 1.8rem;
+            border-radius: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: #A3B18A;
+        }
+        .logo small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #A3B18A;
+            margin-left: 0.5rem;
+        }
+
+        .week-badge {
+            background: #F4EFE4;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #3E5C4A;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #3E5C4A;
+        }
+        .btn-primary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #8FA076;
+        }
+        .btn-accent {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-accent:hover {
+            background: #236885;
+        }
+        .btn-danger {
+            background: #D4A373;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #C08E5F;
+        }
+
+        /* --- КАРТОЧКИ --- */
+        .card {
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title .icon {
+            font-size: 1.4rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .grid-7 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.8rem;
+        }
+
+        /* --- ПОЛЯ --- */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #E5DDCF;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FEFAF2;
+            transition: 0.2s;
+        }
+        input[type="text"]:focus, textarea:focus {
+            border-color: #A3B18A;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(163, 177, 138, 0.2);
+        }
+        textarea {
+            border-radius: 1rem;
+            resize: vertical;
+            min-height: 40px;
+        }
+
+        .goal-input {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* --- ЕЖЕДНЕВНЫЕ ЗАДАЧИ --- */
+        .day-card {
+            background: #FEFAF2;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1rem;
+            border: 1px solid #F4EFE4;
+        }
+
+        .day-name {
+            font-weight: 700;
+            color: #2C7DA0;
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .day-name .date {
+            font-weight: 400;
+            color: #A3B18A;
+            font-size: 0.75rem;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.3rem 0;
+        }
+        .task-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #A3B18A;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .task-item input[type="text"] {
+            flex: 1;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.85rem;
+            border-radius: 1rem;
+            background: transparent;
+            border: 1px solid transparent;
+        }
+        .task-item input[type="text"]:hover {
+            border-color: #E5DDCF;
+        }
+        .task-item input[type="text"]:focus {
+            border-color: #A3B18A;
+            background: white;
+        }
+        .task-item.done input[type="text"] {
+            text-decoration: line-through;
+            color: #A3B18A;
+        }
+        .task-item .checkmark {
+            font-size: 1.1rem;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        .task-item.done .checkmark {
+            opacity: 1;
+            color: #A3B18A;
+        }
+
+        .day-notes textarea {
+            font-size: 0.8rem;
+            min-height: 32px;
+            padding: 0.3rem 0.8rem;
+            margin-top: 0.3rem;
+            border-radius: 1rem;
+            background: #FDF8F0;
+        }
+
+        /* --- ТРЕКЕР ПРИВЫЧЕК --- */
+        .habit-grid {
+            display: grid;
+            grid-template-columns: 1fr repeat(7, 1fr);
+            gap: 0.3rem;
+            font-size: 0.8rem;
+            align-items: center;
+        }
+        .habit-grid .label {
+            font-weight: 600;
+            color: #3E5C4A;
+            padding-right: 0.5rem;
+        }
+        .habit-grid .day-label {
+            text-align: center;
+            font-weight: 600;
+            color: #A3B18A;
+            font-size: 0.7rem;
+        }
+        .habit-grid input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #A3B18A;
+            cursor: pointer;
+            justify-self: center;
+        }
+
+        /* --- ПРОГРЕСС --- */
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .progress-bar-bg {
+            flex: 1;
+            height: 10px;
+            background: #F4EFE4;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #A3B18A, #2C7DA0);
+            border-radius: 1rem;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+        .progress-text {
+            font-weight: 700;
+            color: #2C7DA0;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        /* --- ИТОГИ --- */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .summary-grid textarea {
+            min-height: 60px;
+        }
+
+        /* --- ФУТЕР --- */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #B0BC9C;
+            border-top: 1px solid #E5DDCF;
+            padding-top: 1rem;
+        }
+
+        /* --- ПЕЧАТЬ --- */
+        @media print {
+            body {
+                background: white !important;
+                padding: 0.5in !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #eee;
+                page-break-inside: avoid;
+            }
+            .day-card {
+                background: #fafaf8 !important;
+                border: 1px solid #ddd;
+            }
+            input, textarea {
+                border: 1px solid #ccc !important;
+                background: #fefefe !important;
+            }
+            .header {
+                box-shadow: none !important;
+                border: 1px solid #eee;
+            }
+            .grid-7 {
+                grid-template-columns: repeat(7, 1fr);
+            }
+            .habit-grid {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* --- АДАПТИВ --- */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.8rem;
+                text-align: center;
+            }
+            .header-actions {
+                justify-content: center;
+            }
+            .grid-7 {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            .habit-grid {
+                font-size: 0.7rem;
+                grid-template-columns: 1fr repeat(7, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ШАПКА -->
+    <div class="header">
+        <div class="logo">
+            🐾 ВетСим<span>-Трекер</span>
+            <small>планер недели</small>
+        </div>
+        <div class="week-badge" id="weekBadge">Неделя 27–33</div>
+        <div class="header-actions">
+            <button class="btn btn-primary no-print" onclick="resetWeek()">🔄 Сбросить неделю</button>
+            <button class="btn btn-accent no-print" onclick="window.print()">🖨️ Печать</button>
+        </div>
+    </div>
+
+    <!-- ЦЕЛИ НА НЕДЕЛЮ -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> Мои цели на эту неделю</div>
+        <div class="grid-3">
+            <input type="text" class="goal-input" id="goal1" placeholder="Цель 1" value="">
+            <input type="text" class="goal-input" id="goal2" placeholder="Цель 2" value="">
+            <input type="text" class="goal-input" id="goal3" placeholder="Цель 3" value="">
+        </div>
+    </div>
+
+    <!-- ЕЖЕДНЕВНЫЕ ЗАДАЧИ -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📅</span> Задачи по дням</div>
+        <div class="grid-7" id="daysContainer">
+            <!-- заполняется JS -->
+        </div>
+    </div>
+
+    <!-- ТРЕКЕР ПРИВЫЧЕК -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🔄</span> Трекер привычек</div>
+        <div class="habit-grid" id="habitGrid">
+            <!-- заполняется JS -->
+        </div>
+    </div>
+
+    <!-- ПРОГРЕСС -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📊</span> Прогресс недели</div>
+        <div class="progress-wrapper">
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-text" id="progressText">0%</div>
+        </div>
+    </div>
+
+    <!-- ИТОГИ НЕДЕЛИ -->
+    <div class="card">
+        <div class="card-title"><span class="icon">✨</span> Итоги недели</div>
+        <div class="summary-grid">
+            <div>
+                <label style="font-weight:600; font-size:0.85rem; color:#2C7DA0;">Что получилось?</label>
+                <textarea id="summarySuccess" placeholder="Напишите, что удалось сделать..."></textarea>
+            </div>
+            <div>
+                <label style="font-weight:600; font-size:0.85rem; color:#2C7DA0;">Чему научился?</label>
+                <textarea id="summaryLearn" placeholder="Что нового узнали, что поняли..."></textarea>
+            </div>
+            <div>
+                <label style="font-weight:600; font-size:0.85rem; color:#2C7DA0;">За что благодарен?</label>
+                <textarea id="summaryGratitude" placeholder="За что вы благодарны себе или другим..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer no-print">
+        © ВетСим — ветеринарное просвещение · Планируй с удовольствием
+    </div>
+</div>
+
+<script>
+    (function() {
+        // --- ДАННЫЕ ---
+        const DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+        const HABITS = ['🚀 Проект 15 мин', '🚶 Прогулка', '📚 Чтение', '🧘 Разминка', '💧 Вода (8 ст.)'];
+
+        // --- ИНИЦИАЛИЗАЦИЯ ---
+        function getWeekNumber() {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), 0, 1);
+            const diff = (now - start) / 86400000;
+            const week = Math.ceil((diff + start.getDay() + 1) / 7);
+            return week;
+        }
+
+        function getWeekDates() {
+            const now = new Date();
+            const day = now.getDay() || 7; // ПН=1, ВС=7
+            const diff = day - 1;
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - diff);
+            const dates = [];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(monday);
+                d.setDate(monday.getDate() + i);
+                dates.push(d);
+            }
+            return dates;
+        }
+
+        function formatDate(d) {
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            return `${dd}.${mm}`;
+        }
+
+        // --- СОХРАНЕНИЕ ---
+        function saveData() {
+            const data = {
+                goals: [
+                    document.getElementById('goal1').value,
+                    document.getElementById('goal2').value,
+                    document.getElementById('goal3').value
+                ],
+                tasks: [],
+                habits: [],
+                summary: {
+                    success: document.getElementById('summarySuccess').value,
+                    learn: document.getElementById('summaryLearn').value,
+                    gratitude: document.getElementById('summaryGratitude').value
+                }
+            };
+
+            // задачи по дням
+            for (let d = 0; d < 7; d++) {
+                const dayTasks = [];
+                const dayContainer = document.getElementById(`day-${d}`);
+                if (dayContainer) {
+                    const inputs = dayContainer.querySelectorAll('.task-item input[type="text"]');
+                    const checks = dayContainer.querySelectorAll('.task-item input[type="checkbox"]');
+                    for (let i = 0; i < inputs.length; i++) {
+                        dayTasks.push({
+                            text: inputs[i].value,
+                            done: checks[i].checked
+                        });
+                    }
+                }
+                data.tasks.push(dayTasks);
+            }
+
+            // привычки
+            const habitCheckboxes = document.querySelectorAll('#habitGrid input[type="checkbox"]');
+            const habitValues = [];
+            habitCheckboxes.forEach(cb => {
+                habitValues.push(cb.checked);
+            });
+            data.habits = habitValues;
+
+            localStorage.setItem('vetsim_tracker', JSON.stringify(data));
+            updateProgress();
+        }
+
+        function loadData() {
+            const raw = localStorage.getItem('vetsim_tracker');
+            if (!raw) return false;
+            try {
+                const data = JSON.parse(raw);
+                return data;
+            } catch(e) { return false; }
+        }
+
+        function applyData(data) {
+            if (!data) return;
+            // цели
+            if (data.goals) {
+                document.getElementById('goal1').value = data.goals[0] || '';
+                document.getElementById('goal2').value = data.goals[1] || '';
+                document.getElementById('goal3').value = data.goals[2] || '';
+            }
+            // задачи
+            if (data.tasks) {
+                for (let d = 0; d < 7; d++) {
+                    const dayContainer = document.getElementById(`day-${d}`);
+                    if (!dayContainer) continue;
+                    const inputs = dayContainer.querySelectorAll('.task-item input[type="text"]');
+                    const checks = dayContainer.querySelectorAll('.task-item input[type="checkbox"]');
+                    const dayData = data.tasks[d] || [];
+                    for (let i = 0; i < inputs.length; i++) {
+                        if (i < dayData.length) {
+                            inputs[i].value = dayData[i].text || '';
+                            checks[i].checked = dayData[i].done || false;
+                            // обновить класс done
+                            const parent = checks[i].closest('.task-item');
+                            if (checks[i].checked) {
+                                parent.classList.add('done');
+                            } else {
+                                parent.classList.remove('done');
+                            }
+                        }
+                    }
+                }
+            }
+            // привычки
+            if (data.habits) {
+                const habitCheckboxes = document.querySelectorAll('#habitGrid input[type="checkbox"]');
+                habitCheckboxes.forEach((cb, idx) => {
+                    if (idx < data.habits.length) {
+                        cb.checked = data.habits[idx];
+                    }
+                });
+            }
+            // итоги
+            if (data.summary) {
+                document.getElementById('summarySuccess').value = data.summary.success || '';
+                document.getElementById('summaryLearn').value = data.summary.learn || '';
+                document.getElementById('summaryGratitude').value = data.summary.gratitude || '';
+            }
+            updateProgress();
+        }
+
+        // --- ОТРИСОВКА ---
+        function renderDays() {
+            const container = document.getElementById('daysContainer');
+            const dates = getWeekDates();
+            container.innerHTML = '';
+            for (let i = 0; i < 7; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day-card';
+                dayDiv.id = `day-${i}`;
+                const dateStr = formatDate(dates[i]);
+                dayDiv.innerHTML = `
+                    <div class="day-name">
+                        ${DAYS[i]}
+                        <span class="date">${dateStr}</span>
+                    </div>
+                    <div class="task-item">
+                        <input type="checkbox" class="task-check">
+                        <input type="text" placeholder="Задача 1" class="task-text">
+                        <span class="checkmark">✅</span>
+                    </div>
+                    <div class="task-item">
+                        <input type="checkbox" class="task-check">
+                        <input type="text" placeholder="Задача 2" class="task-text">
+                        <span class="checkmark">✅</span>
+                    </div>
+                    <div class="task-item">
+                        <input type="checkbox" class="task-check">
+                        <input type="text" placeholder="Задача 3" class="task-text">
+                        <span class="checkmark">✅</span>
+                    </div>
+                    <div class="day-notes">
+                        <textarea placeholder="Заметки на день..." rows="1"></textarea>
+                    </div>
+                `;
+                container.appendChild(dayDiv);
+            }
+            // вешаем события на чекбоксы для изменения класса done
+            document.querySelectorAll('.task-check').forEach(cb => {
+                cb.addEventListener('change', function(e) {
+                    const parent = this.closest('.task-item');
+                    if (this.checked) {
+                        parent.classList.add('done');
+                    } else {
+                        parent.classList.remove('done');
+                    }
+                    saveData();
+                });
+            });
+            // текстовые поля задач
+            document.querySelectorAll('.task-text').forEach(inp => {
+                inp.addEventListener('change', saveData);
+                inp.addEventListener('blur', saveData);
+            });
+            // заметки
+            document.querySelectorAll('.day-notes textarea').forEach(ta => {
+                ta.addEventListener('change', saveData);
+                ta.addEventListener('blur', saveData);
+            });
+        }
+
+        function renderHabits() {
+            const grid = document.getElementById('habitGrid');
+            // заголовки дней
+            let html = `<div class="label"></div>`;
+            const dates = getWeekDates();
+            for (let i = 0; i < 7; i++) {
+                html += `<div class="day-label">${DAYS[i]}<br><small>${formatDate(dates[i])}</small></div>`;
+            }
+            // строки привычек
+            for (let h = 0; h < HABITS.length; h++) {
+                html += `<div class="label">${HABITS[h]}</div>`;
+                for (let d = 0; d < 7; d++) {
+                    const id = `habit-${h}-${d}`;
+                    html += `<input type="checkbox" id="${id}" class="habit-check">`;
+                }
+            }
+            grid.innerHTML = html;
+
+            // события
+            document.querySelectorAll('.habit-check').forEach(cb => {
+                cb.addEventListener('change', saveData);
+            });
+        }
+
+        // --- ПРОГРЕСС ---
+        function updateProgress() {
+            const allChecks = document.querySelectorAll('.task-check');
+            if (!allChecks.length) return;
+            const total = allChecks.length;
+            const checked = document.querySelectorAll('.task-check:checked').length;
+            const percent = total ? Math.round((checked / total) * 100) : 0;
+            document.getElementById('progressFill').style.width = percent + '%';
+            document.getElementById('progressText').textContent = percent + '%';
+        }
+
+        // --- СБРОС ---
+        function resetWeek() {
+            if (!confirm('Сбросить все данные текущей недели? Это действие необратимо.')) return;
+            localStorage.removeItem('vetsim_tracker');
+            location.reload();
+        }
+        window.resetWeek = resetWeek;
+
+        // --- ИНИЦИАЛИЗАЦИЯ ---
+        function init() {
+            // неделя
+            const weekNum = getWeekNumber();
+            document.getElementById('weekBadge').textContent = `Неделя ${weekNum}`;
+
+            // рендер
+            renderDays();
+            renderHabits();
+
+            // загрузить данные
+            const data = loadData();
+            if (data) {
+                applyData(data);
+            } else {
+                // установить начальные значения, если данных нет
+                // сохранить пустые данные, чтобы структура была
+                saveData();
+            }
+
+            // автосохранение при изменениях (все уже повешано)
+            // дополнительно сохранять при вводе в итоговых полях
+            document.querySelectorAll('.summary-grid textarea').forEach(ta => {
+                ta.addEventListener('change', saveData);
+                ta.addEventListener('blur', saveData);
+            });
+
+            // цели
+            document.querySelectorAll('.goal-input').forEach(inp => {
+                inp.addEventListener('change', saveData);
+                inp.addEventListener('blur', saveData);
+            });
+
+            // обновить прогресс при загрузке
+            updateProgress();
+        }
+
+        // запуск
+        document.addEventListener('DOMContentLoaded', init);
+    })();
+</script>
+
+</body>
+</html>

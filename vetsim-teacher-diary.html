@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Дневник преподавателя | ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 1300px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            border-bottom: 1px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .header .logo span {
+            color: #2C7DA0;
+        }
+
+        .header .date-info {
+            font-size: 0.9rem;
+            color: #5F7C62;
+            background: #F9F6EF;
+            padding: 0.4rem 1.2rem;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .header .date-info .week-badge {
+            background: #2C7DA0;
+            color: #fff;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* ===== NAV ===== */
+        .nav-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 1.2rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-row .week-nav {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover {
+            background: #E2EAD9;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-olive {
+            background: #A3B18A;
+            color: #fff;
+        }
+        .btn-olive:hover {
+            background: #8FA375;
+        }
+
+        .btn-orange {
+            background: #D4A373;
+            color: #fff;
+        }
+        .btn-orange:hover {
+            background: #C99464;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #A3B18A;
+        }
+        .btn-outline:hover {
+            background: #F0EEE5;
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.75rem;
+        }
+
+        .week-display {
+            font-weight: 600;
+            font-size: 1rem;
+            color: #1F4E6E;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        /* ===== TIMETABLE ===== */
+        .timetable-wrapper {
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            border-radius: 1.2rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        .timetable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 700px;
+        }
+
+        .timetable th {
+            background: #F9F6EF;
+            padding: 10px 8px;
+            text-align: center;
+            font-weight: 700;
+            color: #1F4E6E;
+            border-bottom: 2px solid #E2EAD9;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .timetable th .day-label {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #5F7C62;
+            display: block;
+        }
+
+        .timetable td {
+            padding: 6px 6px;
+            border-bottom: 1px solid #EDF0E5;
+            vertical-align: top;
+            min-height: 60px;
+        }
+
+        .timetable .time-col {
+            font-weight: 600;
+            color: #5F7C62;
+            text-align: center;
+            width: 80px;
+            white-space: nowrap;
+            background: #FCFAF5;
+            padding: 6px 8px;
+            font-size: 0.8rem;
+        }
+
+        .timetable .cell-content {
+            min-height: 55px;
+            padding: 4px 6px;
+            border-radius: 8px;
+            transition: 0.15s;
+            cursor: pointer;
+        }
+
+        .timetable .cell-content:hover {
+            background: #F5F8F0;
+        }
+
+        .timetable .cell-content .subject {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.9rem;
+        }
+
+        .timetable .cell-content .group {
+            font-size: 0.7rem;
+            color: #5F7C62;
+            display: block;
+        }
+
+        .timetable .cell-content .cabinet {
+            font-size: 0.7rem;
+            color: #8A9B7A;
+            display: block;
+        }
+
+        .timetable .cell-content .note {
+            font-size: 0.7rem;
+            color: #D4A373;
+            display: block;
+            font-style: italic;
+            margin-top: 2px;
+        }
+
+        .timetable .empty-cell {
+            color: #C9D6BA;
+            font-style: italic;
+            font-size: 0.75rem;
+            text-align: center;
+            padding: 8px 4px;
+        }
+
+        .timetable .today-cell {
+            background: #F0F7EB;
+            border-left: 3px solid #2C7DA0;
+            border-right: 3px solid #2C7DA0;
+        }
+
+        /* ===== PLANNER ===== */
+        .planner-section {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            border: 1px solid #E2EAD9;
+            margin-top: 0.5rem;
+        }
+
+        .planner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .planner-header .planner-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .planner-notes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .planner-notes .note-item {
+            background: #fff;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            border: 1px solid #E2EAD9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            transition: 0.15s;
+        }
+
+        .planner-notes .note-item:hover {
+            border-color: #A3B18A;
+        }
+
+        .planner-notes .note-item .note-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        .planner-notes .note-item .note-time {
+            font-size: 0.75rem;
+            color: #8A9B7A;
+            white-space: nowrap;
+        }
+
+        .planner-notes .note-item .note-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .planner-notes .note-item .note-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #8A9B7A;
+            transition: 0.15s;
+            padding: 0 4px;
+        }
+
+        .planner-notes .note-item .note-actions button:hover {
+            color: #2C7DA0;
+        }
+
+        .planner-notes .note-item .note-actions .delete-note:hover {
+            color: #D47A6A;
+        }
+
+        .planner-input-row {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .planner-input-row input[type="text"] {
+            flex: 1;
+            min-width: 180px;
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+
+        .planner-input-row input[type="text"]:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44, 125, 160, 0.12);
+        }
+
+        .planner-input-row input[type="time"] {
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fff;
+            width: 140px;
+        }
+
+        .planner-input-row input[type="time"]:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44, 125, 160, 0.12);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1.5rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: #FFFFFF;
+            border-radius: 2rem;
+            padding: 2rem 2.2rem;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.25s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-box h3 {
+            font-size: 1.3rem;
+            color: #1F4E6E;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-box .modal-sub {
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-bottom: 1rem;
+        }
+
+        .modal-box .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .modal-box .field-group label {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #3E5C4A;
+        }
+
+        .modal-box .field-group input,
+        .modal-box .field-group textarea,
+        .modal-box .field-group select {
+            padding: 10px 14px;
+            border-radius: 40px;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fff;
+            width: 100%;
+        }
+
+        .modal-box .field-group textarea {
+            border-radius: 1.2rem;
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .modal-box .field-group input:focus,
+        .modal-box .field-group textarea:focus,
+        .modal-box .field-group select:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44, 125, 160, 0.12);
+        }
+
+        .modal-box .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: flex-end;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .modal-box .modal-actions .btn {
+            padding: 8px 24px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E2EAD9;
+            font-size: 0.75rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.2rem 1rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .header .date-info {
+                justify-content: space-between;
+            }
+            .nav-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .nav-row .week-nav {
+                justify-content: center;
+            }
+            .timetable {
+                font-size: 0.75rem;
+                min-width: 600px;
+            }
+            .timetable .time-col {
+                width: 60px;
+                font-size: 0.7rem;
+            }
+            .planner-input-row {
+                flex-direction: column;
+            }
+            .planner-input-row input[type="text"],
+            .planner-input-row input[type="time"] {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+            .container {
+                padding: 1rem;
+                border-radius: 1.5rem;
+            }
+            .header .logo {
+                font-size: 1.4rem;
+            }
+            .timetable {
+                font-size: 0.7rem;
+                min-width: 480px;
+            }
+            .timetable .time-col {
+                width: 50px;
+                font-size: 0.65rem;
+            }
+            .timetable th .day-label {
+                font-size: 0.6rem;
+            }
+            .modal-box {
+                padding: 1.2rem;
+                margin: 0.5rem;
+            }
+            .btn {
+                padding: 6px 12px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- ===== HEADER ===== -->
+    <div class="header">
+        <div class="logo">📅 <span>Дневник преподавателя</span></div>
+        <div class="date-info">
+            <span id="currentDate">01 сентября 2026</span>
+            <span class="week-badge" id="weekBadge">Неделя 1</span>
+        </div>
+    </div>
+
+    <!-- ===== NAV ===== -->
+    <div class="nav-row">
+        <div class="week-nav">
+            <button class="btn btn-outline btn-sm" id="prevWeekBtn">◀</button>
+            <span class="week-display" id="weekDisplay">1-я учебная неделя</span>
+            <button class="btn btn-outline btn-sm" id="nextWeekBtn">▶</button>
+            <button class="btn btn-primary btn-sm" id="todayBtn">📌 Сегодня</button>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+            <button class="btn btn-olive btn-sm" id="editScheduleBtn">✏️ Редактировать расписание</button>
+            <button class="btn btn-orange btn-sm" id="clearNotesBtn">🗑️ Очистить заметки</button>
+        </div>
+    </div>
+
+    <!-- ===== TIMETABLE ===== -->
+    <div class="timetable-wrapper">
+        <table class="timetable" id="timetable">
+            <thead>
+                <tr>
+                    <th>Время</th>
+                    <th id="day0">ПН</th>
+                    <th id="day1">ВТ</th>
+                    <th id="day2">СР</th>
+                    <th id="day3">ЧТ</th>
+                    <th id="day4">ПТ</th>
+                </tr>
+            </thead>
+            <tbody id="timetableBody">
+                <!-- заполняется JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ===== PLANNER ===== -->
+    <div class="planner-section">
+        <div class="planner-header">
+            <div class="planner-title">📋 Планер на неделю</div>
+            <span style="font-size:0.8rem; color:#8A9B7A;" id="plannerWeekLabel">неделя 1</span>
+        </div>
+        <div class="planner-notes" id="plannerNotes">
+            <!-- заполняется JS -->
+        </div>
+        <div class="planner-input-row">
+            <input type="text" id="noteInput" placeholder="Новая заметка...">
+            <input type="time" id="noteTime" value="09:00">
+            <button class="btn btn-primary" id="addNoteBtn">➕ Добавить</button>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
+    <div class="footer">
+        <span>🐾 <strong>ВетСим</strong> — ветеринарное просвещение</span>
+        <span style="margin:0 0.5rem;">·</span>
+        <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a>
+        <span style="margin:0 0.5rem;">·</span>
+        <a href="https://vk.com/VetSimPros" target="_blank">vk.com/VetSimPros</a>
+    </div>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="modal">
+    <div class="modal-box">
+        <h3 id="modalTitle">✏️ Редактирование расписания</h3>
+        <div class="modal-sub" id="modalSub">Выберите ячейку для редактирования</div>
+        <div class="field-group">
+            <label>Предмет</label>
+            <input type="text" id="modalSubject" placeholder="Название предмета">
+        </div>
+        <div class="field-group">
+            <label>Группа</label>
+            <input type="text" id="modalGroup" placeholder="Например: В-31">
+        </div>
+        <div class="field-group">
+            <label>Кабинет</label>
+            <input type="text" id="modalCabinet" placeholder="Например: 305">
+        </div>
+        <div class="field-group">
+            <label>Примечание</label>
+            <input type="text" id="modalNote" placeholder="Дополнительная информация">
+        </div>
+        <div class="modal-actions">
+            <button class="btn btn-outline" id="modalCancel">Отмена</button>
+            <button class="btn btn-danger" id="modalClear">🗑️ Очистить</button>
+            <button class="btn btn-primary" id="modalSave">💾 Сохранить</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<script>
+    // ================================================================
+    // ДАННЫЕ
+    // ================================================================
+
+    // Расписание: [номер недели][день][пара] = { subject, group, cabinet, note }
+    // Пары: 8:30-10:05, 10:15-11:50, 12:10-13:45, 14:00-15:35, 15:50-17:25
+    const TIME_SLOTS = [
+        { start: '8:30', end: '10:05', label: '1 пара' },
+        { start: '10:15', end: '11:50', label: '2 пара' },
+        { start: '12:10', end: '13:45', label: '3 пара' },
+        { start: '14:00', end: '15:35', label: '4 пара' },
+        { start: '15:50', end: '17:25', label: '5 пара' }
+    ];
+
+    const DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ'];
+    const DAYS_FULL = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница'];
+
+    // База данных расписания
+    let scheduleData = {};
+    // Заметки на неделю: { weekNumber: [ { id, time, text } ] }
+    let notesData = {};
+    let noteIdCounter = 1;
+
+    // Текущее состояние
+    let currentWeek = 1; // 1-я учебная неделя (с 1 сентября)
+    let currentDate = new Date(2026, 8, 1); // 1 сентября 2026
+    let editingCell = null; // { week, day, slot }
+
+    // ================================================================
+    // ИНИЦИАЛИЗАЦИЯ ДАННЫХ
+    // ================================================================
+
+    function initData() {
+        // Загружаем из localStorage
+        try {
+            const saved = localStorage.getItem('vetsim_teacher_diary');
+            if (saved) {
+                const data = JSON.parse(saved);
+                scheduleData = data.schedule || {};
+                notesData = data.notes || {};
+                currentWeek = data.currentWeek || 1;
+                noteIdCounter = data.noteIdCounter || 1;
+                // Восстанавливаем дату
+                if (data.currentDate) {
+                    currentDate = new Date(data.currentDate);
+                }
+                return;
+            }
+        } catch (e) {}
+
+        // Демо-данные для 1-й недели
+        scheduleData = {
+            1: {
+                0: {}, // ПН
+                1: {}, // ВТ
+                2: {}, // СР
+                3: {}, // ЧТ
+                4: {}  // ПТ
+            }
+        };
+        // Заполним демо-примерами
+        const demo = [
+            { day: 0, slot: 0, subject: 'Анатомия животных', group: 'В-21', cabinet: '305' },
+            { day: 0, slot: 2, subject: 'Физиология', group: 'В-22', cabinet: '210' },
+            { day: 1, slot: 1, subject: 'Хирургия', group: 'В-31', cabinet: '408' },
+            { day: 2, slot: 0, subject: 'Фармакология', group: 'В-21', cabinet: '305' },
+            { day: 2, slot: 3, subject: 'Микробиология', group: 'В-22', cabinet: '210' },
+            { day: 3, slot: 2, subject: 'Внутренние болезни', group: 'В-31', cabinet: '408' },
+            { day: 4, slot: 1, subject: 'Патология', group: 'В-21', cabinet: '305' },
+            { day: 4, slot: 4, subject: 'Клиническая практика', group: 'В-31', cabinet: 'Клиника' }
+        ];
+        demo.forEach(item => {
+            if (!scheduleData[1]) scheduleData[1] = {};
+            if (!scheduleData[1][item.day]) scheduleData[1][item.day] = {};
+            scheduleData[1][item.day][item.slot] = {
+                subject: item.subject,
+                group: item.group,
+                cabinet: item.cabinet,
+                note: ''
+            };
+        });
+
+        // Заметки для 1-й недели
+        notesData[1] = [
+            { id: noteIdCounter++, time: '09:00', text: 'Проверить контрольные работы' },
+            { id: noteIdCounter++, time: '12:00', text: 'Совещание кафедры' }
+        ];
+
+        saveData();
+    }
+
+    function saveData() {
+        try {
+            const data = {
+                schedule: scheduleData,
+                notes: notesData,
+                currentWeek: currentWeek,
+                currentDate: currentDate.toISOString(),
+                noteIdCounter: noteIdCounter
+            };
+            localStorage.setItem('vetsim_teacher_diary', JSON.stringify(data));
+        } catch (e) {}
+    }
+
+    // ================================================================
+    // ОСНОВНЫЕ ФУНКЦИИ
+    // ================================================================
+
+    function getWeekStartDate(weekNumber) {
+        // 1 сентября 2026 — начало 1-й недели
+        const base = new Date(2026, 8, 1);
+        const diff = (weekNumber - 1) * 7;
+        return new Date(base.getTime() + diff * 86400000);
+    }
+
+    function getWeekNumber(date) {
+        // Возвращает номер недели от 1 сентября 2026
+        const base = new Date(2026, 8, 1);
+        const diff = Math.floor((date - base) / 86400000);
+        return Math.floor(diff / 7) + 1;
+    }
+
+    function getWeekDates(weekNumber) {
+        const start = getWeekStartDate(weekNumber);
+        const dates = [];
+        for (let i = 0; i < 5; i++) {
+            const d = new Date(start);
+            d.setDate(d.getDate() + i);
+            dates.push(d);
+        }
+        return dates;
+    }
+
+    function formatDate(date) {
+        const d = date.getDate();
+        const m = date.getMonth() + 1;
+        const y = date.getFullYear();
+        return `${d.toString().padStart(2, '0')}.${m.toString().padStart(2, '0')}.${y}`;
+    }
+
+    function getTodayInfo() {
+        const now = new Date();
+        // Если сегодня >= 1 сентября 2026
+        const start = new Date(2026, 8, 1);
+        if (now < start) {
+            return { week: 1, date: start, dayIndex: 0 };
+        }
+        const week = getWeekNumber(now);
+        const weekStart = getWeekStartDate(week);
+        const dayIndex = Math.min(4, Math.max(0, Math.floor((now - weekStart) / 86400000)));
+        return { week, date: now, dayIndex };
+    }
+
+    // ================================================================
+    // РЕНДЕРИНГ
+    // ================================================================
+
+    function renderAll() {
+        renderTimetable();
+        renderPlanner();
+        updateHeader();
+    }
+
+    function renderTimetable() {
+        const tbody = document.getElementById('timetableBody');
+        tbody.innerHTML = '';
+
+        const today = getTodayInfo();
+        const isCurrentWeek = (currentWeek === today.week);
+        const todayDayIndex = isCurrentWeek ? today.dayIndex : -1;
+
+        // Получаем расписание для текущей недели
+        const weekSchedule = scheduleData[currentWeek] || {};
+
+        TIME_SLOTS.forEach((slot, slotIdx) => {
+            const tr = document.createElement('tr');
+            // Время
+            const tdTime = document.createElement('td');
+            tdTime.className = 'time-col';
+            tdTime.textContent = `${slot.start}–${slot.end}`;
+            tr.appendChild(tdTime);
+
+            DAYS.forEach((day, dayIdx) => {
+                const td = document.createElement('td');
+                td.className = 'cell';
+                if (isCurrentWeek && dayIdx === todayDayIndex) {
+                    td.classList.add('today-cell');
+                }
+
+                const daySchedule = weekSchedule[dayIdx] || {};
+                const cell = daySchedule[slotIdx];
+
+                const content = document.createElement('div');
+                content.className = 'cell-content';
+
+                if (cell && cell.subject) {
+                    const subjSpan = document.createElement('span');
+                    subjSpan.className = 'subject';
+                    subjSpan.textContent = cell.subject;
+                    content.appendChild(subjSpan);
+
+                    if (cell.group) {
+                        const groupSpan = document.createElement('span');
+                        groupSpan.className = 'group';
+                        groupSpan.textContent = cell.group;
+                        content.appendChild(groupSpan);
+                    }
+
+                    if (cell.cabinet) {
+                        const cabSpan = document.createElement('span');
+                        cabSpan.className = 'cabinet';
+                        cabSpan.textContent = `каб. ${cell.cabinet}`;
+                        content.appendChild(cabSpan);
+                    }
+
+                    if (cell.note) {
+                        const noteSpan = document.createElement('span');
+                        noteSpan.className = 'note';
+                        noteSpan.textContent = cell.note;
+                        content.appendChild(noteSpan);
+                    }
+                } else {
+                    const empty = document.createElement('div');
+                    empty.className = 'empty-cell';
+                    empty.textContent = '—';
+                    content.appendChild(empty);
+                }
+
+                // Клик для редактирования
+                content.addEventListener('click', () => {
+                    openModal(currentWeek, dayIdx, slotIdx);
+                });
+
+                td.appendChild(content);
+                tr.appendChild(td);
+            });
+
+            tbody.appendChild(tr);
+        });
+
+        // Обновляем заголовки дней недели с датами
+        const dates = getWeekDates(currentWeek);
+        DAYS.forEach((day, idx) => {
+            const th = document.getElementById(`day${idx}`);
+            if (th) {
+                const dateStr = formatDate(dates[idx]);
+                th.innerHTML = `${day} <span class="day-label">${dateStr}</span>`;
+            }
+        });
+
+        // Обновляем навигацию
+        document.getElementById('weekDisplay').textContent = `${currentWeek}-я учебная неделя`;
+        document.getElementById('plannerWeekLabel').textContent = `неделя ${currentWeek}`;
+
+        // Обновляем badge
+        const weekBadge = document.getElementById('weekBadge');
+        weekBadge.textContent = `Неделя ${currentWeek}`;
+    }
+
+    function renderPlanner() {
+        const container = document.getElementById('plannerNotes');
+        const notes = notesData[currentWeek] || [];
+        if (notes.length === 0) {
+            container.innerHTML = '<div style="color:#C9D6BA; text-align:center; padding:0.8rem;">Нет заметок на эту неделю</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        // Сортируем по времени
+        const sorted = [...notes].sort((a, b) => a.time.localeCompare(b.time));
+        sorted.forEach(note => {
+            const div = document.createElement('div');
+            div.className = 'note-item';
+            div.innerHTML = `
+                <span class="note-text">${escapeHtml(note.text)}</span>
+                <span class="note-time">${escapeHtml(note.time)}</span>
+                <div class="note-actions">
+                    <button class="delete-note" data-id="${note.id}" title="Удалить">🗑️</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+
+        // Обработчики удаления
+        container.querySelectorAll('.delete-note').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id);
+                deleteNote(id);
+            });
+        });
+    }
+
+    function updateHeader() {
+        const today = new Date();
+        const dateStr = formatDate(today);
+        document.getElementById('currentDate').textContent = `${dateStr} ${today.toLocaleDateString('ru-RU', { weekday: 'long' })}`;
+    }
+
+    // ================================================================
+    // МОДАЛЬНОЕ ОКНО (редактирование расписания)
+    // ================================================================
+
+    function openModal(week, day, slot) {
+        editingCell = { week, day, slot };
+        const weekSchedule = scheduleData[week] || {};
+        const daySchedule = weekSchedule[day] || {};
+        const cell = daySchedule[slot] || {};
+
+        document.getElementById('modalTitle').textContent = `✏️ Редактирование: ${DAYS_FULL[day]}, ${TIME_SLOTS[slot].label}`;
+        document.getElementById('modalSub').textContent = `Неделя ${week}, ${TIME_SLOTS[slot].start}–${TIME_SLOTS[slot].end}`;
+        document.getElementById('modalSubject').value = cell.subject || '';
+        document.getElementById('modalGroup').value = cell.group || '';
+        document.getElementById('modalCabinet').value = cell.cabinet || '';
+        document.getElementById('modalNote').value = cell.note || '';
+
+        document.getElementById('modal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.remove('active');
+        editingCell = null;
+    }
+
+    function saveModal() {
+        if (!editingCell) return;
+        const { week, day, slot } = editingCell;
+
+        const subject = document.getElementById('modalSubject').value.trim();
+        const group = document.getElementById('modalGroup').value.trim();
+        const cabinet = document.getElementById('modalCabinet').value.trim();
+        const note = document.getElementById('modalNote').value.trim();
+
+        if (!scheduleData[week]) scheduleData[week] = {};
+        if (!scheduleData[week][day]) scheduleData[week][day] = {};
+
+        if (subject) {
+            scheduleData[week][day][slot] = { subject, group, cabinet, note };
+        } else {
+            // Если предмет пустой — удаляем ячейку
+            delete scheduleData[week][day][slot];
+        }
+
+        saveData();
+        closeModal();
+        renderAll();
+        showToast('✅ Расписание обновлено', 2000);
+    }
+
+    function clearCell() {
+        if (!editingCell) return;
+        const { week, day, slot } = editingCell;
+        if (scheduleData[week] && scheduleData[week][day]) {
+            delete scheduleData[week][day][slot];
+        }
+        saveData();
+        closeModal();
+        renderAll();
+        showToast('🗑️ Ячейка очищена', 1500);
+    }
+
+    // ================================================================
+    // ЗАМЕТКИ
+    // ================================================================
+
+    function addNote() {
+        const input = document.getElementById('noteInput');
+        const timeInput = document.getElementById('noteTime');
+        const text = input.value.trim();
+        const time = timeInput.value || '09:00';
+
+        if (!text) {
+            showToast('⚠️ Введите текст заметки', 2000);
+            return;
+        }
+
+        if (!notesData[currentWeek]) notesData[currentWeek] = [];
+        notesData[currentWeek].push({
+            id: noteIdCounter++,
+            time: time,
+            text: text
+        });
+
+        input.value = '';
+        saveData();
+        renderPlanner();
+        showToast('✅ Заметка добавлена', 1500);
+    }
+
+    function deleteNote(id) {
+        if (!notesData[currentWeek]) return;
+        notesData[currentWeek] = notesData[currentWeek].filter(n => n.id !== id);
+        saveData();
+        renderPlanner();
+        showToast('🗑️ Заметка удалена', 1500);
+    }
+
+    function clearNotes() {
+        if (!notesData[currentWeek] || notesData[currentWeek].length === 0) {
+            showToast('Нет заметок для удаления', 1500);
+            return;
+        }
+        if (!confirm('Удалить все заметки на эту неделю?')) return;
+        notesData[currentWeek] = [];
+        saveData();
+        renderPlanner();
+        showToast('🗑️ Все заметки удалены', 1500);
+    }
+
+    // ================================================================
+    // НАВИГАЦИЯ ПО НЕДЕЛЯМ
+    // ================================================================
+
+    function goToWeek(week) {
+        if (week < 1) week = 1;
+        const maxWeek = 52; // примерно
+        if (week > maxWeek) week = maxWeek;
+        currentWeek = week;
+        // Обновляем дату для отображения
+        const start = getWeekStartDate(week);
+        currentDate = start;
+        saveData();
+        renderAll();
+    }
+
+    function goToToday() {
+        const today = getTodayInfo();
+        goToWeek(today.week);
+    }
+
+    // ================================================================
+    // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    // ================================================================
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, m => {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function showToast(message, duration = 2500) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        clearTimeout(toast._timeout);
+        toast._timeout = setTimeout(() => {
+            toast.classList.remove('show');
+        }, duration);
+    }
+
+    // ================================================================
+    // ОБРАБОТЧИКИ СОБЫТИЙ
+    // ================================================================
+
+    // Навигация
+    document.getElementById('prevWeekBtn').addEventListener('click', () => goToWeek(currentWeek - 1));
+    document.getElementById('nextWeekBtn').addEventListener('click', () => goToWeek(currentWeek + 1));
+    document.getElementById('todayBtn').addEventListener('click', goToToday);
+
+    // Модальное окно
+    document.getElementById('modalCancel').addEventListener('click', closeModal);
+    document.getElementById('modalSave').addEventListener('click', saveModal);
+    document.getElementById('modalClear').addEventListener('click', clearCell);
+
+    // Закрытие по клику вне окна
+    document.getElementById('modal').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // Заметки
+    document.getElementById('addNoteBtn').addEventListener('click', addNote);
+    document.getElementById('noteInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') addNote();
+    });
+    document.getElementById('clearNotesBtn').addEventListener('click', clearNotes);
+
+    // Редактирование расписания (кнопка)
+    document.getElementById('editScheduleBtn').addEventListener('click', function() {
+        // Просто подсказка, что можно кликнуть по ячейке
+        showToast('💡 Кликните по любой ячейке расписания для редактирования', 3000);
+    });
+
+    // ================================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+
+    initData();
+
+    // Устанавливаем текущую неделю
+    const todayInfo = getTodayInfo();
+    currentWeek = todayInfo.week;
+    // Если сегодня до 1 сентября, показываем 1-ю неделю
+    if (new Date() < new Date(2026, 8, 1)) {
+        currentWeek = 1;
+    }
+
+    renderAll();
+
+    // Добавим обработку клавиш Escape для модалки
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    console.log('📅 Дневник преподавателя загружен');
+</script>
+</body>
+</html>

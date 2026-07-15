@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вставьте пропущенные термины.   Перечислите три возможных причины тимпании рубца у коз, опираясь на знания патофизиологии. | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,'Segoe UI',Roboto,sans-serif;color:#3E5C4A;padding:1.5rem;}
+        .container{max-width:900px;margin:0 auto;}
+        h1{font-size:1.8rem;color:#1F4E6E;text-align:center;margin-bottom:1rem;}
+        .task-text{background:white;border-radius:28px;padding:1.5rem;border:1px solid #E2EAD9;font-size:1rem;line-height:1.6;margin:1rem 0;}
+        .gap-input{display:inline-block;width:150px;padding:6px 10px;border-radius:30px;border:1px solid #A3B18A;background:#FFFEF7;margin:0 4px;font-family:inherit;text-align:center;}
+        .btn-group{display:flex;gap:1rem;justify-content:center;margin:1rem 0;}
+        .check-btn{background:#2C7DA0;color:white;border:none;padding:10px 24px;border-radius:40px;cursor:pointer;font-weight:bold;}
+        .reset-btn{background:#E2CFB0;border:none;padding:8px 20px;border-radius:40px;cursor:pointer;}
+        .feedback{background:#F3F6EF;border-radius:28px;padding:1rem;margin-top:1rem;text-align:center;}
+        .correct{background:#DAF1D8;color:#2A6B2F;}
+        .wrong{background:#FFE4DE;color:#BC5A3C;}
+        .score{text-align:center;margin-bottom:1rem;background:#F3F6EF;padding:0.5rem;border-radius:40px;}
+        footer{text-align:center;font-size:0.7rem;margin-top:2rem;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Вставьте пропущенные термины.   Перечислите три возможных причины тимпании рубца у коз, опираясь на знания патофизиологии.</h1>
+    <div class="score">📊 Результат: <span id="scoreValue">0</span> / <span id="totalCount"></span></div>
+    <div class="task-text" id="taskTextContainer"></div>
+    <div class="btn-group">
+        <button id="checkBtn" class="check-btn">🔍 Проверить</button>
+        <button id="resetBtn" class="reset-btn">🔄 Сбросить</button>
+    </div>
+    <div id="feedback" class="feedback"></div>
+    <footer>© ВетСим — интерактивное задание. Введите ответы в поля.</footer>
+</div>
+<script>
+    const gapsData = [{"correctAnswer":"анамнеза"},{"correctAnswer":"габитус"},{"correctAnswer":"пальпации"},{"correctAnswer":"перкуссии"},{"correctAnswer":" тимпанический"},{"correctAnswer":"Аускультация"},{"correctAnswer":"преджелудков"},{"correctAnswer":"тимпании"},{"correctAnswer":"дополнительные"},{"correctAnswer":"анализ"},{"correctAnswer":"рубца"},{"correctAnswer":"лейкоцитоз"},{"correctAnswer":"ядра"},{"correctAnswer":"газов"},{"correctAnswer":"тимпания"},{"correctAnswer":"метеоризмом"},{"correctAnswer":"ацидозом"},{"correctAnswer":"электролитов"},{"correctAnswer":"сочных"}];
+    let userAnswers = new Array(gapsData.length).fill('');
+
+    function render() {
+        const container = document.getElementById('taskTextContainer');
+        const raw = "<p dir=\"ltr\">Обследование козы с подозрением на заболевание желудочно-кишечного тракта</p>\n<p dir=\"ltr\">Ветеринарный врач провёл первичное обследование козы, следуя стандартной схеме. Сначала была выполнена&nbsp;регистрация&nbsp;животного и&nbsp;сбор <span class=\"gap-marker\" data-id=\"1\" contenteditable=\"false\">[___]</span>&nbsp;(сведения о кормлении, условиях содержания, времени появления симптомов). Затем приступили к&nbsp;общему клиническому обследованию: оценили <span class=\"gap-marker\" data-id=\"2\" contenteditable=\"false\">[___]</span>, состояние шерстного покрова, кожи, подкожной клетчатки, лимфатических узлов и видимых слизистых оболочек.&nbsp;</p>\n<p dir=\"ltr\">При осмотре ротовой полости обратили внимание на отёчность и покраснение слизистой оболочки губ. При&nbsp;<span class=\"gap-marker\" data-id=\"3\" contenteditable=\"false\">[___]</span>&nbsp;(ощупывании)\nобнаружили болезненность в области нижней трети живота. При <span class=\"gap-marker\" data-id=\"4\" contenteditable=\"false\">[___]</span> (выстукивании) установили, что рубец увеличен в объёме, а звук над ним —\n<span class=\"gap-marker\" data-id=\"5\" contenteditable=\"false\">[___]</span>. <span class=\"gap-marker\" data-id=\"6\" contenteditable=\"false\">[___]</span> (выслушивание) выявила усиленные, ритмичные, но редкие сокращения <span class=\"gap-marker\" data-id=\"7\" contenteditable=\"false\">[___]</span> (гипотонические), что характерно для&nbsp;<span class=\"gap-marker\" data-id=\"8\" contenteditable=\"false\">[___]</span>&nbsp;(вздутия).&nbsp;</p>\n<p dir=\"ltr\">Для уточнения диагноза назначили&nbsp;<span class=\"gap-marker\" data-id=\"9\" contenteditable=\"false\">[___]</span> исследования: общий <span class=\"gap-marker\" data-id=\"10\" contenteditable=\"false\">[___]</span> крови, анализ содержимого <span class=\"gap-marker\" data-id=\"11\" contenteditable=\"false\">[___]</span>. В анализе крови отметили нейтрофильный <span class=\"gap-marker\" data-id=\"12\" contenteditable=\"false\">[___]</span> со сдвигом <span class=\"gap-marker\" data-id=\"13\" contenteditable=\"false\">[___]</span> влево. В содержимом рубца обнаружили большое количество <span class=\"gap-marker\" data-id=\"14\" contenteditable=\"false\">[___]</span> и небольшое количество жидкого содержимого.</p>\n<p dir=\"ltr\">На основании полученных данных ветврач сформулировал предварительный диагноз: острая <span class=\"gap-marker\" data-id=\"15\" contenteditable=\"false\">[___]</span> рубца, осложнённая <span class=\"gap-marker\" data-id=\"16\" contenteditable=\"false\">[___]</span> и вторичным <span class=\"gap-marker\" data-id=\"18\" contenteditable=\"false\">[___]</span>.&nbsp;Назначено лечение: внутривенные вливания растворов <span class=\"gap-marker\" data-id=\"19\" contenteditable=\"false\">[___]</span>, сорбенты, спазмолитики. Проведена коррекция рациона с исключением <span class=\"gap-marker\" data-id=\"20\" contenteditable=\"false\">[___]</span> кормов на 24 часа.</p>";
+        const wrapper = document.createElement('div');
+        wrapper.innerHTML = raw;
+        const placeholders = wrapper.querySelectorAll('.gap-marker');
+        placeholders.forEach((ph, idx) => {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'gap-input';
+            input.placeholder = '_____';
+            input.value = userAnswers[idx] || '';
+            input.setAttribute('data-idx', idx);
+            input.addEventListener('input', (e) => {
+                userAnswers[parseInt(e.target.getAttribute('data-idx'))] = e.target.value;
+            });
+            ph.parentNode.replaceChild(input, ph);
+        });
+        // ВАЖНО: перемещаем готовые узлы, а не перезаписываем innerHTML
+        container.innerHTML = '';
+        while (wrapper.firstChild) {
+            container.appendChild(wrapper.firstChild);
+        }
+        document.getElementById('totalCount').innerText = gapsData.length;
+    }
+
+    function evaluate() {
+        let correct = 0;
+        const details = [];
+        for (let i = 0; i < gapsData.length; i++) {
+            const user = (userAnswers[i] || '').trim().toLowerCase();
+            const correctAnswer = (gapsData[i].correctAnswer || '').trim().toLowerCase();
+            const ok = (user === correctAnswer);
+            if (ok) correct++;
+            details.push({ idx: i, ok, user, correct: gapsData[i].correctAnswer });
+        }
+        const percent = gapsData.length ? Math.round((correct / gapsData.length)*100) : 0;
+        document.getElementById('scoreValue').innerHTML = `${correct} из ${gapsData.length} (${percent}%)`;
+        const feedbackDiv = document.getElementById('feedback');
+        if (correct === gapsData.length && gapsData.length > 0) {
+            feedbackDiv.innerHTML = '<div class="correct">🎉 Отлично! Все ответы верны!</div>';
+        } else {
+            const missed = details.filter(d => !d.ok).map(d => `Пропуск ${d.idx+1}: «${d.correct}» (вы ввели: «${d.user || 'пусто'}»)`);
+            feedbackDiv.innerHTML = '<div class="wrong">❌ Не все ответы правильны.<br>' + missed.join('<br>') + '</div>';
+        }
+    }
+
+    function resetAll() {
+        userAnswers.fill('');
+        render();
+        document.getElementById('scoreValue').innerHTML = '0';
+        document.getElementById('feedback').innerHTML = '';
+    }
+
+    render();
+    document.getElementById('checkBtn').addEventListener('click', evaluate);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+</script>
+</body>
+</html>

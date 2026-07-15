@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>ВетСим · Конструктор "Кто хочет стать ветеринаром?"</title>
+  <style>
+    /* ===== Глобальный сброс и шрифты ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    }
+    body {
+      background: #FDF8F0;
+      color: #1e2f2a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+    /* ===== Основной контейнер ===== */
+    .app {
+      max-width: 1300px;
+      width: 100%;
+      background: #FDF8F0;
+      border-radius: 36px 36px 24px 24px;
+      box-shadow: 0 20px 40px rgba(0, 20, 30, 0.2);
+      padding: 24px 28px 20px;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      min-height: 90vh;
+    }
+    /* ===== Вкладки ===== */
+    .tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: #e8e0d6;
+      border: none;
+      padding: 10px 28px;
+      border-radius: 48px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #2f4a3c;
+      cursor: pointer;
+      transition: 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      letter-spacing: 0.3px;
+    }
+    .tab-btn.active {
+      background: #2C7DA0;
+      color: white;
+      box-shadow: 0 6px 12px rgba(44, 125, 160, 0.25);
+    }
+    .tab-btn:hover:not(.active) {
+      background: #d6cdc0;
+    }
+    /* ===== Панели ===== */
+    .panel {
+      display: none;
+      animation: fade 0.2s ease;
+      flex: 1;
+    }
+    .panel.active {
+      display: block;
+    }
+    @keyframes fade { from { opacity: 0.3; } to { opacity: 1; } }
+
+    /* ===== РЕДАКТОР (офисный стиль ВетСим) ===== */
+    .editor-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 28px;
+    }
+    @media (max-width: 800px) {
+      .editor-grid { grid-template-columns: 1fr; gap: 18px; }
+    }
+    .editor-card {
+      background: #ffffffdd;
+      backdrop-filter: blur(2px);
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 22px 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      border: 1px solid #eae3d8;
+    }
+    .editor-card h3 {
+      font-weight: 600;
+      color: #2C7DA0;
+      font-size: 1.2rem;
+      letter-spacing: -0.2px;
+      margin-bottom: 18px;
+      border-bottom: 2px solid #dce5da;
+      padding-bottom: 10px;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .field-group label {
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: #3E5C4A;
+      letter-spacing: 0.3px;
+    }
+    .field-group input, .field-group select, .field-group textarea {
+      background: #FDF8F0;
+      border: 1px solid #d0cbc2;
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+      transition: 0.15s;
+      width: 100%;
+    }
+    .field-group input:focus, .field-group select:focus, .field-group textarea:focus {
+      border-color: #2C7DA0;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(44,125,160,0.15);
+    }
+    .field-group textarea { min-height: 60px; resize: vertical; }
+    .row-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .question-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 16px 0 10px;
+    }
+    .btn {
+      background: #A3B18A;
+      border: none;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 600;
+      color: #1e2f1e;
+      cursor: pointer;
+      transition: 0.15s;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary { background: #2C7DA0; color: white; }
+    .btn-primary:hover { background: #1f5f7a; }
+    .btn-success { background: #5b8c5a; color: white; }
+    .btn-success:hover { background: #437042; }
+    .btn-warning { background: #d9b650; color: #1e2f1a; }
+    .btn-warning:hover { background: #c4a33e; }
+    .btn-outline { background: transparent; border: 1px solid #b3a99b; }
+    .btn-outline:hover { background: #ede7dd; }
+    .btn-sm { padding: 5px 12px; font-size: 0.8rem; }
+    .badge-count {
+      background: #d9d0c2;
+      padding: 4px 16px;
+      border-radius: 40px;
+      font-weight: 500;
+    }
+    .settings-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+      margin: 10px 0 18px;
+    }
+    .settings-row label { display: flex; align-items: center; gap: 6px; font-weight: 500; color: #3E5C4A; }
+    .export-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+
+    /* ===== ИГРОВОЙ РЕЖИМ (телешоу) ===== */
+    .game-wrapper {
+      background: radial-gradient(circle at 20% 30%, #1b2b4a, #0b1628);
+      border-radius: 40px;
+      padding: 24px 20px 30px;
+      box-shadow: inset 0 0 80px rgba(10, 30, 70, 0.6);
+      position: relative;
+      border: 1px solid #667a9e33;
+    }
+    .game-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .game-logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #f5e56b;
+      text-shadow: 0 0 20px #f5b81b55, 0 4px 8px #00000066;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .game-logo small { font-size: 1rem; color: #cfddee; font-weight: 400; }
+    .game-progress {
+      background: #1d314a;
+      padding: 6px 18px 6px 14px;
+      border-radius: 60px;
+      color: #dbeafe;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid #6f8bb0;
+      box-shadow: inset 0 0 10px #00000033;
+    }
+    .game-question-box {
+      background: #eef5ff;
+      border-radius: 40px;
+      padding: 24px 28px;
+      margin: 20px 0 28px;
+      box-shadow: 0 10px 30px #00000055, 0 0 0 2px #d5b87c55;
+      text-align: center;
+    }
+    .game-question-text {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #0b1a2b;
+      line-height: 1.3;
+      min-height: 4rem;
+    }
+    .game-answers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 20px 0 28px;
+    }
+    @media (max-width: 550px) {
+      .game-answers { grid-template-columns: 1fr; }
+      .game-question-text { font-size: 1.3rem; }
+    }
+    .answer-btn {
+      background: #1f3f5c;
+      border: 2px solid #c6a86b;
+      border-radius: 60px;
+      padding: 18px 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: white;
+      text-shadow: 0 2px 4px #00000055;
+      box-shadow: 0 6px 0 #0a1a2a, 0 8px 20px #00000066;
+      transition: 0.1s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: center;
+      letter-spacing: 0.5px;
+      background: linear-gradient(145deg, #294d6e, #18324b);
+    }
+    .answer-btn span { background: #f5d742; color: #1a1a1a; border-radius: 40px; padding: 2px 14px; font-weight: 700; }
+    .answer-btn:active { transform: scale(0.96); }
+    .answer-btn.correct { background: #2a8e4a; border-color: #b3ffb3; box-shadow: 0 0 30px #48d66b; }
+    .answer-btn.wrong { background: #b13e3e; border-color: #ff8a8a; box-shadow: 0 0 30px #ff5e5e; }
+    .answer-btn.disabled { opacity: 0.5; pointer-events: none; }
+    .game-lifelines {
+      display: flex;
+      gap: 18px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .lifeline-btn {
+      background: #2a3f5a;
+      border: 1px solid #cfb37a;
+      border-radius: 48px;
+      padding: 10px 24px;
+      color: #f5f0e0;
+      font-weight: 600;
+      box-shadow: 0 4px 0 #121f2f;
+      transition: 0.1s;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lifeline-btn.used { opacity: 0.3; pointer-events: none; filter: grayscale(0.7); }
+    .lifeline-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #121f2f; }
+    .game-start-screen {
+      text-align: center;
+      padding: 40px 20px;
+      background: radial-gradient(circle at 30% 20%, #1f3757, #09111f);
+      border-radius: 50px;
+    }
+    .game-start-screen h1 { font-size: 3.2rem; color: #f5e56b; text-shadow: 0 0 30px #f5b81b; }
+    .game-start-screen .sub { color: #aac3e0; font-size: 1.2rem; margin: 10px 0 30px; }
+    .btn-start {
+      background: #f5c542;
+      border: none;
+      padding: 18px 58px;
+      border-radius: 80px;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1d2e1d;
+      box-shadow: 0 8px 0 #a07e2a, 0 12px 40px #f5b81b55;
+      transition: 0.08s;
+      cursor: pointer;
+    }
+    .btn-start:active { transform: translateY(6px); box-shadow: 0 2px 0 #a07e2a; }
+    .game-result {
+      text-align: center;
+      padding: 30px 20px;
+      background: #101f31dd;
+      backdrop-filter: blur(4px);
+      border-radius: 60px;
+      color: white;
+    }
+    .game-result h2 { font-size: 2.8rem; color: #f5d742; }
+    .result-actions { display: flex; gap: 20px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
+
+    /* ===== ПОДВАЛ ===== */
+    .app-footer {
+      margin-top: 32px;
+      padding-top: 18px;
+      border-top: 2px solid #dce5da;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: #3E5C4A;
+    }
+    .app-footer a {
+      color: #2C7DA0;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .app-footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 20px; flex-wrap: wrap; }
+
+    /* ===== общие ===== */
+    .hidden { display: none !important; }
+    .flex { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .mt-2 { margin-top: 12px; }
+    .mb-2 { margin-bottom: 10px; }
+    .text-center { text-align: center; }
+    .constructor-header {
+      margin-bottom: 16px;
+    }
+    .constructor-header h2 {
+      color: #2C7DA0;
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+    .constructor-header p {
+      color: #3E5C4A;
+      font-size: 1rem;
+      max-width: 700px;
+    }
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <!-- Заголовок конструктора -->
+  <div class="constructor-header">
+    <h2>🧩 Конструктор игры «Кто хочет стать ветеринаром?»</h2>
+    <p>Создайте викторину в стиле телешоу. Добавьте до 15 вопросов, настройте подсказки и экспортируйте готовую игру для студентов.</p>
+  </div>
+
+  <!-- Вкладки -->
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
+    <button class="tab-btn" data-tab="game">🎮 Игра</button>
+  </div>
+
+  <!-- ========== РЕДАКТОР ========== -->
+  <div class="panel active" id="panel-editor">
+    <div class="editor-grid">
+      <!-- Левая колонка: вопросы -->
+      <div class="editor-card">
+        <h3>📋 Вопросы (до 15)</h3>
+        <div class="field-group">
+          <label>Название игры</label>
+          <input id="gameTitle" value="Кто хочет стать ветеринаром?" />
+        </div>
+        <div class="field-group">
+          <label>Тематика</label>
+          <input id="gameTopic" value="Анатомия животных" />
+        </div>
+        <hr style="margin: 16px 0; border-color: #ddd6cb;" />
+        <div class="field-group">
+          <label>Уровень сложности (1–5)</label>
+          <select id="qLevel"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+        </div>
+        <div class="field-group">
+          <label>Текст вопроса</label>
+          <textarea id="qText">Как называется наука о строении тела животных?</textarea>
+        </div>
+        <div class="row-4">
+          <div class="field-group"><label>А</label><input id="qA" value="Анатомия" /></div>
+          <div class="field-group"><label>Б</label><input id="qB" value="Физиология" /></div>
+          <div class="field-group"><label>В</label><input id="qC" value="Гистология" /></div>
+          <div class="field-group"><label>Г</label><input id="qD" value="Эмбриология" /></div>
+        </div>
+        <div class="field-group">
+          <label>Правильный ответ</label>
+          <select id="qCorrect"><option value="A">А</option><option value="B">Б</option><option value="C" selected>В</option><option value="D">Г</option></select>
+        </div>
+        <div class="question-nav">
+          <button class="btn btn-outline btn-sm" id="prevQ">◀ Пред.</button>
+          <span class="badge-count" id="qCounter">Вопрос 1 из 15</span>
+          <button class="btn btn-outline btn-sm" id="nextQ">След. ▶</button>
+          <button class="btn btn-success btn-sm" id="addQ">➕ Добавить</button>
+          <button class="btn btn-warning btn-sm" id="delQ">🗑️ Удалить</button>
+        </div>
+        <button class="btn btn-primary" id="loadExample">📂 Загрузить пример</button>
+      </div>
+
+      <!-- Правая колонка: настройки + экспорт -->
+      <div class="editor-card">
+        <h3>⚙️ Настройки игры</h3>
+        <div class="settings-row">
+          <label><input type="checkbox" id="opt5050" checked /> 50/50</label>
+          <label><input type="checkbox" id="optCall" checked /> Звонок другу</label>
+          <label><input type="checkbox" id="optHall" checked /> Помощь зала</label>
+        </div>
+        <div class="field-group">
+          <label>Подсказки для "Звонок другу" (через запятую)</label>
+          <input id="friendHints" value="Возможно, правильный ответ А, Думаю это В, Я бы выбрал Г, Скорее всего Б" />
+        </div>
+        <hr style="margin: 20px 0; border-color: #ddd6cb;" />
+        <h3>📤 Экспорт</h3>
+        <div class="export-bar">
+          <button class="btn btn-primary" id="exportGame">📤 Экспортировать игру</button>
+          <button class="btn btn-outline" id="resetGame">🔄 Сбросить</button>
+        </div>
+        <p style="font-size:0.8rem; color:#5f6b5a; margin-top: 10px;">Автосохранение в LocalStorage</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ИГРА ========== -->
+  <div class="panel" id="panel-game">
+    <div class="game-wrapper" id="gameWrapper">
+      <!-- Стартовый экран -->
+      <div id="gameStartScreen" class="game-start-screen">
+        <div class="game-logo" style="justify-content:center; font-size:2.8rem;">🐾 Кто хочет стать ВЕТЕРИНАРОМ?</div>
+        <div class="sub">Платформа ВетСим · интерактивное шоу</div>
+        <button class="btn-start" id="startGameBtn">▶ Начать игру</button>
+        <div style="margin-top:20px; color:#aac3e0;">15 вопросов · 5 уровней</div>
+      </div>
+      <!-- Игровой экран -->
+      <div id="gamePlayScreen" class="hidden">
+        <div class="game-header">
+          <div class="game-logo">🐾 <small>ВетСим</small></div>
+          <div class="game-progress" id="gameProgress">Уровень 1 · Вопрос 1/15</div>
+        </div>
+        <div class="game-question-box">
+          <div class="game-question-text" id="gameQuestionText">Загрузка вопроса...</div>
+        </div>
+        <div class="game-answers" id="gameAnswersContainer"></div>
+        <div class="game-lifelines" id="gameLifelines">
+          <button class="lifeline-btn" data-lifeline="5050">🧩 50/50</button>
+          <button class="lifeline-btn" data-lifeline="call">📞 Друг</button>
+          <button class="lifeline-btn" data-lifeline="hall">👥 Зал</button>
+        </div>
+        <div style="text-align:center; margin-top:12px;">
+          <button class="btn btn-outline" style="background:#2a3f5a; color:white; border-color:#b39d6b;" id="exitGameBtn">🏠 На главную</button>
+        </div>
+      </div>
+      <!-- Результат -->
+      <div id="gameResultScreen" class="hidden game-result">
+        <h2 id="resultTitle">🎉 Вы — настоящий ветеринар!</h2>
+        <p style="font-size:1.8rem; margin:12px 0;" id="resultScore">Правильных: 12</p>
+        <div class="result-actions">
+          <button class="btn btn-warning" id="retryGameBtn">🔄 Играть снова</button>
+          <button class="btn btn-primary" id="homeFromResultBtn">🏠 На главную</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ПОДВАЛ ===== -->
+  </script>
+    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
+    <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
+    <p style="margin-top: 0.5rem;">
+        <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
+        <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
+        <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
+        <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
+    </p>
+    <p style="margin-top: 0.5rem;">
+        Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
+    </p>
+    <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
+        💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
+    </p>
+    <p style="font-size: 0.7rem; color: #89A07B;">
+        © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
+    </p>
+</footer>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+    // ---------- ДАННЫЕ (15 вопросов по умолчанию) ----------
+    const DEFAULT_QUESTIONS = [
+      { level:1, text:"Как называется наука о строении тела животных?", A:"Анатомия", B:"Физиология", C:"Гистология", D:"Эмбриология", correct:"A" },
+      { level:1, text:"Сколько отделов в позвоночнике млекопитающих?", A:"3", B:"4", C:"5", D:"6", correct:"C" },
+      { level:2, text:"Какой орган отвечает за фильтрацию крови у позвоночных?", A:"Печень", B:"Почка", C:"Селезёнка", D:"Лёгкие", correct:"B" },
+      { level:2, text:"Что такое диафрагма?", A:"Мышца", B:"Кость", C:"Связка", D:"Сухожилие", correct:"A" },
+      { level:3, text:"У какого животного трёхкамерное сердце?", A:"Лягушка", B:"Собака", C:"Птица", D:"Кошка", correct:"A" },
+      { level:3, text:"Что входит в состав гемоглобина?", A:"Железо", B:"Магний", C:"Кальций", D:"Натрий", correct:"A" },
+      { level:4, text:"Какая железа вырабатывает панкреатический сок?", A:"Щитовидная", B:"Поджелудочная", C:"Надпочечник", D:"Гипофиз", correct:"B" },
+      { level:4, text:"Сколько зубов у взрослой собаки?", A:"28", B:"32", C:"42", D:"36", correct:"C" },
+      { level:5, text:"Как называется воспаление лёгких?", A:"Пневмония", B:"Бронхит", C:"Трахеит", D:"Плеврит", correct:"A" },
+      { level:5, text:"Какая птица не умеет летать?", A:"Пингвин", B:"Воробей", C:"Сокол", D:"Орёл", correct:"A" },
+      { level:1, text:"Сколько камер в сердце млекопитающих?", A:"2", B:"3", C:"4", D:"5", correct:"C" },
+      { level:2, text:"Что такое коллаген?", A:"Белок", B:"Углевод", C:"Жир", D:"Витамин", correct:"A" },
+      { level:3, text:"Какая часть мозга отвечает за координацию?", A:"Мозжечок", B:"Гипоталамус", C:"Продолговатый", D:"Таламус", correct:"A" },
+      { level:4, text:"Какую функцию выполняет желчный пузырь?", A:"Хранит желчь", B:"Фильтрует кровь", C:"Переваривает жиры", D:"Вырабатывает инсулин", correct:"A" },
+      { level:5, text:"Самое крупное животное на планете?", A:"Синий кит", B:"Африканский слон", C:"Белый носорог", D:"Косатка", correct:"A" }
+    ];
+
+    // ---------- СОСТОЯНИЕ ----------
+    let questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+    let currentIndex = 0;          // индекс в редакторе
+    let gameQuestions = [];
+    let gameIndex = 0;
+    let gameCorrect = 0;
+    let gameOver = false;
+    let used5050 = false, usedCall = false, usedHall = false;
+
+    // DOM-ссылки
+    const $ = id => document.getElementById(id);
+    const qText = $('qText'), qA = $('qA'), qB = $('qB'), qC = $('qC'), qD = $('qD');
+    const qLevel = $('qLevel'), qCorrect = $('qCorrect');
+    const counter = $('qCounter');
+    const gameTitle = $('gameTitle'), gameTopic = $('gameTopic');
+    const opt5050 = $('opt5050'), optCall = $('optCall'), optHall = $('optHall');
+    const friendHints = $('friendHints');
+
+    // ---------- ФУНКЦИИ РЕДАКТОРА ----------
+    function loadQuestion(index) {
+      const q = questions[index];
+      if (!q) return;
+      qText.value = q.text || '';
+      qA.value = q.A || '';
+      qB.value = q.B || '';
+      qC.value = q.C || '';
+      qD.value = q.D || '';
+      qLevel.value = q.level || 1;
+      qCorrect.value = q.correct || 'A';
+      counter.textContent = `Вопрос ${index+1} из ${questions.length}`;
+      currentIndex = index;
+      saveToStorage();
+    }
+
+    function saveCurrentQuestion() {
+      if (!questions[currentIndex]) return;
+      const q = questions[currentIndex];
+      q.text = qText.value.trim();
+      q.A = qA.value.trim();
+      q.B = qB.value.trim();
+      q.C = qC.value.trim();
+      q.D = qD.value.trim();
+      q.level = parseInt(qLevel.value) || 1;
+      q.correct = qCorrect.value;
+    }
+
+    function saveToStorage() {
+      try {
+        const data = {
+          questions,
+          title: gameTitle.value,
+          topic: gameTopic.value,
+          opts: { opt5050: opt5050.checked, optCall: optCall.checked, optHall: optHall.checked, hints: friendHints.value }
+        };
+        localStorage.setItem('vetsim_game_data', JSON.stringify(data));
+      } catch(e) {}
+    }
+
+    function loadFromStorage() {
+      try {
+        const raw = localStorage.getItem('vetsim_game_data');
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        if (data.questions && data.questions.length) questions = data.questions;
+        if (data.title) gameTitle.value = data.title;
+        if (data.topic) gameTopic.value = data.topic;
+        if (data.opts) {
+          opt5050.checked = data.opts.opt5050 !== undefined ? data.opts.opt5050 : true;
+          optCall.checked = data.opts.optCall !== undefined ? data.opts.optCall : true;
+          optHall.checked = data.opts.optHall !== undefined ? data.opts.optHall : true;
+          if (data.opts.hints) friendHints.value = data.opts.hints;
+        }
+        return true;
+      } catch(e) { return false; }
+    }
+
+    function renderEditor() {
+      if (currentIndex >= questions.length) currentIndex = questions.length - 1;
+      if (currentIndex < 0) currentIndex = 0;
+      loadQuestion(currentIndex);
+    }
+
+    // ---------- ЭКСПОРТ (исправленный, с подсказками и логикой) ----------
+    function exportGame() {
+      saveCurrentQuestion();
+      const data = {
+        questions: questions,
+        title: gameTitle.value,
+        topic: gameTopic.value,
+        opts: { opt5050: opt5050.checked, optCall: optCall.checked, optHall: optHall.checked, hints: friendHints.value }
+      };
+      const blob = new Blob([buildExportedHTML(data)], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'vetsim_game.html';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function buildExportedHTML(data) {
+      // Встраиваем полную логику с подсказками и кнопкой "На главную"
+      return `<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,sans-serif}
+body{background:#0b1628;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:16px}
+.game-wrapper{max-width:900px;width:100%;background:radial-gradient(circle at 20% 30%,#1b2b4a,#0b1628);border-radius:40px;padding:24px 20px 30px;box-shadow:inset 0 0 80px #0a1e3f;border:1px solid #667a9e33}
+.game-logo{font-size:2rem;font-weight:800;color:#f5e56b;text-shadow:0 0 20px #f5b81b55;text-align:center;margin-bottom:10px}
+.game-question-box{background:#eef5ff;border-radius:40px;padding:24px 28px;margin:16px 0 24px;text-align:center}
+.game-question-text{font-size:1.6rem;font-weight:700;color:#0b1a2b}
+.game-answers{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:16px 0 24px}
+@media(max-width:550px){.game-answers{grid-template-columns:1fr}}
+.answer-btn{background:#1f3f5c;border:2px solid #c6a86b;border-radius:60px;padding:16px 12px;font-size:1.2rem;font-weight:600;color:#fff;box-shadow:0 6px 0 #0a1a2a;cursor:pointer;transition:0.1s;display:flex;align-items:center;gap:8px;justify-content:center}
+.answer-btn.correct{background:#2a8e4a;border-color:#b3ffb3}
+.answer-btn.wrong{background:#b13e3e;border-color:#ff8a8a}
+.lifeline-btn{background:#2a3f5a;border:1px solid #cfb37a;border-radius:48px;padding:8px 20px;color:#f5f0e0;font-weight:600;cursor:pointer;margin:4px}
+.lifeline-btn.used{opacity:0.3;pointer-events:none;filter:grayscale(0.7)}
+.btn-start{background:#f5c542;border:none;padding:14px 48px;border-radius:80px;font-size:1.6rem;font-weight:700;color:#1d2e1d;box-shadow:0 8px 0 #a07e2a;cursor:pointer}
+.hidden{display:none!important}
+.game-result{text-align:center;padding:30px 20px;background:#101f31dd;border-radius:60px;color:#fff}
+.result-actions{display:flex;gap:20px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.game-lifelines{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:10px 0}
+.game-progress{background:#1d314a;padding:6px 18px;border-radius:60px;color:#dbeafe;font-weight:600;display:inline-block;margin-bottom:12px}
+</style>
+</head><body>
+<div class="game-wrapper" id="root"></div>
+<script>
+const DATA = ${JSON.stringify(data)};
+(function(){
+  let qs = DATA.questions, idx=0, correct=0, over=false;
+  let used5050=false, usedCall=false, usedHall=false;
+  const root = document.getElementById('root');
+  const hints = DATA.opts.hints ? DATA.opts.hints.split(',').map(s=>s.trim()).filter(Boolean) : [];
+
+  function renderStart(){
+    root.innerHTML = \`<div style="text-align:center;padding:40px 20px;">
+      <div class="game-logo">🐾 Кто хочет стать ВЕТЕРИНАРОМ?</div>
+      <div style="color:#aac3e0;margin:12px 0 30px;">\${DATA.title} · \${DATA.topic}</div>
+      <button class="btn-start" onclick="startGame()">▶ Начать игру</button>
+      <div style="color:#aac3e0;margin-top:20px;">\${qs.length} вопросов</div>
+    </div>\`;
+  }
+  window.startGame = function(){
+    idx=0; correct=0; over=false; used5050=false; usedCall=false; usedHall=false;
+    renderQuestion();
+  };
+  function renderQuestion(){
+    if(!qs[idx] || over){ renderResult(); return; }
+    const q=qs[idx];
+    const letters=['A','B','C','D'];
+    const labels=['А','Б','В','Г'];
+    let html = \`<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
+      <div class="game-logo" style="font-size:1.6rem;">🐾 ВетСим</div>
+      <div class="game-progress">Уровень \${q.level||1} · Вопрос \${idx+1}/\${qs.length}</div>
+    </div>
+    <div class="game-question-box"><div class="game-question-text">\${q.text}</div></div>
+    <div class="game-answers">\`;
+    letters.forEach((l,i)=>{
+      const txt = q[l] || '';
+      html += \`<button class="answer-btn" data-letter="\${l}" onclick="answer('\${l}')"><span>\${labels[i]}</span> \${txt}</button>\`;
+    });
+    html += \`</div><div class="game-lifelines">\`;
+    if(DATA.opts.opt5050) html += \`<button class="lifeline-btn \${used5050?'used':''}" onclick="useLifeline('5050')">🧩 50/50</button>\`;
+    if(DATA.opts.optCall) html += \`<button class="lifeline-btn \${usedCall?'used':''}" onclick="useLifeline('call')">📞 Друг</button>\`;
+    if(DATA.opts.optHall) html += \`<button class="lifeline-btn \${usedHall?'used':''}" onclick="useLifeline('hall')">👥 Зал</button>\`;
+    html += \`</div><div style="text-align:center;margin-top:12px;">
+      <button class="lifeline-btn" onclick="exitGame()" style="background:#2a3f5a;border-color:#b39d6b;">🏠 На главную</button>
+    </div>\`;
+    root.innerHTML = html;
+  }
+  window.answer = function(letter){
+    if(over) return;
+    const q = qs[idx];
+    const btns = root.querySelectorAll('.answer-btn');
+    btns.forEach(b=>{ if(b.dataset.letter === q.correct) b.classList.add('correct'); else if(b.dataset.letter === letter && letter !== q.correct) b.classList.add('wrong'); });
+    btns.forEach(b=>b.style.pointerEvents='none');
+    if(letter === q.correct){ correct++; idx++; setTimeout(renderQuestion, 700); }
+    else { over=true; setTimeout(renderResult, 900); }
+  };
+  window.useLifeline = function(type){
+    if(over) return;
+    if(type==='5050' && !used5050 && DATA.opts.opt5050){
+      used5050=true;
+      const q=qs[idx];
+      const wrongs=['A','B','C','D'].filter(l=>l!==q.correct);
+      const remove=wrongs.slice(0,2);
+      root.querySelectorAll('.answer-btn').forEach(b=>{ if(remove.includes(b.dataset.letter)) b.style.display='none'; });
+      const btn=root.querySelector('.lifeline-btn[onclick*="5050"]');
+      if(btn) btn.classList.add('used');
+    } else if(type==='call' && !usedCall && DATA.opts.optCall){
+      usedCall=true;
+      const hint = hints.length ? hints[Math.floor(Math.random()*hints.length)] : 'Я думаю, это правильный ответ!';
+      alert('📞 Друг говорит: "'+hint+'"');
+      const btn=root.querySelector('.lifeline-btn[onclick*="call"]');
+      if(btn) btn.classList.add('used');
+    } else if(type==='hall' && !usedHall && DATA.opts.optHall){
+      usedHall=true;
+      const q=qs[idx];
+      const letters=['A','B','C','D'];
+      const percents = letters.map(l => l===q.correct ? 45+Math.floor(Math.random()*20) : 10+Math.floor(Math.random()*15));
+      let sum=percents.reduce((a,b)=>a+b,0);
+      const result = letters.map((l,i)=> l+': '+Math.round(percents[i]/sum*100)+'%').join('  ');
+      alert('👥 Зал голосует:\\n'+result);
+      const btn=root.querySelector('.lifeline-btn[onclick*="hall"]');
+      if(btn) btn.classList.add('used');
+    }
+  };
+  function renderResult(){
+    const total=qs.length;
+    root.innerHTML = \`<div class="game-result"><h2>\${correct===total?'🎉 Вы — настоящий ветеринар!':'😞 Попробуйте снова'}</h2>
+    <p style="font-size:1.8rem;">Правильных: \${correct} из \${total}</p>
+    <div class="result-actions">
+    <button class="btn-start" style="font-size:1.2rem;padding:12px 30px;" onclick="startGame()">🔄 Снова</button>
+    <button class="lifeline-btn" onclick="exitGame()" style="background:#2a3f5a;border-color:#b39d6b;">🏠 На главную</button>
+    </div></div>\`;
+  }
+  window.exitGame = function(){ renderStart(); };
+  renderStart();
+})();
+<\/script>
+</body></html>`;
+    }
+
+    // ---------- ИГРОВАЯ ЛОГИКА (в редакторе) ----------
+    function startGame() {
+      gameQuestions = JSON.parse(JSON.stringify(questions));
+      if (gameQuestions.length === 0) {
+        alert('Нет вопросов! Загрузите пример или добавьте вопросы.');
+        return;
+      }
+      gameIndex = 0;
+      gameCorrect = 0;
+      gameOver = false;
+      used5050 = usedCall = usedHall = false;
+      document.getElementById('gameStartScreen').classList.add('hidden');
+      document.getElementById('gamePlayScreen').classList.remove('hidden');
+      document.getElementById('gameResultScreen').classList.add('hidden');
+      renderGameQuestion();
+    }
+
+    function renderGameQuestion() {
+      if (gameOver || gameIndex >= gameQuestions.length) {
+        showGameResult();
+        return;
+      }
+      const q = gameQuestions[gameIndex];
+      document.getElementById('gameQuestionText').textContent = q.text;
+      document.getElementById('gameProgress').textContent = `Уровень ${q.level||1} · Вопрос ${gameIndex+1}/${gameQuestions.length}`;
+      const container = document.getElementById('gameAnswersContainer');
+      container.innerHTML = '';
+      const letters = ['A','B','C','D'];
+      const labels = ['А','Б','В','Г'];
+      letters.forEach((l, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.dataset.letter = l;
+        btn.innerHTML = `<span>${labels[i]}</span> ${q[l] || ''}`;
+        btn.onclick = (e) => handleAnswer(l, btn);
+        container.appendChild(btn);
+      });
+      // Обновляем состояние подсказок
+      document.querySelectorAll('.lifeline-btn').forEach(b => {
+        const type = b.dataset.lifeline;
+        if (type === '5050') b.classList.toggle('used', used5050);
+        else if (type === 'call') b.classList.toggle('used', usedCall);
+        else if (type === 'hall') b.classList.toggle('used', usedHall);
+        b.onclick = () => useLifeline(type);
+      });
+    }
+
+    function handleAnswer(letter, btnEl) {
+      if (gameOver) return;
+      const q = gameQuestions[gameIndex];
+      const btns = document.querySelectorAll('.answer-btn');
+      btns.forEach(b => b.style.pointerEvents = 'none');
+      btns.forEach(b => {
+        if (b.dataset.letter === q.correct) b.classList.add('correct');
+        else if (b.dataset.letter === letter && letter !== q.correct) b.classList.add('wrong');
+      });
+      if (letter === q.correct) {
+        gameCorrect++;
+        gameIndex++;
+        setTimeout(() => { renderGameQuestion(); }, 700);
+      } else {
+        gameOver = true;
+        setTimeout(() => { showGameResult(); }, 900);
+      }
+    }
+
+    function showGameResult() {
+      document.getElementById('gamePlayScreen').classList.add('hidden');
+      document.getElementById('gameResultScreen').classList.remove('hidden');
+      const total = gameQuestions.length;
+      const correct = gameCorrect;
+      document.getElementById('resultTitle').textContent = (correct === total) ? '🎉 Вы — настоящий ветеринар!' : '😞 Попробуйте ещё раз!';
+      document.getElementById('resultScore').textContent = `Правильных: ${correct} из ${total}`;
+    }
+
+    function useLifeline(type) {
+      if (gameOver) return;
+      if (type === '5050' && !used5050 && opt5050.checked) {
+        used5050 = true;
+        const q = gameQuestions[gameIndex];
+        const wrongs = ['A','B','C','D'].filter(l => l !== q.correct);
+        const remove = wrongs.slice(0,2);
+        document.querySelectorAll('.answer-btn').forEach(b => {
+          if (remove.includes(b.dataset.letter)) {
+            b.style.display = 'none';
+          }
+        });
+        document.querySelector('.lifeline-btn[data-lifeline="5050"]').classList.add('used');
+      } else if (type === 'call' && !usedCall && optCall.checked) {
+        usedCall = true;
+        const hints = friendHints.value.split(',').map(s=>s.trim()).filter(Boolean);
+        const hint = hints.length ? hints[Math.floor(Math.random()*hints.length)] : 'Я думаю, это правильный ответ!';
+        alert(`📞 Друг говорит: "${hint}"`);
+        document.querySelector('.lifeline-btn[data-lifeline="call"]').classList.add('used');
+      } else if (type === 'hall' && !usedHall && optHall.checked) {
+        usedHall = true;
+        const q = gameQuestions[gameIndex];
+        const letters = ['A','B','C','D'];
+        const percents = letters.map(l => l === q.correct ? 45 + Math.floor(Math.random()*20) : 10 + Math.floor(Math.random()*15));
+        let sum = percents.reduce((a,b)=>a+b,0);
+        const result = letters.map((l,i) => `${l}: ${Math.round(percents[i]/sum*100)}%`).join('  ');
+        alert(`👥 Зал голосует:\n${result}`);
+        document.querySelector('.lifeline-btn[data-lifeline="hall"]').classList.add('used');
+      }
+    }
+
+    // ---------- ИНИЦИАЛИЗАЦИЯ ----------
+    function init() {
+      // вкладки
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+          document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+        };
+      });
+      // кнопки редактора
+      $('prevQ').onclick = () => { saveCurrentQuestion(); if (currentIndex>0) { currentIndex--; loadQuestion(currentIndex); } };
+      $('nextQ').onclick = () => { saveCurrentQuestion(); if (currentIndex<questions.length-1) { currentIndex++; loadQuestion(currentIndex); } };
+      $('addQ').onclick = () => {
+        saveCurrentQuestion();
+        if (questions.length >= 15) { alert('Максимум 15 вопросов.'); return; }
+        const newQ = { level:1, text:'Новый вопрос', A:'', B:'', C:'', D:'', correct:'A' };
+        questions.splice(currentIndex+1, 0, newQ);
+        currentIndex++;
+        loadQuestion(currentIndex);
+        saveToStorage();
+      };
+      $('delQ').onclick = () => {
+        if (questions.length <= 1) { alert('Должен быть минимум 1 вопрос.'); return; }
+        if (confirm('Удалить вопрос?')) {
+          questions.splice(currentIndex, 1);
+          if (currentIndex >= questions.length) currentIndex = questions.length-1;
+          loadQuestion(currentIndex);
+          saveToStorage();
+        }
+      };
+      $('loadExample').onclick = () => {
+        if (confirm('Заменить все вопросы на пример из анатомии?')) {
+          questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+          currentIndex = 0;
+          loadQuestion(0);
+          saveToStorage();
+        }
+      };
+      $('exportGame').onclick = exportGame;
+      $('resetGame').onclick = () => {
+        if (confirm('Сбросить все данные к примеру?')) {
+          localStorage.removeItem('vetsim_game_data');
+          questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+          gameTitle.value = 'Кто хочет стать ветеринаром?';
+          gameTopic.value = 'Анатомия животных';
+          opt5050.checked = optCall.checked = optHall.checked = true;
+          friendHints.value = 'Возможно, правильный ответ А, Думаю это В, Я бы выбрал Г, Скорее всего Б';
+          currentIndex=0;
+          loadQuestion(0);
+          saveToStorage();
+        }
+      };
+      // игровые кнопки
+      $('startGameBtn').onclick = startGame;
+      $('exitGameBtn').onclick = () => { document.getElementById('gamePlayScreen').classList.add('hidden'); document.getElementById('gameStartScreen').classList.remove('hidden'); document.getElementById('gameResultScreen').classList.add('hidden'); };
+      $('retryGameBtn').onclick = startGame;
+      $('homeFromResultBtn').onclick = () => { document.getElementById('gameResultScreen').classList.add('hidden'); document.getElementById('gameStartScreen').classList.remove('hidden'); };
+      // автозагрузка
+      const loaded = loadFromStorage();
+      if (!loaded) {
+        questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
+        saveToStorage();
+      }
+      if (questions.length) {
+        currentIndex = 0;
+        loadQuestion(0);
+      }
+      // сохраняем при изменении полей
+      document.querySelectorAll('#panel-editor input, #panel-editor textarea, #panel-editor select').forEach(el => {
+        el.onchange = () => { saveCurrentQuestion(); saveToStorage(); };
+        el.oninput = () => { saveCurrentQuestion(); saveToStorage(); };
+      });
+    }
+
+    init();
+  })();
+</script>
+</body>
+</html>

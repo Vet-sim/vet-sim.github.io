@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>🐾 Дневник юного ветеринара</title>
+    <style>
+        /* ===== ГЛОБАЛЬНЫЙ СТИЛЬ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            background: #FDF8F0;
+            color: #3E5C4A;
+            padding: 20px 16px 40px;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(44, 125, 160, 0.03) 0%, transparent 60%),
+                              radial-gradient(circle at 90% 80%, rgba(212, 163, 115, 0.05) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        /* Декоративные лапки (фон) */
+        body::before {
+            content: "🐾🐾🐾";
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+            font-size: 60px;
+            opacity: 0.04;
+            pointer-events: none;
+            transform: rotate(-10deg);
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px 12px 20px;
+            margin-bottom: 28px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 40px 40px 24px 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(163, 177, 138, 0.3);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .header-logo {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-logo span {
+            background: #FFD700;
+            padding: 0 12px;
+            border-radius: 40px;
+            color: #3E5C4A;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+
+        .header-sub {
+            font-size: 0.95rem;
+            color: #5f7a6a;
+            font-weight: 500;
+            border-left: 2px solid #D4A373;
+            padding-left: 12px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-week {
+            background: #2C7DA0;
+            color: white;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 8px rgba(44, 125, 160, 0.2);
+        }
+
+        .btn-reset {
+            background: transparent;
+            border: 1px solid #d0cbc2;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #5f7a6a;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.85rem;
+        }
+
+        .btn-reset:hover {
+            background: #e8e0d6;
+            border-color: #b3a99b;
+        }
+
+        /* ===== КАРТОЧКА НЕДЕЛИ ===== */
+        .week-card {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 28px 28px 24px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(163, 177, 138, 0.2);
+            transition: 0.2s;
+        }
+
+        .week-card.completed {
+            border-left: 6px solid #A3B18A;
+            background: #fafcf7;
+        }
+
+        .week-card.completed .week-title::after {
+            content: " ✅";
+            color: #A3B18A;
+            font-size: 1.2rem;
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .week-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            line-height: 1.2;
+        }
+
+        .week-sticker {
+            font-size: 2.2rem;
+            background: #FDF8F0;
+            padding: 4px 14px;
+            border-radius: 60px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+
+        .week-book {
+            background: #f4f1ea;
+            padding: 14px 20px;
+            border-radius: 24px;
+            margin: 14px 0 18px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border: 1px dashed #D4A373;
+        }
+
+        .week-book-title {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: #3E5C4A;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .week-book-title .icon {
+            font-size: 1.5rem;
+        }
+
+        .btn-search {
+            background: #FFD700;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: #2f4a3c;
+            cursor: pointer;
+            transition: 0.1s;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 6px rgba(212, 163, 115, 0.2);
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-search:hover {
+            background: #f0c82e;
+            transform: scale(1.02);
+        }
+
+        .week-desc {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            margin: 14px 0 18px;
+            padding: 6px 4px;
+            color: #3E5C4A;
+            background: #f9f6f0;
+            border-radius: 16px;
+            padding: 12px 16px;
+        }
+
+        .week-quote {
+            background: #f0f3ea;
+            padding: 14px 18px;
+            border-radius: 20px;
+            font-style: italic;
+            color: #4a6b5a;
+            margin: 12px 0 18px;
+            border-left: 4px solid #D4A373;
+            font-size: 0.98rem;
+        }
+
+        .week-quote::before {
+            content: "«";
+            color: #D4A373;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+        .week-quote::after {
+            content: "»";
+            color: #D4A373;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .week-task {
+            margin: 16px 0 14px;
+        }
+
+        .week-task label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #2C7DA0;
+        }
+
+        .week-task textarea {
+            width: 100%;
+            min-height: 90px;
+            padding: 14px 18px;
+            border-radius: 24px;
+            border: 2px solid #dce5da;
+            background: #FDF8F0;
+            font-family: inherit;
+            font-size: 0.98rem;
+            transition: 0.15s;
+            resize: vertical;
+            color: #1e2f2a;
+        }
+
+        .week-task textarea:focus {
+            border-color: #2C7DA0;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(44, 125, 160, 0.08);
+        }
+
+        .week-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 12px;
+            align-items: center;
+        }
+
+        .btn-complete {
+            background: #A3B18A;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 1rem;
+            box-shadow: 0 3px 10px rgba(163, 177, 138, 0.3);
+        }
+
+        .btn-complete:hover {
+            background: #8a9e73;
+            transform: translateY(-1px);
+        }
+
+        .btn-complete:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            transform: none;
+        }
+
+        .btn-complete.done {
+            background: #5b8c5a;
+        }
+
+        .week-status {
+            font-weight: 500;
+            color: #5f7a6a;
+            font-size: 0.95rem;
+        }
+
+        /* ===== БЛОК ФАКТА ===== */
+        .fact-block {
+            background: #eaf0e5;
+            border-radius: 28px;
+            padding: 18px 24px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(163, 177, 138, 0.3);
+        }
+
+        .fact-icon {
+            font-size: 2.2rem;
+        }
+
+        .fact-text {
+            font-size: 1.05rem;
+            flex: 1;
+            color: #2f4a3c;
+        }
+
+        .fact-text strong {
+            color: #2C7DA0;
+        }
+
+        /* ===== ПРОГРЕСС ===== */
+        .progress-block {
+            background: white;
+            border-radius: 32px;
+            padding: 22px 26px;
+            margin-bottom: 28px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(163, 177, 138, 0.2);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .progress-label {
+            font-weight: 600;
+            color: #2C7DA0;
+            font-size: 1.1rem;
+        }
+
+        .progress-count {
+            background: #FDF8F0;
+            padding: 2px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #3E5C4A;
+        }
+
+        .progress-bar-bg {
+            width: 100%;
+            height: 18px;
+            background: #ede7dd;
+            border-radius: 40px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #A3B18A, #2C7DA0);
+            border-radius: 40px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-weeks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+            justify-content: center;
+        }
+
+        .week-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ede7dd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #7a8f7a;
+            transition: 0.1s;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .week-dot.done {
+            background: #A3B18A;
+            color: white;
+            border-color: #8a9e73;
+        }
+
+        .week-dot.active {
+            border-color: #2C7DA0;
+            background: #dce8e0;
+        }
+
+        /* ===== ПОРТФОЛИО ===== */
+        .portfolio-block {
+            background: white;
+            border-radius: 32px;
+            padding: 22px 26px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(163, 177, 138, 0.2);
+        }
+
+        .portfolio-header {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .portfolio-header h3 {
+            color: #2C7DA0;
+            font-size: 1.3rem;
+        }
+
+        .btn-download {
+            background: #D4A373;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.95rem;
+        }
+
+        .btn-download:hover {
+            background: #c09062;
+        }
+
+        .portfolio-list {
+            max-height: 200px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .portfolio-item {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ede7dd;
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+        }
+
+        .portfolio-item .week-num {
+            font-weight: 700;
+            color: #2C7DA0;
+            min-width: 70px;
+        }
+
+        .portfolio-item .answer-preview {
+            color: #3E5C4A;
+            font-size: 0.93rem;
+            word-break: break-word;
+        }
+
+        /* ===== АДАПТИВНОСТЬ ===== */
+        @media (max-width: 700px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                padding: 16px;
+            }
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .header-sub {
+                border-left: none;
+                padding-left: 0;
+            }
+            .header-right {
+                justify-content: space-between;
+            }
+            .week-title {
+                font-size: 1.5rem;
+            }
+            .week-book {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-search {
+                text-align: center;
+                justify-content: center;
+            }
+            .fact-block {
+                flex-direction: column;
+                text-align: center;
+            }
+            .week-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .btn-complete {
+                text-align: center;
+            }
+            .progress-weeks {
+                gap: 5px;
+            }
+            .week-dot {
+                width: 30px;
+                height: 30px;
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .container {
+                padding: 0 2px;
+            }
+            .week-card {
+                padding: 18px 14px;
+            }
+            .header-logo {
+                font-size: 1.4rem;
+            }
+            .week-title {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* ===== Стили для скролла ===== */
+        .portfolio-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .portfolio-list::-webkit-scrollbar-track {
+            background: #ede7dd;
+            border-radius: 10px;
+        }
+        .portfolio-list::-webkit-scrollbar-thumb {
+            background: #A3B18A;
+            border-radius: 10px;
+        }
+
+        /* ===== Анимации ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .week-card {
+            animation: fadeIn 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+
+    <!-- ===== ШАПКА ===== -->
+    <header class="header">
+        <div class="header-left">
+            <div class="header-logo">
+                🐾 Дневник юного ветеринара <span>6–8 кл.</span>
+            </div>
+            <div class="header-sub">Моя дорога в профессию</div>
+        </div>
+        <div class="header-right">
+            <div class="header-week" id="weekDisplay">Неделя 1 из 16</div>
+            <button class="btn-reset" id="resetBtn">↻ Сбросить неделю</button>
+        </div>
+    </header>
+
+    <!-- ===== КАРТОЧКА ТЕКУЩЕЙ НЕДЕЛИ ===== -->
+    <div id="weekCardContainer"></div>
+
+    <!-- ===== БЛОК ИНТЕРЕСНЫЙ ФАКТ ===== -->
+    <div class="fact-block" id="factBlock">
+        <div class="fact-icon">🐾</div>
+        <div class="fact-text" id="factText">
+            <strong>Интересный факт:</strong> У собак около 220 миллионов обонятельных рецепторов, а у человека — всего 5 миллионов.
+        </div>
+    </div>
+
+    <!-- ===== БЛОК ПРОГРЕСС ===== -->
+    <div class="progress-block">
+        <div class="progress-header">
+            <span class="progress-label">📊 Мой прогресс</span>
+            <span class="progress-count" id="progressCount">Выполнено 0 из 16</span>
+        </div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill" style="width:0%;"></div>
+        </div>
+        <div class="progress-weeks" id="progressDots"></div>
+    </div>
+
+    <!-- ===== БЛОК ПОРТФОЛИО ===== -->
+    <div class="portfolio-block">
+        <div class="portfolio-header">
+            <h3>📁 Моё портфолио</h3>
+            <button class="btn-download" id="downloadBtn">📥 Скачать портфолио</button>
+        </div>
+        <div class="portfolio-list" id="portfolioList">
+            <p style="color:#8a9e8a; text-align:center; padding:12px 0;">Здесь появятся выполненные задания</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        // ===== ДАННЫЕ: 16 НЕДЕЛЬ =====
+        const WEEKS = [
+            // Блок 1. Знакомство с профессией (1–4)
+            {
+                id: 0,
+                title: 'Кто такой ветеринар?',
+                book: 'Джеймс Хэрриот «О всех созданиях – больших и малых» (первые главы)',
+                quote: '«Они не могут говорить, но они чувствуют и страдают так же, как мы»',
+                task: 'Напиши, что ты знаешь о профессии ветеринара. Кого ты представляешь, когда слышишь это слово? Нарисуй портрет идеального ветеринара (можно описать словами).',
+                sticker: '🩺'
+            },
+            {
+                id: 1,
+                title: 'Где работают ветеринары?',
+                book: 'Джеймс Хэрриот «О всех созданиях – больших и малых» (продолжение)',
+                quote: '«Каждое животное — это целая вселенная»',
+                task: 'Исследуй: ветеринарная клиника, ферма, зоопарк, лаборатория, приют. Выбери одно место и опиши, что там делает ветеринар.',
+                sticker: '🏥'
+            },
+            {
+                id: 2,
+                title: 'Качества настоящего ветеринара',
+                book: 'Джеймс Хэрриот «О всех созданиях — прекрасных и разумных»',
+                quote: '«Самое важное — любить свою работу и тех, кому ты служишь»',
+                task: 'Составь свой список из 5 качеств, которыми должен обладать ветеринар. Оцени себя по этой шкале.',
+                sticker: '⭐'
+            },
+            {
+                id: 3,
+                title: 'История профессии',
+                book: 'Джеймс Хэрриот «И всех их создал Бог»',
+                quote: '«У каждой профессии есть свои герои и свои легенды»',
+                task: 'Кто такие «коновалы»? Найди интересный факт из истории ветеринарии и запиши его.',
+                sticker: '📜'
+            },
+            // Блок 2. Анатомия и здоровье (5–8)
+            {
+                id: 4,
+                title: 'Скелет животных',
+                book: 'Джеймс Хэрриот «О всех созданиях — мудрых и удивительных»',
+                quote: '«Кость — это опора жизни»',
+                task: 'Нарисуй скелет собаки или кошки (можно схематично). Опиши словами, что ты нарисовал(а).',
+                sticker: '🦴'
+            },
+            {
+                id: 5,
+                title: 'Органы чувств',
+                book: 'Джеймс Хэрриот «Кошачьи истории»',
+                quote: '«У кошки девять жизней, но одно сердце»',
+                task: 'Как видят, слышат и чувствуют запахи животные? Сравни с человеком. Напиши 3–4 предложения.',
+                sticker: '👁️'
+            },
+            {
+                id: 6,
+                title: 'Здоровое питание',
+                book: 'Джеймс Хэрриот «Собачьи истории»',
+                quote: '«Здоровье начинается с тарелки»',
+                task: 'Что едят разные животные? Составь меню для кошки, собаки, коровы.',
+                sticker: '🍖'
+            },
+            {
+                id: 7,
+                title: 'Признаки здоровья и болезни',
+                book: 'Джеймс Хэрриот «Помоечный пёс» (рассказ)',
+                quote: '«Внимательный взгляд врача видит больше, чем приборы»',
+                task: 'Напиши 5 признаков здоровья и 5 признаков болезни у животных.',
+                sticker: '💚'
+            },
+            // Блок 3. Ветеринарная практика (9–12)
+            {
+                id: 8,
+                title: 'Первая помощь',
+                book: 'Джеймс Хэрриот «Рип» (рассказ)',
+                quote: '«Первая помощь — это шаг к спасению»',
+                task: 'Составь алгоритм действий при порезе лапы у собаки (3–4 шага).',
+                sticker: '🩹'
+            },
+            {
+                id: 9,
+                title: 'Вакцинация и профилактика',
+                book: 'Джеймс Хэрриот «Дусик и Пусик» (рассказ)',
+                quote: '«Лучше предупредить, чем лечить»',
+                task: 'Зачем нужны прививки? Напиши 3 аргумента «За» вакцинацию.',
+                sticker: '💉'
+            },
+            {
+                id: 10,
+                title: 'Работа в клинике',
+                book: 'Джеймс Хэрриот «Мёртл» (рассказ)',
+                quote: '«Каждый день в клинике — это маленькая драма и победа»',
+                task: 'Представь, что ты ветеринар на приёме. Опиши свой день (5–7 предложений).',
+                sticker: '🏢'
+            },
+            {
+                id: 11,
+                title: 'Уход за животными',
+                book: 'Джеймс Хэрриот «Венера» (рассказ)',
+                quote: '«Любовь к животным начинается с заботы»',
+                task: 'Создай чек-лист по уходу за собакой (5 пунктов).',
+                sticker: '🐕'
+            },
+            // Блок 4. Профессиональный путь (13–16)
+            {
+                id: 12,
+                title: 'Специализации в ветеринарии',
+                book: 'Джеймс Хэрриот «Все яркие и прекрасные»',
+                quote: '«Каждый врач находит своё призвание»',
+                task: 'Выбери одну специализацию (хирург, терапевт, дерматолог) и расскажи о ней (4–5 предложений).',
+                sticker: '🎯'
+            },
+            {
+                id: 13,
+                title: 'Как стать ветеринаром?',
+                book: 'Джеймс Хэрриот «Вечное чудо жизни»',
+                quote: '«Путь к профессии начинается с первого шага»',
+                task: 'Напиши 3 шага, которые нужно сделать, чтобы стать ветеринаром.',
+                sticker: '📝'
+            },
+            {
+                id: 14,
+                title: 'Ветеринары-писатели',
+                book: 'Джеймс Хэрриот «Из воспоминаний сельского ветеринара»',
+                quote: '«Истории о животных учат нас быть добрее»',
+                task: 'Напиши мини-эссе (5–7 предложений) «Почему важно рассказывать истории о животных».',
+                sticker: '✍️'
+            },
+            {
+                id: 15,
+                title: 'Итоги полугодия',
+                book: 'Любая книга Джеймса Хэрриота по выбору',
+                quote: '«Взгляд в будущее начинается с мечты»',
+                task: 'Напиши письмо себе в будущее (через 5 лет). Что ты хочешь сказать будущему ветеринару?',
+                sticker: '🌟'
+            }
+        ];
+
+        // ===== СОСТОЯНИЕ =====
+        let currentWeek = 0;          // 0-индекс
+        const STORAGE_KEY = 'vet_diary_data';
+
+        // Загрузка из localStorage
+        function loadState() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const data = JSON.parse(raw);
+                    if (data.currentWeek !== undefined) currentWeek = data.currentWeek;
+                    // answers: { weekId: 'текст ответа' }
+                    return data.answers || {};
+                }
+            } catch (e) {}
+            return {};
+        }
+
+        let answers = loadState();
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    currentWeek: currentWeek,
+                    answers: answers
+                }));
+            } catch (e) {}
+        }
+
+        // ===== ФУНКЦИЯ ДЛЯ ПОИСКА В ВК =====
+        function getVkAudioSearchUrl(bookTitle) {
+            // Формируем поисковый запрос: название книги + аудиокнига
+            const query = `${bookTitle} аудиокнига`;
+            const encodedQuery = encodeURIComponent(query);
+            // Ссылка для поиска в аудиозаписях ВКонтакте
+            return `https://vk.com/search?c[audio]=1&q=${encodedQuery}`;
+        }
+
+        // ===== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ =====
+        function getWeekData(index) {
+            return WEEKS[index] || null;
+        }
+
+        function isWeekCompleted(index) {
+            const w = WEEKS[index];
+            if (!w) return false;
+            const answer = answers[w.id];
+            return answer && answer.trim().length > 0;
+        }
+
+        function getCompletedCount() {
+            let count = 0;
+            WEEKS.forEach(w => {
+                if (answers[w.id] && answers[w.id].trim().length > 0) count++;
+            });
+            return count;
+        }
+
+        // ===== ОТРИСОВКА =====
+        function render() {
+            renderWeek();
+            renderProgress();
+            renderPortfolio();
+            renderFact();
+            updateHeader();
+        }
+
+        function renderWeek() {
+            const container = document.getElementById('weekCardContainer');
+            const week = getWeekData(currentWeek);
+            if (!week) {
+                container.innerHTML = `<div class="week-card"><p style="text-align:center;padding:30px 0;">🎉 Поздравляем! Вы прошли все 16 недель!</p></div>`;
+                return;
+            }
+
+            const completed = isWeekCompleted(currentWeek);
+            const answerText = answers[week.id] || '';
+
+            // Формируем ссылку для ВК
+            const bookSearchUrl = getVkAudioSearchUrl(week.book);
+
+            const html = `
+                <div class="week-card ${completed ? 'completed' : ''}">
+                    <div class="week-header">
+                        <div class="week-title">${week.title}</div>
+                        <div class="week-sticker">${week.sticker}</div>
+                    </div>
+
+                    <div class="week-book">
+                        <div class="week-book-title">
+                            <span class="icon">📖</span> Читаем: ${week.book}
+                        </div>
+                        <a href="${bookSearchUrl}" target="_blank" class="btn-search">🔍 Найти аудиокнигу</a>
+                    </div>
+
+                    <div class="week-quote">${week.quote}</div>
+
+                    <div class="week-desc">
+                        <strong>📌 Задание:</strong> ${week.task}
+                    </div>
+
+                    <div class="week-task">
+                        <label for="weekAnswer">✏️ Твой ответ:</label>
+                        <textarea id="weekAnswer" placeholder="Напиши свой ответ здесь...">${answerText}</textarea>
+                    </div>
+
+                    <div class="week-actions">
+                        <button class="btn-complete ${completed ? 'done' : ''}" id="completeBtn" ${completed ? 'disabled' : ''}>
+                            ${completed ? '✅ Выполнено' : '✅ Отметить как выполненное'}
+                        </button>
+                        <span class="week-status">${completed ? '✨ Задание выполнено!' : 'Выполни задание и нажми кнопку'}</span>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+
+            // Обработчики для этой недели
+            const textarea = document.getElementById('weekAnswer');
+            const completeBtn = document.getElementById('completeBtn');
+
+            if (textarea) {
+                textarea.addEventListener('input', function() {
+                    const val = this.value.trim();
+                    if (val.length > 0) {
+                        answers[week.id] = val;
+                        saveState();
+                        render();
+                    } else if (answers[week.id]) {
+                        delete answers[week.id];
+                        saveState();
+                        render();
+                    }
+                });
+            }
+
+            if (completeBtn) {
+                completeBtn.addEventListener('click', function() {
+                    const val = textarea ? textarea.value.trim() : '';
+                    if (val.length === 0) {
+                        alert('✍️ Сначала напиши свой ответ в поле!');
+                        return;
+                    }
+                    answers[week.id] = val;
+                    saveState();
+                    render();
+                });
+            }
+        }
+
+        function renderProgress() {
+            const total = WEEKS.length;
+            const done = getCompletedCount();
+            const percent = total > 0 ? (done / total) * 100 : 0;
+
+            document.getElementById('progressCount').textContent = `Выполнено ${done} из ${total}`;
+            document.getElementById('progressFill').style.width = percent + '%';
+
+            const dotsContainer = document.getElementById('progressDots');
+            let dotsHtml = '';
+            WEEKS.forEach((w, idx) => {
+                const isDone = isWeekCompleted(idx);
+                const isActive = idx === currentWeek;
+                let cls = 'week-dot';
+                if (isDone) cls += ' done';
+                if (isActive) cls += ' active';
+                dotsHtml += `<div class="${cls}" data-index="${idx}" title="Неделя ${idx+1}">${idx+1}</div>`;
+            });
+            dotsContainer.innerHTML = dotsHtml;
+
+            dotsContainer.querySelectorAll('.week-dot').forEach(el => {
+                el.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index, 10);
+                    if (!isNaN(idx) && idx >= 0 && idx < WEEKS.length) {
+                        currentWeek = idx;
+                        saveState();
+                        render();
+                    }
+                });
+            });
+        }
+
+        function renderPortfolio() {
+            const container = document.getElementById('portfolioList');
+            const entries = [];
+            WEEKS.forEach(w => {
+                if (answers[w.id] && answers[w.id].trim().length > 0) {
+                    entries.push({ week: w.id + 1, title: w.title, answer: answers[w.id].trim() });
+                }
+            });
+
+            if (entries.length === 0) {
+                container.innerHTML = `<p style="color:#8a9e8a; text-align:center; padding:12px 0;">📭 Пока нет выполненных заданий. Начни первую неделю!</p>`;
+                return;
+            }
+
+            let html = '';
+            entries.forEach(e => {
+                const preview = e.answer.length > 120 ? e.answer.substring(0, 120) + '…' : e.answer;
+                html += `
+                    <div class="portfolio-item">
+                        <span class="week-num">Неделя ${e.week}</span>
+                        <span class="answer-preview">${preview}</span>
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function renderFact() {
+            const facts = [
+                'У собак около 220 миллионов обонятельных рецепторов, а у человека — всего 5 миллионов.',
+                'Сердце кита бьется всего 8–10 раз в минуту, а сердце мыши — до 600 раз.',
+                'Коровы могут чувствовать магнитное поле Земли и выстраиваться вдоль него.',
+                'У кошек 32 мышцы, контролирующих движение ушей.',
+                'Ветеринарная профессия существует более 4000 лет — первые записи найдены в Древнем Египте.',
+                'Джеймс Хэрриот написал свои книги, будучи практикующим ветеринаром, и они переведены на 20 языков.'
+            ];
+            const factEl = document.getElementById('factText');
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            factEl.innerHTML = `<strong>🧠 Интересный факт:</strong> ${randomFact}`;
+        }
+
+        function updateHeader() {
+            document.getElementById('weekDisplay').textContent = `Неделя ${currentWeek+1} из ${WEEKS.length}`;
+        }
+
+        // ===== СБРОС НЕДЕЛИ =====
+        function resetWeek() {
+            const week = WEEKS[currentWeek];
+            if (!week) return;
+            if (answers[week.id] && answers[week.id].trim().length > 0) {
+                if (!confirm(`Сбросить ответ для недели «${week.title}»?`)) return;
+            }
+            delete answers[week.id];
+            saveState();
+            render();
+        }
+
+        // ===== СКАЧИВАНИЕ ПОРТФОЛИО =====
+        function downloadPortfolio() {
+            const lines = ['🐾 Дневник юного ветеринара', 'Моя дорога в профессию', '', '=== ПОРТФОЛИО ===', ''];
+            let hasEntries = false;
+            WEEKS.forEach(w => {
+                const answer = answers[w.id];
+                if (answer && answer.trim().length > 0) {
+                    hasEntries = true;
+                    lines.push(`Неделя ${w.id+1}. ${w.title}`);
+                    lines.push(`📖 Книга: ${w.book}`);
+                    lines.push(`📌 Задание: ${w.task}`);
+                    lines.push(`✍️ Ответ: ${answer.trim()}`);
+                    lines.push('---');
+                    lines.push('');
+                }
+            });
+            if (!hasEntries) {
+                lines.push('Пока нет выполненных заданий. Начни своё путешествие в профессию!');
+            }
+            lines.push('', '✨ Создано с помощью ВетСим');
+
+            const blob = new Blob([lines.join('\n')], { type: 'text/plain;charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'portfolio_vet_diary.txt';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
+        // ===== ИНИЦИАЛИЗАЦИЯ =====
+        function init() {
+            render();
+
+            document.getElementById('resetBtn').addEventListener('click', resetWeek);
+            document.getElementById('downloadBtn').addEventListener('click', downloadPortfolio);
+
+            window.addEventListener('beforeunload', function() {
+                saveState();
+            });
+        }
+
+        init();
+    })();
+</script>
+
+</body>
+</html>

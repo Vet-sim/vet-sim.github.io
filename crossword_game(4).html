@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кроссворд | ВетСим</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{background:#FDF8F0;font-family:system-ui,'Segoe UI',Roboto;color:#3E5C4A;padding:1rem;}
+        .container{max-width:1100px;margin:0 auto;}
+        h2{text-align:center;margin-bottom:1rem;}
+        .crossword-grid{margin:0 auto;border-collapse:collapse;}
+        .cell{width:40px;height:40px;border:1px solid #BECFAD;text-align:center;vertical-align:middle;background:#FFFEF7;position:relative;}
+        .cell input{width:100%;height:100%;border:none;text-align:center;font-size:1.2rem;text-transform:uppercase;background:transparent;font-family:monospace;outline:none;}
+        .cell-number{position:absolute;top:2px;left:4px;font-size:10px;font-weight:bold;color:#2C7DA0;}
+        .questions{background:#F9F6EF;border-radius:28px;padding:1rem;margin-top:1.5rem;}
+        .question-item{margin-bottom:8px;font-size:0.9rem;}
+        .btn-group{display:flex;gap:1rem;justify-content:center;margin:1rem 0;}
+        button{background:#2C7DA0;color:white;border:none;padding:8px 20px;border-radius:40px;cursor:pointer;}
+        .reset-btn{background:#E2CFB0;color:#3E5C4A;}
+        .result{text-align:center;margin-top:1rem;font-weight:bold;}
+        footer{text-align:center;font-size:0.7rem;margin-top:1rem;}
+        @media (max-width:600px){.cell{width:32px;height:32px;font-size:0.9rem;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>🧩 Кроссворд</h2>
+    <div id="crosswordGrid"></div>
+    <div class="questions" id="questionsList"></div>
+    <div class="btn-group">
+        <button id="checkBtn">🔍 Проверить</button>
+        <button id="resetBtn" class="reset-btn">🔄 Сбросить</button>
+    </div>
+    <div id="result" class="result"></div>
+    <footer>© ВетСим — интерактивный кроссворд.</footer>
+</div>
+<script>
+    const size = 14;
+    const gridData = [["Л","И","Ч","И","Н","К","А","","","","","Ф","",""],["","","","Ц","Е","","","М","","П","А","А","",""],["","Т","Р","Е","М","А","Т","О","Д","А","С","С","","Д"],["","П","А","С","А","","Е","Н","","Р","К","Ц","","И"],["Ч","Р","Н","Т","Т","","Н","И","","А","А","И","С","Р"],["Е","О","К","О","О","","И","Е","","З","Р","О","А","О"],["С","Т","И","Д","Д","","О","З","","И","И","Л","Р","Ф"],["О","О","Л","А","А","","З","И","","Т","Д","Ё","К","И"],["Т","З","О","П","И","С","Т","О","Р","Х","О","З","О","Л"],["К","О","С","Б","А","Б","Е","З","И","О","З","","П","Я"],["А","А","Т","Р","И","Х","И","Н","Е","Л","Л","А","Т","Р"],["Г","Е","О","Г","Е","Л","Ь","М","И","Н","Т","","О","И"],["","","М","","","Э","Й","М","Е","Р","И","О","З","О"],["","","А","Э","Х","И","Н","О","К","О","К","К","О","З"]];
+    const numbersData = [[17,0,0,0,14,0,0,0,0,0,0,10,0,0],[0,0,0,19,0,0,0,8,0,18,7,0,0,0],[0,9,0,0,0,0,21,0,0,0,0,0,0,1],[0,15,3,0,0,0,0,0,0,0,0,0,0,0],[20,0,0,0,0,0,0,0,0,0,0,0,11,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,5,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,12,0,0,0,0,0,0,0,0,0,0],[0,0,6,0,0,0,0,0,0,0,0,0,0,0],[4,0,0,13,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,16,0,0,0,0,0,0,0,0],[0,0,0,2,0,0,0,0,0,0,0,0,0,0]];
+    const questionsList = [{"num":1,"word":"ДИРОФИЛЯРИОЗ","definition":"Трансмиссивный гельминтоз, передающийся через укусы комаров","dir":"по вертикали"},{"num":2,"word":"ЭХИНОКОККОЗ","definition":"Гельминтоз, вызываемый личиночной стадией эхинококка","dir":"по горизонтали"},{"num":3,"word":"АНКИЛОСТОМА","definition":"Круглый червь, паразитирующий в тонком кишечнике","dir":"по вертикали"},{"num":4,"word":"ГЕОГЕЛЬМИНТ","definition":"Гельминт, яйца которого созревают в почве","dir":"по горизонтали"},{"num":5,"word":"ОПИСТОРХОЗ","definition":"Трематодоз, поражающий печень и желчный пузырь","dir":"по горизонтали"},{"num":6,"word":"ТРИХИНЕЛЛА","definition":"Мелкий круглый червь в мышечной ткани всеядных и плотоядных","dir":"по горизонтали"},{"num":7,"word":"АСКАРИДОЗ","definition":"Гельминтозное заболевание, вызываемое аскаридами","dir":"по вертикали"},{"num":8,"word":"МОНИЕЗИОЗ","definition":"Гельминтоз, вызываемый ленточными червями","dir":"по вертикали"},{"num":9,"word":"ТРЕМАТОДА","definition":"Сосальщик, паразитический плоский червь","dir":"по горизонтали"},{"num":10,"word":"ФАСЦИОЛЁЗ","definition":"Гельминтоз, вызываемый печёночной двуусткой","dir":"по вертикали"},{"num":11,"word":"САРКОПТОЗ","definition":"Название чесотки, вызываемой клещами Sarcoptes","dir":"по вертикали"},{"num":12,"word":"БАБЕЗИОЗ","definition":"Кровепаразитарное заболевание, вызываемое бабезиями","dir":"по горизонтали"},{"num":13,"word":"ГЕЛЬМИНТ","definition":"Паразитический червь","dir":"по горизонтали"},{"num":14,"word":"НЕМАТОДА","definition":"Круглый червь-паразит","dir":"по вертикали"},{"num":15,"word":"ПРОТОЗОА","definition":"Простейшие микроорганизмы-паразиты","dir":"по вертикали"},{"num":16,"word":"ЭЙМЕРИОЗ","definition":"Протозойное заболевание птиц","dir":"по горизонтали"},{"num":17,"word":"ЛИЧИНКА","definition":"Стадия развития паразита после яйца","dir":"по горизонтали"},{"num":18,"word":"ПАРАЗИТ","definition":"Организм, живущий за счёт другого организма","dir":"по вертикали"},{"num":19,"word":"ЦЕСТОДА","definition":"Ленточный червь","dir":"по вертикали"},{"num":20,"word":"ЧЕСОТКА","definition":"Кожное заболевание, вызываемое клещами-зуднями","dir":"по вертикали"},{"num":21,"word":"ТЕНИОЗ","definition":"Гельминтоз, вызываемый цепнями","dir":"по вертикали"}];
+
+    let userLetters = Array(size).fill().map(() => Array(size).fill(''));
+
+    function render() {
+        const container = document.getElementById('crosswordGrid');
+        const table = document.createElement('table');
+        table.className = 'crossword-grid';
+        for (let i = 0; i < size; i++) {
+            const tr = document.createElement('tr');
+            for (let j = 0; j < size; j++) {
+                const td = document.createElement('td');
+                td.className = 'cell';
+                if (gridData[i][j] !== '') {
+                    if (numbersData[i][j] !== 0) {
+                        const span = document.createElement('span');
+                        span.className = 'cell-number';
+                        span.innerText = numbersData[i][j];
+                        td.appendChild(span);
+                    }
+                    const input = document.createElement('input');
+                    input.maxLength = 1;
+                    input.value = userLetters[i][j];
+                    input.addEventListener('input', (e) => {
+                        let val = e.target.value.toUpperCase().slice(0,1);
+                        if (/[А-ЯA-Z]/.test(val) || val === '') userLetters[i][j] = val;
+                        else userLetters[i][j] = '';
+                        e.target.value = userLetters[i][j];
+                        td.style.backgroundColor = '#E9F0E3';
+                        setTimeout(() => td.style.backgroundColor = '', 200);
+                    });
+                    td.appendChild(input);
+                } else {
+                    td.classList.add('black');
+                }
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        container.innerHTML = '';
+        container.appendChild(table);
+
+        const qContainer = document.getElementById('questionsList');
+        qContainer.innerHTML = '<h3>📋 Вопросы:</h3>';
+        questionsList.forEach(q => {
+            const div = document.createElement('div');
+            div.className = 'question-item';
+            div.innerHTML = `<b>${q.num}</b>. ${escapeHtml(q.definition)} (${q.word.length} букв, ${q.dir})`;
+            qContainer.appendChild(div);
+        });
+    }
+
+    function check() {
+        let correct = 0, total = 0;
+        for (let i=0; i<size; i++) {
+            for (let j=0; j<size; j++) {
+                if (gridData[i][j] !== '') {
+                    total++;
+                    if (userLetters[i][j] === gridData[i][j]) correct++;
+                }
+            }
+        }
+        const percent = total ? Math.round(correct/total*100) : 0;
+        document.getElementById('result').innerHTML = `✅ Результат: ${correct} из ${total} букв (${percent}%)`;
+        if (correct === total && total>0) alert('🎉 Поздравляем! Кроссворд разгадан полностью!');
+    }
+
+    function reset() {
+        for (let i=0; i<size; i++) for (let j=0; j<size; j++) userLetters[i][j] = '';
+        render();
+        document.getElementById('result').innerHTML = '';
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
+
+    render();
+    document.getElementById('checkBtn').addEventListener('click', check);
+    document.getElementById('resetBtn').addEventListener('click', reset);
+</script>
+</body>
+</html>

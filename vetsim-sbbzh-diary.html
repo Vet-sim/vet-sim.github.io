@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Дневник ветеринарного специалиста СББЖ | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #F5F2EB;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #2D3F3A;
+            padding: 1.2rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- ШАПКА --- */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
+            background: #FFFFFF;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 1.2rem;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2D3F3A;
+        }
+        .logo span {
+            color: #4A7C59;
+        }
+        .logo .accent {
+            color: #C68D5C;
+        }
+        .subhead {
+            font-size: 0.75rem;
+            color: #7B8D6E;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .week-label {
+            background: #EDE8DC;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #2D5F6E;
+            white-space: nowrap;
+        }
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 5px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+            font-family: inherit;
+            color: #2D3F3A;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn-primary {
+            background: #4A7C59;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #3D6A4A;
+        }
+        .btn-accent {
+            background: #2D5F6E;
+            color: white;
+        }
+        .btn-accent:hover {
+            background: #234A57;
+        }
+        .btn-danger {
+            background: #C68D5C;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #B57A4A;
+        }
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #5A865A;
+        }
+        .btn-warning {
+            background: #E2CFB0;
+            color: #4D3E2A;
+        }
+        .btn-warning:hover {
+            background: #D6C09B;
+        }
+        .btn-sm {
+            padding: 3px 10px;
+            font-size: 0.7rem;
+        }
+
+        /* --- КАРТОЧКИ --- */
+        .card {
+            background: #FFFFFF;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.2rem;
+            border: 1px solid #E8EADD;
+        }
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1F4E3D;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+            border-bottom: 2px solid #E8EADD;
+            padding-bottom: 0.4rem;
+        }
+        .card-title .icon {
+            font-size: 1.2rem;
+        }
+        .card-title .badge {
+            font-size: 0.6rem;
+            background: #EDE8DC;
+            padding: 0.1rem 0.8rem;
+            border-radius: 1rem;
+            color: #5F7C62;
+            font-weight: 600;
+            margin-left: auto;
+        }
+
+        /* --- СЕТКИ --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 0.8rem;
+        }
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+        .form-grid .half-width {
+            grid-column: span 2;
+        }
+        @media (max-width: 600px) {
+            .form-grid .half-width {
+                grid-column: 1 / -1;
+            }
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.72rem;
+            color: #2D3F3A;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+        .form-group input,
+        .form-group select {
+            padding: 6px 12px;
+            border: 1px solid #D9D0BD;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-family: inherit;
+            background: #FEFAF2;
+            color: #2D3F3A;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .form-group textarea {
+            padding: 8px 12px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-family: inherit;
+            background: #FEFAF2;
+            color: #2D3F3A;
+            transition: 0.2s;
+            width: 100%;
+            resize: vertical;
+            min-height: 60px;
+        }
+        .form-group textarea.large {
+            min-height: 100px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4A7C59;
+            box-shadow: 0 0 0 3px rgba(74, 124, 89, 0.15);
+        }
+        .form-group .hint {
+            font-size: 0.6rem;
+            color: #8A9B7A;
+            margin-top: 1px;
+            font-style: italic;
+        }
+
+        /* --- РАЗДЕЛЫ В РАБОЧЕМ ДНЕ --- */
+        .section-block {
+            background: #F8F6F0;
+            border-radius: 1rem;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.8rem;
+        }
+        .section-block:last-child {
+            margin-bottom: 0;
+        }
+        .section-block .section-title {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #2D5F6E;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .section-block .section-title .icon {
+            font-size: 0.9rem;
+        }
+        .section-block .form-grid {
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        }
+
+        /* --- ТРЕКЕР ПРИВЫЧЕК (улучшенный) --- */
+        .habits-wrap {
+            overflow-x: auto;
+        }
+        .habits-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            min-width: 500px;
+        }
+        .habits-table th,
+        .habits-table td {
+            border: 1px solid #E2EAD9;
+            padding: 5px 8px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .habits-table th {
+            background: #F0EEE6;
+            font-weight: 600;
+            color: #1F4E3D;
+            font-size: 0.7rem;
+        }
+        .habits-table .habit-label {
+            text-align: left;
+            padding-left: 12px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            min-width: 130px;
+        }
+        .habits-table .habit-label .icon {
+            margin-right: 6px;
+        }
+        .habit-check {
+            width: 20px;
+            height: 20px;
+            accent-color: #4A7C59;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .habit-check:hover {
+            transform: scale(1.15);
+        }
+        .habit-check:checked {
+            accent-color: #2D5F6E;
+        }
+        .habits-table .day-total {
+            font-weight: 600;
+            font-size: 0.7rem;
+            color: #2D5F6E;
+        }
+
+        /* --- СТРЕСС-СЛАЙДЕР --- */
+        .stress-slider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .stress-slider input[type="range"] {
+            flex: 1;
+            min-width: 120px;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #EDE8DC;
+            border-radius: 2rem;
+            outline: none;
+        }
+        .stress-slider input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #4A7C59;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .stress-slider input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        .stress-value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #4A7C59;
+            min-width: 30px;
+            text-align: center;
+        }
+        .stress-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.6rem;
+            color: #8A9B7A;
+            padding: 0 2px;
+            width: 100%;
+        }
+
+        /* --- ПРОГРЕСС-БАР --- */
+        .progress-bar-wrap {
+            width: 100%;
+            height: 12px;
+            background: #EDE8DC;
+            border-radius: 2rem;
+            overflow: hidden;
+            margin: 4px 0;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .progress-bar-wrap .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #6B9E6B, #4A7C59, #2D5F6E);
+            border-radius: 2rem;
+            transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* --- СТАТИСТИКА --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.6rem;
+            margin-top: 0.6rem;
+        }
+        .stat-item {
+            background: #F8F6F0;
+            padding: 0.5rem 0.8rem;
+            border-radius: 1rem;
+            text-align: center;
+            border: 1px solid #E8EADD;
+        }
+        .stat-item .num {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2D5F6E;
+        }
+        .stat-item .label {
+            font-size: 0.65rem;
+            color: #5F7C62;
+            font-weight: 500;
+        }
+        .stat-item.highlight {
+            background: #E8F0E4;
+            border-color: #4A7C59;
+        }
+        .stat-item.highlight .num {
+            color: #4A7C59;
+        }
+
+        /* --- ЗАБОТА О СЕБЕ --- */
+        .selfcare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        @media (max-width: 700px) {
+            .selfcare-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .selfcare-card {
+            background: #F8F6F0;
+            border-radius: 1rem;
+            padding: 1rem;
+        }
+        .selfcare-card .title {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #2D5F6E;
+            margin-bottom: 0.4rem;
+        }
+        .selfcare-card .value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #2D3F3A;
+        }
+
+        /* --- TOAST --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E3D;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* --- ПЕЧАТЬ --- */
+        @media print {
+            .header-actions .btn {
+                display: none !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border-color: #ddd;
+            }
+            .container {
+                max-width: 100%;
+            }
+            body {
+                padding: 0.3rem;
+                background: #fff;
+            }
+            .form-group input,
+            .form-group textarea {
+                border: 1px solid #ccc;
+                background: #fff;
+            }
+            .habits-table {
+                font-size: 0.7rem;
+            }
+            .section-block {
+                background: #f9f9f9;
+                border: 1px solid #eee;
+            }
+        }
+
+        /* --- АДАПТИВНОСТЬ --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.6rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0.8rem 1rem;
+            }
+            .header-actions {
+                justify-content: center;
+            }
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .card {
+                padding: 1rem;
+            }
+            .section-block .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .section-block .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .logo {
+                font-size: 1rem;
+            }
+            .btn {
+                padding: 4px 10px;
+                font-size: 0.7rem;
+            }
+            .selfcare-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ============================================================
+        ШАПКА
+        ============================================================ -->
+        <header class="header">
+            <div>
+                <div class="logo">🐾 <span>ВетСим</span> <span class="accent">СББЖ</span></div>
+                <div class="subhead">Дневник ветеринарного специалиста · планируй, анализируй, выдыхай</div>
+            </div>
+            <div class="header-actions">
+                <span class="week-label" id="weekLabel">📅 Неделя 1</span>
+                <button class="btn btn-primary" id="saveBtn">💾 Сохранить</button>
+                <button class="btn btn-warning" id="printBtn">🖨️ Печать</button>
+                <button class="btn btn-danger" id="resetBtn">🔄 Сбросить неделю</button>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        БЛОК 1: РАБОЧИЙ ДЕНЬ — НАГРУЗКА (СТРУКТУРИРОВАННЫЙ)
+        ============================================================ -->
+        <div class="card">
+            <div class="card-title">
+                <span class="icon">📋</span> Рабочий день — нагрузка
+                <span class="badge">заполните данные</span>
+            </div>
+
+            <!-- Общие поля -->
+            <div class="form-grid" style="margin-bottom:0.8rem;">
+                <div class="form-group">
+                    <label>📅 Дата</label>
+                    <input type="date" id="wd_date">
+                </div>
+                <div class="form-group">
+                    <label>⏰ Начало работы</label>
+                    <input type="time" id="wd_start" value="08:00">
+                </div>
+                <div class="form-group">
+                    <label>⏰ Окончание работы</label>
+                    <input type="time" id="wd_end" value="17:00">
+                </div>
+            </div>
+
+            <!-- 1. Противоэпизоотические мероприятия -->
+            <div class="section-block">
+                <div class="section-title"><span class="icon">🛡️</span> Противоэпизоотические мероприятия</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Вакцинации (голов)</label>
+                        <input type="number" id="wd_vaccinations" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Обработки / дегельминтизация</label>
+                        <input type="number" id="wd_treatments" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Отбор проб (исследования)</label>
+                        <input type="number" id="wd_samples" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Карантинные мероприятия</label>
+                        <input type="text" id="wd_quarantine" placeholder="объекты, причины">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Лечебно-профилактическая работа -->
+            <div class="section-block">
+                <div class="section-title"><span class="icon">💊</span> Лечебно-профилактическая работа</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Осмотр животных (голов)</label>
+                        <input type="number" id="wd_examinations" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Лечебные процедуры</label>
+                        <input type="number" id="wd_procedures" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Консультации владельцев</label>
+                        <input type="number" id="wd_consultations" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Препараты (названия)</label>
+                        <input type="text" id="wd_drugs" placeholder="список препаратов">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Ветеринарно-санитарная экспертиза -->
+            <div class="section-block">
+                <div class="section-title"><span class="icon">🔬</span> Ветеринарно-санитарная экспертиза</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>ВСЭ (всего голов / туш)</label>
+                        <input type="number" id="wd_expertise" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Трихинеллоскопия (кабан)</label>
+                        <input type="number" id="wd_expertise_boar" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Трихинеллоскопия (медведь)</label>
+                        <input type="number" id="wd_expertise_bear" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Браковка мяса (кг)</label>
+                        <input type="number" id="wd_expertise_reject" min="0" step="0.1" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Лабораторные исследования</label>
+                        <input type="number" id="wd_lab_tests" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Результаты / патологии</label>
+                        <input type="text" id="wd_expertise_results" placeholder="выявленные патологии">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Оформление документов -->
+            <div class="section-block">
+                <div class="section-title"><span class="icon">📄</span> Оформление документов</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Ветсвидетельства</label>
+                        <input type="number" id="wd_certificates" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Акты / заключения</label>
+                        <input type="number" id="wd_acts" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Другие документы</label>
+                        <input type="number" id="wd_other_docs" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Какие документы</label>
+                        <input type="text" id="wd_docs_detail" placeholder="список документов">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Выездные обследования -->
+            <div class="section-block">
+                <div class="section-title"><span class="icon">🚗</span> Выездные обследования</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Количество выездов</label>
+                        <input type="number" id="wd_trips" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Обследовано объектов</label>
+                        <input type="number" id="wd_facilities" min="0" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Населённые пункты</label>
+                        <input type="text" id="wd_locations" placeholder="куда выезжали">
+                    </div>
+                    <div class="form-group">
+                        <label>Цель выезда</label>
+                        <input type="text" id="wd_trip_purpose" placeholder="проверка, вакцинация...">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        БЛОК 2: ЗАПИСЬ ДНЯ
+        ============================================================ -->
+        <div class="card">
+            <div class="card-title"><span class="icon">📝</span> Запись дня</div>
+            <div class="form-grid" id="notesFields">
+                <!-- генерируется JS -->
+            </div>
+        </div>
+
+        <!-- ============================================================
+        БЛОК 3: ПРОФЕССИОНАЛЬНАЯ РЕФЛЕКСИЯ
+        ============================================================ -->
+        <div class="card">
+            <div class="card-title"><span class="icon">🌱</span> Профессиональная рефлексия</div>
+            <div class="form-grid" id="reflectionFields">
+                <!-- генерируется JS -->
+            </div>
+        </div>
+
+        <!-- ============================================================
+        БЛОК 4: ЗАБОТА О СЕБЕ (УЛУЧШЕННЫЙ)
+        ============================================================ -->
+        <div class="card">
+            <div class="card-title"><span class="icon">🌿</span> Забота о себе сегодня</div>
+            <div id="selfcareFields">
+                <!-- генерируется JS -->
+            </div>
+        </div>
+
+        <!-- ============================================================
+        БЛОК 5: ТРЕКЕР ПРИВЫЧЕК (УЛУЧШЕННЫЙ)
+        ============================================================ -->
+        <div class="card">
+            <div class="card-title"><span class="icon">🔄</span> Трекер привычек <span class="badge" id="habitsProgress">0%</span></div>
+            <div class="habits-wrap">
+                <table class="habits-table" id="habitsTable">
+                    <thead>
+                        <tr>
+                            <th>Привычка</th>
+                            <th>ПН</th>
+                            <th>ВТ</th>
+                            <th>СР</th>
+                            <th>ЧТ</th>
+                            <th>ПТ</th>
+                            <th>СБ</th>
+                            <th>ВС</th>
+                            <th>✅</th>
+                        </tr>
+                    </thead>
+                    <tbody id="habitsBody">
+                        <!-- генерируется JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        БЛОК 6: ИТОГИ НЕДЕЛИ
+        ============================================================ -->
+        <div class="card">
+            <div class="card-title"><span class="icon">📊</span> Итоги недели</div>
+            <div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <span style="font-weight:600; font-size:0.85rem;">📈 Прогресс заполнения</span>
+                    <span id="progressPercent" style="font-weight:700; color:#2D5F6E; font-size:1rem;">0%</span>
+                </div>
+                <div class="progress-bar-wrap">
+                    <div class="fill" id="progressFill" style="width:0%;"></div>
+                </div>
+                <div class="stats-grid" id="weeklyStats">
+                    <!-- генерируется JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ФУТЕР -->
+        <footer style="text-align:center; margin-top:1rem; padding-top:0.8rem; border-top:1px solid #E8EADD; font-size:0.65rem; color:#A8B89A;">
+            © ВетСим — ветеринарное просвещение · СББЖ
+        </footer>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ================================================================
+        //  ДНЕВНИК ВЕТЕРИНАРНОГО СПЕЦИАЛИСТА СББЖ
+        // ================================================================
+
+        // --- КОНСТАНТЫ ---
+        const DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+        const DAY_KEYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+        const HABITS = [
+            { id: 'sleep', label: '😴 Сон 7–8 ч' },
+            { id: 'water', label: '💧 Вода 1.5 л' },
+            { id: 'food', label: '🥗 Регулярное питание' },
+            { id: 'break', label: '☕ Перерыв в работе' },
+            { id: 'walk', label: '🚶 Прогулка / движение' },
+            { id: 'mind', label: '🧘 Минута осознанности' },
+            { id: 'gratitude', label: '🙏 Запись благодарности' }
+        ];
+
+        // Поля записей
+        const NOTES_FIELDS = [
+            { id: 'main_events', label: '📌 Основные мероприятия дня', rows: 3,
+            placeholder: 'Выезды, проверки, вакцинации, обработки, экспертизы...' },
+            { id: 'vet_san', label: '🔬 Ветсанэкспертиза (особые случаи)', rows: 3,
+                placeholder: 'Результаты трихинеллоскопии, браковка мяса, выявленные патологии...' },
+            { id: 'epizootic', label: '🛡️ Противоэпизоотические мероприятия', rows: 3,
+                placeholder: 'Вакцинации, обработки, отбор проб, карантин...' },
+            { id: 'difficult', label: '⚡ Сложная ситуация', rows: 3,
+                placeholder: 'Конфликт, нестандартный случай, отказ владельца...' },
+            { id: 'success', label: '🌟 Успех дня', rows: 3, placeholder: 'Что удалось решить, чем горжусь...' },
+            { id: 'tomorrow', label: '📅 Заметки на завтра', rows: 3, placeholder: 'Планы, звонки, проверки, предстоящие выезды...' }
+        ];
+
+        // Поля рефлексии
+        const REFLECTION_FIELDS = [
+            { id: 'growth', label: '🌱 Точка роста', rows: 4,
+                placeholder: 'Что я мог(ла) сделать лучше? Какие навыки прокачать? Как улучшить коммуникацию?' },
+            { id: 'vest', label: '💬 Жилетка (анонимно)', rows: 4,
+                placeholder: 'Что раздражало? Кто вывел из себя? Что пошло не так? (для себя)' },
+            { id: 'insight', label: '💡 Инсайт', rows: 3,
+                placeholder: 'Что нового я узнал(а) сегодня? Какое открытие сделал(а)?' }
+        ];
+
+        // --- СОСТОЯНИЕ ---
+        let weekId = localStorage.getItem('vetsim_sbbj_week_id') || 'week1';
+        let weekNumber = parseInt(localStorage.getItem('vetsim_sbbj_week_number') || '1');
+        let data = {};
+
+        // --- ИНИЦИАЛИЗАЦИЯ ДАННЫХ ---
+        function initData() {
+            const saved = localStorage.getItem('vetsim_sbbj_data_' + weekId);
+            if (saved) {
+                try { data = JSON.parse(saved); } catch (e) { data = {}; }
+            }
+
+            // Инициализация всех полей рабочего дня
+            const wdFields = [
+                'date', 'start', 'end',
+                'vaccinations', 'treatments', 'samples', 'quarantine',
+                'examinations', 'procedures', 'consultations', 'drugs',
+                'expertise', 'expertise_boar', 'expertise_bear', 'expertise_reject', 'lab_tests', 'expertise_results',
+                'certificates', 'acts', 'other_docs', 'docs_detail',
+                'trips', 'facilities', 'locations', 'trip_purpose'
+            ];
+            if (!data.workday) {
+                data.workday = {};
+                wdFields.forEach(f => { data.workday[f] = ''; });
+            }
+            wdFields.forEach(f => {
+                if (data.workday[f] === undefined) data.workday[f] = '';
+            });
+
+            // Инициализация записей
+            if (!data.notes) {
+                data.notes = {};
+                NOTES_FIELDS.forEach(f => { data.notes[f.id] = ''; });
+            }
+
+            // Инициализация рефлексии
+            if (!data.reflection) {
+                data.reflection = {};
+                REFLECTION_FIELDS.forEach(f => { data.reflection[f.id] = ''; });
+            }
+
+            // Инициализация заботы о себе
+            if (!data.selfcare) {
+                data.selfcare = {
+                    breaks: '',
+                    self_activity: '',
+                    stress: 5,
+                    mood: 5
+                };
+            }
+
+            // Инициализация привычек
+            if (!data.habits) {
+                data.habits = {};
+                DAY_KEYS.forEach(day => {
+                    data.habits[day] = {};
+                    HABITS.forEach(h => {
+                        data.habits[day][h.id] = false;
+                    });
+                });
+            }
+
+            if (!data.workday.date) {
+                const today = new Date();
+                data.workday.date = today.toISOString().split('T')[0];
+            }
+
+            updateWeekLabel();
+        }
+
+        // --- ОТРИСОВКА ---
+        function render() {
+            renderWorkday();
+            renderNotes();
+            renderReflection();
+            renderSelfcare();
+            renderHabits();
+            renderStats();
+            updateProgress();
+            updateHabitsProgress();
+        }
+
+        // --- РАБОЧИЙ ДЕНЬ (поля привязаны к data.workday) ---
+        function renderWorkday() {
+            const fields = [
+                'date', 'start', 'end',
+                'vaccinations', 'treatments', 'samples', 'quarantine',
+                'examinations', 'procedures', 'consultations', 'drugs',
+                'expertise', 'expertise_boar', 'expertise_bear', 'expertise_reject', 'lab_tests', 'expertise_results',
+                'certificates', 'acts', 'other_docs', 'docs_detail',
+                'trips', 'facilities', 'locations', 'trip_purpose'
+            ];
+            fields.forEach(id => {
+                const el = document.getElementById('wd_' + id);
+                if (el) {
+                    el.value = data.workday[id] || '';
+                    el.addEventListener('input', function() {
+                        data.workday[id] = this.value;
+                        saveData();
+                        renderStats();
+                        updateProgress();
+                    });
+                }
+            });
+        }
+
+        // --- ЗАПИСЬ ДНЯ ---
+        function renderNotes() {
+            const container = document.getElementById('notesFields');
+            container.innerHTML = '';
+            NOTES_FIELDS.forEach(f => {
+                const div = document.createElement('div');
+                div.className = 'form-group full-width';
+                const val = data.notes[f.id] || '';
+                div.innerHTML = `
+                    <label>${f.label}</label>
+                    <textarea id="note_${f.id}" rows="${f.rows || 3}" placeholder="${escapeHtml(f.placeholder || '')}" class="${f.rows > 3 ? 'large' : ''}">${escapeHtml(val)}</textarea>
+                `;
+                const textarea = div.querySelector('textarea');
+                textarea.addEventListener('input', function() {
+                    data.notes[f.id] = this.value;
+                    saveData();
+                    updateProgress();
+                });
+                container.appendChild(div);
+            });
+        }
+
+        // --- РЕФЛЕКСИЯ ---
+        function renderReflection() {
+            const container = document.getElementById('reflectionFields');
+            container.innerHTML = '';
+            REFLECTION_FIELDS.forEach(f => {
+                const div = document.createElement('div');
+                div.className = 'form-group full-width';
+                const val = data.reflection[f.id] || '';
+                div.innerHTML = `
+                    <label>${f.label}</label>
+                    <textarea id="ref_${f.id}" rows="${f.rows || 4}" placeholder="${escapeHtml(f.placeholder || '')}" class="${f.rows > 3 ? 'large' : ''}">${escapeHtml(val)}</textarea>
+                `;
+                const textarea = div.querySelector('textarea');
+                textarea.addEventListener('input', function() {
+                    data.reflection[f.id] = this.value;
+                    saveData();
+                    updateProgress();
+                });
+                container.appendChild(div);
+            });
+        }
+
+        // --- ЗАБОТА О СЕБЕ (улучшенный) ---
+        function renderSelfcare() {
+            const container = document.getElementById('selfcareFields');
+            const breaks = data.selfcare.breaks || '';
+            const activity = data.selfcare.self_activity || '';
+            const stress = data.selfcare.stress || 5;
+            const mood = data.selfcare.mood || 5;
+
+            container.innerHTML = `
+                <div class="selfcare-grid">
+                    <div class="selfcare-card">
+                        <div class="title">🧘 Микропаузы (перерывы 3–5 мин)</div>
+                        <div style="display:flex; align-items:center; gap:0.6rem;">
+                            <input type="number" id="sc_breaks" value="${breaks}" min="0" placeholder="0" style="width:80px; padding:6px 12px; border:1px solid #D9D0BD; border-radius:2rem; font-size:0.9rem; font-family:inherit; background:#FEFAF2;">
+                            <span style="font-size:0.8rem; color:#5F7C62;">перерывов</span>
+                        </div>
+                        <div style="margin-top:0.4rem; font-size:0.7rem; color:#8A9B7A;">Короткие перерывы для восстановления</div>
+                    </div>
+                    <div class="selfcare-card">
+                        <div class="title">💪 Что я сделал(а) для себя сегодня?</div>
+                        <input type="text" id="sc_activity" value="${escapeHtml(activity)}" placeholder="Прогулка, спорт, хобби, тишина..." style="width:100%; padding:6px 12px; border:1px solid #D9D0BD; border-radius:2rem; font-size:0.8rem; font-family:inherit; background:#FEFAF2;">
+                    </div>
+                </div>
+                <div style="margin-top:0.8rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                    <div class="selfcare-card">
+                        <div class="title">🎯 Уровень стресса (1–10)</div>
+                        <div class="stress-slider">
+                            <span style="font-size:0.7rem; color:#8A9B7A;">1</span>
+                            <input type="range" id="sc_stress" min="1" max="10" value="${stress}">
+                            <span style="font-size:0.7rem; color:#8A9B7A;">10</span>
+                            <span class="stress-value" id="stressValue">${stress}</span>
+                        </div>
+                        <div class="stress-labels">
+                            <span>спокойствие</span>
+                            <span>максимум</span>
+                        </div>
+                    </div>
+                    <div class="selfcare-card">
+                        <div class="title">😊 Настроение (1–10)</div>
+                        <div class="stress-slider">
+                            <span style="font-size:0.7rem; color:#8A9B7A;">1</span>
+                            <input type="range" id="sc_mood" min="1" max="10" value="${mood}">
+                            <span style="font-size:0.7rem; color:#8A9B7A;">10</span>
+                            <span class="stress-value" id="moodValue">${mood}</span>
+                        </div>
+                        <div class="stress-labels">
+                            <span>плохое</span>
+                            <span>отличное</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('sc_breaks').addEventListener('input', function() {
+                data.selfcare.breaks = this.value;
+                saveData();
+                updateProgress();
+            });
+
+            document.getElementById('sc_activity').addEventListener('input', function() {
+                data.selfcare.self_activity = this.value;
+                saveData();
+                updateProgress();
+            });
+
+            const stressInput = document.getElementById('sc_stress');
+            const stressVal = document.getElementById('stressValue');
+            stressInput.addEventListener('input', function() {
+                data.selfcare.stress = parseInt(this.value) || 5;
+                stressVal.textContent = data.selfcare.stress;
+                saveData();
+                updateProgress();
+            });
+
+            const moodInput = document.getElementById('sc_mood');
+            const moodVal = document.getElementById('moodValue');
+            moodInput.addEventListener('input', function() {
+                data.selfcare.mood = parseInt(this.value) || 5;
+                moodVal.textContent = data.selfcare.mood;
+                saveData();
+                updateProgress();
+            });
+        }
+
+        // --- ПРИВЫЧКИ (улучшенный с итогами по дням) ---
+        function renderHabits() {
+            const tbody = document.getElementById('habitsBody');
+            tbody.innerHTML = '';
+
+            HABITS.forEach(habit => {
+                const tr = document.createElement('tr');
+                let total = 0;
+                let done = 0;
+                let cells = '';
+                DAY_KEYS.forEach(day => {
+                    const checked = data.habits[day]?.[habit.id] || false;
+                    if (checked) done++;
+                    total++;
+                    cells += `<td><input type="checkbox" class="habit-check" data-day="${day}" data-habit="${habit.id}" ${checked ? 'checked' : ''}></td>`;
+                });
+                const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+                tr.innerHTML = `
+                    <td class="habit-label"><span class="icon">${habit.label.split(' ')[0]}</span> ${habit.label.substring(habit.label.indexOf(' ') + 1)}</td>
+                    ${cells}
+                    <td class="day-total">${done}/${total}</td>
+                `;
+                tbody.appendChild(tr);
+
+                // события
+                tr.querySelectorAll('.habit-check').forEach(cb => {
+                    cb.addEventListener('change', function() {
+                        if (!data.habits[this.dataset.day]) data.habits[this.dataset.day] = {};
+                        data.habits[this.dataset.day][this.dataset.habit] = this.checked;
+                        saveData();
+                        renderStats();
+                        updateProgress();
+                        updateHabitsProgress();
+                        renderHabits(); // перерисовка для обновления итогов
+                    });
+                });
+            });
+        }
+
+        // --- ПРОГРЕСС ПРИВЫЧЕК ---
+        function updateHabitsProgress() {
+            let total = 0;
+            let done = 0;
+            DAY_KEYS.forEach(day => {
+                HABITS.forEach(h => {
+                    total++;
+                    if (data.habits[day]?.[h.id]) done++;
+                });
+            });
+            const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+            document.getElementById('habitsProgress').textContent = percent + '%';
+        }
+
+        // --- СТАТИСТИКА ---
+        function renderStats() {
+            const container = document.getElementById('weeklyStats');
+
+            const expertise = parseInt(data.workday.expertise) || 0;
+            const expertiseBoar = parseInt(data.workday.expertise_boar) || 0;
+            const expertiseBear = parseInt(data.workday.expertise_bear) || 0;
+            const expertiseReject = parseFloat(data.workday.expertise_reject) || 0;
+            const vaccinations = parseInt(data.workday.vaccinations) || 0;
+            const treatments = parseInt(data.workday.treatments) || 0;
+            const trips = parseInt(data.workday.trips) || 0;
+            const consultations = parseInt(data.workday.consultations) || 0;
+            const certificates = parseInt(data.workday.certificates) || 0;
+            const labTests = parseInt(data.workday.lab_tests) || 0;
+            const examinations = parseInt(data.workday.examinations) || 0;
+            const procedures = parseInt(data.workday.procedures) || 0;
+            const samples = parseInt(data.workday.samples) || 0;
+
+            // Привычки
+            let habitsDone = 0;
+            let habitsTotal = 0;
+            DAY_KEYS.forEach(day => {
+                HABITS.forEach(h => {
+                    habitsTotal++;
+                    if (data.habits[day]?.[h.id]) habitsDone++;
+                });
+            });
+
+            container.innerHTML = `
+                <div class="stat-item highlight">
+                    <div class="num">${expertise}</div>
+                    <div class="label">ВСЭ (всего)</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${expertiseBoar + expertiseBear}</div>
+                    <div class="label">Трихинеллоскопия</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${expertiseReject > 0 ? expertiseReject.toFixed(1) : 0}</div>
+                    <div class="label">Браковка (кг)</div>
+                </div>
+                <div class="stat-item highlight">
+                    <div class="num">${vaccinations}</div>
+                    <div class="label">Вакцинации</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${treatments}</div>
+                    <div class="label">Обработки</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${trips}</div>
+                    <div class="label">Выезды</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${consultations}</div>
+                    <div class="label">Консультации</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${certificates}</div>
+                    <div class="label">Ветсвидетельства</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${labTests}</div>
+                    <div class="label">Исследования</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${examinations}</div>
+                    <div class="label">Осмотры</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${procedures}</div>
+                    <div class="label">Процедуры</div>
+                </div>
+                <div class="stat-item">
+                    <div class="num">${samples}</div>
+                    <div class="label">Отбор проб</div>
+                </div>
+                <div class="stat-item highlight">
+                    <div class="num">${habitsDone}/${habitsTotal}</div>
+                    <div class="label">Привычки ✅</div>
+                </div>
+            `;
+        }
+
+        // --- ПРОГРЕСС ЗАПОЛНЕНИЯ ---
+        function updateProgress() {
+            let total = 0;
+            let filled = 0;
+
+            // Поля рабочего дня (только значимые)
+            const wdFields = [
+                'date', 'vaccinations', 'treatments', 'samples',
+                'examinations', 'procedures', 'consultations',
+                'expertise', 'expertise_boar', 'expertise_bear', 'expertise_reject', 'lab_tests',
+                'certificates', 'acts', 'other_docs',
+                'trips', 'facilities'
+            ];
+            wdFields.forEach(f => {
+                total++;
+                const val = data.workday[f];
+                if (val && val.toString().trim().length > 0 && val !== '0' && val !== '0.0') {
+                    filled++;
+                }
+            });
+
+            // Записи
+            NOTES_FIELDS.forEach(f => {
+                total++;
+                if (data.notes[f.id] && data.notes[f.id].trim().length > 0) filled++;
+            });
+
+            // Рефлексия
+            REFLECTION_FIELDS.forEach(f => {
+                total++;
+                if (data.reflection[f.id] && data.reflection[f.id].trim().length > 0) filled++;
+            });
+
+            // Забота о себе
+            total++;
+            if (data.selfcare.breaks && parseInt(data.selfcare.breaks) > 0) filled++;
+            total++;
+            if (data.selfcare.self_activity && data.selfcare.self_activity.trim().length > 0) filled++;
+
+            // Привычки
+            DAY_KEYS.forEach(day => {
+                HABITS.forEach(h => {
+                    total++;
+                    if (data.habits[day]?.[h.id]) filled++;
+                });
+            });
+
+            const percent = total > 0 ? Math.round((filled / total) * 100) : 0;
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+
+        // --- ОБНОВЛЕНИЕ НЕДЕЛИ ---
+        function updateWeekLabel() {
+            document.getElementById('weekLabel').textContent = '📅 Неделя ' + weekNumber;
+        }
+
+        // --- СОХРАНЕНИЕ ---
+        function saveData() {
+            try {
+                localStorage.setItem('vetsim_sbbj_data_' + weekId, JSON.stringify(data));
+            } catch (e) { console.warn('Не удалось сохранить', e); }
+            showToast('✅ Данные сохранены');
+        }
+
+        // --- СБРОС ---
+        function resetWeek() {
+            if (!confirm('Сбросить все данные за неделю?')) return;
+            weekNumber++;
+            weekId = 'week' + weekNumber;
+            data = {};
+            initData();
+            localStorage.setItem('vetsim_sbbj_week_number', String(weekNumber));
+            localStorage.setItem('vetsim_sbbj_week_id', weekId);
+            localStorage.removeItem('vetsim_sbbj_data_' + weekId);
+            render();
+            showToast('🔄 Неделя сброшена');
+        }
+
+        // --- ПЕЧАТЬ ---
+        function printPage() {
+            window.print();
+        }
+
+        // --- ВСПОМОГАТЕЛЬНЫЕ ---
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        let toastTimer = null;
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // --- СОБЫТИЯ ---
+        document.getElementById('saveBtn').addEventListener('click', saveData);
+        document.getElementById('printBtn').addEventListener('click', printPage);
+        document.getElementById('resetBtn').addEventListener('click', resetWeek);
+
+        window.addEventListener('beforeunload', saveData);
+
+        // --- ЗАПУСК ---
+        initData();
+        render();
+        showToast('🐾 Дневник готов! Заполняйте и сохраняйте.');
+    </script>
+
+</body>
+</html>

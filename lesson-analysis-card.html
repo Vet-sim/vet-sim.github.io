@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Карта анализа урока | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.2rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* --- ШАПКА --- */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 0.8rem 1.2rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.2rem;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3E5C4A;
+        }
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subhead {
+            font-size: 0.8rem;
+            color: #7B8D6E;
+            margin-top: 2px;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 5px 14px;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            font-family: inherit;
+            color: #3E5C4A;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            opacity: 0.85;
+        }
+        .btn:active {
+            transform: scale(0.96);
+        }
+        .btn-primary {
+            background: #A3B18A;
+            color: #2C4027;
+        }
+        .btn-primary:hover {
+            background: #8FA375;
+        }
+        .btn-accent {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-accent:hover {
+            background: #236B8A;
+        }
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #5A865A;
+        }
+        .btn-danger {
+            background: #D4A373;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #C99464;
+        }
+        .btn-warning {
+            background: #E2CFB0;
+            color: #4D3E2A;
+        }
+        .btn-warning:hover {
+            background: #D6C09B;
+        }
+        .btn-sm {
+            padding: 3px 10px;
+            font-size: 0.7rem;
+        }
+
+        /* --- КАРТОЧКИ-АККОРДЕОНЫ --- */
+        .accordion {
+            background: white;
+            border-radius: 1.5rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid #E7EDE2;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        .accordion-header {
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+            background: #FEFCF9;
+            user-select: none;
+        }
+        .accordion-header:hover {
+            background: #F9F6EF;
+        }
+        .accordion-header .title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .accordion-header .title .num {
+            background: #2C7DA0;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        .accordion-header .arrow {
+            font-size: 1.2rem;
+            color: #7B8D6E;
+            transition: transform 0.3s;
+        }
+        .accordion-header .arrow.open {
+            transform: rotate(180deg);
+        }
+        .accordion-body {
+            padding: 0 1.2rem 1.2rem 1.2rem;
+            display: none;
+        }
+        .accordion-body.open {
+            display: block;
+        }
+
+        /* --- ФОРМЫ --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 0.8rem;
+        }
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #3E5C4A;
+        }
+        .form-group label .hint {
+            font-weight: 400;
+            color: #7B8D6E;
+            font-size: 0.65rem;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 6px 12px;
+            border: 1px solid #D9D0BD;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-family: inherit;
+            background: #FEFAF2;
+            color: #3E5C4A;
+            transition: 0.2s;
+            width: 100%;
+        }
+        .form-group textarea {
+            border-radius: 1rem;
+            resize: vertical;
+            min-height: 50px;
+        }
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44, 125, 160, 0.1);
+        }
+        .form-group .score-input {
+            max-width: 80px;
+            text-align: center;
+        }
+        .form-group .score-input-small {
+            max-width: 60px;
+            text-align: center;
+        }
+
+        /* --- ИТОГОВЫЙ БЛОК --- */
+        .result-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border: 2px solid #2C7DA0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-top: 1.2rem;
+        }
+        .result-card .result-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            margin-bottom: 0.6rem;
+        }
+        .result-card .result-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .result-card .score-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .result-card .level-display {
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 0.3rem 1.5rem;
+            border-radius: 2rem;
+        }
+        .level-high {
+            background: #E2F0DA;
+            color: #2C7DA0;
+        }
+        .level-good {
+            background: #D4E8CA;
+            color: #3E5C4A;
+        }
+        .level-satisfactory {
+            background: #FDE8E0;
+            color: #D4A373;
+        }
+        .level-low {
+            background: #FDE8E0;
+            color: #D4A373;
+        }
+
+        /* --- ПОДПИСИ --- */
+        .signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        @media (max-width: 600px) {
+            .signatures {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- TOAST --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* --- АДАПТИВНОСТЬ --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.8rem;
+            }
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .header-actions {
+                justify-content: center;
+            }
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .result-card .result-row {
+                flex-direction: column;
+                text-align: center;
+            }
+            .logo {
+                font-size: 1rem;
+            }
+        }
+
+        /* --- ПЕЧАТЬ --- */
+        @media print {
+            .header-actions .btn {
+                display: none !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .accordion-body {
+                display: block !important;
+            }
+            .accordion-header .arrow {
+                display: none;
+            }
+            .accordion {
+                break-inside: avoid;
+                box-shadow: none;
+                border-color: #ddd;
+            }
+            .container {
+                max-width: 100%;
+            }
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                border: 1px solid #ccc;
+                background: #fff;
+            }
+            .result-card {
+                border-color: #ccc;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* --- ПРОГРЕСС-БАР --- */
+        .progress-bar-wrap {
+            width: 100%;
+            height: 6px;
+            background: #EDE8DC;
+            border-radius: 2rem;
+            overflow: hidden;
+            margin: 4px 0;
+        }
+        .progress-bar-wrap .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #6B9E6B, #A3B18A);
+            border-radius: 2rem;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ============================================================
+        ШАПКА
+        ============================================================ -->
+        <header class="header">
+            <div>
+                <div class="logo">🐾 <span>ВетСим</span> — Карта анализа урока</div>
+                <div class="subhead">Для экспертов, преподавателей и открытых уроков</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-accent" id="exportPdfBtn">📤 Экспорт в PDF</button>
+                <button class="btn btn-warning" id="printBtn">🖨️ Печать</button>
+                <button class="btn btn-primary" id="saveBtn">💾 Сохранить</button>
+                <button class="btn btn-danger" id="resetBtn">🔄 Сбросить</button>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        ОПИСАНИЕ
+        ============================================================ -->
+        <div style="background:white; border-radius:1.5rem; padding:0.8rem 1.2rem; margin-bottom:1.2rem; border:1px solid #E7EDE2; box-shadow:0 2px 8px rgba(0,0,0,0.05);">
+            <p style="font-size:0.85rem; color:#5F7C62; line-height:1.5;">
+                📋 Инструмент для системного анализа учебного занятия в соответствии с требованиями ФГОС СПО,
+                критериями конкурса «Мастер года» и для любого открытого урока. Заполните разделы, получите итоговую оценку и рекомендации.
+            </p>
+        </div>
+
+        <!-- ============================================================
+        АККОРДЕОНЫ
+        ============================================================ -->
+        <div id="accordionContainer">
+            <!-- генерируется JS -->
+        </div>
+
+        <!-- ============================================================
+        ИТОГОВЫЙ БЛОК
+        ============================================================ -->
+        <div class="result-card" id="resultCard">
+            <div class="result-title">📊 Итоги анализа урока</div>
+            <div class="result-row">
+                <div>
+                    <div style="font-size:0.8rem; color:#7B8D6E;">Общая сумма баллов</div>
+                    <div class="score-display" id="totalScore">0</div>
+                </div>
+                <div style="text-align:center;">
+                    <div style="font-size:0.8rem; color:#7B8D6E;">Уровень урока</div>
+                    <div class="level-display" id="levelDisplay">—</div>
+                </div>
+                <div style="flex:1; min-width:150px;">
+                    <div style="font-size:0.8rem; color:#7B8D6E;">Прогресс заполнения</div>
+                    <div class="progress-bar-wrap">
+                        <div class="fill" id="progressFill" style="width:0%;"></div>
+                    </div>
+                    <div style="font-size:0.7rem; color:#7B8D6E; text-align:right;" id="progressText">0%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        ПОДПИСИ
+        ============================================================ -->
+        <div class="result-card" style="border-color:#A3B18A;">
+            <div class="result-title">✍️ Подписи</div>
+            <div class="signatures">
+                <div class="form-group">
+                    <label>Эксперт (ФИО, должность)</label>
+                    <input type="text" id="signExpert" placeholder="Иванов И.И., методист">
+                </div>
+                <div class="form-group">
+                    <label>Согласовано / Ознакомлен(а)</label>
+                    <input type="text" id="signTeacher" placeholder="Петрова П.П., преподаватель">
+                </div>
+            </div>
+            <div style="margin-top:0.6rem; display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-success btn-sm" id="addSignatureBtn">➕ Добавить подпись</button>
+                <button class="btn btn-warning btn-sm" id="clearSignaturesBtn">🗑️ Очистить подписи</button>
+            </div>
+            <div id="signaturesList" style="margin-top:0.6rem; display:flex; flex-wrap:wrap; gap:8px;"></div>
+        </div>
+
+        <!-- TOAST -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  КАРТА АНАЛИЗА УРОКА
+        // ================================================================
+
+        // --- КОНСТАНТЫ ---
+        const SECTIONS = [{
+            id: 'general',
+            title: 'Общие сведения',
+            icon: '📋',
+            fields: [
+                { id: 'date', label: 'Дата проведения', type: 'date' },
+                { id: 'subject', label: 'Предмет', type: 'text', placeholder: 'Например: Биология' },
+                { id: 'group', label: 'Группа / Класс', type: 'text', placeholder: 'Например: Б-21' },
+                { id: 'teacher', label: 'ФИО преподавателя', type: 'text', placeholder: 'Иванов Иван Иванович' },
+                { id: 'theme', label: 'Тема урока', type: 'text', placeholder: 'Введите тему урока' },
+                { id: 'lesson_type', label: 'Тип урока', type: 'select', options: ['Комбинированный',
+                        'Усвоение новых знаний', 'Закрепление знаний', 'Обобщение и систематизация',
+                        'Контроль знаний', 'Коррекция знаний'
+                    ] },
+                { id: 'lesson_view', label: 'Вид урока', type: 'select', options: ['Лекция', 'Семинар',
+                        'Практическая работа', 'Лабораторная работа', 'Урок-игра', 'Урок-конференция',
+                        'Урок-экскурсия', 'Интегрированный урок'
+                    ] }
+            ]
+        }, {
+            id: 'organization',
+            title: 'Организационная структура',
+            icon: '🏗️',
+            fields: [
+                { id: 'org_start', label: 'Мобилизующее начало', type: 'text',
+                placeholder: 'Описание начала урока' },
+                { id: 'org_stages', label: 'Последовательность этапов', type: 'text',
+                    placeholder: 'Перечислите этапы урока' },
+                { id: 'org_timing', label: 'Хронометраж (мин)', type: 'number', min: 0 },
+                { id: 'org_motivation', label: 'Мотивация', type: 'select', options: ['Отсутствует',
+                        'Частичная', 'Полная'
+                    ] }
+            ]
+        }, {
+            id: 'content',
+            title: 'Содержание урока',
+            icon: '📚',
+            fields: [
+                { id: 'cont_program', label: 'Соответствие программе', type: 'select_score', options: [
+                        '0 — не соответствует', '1 — частично соответствует', '2 — полностью соответствует'
+                    ] },
+                { id: 'cont_science', label: 'Научность и достоверность', type: 'select_score', options: [
+                        '0 — отсутствует', '1 — частично', '2 — в полной мере'
+                    ] },
+                { id: 'cont_practice', label: 'Связь с практикой', type: 'select_score', options: [
+                        '0 — отсутствует', '1 — частично', '2 — в полной мере'
+                    ] },
+                { id: 'cont_meta', label: 'Метапредметные связи', type: 'select_score', options: [
+                        '0 — отсутствуют', '1 — частично', '2 — в полной мере'
+                    ] }
+            ]
+        }, {
+            id: 'methods',
+            title: 'Методика проведения',
+            icon: '🎯',
+            fields: [
+                { id: 'meth_methods', label: 'Методы и приёмы', type: 'text', placeholder: 'Перечислите методы' },
+                { id: 'meth_activity', label: 'Соотношение деятельности преподавателя и студентов', type: 'select',
+                    options: ['1:1', '1:2', '1:3', '2:1', '3:1'] },
+                { id: 'meth_forms', label: 'Формы работы', type: 'text', placeholder: 'Фронтальная, групповая, парная, индивидуальная' },
+                { id: 'meth_variety', label: 'Разнообразие методов', type: 'select_score', options: [
+                        '0 — однообразные', '1 — частичное разнообразие', '2 — широкое разнообразие'
+                    ] }
+            ]
+        }, {
+            id: 'uud',
+            title: 'Формирование УУД',
+            icon: '🧠',
+            fields: [
+                { id: 'uud_personal', label: 'Личностные УУД', type: 'select_score', options: [
+                        '0 — не формируются', '1 — частично', '2 — в полной мере'
+                    ] },
+                { id: 'uud_regulatory', label: 'Регулятивные УУД', type: 'select_score', options: [
+                        '0 — не формируются', '1 — частично', '2 — в полной мере'
+                    ] },
+                { id: 'uud_cognitive', label: 'Познавательные УУД', type: 'select_score', options: [
+                        '0 — не формируются', '1 — частично', '2 — в полной мере'
+                    ] },
+                { id: 'uud_communicative', label: 'Коммуникативные УУД', type: 'select_score', options: [
+                        '0 — не формируются', '1 — частично', '2 — в полной мере'
+                    ] }
+            ]
+        }, {
+            id: 'technologies',
+            title: 'Использование технологий',
+            icon: '💻',
+            fields: [
+                { id: 'tech_ict', label: 'ИКТ', type: 'select_score', options: ['0 — не используются',
+                        '1 — частично', '2 — эффективно'
+                    ] },
+                { id: 'tech_health', label: 'Здоровьесберегающие', type: 'select_score', options: [
+                        '0 — не используются', '1 — частично', '2 — эффективно'
+                    ] },
+                { id: 'tech_interactive', label: 'Интерактивные технологии', type: 'select_score', options: [
+                        '0 — не используются', '1 — частично', '2 — эффективно'
+                    ] },
+                { id: 'tech_problem', label: 'Проблемное обучение', type: 'select_score', options: [
+                        '0 — не используется', '1 — частично', '2 — эффективно'
+                    ] }
+            ]
+        }, {
+            id: 'results',
+            title: 'Результативность',
+            icon: '📈',
+            fields: [
+                { id: 'res_goals', label: 'Достижение целей', type: 'select_score', options: [
+                        '0 — не достигнуты', '1 — частично', '2 — полностью'
+                    ] },
+                { id: 'res_quality', label: 'Качество знаний', type: 'select_score', options: [
+                        '0 — низкое', '1 — среднее', '2 — высокое'
+                    ] },
+                { id: 'res_product', label: 'Наличие продукта деятельности', type: 'select_score', options: [
+                        '0 — отсутствует', '1 — частично', '2 — в полной мере'
+                    ] }
+            ]
+        }, {
+            id: 'reflection',
+            title: 'Рефлексия и самоанализ',
+            icon: '🔄',
+            fields: [
+                { id: 'ref_teacher', label: 'Рефлексивная культура преподавателя', type: 'select_score',
+                    options: ['0 — отсутствует', '1 — частично', '2 — в полной мере'] },
+                { id: 'ref_elements', label: 'Оценочно-рефлексивные элементы в структуре урока', type: 'select_score',
+                    options: ['0 — отсутствуют', '1 — частично', '2 — в полной мере'] }
+            ]
+        }, {
+            id: 'conclusion',
+            title: 'Выводы и рекомендации',
+            icon: '📝',
+            fields: [
+                { id: 'conclusion_text', label: 'Итоговое заключение эксперта', type: 'textarea',
+                    placeholder: 'Основные выводы по уроку...', rows: 4 },
+                { id: 'recommendations_text', label: 'Рекомендации', type: 'textarea',
+                    placeholder: 'Рекомендации по улучшению...', rows: 3 }
+            ]
+        }];
+
+        // Соответствие ID полей для подсчёта баллов
+        const SCORE_FIELDS = [
+            'cont_program', 'cont_science', 'cont_practice', 'cont_meta',
+            'meth_variety',
+            'uud_personal', 'uud_regulatory', 'uud_cognitive', 'uud_communicative',
+            'tech_ict', 'tech_health', 'tech_interactive', 'tech_problem',
+            'res_goals', 'res_quality', 'res_product',
+            'ref_teacher', 'ref_elements'
+        ];
+
+        // --- СОСТОЯНИЕ ---
+        let data = {};
+        let signatures = [];
+
+        // --- DOM-ЭЛЕМЕНТЫ ---
+        const accordionContainer = document.getElementById('accordionContainer');
+        const totalScoreEl = document.getElementById('totalScore');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        const signExpert = document.getElementById('signExpert');
+        const signTeacher = document.getElementById('signTeacher');
+        const signaturesList = document.getElementById('signaturesList');
+
+        const toast = document.getElementById('toast');
+        let toastTimer = null;
+
+        // --- ИНИЦИАЛИЗАЦИЯ ---
+        function init() {
+            loadFromLocalStorage();
+            renderAccordions();
+            renderSignatures();
+            updateResults();
+            setupEventListeners();
+            showToast('📋 Карта анализа урока готова к заполнению');
+        }
+
+        // --- ЗАГРУЗКА/СОХРАНЕНИЕ ---
+        function loadFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem('lesson_analysis_data');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    data = parsed.data || {};
+                    signatures = parsed.signatures || [];
+                }
+            } catch (e) { console.warn('Ошибка загрузки', e); }
+        }
+
+        function saveToLocalStorage() {
+            const saveData = { data: data, signatures: signatures };
+            try {
+                localStorage.setItem('lesson_analysis_data', JSON.stringify(saveData));
+            } catch (e) { console.warn('Ошибка сохранения', e); }
+        }
+
+        function saveData() {
+            // Собираем данные из всех полей
+            document.querySelectorAll('.form-group input, .form-group select, .form-group textarea').forEach(el => {
+                if (el.id) {
+                    data[el.id] = el.value;
+                }
+            });
+            saveToLocalStorage();
+            updateResults();
+            showToast('✅ Данные сохранены');
+        }
+
+        // --- ОТРИСОВКА АККОРДЕОНОВ ---
+        function renderAccordions() {
+            accordionContainer.innerHTML = '';
+            SECTIONS.forEach((section, idx) => {
+                const accordion = document.createElement('div');
+                accordion.className = 'accordion';
+
+                const header = document.createElement('div');
+                header.className = 'accordion-header';
+                header.innerHTML = `
+                    <span class="title">
+                        <span class="num">${idx + 1}</span>
+                        ${section.icon} ${section.title}
+                    </span>
+                    <span class="arrow">▼</span>
+                `;
+
+                const body = document.createElement('div');
+                body.className = 'accordion-body';
+
+                // Генерируем поля
+                const grid = document.createElement('div');
+                grid.className = 'form-grid';
+
+                section.fields.forEach(field => {
+                    const group = document.createElement('div');
+                    group.className = 'form-group';
+
+                    // Добавляем full-width для textarea
+                    if (field.type === 'textarea') {
+                        group.classList.add('full-width');
+                    }
+
+                    const val = data[field.id] || '';
+
+                    let inputHTML = '';
+                    const label = document.createElement('label');
+                    label.textContent = field.label;
+
+                    if (field.type === 'select') {
+                        const select = document.createElement('select');
+                        select.id = field.id;
+                        select.innerHTML = `<option value="">— Выберите —</option>`;
+                        field.options.forEach(opt => {
+                            const option = document.createElement('option');
+                            option.value = opt;
+                            option.textContent = opt;
+                            if (val === opt) option.selected = true;
+                            select.appendChild(option);
+                        });
+                        group.appendChild(label);
+                        group.appendChild(select);
+                    } else if (field.type === 'select_score') {
+                        const select = document.createElement('select');
+                        select.id = field.id;
+                        select.innerHTML = `<option value="">— Выберите —</option>`;
+                        field.options.forEach(opt => {
+                            const option = document.createElement('option');
+                            option.value = opt.split(' — ')[0];
+                            option.textContent = opt;
+                            if (val === opt.split(' — ')[0]) option.selected = true;
+                            select.appendChild(option);
+                        });
+                        group.appendChild(label);
+                        group.appendChild(select);
+                    } else if (field.type === 'textarea') {
+                        const textarea = document.createElement('textarea');
+                        textarea.id = field.id;
+                        textarea.rows = field.rows || 3;
+                        textarea.placeholder = field.placeholder || '';
+                        textarea.value = val;
+                        group.appendChild(label);
+                        group.appendChild(textarea);
+                    } else if (field.type === 'number') {
+                        const input = document.createElement('input');
+                        input.type = 'number';
+                        input.id = field.id;
+                        input.min = field.min || 0;
+                        input.value = val;
+                        if (field.placeholder) input.placeholder = field.placeholder;
+                        group.appendChild(label);
+                        group.appendChild(input);
+                    } else if (field.type === 'date') {
+                        const input = document.createElement('input');
+                        input.type = 'date';
+                        input.id = field.id;
+                        input.value = val;
+                        group.appendChild(label);
+                        group.appendChild(input);
+                    } else {
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.id = field.id;
+                        input.placeholder = field.placeholder || '';
+                        input.value = val;
+                        group.appendChild(label);
+                        group.appendChild(input);
+                    }
+
+                    grid.appendChild(group);
+                });
+
+                body.appendChild(grid);
+                accordion.appendChild(header);
+                accordion.appendChild(body);
+                accordionContainer.appendChild(accordion);
+
+                // Событие открытия/закрытия
+                header.addEventListener('click', () => {
+                    const isOpen = body.classList.contains('open');
+                    body.classList.toggle('open');
+                    header.querySelector('.arrow').classList.toggle('open');
+                });
+
+                // Первый аккордеон открыт по умолчанию
+                if (idx === 0) {
+                    body.classList.add('open');
+                    header.querySelector('.arrow').classList.add('open');
+                }
+
+                // События для автосохранения
+                body.querySelectorAll('input, select, textarea').forEach(el => {
+                    el.addEventListener('input', function() {
+                        data[this.id] = this.value;
+                        saveToLocalStorage();
+                        updateResults();
+                    });
+                    el.addEventListener('change', function() {
+                        data[this.id] = this.value;
+                        saveToLocalStorage();
+                        updateResults();
+                    });
+                });
+            });
+        }
+
+        // --- ПОДПИСИ ---
+        function renderSignatures() {
+            signaturesList.innerHTML = '';
+            signatures.forEach((sig, idx) => {
+                const tag = document.createElement('span');
+                tag.style.cssText =
+                    'background:#F4EFE4; padding:4px 12px; border-radius:2rem; font-size:0.8rem; display:inline-flex; align-items:center; gap:6px;';
+                tag.innerHTML = `
+                    ${sig}
+                    <span style="cursor:pointer; color:#D4A373; font-weight:700;" data-idx="${idx}">×</span>
+                `;
+                tag.querySelector('span').addEventListener('click', function() {
+                    const index = parseInt(this.dataset.idx);
+                    signatures.splice(index, 1);
+                    saveToLocalStorage();
+                    renderSignatures();
+                    showToast('🗑️ Подпись удалена');
+                });
+                signaturesList.appendChild(tag);
+            });
+        }
+
+        function addSignature() {
+            const expert = signExpert.value.trim();
+            const teacher = signTeacher.value.trim();
+            let text = '';
+            if (expert && teacher) {
+                text = `Эксперт: ${expert} | Ознакомлен: ${teacher}`;
+            } else if (expert) {
+                text = `Эксперт: ${expert}`;
+            } else if (teacher) {
+                text = `Ознакомлен: ${teacher}`;
+            } else {
+                showToast('❌ Заполните хотя бы одно поле');
+                return;
+            }
+            signatures.push(text);
+            signExpert.value = '';
+            signTeacher.value = '';
+            saveToLocalStorage();
+            renderSignatures();
+            showToast('✅ Подпись добавлена');
+        }
+
+        function clearSignatures() {
+            if (!confirm('Удалить все подписи?')) return;
+            signatures = [];
+            saveToLocalStorage();
+            renderSignatures();
+            showToast('🔄 Подписи очищены');
+        }
+
+        // --- ПОДСЧЁТ РЕЗУЛЬТАТОВ ---
+        function updateResults() {
+            // Собираем текущие значения
+            document.querySelectorAll('.form-group input, .form-group select, .form-group textarea').forEach(el => {
+                if (el.id) {
+                    data[el.id] = el.value;
+                }
+            });
+
+            // Подсчёт баллов
+            let total = 0;
+            let maxScore = 0;
+            let filledFields = 0;
+            let totalFields = 0;
+
+            SCORE_FIELDS.forEach(id => {
+                totalFields++;
+                const val = data[id];
+                if (val !== undefined && val !== null && val !== '') {
+                    const num = parseInt(val);
+                    if (!isNaN(num) && num >= 0) {
+                        total += num;
+                        filledFields++;
+                    }
+                }
+            });
+
+            // Добавляем поля для прогресса (все поля)
+            const allFields = document.querySelectorAll('.form-group input, .form-group select, .form-group textarea');
+            let filledAll = 0;
+            let totalAll = 0;
+            allFields.forEach(el => {
+                if (el.id && !el.id.startsWith('sign')) {
+                    totalAll++;
+                    if (el.value && el.value.toString().trim().length > 0 && el.value !== '0') {
+                        filledAll++;
+                    }
+                }
+            });
+
+            // Обновляем отображение
+            totalScoreEl.textContent = total;
+
+            // Определяем уровень
+            const maxPossible = SCORE_FIELDS.length * 2;
+            const percent = maxPossible > 0 ? (total / maxPossible) * 100 : 0;
+
+            let level = '';
+            let levelClass = '';
+            if (percent >= 85) {
+                level = '🏆 Высокий';
+                levelClass = 'level-high';
+            } else if (percent >= 65) {
+                level = '✅ Хороший';
+                levelClass = 'level-good';
+            } else if (percent >= 40) {
+                level = '📊 Удовлетворительный';
+                levelClass = 'level-satisfactory';
+            } else {
+                level = '📖 Низкий (требуется доработка)';
+                levelClass = 'level-low';
+            }
+
+            levelDisplay.textContent = level;
+            levelDisplay.className = 'level-display ' + levelClass;
+
+            // Прогресс заполнения
+            const progressPercent = totalAll > 0 ? Math.round((filledAll / totalAll) * 100) : 0;
+            progressFill.style.width = progressPercent + '%';
+            progressText.textContent = progressPercent + '%';
+
+            // Сохраняем в data для экспорта
+            data['_total_score'] = total;
+            data['_level'] = level;
+            data['_progress'] = progressPercent;
+
+            saveToLocalStorage();
+        }
+
+        // --- ЭКСПОРТ В PDF (через печать) ---
+        function exportPDF() {
+            // Перед печатью обновляем данные
+            saveData();
+            showToast('🖨️ Подготовка к экспорту...');
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        }
+
+        // --- ПЕЧАТЬ ---
+        function printPage() {
+            saveData();
+            window.print();
+        }
+
+        // --- СБРОС ---
+        function resetAll() {
+            if (!confirm('Сбросить все данные? Это действие необратимо.')) return;
+            data = {};
+            signatures = [];
+            localStorage.removeItem('lesson_analysis_data');
+            renderAccordions();
+            renderSignatures();
+            updateResults();
+            showToast('🔄 Все данные сброшены');
+        }
+
+        // --- СОБЫТИЯ ---
+        function setupEventListeners() {
+            document.getElementById('exportPdfBtn').addEventListener('click', exportPDF);
+            document.getElementById('printBtn').addEventListener('click', printPage);
+            document.getElementById('saveBtn').addEventListener('click', saveData);
+            document.getElementById('resetBtn').addEventListener('click', resetAll);
+            document.getElementById('addSignatureBtn').addEventListener('click', addSignature);
+            document.getElementById('clearSignaturesBtn').addEventListener('click', clearSignatures);
+
+            // Автосохранение при потере фокуса
+            document.addEventListener('focusout', function(e) {
+                if (e.target.closest('.form-group')) {
+                    saveData();
+                }
+            });
+
+            // Автосохранение при закрытии
+            window.addEventListener('beforeunload', saveData);
+
+            // Сохранение при изменении подписей
+            signExpert.addEventListener('input', saveToLocalStorage);
+            signTeacher.addEventListener('input', saveToLocalStorage);
+        }
+
+        // --- TOAST ---
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // --- ЗАПУСК ---
+        init();
+    </script>
+
+</body>
+</html>

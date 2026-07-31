@@ -52,6 +52,10 @@
         .info strong { color: #3E5C4A; }
         .save-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0.4rem 0 0.2rem 0; }
         .save-row .btn { font-size: 0.75rem; padding: 6px 16px; min-width: auto; }
+        .btn-accent { background: #2C7DA0; color: white; }
+        .btn-accent:hover { background: #236B8A; }
+        .btn-warning { background: #E2CFB0; color: #4D3E2A; }
+        .btn-warning:hover { background: #D6C09B; }
 
         @media (max-width: 550px) { .container { padding: 1.2rem; } .controls { flex-direction: column; align-items: center; } .btn { width: 100%; } .slider-row { flex-wrap: wrap; justify-content: center; } .slider-row label { min-width: 44px; } .selectors select { width: 100%; } .state-group .state-btn { flex: 1 1 auto; font-size: 0.7rem; padding: 4px 8px; } #ecgCanvas { height: 80px; } }
     </style>
@@ -126,10 +130,12 @@
 
     <script>
         // ================================================================
-        //  ИСПРАВЛЕННАЯ ВЕРСИЯ: ДИНАМИЧЕСКАЯ ЭКГ
+        //  ИСПРАВЛЕННАЯ ВЕРСИЯ: БАГ ФИКС ПРИ ВОЗВРАТЕ НА НОРМУ
+        //  Проблема: при возврате на норму оставалась модифицированная ЧСС
+        //  Решение: при применении состояния "normal" сбрасываем bpm к норме вида
         // ================================================================
 
-        // --- ВИДЫ И ПАРАМЕТРЫ ЭКГ ДЛЯ НИХ ---
+        // --- ВИДЫ ---
         const SPECIES = {
             dog:   { label: 'собаки (крупной)', emoji: '🐕', s1: 55, s2: 75, defaultBpm: 90, min: 60, max: 160, display: 'собака', ecg: { amp: 0.8, duration: 80, pAmp: 0.15, tAmp: 0.2 } },
             cat:   { label: 'кошки', emoji: '🐈', s1: 65, s2: 90, defaultBpm: 140, min: 100, max: 220, display: 'кошка', ecg: { amp: 0.6, duration: 60, pAmp: 0.1, tAmp: 0.15 } },
@@ -137,6 +143,7 @@
             horse: { label: 'лошади', emoji: '🐴', s1: 40, s2: 55, defaultBpm: 36, min: 24, max: 60, display: 'лошадь', ecg: { amp: 0.9, duration: 120, pAmp: 0.18, tAmp: 0.22 } }
         };
 
+        // --- СОСТОЯНИЯ ---
         const STATES = {
             normal:    { label: 'Норма', icon: '✅', color: '#6B9E6B', bpmModifier: null, arrhythmia: false, murmur: false },
             tachy:     { label: 'Тахикардия', icon: '⚡', color: '#D9534F', bpmModifier: 1.4, arrhythmia: false, murmur: false },
@@ -145,7 +152,7 @@
             murmur:    { label: 'Систолический шум', icon: '🌊', color: '#D9534F', bpmModifier: null, arrhythmia: false, murmur: true }
         };
 
-        // --- DOM-элементы ---
+        // --- DOM ---
         const speciesSelect = document.getElementById('speciesSelect');
         const speciesEmoji = document.getElementById('speciesEmoji');
         const speciesSub = document.getElementById('speciesSub');
@@ -188,25 +195,25 @@
         let baseBpm = 90;
         let isArrhythmia = false;
         let isMurmur = false;
-        let ecgParams = SPECIES.dog.ecg; // параметры формы ЭКГ
+        let ecgParams = SPECIES.dog.ecg;
 
-        // --- Константы звука ---
+        // --- Константы ---
         const S1_DURATION = 0.12;
         const S2_DURATION = 0.08;
         const AMPLITUDE = 0.6;
         const MURMUR_DURATION = 0.2;
 
-        // --- ЭКГ (динамическая) ---
+        // --- ЭКГ ---
         let ecgData = [];
         const ECG_BUFFER_LENGTH = 600;
-        let ecgQueue = [];
 
-        // --- localStorage ключи ---
+        // --- localStorage ---
         const STORAGE_KEY = 'vetsim_ecg_settings';
 
         // ================================================================
         //  ОСНОВНЫЕ ФУНКЦИИ
         // ================================================================
+
         function loadSettings() {
             try {
                 const raw = localStorage.getItem(STORAGE_KEY);
@@ -250,9 +257,12 @@
                 volumeValue.textContent = vol + '%';
             }
             if (saved.state && STATES[saved.state]) {
-                applyState(saved.state);
+                // Применяем состояние, но НЕ перезаписываем bpm из localStorage,
+                // если это норма — используем дефолтную норму для вида
+                applyState(saved.state, true);
             }
-            if (saved.bpm !== undefined) {
+            // Восстанавливаем bpm только если это не норма (для нормы используем defaultBpm)
+            if (saved.bpm !== undefined && saved.state !== 'normal') {
                 const data = SPECIES[currentSpecies];
                 if (data) {
                     const clamped = Math.min(data.max, Math.max(data.min, saved.bpm));
@@ -282,24 +292,31 @@
             bpmSlider.min = data.min;
             bpmSlider.max = data.max;
 
-            applyState(currentState);
+            // Сбрасываем на норму при смене вида
+            applyState('normal', true);
         }
 
-        function applyState(stateKey) {
+        // ================================================================
+        //  ГЛАВНОЕ ИСПРАВЛЕНИЕ: applyState с флагом restore
+        // ================================================================
+        function applyState(stateKey, isRestore = false) {
             const state = STATES[stateKey];
             if (!state) return;
             currentState = stateKey;
             isArrhythmia = state.arrhythmia;
             isMurmur = state.murmur;
 
+            // Обновляем кнопки
             stateBtns.forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.state === stateKey);
             });
 
+            // Обновляем статус-бар
             statusBar.style.borderLeftColor = state.color;
             stateLabel.textContent = state.label;
             statusState.querySelector('.state-icon').textContent = state.icon;
 
+            // Обновляем описание
             let desc = state.label;
             if (stateKey === 'tachy') desc = 'Тахикардия (ЧСС ↑ 40%)';
             else if (stateKey === 'brady') desc = 'Брадикардия (ЧСС ↓ 30%)';
@@ -308,33 +325,51 @@
             infoStateDesc.textContent = desc;
 
             const data = SPECIES[currentSpecies];
-            let targetBpm = baseBpm;
+            let targetBpm;
 
-            if (state.bpmModifier !== null) {
-                targetBpm = Math.round(baseBpm * state.bpmModifier);
+            // ============================================================
+            //  ГЛАВНОЕ ИСПРАВЛЕНИЕ: для НОРМЫ всегда берём defaultBpm
+            // ============================================================
+            if (stateKey === 'normal') {
+                // Всегда сбрасываем к норме вида
+                targetBpm = data.defaultBpm;
+                bpmSlider.disabled = false;
+            } else if (state.bpmModifier !== null) {
+                // Для тахи/бради — модифицируем от нормы
+                targetBpm = Math.round(data.defaultBpm * state.bpmModifier);
                 targetBpm = Math.min(data.max, Math.max(data.min, targetBpm));
                 bpmSlider.disabled = true;
             } else {
+                // Для аритмии и шума — используем текущее значение слайдера
                 bpmSlider.disabled = false;
                 targetBpm = parseInt(bpmSlider.value);
+                // Если пришло из restore, но это не норма, используем сохранённое
+                if (isRestore) {
+                    // оставляем текущее значение bpm (уже восстановлено из localStorage)
+                    targetBpm = bpm;
+                }
             }
 
+            // Применяем targetBpm
             bpm = targetBpm;
             bpmSlider.value = targetBpm;
             bpmValue.textContent = targetBpm;
-            if (isPlaying) pulseRate.textContent = bpm;
-            else pulseRate.textContent = '0';
+
+            // Обновляем отображение ЧСС
+            if (isPlaying) {
+                pulseRate.textContent = bpm;
+            } else {
+                pulseRate.textContent = '0';
+            }
 
             pulseDot.classList.remove('beat');
-            // Очищаем буфер ЭКГ при смене состояния, чтобы перерисовать с новыми параметрами
+            // Очищаем буфер ЭКГ
             ecgData = [];
-            ecgQueue = [];
-            // Заполняем изолинией
             for (let i = 0; i < 100; i++) ecgData.push(0);
         }
 
         // ================================================================
-        //  ГЕНЕРАЦИЯ ЭКГ-КОМПЛЕКСА (ЗАВИСИТ ОТ ПАРАМЕТРОВ ВИДА)
+        //  ГЕНЕРАЦИЯ ЭКГ
         // ================================================================
         function generateEcgComplex(amp, duration, pAmp, tAmp) {
             const points = [];
@@ -343,24 +378,19 @@
             const p = pAmp || 0.15;
             const t = tAmp || 0.2;
 
-            // P-зубец
             for (let i = 0; i < 12; i++) {
                 const x = i / 12;
                 points.push(p * Math.sin(x * Math.PI));
             }
-            // PR-сегмент
             for (let i = 0; i < 8; i++) points.push(0);
-            // QRS-комплекс
             points.push(-0.25 * a);
             points.push(0.8 * a);
             points.push(-0.3 * a);
             for (let i = 0; i < 6; i++) points.push(0);
-            // T-зубец
             for (let i = 0; i < 16; i++) {
                 const x = i / 16;
                 points.push(t * Math.sin(x * Math.PI));
             }
-            // возврат к изолинии
             for (let i = 0; i < 10; i++) points.push(0);
             return points;
         }
@@ -426,7 +456,6 @@
             const s2Delay = 0.12;
             playHeartSound(s2Freq, S2_DURATION, time + s2Delay, s2Vol);
 
-            // Визуальный пульс
             const pulseTime = (audioCtx.currentTime + time) * 1000;
             const currentTime = performance.now();
             const delayMs = Math.max(0, pulseTime - currentTime);
@@ -435,7 +464,6 @@
                 setTimeout(() => pulseDot.classList.remove('beat'), 140);
             }, delayMs);
 
-            // Добавляем ЭКГ-комплекс
             addEcgComplex();
         }
 
@@ -491,7 +519,6 @@
         //  ОТРИСОВКА ЭКГ
         // ================================================================
         function drawEcg() {
-            const rect = canvas.parentElement.getBoundingClientRect();
             const w = canvas.parentElement.clientWidth - 16;
             const h = 120;
             canvas.width = w * devicePixelRatio;
@@ -507,7 +534,6 @@
 
             ctx.clearRect(0, 0, drawWidth, drawHeight);
 
-            // Сетка
             ctx.strokeStyle = '#E2EAD9';
             ctx.lineWidth = 0.5;
             for (let x = 0; x < drawWidth; x += 20) {
@@ -548,9 +574,7 @@
             }
             ctx.stroke();
 
-            // Смещение буфера для анимации
             if (isPlaying && ecgData.length > 0) {
-                // Удаляем старые точки, чтобы создать движение
                 const removeCount = Math.floor(60 / bpm * 2);
                 if (removeCount > 0 && ecgData.length > 200) {
                     ecgData.splice(0, removeCount);
@@ -558,9 +582,6 @@
             }
         }
 
-        // ================================================================
-        //  ЦИКЛ ОБНОВЛЕНИЯ ЭКГ
-        // ================================================================
         function updateEcgLoop() {
             drawEcg();
             requestAnimationFrame(updateEcgLoop);
@@ -578,7 +599,8 @@
         stateBtns.forEach(btn => {
             btn.addEventListener('click', function() {
                 if (isPlaying) stopPlayback();
-                applyState(this.dataset.state);
+                const stateKey = this.dataset.state;
+                applyState(stateKey, false);
                 saveSettings();
             });
         });
@@ -656,7 +678,7 @@
             }
         });
 
-        console.log('🩺 Исправленная версия с динамической ЭКГ');
+        console.log('🩺 Исправленная версия: баг с возвратом на норму устранён');
     </script>
 </body>
 </html>

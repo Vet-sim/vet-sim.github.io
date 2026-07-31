@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Аускультация + ЭКГ | ВетСим</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #FDF8F0; font-family: 'Montserrat', system-ui, sans-serif; color: #3E5C4A; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .container { background: white; border-radius: 2.5rem; padding: 2rem 2.2rem; max-width: 720px; width: 100%; box-shadow: 0 8px 30px rgba(0,0,0,0.08); text-align: center; }
+        h1 { color: #2C7DA0; font-size: 1.6rem; margin-bottom: 0.1rem; display: flex; align-items: center; justify-content: center; gap: 6px; flex-wrap: wrap; }
+        .sub { color: #7B8D6E; font-size: 0.85rem; margin-bottom: 0.8rem; }
+        .heart-icon { font-size: 2.4rem; display: block; }
+        .selectors { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 0.3rem 0 0.6rem 0; }
+        .selectors select { background: #F4EFE4; border: 2px solid #D9D0BD; border-radius: 3rem; padding: 8px 16px 8px 16px; font-family: inherit; font-size: 0.85rem; font-weight: 600; color: #1F4E6E; cursor: pointer; outline: none; transition: 0.2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%232C7DA0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 12px; padding-right: 34px; min-width: 120px; flex: 1 1 120px; }
+        .selectors select:hover { border-color: #A3B18A; }
+        .selectors select:focus { border-color: #2C7DA0; box-shadow: 0 0 0 3px rgba(44,125,160,0.12); }
+
+        .state-group { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin: 0.5rem 0 0.8rem 0; }
+        .state-btn { background: #F4EFE4; border: 2px solid #D9D0BD; border-radius: 2.5rem; padding: 5px 12px; font-family: inherit; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: 0.2s; color: #3E5C4A; white-space: nowrap; }
+        .state-btn:hover { border-color: #A3B18A; background: #EBE3D2; }
+        .state-btn.active { border-color: #2C7DA0; background: #D4E3ED; color: #1F4E6E; box-shadow: 0 0 0 2px rgba(44,125,160,0.15); }
+        .state-btn .badge { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; }
+        .badge-green { background: #6B9E6B; } .badge-yellow { background: #E8B84C; } .badge-red { background: #D9534F; }
+
+        .controls { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 0.6rem 0 0.6rem 0; }
+        .btn { background: #EBE3D2; border: none; padding: 8px 20px; border-radius: 3rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.85rem; font-family: inherit; color: #3E5C4A; min-width: 100px; }
+        .btn-primary { background: #A3B18A; color: white; }
+        .btn-primary:hover { background: #8FA376; }
+        .btn-danger { background: #D4A373; color: white; }
+        .btn-danger:hover { background: #C99464; }
+        .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+        .slider-group { margin: 0.8rem 0; display: flex; flex-direction: column; gap: 0.6rem; }
+        .slider-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .slider-row label { font-weight: 600; font-size: 0.85rem; min-width: 54px; text-align: left; }
+        .slider-row input[type="range"] { flex: 1; min-width: 100px; cursor: pointer; accent-color: #2C7DA0; }
+        .slider-row input:disabled { opacity: 0.4; cursor: not-allowed; }
+        .slider-row .value { font-weight: 700; color: #2C7DA0; min-width: 44px; text-align: right; font-size: 0.9rem; }
+
+        .status { background: #F4EFE4; border-radius: 2rem; padding: 8px 16px; margin: 0.6rem 0 0.4rem 0; font-weight: 600; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 4px; border-left: 6px solid #6B9E6B; transition: border-color 0.3s; }
+        .status .pulse { display: flex; align-items: center; gap: 8px; }
+        .pulse-dot { width: 14px; height: 14px; border-radius: 50%; background: #D4A373; transition: 0.12s; display: inline-block; }
+        .pulse-dot.beat { background: #D9534F; transform: scale(1.4); }
+        .status-state { display: flex; align-items: center; gap: 4px; }
+        .status-state .state-icon { font-size: 1rem; }
+
+        .ecg-wrapper { background: #FCFAF5; border-radius: 1.5rem; padding: 8px; margin: 0.4rem 0 0.6rem 0; border: 1px solid #E2EAD9; }
+        #ecgCanvas { display: block; width: 100%; height: 120px; border-radius: 1rem; background: #FCFAF5; }
+
+        .info { font-size: 0.75rem; color: #7B8D6E; line-height: 1.5; background: #F9F6EF; padding: 8px 14px; border-radius: 1.5rem; margin-top: 0.3rem; }
+        .info strong { color: #3E5C4A; }
+        .save-row { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin: 0.4rem 0 0.2rem 0; }
+        .save-row .btn { font-size: 0.75rem; padding: 6px 16px; min-width: auto; }
+
+        @media (max-width: 550px) { .container { padding: 1.2rem; } .controls { flex-direction: column; align-items: center; } .btn { width: 100%; } .slider-row { flex-wrap: wrap; justify-content: center; } .slider-row label { min-width: 44px; } .selectors select { width: 100%; } .state-group .state-btn { flex: 1 1 auto; font-size: 0.7rem; padding: 4px 8px; } #ecgCanvas { height: 80px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="heart-icon">🩺</span>
+        <h1>Аускультация + ЭКГ <span id="speciesEmoji">🐕</span></h1>
+        <p class="sub" id="speciesSub">Нормальный ритм крупной собаки</p>
+
+        <div class="selectors">
+            <select id="speciesSelect">
+                <option value="dog">🐕 Собака (крупная)</option>
+                <option value="cat">🐈 Кошка</option>
+                <option value="cow">🐄 КРС</option>
+                <option value="horse">🐴 Лошадь</option>
+            </select>
+        </div>
+
+        <div class="state-group" id="stateGroup">
+            <button class="state-btn active" data-state="normal"><span class="badge badge-green"></span> Норма</button>
+            <button class="state-btn" data-state="tachy"><span class="badge badge-red"></span> Тахикардия</button>
+            <button class="state-btn" data-state="brady"><span class="badge badge-yellow"></span> Брадикардия</button>
+            <button class="state-btn" data-state="arrhythmia"><span class="badge badge-yellow"></span> Аритмия</button>
+            <button class="state-btn" data-state="murmur"><span class="badge badge-red"></span> Сист. шум</button>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="playBtn">▶️ Воспроизвести</button>
+            <button class="btn btn-danger" id="stopBtn" disabled>⏹️ Остановить</button>
+        </div>
+
+        <div class="slider-group">
+            <div class="slider-row">
+                <label for="bpmSlider">ЧСС (уд/мин)</label>
+                <input type="range" id="bpmSlider" min="60" max="180" value="90" step="1">
+                <span class="value" id="bpmValue">90</span>
+            </div>
+            <div class="slider-row">
+                <label for="volumeSlider">Громкость</label>
+                <input type="range" id="volumeSlider" min="0" max="100" value="70" step="1">
+                <span class="value" id="volumeValue">70%</span>
+            </div>
+        </div>
+
+        <div class="status" id="statusBar">
+            <span>Статус: <span id="statusText">⏸️ Остановлено</span></span>
+            <span class="pulse">
+                <span class="pulse-dot" id="pulseDot"></span>
+                <span id="pulseRate">0</span> уд/мин
+            </span>
+            <span class="status-state" id="statusState">
+                <span class="state-icon">✅</span>
+                <span id="stateLabel">Норма</span>
+            </span>
+        </div>
+
+        <div class="ecg-wrapper">
+            <canvas id="ecgCanvas"></canvas>
+        </div>
+
+        <div class="save-row">
+            <button class="btn btn-accent" id="saveBtn">💾 Сохранить настройки</button>
+            <button class="btn btn-warning" id="resetBtn">🔄 Сбросить</button>
+        </div>
+
+        <div class="info">
+            <p><strong>🎧 Режим:</strong> <span id="infoStateDesc">Нормальный ритм</span> для <span class="species-name" id="infoSpecies">собаки</span>.
+            <strong>ЧСС:</strong> <span id="infoBpmRange">60–160</span> уд/мин.</p>
+        </div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  ИСПРАВЛЕННАЯ ВЕРСИЯ: ДИНАМИЧЕСКАЯ ЭКГ
+        // ================================================================
+
+        // --- ВИДЫ И ПАРАМЕТРЫ ЭКГ ДЛЯ НИХ ---
+        const SPECIES = {
+            dog:   { label: 'собаки (крупной)', emoji: '🐕', s1: 55, s2: 75, defaultBpm: 90, min: 60, max: 160, display: 'собака', ecg: { amp: 0.8, duration: 80, pAmp: 0.15, tAmp: 0.2 } },
+            cat:   { label: 'кошки', emoji: '🐈', s1: 65, s2: 90, defaultBpm: 140, min: 100, max: 220, display: 'кошка', ecg: { amp: 0.6, duration: 60, pAmp: 0.1, tAmp: 0.15 } },
+            cow:   { label: 'КРС', emoji: '🐄', s1: 45, s2: 60, defaultBpm: 70, min: 40, max: 120, display: 'КРС', ecg: { amp: 1.0, duration: 100, pAmp: 0.2, tAmp: 0.25 } },
+            horse: { label: 'лошади', emoji: '🐴', s1: 40, s2: 55, defaultBpm: 36, min: 24, max: 60, display: 'лошадь', ecg: { amp: 0.9, duration: 120, pAmp: 0.18, tAmp: 0.22 } }
+        };
+
+        const STATES = {
+            normal:    { label: 'Норма', icon: '✅', color: '#6B9E6B', bpmModifier: null, arrhythmia: false, murmur: false },
+            tachy:     { label: 'Тахикардия', icon: '⚡', color: '#D9534F', bpmModifier: 1.4, arrhythmia: false, murmur: false },
+            brady:     { label: 'Брадикардия', icon: '🐢', color: '#E8B84C', bpmModifier: 0.7, arrhythmia: false, murmur: false },
+            arrhythmia: { label: 'Аритмия', icon: '🔀', color: '#E8B84C', bpmModifier: null, arrhythmia: true, murmur: false },
+            murmur:    { label: 'Систолический шум', icon: '🌊', color: '#D9534F', bpmModifier: null, arrhythmia: false, murmur: true }
+        };
+
+        // --- DOM-элементы ---
+        const speciesSelect = document.getElementById('speciesSelect');
+        const speciesEmoji = document.getElementById('speciesEmoji');
+        const speciesSub = document.getElementById('speciesSub');
+        const infoSpecies = document.getElementById('infoSpecies');
+        const infoBpmRange = document.getElementById('infoBpmRange');
+        const infoStateDesc = document.getElementById('infoStateDesc');
+
+        const playBtn = document.getElementById('playBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const bpmSlider = document.getElementById('bpmSlider');
+        const bpmValue = document.getElementById('bpmValue');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeValue = document.getElementById('volumeValue');
+        const statusText = document.getElementById('statusText');
+        const pulseDot = document.getElementById('pulseDot');
+        const pulseRate = document.getElementById('pulseRate');
+        const statusBar = document.getElementById('statusBar');
+        const stateLabel = document.getElementById('stateLabel');
+        const statusState = document.getElementById('statusState');
+        const stateBtns = document.querySelectorAll('.state-btn');
+        const saveBtn = document.getElementById('saveBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        const canvas = document.getElementById('ecgCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // --- Аудио ---
+        let audioCtx = null;
+        let isPlaying = false;
+        let timeoutId = null;
+        let nextBeatTime = 0;
+
+        // --- Текущие параметры ---
+        let currentSpecies = 'dog';
+        let currentState = 'normal';
+        let s1Freq = 55;
+        let s2Freq = 75;
+        let bpm = 90;
+        let volume = 0.7;
+        let baseBpm = 90;
+        let isArrhythmia = false;
+        let isMurmur = false;
+        let ecgParams = SPECIES.dog.ecg; // параметры формы ЭКГ
+
+        // --- Константы звука ---
+        const S1_DURATION = 0.12;
+        const S2_DURATION = 0.08;
+        const AMPLITUDE = 0.6;
+        const MURMUR_DURATION = 0.2;
+
+        // --- ЭКГ (динамическая) ---
+        let ecgData = [];
+        const ECG_BUFFER_LENGTH = 600;
+        let ecgQueue = [];
+
+        // --- localStorage ключи ---
+        const STORAGE_KEY = 'vetsim_ecg_settings';
+
+        // ================================================================
+        //  ОСНОВНЫЕ ФУНКЦИИ
+        // ================================================================
+        function loadSettings() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return null;
+                return JSON.parse(raw);
+            } catch { return null; }
+        }
+
+        function saveSettings() {
+            const data = { species: currentSpecies, state: currentState, volume: Math.round(volume * 100), bpm: bpm };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function resetToDefaults() {
+            const data = SPECIES[currentSpecies];
+            if (!data) return;
+            const targetBpm = data.defaultBpm;
+            bpm = targetBpm;
+            bpmSlider.value = targetBpm;
+            bpmValue.textContent = targetBpm;
+            volume = 0.7;
+            volumeSlider.value = 70;
+            volumeValue.textContent = '70%';
+            applyState('normal');
+            saveSettings();
+            showToast('Настройки сброшены к стандарту');
+        }
+
+        function restoreFromStorage() {
+            const saved = loadSettings();
+            if (!saved) return false;
+
+            if (saved.species && SPECIES[saved.species]) {
+                speciesSelect.value = saved.species;
+                applySpecies(saved.species);
+            }
+            if (saved.volume !== undefined) {
+                const vol = Math.min(100, Math.max(0, saved.volume));
+                volumeSlider.value = vol;
+                volume = vol / 100;
+                volumeValue.textContent = vol + '%';
+            }
+            if (saved.state && STATES[saved.state]) {
+                applyState(saved.state);
+            }
+            if (saved.bpm !== undefined) {
+                const data = SPECIES[currentSpecies];
+                if (data) {
+                    const clamped = Math.min(data.max, Math.max(data.min, saved.bpm));
+                    bpm = clamped;
+                    bpmSlider.value = clamped;
+                    bpmValue.textContent = clamped;
+                    if (isPlaying) pulseRate.textContent = clamped;
+                }
+            }
+            return true;
+        }
+
+        function applySpecies(key) {
+            const data = SPECIES[key];
+            if (!data) return;
+            currentSpecies = key;
+            s1Freq = data.s1;
+            s2Freq = data.s2;
+            baseBpm = data.defaultBpm;
+            ecgParams = data.ecg;
+
+            speciesEmoji.textContent = data.emoji;
+            speciesSub.textContent = `Нормальный ритм ${data.label}`;
+            infoSpecies.textContent = data.display;
+            infoBpmRange.textContent = `${data.min}–${data.max}`;
+
+            bpmSlider.min = data.min;
+            bpmSlider.max = data.max;
+
+            applyState(currentState);
+        }
+
+        function applyState(stateKey) {
+            const state = STATES[stateKey];
+            if (!state) return;
+            currentState = stateKey;
+            isArrhythmia = state.arrhythmia;
+            isMurmur = state.murmur;
+
+            stateBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.state === stateKey);
+            });
+
+            statusBar.style.borderLeftColor = state.color;
+            stateLabel.textContent = state.label;
+            statusState.querySelector('.state-icon').textContent = state.icon;
+
+            let desc = state.label;
+            if (stateKey === 'tachy') desc = 'Тахикардия (ЧСС ↑ 40%)';
+            else if (stateKey === 'brady') desc = 'Брадикардия (ЧСС ↓ 30%)';
+            else if (stateKey === 'arrhythmia') desc = 'Аритмия (нерегулярный ритм)';
+            else if (stateKey === 'murmur') desc = 'Систолический шум после 1-го тона';
+            infoStateDesc.textContent = desc;
+
+            const data = SPECIES[currentSpecies];
+            let targetBpm = baseBpm;
+
+            if (state.bpmModifier !== null) {
+                targetBpm = Math.round(baseBpm * state.bpmModifier);
+                targetBpm = Math.min(data.max, Math.max(data.min, targetBpm));
+                bpmSlider.disabled = true;
+            } else {
+                bpmSlider.disabled = false;
+                targetBpm = parseInt(bpmSlider.value);
+            }
+
+            bpm = targetBpm;
+            bpmSlider.value = targetBpm;
+            bpmValue.textContent = targetBpm;
+            if (isPlaying) pulseRate.textContent = bpm;
+            else pulseRate.textContent = '0';
+
+            pulseDot.classList.remove('beat');
+            // Очищаем буфер ЭКГ при смене состояния, чтобы перерисовать с новыми параметрами
+            ecgData = [];
+            ecgQueue = [];
+            // Заполняем изолинией
+            for (let i = 0; i < 100; i++) ecgData.push(0);
+        }
+
+        // ================================================================
+        //  ГЕНЕРАЦИЯ ЭКГ-КОМПЛЕКСА (ЗАВИСИТ ОТ ПАРАМЕТРОВ ВИДА)
+        // ================================================================
+        function generateEcgComplex(amp, duration, pAmp, tAmp) {
+            const points = [];
+            const dur = duration || 80;
+            const a = amp || 0.8;
+            const p = pAmp || 0.15;
+            const t = tAmp || 0.2;
+
+            // P-зубец
+            for (let i = 0; i < 12; i++) {
+                const x = i / 12;
+                points.push(p * Math.sin(x * Math.PI));
+            }
+            // PR-сегмент
+            for (let i = 0; i < 8; i++) points.push(0);
+            // QRS-комплекс
+            points.push(-0.25 * a);
+            points.push(0.8 * a);
+            points.push(-0.3 * a);
+            for (let i = 0; i < 6; i++) points.push(0);
+            // T-зубец
+            for (let i = 0; i < 16; i++) {
+                const x = i / 16;
+                points.push(t * Math.sin(x * Math.PI));
+            }
+            // возврат к изолинии
+            for (let i = 0; i < 10; i++) points.push(0);
+            return points;
+        }
+
+        function addEcgComplex() {
+            const params = ecgParams;
+            const complex = generateEcgComplex(params.amp, params.duration, params.pAmp, params.tAmp);
+            ecgData.push(...complex);
+            if (ecgData.length > ECG_BUFFER_LENGTH) {
+                ecgData.splice(0, ecgData.length - ECG_BUFFER_LENGTH);
+            }
+        }
+
+        // ================================================================
+        //  ЗВУК
+        // ================================================================
+        function playHeartSound(freq, duration, time, volumeScale = 1, isNoise = false) {
+            if (!audioCtx) return;
+            if (isNoise) {
+                const bufferSize = audioCtx.sampleRate * duration;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.3;
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0, audioCtx.currentTime + time);
+                gain.gain.linearRampToValueAtTime(AMPLITUDE * volume * 0.4 * volumeScale, audioCtx.currentTime + time + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + time + duration);
+                noise.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start(audioCtx.currentTime + time);
+                noise.stop(audioCtx.currentTime + time + duration);
+                return;
+            }
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + time);
+
+            const startTime = audioCtx.currentTime + time;
+            const endTime = startTime + duration;
+            gainNode.gain.setValueAtTime(0, startTime);
+            gainNode.gain.linearRampToValueAtTime(AMPLITUDE * volume * volumeScale, startTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, endTime);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start(startTime);
+            oscillator.stop(endTime);
+        }
+
+        function playHeartCycle(time) {
+            const s1Vol = 1.0;
+            const s2Vol = 0.7;
+            playHeartSound(s1Freq, S1_DURATION, time, s1Vol);
+
+            if (isMurmur) {
+                playHeartSound(0, MURMUR_DURATION, time + 0.02, 0.6, true);
+            }
+
+            const s2Delay = 0.12;
+            playHeartSound(s2Freq, S2_DURATION, time + s2Delay, s2Vol);
+
+            // Визуальный пульс
+            const pulseTime = (audioCtx.currentTime + time) * 1000;
+            const currentTime = performance.now();
+            const delayMs = Math.max(0, pulseTime - currentTime);
+            setTimeout(() => {
+                pulseDot.classList.add('beat');
+                setTimeout(() => pulseDot.classList.remove('beat'), 140);
+            }, delayMs);
+
+            // Добавляем ЭКГ-комплекс
+            addEcgComplex();
+        }
+
+        function scheduleBeats() {
+            if (!isPlaying || !audioCtx) return;
+            const now = audioCtx.currentTime;
+            let interval = 60 / bpm;
+
+            if (isArrhythmia) {
+                const variation = 0.2;
+                const factor = 1 + (Math.random() * 2 - 1) * variation;
+                interval = interval * factor;
+                interval = Math.min(interval * 1.5, Math.max(interval * 0.5, interval));
+            }
+
+            if (nextBeatTime < now + 1.5) {
+                const cycleTime = nextBeatTime - now;
+                if (cycleTime >= 0) playHeartCycle(cycleTime);
+                else { playHeartCycle(0.05); nextBeatTime = now + interval; }
+                nextBeatTime += interval;
+            }
+
+            const nextSchedule = Math.max(0.05, (nextBeatTime - audioCtx.currentTime) * 0.8);
+            timeoutId = setTimeout(scheduleBeats, nextSchedule * 1000);
+        }
+
+        function startPlayback() {
+            if (isPlaying) return;
+            if (!audioCtx) audioCtx = new(window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            isPlaying = true;
+            nextBeatTime = audioCtx.currentTime + 0.1;
+            playBtn.disabled = true;
+            stopBtn.disabled = false;
+            statusText.textContent = '▶️ Идёт воспроизведение...';
+            pulseRate.textContent = bpm;
+            scheduleBeats();
+        }
+
+        function stopPlayback() {
+            isPlaying = false;
+            if (timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
+            if (audioCtx) audioCtx.suspend();
+            playBtn.disabled = false;
+            stopBtn.disabled = true;
+            statusText.textContent = '⏸️ Остановлено';
+            pulseRate.textContent = '0';
+            pulseDot.classList.remove('beat');
+        }
+
+        // ================================================================
+        //  ОТРИСОВКА ЭКГ
+        // ================================================================
+        function drawEcg() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const w = canvas.parentElement.clientWidth - 16;
+            const h = 120;
+            canvas.width = w * devicePixelRatio;
+            canvas.height = h * devicePixelRatio;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.scale(devicePixelRatio, devicePixelRatio);
+
+            const drawWidth = w;
+            const drawHeight = h;
+            const midY = drawHeight / 2;
+            const amp = drawHeight * 0.35;
+
+            ctx.clearRect(0, 0, drawWidth, drawHeight);
+
+            // Сетка
+            ctx.strokeStyle = '#E2EAD9';
+            ctx.lineWidth = 0.5;
+            for (let x = 0; x < drawWidth; x += 20) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, drawHeight);
+                ctx.stroke();
+            }
+            for (let y = 0; y < drawHeight; y += 20) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(drawWidth, y);
+                ctx.stroke();
+            }
+
+            if (ecgData.length < 2) {
+                ctx.strokeStyle = '#3E5C4A';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(0, midY);
+                ctx.lineTo(drawWidth, midY);
+                ctx.stroke();
+                return;
+            }
+
+            const totalPoints = ecgData.length;
+            const step = drawWidth / totalPoints;
+
+            ctx.strokeStyle = '#1F6E4A';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            for (let i = 0; i < totalPoints; i++) {
+                const x = i * step;
+                const y = midY - ecgData[i] * amp;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Смещение буфера для анимации
+            if (isPlaying && ecgData.length > 0) {
+                // Удаляем старые точки, чтобы создать движение
+                const removeCount = Math.floor(60 / bpm * 2);
+                if (removeCount > 0 && ecgData.length > 200) {
+                    ecgData.splice(0, removeCount);
+                }
+            }
+        }
+
+        // ================================================================
+        //  ЦИКЛ ОБНОВЛЕНИЯ ЭКГ
+        // ================================================================
+        function updateEcgLoop() {
+            drawEcg();
+            requestAnimationFrame(updateEcgLoop);
+        }
+
+        // ================================================================
+        //  СОБЫТИЯ
+        // ================================================================
+        speciesSelect.addEventListener('change', function() {
+            if (isPlaying) stopPlayback();
+            applySpecies(this.value);
+            saveSettings();
+        });
+
+        stateBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (isPlaying) stopPlayback();
+                applyState(this.dataset.state);
+                saveSettings();
+            });
+        });
+
+        bpmSlider.addEventListener('input', function() {
+            if (bpmSlider.disabled) return;
+            bpm = parseInt(this.value);
+            bpmValue.textContent = bpm;
+            if (isPlaying) pulseRate.textContent = bpm;
+        });
+
+        volumeSlider.addEventListener('input', function() {
+            volume = parseInt(this.value) / 100;
+            volumeValue.textContent = Math.round(volume * 100) + '%';
+        });
+
+        playBtn.addEventListener('click', startPlayback);
+        stopBtn.addEventListener('click', stopPlayback);
+
+        saveBtn.addEventListener('click', function() {
+            saveSettings();
+            showToast('Настройки сохранены 💾');
+        });
+
+        resetBtn.addEventListener('click', function() {
+            resetToDefaults();
+        });
+
+        // ================================================================
+        //  TOAST
+        // ================================================================
+        function showToast(msg) {
+            let toast = document.getElementById('toastMsg');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'toastMsg';
+                toast.style.cssText = `
+                    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+                    background: #1F4E6E; color: white; padding: 10px 24px;
+                    border-radius: 40px; font-weight: 600; font-size: 0.9rem;
+                    box-shadow: 0 4px 16px rgba(0,0,0,0.15); z-index: 2000;
+                    transition: opacity 0.3s; opacity: 0; pointer-events: none;
+                    max-width: 90%; text-align: center;
+                `;
+                document.body.appendChild(toast);
+            }
+            toast.textContent = msg;
+            toast.style.opacity = '1';
+            clearTimeout(toast._timer);
+            toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+        }
+
+        // ================================================================
+        //  ЗАПУСК
+        // ================================================================
+        const restored = restoreFromStorage();
+        if (!restored) {
+            applySpecies('dog');
+            applyState('normal');
+            volume = 0.7;
+            volumeSlider.value = 70;
+            volumeValue.textContent = '70%';
+        }
+
+        // Инициализация ЭКГ
+        ecgData = [];
+        for (let i = 0; i < 100; i++) ecgData.push(0);
+        updateEcgLoop();
+
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && isPlaying) {
+                if (audioCtx && audioCtx.state === 'running') audioCtx.suspend();
+            } else if (!document.hidden && isPlaying) {
+                if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+            }
+        });
+
+        console.log('🩺 Исправленная версия с динамической ЭКГ');
+    </script>
+</body>
+</html>

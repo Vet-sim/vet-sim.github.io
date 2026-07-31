@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Витальные карточки | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ — симметрия и адаптивность
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* --- ШАПКА --- */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 3rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #3E5C4A;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subhead {
+            font-size: 0.75rem;
+            color: #7B8D6E;
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* --- КНОПКИ --- */
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            font-family: inherit;
+            color: #3E5C4A;
+            white-space: nowrap;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: #A3B18A;
+            color: #2C4027;
+        }
+
+        .btn-primary:hover {
+            background: #8FA375;
+        }
+
+        .btn-accent {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: #236B8A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        .btn-danger {
+            background: #D4A373;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #C99464;
+        }
+
+        .btn-warning {
+            background: #E2CFB0;
+            color: #4D3E2A;
+        }
+
+        .btn-warning:hover {
+            background: #D6C09B;
+        }
+
+        .btn-sm {
+            padding: 4px 14px;
+            font-size: 0.7rem;
+        }
+
+        /* --- КАРТОЧКИ ОБЩИЕ --- */
+        .card {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.5rem;
+            border: 1px solid #E7EDE2;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.9rem;
+            border-bottom: 1px solid #E2EAD9;
+            padding-bottom: 0.5rem;
+        }
+
+        /* --- СИММЕТРИЧНАЯ СЕТКА ГЛАВНОГО ЭКРАНА --- */
+        .species-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.2rem;
+            justify-content: center;
+        }
+
+        .species-card {
+            background: white;
+            border: 2px solid #E2EAD9;
+            border-radius: 2rem;
+            padding: 1.4rem 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+        }
+
+        .species-card:hover {
+            border-color: #2C7DA0;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .species-card .icon {
+            font-size: 3.2rem;
+            line-height: 1.2;
+            margin-bottom: 0.4rem;
+        }
+
+        .species-card .name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #1F4E6E;
+        }
+
+        .species-card .latin {
+            font-size: 0.75rem;
+            color: #7B8D6E;
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        /* --- КАРТОЧКА ЖИВОТНОГО (симметрия) --- */
+        .animal-card {
+            text-align: center;
+        }
+
+        .animal-card .animal-icon {
+            font-size: 4.2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .animal-card .animal-name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        .animal-card .animal-latin {
+            font-size: 0.9rem;
+            color: #7B8D6E;
+            margin-bottom: 1.2rem;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1rem 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .param-card {
+            background: #F9F6EF;
+            border-radius: 1.5rem;
+            padding: 1rem 0.5rem;
+            text-align: center;
+            border: 1px solid #E2EAD9;
+            transition: 0.2s;
+        }
+
+        .param-card:hover {
+            border-color: #A3B18A;
+        }
+
+        .param-card .param-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .param-card .param-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #7B8D6E;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .param-card .param-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            margin-top: 2px;
+        }
+
+        .nav-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1.2rem;
+        }
+
+        /* --- ПОИСК --- */
+        .search-box {
+            width: 100%;
+            max-width: 380px;
+            padding: 10px 18px;
+            border: 1px solid #D9D0BD;
+            border-radius: 3rem;
+            font-size: 0.9rem;
+            font-family: inherit;
+            background: #FEFAF2;
+            color: #3E5C4A;
+            transition: 0.2s;
+            margin: 0 auto 1rem auto;
+            display: block;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.08);
+        }
+
+        /* --- МОДАЛЬНЫЕ ОКНА --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 2.5rem;
+            padding: 1.8rem 2rem;
+            max-width: 540px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            position: relative;
+        }
+
+        .modal h2 {
+            font-size: 1.3rem;
+            color: #1F4E6E;
+            margin-bottom: 1.2rem;
+            padding-right: 2rem;
+        }
+
+        .modal .close-btn {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #7B8D6E;
+            transition: 0.2s;
+            line-height: 1;
+        }
+
+        .modal .close-btn:hover {
+            color: #3E5C4A;
+            transform: rotate(90deg);
+        }
+
+        /* --- ВИКТОРИНА / ЭКЗАМЕН --- */
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-options .option {
+            padding: 12px 18px;
+            border: 2px solid #D1DEC2;
+            border-radius: 3rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FEFCF9;
+            color: #3E5C4A;
+            text-align: left;
+        }
+
+        .quiz-options .option:hover:not(.disabled) {
+            border-color: #A3B18A;
+            background: #F9F6EF;
+        }
+
+        .quiz-options .option.correct {
+            border-color: #6B9E6B;
+            background: #E2F0DA;
+        }
+
+        .quiz-options .option.wrong {
+            border-color: #D4A373;
+            background: #FDE8E0;
+        }
+
+        .quiz-options .option.disabled {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .quiz-options .option.disabled:hover {
+            border-color: #D1DEC2;
+            background: #FEFCF9;
+        }
+
+        .quiz-feedback {
+            padding: 10px 16px;
+            border-radius: 2rem;
+            margin: 0.8rem 0;
+            font-weight: 600;
+        }
+
+        .quiz-feedback.correct {
+            background: #E2F0DA;
+            color: #2C7DA0;
+        }
+
+        .quiz-feedback.wrong {
+            background: #FDE8E0;
+            color: #D4A373;
+        }
+
+        .quiz-score {
+            font-size: 0.9rem;
+            color: #7B8D6E;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+
+        .exam-progress {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #7B8D6E;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .exam-result {
+            text-align: center;
+            padding: 1.5rem 0.5rem;
+        }
+
+        .exam-result .score {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+
+        .exam-result .message {
+            font-size: 1.1rem;
+            margin-top: 0.5rem;
+            color: #3E5C4A;
+        }
+
+        /* --- TOAST --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ============================================================
+           АДАПТИВНОСТЬ — СИММЕТРИЯ НА ВСЕХ ЭКРАНАХ
+           ============================================================ */
+        @media (max-width: 900px) {
+            .params-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                gap: 6px;
+                padding: 0.8rem 1rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            .species-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+
+            .params-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.6rem;
+            }
+
+            .modal {
+                padding: 1.5rem;
+                margin: 0.5rem;
+            }
+
+            .animal-card .animal-name {
+                font-size: 1.6rem;
+            }
+        }
+
+        @media (max-width: 540px) {
+            .species-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+
+            .species-card {
+                min-height: 130px;
+                padding: 1rem 0.4rem;
+            }
+
+            .species-card .icon {
+                font-size: 2.6rem;
+            }
+
+            .params-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.6rem;
+            }
+
+            .param-card .param-icon {
+                font-size: 1.4rem;
+            }
+
+            .param-card .param-value {
+                font-size: 1rem;
+            }
+
+            .animal-card .animal-icon {
+                font-size: 3.4rem;
+            }
+
+            .animal-card .animal-name {
+                font-size: 1.4rem;
+            }
+
+            .modal {
+                padding: 1.2rem;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .species-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.6rem;
+            }
+
+            .species-card {
+                min-height: 110px;
+                padding: 0.8rem 0.2rem;
+            }
+
+            .species-card .icon {
+                font-size: 2.2rem;
+            }
+
+            .params-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .btn {
+                font-size: 0.7rem;
+                padding: 5px 12px;
+            }
+
+            .header .logo {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* --- ПЕЧАТЬ --- */
+        @media print {
+            .header-actions .btn,
+            .no-print {
+                display: none !important;
+            }
+
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border-color: #ddd;
+            }
+
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            .modal-overlay {
+                display: none !important;
+            }
+
+            .species-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* дополнительная центровка для карточек */
+        .species-grid {
+            justify-items: center;
+        }
+
+        .species-card {
+            width: 100%;
+            max-width: 240px;
+        }
+
+        .param-card {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ============================================================
+        ШАПКА
+        ============================================================ -->
+        <header class="header">
+            <div>
+                <div class="logo">🩺 <span>ВетСим</span> — Витальные карточки</div>
+                <div class="subhead">Физиологические параметры животных</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="examBtn">📝 Режим экзамена</button>
+                <button class="btn btn-warning" id="resetBtn">🔄 Сбросить</button>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        ОСНОВНОЙ КОНТЕЙНЕР
+        ============================================================ -->
+        <div id="app">
+            <!-- генерируется JS -->
+        </div>
+
+        <!-- ============================================================
+        МОДАЛЬНОЕ ОКНО ВИКТОРИНЫ
+        ============================================================ -->
+        <div class="modal-overlay" id="quizModal">
+            <div class="modal">
+                <button class="close-btn" id="quizCloseBtn">&times;</button>
+                <h2 id="quizTitle">❓ Проверка знаний</h2>
+                <div id="quizBody">
+                    <!-- генерируется JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        МОДАЛЬНОЕ ОКНО ЭКЗАМЕНА
+        ============================================================ -->
+        <div class="modal-overlay" id="examModal">
+            <div class="modal">
+                <button class="close-btn" id="examCloseBtn">&times;</button>
+                <h2 id="examTitle">📝 Экзамен</h2>
+                <div id="examBody">
+                    <!-- генерируется JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TOAST -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  ВИТАЛЬНЫЕ КАРТОЧКИ — ДАННЫЕ (3 параметра)
+        // ================================================================
+
+        const ANIMALS = [{
+            id: 'cow',
+            name: 'КРС (корова)',
+            latin: 'Bos taurus',
+            icon: '🐄',
+            temperature: '37.5–39.0',
+            pulse: '50–80',
+            respiration: '15–30'
+        }, {
+            id: 'horse',
+            name: 'Лошадь',
+            latin: 'Equus ferus caballus',
+            icon: '🐴',
+            temperature: '37.5–38.5',
+            pulse: '24–44',
+            respiration: '8–16'
+        }, {
+            id: 'pig',
+            name: 'Свинья',
+            latin: 'Sus scrofa domesticus',
+            icon: '🐖',
+            temperature: '38.0–40.0',
+            pulse: '60–90',
+            respiration: '10–20'
+        }, {
+            id: 'sheep',
+            name: 'Овца',
+            latin: 'Ovis aries',
+            icon: '🐑',
+            temperature: '38.5–40.0',
+            pulse: '60–85',
+            respiration: '12–30'
+        }, {
+            id: 'goat',
+            name: 'Коза',
+            latin: 'Capra aegagrus hircus',
+            icon: '🐐',
+            temperature: '38.5–40.0',
+            pulse: '60–85',
+            respiration: '12–30'
+        }, {
+            id: 'dog',
+            name: 'Собака',
+            latin: 'Canis lupus familiaris',
+            icon: '🐕',
+            temperature: '37.5–39.0',
+            pulse: '70–130',
+            respiration: '10–26'
+        }, {
+            id: 'cat',
+            name: 'Кошка',
+            latin: 'Felis catus',
+            icon: '🐈',
+            temperature: '38.0–39.5',
+            pulse: '110–140',
+            respiration: '20–30'
+        }, {
+            id: 'rabbit',
+            name: 'Кролик',
+            latin: 'Oryctolagus cuniculus',
+            icon: '🐇',
+            temperature: '38.5–39.5',
+            pulse: '130–200',
+            respiration: '50–60'
+        }, {
+            id: 'chicken',
+            name: 'Курица',
+            latin: 'Gallus gallus domesticus',
+            icon: '🐔',
+            temperature: '40.5–42.0',
+            pulse: '120–250',
+            respiration: '30–50'
+        }, {
+            id: 'goose',
+            name: 'Гусь',
+            latin: 'Anser anser',
+            icon: '🦢',
+            temperature: '40.0–41.0',
+            pulse: '70–90',
+            respiration: '15–25'
+        }, {
+            id: 'duck',
+            name: 'Утка',
+            latin: 'Anas platyrhynchos',
+            icon: '🦆',
+            temperature: '41.0–43.0',
+            pulse: '100–140',
+            respiration: '50–70'
+        }];
+
+        // ================================================================
+        //  СОСТОЯНИЕ
+        // ================================================================
+
+        let currentView = 'main';
+        let currentAnimalId = null;
+        let quizScore = 0;
+        let quizTotal = 0;
+        let examQuestions = [];
+        let examIndex = 0;
+        let examScore = 0;
+        let isExamMode = false;
+
+        // DOM
+        const app = document.getElementById('app');
+        const quizModal = document.getElementById('quizModal');
+        const quizCloseBtn = document.getElementById('quizCloseBtn');
+        const quizTitle = document.getElementById('quizTitle');
+        const quizBody = document.getElementById('quizBody');
+        const examModal = document.getElementById('examModal');
+        const examCloseBtn = document.getElementById('examCloseBtn');
+        const examTitle = document.getElementById('examTitle');
+        const examBody = document.getElementById('examBody');
+        const toast = document.getElementById('toast');
+        let toastTimer = null;
+
+        // --- ВСПОМОГАТЕЛЬНЫЕ ---
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(function() {
+                toast.classList.remove('show');
+            }, 2600);
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // --- ОТРИСОВКА ГЛАВНОГО ЭКРАНА (симметричная сетка) ---
+        function renderMain() {
+            currentView = 'main';
+            let html = `
+                <div class="card">
+                    <div class="card-title">📋 Выберите вид животного</div>
+                    <input type="text" class="search-box" id="searchInput" placeholder="🔍 Поиск по названию...">
+                    <div class="species-grid" id="speciesGrid">
+            `;
+
+            ANIMALS.forEach(animal => {
+                html += `
+                    <div class="species-card" data-id="${animal.id}">
+                        <div class="icon">${animal.icon}</div>
+                        <div class="name">${animal.name}</div>
+                        <div class="latin">${animal.latin}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+                <div style="text-align:center; margin-top:0.2rem;">
+                    <button class="btn btn-primary" id="examMainBtn">📝 Режим экзамена</button>
+                </div>
+            `;
+
+            app.innerHTML = html;
+
+            // События карточек
+            document.querySelectorAll('.species-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const id = this.dataset.id;
+                    showAnimal(id);
+                });
+            });
+
+            // Поиск
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.toLowerCase().trim();
+                    document.querySelectorAll('.species-card').forEach(card => {
+                        const name = card.querySelector('.name').textContent.toLowerCase();
+                        const latin = card.querySelector('.latin').textContent.toLowerCase();
+                        const match = name.includes(query) || latin.includes(query);
+                        card.style.display = match ? 'flex' : 'none';
+                    });
+                });
+            }
+
+            document.getElementById('examMainBtn').addEventListener('click', startExam);
+        }
+
+        // --- ОТРИСОВКА КАРТОЧКИ ЖИВОТНОГО (симметрия) ---
+        function showAnimal(id) {
+            const animal = ANIMALS.find(a => a.id === id);
+            if (!animal) return;
+
+            currentView = 'animal';
+            currentAnimalId = id;
+
+            const params = [
+                { icon: '🌡️', label: 'Температура', value: animal.temperature + ' °C' },
+                { icon: '💓', label: 'Пульс', value: animal.pulse + ' уд/мин' },
+                { icon: '💨', label: 'Дыхание', value: animal.respiration + ' дв/мин' }
+            ];
+
+            let html = `
+                <div class="card animal-card">
+                    <div class="animal-icon">${animal.icon}</div>
+                    <div class="animal-name">${animal.name}</div>
+                    <div class="animal-latin">${animal.latin}</div>
+
+                    <div class="params-grid">
+            `;
+
+            params.forEach(p => {
+                html += `
+                    <div class="param-card">
+                        <div class="param-icon">${p.icon}</div>
+                        <div class="param-label">${p.label}</div>
+                        <div class="param-value">${p.value}</div>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+
+                    <div class="nav-row">
+                        <button class="btn btn-warning" id="backBtn">⬅ Назад к списку</button>
+                        <button class="btn btn-accent" id="quizBtn">❓ Проверить знания</button>
+                    </div>
+                </div>
+            `;
+
+            app.innerHTML = html;
+
+            document.getElementById('backBtn').addEventListener('click', renderMain);
+            document.getElementById('quizBtn').addEventListener('click', function() {
+                startQuiz(animal.id);
+            });
+        }
+
+        // --- ВИКТОРИНА ---
+        function startQuiz(animalId) {
+            const animal = ANIMALS.find(a => a.id === animalId);
+            if (!animal) return;
+            quizScore = 0;
+            quizTotal = 0;
+            showQuestion(animal);
+            quizModal.classList.add('active');
+        }
+
+        function showQuestion(animal) {
+            quizTotal++;
+            const fieldMap = ['temperature', 'pulse', 'respiration'];
+            const labelMap = {
+                temperature: 'температуру',
+                pulse: 'пульс',
+                respiration: 'дыхание'
+            };
+            const field = fieldMap[Math.floor(Math.random() * 3)];
+            const questionText = `Какая норма ${labelMap[field]} у ${animal.name}?`;
+            const correctAnswer = animal[field];
+            let options = generateOptions(animal, field);
+            const shuffledOptions = shuffleArray([...options]);
+
+            let html = `
+                <div style="font-size:1.1rem; font-weight:600; margin-bottom:0.8rem;">${questionText}</div>
+                <div class="quiz-options" id="quizOptions">
+            `;
+
+            shuffledOptions.forEach(opt => {
+                html += `<button class="option" data-value="${escapeHtml(opt)}">${escapeHtml(opt)}</button>`;
+            });
+
+            html += `
+                </div>
+                <div id="quizFeedback"></div>
+                <div class="quiz-score">✅ Правильно: ${quizScore} из ${quizTotal}</div>
+                <div style="margin-top:0.8rem; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+                    <button class="btn btn-success" id="quizNextBtn" style="display:none;">Следующий вопрос →</button>
+                    <button class="btn btn-danger" id="quizCloseBtn2">✖ Закрыть</button>
+                </div>
+            `;
+
+            quizBody.innerHTML = html;
+            quizTitle.textContent = `❓ Проверка знаний — ${animal.name}`;
+
+            // Обработчики вариантов
+            document.querySelectorAll('.quiz-options .option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+                    const selected = this.dataset.value;
+                    const isCorrect = selected === correctAnswer;
+
+                    document.querySelectorAll('.quiz-options .option').forEach(b => b.classList.add('disabled'));
+
+                    if (isCorrect) {
+                        this.classList.add('correct');
+                        quizScore++;
+                        document.getElementById('quizFeedback').innerHTML =
+                            `<div class="quiz-feedback correct">✅ Правильно!</div>`;
+                    } else {
+                        this.classList.add('wrong');
+                        document.querySelectorAll('.quiz-options .option').forEach(b => {
+                            if (b.dataset.value === correctAnswer) {
+                                b.classList.add('correct');
+                            }
+                        });
+                        document.getElementById('quizFeedback').innerHTML =
+                            `<div class="quiz-feedback wrong">❌ Неправильно. Правильный ответ: ${correctAnswer}</div>`;
+                    }
+
+                    document.querySelector('.quiz-score').textContent =
+                        `✅ Правильно: ${quizScore} из ${quizTotal}`;
+                    document.getElementById('quizNextBtn').style.display = 'inline-block';
+                });
+            });
+
+            document.getElementById('quizNextBtn').addEventListener('click', function() {
+                showQuestion(animal);
+            });
+
+            document.getElementById('quizCloseBtn2').addEventListener('click', function() {
+                quizModal.classList.remove('active');
+                showToast(`📊 Викторина завершена! Правильных: ${quizScore} из ${quizTotal}`);
+            });
+        }
+
+        function generateOptions(animal, field) {
+            const allValues = ANIMALS
+                .filter(a => a.id !== animal.id)
+                .map(a => a[field])
+                .filter(v => v && v.length > 0);
+
+            const shuffled = shuffleArray([...allValues]);
+            const uniqueValues = [];
+            for (const val of shuffled) {
+                if (!uniqueValues.includes(val) && val !== animal[field]) {
+                    uniqueValues.push(val);
+                }
+                if (uniqueValues.length >= 3) break;
+            }
+
+            const options = [animal[field], ...uniqueValues];
+            while (options.length < 4) {
+                const otherFields = ['temperature', 'pulse', 'respiration'].filter(f => f !== field);
+                for (const f of otherFields) {
+                    const val = animal[f];
+                    if (val && !options.includes(val)) {
+                        options.push(val);
+                        break;
+                    }
+                }
+                if (options.length < 4) {
+                    options.push('Нет данных');
+                }
+            }
+            return options;
+        }
+
+        // --- ЭКЗАМЕН ---
+        function startExam() {
+            isExamMode = true;
+            examIndex = 0;
+            examScore = 0;
+
+            examQuestions = [];
+            const shuffledAnimals = shuffleArray([...ANIMALS]);
+            const count = Math.min(10, shuffledAnimals.length);
+
+            for (let i = 0; i < count; i++) {
+                const animal = shuffledAnimals[i];
+                const field = ['temperature', 'pulse', 'respiration'][Math.floor(Math.random() * 3)];
+                const labels = {
+                    temperature: 'температуру',
+                    pulse: 'пульс',
+                    respiration: 'дыхание'
+                };
+                const questionText = `Какая норма ${labels[field]} у ${animal.name}?`;
+                const correctAnswer = animal[field];
+                const options = generateOptions(animal, field);
+
+                examQuestions.push({
+                    animal: animal,
+                    question: questionText,
+                    correct: correctAnswer,
+                    options: shuffleArray([...options])
+                });
+            }
+
+            showExamQuestion();
+            examModal.classList.add('active');
+        }
+
+        function showExamQuestion() {
+            if (examIndex >= examQuestions.length) {
+                showExamResult();
+                return;
+            }
+
+            const q = examQuestions[examIndex];
+            const progress = `${examIndex + 1} / ${examQuestions.length}`;
+
+            let html = `
+                <div class="exam-progress">📊 Вопрос ${progress}</div>
+                <div style="font-size:1.1rem; font-weight:600; margin-bottom:0.8rem;">${q.question}</div>
+                <div class="quiz-options" id="examOptions">
+            `;
+
+            q.options.forEach(opt => {
+                html += `<button class="option" data-value="${escapeHtml(opt)}">${escapeHtml(opt)}</button>`;
+            });
+
+            html += `
+                </div>
+                <div id="examFeedback"></div>
+                <div style="margin-top:0.8rem; display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+                    <button class="btn btn-success" id="examNextBtn" style="display:none;">Следующий вопрос →</button>
+                    <button class="btn btn-danger" id="examCloseBtn2">✖ Закрыть</button>
+                </div>
+            `;
+
+            examBody.innerHTML = html;
+            examTitle.textContent = `📝 Экзамен — вопрос ${examIndex + 1}`;
+
+            document.querySelectorAll('#examOptions .option').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('disabled')) return;
+                    const selected = this.dataset.value;
+                    const isCorrect = selected === q.correct;
+
+                    document.querySelectorAll('#examOptions .option').forEach(b => b.classList.add('disabled'));
+
+                    if (isCorrect) {
+                        this.classList.add('correct');
+                        examScore++;
+                        document.getElementById('examFeedback').innerHTML =
+                            `<div class="quiz-feedback correct">✅ Правильно!</div>`;
+                    } else {
+                        this.classList.add('wrong');
+                        document.querySelectorAll('#examOptions .option').forEach(b => {
+                            if (b.dataset.value === q.correct) {
+                                b.classList.add('correct');
+                            }
+                        });
+                        document.getElementById('examFeedback').innerHTML =
+                            `<div class="quiz-feedback wrong">❌ Неправильно. Правильный ответ: ${q.correct}</div>`;
+                    }
+
+                    document.getElementById('examNextBtn').style.display = 'inline-block';
+                });
+            });
+
+            document.getElementById('examNextBtn').addEventListener('click', function() {
+                examIndex++;
+                showExamQuestion();
+            });
+
+            document.getElementById('examCloseBtn2').addEventListener('click', function() {
+                examModal.classList.remove('active');
+                isExamMode = false;
+                renderMain();
+            });
+        }
+
+        function showExamResult() {
+            const total = examQuestions.length;
+            const percent = Math.round((examScore / total) * 100);
+            let message = '';
+            if (percent >= 90) message = '🌟 Отлично! Вы знаете физиологию!';
+            else if (percent >= 70) message = '👍 Хороший результат!';
+            else if (percent >= 50) message = '📖 Неплохо, но стоит повторить материал.';
+            else message = '📚 Рекомендуем перепройти экзамен.';
+
+            examBody.innerHTML = `
+                <div class="exam-result">
+                    <div class="score">${examScore} / ${total}</div>
+                    <div style="font-size:1.2rem; font-weight:600; color:#2C7DA0;">${percent}%</div>
+                    <div class="message">${message}</div>
+                    <div style="margin-top:1.5rem; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+                        <button class="btn btn-success" id="examRetryBtn">🔄 Пройти заново</button>
+                        <button class="btn btn-warning" id="examCloseBtn3">✖ Закрыть</button>
+                    </div>
+                </div>
+            `;
+
+            examTitle.textContent = '📊 Результаты экзамена';
+
+            document.getElementById('examRetryBtn').addEventListener('click', function() {
+                examIndex = 0;
+                examScore = 0;
+                startExam();
+            });
+
+            document.getElementById('examCloseBtn3').addEventListener('click', function() {
+                examModal.classList.remove('active');
+                isExamMode = false;
+                renderMain();
+            });
+        }
+
+        // --- СОБЫТИЯ МОДАЛЬНЫХ ОКОН ---
+        quizCloseBtn.addEventListener('click', function() {
+            quizModal.classList.remove('active');
+        });
+
+        quizModal.addEventListener('click', function(e) {
+            if (e.target === quizModal) quizModal.classList.remove('active');
+        });
+
+        examCloseBtn.addEventListener('click', function() {
+            examModal.classList.remove('active');
+            isExamMode = false;
+            renderMain();
+        });
+
+        examModal.addEventListener('click', function(e) {
+            if (e.target === examModal) {
+                examModal.classList.remove('active');
+                isExamMode = false;
+                renderMain();
+            }
+        });
+
+        // --- КНОПКИ ШАПКИ ---
+        document.getElementById('examBtn').addEventListener('click', function() {
+            if (currentView === 'main' || currentView === 'animal') {
+                startExam();
+            } else {
+                renderMain();
+                setTimeout(startExam, 120);
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            if (!confirm('Сбросить прогресс и вернуться на главный экран?')) return;
+            quizScore = 0;
+            quizTotal = 0;
+            examScore = 0;
+            examIndex = 0;
+            examQuestions = [];
+            isExamMode = false;
+            quizModal.classList.remove('active');
+            examModal.classList.remove('active');
+            renderMain();
+            showToast('🔄 Прогресс сброшен');
+        });
+
+        // ================================================================
+        //  ЗАПУСК
+        // ================================================================
+
+        renderMain();
+        showToast('🩺 Добро пожаловать! Выберите вид животного для изучения.');
+    </script>
+
+</body>
+</html>

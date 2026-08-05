@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конструктор "Колесо фортуны" | ВетСим</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', sans-serif;
+            color: #3E5C4A;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #1F4E6E;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E7EDE2;
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1F4E6E;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.5rem;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Формы --- */
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #7B8D6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 3px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px 14px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1.5rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FEFAF2;
+            outline: none;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #2C7DA0;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: #A3B18A;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #8FA376;
+        }
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #5A865A;
+        }
+        .btn-danger {
+            background: #D4A373;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #C99464;
+        }
+        .btn-accent {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-accent:hover {
+            background: #236B8A;
+        }
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.75rem;
+        }
+
+        .flex {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /* --- Сектора --- */
+        .sector-item {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border-left: 4px solid #A3B18A;
+        }
+        .sector-item .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .sector-item .color-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .sector-item input[type="text"] {
+            flex: 1;
+            min-width: 100px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed #D9D0BD;
+            padding: 4px 6px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            outline: none;
+        }
+        .sector-item input[type="text"]:focus {
+            border-bottom-color: #2C7DA0;
+        }
+
+        /* --- Колесо --- */
+        .wheel-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        #wheelCanvas {
+            width: 100%;
+            max-width: 450px;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            border: 3px solid #D9D0BD;
+            background: #FCFAF5;
+            cursor: pointer;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        .game-stats span {
+            background: #F4EFE4;
+            padding: 4px 16px;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+        }
+        .game-stats strong {
+            color: #1F4E6E;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 2.5rem;
+            padding: 2rem;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal .close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #7B8D6E;
+        }
+        .modal .close:hover {
+            color: #3E5C4A;
+        }
+        .modal h3 {
+            color: #1F4E6E;
+            margin-bottom: 1rem;
+        }
+
+        .opt-btn {
+            display: block;
+            width: 100%;
+            padding: 10px 16px;
+            margin-bottom: 6px;
+            background: #F9F6EF;
+            border: 2px solid #D9D0BD;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .opt-btn:hover:not(:disabled) {
+            border-color: #2C7DA0;
+        }
+        .opt-btn.correct {
+            border-color: #6B9E6B;
+            background: #E2F0DA;
+        }
+        .opt-btn.wrong {
+            border-color: #D4A373;
+            background: #FDE8E0;
+        }
+        .opt-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .feedback {
+            padding: 10px 16px;
+            border-radius: 1.5rem;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        .feedback.ok {
+            background: #E2F0DA;
+            color: #2C7DA0;
+        }
+        .feedback.fail {
+            background: #FDE8E0;
+            color: #D4A373;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            opacity: 0;
+            transition: 0.3s;
+            z-index: 2000;
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+        .sector-content-block {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: #FCFAF5;
+            border-radius: 1rem;
+            border: 1px solid #E2EAD9;
+        }
+        .sector-content-block .field-group {
+            margin-bottom: 6px;
+        }
+        .sector-content-block .field-group label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #7B8D6E;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .sector-content-block input,
+        .sector-content-block textarea {
+            width: 100%;
+            padding: 4px 10px;
+            border: 1px solid #E2EAD9;
+            border-radius: 0.8rem;
+            font-family: inherit;
+            font-size: 0.8rem;
+            background: white;
+            outline: none;
+        }
+        .sector-content-block input:focus,
+        .sector-content-block textarea:focus {
+            border-color: #2C7DA0;
+        }
+        .sector-content-block textarea {
+            resize: vertical;
+            min-height: 40px;
+        }
+        .options-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .options-group .opt-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+            min-width: 100px;
+        }
+        .options-group .opt-item input[type="text"] {
+            flex: 1;
+        }
+        .options-group .opt-item input[type="radio"] {
+            accent-color: #2C7DA0;
+        }
+
+        /* Скрытые сектора в игре */
+        .sector-item.used {
+            opacity: 0.4;
+            border-left-color: #D9D0BD;
+            text-decoration: line-through;
+        }
+        .sector-item.used .sector-content-block {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🎡 Конструктор «Колесо фортуны»</h1>
+
+        <!-- ===== НАСТРОЙКИ ===== -->
+        <div class="card">
+            <div class="card-title">⚙️ Настройки игры</div>
+            <div class="grid-2">
+                <div>
+                    <div class="form-group">
+                        <label>Название игры</label>
+                        <input type="text" id="gameName" value="Ветеринарный опрос">
+                    </div>
+                    <div class="form-group">
+                        <label>Тема</label>
+                        <input type="text" id="gameTheme" value="Анатомия животных">
+                    </div>
+                    <div class="form-group">
+                        <label>Количество секторов: <span id="sectorCountLabel">8</span></label>
+                        <input type="range" id="sectorCount" min="2" max="20" value="8" step="1">
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group">
+                        <label>Действия</label>
+                        <div class="flex">
+                            <button class="btn btn-success" id="addSectorBtn">➕ Добавить сектор</button>
+                            <button class="btn btn-danger" id="clearSectorsBtn">🗑️ Очистить всё</button>
+                        </div>
+                        <div class="flex" style="margin-top:8px;">
+                            <button class="btn btn-accent" id="exportHtmlBtn">📥 Скачать игру</button>
+                            <button class="btn btn-primary" id="switchToGame">🎮 Играть</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== РЕДАКТОР СЕКТОРОВ ===== -->
+        <div id="editorMode">
+            <div class="card">
+                <div class="card-title">🎯 Сектора</div>
+                <div id="sectorList"></div>
+            </div>
+        </div>
+
+        <!-- ===== РЕЖИМ ИГРЫ ===== -->
+        <div id="gameMode" style="display:none;">
+            <div class="card">
+                <div style="text-align:center;">
+                    <h2 id="gameDisplayTitle">Колесо фортуны</h2>
+                    <p style="color:#7B8D6E;" id="gameDisplayTheme">Тема: Анатомия животных</p>
+                </div>
+
+                <div class="wheel-wrapper">
+                    <canvas id="wheelCanvas" width="600" height="600"></canvas>
+                </div>
+
+                <div style="text-align:center;">
+                    <div class="flex" style="justify-content:center; gap:12px;">
+                        <button class="btn btn-primary" id="spinBtn">🎡 Крутить</button>
+                        <button class="btn btn-danger" id="resetGameBtn">🔄 Сброс</button>
+                        <button class="btn btn-accent" id="backToEditor">✏️ Редактор</button>
+                    </div>
+
+                    <div class="game-stats">
+                        <span>🎯 Баллы: <strong id="scoreDisplay">0</strong></span>
+                        <span>🟢 Осталось: <strong id="remainingDisplay">0</strong></span>
+                        <span>⚪ Всего: <strong id="totalDisplay">0</strong></span>
+                    </div>
+
+                    <div id="historyLog" style="text-align:left; max-height:200px; overflow-y:auto; font-size:0.85rem; margin-top:12px; padding:8px 12px; background:#F9F6EF; border-radius:1rem;">
+                        <p style="color:#7B8D6E; font-style:italic;">Результаты будут здесь</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <button class="close" id="modalCloseBtn">&times;</button>
+            <h3 id="modalTitle">🎯 Сектор</h3>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ================================================================
+        //  КОНСТРУКТОР "КОЛЕСО ФОРТУНЫ" — ИСПРАВЛЕННАЯ ВЕРСИЯ
+        //  1. Сектора называются "Сектор 1", "Сектор 2" и т.д.
+        //  2. При смене типа меняется название
+        //  3. В игре выпадает случайный сектор (исправлен баг с id)
+        //  4. Использованные сектора исчезают (удаляются из массива)
+        // ================================================================
+
+        // --- СОСТОЯНИЕ ---
+        let sectors = [];
+        let gameName = 'Ветеринарный опрос';
+        let gameTheme = 'Анатомия животных';
+        let isGameMode = false;
+        let usedIndices = [];
+        let score = 0;
+        let currentAngle = 0;
+        let isSpinning = false;
+
+        // --- DOM ---
+        const sectorList = document.getElementById('sectorList');
+        const gameNameInput = document.getElementById('gameName');
+        const gameThemeInput = document.getElementById('gameTheme');
+        const sectorCountInput = document.getElementById('sectorCount');
+        const sectorCountLabel = document.getElementById('sectorCountLabel');
+        const addSectorBtn = document.getElementById('addSectorBtn');
+        const clearSectorsBtn = document.getElementById('clearSectorsBtn');
+        const exportHtmlBtn = document.getElementById('exportHtmlBtn');
+        const switchToGame = document.getElementById('switchToGame');
+        const backToEditor = document.getElementById('backToEditor');
+        const editorMode = document.getElementById('editorMode');
+        const gameMode = document.getElementById('gameMode');
+        const gameDisplayTitle = document.getElementById('gameDisplayTitle');
+        const gameDisplayTheme = document.getElementById('gameDisplayTheme');
+        const spinBtn = document.getElementById('spinBtn');
+        const resetGameBtn = document.getElementById('resetGameBtn');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const remainingDisplay = document.getElementById('remainingDisplay');
+        const totalDisplay = document.getElementById('totalDisplay');
+        const historyLog = document.getElementById('historyLog');
+        const wheelCanvas = document.getElementById('wheelCanvas');
+        const ctx = wheelCanvas.getContext('2d');
+        const modalOverlay = document.getElementById('modalOverlay');
+        const modalCloseBtn = document.getElementById('modalCloseBtn');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const toast = document.getElementById('toast');
+        let toastTimer = null;
+
+        // --- ВСПОМОГАТЕЛЬНЫЕ ---
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function randomColor() {
+            const colors = ['#2C7DA0', '#A3B18A', '#D4A373', '#6B9E6B', '#E8B84C', '#D9534F', '#8E6B8E', '#4A8C8C', '#B8860B',
+                '#4682B4', '#8FBC8F', '#DAA520', '#A0522D'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function getTypeLabel(type) {
+            const labels = {
+                student: 'Студент',
+                task: 'Задание',
+                question: 'Вопрос',
+                bonus: 'Бонус'
+            };
+            return labels[type] || 'Сектор';
+        }
+
+        function getDefaultData(type, name) {
+            const defaults = {
+                student: { studentName: name || 'Студент' },
+                task: { task: 'Введите текст задания', answer: 'Правильный ответ' },
+                question: { question: 'Введите вопрос', options: ['Вариант 1', 'Вариант 2', 'Вариант 3', 'Вариант 4'],
+                    correct: 0 },
+                bonus: { description: 'Бонус: +5 баллов', bonusPoints: 5 }
+            };
+            return defaults[type] || defaults.student;
+        }
+
+        function createSector(index, type) {
+            const typeName = type || 'student';
+            const displayName = getTypeLabel(typeName);
+            return {
+                name: `${displayName} ${index + 1}`,
+                color: randomColor(),
+                type: typeName,
+                data: getDefaultData(typeName, `${displayName} ${index + 1}`)
+            };
+        }
+
+        function createDefaultSectors(count) {
+            const result = [];
+            const types = ['student', 'task', 'question', 'bonus'];
+            for (let i = 0; i < count; i++) {
+                const type = types[i % types.length];
+                result.push(createSector(i, type));
+            }
+            return result;
+        }
+
+        // --- ГЕНЕРАЦИЯ СПИСКА СЕКТОРОВ ---
+        function renderSectors() {
+            let html = '';
+            sectors.forEach((s, i) => {
+                const isUsed = usedIndices.includes(i);
+                html += `
+                        <div class="sector-item ${isUsed ? 'used' : ''}" data-index="${i}">
+                            <div class="row">
+                                <div class="color-box" style="background:${s.color};" onclick="pickColor(${i})"></div>
+                                <input type="text" value="${escapeHtml(s.name)}" placeholder="Название" data-index="${i}" class="sector-name">
+                                <select data-index="${i}" class="sector-type">
+                                    <option value="student" ${s.type==='student'?'selected':''}>👤 Студент</option>
+                                    <option value="task" ${s.type==='task'?'selected':''}>📝 Задание</option>
+                                    <option value="question" ${s.type==='question'?'selected':''}>❓ Вопрос</option>
+                                    <option value="bonus" ${s.type==='bonus'?'selected':''}>⭐ Бонус</option>
+                                </select>
+                                <button class="btn btn-danger btn-sm" onclick="removeSector(${i})">🗑️</button>
+                            </div>
+                            ${!isUsed ? renderSectorContent(s, i) : ''}
+                        </div>
+                    `;
+            });
+            sectorList.innerHTML = html;
+
+            // События
+            document.querySelectorAll('.sector-name').forEach(inp => {
+                inp.addEventListener('input', function() {
+                    const idx = parseInt(this.dataset.index);
+                    if (sectors[idx]) sectors[idx].name = this.value;
+                });
+            });
+
+            document.querySelectorAll('.sector-type').forEach(sel => {
+                sel.addEventListener('change', function() {
+                    const idx = parseInt(this.dataset.index);
+                    if (sectors[idx]) {
+                        const newType = this.value;
+                        const newName = `${getTypeLabel(newType)} ${idx + 1}`;
+                        sectors[idx].name = newName;
+                        sectors[idx].type = newType;
+                        sectors[idx].data = getDefaultData(newType, newName);
+                        renderSectors();
+                        if (isGameMode) updateGameDisplay();
+                    }
+                });
+            });
+
+            // Поля в блоке контента
+            document.querySelectorAll('.sector-content-block input, .sector-content-block textarea').forEach(el => {
+                el.addEventListener('input', function() {
+                    const idx = parseInt(this.dataset.index);
+                    const field = this.dataset.field;
+                    if (!isNaN(idx) && sectors[idx] && sectors[idx].data && field) {
+                        sectors[idx].data[field] = this.value;
+                    }
+                });
+                el.addEventListener('change', function() {
+                    const idx = parseInt(this.dataset.index);
+                    const field = this.dataset.field;
+                    if (!isNaN(idx) && sectors[idx] && sectors[idx].data && field) {
+                        sectors[idx].data[field] = this.value;
+                    }
+                });
+            });
+
+            document.querySelectorAll('.opt-text').forEach(inp => {
+                inp.addEventListener('input', function() {
+                    const idx = parseInt(this.dataset.index);
+                    const optIdx = parseInt(this.dataset.opt);
+                    if (!isNaN(idx) && sectors[idx] && sectors[idx].data && sectors[idx].data.options) {
+                        sectors[idx].data.options[optIdx] = this.value;
+                    }
+                });
+            });
+
+            document.querySelectorAll('.opt-radio').forEach(inp => {
+                inp.addEventListener('change', function() {
+                    const idx = parseInt(this.dataset.index);
+                    if (!isNaN(idx) && sectors[idx] && sectors[idx].data) {
+                        sectors[idx].data.correct = parseInt(this.value);
+                    }
+                });
+            });
+        }
+
+        function renderSectorContent(s, i) {
+            let html = `<div class="sector-content-block">`;
+            if (s.type === 'student') {
+                html += `
+                            <div class="field-group">
+                                <label>Имя студента</label>
+                                <input type="text" data-index="${i}" data-field="studentName" value="${escapeHtml(s.data.studentName || s.name)}">
+                            </div>
+                        `;
+            } else if (s.type === 'task') {
+                html += `
+                            <div class="field-group">
+                                <label>Задание</label>
+                                <textarea data-index="${i}" data-field="task" rows="2">${escapeHtml(s.data.task || '')}</textarea>
+                            </div>
+                            <div class="field-group">
+                                <label>Правильный ответ</label>
+                                <input type="text" data-index="${i}" data-field="answer" value="${escapeHtml(s.data.answer || '')}">
+                            </div>
+                        `;
+            } else if (s.type === 'question') {
+                html += `
+                            <div class="field-group">
+                                <label>Вопрос</label>
+                                <textarea data-index="${i}" data-field="question" rows="2">${escapeHtml(s.data.question || '')}</textarea>
+                            </div>
+                            <div class="field-group">
+                                <label>Варианты (отметьте правильный)</label>
+                                <div class="options-group">
+                                    ${(s.data.options || ['','','','']).map((opt, oi) => `
+                                            <div class="opt-item">
+                                                <input type="text" class="opt-text" data-index="${i}" data-opt="${oi}" value="${escapeHtml(opt)}" placeholder="Вариант ${oi+1}">
+                                                <input type="radio" class="opt-radio" name="correct_${i}" value="${oi}" data-index="${i}" ${s.data.correct === oi ? 'checked' : ''}>
+                                            </div>
+                                        `).join('')}
+                                </div>
+                            </div>
+                        `;
+            } else if (s.type === 'bonus') {
+                html += `
+                            <div class="field-group">
+                                <label>Описание бонуса</label>
+                                <textarea data-index="${i}" data-field="description" rows="2">${escapeHtml(s.data.description || '')}</textarea>
+                            </div>
+                            <div class="field-group">
+                                <label>Баллы</label>
+                                <input type="number" data-index="${i}" data-field="bonusPoints" value="${s.data.bonusPoints || 5}" min="1" max="20" style="width:80px;">
+                            </div>
+                        `;
+            }
+            html += `</div>`;
+            return html;
+        }
+
+        // --- ДЕЙСТВИЯ С СЕКТОРАМИ ---
+        window.pickColor = function(index) {
+            if (sectors[index]) {
+                sectors[index].color = randomColor();
+                renderSectors();
+                if (isGameMode) drawWheel();
+            }
+        };
+
+        window.removeSector = function(index) {
+            if (sectors.length <= 2) {
+                showToast('Минимум 2 сектора');
+                return;
+            }
+            sectors.splice(index, 1);
+            // Обновляем номера в названиях
+            sectors.forEach((s, i) => {
+                const typeLabel = getTypeLabel(s.type);
+                s.name = `${typeLabel} ${i + 1}`;
+            });
+            renderSectors();
+            if (isGameMode) updateGameDisplay();
+            sectorCountInput.value = sectors.length;
+            sectorCountLabel.textContent = sectors.length;
+        };
+
+        function addSector() {
+            const types = ['student', 'task', 'question', 'bonus'];
+            const type = types[sectors.length % types.length];
+            const newSector = createSector(sectors.length, type);
+            sectors.push(newSector);
+            renderSectors();
+            if (isGameMode) updateGameDisplay();
+            sectorCountInput.value = sectors.length;
+            sectorCountLabel.textContent = sectors.length;
+            showToast('➕ Сектор добавлен');
+        }
+
+        function clearSectors() {
+            if (sectors.length <= 2) {
+                showToast('Минимум 2 сектора');
+                return;
+            }
+            if (!confirm('Удалить все сектора?')) return;
+            sectors = createDefaultSectors(8);
+            renderSectors();
+            if (isGameMode) updateGameDisplay();
+            sectorCountInput.value = sectors.length;
+            sectorCountLabel.textContent = sectors.length;
+            showToast('🗑️ Все сектора сброшены');
+        }
+
+        function updateSectorCount(count) {
+            count = Math.min(20, Math.max(2, count));
+            if (count > sectors.length) {
+                const types = ['student', 'task', 'question', 'bonus'];
+                for (let i = sectors.length; i < count; i++) {
+                    const type = types[i % types.length];
+                    sectors.push(createSector(i, type));
+                }
+            } else if (count < sectors.length) {
+                sectors = sectors.slice(0, count);
+            }
+            // Обновляем номера
+            sectors.forEach((s, i) => {
+                const typeLabel = getTypeLabel(s.type);
+                s.name = `${typeLabel} ${i + 1}`;
+            });
+            renderSectors();
+            if (isGameMode) updateGameDisplay();
+            sectorCountLabel.textContent = count;
+        }
+
+        // --- РИСОВАНИЕ КОЛЕСА ---
+        function drawWheel() {
+            const w = wheelCanvas.width,
+                h = wheelCanvas.height;
+            const cx = w / 2,
+                cy = h / 2;
+            const radius = Math.min(w, h) * 0.44;
+            // Используем только активные сектора (не использованные)
+            const activeSectors = sectors.filter((_, i) => !usedIndices.includes(i));
+            const count = activeSectors.length;
+
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = '#FCFAF5';
+            ctx.fillRect(0, 0, w, h);
+
+            if (count === 0) {
+                ctx.fillStyle = '#7B8D6E';
+                ctx.font = '20px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('🎉 Все сектора использованы!', cx, cy);
+                return;
+            }
+
+            const angleStep = (Math.PI * 2) / count;
+
+            for (let i = 0; i < count; i++) {
+                // Находим реальный индекс в массиве sectors
+                let realIndex = -1;
+                let counter = 0;
+                for (let j = 0; j < sectors.length; j++) {
+                    if (!usedIndices.includes(j)) {
+                        if (counter === i) { realIndex = j; break; }
+                        counter++;
+                    }
+                }
+                if (realIndex === -1) continue;
+
+                const sector = sectors[realIndex];
+                const startAngle = currentAngle + i * angleStep;
+                const endAngle = startAngle + angleStep;
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = sector?.color || '#A3B18A';
+                ctx.fill();
+                ctx.strokeStyle = '#FCFAF5';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                const midAngle = startAngle + angleStep / 2;
+                const textRadius = radius * 0.65;
+                const tx = cx + Math.cos(midAngle) * textRadius;
+                const ty = cy + Math.sin(midAngle) * textRadius;
+                ctx.save();
+                ctx.translate(tx, ty);
+                ctx.rotate(midAngle + (midAngle > Math.PI / 2 ? Math.PI : 0));
+                ctx.fillStyle = 'white';
+                ctx.font = '600 12px Montserrat, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const name = sector?.name || `Сектор`;
+                ctx.fillText(name.length > 14 ? name.slice(0, 12) + '…' : name, 0, 0);
+                ctx.restore();
+            }
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius * 0.08, 0, Math.PI * 2);
+            ctx.fillStyle = '#2C7DA0';
+            ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 18px Montserrat, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🎯', cx, cy + 1);
+
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = '#D9D0BD';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            const arrowY = cy - radius - 10;
+            ctx.beginPath();
+            ctx.moveTo(cx, arrowY - 14);
+            ctx.lineTo(cx - 12, arrowY + 2);
+            ctx.lineTo(cx + 12, arrowY + 2);
+            ctx.closePath();
+            ctx.fillStyle = '#D9534F';
+            ctx.fill();
+            ctx.strokeStyle = '#8A3A3A';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        }
+
+        // --- ИГРОВАЯ ЛОГИКА ---
+        function updateGameDisplay() {
+            const activeCount = sectors.filter((_, i) => !usedIndices.includes(i)).length;
+            const total = sectors.length;
+            const remaining = activeCount;
+            scoreDisplay.textContent = score;
+            remainingDisplay.textContent = remaining;
+            totalDisplay.textContent = total;
+            gameDisplayTitle.textContent = gameName || 'Колесо фортуны';
+            gameDisplayTheme.textContent = `Тема: ${gameTheme || 'Не указана'}`;
+            drawWheel();
+            renderSectors();
+
+            if (remaining === 0 && total > 0) {
+                setTimeout(() => showToast(`🎉 Все задания выполнены! Счёт: ${score} баллов`), 500);
+            }
+        }
+
+        function spinWheel() {
+            if (isSpinning) return;
+            // Находим активные сектора
+            const activeIndices = [];
+            for (let i = 0; i < sectors.length; i++) {
+                if (!usedIndices.includes(i)) activeIndices.push(i);
+            }
+            if (activeIndices.length === 0) {
+                showToast('🎉 Все сектора использованы!');
+                return;
+            }
+
+            isSpinning = true;
+            spinBtn.disabled = true;
+
+            const count = activeIndices.length;
+            const angleStep = (Math.PI * 2) / count;
+            const totalRotations = 5 + Math.random() * 5;
+            // Выбираем случайный активный сектор
+            const randomActivePos = Math.floor(Math.random() * activeIndices.length);
+            const targetRealIndex = activeIndices[randomActivePos];
+            // Находим позицию этого сектора на колесе (среди активных)
+            let targetPos = 0;
+            for (let i = 0; i < activeIndices.length; i++) {
+                if (activeIndices[i] === targetRealIndex) { targetPos = i; break; }
+            }
+
+            const targetAngle = currentAngle + totalRotations * Math.PI * 2 +
+                (targetPos * angleStep + angleStep / 2);
+
+            const duration = 4000 + Math.random() * 2000;
+            const startTime = performance.now();
+            const startAngle = currentAngle;
+
+            function animateSpin(time) {
+                const elapsed = time - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                currentAngle = startAngle + (targetAngle - startAngle) * eased;
+                drawWheel();
+                if (progress < 1) {
+                    requestAnimationFrame(animateSpin);
+                } else {
+                    currentAngle = targetAngle;
+                    drawWheel();
+                    isSpinning = false;
+                    spinBtn.disabled = false;
+                    // Помечаем сектор как использованный
+                    usedIndices.push(targetRealIndex);
+                    updateGameDisplay();
+                    openModal(targetRealIndex);
+                }
+            }
+            requestAnimationFrame(animateSpin);
+        }
+
+        function resetGame() {
+            if (!confirm('Сбросить прогресс?')) return;
+            usedIndices = [];
+            score = 0;
+            historyLog.innerHTML = '<p style="color:#7B8D6E;font-style:italic;">Результаты будут здесь</p>';
+            updateGameDisplay();
+            showToast('🔄 Игра сброшена');
+        }
+
+        function addHistory(text) {
+            const entry = document.createElement('div');
+            entry.textContent = `• ${text}`;
+            historyLog.appendChild(entry);
+            historyLog.scrollTop = historyLog.scrollHeight;
+            const placeholder = historyLog.querySelector('p');
+            if (placeholder && placeholder.style.fontStyle === 'italic') placeholder.remove();
+        }
+
+        // --- МОДАЛЬНОЕ ОКНО ---
+        function openModal(index) {
+            const sector = sectors[index];
+            if (!sector) return;
+
+            modalTitle.textContent = `🎯 ${sector.name}`;
+            let html = `<div>`;
+
+            if (sector.type === 'student') {
+                const name = sector.data.studentName || sector.name;
+                html += `<p style="font-size:1.2rem;font-weight:700;color:#2C7DA0;">👤 ${escapeHtml(name)}</p>`;
+                html += `<p style="color:#7B8D6E;">Студент вызван к доске!</p>`;
+                html +=
+                    `<div style="margin-top:12px;"><button class="btn btn-primary" onclick="closeModal()">✅ Принять</button></div>`;
+            } else if (sector.type === 'task') {
+                html += `<p><strong>📝 Задание:</strong> ${escapeHtml(sector.data.task || 'Нет задания')}</p>`;
+                html +=
+                    `<input type="text" class="answer-input" id="taskAnswer" placeholder="Введите ответ..." style="width:100%;padding:8px 14px;border:1px solid #D9D0BD;border-radius:1.5rem;font-family:inherit;margin:8px 0;">`;
+                html +=
+                    `<div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="btn btn-success" id="checkTaskBtn">✅ Проверить</button>`;
+                html += `<button class="btn btn-danger" onclick="closeModal()">✖ Закрыть</button></div>`;
+                html += `<div id="taskFeedback"></div>`;
+            } else if (sector.type === 'question') {
+                html += `<p><strong>❓ Вопрос:</strong> ${escapeHtml(sector.data.question || 'Нет вопроса')}</p>`;
+                html += `<div id="questionOptions">`;
+                (sector.data.options || []).forEach((opt, oi) => {
+                    html +=
+                        `<button class="opt-btn" onclick="checkQuestion(${index}, ${oi})">${escapeHtml(opt)}</button>`;
+                });
+                html += `</div><div id="questionFeedback"></div>`;
+                html +=
+                    `<div style="margin-top:8px;"><button class="btn btn-danger" onclick="closeModal()">✖ Закрыть</button></div>`;
+            } else if (sector.type === 'bonus') {
+                const points = sector.data.bonusPoints || 5;
+                html += `<p>⭐ <strong>Бонус!</strong></p>`;
+                html +=
+                    `<p>${escapeHtml(sector.data.description || 'Поздравляем! Вы получаете бонусные баллы!')}</p>`;
+                html += `<p style="color:#6B9E6B;font-weight:700;">+${points} баллов!</p>`;
+                html +=
+                    `<div style="margin-top:12px;"><button class="btn btn-success" onclick="applyBonus(${points})">🎉 Получить бонус</button></div>`;
+            }
+
+            html += `</div>`;
+            modalBody.innerHTML = html;
+            modalOverlay.classList.add('active');
+
+            if (sector.type === 'task') {
+                const input = document.getElementById('taskAnswer');
+                const checkBtn = document.getElementById('checkTaskBtn');
+                if (input && checkBtn) {
+                    checkBtn.addEventListener('click', () => checkTask(index));
+                    input.addEventListener('keyup', (e) => { if (e.key === 'Enter') checkTask(index); });
+                    setTimeout(() => input.focus(), 100);
+                }
+            }
+        }
+
+        window.closeModal = function() {
+            modalOverlay.classList.remove('active');
+            updateGameDisplay();
+        };
+
+        window.checkTask = function(index) {
+            const sector = sectors[index];
+            const input = document.getElementById('taskAnswer');
+            const feedback = document.getElementById('taskFeedback');
+            if (!sector || !input) return;
+            const userAnswer = input.value.trim().toLowerCase();
+            const correctAnswer = (sector.data.answer || '').toLowerCase();
+            if (userAnswer === correctAnswer) {
+                feedback.innerHTML = `<div class="feedback ok">✅ Правильно! +1 балл</div>`;
+                score++;
+                updateGameDisplay();
+                const actions = document.querySelector('.modal .flex');
+                if (actions) actions.innerHTML =
+                    '<button class="btn btn-danger" onclick="closeModal()">✖ Закрыть</button>';
+                addHistory(`✅ Задание "${sector.name}" выполнено`);
+            } else {
+                feedback.innerHTML = `<div class="feedback fail">❌ Неправильно. Попробуйте ещё раз</div>`;
+                input.value = '';
+                input.focus();
+            }
+        };
+
+        window.checkQuestion = function(index, optIndex) {
+            const sector = sectors[index];
+            if (!sector) return;
+            const isCorrect = sector.data.correct === optIndex;
+            document.querySelectorAll('#questionOptions .opt-btn').forEach((btn, i) => {
+                btn.disabled = true;
+                if (i === sector.data.correct) btn.classList.add('correct');
+                if (i === optIndex && !isCorrect) btn.classList.add('wrong');
+            });
+            const feedback = document.getElementById('questionFeedback');
+            if (isCorrect) {
+                feedback.innerHTML = `<div class="feedback ok">✅ Правильно! +1 балл</div>`;
+                score++;
+                updateGameDisplay();
+                addHistory(`✅ Вопрос "${sector.name}" отвечен верно`);
+            } else {
+                feedback.innerHTML =
+                    `<div class="feedback fail">❌ Неправильно. Ответ: ${escapeHtml(sector.data.options[sector.data.correct] || '')}</div>`;
+                addHistory(`❌ Вопрос "${sector.name}" отвечен неверно`);
+            }
+            // Добавляем кнопку закрытия, если её нет
+            const actions = document.querySelector('.modal');
+            if (actions && !actions.querySelector('.btn-close-final')) {
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'btn btn-danger btn-close-final';
+                closeBtn.textContent = '✖ Закрыть';
+                closeBtn.onclick = closeModal;
+                closeBtn.style.marginTop = '8px';
+                actions.appendChild(closeBtn);
+            }
+        };
+
+        window.applyBonus = function(points) {
+            score += points;
+            updateGameDisplay();
+            showToast(`⭐ +${points} бонусных баллов!`);
+            addHistory(`⭐ Бонус: +${points} баллов`);
+            setTimeout(closeModal, 600);
+        };
+
+        // --- ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ ---
+        function switchToGameMode() {
+            if (sectors.length < 2) {
+                showToast('❌ Добавьте минимум 2 сектора');
+                return;
+            }
+            editorMode.style.display = 'none';
+            gameMode.style.display = 'block';
+            isGameMode = true;
+            gameName = gameNameInput.value || 'Колесо фортуны';
+            gameTheme = gameThemeInput.value || 'Ветеринария';
+            usedIndices = [];
+            score = 0;
+            historyLog.innerHTML = '<p style="color:#7B8D6E;font-style:italic;">Результаты будут здесь</p>';
+            updateGameDisplay();
+        }
+
+        function switchToEditorMode() {
+            editorMode.style.display = 'block';
+            gameMode.style.display = 'none';
+            isGameMode = false;
+            // Сбрасываем использованные индексы при возврате в редактор
+            usedIndices = [];
+            renderSectors();
+        }
+
+        // --- ЭКСПОРТ HTML ---
+        function exportHTML() {
+            // Сохраняем текущие данные для экспорта
+            const data = {
+                sectors: sectors.map(s => ({
+                    name: s.name,
+                    color: s.color,
+                    type: s.type,
+                    data: JSON.parse(JSON.stringify(s.data))
+                })),
+                gameName: gameName,
+                gameTheme: gameTheme
+            };
+            const dataStr = JSON.stringify(data);
+
+            const html = `<!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>${escapeHtml(gameName)} | ВетСим</title>
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+            <style>
+                *{box-sizing:border-box;margin:0;padding:0}
+                body{background:#FDF8F0;font-family:'Montserrat',sans-serif;color:#3E5C4A;padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh}
+                .container{max-width:600px;width:100%}
+                .card{background:white;border-radius:2rem;padding:1.5rem;box-shadow:0 2px 12px rgba(0,0,0,0.06);border:1px solid #E7EDE2;text-align:center}
+                h2{color:#1F4E6E;font-size:1.4rem}
+                .meta{color:#7B8D6E;font-size:0.85rem;margin-bottom:12px}
+                .btn{background:#EBE3D2;border:none;padding:8px 20px;border-radius:2.5rem;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.85rem}
+                .btn-primary{background:#A3B18A;color:white}
+                .btn-primary:hover{background:#8FA376}
+                .btn-danger{background:#D4A373;color:white}
+                .btn-danger:hover{background:#C99464}
+                .btn-success{background:#6B9E6B;color:white}
+                .btn-success:hover{background:#5A865A}
+                .btn:disabled{opacity:0.45;cursor:not-allowed}
+                #wheelCanvas{width:100%;max-width:450px;aspect-ratio:1/1;border-radius:50%;border:3px solid #D9D0BD;background:#FCFAF5;cursor:pointer;margin:10px auto;display:block}
+                .game-stats{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:12px 0}
+                .game-stats span{background:#F4EFE4;padding:4px 16px;border-radius:2rem;font-size:0.85rem}
+                .game-stats strong{color:#1F4E6E}
+                .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:1000;justify-content:center;align-items:center;padding:20px}
+                .modal-overlay.active{display:flex}
+                .modal{background:white;border-radius:2.5rem;padding:1.5rem 2rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;position:relative}
+                .modal .close{position:absolute;top:15px;right:20px;font-size:2rem;background:none;border:none;cursor:pointer;color:#7B8D6E}
+                .modal .close:hover{color:#3E5C4A}
+                .modal h3{color:#1F4E6E;margin-bottom:0.8rem}
+                .opt-btn{display:block;width:100%;padding:10px 16px;margin-bottom:6px;background:#F9F6EF;border:2px solid #D9D0BD;border-radius:2rem;font-family:inherit;font-size:0.9rem;text-align:left;cursor:pointer}
+                .opt-btn:hover:not(:disabled){border-color:#2C7DA0}
+                .opt-btn.correct{border-color:#6B9E6B;background:#E2F0DA}
+                .opt-btn.wrong{border-color:#D4A373;background:#FDE8E0}
+                .opt-btn:disabled{opacity:0.6;cursor:default}
+                .feedback{padding:10px 16px;border-radius:1.5rem;font-weight:600;margin:10px 0}
+                .feedback.ok{background:#E2F0DA;color:#2C7DA0}
+                .feedback.fail{background:#FDE8E0;color:#D4A373}
+                .answer-input{width:100%;padding:8px 14px;border:1px solid #D9D0BD;border-radius:1.5rem;font-family:inherit;font-size:0.9rem;margin:8px 0;background:#FEFAF2}
+                .answer-input:focus{border-color:#2C7DA0;outline:none}
+                .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1F4E6E;color:white;padding:10px 24px;border-radius:40px;font-weight:600;opacity:0;transition:0.3s;z-index:2000;pointer-events:none}
+                .toast.show{opacity:1}
+                .flex{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:8px 0}
+            </style>
+        </head>
+        <body>
+        <div class="container">
+        <div class="card">
+            <h2 id="gameTitle">${escapeHtml(gameName)}</h2>
+            <div class="meta" id="gameThemeDisplay">Тема: ${escapeHtml(gameTheme)}</div>
+
+            <canvas id="wheelCanvas" width="600" height="600"></canvas>
+
+            <div class="flex">
+                <button class="btn btn-primary" id="spinBtn">🎡 Крутить</button>
+                <button class="btn btn-danger" id="resetBtn">🔄 Сброс</button>
+            </div>
+
+            <div class="game-stats">
+                <span>🎯 Баллы: <strong id="scoreDisplay">0</strong></span>
+                <span>🟢 Осталось: <strong id="remainingDisplay">0</strong></span>
+                <span>⚪ Всего: <strong id="totalDisplay">0</strong></span>
+            </div>
+        </div>
+        </div>
+
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <button class="close" id="modalCloseBtn">&times;</button>
+                <h3 id="modalTitle">🎯 Сектор</h3>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+
+        <div class="toast" id="toast"></div>
+
+        <script>
+        const DATA = ${dataStr};
+        const sectors = DATA.sectors;
+        let usedIndices=[], score=0, isSpinning=false, currentAngle=0;
+        const canvas=document.getElementById('wheelCanvas'), ctx=canvas.getContext('2d');
+        const spinBtn=document.getElementById('spinBtn'), resetBtn=document.getElementById('resetBtn');
+        const scoreDisplay=document.getElementById('scoreDisplay'), remainingDisplay=document.getElementById('remainingDisplay'), totalDisplay=document.getElementById('totalDisplay');
+        const modalOverlay=document.getElementById('modalOverlay'), modalCloseBtn=document.getElementById('modalCloseBtn'), modalTitle=document.getElementById('modalTitle'), modalBody=document.getElementById('modalBody');
+        const toast=document.getElementById('toast');
+        let toastTimer=null;
+
+        function showToast(m){toast.textContent=m;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2500);}
+        function escapeHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'):'';}
+
+        function drawWheel(){
+            const w=canvas.width,h=canvas.height,cx=w/2,cy=h/2,radius=Math.min(w,h)*0.44;
+            const activeIndices=[];for(let i=0;i<sectors.length;i++){if(!usedIndices.includes(i))activeIndices.push(i);}
+            const count=activeIndices.length;
+            ctx.clearRect(0,0,w,h);ctx.fillStyle='#FCFAF5';ctx.fillRect(0,0,w,h);
+            if(count===0){
+                ctx.fillStyle='#7B8D6E';ctx.font='20px Montserrat,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+                ctx.fillText('🎉 Все сектора использованы!',cx,cy);return;
+            }
+            const angleStep=(Math.PI*2)/count;
+            for(let i=0;i<count;i++){
+                const realIndex=activeIndices[i];
+                const sector=sectors[realIndex];
+                const sA=currentAngle+i*angleStep,eA=sA+angleStep;
+                ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,radius,sA,eA);ctx.closePath();
+                ctx.fillStyle=sector?.color||'#A3B18A';ctx.fill();
+                ctx.strokeStyle='#FCFAF5';ctx.lineWidth=2;ctx.stroke();
+                const mA=sA+angleStep/2,tr=radius*0.65,tx=cx+Math.cos(mA)*tr,ty=cy+Math.sin(mA)*tr;
+                ctx.save();ctx.translate(tx,ty);ctx.rotate(mA+(mA>Math.PI/2?Math.PI:0));
+                ctx.fillStyle='white';ctx.font='600 12px Montserrat,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+                const name=sector?.name||'Сектор';ctx.fillText(name.length>14?name.slice(0,12)+'…':name,0,0);ctx.restore();
+            }
+            ctx.beginPath();ctx.arc(cx,cy,radius*0.08,0,Math.PI*2);ctx.fillStyle='#2C7DA0';ctx.fill();
+            ctx.fillStyle='white';ctx.font='bold 18px Montserrat,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🎯',cx,cy+1);
+            ctx.beginPath();ctx.arc(cx,cy,radius,0,Math.PI*2);ctx.strokeStyle='#D9D0BD';ctx.lineWidth=3;ctx.stroke();
+            const ay=cy-radius-10;ctx.beginPath();ctx.moveTo(cx,ay-14);ctx.lineTo(cx-12,ay+2);ctx.lineTo(cx+12,ay+2);ctx.closePath();ctx.fillStyle='#D9534F';ctx.fill();ctx.strokeStyle='#8A3A3A';ctx.lineWidth=1.5;ctx.stroke();
+        }
+
+        function updateDisplay(){
+            const activeIndices=[];for(let i=0;i<sectors.length;i++){if(!usedIndices.includes(i))activeIndices.push(i);}
+            const remaining=activeIndices.length,total=sectors.length;
+            scoreDisplay.textContent=score;remainingDisplay.textContent=remaining;totalDisplay.textContent=total;drawWheel();
+            if(remaining===0&&total>0)setTimeout(()=>showToast('🎉 Все задания выполнены! Счёт: '+score+' баллов'),500);
+        }
+
+        function spinWheel(){
+            if(isSpinning)return;
+            const activeIndices=[];for(let i=0;i<sectors.length;i++){if(!usedIndices.includes(i))activeIndices.push(i);}
+            if(activeIndices.length===0){showToast('🎉 Все сектора использованы!');return;}
+            isSpinning=true;spinBtn.disabled=true;
+            const count=activeIndices.length,angleStep=(Math.PI*2)/count,totalRotations=5+Math.random()*5;
+            const randomPos=Math.floor(Math.random()*activeIndices.length);
+            const targetRealIndex=activeIndices[randomPos];
+            const targetAngle=currentAngle+totalRotations*Math.PI*2+(randomPos*angleStep+angleStep/2);
+            const duration=4000+Math.random()*2000,startTime=performance.now(),startAngle=currentAngle;
+            function anim(t){
+                const e=t-startTime,p=Math.min(e/duration,1),eased=1-Math.pow(1-p,3);
+                currentAngle=startAngle+(targetAngle-startAngle)*eased;drawWheel();
+                if(p<1)requestAnimationFrame(anim);
+                else{currentAngle=targetAngle;drawWheel();isSpinning=false;spinBtn.disabled=false;
+                    usedIndices.push(targetRealIndex);updateDisplay();openModal(targetRealIndex);}
+            }
+            requestAnimationFrame(anim);
+        }
+
+        function resetGame(){if(!confirm('Сбросить прогресс?'))return;usedIndices=[];score=0;updateDisplay();showToast('🔄 Игра сброшена');}
+
+        function openModal(index){
+            const sector=sectors[index];if(!sector)return;
+            modalTitle.textContent='🎯 '+sector.name;
+            let html='<div>';
+            if(sector.type==='student'){
+                const name=sector.data.studentName||sector.name;
+                html+='<p style="font-size:1.2rem;font-weight:700;color:#2C7DA0;">👤 '+escapeHtml(name)+'</p>';
+                html+='<p style="color:#7B8D6E;">Студент вызван к доске!</p>';
+                html+='<div style="margin-top:12px;"><button class="btn btn-primary" onclick="closeModal()">✅ Принять</button></div>';
+            }else if(sector.type==='task'){
+                html+='<p><strong>📝 Задание:</strong> '+escapeHtml(sector.data.task||'Нет задания')+'</p>';
+                html+='<input type="text" class="answer-input" id="taskAnswer" placeholder="Введите ответ...">';
+                html+='<div class="flex"><button class="btn btn-success" id="checkTaskBtn">✅ Проверить</button><button class="btn btn-danger" onclick="closeModal()">✖ Закрыть</button></div>';
+                html+='<div id="taskFeedback"></div>';
+            }else if(sector.type==='question'){
+                html+='<p><strong>❓ Вопрос:</strong> '+escapeHtml(sector.data.question||'Нет вопроса')+'</p>';
+                html+='<div id="questionOptions">';
+                (sector.data.options||[]).forEach((opt,oi)=>{html+='<button class="opt-btn" onclick="checkQuestion('+index+','+oi+')">'+escapeHtml(opt)+'</button>';});
+                html+='</div><div id="questionFeedback"></div>';
+                html+='<div style="margin-top:8px;"><button class="btn btn-danger" onclick="closeModal()">✖ Закрыть</button></div>';
+            }else if(sector.type==='bonus'){
+                const points=sector.data.bonusPoints||5;
+                html+='<p>⭐ <strong>Бонус!</strong></p>';
+                html+='<p>'+escapeHtml(sector.data.description||'Поздравляем! Вы получаете бонусные баллы!')+'</p>';
+                html+='<p style="color:#6B9E6B;font-weight:700;">+'+points+' баллов!</p>';
+                html+='<div style="margin-top:12px;"><button class="btn btn-success" onclick="applyBonus('+points+')">🎉 Получить бонус</button></div>';
+            }
+            html+='</div>';modalBody.innerHTML=html;modalOverlay.classList.add('active');
+            if(sector.type==='task'){
+                const inp=document.getElementById('taskAnswer'),btn=document.getElementById('checkTaskBtn');
+                if(inp&&btn){btn.addEventListener('click',()=>checkTask(index));inp.addEventListener('keyup',(e)=>{if(e.key==='Enter')checkTask(index);});setTimeout(()=>inp.focus(),100);}
+            }
+        }
+        window.closeModal=function(){modalOverlay.classList.remove('active');updateDisplay();};
+        window.checkTask=function(index){
+            const sector=sectors[index],inp=document.getElementById('taskAnswer'),fb=document.getElementById('taskFeedback');
+            if(!sector||!inp)return;
+            if(inp.value.trim().toLowerCase()===(sector.data.answer||'').toLowerCase()){
+                fb.innerHTML='<div class="feedback ok">✅ Правильно! +1 балл</div>';score++;updateDisplay();
+                const actions=document.querySelector('.modal .flex');if(actions)actions.innerHTML='<button class="btn btn-danger" onclick="closeModal()">✖ Закрыть</button>';
+            }else{fb.innerHTML='<div class="feedback fail">❌ Неправильно. Попробуйте ещё раз</div>';inp.value='';inp.focus();}
+        };
+        window.checkQuestion=function(index,optIndex){
+            const sector=sectors[index];if(!sector)return;
+            const isCorrect=sector.data.correct===optIndex;
+            document.querySelectorAll('#questionOptions .opt-btn').forEach((btn,i)=>{btn.disabled=true;if(i===sector.data.correct)btn.classList.add('correct');if(i===optIndex&&!isCorrect)btn.classList.add('wrong');});
+            const fb=document.getElementById('questionFeedback');
+            if(isCorrect){fb.innerHTML='<div class="feedback ok">✅ Правильно! +1 балл</div>';score++;updateDisplay();}
+            else{fb.innerHTML='<div class="feedback fail">❌ Неправильно. Ответ: '+escapeHtml(sector.data.options[sector.data.correct]||'')+'</div>';}
+            if(!document.querySelector('.modal .btn-close-final')){const cb=document.createElement('button');cb.className='btn btn-danger btn-close-final';cb.textContent='✖ Закрыть';cb.onclick=closeModal;cb.style.marginTop='8px';document.querySelector('.modal').appendChild(cb);}
+        };
+        window.applyBonus=function(points){score+=points;updateDisplay();showToast('⭐ +'+points+' баллов!');setTimeout(closeModal,600);};
+
+        spinBtn.addEventListener('click',spinWheel);resetBtn.addEventListener('click',resetGame);
+        modalCloseBtn.addEventListener('click',closeModal);
+        modalOverlay.addEventListener('click',function(e){if(e.target===modalOverlay)closeModal();});
+        updateDisplay();showToast('🎡 Добро пожаловать! Крутите колесо!');
+        <\/script>
+        </body>
+        </html>`;
+
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${gameName.replace(/\s+/g, '_')}_wheel_game.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📥 Игра скачана!');
+        }
+
+        // --- ИНИЦИАЛИЗАЦИЯ ---
+        function init() {
+            sectors = createDefaultSectors(8);
+            renderSectors();
+            sectorCountInput.value = sectors.length;
+            sectorCountLabel.textContent = sectors.length;
+
+            // События
+            sectorCountInput.addEventListener('input', function() {
+                updateSectorCount(parseInt(this.value));
+            });
+
+            addSectorBtn.addEventListener('click', addSector);
+            clearSectorsBtn.addEventListener('click', clearSectors);
+            exportHtmlBtn.addEventListener('click', exportHTML);
+            switchToGame.addEventListener('click', switchToGameMode);
+            backToEditor.addEventListener('click', switchToEditorMode);
+            spinBtn.addEventListener('click', spinWheel);
+            resetGameBtn.addEventListener('click', resetGame);
+            modalCloseBtn.addEventListener('click', () => { modalOverlay.classList.remove('active'); });
+            modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove(
+                    'active'); });
+
+            gameNameInput.addEventListener('input', function() {
+                gameName = this.value || 'Колесо фортуны';
+                if (isGameMode) updateGameDisplay();
+            });
+            gameThemeInput.addEventListener('input', function() {
+                gameTheme = this.value || 'Ветеринария';
+                if (isGameMode) updateGameDisplay();
+            });
+
+            drawWheel();
+            showToast('🎡 Конструктор загружен!');
+        }
+
+        init();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Колесо баланса ветеринара | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ — ВетСим
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #3E5C4A;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-wrapper {
+            max-width: 1300px;
+            width: 100%;
+        }
+
+        /* --- ШАПКА --- */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 0.8rem 2rem;
+            border-radius: 3rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            margin-bottom: 1.5rem;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #3E5C4A;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subhead {
+            font-size: 0.8rem;
+            color: #7B8D6E;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.8rem;
+            font-family: inherit;
+            color: #3E5C4A;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: #A3B18A;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #8FA376;
+        }
+
+        .btn-accent {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: #236B8A;
+        }
+
+        .btn-danger {
+            background: #D4A373;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #C99464;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        .btn-warning {
+            background: #E2CFB0;
+            color: #4D3E2A;
+        }
+
+        .btn-warning:hover {
+            background: #D6C09B;
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 0.7rem;
+        }
+
+        /* --- ОСНОВНАЯ СЕТКА --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E7EDE2;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+        }
+
+        /* --- КОЛЕСО (Canvas) --- */
+        .canvas-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        #balanceCanvas {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            aspect-ratio: 1/1;
+            border-radius: 1.5rem;
+            background: #FCFAF5;
+            border: 1px solid #E2EAD9;
+            cursor: pointer;
+        }
+
+        /* --- ПОЛЗУНКИ --- */
+        .sliders-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .slider-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 4px 8px;
+            border-radius: 1.5rem;
+            transition: 0.2s;
+            background: #F9F6EF;
+        }
+
+        .slider-item:hover {
+            background: #F4EFE4;
+        }
+
+        .slider-item .label {
+            font-weight: 600;
+            font-size: 0.78rem;
+            min-width: 90px;
+            flex-shrink: 0;
+            color: #3E5C4A;
+        }
+
+        .slider-item input[type="range"] {
+            flex: 1;
+            min-width: 60px;
+            cursor: pointer;
+            accent-color: #2C7DA0;
+            height: 4px;
+        }
+
+        .slider-item .value {
+            font-weight: 700;
+            color: #2C7DA0;
+            min-width: 28px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .slider-item .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* --- РЕЗУЛЬТАТЫ И РЕКОМЕНДАЦИИ --- */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .stat-card {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1rem;
+            text-align: center;
+            border: 1px solid #E2EAD9;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #2C7DA0;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.7rem;
+            color: #7B8D6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .recommendation-box {
+            background: #F4EFE4;
+            border-radius: 1.5rem;
+            padding: 1rem 1.2rem;
+            margin-top: 0.8rem;
+            border-left: 5px solid #A3B18A;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .recommendation-box .rec-icon {
+            font-size: 1.5rem;
+            margin-right: 8px;
+        }
+
+        .rec-card {
+            background: #FCFAF5;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.6rem;
+            border: 1px solid #E2EAD9;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .rec-card .icon {
+            font-size: 1.6rem;
+            flex-shrink: 0;
+        }
+
+        .rec-card .text {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .rec-card .text strong {
+            color: #1F4E6E;
+        }
+
+        /* --- БЛОК ПЕРВОГО ШАГА --- */
+        .step-block {
+            margin-top: 1rem;
+            padding: 1rem 1.2rem;
+            background: #FCFAF5;
+            border-radius: 1.5rem;
+            border: 2px dashed #A3B18A;
+        }
+
+        .step-block textarea {
+            width: 100%;
+            min-height: 70px;
+            background: #FEFAF2;
+            border: 1px solid #D9D0BD;
+            border-radius: 1.2rem;
+            padding: 10px 16px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+            resize: vertical;
+            outline: none;
+            transition: 0.2s;
+            margin-top: 6px;
+        }
+
+        .step-block textarea:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.08);
+        }
+
+        .step-block .step-label {
+            font-weight: 700;
+            color: #2C7DA0;
+            font-size: 0.9rem;
+        }
+
+        /* --- КНОПКИ УПРАВЛЕНИЯ --- */
+        .action-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 0.8rem;
+        }
+
+        /* --- АДАПТИВ --- */
+        @media (max-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+                padding: 0.8rem 1.2rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .slider-item .label {
+                min-width: 70px;
+                font-size: 0.7rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            #balanceCanvas {
+                max-width: 100%;
+            }
+
+            .main-grid {
+                gap: 0.8rem;
+            }
+        }
+
+        @media print {
+            .slider-item,
+            .action-row .btn,
+            .header-actions .btn,
+            .step-block textarea,
+            .no-print {
+                display: none !important;
+            }
+
+            .main-grid {
+                display: block;
+            }
+
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border-color: #ddd;
+            }
+
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            #balanceCanvas {
+                max-width: 400px;
+            }
+
+            .canvas-wrapper {
+                justify-content: center;
+            }
+
+            .recommendation-box {
+                border-left-color: #2C7DA0;
+            }
+        }
+
+        /* --- TOAST --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .mt-1 {
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <!-- ============================================================
+        ШАПКА
+        ============================================================ -->
+        <header class="header">
+            <div>
+                <div class="logo">🐾 <span>ВетСим</span> — Колесо баланса</div>
+                <div class="subhead">Найди точку опоры, чтобы двигаться вперёд</div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="saveBtn">💾 Сохранить</button>
+                <button class="btn btn-warning" id="printBtn">🖨️ Печать</button>
+                <button class="btn btn-danger" id="resetBtn">📋 Сбросить</button>
+                <button class="btn btn-accent" id="exportBtn">📤 Экспорт PNG</button>
+                <button class="btn btn-success" id="reportBtn">📄 Скачать отчёт</button>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        ОСНОВНАЯ СЕТКА
+        ============================================================ -->
+        <div class="main-grid">
+            <!-- ЛЕВАЯ КОЛОНКА: КОЛЕСО -->
+            <div class="card">
+                <div class="card-title">🎯 Колесо баланса</div>
+                <div class="canvas-wrapper">
+                    <canvas id="balanceCanvas" width="600" height="600"></canvas>
+                </div>
+                <div class="action-row no-print">
+                    <button class="btn btn-sm btn-primary" id="resetBtnSmall">📋 Сбросить оценки</button>
+                </div>
+            </div>
+
+            <!-- ПРАВАЯ КОЛОНКА: ПОЛЗУНКИ + РЕЗУЛЬТАТЫ -->
+            <div class="card">
+                <div class="card-title">⚙️ Оценка сфер</div>
+
+                <div class="sliders-list" id="slidersContainer">
+                    <!-- генерируется JS -->
+                </div>
+
+                <!-- РЕЗУЛЬТАТЫ И РЕКОМЕНДАЦИИ -->
+                <div id="resultsContainer" class="hidden">
+                    <div class="card-title" style="margin-top:0.8rem;">📊 Анализ баланса</div>
+
+                    <div class="results-grid" id="statsGrid">
+                        <!-- генерируется JS -->
+                    </div>
+
+                    <div id="recommendationsContainer">
+                        <!-- генерируется JS -->
+                    </div>
+
+                    <!-- БЛОК ПЕРВОГО ШАГА -->
+                    <div class="step-block" id="stepBlock">
+                        <div class="step-label">🚀 Мой первый шаг</div>
+                        <p style="font-size:0.8rem;color:#7B8D6E;margin:4px 0;">
+                            Какое одно действие я могу сделать уже на этой неделе, чтобы улучшить свою самую слабую сферу?
+                        </p>
+                        <textarea id="stepInput" placeholder="Напишите ваш план действий..."></textarea>
+                        <button class="btn btn-sm btn-accent" id="saveStepBtn" style="margin-top:6px;">💾 Сохранить шаг</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOAST -->
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+        // ================================================================
+        //  КОЛЕСО БАЛАНСА ВЕТЕРИНАРА — ПОЛНАЯ ЛОГИКА
+        // ================================================================
+
+        // --- КОНФИГУРАЦИЯ ---
+        const SECTORS = [
+            { id: 'health', label: 'Здоровье', short: 'Здоровье' },
+            { id: 'family', label: 'Семья', short: 'Семья' },
+            { id: 'friends', label: 'Друзья', short: 'Друзья' },
+            { id: 'career', label: 'Карьера', short: 'Карьера' },
+            { id: 'finance', label: 'Финансы', short: 'Финансы' },
+            { id: 'rest', label: 'Отдых', short: 'Отдых' },
+            { id: 'hobby', label: 'Хобби', short: 'Хобби' },
+            { id: 'selfdev', label: 'Саморазвитие', short: 'Саморазвитие' }
+        ];
+
+        const DEFAULT_VALUES = [5, 5, 5, 5, 5, 5, 5, 5];
+        const STORAGE_KEY = 'vetsim_balance_wheel';
+
+        // --- DOM ---
+        const canvas = document.getElementById('balanceCanvas');
+        const ctx = canvas.getContext('2d');
+        const slidersContainer = document.getElementById('slidersContainer');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const statsGrid = document.getElementById('statsGrid');
+        const recommendationsContainer = document.getElementById('recommendationsContainer');
+        const stepInput = document.getElementById('stepInput');
+        const saveStepBtn = document.getElementById('saveStepBtn');
+
+        const saveBtn = document.getElementById('saveBtn');
+        const printBtn = document.getElementById('printBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const exportBtn = document.getElementById('exportBtn');
+        const reportBtn = document.getElementById('reportBtn');
+        const resetBtnSmall = document.getElementById('resetBtnSmall');
+
+        const toast = document.getElementById('toast');
+        let toastTimer = null;
+
+        // --- СОСТОЯНИЕ ---
+        let values = [...DEFAULT_VALUES];
+        let stepText = '';
+
+        // ================================================================
+        //  ВСПОМОГАТЕЛЬНЫЕ
+        // ================================================================
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+        // ================================================================
+        //  LOCALSTORAGE
+        // ================================================================
+        function loadFromStorage() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return false;
+                const data = JSON.parse(raw);
+                if (data.values && data.values.length === SECTORS.length) {
+                    values = data.values.map(v => clamp(v, 0, 10));
+                }
+                if (data.step !== undefined) {
+                    stepText = data.step || '';
+                }
+                return true;
+            } catch { return false; }
+        }
+
+        function saveToStorage() {
+            const data = { values: values, step: stepText };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        // ================================================================
+        //  ОТРИСОВКА КОЛЕСА (Canvas)
+        // ================================================================
+        function drawWheel() {
+            const w = canvas.width;
+            const h = canvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            const radius = Math.min(w, h) * 0.42;
+            const count = SECTORS.length;
+            const angleStep = (Math.PI * 2) / count;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // Фон
+            ctx.fillStyle = '#FCFAF5';
+            ctx.fillRect(0, 0, w, h);
+
+            // Рисуем сектора
+            for (let i = 0; i < count; i++) {
+                const startAngle = -Math.PI / 2 + i * angleStep;
+                const endAngle = startAngle + angleStep;
+                const val = values[i] || 0;
+                const fillRadius = radius * (val / 10);
+
+                // Градиент от центра к краю
+                const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+                const intensity = val / 10;
+                const r = Math.round(44 + 60 * intensity);
+                const g = Math.round(125 + 70 * intensity);
+                const b = Math.round(160 - 60 * intensity);
+                const color1 = `rgba(${r}, ${g}, ${b}, 0.3)`;
+                const color2 = `rgba(44, 125, 160, ${0.3 + 0.5 * intensity})`;
+                grad.addColorStop(0, color1);
+                grad.addColorStop(1, color2);
+
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.arc(cx, cy, fillRadius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = grad;
+                ctx.fill();
+
+                // Контур сектора
+                ctx.strokeStyle = '#D9D0BD';
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+
+                // Подпись сектора
+                const midAngle = startAngle + angleStep / 2;
+                const labelRadius = radius * 1.05;
+                const lx = cx + Math.cos(midAngle) * labelRadius;
+                const ly = cy + Math.sin(midAngle) * labelRadius;
+
+                ctx.fillStyle = '#3E5C4A';
+                ctx.font = '600 13px Montserrat, system-ui, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // Короткая подпись
+                const shortLabel = SECTORS[i].short;
+                ctx.fillText(shortLabel, lx, ly);
+
+                // Значение внутри сектора
+                const valRadius = fillRadius * 0.6;
+                const vx = cx + Math.cos(midAngle) * valRadius;
+                const vy = cy + Math.sin(midAngle) * valRadius;
+                ctx.fillStyle = '#1F4E6E';
+                ctx.font = '700 16px Montserrat, system-ui, sans-serif';
+                ctx.fillText(Math.round(val), vx, vy);
+            }
+
+            // Центральный круг
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius * 0.08, 0, Math.PI * 2);
+            ctx.fillStyle = '#2C7DA0';
+            ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 14px Montserrat, system-ui, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('🐾', cx, cy + 1);
+
+            // Внешняя окружность
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = '#D9D0BD';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Сетка (концентрические круги)
+            for (let r = 0.2; r <= 0.8; r += 0.2) {
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius * r, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(200, 200, 190, 0.3)';
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        }
+
+        // ================================================================
+        //  ГЕНЕРАЦИЯ ПОЛЗУНКОВ
+        // ================================================================
+        function renderSliders() {
+            let html = '';
+            const colors = ['#2C7DA0', '#A3B18A', '#D4A373', '#6B9E6B', '#2C7DA0', '#A3B18A', '#D4A373', '#6B9E6B'];
+
+            SECTORS.forEach((s, i) => {
+                const val = values[i] || 0;
+                const color = colors[i % colors.length];
+                html += `
+                    <div class="slider-item">
+                        <span class="color-dot" style="background:${color};"></span>
+                        <span class="label">${s.label}</span>
+                        <input type="range" min="0" max="10" step="1" value="${val}" data-index="${i}">
+                        <span class="value" id="val_${i}">${Math.round(val)}</span>
+                    </div>
+                `;
+            });
+
+            slidersContainer.innerHTML = html;
+
+            // События для ползунков
+            document.querySelectorAll('.slider-item input[type="range"]').forEach(input => {
+                input.addEventListener('input', function() {
+                    const idx = parseInt(this.dataset.index);
+                    const val = parseFloat(this.value);
+                    values[idx] = val;
+                    document.getElementById(`val_${idx}`).textContent = Math.round(val);
+                    drawWheel();
+                    updateResults();
+                    saveToStorage();
+                });
+            });
+        }
+
+        // ================================================================
+        //  АНАЛИЗ И РЕКОМЕНДАЦИИ
+        // ================================================================
+        function updateResults() {
+            const total = values.reduce((a, b) => a + b, 0);
+            const avg = total / values.length;
+            const maxVal = Math.max(...values);
+            const minVal = Math.min(...values);
+            const maxIdx = values.indexOf(maxVal);
+            const minIdx = values.indexOf(minVal);
+
+            // Проверяем, есть ли хоть одна оценка > 0
+            const hasAny = values.some(v => v > 0);
+            if (!hasAny) {
+                resultsContainer.classList.add('hidden');
+                return;
+            }
+            resultsContainer.classList.remove('hidden');
+
+            // Статистика
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${avg.toFixed(1)}</div>
+                    <div class="stat-label">Средняя оценка</div>
+                </div>
+                <div class="stat-card" style="border-color:#6B9E6B;">
+                    <div class="stat-value" style="color:#6B9E6B;">${Math.round(maxVal)}</div>
+                    <div class="stat-label">🔝 ${SECTORS[maxIdx].short}</div>
+                </div>
+                <div class="stat-card" style="border-color:#D4A373;">
+                    <div class="stat-value" style="color:#D4A373;">${Math.round(minVal)}</div>
+                    <div class="stat-label">🔽 ${SECTORS[minIdx].short}</div>
+                </div>
+                <div class="stat-card" style="border-color:#2C7DA0;">
+                    <div class="stat-value" style="color:#2C7DA0;">${values.filter(v => v >= 7).length}</div>
+                    <div class="stat-label">⭐ Сильных сфер (≥7)</div>
+                </div>
+            `;
+
+            // Рекомендации
+            let recs = [];
+            const icons = ['💚', '💛', '💙', '💜'];
+
+            // Проверяем наличие критических зон
+            const lowZones = values.filter(v => v >= 1 && v <= 3);
+            const midZones = values.filter(v => v >= 4 && v <= 6);
+            const highZones = values.filter(v => v >= 7 && v <= 8);
+            const topZones = values.filter(v => v >= 9 && v <= 10);
+
+            if (lowZones.length > 0) {
+                recs.push({
+                    icon: '🔴',
+                    text: `<strong>Зона глубокого дефицита (1–3)</strong> — Важно не игнорировать её, но и не пытаться исправить всё сразу. Начните с малого: выберите одно действие, которое можно сделать уже сегодня. Одна маленькая победа запускает цепочку изменений.`
+                });
+            }
+
+            if (midZones.length > 0) {
+                recs.push({
+                    icon: '🟡',
+                    text: `<strong>Зона нестабильности (4–6)</strong> — Здесь есть ресурс, но его не хватает. Спросите себя: что мешает поднять оценку на 1–2 балла? Попробуйте делегировать часть задач или ввести новую привычку — 10 минут в день на то, что приносит радость.`
+                });
+            }
+
+            if (highZones.length > 0) {
+                recs.push({
+                    icon: '🟢',
+                    text: `<strong>Зона стабильности (7–8)</strong> — Хорошо! Что можно улучшить здесь на 10–20%? Например, подумайте о курсе повышения квалификации или о новом проекте. Планируйте отдых заранее, а не по остаточному принципу.`
+                });
+            }
+
+            if (topZones.length > 0) {
+                recs.push({
+                    icon: '💜',
+                    text: `<strong>Зона силы (9–10)</strong> — Отлично! Эта сфера — ваш ресурс. Как вы можете использовать её, чтобы поддержать другие, более слабые сектора? Попробуйте найти там идеи для улучшения других сфер.`
+                });
+            }
+
+            // Общие рекомендации по среднему баллу
+            if (avg < 4) {
+                recs.push({
+                    icon: '⚠️',
+                    text: `<strong>Ваше колесо сильно проседает.</strong> Это сигнал, что стоит остановиться и пересмотреть приоритеты. Восстановление требует времени, и это нормально. Обратите внимание на сферы, которые можно подтянуть без больших усилий — начните с них. Помните, что просить о помощи — это не слабость.`
+                });
+            } else if (avg >= 4 && avg < 7) {
+                recs.push({
+                    icon: '📈',
+                    text: `<strong>Ваше колесо достаточно ровное, но есть потенциал для роста.</strong> Сосредоточьтесь на секторах с самыми низкими оценками — даже один шаг в них может сделать всю картину более гармоничной.`
+                });
+            } else if (avg >= 7) {
+                recs.push({
+                    icon: '🌟',
+                    text: `<strong>Поздравляю! Ваше колесо баланса в отличном состоянии.</strong> Вы умеете распределять внимание между разными сферами жизни. Используйте этот ресурс, чтобы поддерживать коллег и делиться опытом — это усилит и вас, и сообщество.`
+                });
+            }
+
+            // Ограничим количество рекомендаций (не более 4)
+            if (recs.length > 4) {
+                recs = recs.slice(0, 4);
+            }
+
+            let recHtml = '';
+            recs.forEach((rec, idx) => {
+                const colorClass = ['#6B9E6B', '#E8B84C', '#2C7DA0', '#D4A373'][idx % 4];
+                recHtml += `
+                    <div class="rec-card" style="border-left-color:${colorClass};">
+                        <span class="icon">${rec.icon}</span>
+                        <div class="text">${rec.text}</div>
+                    </div>
+                `;
+            });
+
+            recommendationsContainer.innerHTML = recHtml;
+
+            // Обновляем блок первого шага
+            stepInput.value = stepText || '';
+        }
+
+        // ================================================================
+        //  ЭКСПОРТ В PNG
+        // ================================================================
+        function exportPNG() {
+            const link = document.createElement('a');
+            link.download = 'koleso_balansa_vetsim.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showToast('📤 Изображение скачано');
+        }
+
+        // ================================================================
+        //  СКАЧИВАНИЕ ОТЧЁТА
+        // ================================================================
+        function downloadReport() {
+            const total = values.reduce((a, b) => a + b, 0);
+            const avg = total / values.length;
+            const maxVal = Math.max(...values);
+            const minVal = Math.min(...values);
+            const maxIdx = values.indexOf(maxVal);
+            const minIdx = values.indexOf(minVal);
+
+            let report = '🐾 ВетСим — Колесо баланса ветеринара\n';
+            report += '='.repeat(50) + '\n\n';
+            report += `📅 Дата: ${new Date().toLocaleDateString('ru-RU')}\n\n`;
+
+            report += '📊 Оценки по сферам:\n';
+            SECTORS.forEach((s, i) => {
+                report += `  ${s.label}: ${Math.round(values[i])}/10\n`;
+            });
+
+            report += '\n' + '='.repeat(50) + '\n';
+            report += `📈 Средняя оценка: ${avg.toFixed(1)}\n`;
+            report += `🔝 Самая сильная сфера: ${SECTORS[maxIdx].label} (${Math.round(maxVal)})\n`;
+            report += `🔽 Сфера для роста: ${SECTORS[minIdx].label} (${Math.round(minVal)})\n`;
+
+            report += '\n' + '='.repeat(50) + '\n';
+            report += '💡 Рекомендации:\n\n';
+
+            // Простые рекомендации
+            if (avg < 4) {
+                report += '⚠️ Ваше колесо сильно проседает. Рекомендуется пересмотреть приоритеты и начать с малых шагов.\n';
+            } else if (avg < 7) {
+                report += '📈 Ваше колесо ровное, есть потенциал для роста. Сосредоточьтесь на самых слабых сферах.\n';
+            } else {
+                report += '🌟 Отличный баланс! Используйте свои сильные стороны для поддержки других.\n';
+            }
+
+            if (minVal <= 3) {
+                report += `🔴 Обратите внимание на сферу "${SECTORS[minIdx].label}" — это зона дефицита.\n`;
+            }
+
+            if (stepText) {
+                report += '\n' + '='.repeat(50) + '\n';
+                report += '🚀 Мой первый шаг:\n';
+                report += stepText + '\n';
+            }
+
+            const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'vetsim_balance_report.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📄 Отчёт скачан');
+        }
+
+        // ================================================================
+        //  СБРОС
+        // ================================================================
+        function resetAll() {
+            if (!confirm('Сбросить все оценки и шаг?')) return;
+            values = [...DEFAULT_VALUES];
+            stepText = '';
+            stepInput.value = '';
+            renderSliders();
+            drawWheel();
+            updateResults();
+            saveToStorage();
+            showToast('📋 Все сброшено');
+        }
+
+        // ================================================================
+        //  СОБЫТИЯ
+        // ================================================================
+        saveBtn.addEventListener('click', () => {
+            saveToStorage();
+            showToast('💾 Сохранено');
+        });
+
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+
+        resetBtn.addEventListener('click', resetAll);
+        resetBtnSmall.addEventListener('click', resetAll);
+
+        exportBtn.addEventListener('click', exportPNG);
+
+        reportBtn.addEventListener('click', downloadReport);
+
+        saveStepBtn.addEventListener('click', () => {
+            stepText = stepInput.value.trim();
+            saveToStorage();
+            showToast('💾 Шаг сохранён');
+        });
+
+        stepInput.addEventListener('input', () => {
+            stepText = stepInput.value.trim();
+        });
+
+        // Клик по колесу — обновление (для удобства)
+        canvas.addEventListener('click', () => {
+            drawWheel();
+        });
+
+        // ================================================================
+        //  ИНИЦИАЛИЗАЦИЯ
+        // ================================================================
+        function init() {
+            const loaded = loadFromStorage();
+            if (!loaded) {
+                values = [...DEFAULT_VALUES];
+                stepText = '';
+            }
+            renderSliders();
+            drawWheel();
+            updateResults();
+            if (stepText) {
+                stepInput.value = stepText;
+            }
+            // Если есть оценки — показываем результаты
+            if (values.some(v => v > 0)) {
+                resultsContainer.classList.remove('hidden');
+            }
+        }
+
+        init();
+
+        // Ресайз для canvas
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                drawWheel();
+            }, 100);
+        });
+
+        console.log('🐾 Колесо баланса ветеринара загружено');
+    </script>
+</body>
+</html>

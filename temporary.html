@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VetSim — Ветеринарное образование нового поколения</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* ======================================================
+               БАЗОВЫЕ ЦВЕТА
+            ====================================================== */
+        :root {
+            /* Бренд-платформа */
+            --blue-medical: #0891EB;
+            --gray-bg: #F8FAFC;
+            --text-dark: #0F172A;
+
+            /* Направления */
+            --orange-school: #F39C12;
+            --teal-student: #0DEACF;
+            --mint-vet: #2ECC71;
+            --beige-community: #EEDAA2;
+            --gold-accent: #D49A2A;
+
+            /* Дополнительно */
+            --white: #FFFFFF;
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            --radius: 28px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-bg);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ======================================================
+               ШАПКА
+            ====================================================== */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 16px 0 20px;
+            border-bottom: 1px solid rgba(8, 145, 235, 0.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--blue-medical);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--gold-accent);
+        }
+
+        .logo span {
+            color: var(--gold-accent);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--blue-medical);
+        }
+
+        .btn-outline-blue {
+            border: 2px solid var(--blue-medical);
+            background: transparent;
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: var(--blue-medical);
+            transition: 0.2s;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline-blue:hover {
+            background: var(--blue-medical);
+            color: #fff;
+        }
+
+        /* ======================================================
+               ГЕРОЙ
+            ====================================================== */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 0 50px;
+            gap: 30px;
+        }
+
+        .hero-text {
+            flex: 1 1 50%;
+        }
+
+        .hero-text .badge {
+            display: inline-block;
+            background: rgba(8, 145, 235, 0.10);
+            color: var(--blue-medical);
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.3px;
+            margin-bottom: 16px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+
+        .hero-text h1 i {
+            color: var(--blue-medical);
+        }
+
+        .hero-text p {
+            font-size: 1.15rem;
+            color: #5e6f66;
+            max-width: 520px;
+            margin-bottom: 32px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .btn-primary {
+            background: var(--blue-medical);
+            color: #fff;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+            box-shadow: 0 4px 14px rgba(8, 145, 235, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: #0675c4;
+            transform: translateY(-2px);
+        }
+
+        .btn-gold {
+            background: var(--gold-accent);
+            color: #fff;
+            padding: 14px 36px;
+            border-radius: 60px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-gold:hover {
+            background: #b88920;
+            transform: translateY(-2px);
+        }
+
+        .hero-image {
+            flex: 1 1 40%;
+            text-align: center;
+        }
+
+        .hero-image i {
+            font-size: 12rem;
+            color: var(--blue-medical);
+            opacity: 0.10;
+        }
+
+        /* ======================================================
+               СТАТИСТИКА
+            ====================================================== */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            gap: 20px;
+            padding: 40px 0;
+            border-top: 1px solid rgba(8, 145, 235, 0.06);
+            border-bottom: 1px solid rgba(8, 145, 235, 0.06);
+            margin: 20px 0 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .num {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .stat-item .num i {
+            color: var(--blue-medical);
+            font-weight: 400;
+        }
+
+        .stat-item .label {
+            font-size: 0.9rem;
+            color: #5e6f66;
+        }
+
+        /* ======================================================
+               РАЗДЕЛЫ С ЦВЕТОВЫМ КОДИРОВАНИЕМ
+            ====================================================== */
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: #5e6f66;
+            font-size: 1.05rem;
+            margin-bottom: 40px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+
+        .card-item {
+            background: var(--white);
+            padding: 32px 24px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(8, 145, 235, 0.04);
+            transition: 0.25s;
+            text-align: center;
+        }
+
+        .card-item:hover {
+            transform: translateY(-6px);
+            border-color: rgba(8, 145, 235, 0.15);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.07);
+        }
+
+        .card-item .icon {
+            font-size: 2.6rem;
+            margin-bottom: 12px;
+        }
+
+        .card-item .icon.school {
+            color: var(--orange-school);
+        }
+        .card-item .icon.student {
+            color: var(--teal-student);
+        }
+        .card-item .icon.vet {
+            color: var(--mint-vet);
+        }
+        .card-item .icon.community {
+            color: var(--gold-accent);
+        }
+
+        .card-item h3 {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .card-item p {
+            color: #5e6f66;
+            font-size: 0.95rem;
+        }
+
+        .card-item .badge-dir {
+            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 12px;
+            border-radius: 20px;
+            margin-top: 8px;
+        }
+
+        .card-item .badge-dir.school {
+            background: rgba(243, 156, 18, 0.12);
+            color: var(--orange-school);
+        }
+        .card-item .badge-dir.student {
+            background: rgba(13, 234, 207, 0.12);
+            color: #0a9a8a;
+        }
+        .card-item .badge-dir.vet {
+            background: rgba(46, 204, 113, 0.12);
+            color: var(--mint-vet);
+        }
+        .card-item .badge-dir.community {
+            background: rgba(212, 154, 42, 0.12);
+            color: var(--gold-accent);
+        }
+
+        /* ======================================================
+               БАННЕР
+            ====================================================== */
+        .banner-blue {
+            background: var(--blue-medical);
+            color: #fff;
+            border-radius: var(--radius);
+            padding: 48px 40px;
+            margin: 50px 0 40px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .banner-blue h2 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .banner-blue p {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 500px;
+        }
+
+        .banner-blue .btn-white {
+            background: #fff;
+            color: var(--blue-medical);
+            padding: 14px 34px;
+            border-radius: 60px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .banner-blue .btn-white:hover {
+            background: #f0ede8;
+            transform: translateY(-2px);
+        }
+
+        /* ======================================================
+               ПОДВАЛ
+            ====================================================== */
+        .footer {
+            padding: 40px 0 24px;
+            border-top: 1px solid rgba(8, 145, 235, 0.08);
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .footer-col h4 {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+
+        .footer-col a {
+            display: block;
+            color: #5e6f66;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        .footer-col a:hover {
+            color: var(--blue-medical);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #5e6f66;
+            padding-top: 20px;
+            border-top: 1px solid rgba(8, 145, 235, 0.06);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.4rem;
+            }
+            .banner-blue {
+                padding: 32px 24px;
+                flex-direction: column;
+                text-align: center;
+            }
+            .banner-blue h2 {
+                font-size: 1.6rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 1.8rem;
+            }
+            .btn-primary,
+            .btn-gold {
+                width: 100%;
+                justify-content: center;
+            }
+            .hero-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ШАПКА -->
+        <header class="navbar">
+            <a href="#" class="logo">
+                <i class="fas fa-paw"></i> Вет<span>Сим</span>
+            </a>
+            <div class="nav-links">
+                <a href="#">Конструкторы</a>
+                <a href="#">Дневники</a>
+                <a href="#">Методикам</a>
+                <a href="#">О проекте</a>
+                <button class="btn-outline-blue"><i class="fas fa-user-plus"></i> Вход</button>
+            </div>
+        </header>
+
+        <!-- ГЕРОЙ -->
+        <section class="hero">
+            <div class="hero-text">
+                <span class="badge"><i class="fas fa-seedling"></i> Федеральный уровень</span>
+                <h1>
+                    Ветеринария <br />
+                    <i>нового поколения</i>
+                </h1>
+                <p>
+                    Конструкторы, дневники, методики и живое сообщество — всё, чтобы
+                    учить и учиться по-настоящему.
+                </p>
+                <div class="hero-buttons">
+                    <button class="btn-primary"><i class="fas fa-rocket"></i> Начать</button>
+                    <button class="btn-gold"><i class="fas fa-play-circle"></i> Смотреть видео</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <i class="fas fa-dog"></i>
+            </div>
+        </section>
+
+        <!-- СТАТИСТИКА -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="num">20+ <i class="fas fa-cube"></i></div>
+                <div class="label">конструкторов</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">4 <i class="fas fa-layer-group"></i></div>
+                <div class="label">уровня дневников</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">1200+ <i class="fas fa-users"></i></div>
+                <div class="label">преподавателей</div>
+            </div>
+            <div class="stat-item">
+                <div class="num">100% <i class="fas fa-mobile-alt"></i></div>
+                <div class="label">офлайн-доступ</div>
+            </div>
+        </div>
+
+        <!-- НАПРАВЛЕНИЯ (СУББРЕНДЫ) -->
+        <h2 class="section-title">🧭 Четыре направления <span style="color:var(--blue-medical);">ВетСим</span></h2>
+        <p class="section-sub">Каждый пользователь видит «свой» цвет — школьник, студент, врач или участник сообщества</p>
+
+        <div class="card-grid">
+            <!-- Школьники -->
+            <div class="card-item">
+                <div class="icon school"><i class="fas fa-graduation-cap"></i></div>
+                <h3>Школьникам</h3>
+                <p>Тесты, квесты, Дневник юного ветеринара и профориентация</p>
+                <span class="badge-dir school">🧡 Направление</span>
+            </div>
+
+            <!-- Студенты -->
+            <div class="card-item">
+                <div class="icon student"><i class="fas fa-user-graduate"></i></div>
+                <h3>Студентам</h3>
+                <p>Дневники становления, конструкторы, цифровые зачётки</p>
+                <span class="badge-dir student">💚 Направление</span>
+            </div>
+
+            <!-- Ветврачи и преподаватели -->
+            <div class="card-item">
+                <div class="icon vet"><i class="fas fa-stethoscope"></i></div>
+                <h3>Ветврачам и педагогам</h3>
+                <p>Методики, КПК, научные публикации, стандарты</p>
+                <span class="badge-dir vet">💚 Направление</span>
+            </div>
+
+            <!-- Сообщество -->
+            <div class="card-item">
+                <div class="icon community"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3>Сообществу</h3>
+                <p>Форумы, волонтёрство, поддержка, базы знаний</p>
+                <span class="badge-dir community">💛 Направление</span>
+            </div>
+        </div>
+
+        <!-- БАННЕР -->
+        <div class="banner-blue">
+            <div>
+                <h2>📓 Дневник становления</h2>
+                <p>От школьника до наставника — единый трекер профессионального развития для всех этапов.</p>
+            </div>
+            <button class="btn-white"><i class="fas fa-arrow-right"></i> Попробовать</button>
+        </div>
+
+        <!-- ПОДВАЛ -->
+        <footer class="footer">
+            <div>
+                <div class="logo" style="font-size:1.3rem;">
+                    <i class="fas fa-paw"></i> Вет<span>Сим</span>
+                </div>
+                <p style="color:#5e6f66; font-size:0.9rem; margin-top:10px;">
+                    Ветеринарное образование <br />нового поколения.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4>Инструменты</h4>
+                <a href="#">Конструкторы</a>
+                <a href="#">Дневники</a>
+                <a href="#">Методики</a>
+            </div>
+            <div class="footer-col">
+                <h4>Направления</h4>
+                <a href="#">Школьникам</a>
+                <a href="#">Студентам</a>
+                <a href="#">Ветврачам</a>
+                <a href="#">Сообществу</a>
+            </div>
+            <div class="footer-col">
+                <h4>О проекте</h4>
+                <a href="#">О нас</a>
+                <a href="#">Контакты</a>
+                <a href="#">Политика</a>
+            </div>
+        </footer>
+
+        <div class="footer-bottom">
+            &copy; 2026 ВетСим. Сделано с ❤️ для ветеринарного образования.
+        </div>
+
+    </div>
+
+</body>
+</html>

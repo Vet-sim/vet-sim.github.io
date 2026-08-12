@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Витрина тренажёров | ВетСим</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>VetSim — Витрина тренажёров</title>
     <style>
         /* ============================================================
-           БАЗОВЫЕ СТИЛИ (скопированы из основной системы)
+           БАЗОВЫЕ СТИЛИ (сохранены из вашей original general.html)
            ============================================================ */
         * {
             margin: 0;
@@ -18,576 +14,651 @@
             box-sizing: border-box;
         }
         body {
-            background: #f8fafc;
-            font-family: 'Inter', sans-serif;
-            color: #0f172a;
-            line-height: 1.6;
-            padding: 1.5rem;
+            background: #F4F7F9;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
+            color: #3E5C4A;
+            line-height: 1.4;
+            padding: 2rem 1.5rem;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
         }
-        a {
-            color: #0891eb;
-            text-decoration: none;
+
+        .nav-back {
+            margin-bottom: 2rem;
         }
-        a:hover {
-            color: #d49a2a;
-        }
-        .btn {
+        .back-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 20px;
-            border-radius: 40px;
+            text-decoration: none;
             font-weight: 600;
+            color: #2C7DA0;
+            background: #EFF3EA;
+            padding: 0.5rem 1.2rem;
+            border-radius: 3rem;
+            transition: 0.2s;
             font-size: 0.9rem;
-            border: none;
-            cursor: pointer;
-            transition: 0.2s;
-            background: #eef2f6;
-            color: #0f172a;
         }
-        .btn-primary {
-            background: #0891eb;
-            color: #fff;
-            box-shadow: 0 4px 14px rgba(8, 145, 235, 0.25);
-        }
-        .btn-primary:hover {
-            background: #0675c4;
-            transform: translateY(-2px);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #0891eb;
-            color: #0891eb;
-        }
-        .btn-outline:hover {
-            background: #0891eb;
-            color: #fff;
-        }
-        .badge {
-            background: rgba(8, 145, 235, 0.08);
-            color: #0891eb;
-            padding: 2px 12px;
-            border-radius: 40px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .badge-soon {
-            background: rgba(212, 154, 42, 0.12);
-            color: #d49a2a;
-        }
-        .badge-new {
-            background: rgba(46, 204, 113, 0.12);
-            color: #2ecc71;
+        .back-link:hover {
+            background: #E2EBD4;
+            gap: 12px;
         }
 
-        /* ============================================================
-           ШАПКА
-           ============================================================ */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-            padding: 0.8rem 0 1.2rem;
-            border-bottom: 1px solid rgba(8, 145, 235, 0.08);
-            margin-bottom: 1.5rem;
-        }
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #0891eb;
-        }
-        .logo i {
-            color: #d49a2a;
-        }
-        .logo span {
-            color: #d49a2a;
-        }
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        .nav-links a {
-            font-weight: 500;
-            color: #0f172a;
-            transition: 0.2s;
-        }
-        .nav-links a:hover {
-            color: #0891eb;
-        }
-        .nav-links a.active {
-            color: #0891eb;
-            font-weight: 600;
-        }
-
-        /* ============================================================
-           ЗАГОЛОВКИ
-           ============================================================ */
         .page-header {
             text-align: center;
             margin-bottom: 2.5rem;
         }
-        .page-header h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #0f172a;
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.3px;
         }
-        .page-header h1 i {
-            color: #0891eb;
-        }
-        .page-header p {
-            color: #5e6f66;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
+        .subhead {
+            font-size: 1rem;
+            color: #5F7C62;
+            margin-top: 0.5rem;
         }
 
         /* ============================================================
-           АККОРДЕОНЫ
+           АККОРДЕОНЫ (НОВЫЕ)
            ============================================================ */
-        .accordion {
-            background: #fff;
-            border-radius: 28px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(8, 145, 235, 0.04);
-            margin-bottom: 1.5rem;
-            overflow: hidden;
+        .accordion-section {
+            margin-bottom: 2rem;
         }
         .accordion-header {
+            background: #FFFFFF;
+            border-radius: 1.8rem;
+            padding: 1.2rem 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E7EDE2;
+            cursor: pointer;
+            transition: 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.2rem 1.8rem;
-            cursor: pointer;
-            transition: 0.2s;
-            background: #fff;
-            border-bottom: 1px solid transparent;
+            user-select: none;
+            margin-bottom: 1.5rem;
         }
         .accordion-header:hover {
-            background: #f8fafc;
+            border-color: #C9D6BA;
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.06);
         }
         .accordion-header .title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1F4E6E;
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #0f172a;
-        }
-        .accordion-header .title .icon {
-            font-size: 1.6rem;
-        }
-        .accordion-header .count {
-            background: #f1f5f9;
-            padding: 2px 12px;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: #5e6f66;
         }
         .accordion-header .arrow {
-            font-size: 1.2rem;
-            color: #94a3b8;
+            font-size: 1.5rem;
+            color: #8AAE7A;
             transition: transform 0.3s;
         }
-        .accordion-header.open .arrow {
+        .accordion-header .arrow.open {
             transform: rotate(180deg);
         }
-        .accordion-header.open {
-            border-bottom-color: rgba(8, 145, 235, 0.06);
-        }
+
         .accordion-body {
             display: none;
-            padding: 1.5rem 1.8rem 1.8rem;
-            background: #fafcfe;
+            /* Скрыты по умолчанию */;
         }
         .accordion-body.open {
             display: block;
         }
 
         /* ============================================================
-           СЕТКА ТРЕНАЖЁРОВ
+           СЕТКА КАРТОЧЕК (3 в ряд)
            ============================================================ */
-        .trainer-grid {
+        .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.2rem;
-        }
-        .trainer-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 1.2rem 1.2rem 1.4rem;
-            border: 1px solid rgba(8, 145, 235, 0.04);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-            transition: 0.25s;
-            display: flex;
-            flex-direction: column;
-        }
-        .trainer-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(8, 145, 235, 0.12);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
-        }
-        .trainer-card .trainer-icon {
-            font-size: 2rem;
-            margin-bottom: 0.3rem;
-        }
-        .trainer-card .trainer-title {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #0f172a;
-            margin-bottom: 0.2rem;
-        }
-        .trainer-card .trainer-desc {
-            font-size: 0.85rem;
-            color: #5e6f66;
-            flex: 1;
-            margin-bottom: 0.6rem;
-        }
-        .trainer-card .trainer-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            margin-bottom: 0.6rem;
-        }
-        .trainer-card .trainer-meta .badge {
-            font-size: 0.6rem;
-        }
-        .trainer-card .trainer-actions {
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-            margin-top: auto;
-        }
-        .trainer-card .trainer-actions .btn {
-            font-size: 0.75rem;
-            padding: 4px 14px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 0 0 1rem 0;
         }
 
         /* ============================================================
-           ПОДВАЛ
+           СТИЛИ КАРТОЧЕК (сохранены из вашей original)
            ============================================================ */
+        .card {
+            background: #FFFFFF;
+            border-radius: 1.8rem;
+            padding: 1.8rem 1.5rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E7EDE2;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 28px -8px rgba(0, 0, 0, 0.1);
+            border-color: #C9D6BA;
+        }
+
+        .card-icon {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 0.7rem;
+        }
+        .card-desc {
+            font-size: 0.9rem;
+            line-height: 1.45;
+            color: #537A5A;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        .card-badge {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            margin-bottom: 1rem;
+            width: fit-content;
+            color: #8A9B7A;
+        }
+        .card-badge.ready {
+            background: #D4E8CA;
+            color: #3E724A;
+        }
+        .card-badge.soon {
+            background: #FDEAD8;
+            color: #B5794A;
+        }
+
+        .card-action {
+            margin-top: 0.5rem;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2.5rem;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            background: #F0F5EA;
+            color: #2C7DA0;
+        }
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #236B8A;
+            gap: 0.7rem;
+        }
+        .btn-disabled {
+            background: #EFF3EA;
+            color: #9AAE8A;
+            cursor: default;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+        .btn:hover:not(.btn-disabled) {
+            gap: 0.7rem;
+        }
+        .arrow-icon {
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+        .btn:hover .arrow-icon {
+            transform: translateX(3px);
+        }
+
+        /* футер */
         .footer {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(8, 145, 235, 0.06);
             text-align: center;
-            font-size: 0.8rem;
-            color: #94a3b8;
+            padding-top: 2rem;
+            margin-top: 1rem;
+            border-top: 1px solid #E2E9DC;
+            font-size: 0.75rem;
+            color: #89A07B;
         }
         .footer a {
-            color: #0891eb;
+            color: #568A6B;
+            text-decoration: none;
+            border-bottom: 1px dotted #BECFAD;
+        }
+        .footer a:hover {
+            color: #2F6B47;
         }
 
         /* ============================================================
            АДАПТИВ
            ============================================================ */
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                align-items: stretch;
+        @media (max-width: 900px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
             }
-            .nav-links {
-                justify-content: center;
+            body {
+                padding: 1.5rem;
             }
-            .page-header h1 {
-                font-size: 2rem;
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        @media (max-width: 580px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
             }
             .accordion-header {
                 padding: 1rem 1.2rem;
             }
             .accordion-header .title {
-                font-size: 1rem;
-            }
-            .accordion-body {
-                padding: 1rem 1.2rem 1.2rem;
-            }
-            .trainer-grid {
-                grid-template-columns: 1fr;
-            }
-            .trainer-card {
-                padding: 1rem;
-            }
-        }
-        @media (max-width: 480px) {
-            body {
-                padding: 0.8rem;
-            }
-            .page-header h1 {
-                font-size: 1.6rem;
-            }
-            .nav-links {
-                gap: 0.8rem;
-                font-size: 0.85rem;
-            }
-            .logo {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
+<div class="container">
 
-        <!-- ===== ШАПКА ===== -->
-        <header class="navbar">
-            <a href="/" class="logo">
-                <i class="fas fa-paw"></i> Вет<span>Сим</span>
-            </a>
-            <nav class="nav-links">
-                <a href="universal.html">Конструкторы</a>
-                <a href="showcase.html" class="active">Витрина</a>
-                <a href="#">Готовые материалы</a>
-                <a href="#">О проекте</a>
-                <button class="btn btn-outline" style="padding:4px 16px; font-size:0.8rem;">
-                    <i class="fas fa-user"></i> Вход
-                </button>
-            </nav>
-        </header>
-
-        <!-- ===== ЗАГОЛОВОК СТРАНИЦЫ ===== -->
-        <div class="page-header">
-            <h1>🖼️ Витрина тренажёров</h1>
-            <p>Готовые интерактивные задания по ветеринарным дисциплинам. Выбирайте, скачивайте, используйте на занятиях.</p>
-        </div>
-
-        <!-- ===== БЛОК 1: ОБЩЕПРОФЕССИОНАЛЬНЫЙ ЦИКЛ ===== -->
-        <div class="accordion">
-            <div class="accordion-header open" onclick="toggleAccordion(this)">
-                <span class="title">
-                    <span class="icon">🧬</span>
-                    Общепрофессиональный цикл
-                </span>
-                <span class="count">7 тренажёров</span>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="accordion-body open">
-                <div class="trainer-grid">
-                
-                    <!-- Карточка 1 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">💊🧪</div>
-                        <div class="trainer-title">Симулятор доз антибиотиков</div>
-                        <div class="trainer-desc">Рассчитайте разовую и суточную дозу для разных животных и препаратов. Учебный инструмент для фармакологии.</div>
-                        <div class="trainer-meta"><span class="badge badge-new">✅ Готов</span></div>
-                        <div class="trainer-actions">
-                            <a href="doses.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Смотреть</a>
-                            <a href="doses.html" class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Скачать</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 2 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">💊📐</div>
-                        <div class="trainer-title">Тренажёр по фармакологии</div>
-                        <div class="trainer-desc">Расчёт доз и разведений для 17 препаратов. Разведения порошков, периоды ожидания, перевод МЕ.</div>
-                        <div class="trainer-meta"><span class="badge badge-new">✅ Готов</span></div>
-                        <div class="trainer-actions">
-                            <a href="dose_calc_trainer.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Смотреть</a>
-                            <a href="dose_calc_trainer.html" class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Скачать</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 3 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">🐄⚖️</div>
-                        <div class="trainer-title">Рацион PRO</div>
-                        <div class="trainer-desc">Составление сбалансированных рационов для КРС с учётом массы, продуктивности и сезона.</div>
-                        <div class="trainer-meta"><span class="badge badge-new">✅ Готов</span></div>
-                        <div class="trainer-actions">
-                            <a href="ration-pro.html" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Смотреть</a>
-                            <a href="ration-pro.html" class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Скачать</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 4 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">🔬🧫</div>
-                        <div class="trainer-title">Гистология: определи ткань</div>
-                        <div class="trainer-desc">Викторина по микропрепаратам. Узнавайте ткани и структуры под микроскопом.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 5 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">⚡🧠</div>
-                        <div class="trainer-title">Физиология: рефлекторная дуга</div>
-                        <div class="trainer-desc">Анимированная модель прохождения нервного импульса. Изучайте строение и работу рефлекторной дуги.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 6 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">🔍🩺</div>
-                        <div class="trainer-title">Патология: макропрепараты</div>
-                        <div class="trainer-desc">Клинические случаи и изображения макропрепаратов. Ставьте диагноз по внешнему виду органов.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== БЛОК 2: КЛИНИЧЕСКИЕ ДИСЦИПЛИНЫ ===== -->
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                <span class="title">
-                    <span class="icon">🩺</span>
-                    Клинические дисциплины
-                </span>
-                <span class="count">5 тренажёров</span>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="accordion-body">
-                <div class="trainer-grid">
-                    <!-- Карточка 1 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">🩺📋</div>
-                        <div class="trainer-title">Диагностика: клинический случай</div>
-                        <div class="trainer-desc">Интерактивный разбор клинических случаев с выбором диагноза и лечения.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 2 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">💉🩹</div>
-                        <div class="trainer-title">Хирургия: наложение швов</div>
-                        <div class="trainer-desc">Симулятор отработки навыков наложения хирургических швов.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 3 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">🐕🫀</div>
-                        <div class="trainer-title">Аускультация сердца + ЭКГ</div>
-                        <div class="trainer-desc">Тренажёр по аускультации сердца и интерпретации ЭКГ у животных.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 4 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">🧪📊</div>
-                        <div class="trainer-title">Лабораторная диагностика</div>
-                        <div class="trainer-desc">Интерпретация результатов лабораторных анализов (кровь, моча, биохимия).</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 5 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">🐄🤱</div>
-                        <div class="trainer-title">Акушерство и гинекология</div>
-                        <div class="trainer-desc">Симуляция родовспоможения и гинекологических патологий у животных.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== БЛОК 3: ПРОФЕССИОНАЛЬНЫЕ НАВЫКИ ===== -->
-        <div class="accordion">
-            <div class="accordion-header" onclick="toggleAccordion(this)">
-                <span class="title">
-                    <span class="icon">🛠️</span>
-                    Профессиональные навыки
-                </span>
-                <span class="count">3 тренажёра</span>
-                <span class="arrow">▼</span>
-            </div>
-            <div class="accordion-body">
-                <div class="trainer-grid">
-                    <!-- Карточка 1 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">📋🖊️</div>
-                        <div class="trainer-title">Ветеринарная документация</div>
-                        <div class="trainer-desc">Тренажёр по заполнению ветеринарных документов (акты, рецепты, журналы).</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 2 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">💬🦮</div>
-                        <div class="trainer-title">Общение с владельцами</div>
-                        <div class="trainer-desc">Симуляция приёма пациента: сбор анамнеза, объяснение диагноза и рекомендаций.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                    <!-- Карточка 3 -->
-                    <div class="trainer-card">
-                        <div class="trainer-icon">🩻🔍</div>
-                        <div class="trainer-title">Интерпретация лучевых исследований</div>
-                        <div class="trainer-desc">Тренажёр по чтению рентгеновских снимков и УЗИ-изображений.</div>
-                        <div class="trainer-meta"><span class="badge badge-soon">⏳ Скоро</span></div>
-                        <div class="trainer-actions">
-                            <a href="#" class="btn btn-outline btn-sm" disabled><i class="fas fa-hourglass-half"></i> В разработке</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== ПОДВАЛ ===== -->
-        <div class="footer">
-            <p>
-                🐾 <strong>ВетСим</strong> — ветеринарное образование нового поколения.
-                <br />
-                <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a>
-                &nbsp;·&nbsp;
-                <a href="#">О проекте</a>
-                &nbsp;·&nbsp;
-                <a href="#">Контакты</a>
-            </p>
-        </div>
-
+    <!-- навигация назад -->
+    <div class="nav-back">
+        <a href="index.html" class="back-link">
+            ← На главную
+        </a>
     </div>
 
-    <script>
-        // ============================================================
-        // ФУНКЦИЯ ДЛЯ АККОРДЕОНОВ
-        // ============================================================
-        function toggleAccordion(header) {
-            const body = header.nextElementSibling;
-            const isOpen = body.classList.contains('open');
+    <div class="page-header">
+        <h1>🖼️ Витрина тренажёров</h1>
+        <div class="subhead">Готовые интерактивные задания по ветеринарным дисциплинам. Выбирайте, скачивайте, используйте на занятиях.</div>
+    </div>
 
-            // Закрываем все аккордеоны (по желанию можно убрать, если нужно, чтобы открывались независимо)
-            // document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
-            // document.querySelectorAll('.accordion-header').forEach(h => h.classList.remove('open'));
+    <!-- ============================================================
+    РАЗДЕЛ 1: ОБЩЕПРОФЕССИОНАЛЬНЫЙ ЦИКЛ
+    ============================================================ -->
+    <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="title">📖 Общепрофессиональный цикл</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+            <div class="cards-grid">
 
-            if (isOpen) {
-                body.classList.remove('open');
-                header.classList.remove('open');
-            } else {
-                body.classList.add('open');
-                header.classList.add('open');
+                <!-- 1. Анатомия: Атлас раскраска -->
+                <div class="card">
+                    <div class="card-icon">🎨🖌️</div>
+                    <div class="card-title">Анатомия: раскраска</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Интерактивная раскраска анатомических областей. Загружайте контуры и изучайте строение.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/trainers/coloring-dog-head-region.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 2. Анатомия: Черепные нервы -->
+                <div class="card">
+                    <div class="card-icon">🧠🔬</div>
+                    <div class="card-title">Черепные нервы</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Интерактивный тренажёр для запоминания 12 пар черепных нервов. Изучайте названия и функции.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/trainers/anatomy/nerves/cranial_nerves.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 3. Физиология: Викторина -->
+                <div class="card">
+                    <div class="card-icon">🧪❓</div>
+                    <div class="card-title">Физиология: викторина</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Тесты и вопросы по физиологии животных. Проверьте свои знания.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/victoryna_trainer.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 4. Физиология: Последовательность -->
+                <div class="card">
+                    <div class="card-icon">⏳🔗</div>
+                    <div class="card-title">Физиология: последовательность</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Восстановите правильный порядок физиологических процессов и этапов.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/sequence_trainer.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 5. Фармакология: Дозы -->
+                <div class="card">
+                    <div class="card-icon">💊📐</div>
+                    <div class="card-title">Фармакология: расчёт доз</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Интерактивный симулятор расчёта доз антибиотиков и других препаратов.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/dose_calc_trainer.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 6. Анатомия: Интерактивный плакат -->
+                <div class="card">
+                    <div class="card-icon">🖼️📍</div>
+                    <div class="card-title">Анатомия: интерактивный плакат</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Интерактивный плакат с кликабельными зонами для изучения анатомических структур.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/interactive_poster(2).html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 7. Анатомия: Флип-карточки -->
+                <div class="card">
+                    <div class="card-icon">🃏🔄</div>
+                    <div class="card-title">Флип-карточки</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Двусторонние карточки для запоминания терминов, анатомических структур и латинских названий.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/flip_cards_trainer.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 8. Термины: Филворд -->
+                <div class="card">
+                    <div class="card-icon">🔍📝</div>
+                    <div class="card-title">Термины: филворд</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Интерактивный филворд для запоминания ветеринарных терминов.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/fillword_interactive(1).html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 9. Игра-бродилка -->
+                <div class="card">
+                    <div class="card-icon">🎲🏁</div>
+                    <div class="card-title">Игра-бродилка</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Командная викторина в формате игры-ходилки. Бросайте кубик и отвечайте на вопросы.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/gameboard(13).html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    РАЗДЕЛ 2: КЛИНИЧЕСКИЕ ДИСЦИПЛИНЫ
+    ============================================================ -->
+    <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="title">🩺 Клинические дисциплины</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+            <div class="cards-grid">
+
+                <!-- 10. GOSCE: Сбор анамнеза -->
+                <div class="card">
+                    <div class="card-icon">📋🏥</div>
+                    <div class="card-title">GOSCE: сбор анамнеза</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Отработка логической последовательности опроса владельца по алгоритму GOSCE.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/gosce_trainer.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 11. План лечения (с/х) -->
+                <div class="card">
+                    <div class="card-icon">📋💊</div>
+                    <div class="card-title">План лечения (с/х)</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Тренажёр по разработке терапевтической тактики для сельскохозяйственных животных.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/treatment_trainer.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 12. Кроссворд -->
+                <div class="card">
+                    <div class="card-icon">🧩📐</div>
+                    <div class="card-title">Кроссворд</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Интерактивный кроссворд по ветеринарной терминологии.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/crossword_game(4).html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 13. Текст с пропусками -->
+                <div class="card">
+                    <div class="card-icon">📝🔍</div>
+                    <div class="card-title">Текст с пропусками</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Упражнение «Вставьте пропущенное слово» для закрепления материала.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/cloze_trainer.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 14. Фермерские задачи -->
+                <div class="card">
+                    <div class="card-icon">🐄🧑‍🌾</div>
+                    <div class="card-title">Фермерские задачи</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Практические задачи по ветеринарному обслуживанию сельскохозяйственных животных.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/farm_tasks_trainer.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 15. Диагностика (заглушка) -->
+                <div class="card">
+                    <div class="card-icon">🩻🔬</div>
+                    <div class="card-title">Диагностика: клинический случай</div>
+                    <div class="card-badge soon">⏳ Скоро</div>
+                    <div class="card-desc">
+                        Интерактивный разбор клинических случаев с выбором диагноза и лечения.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-disabled">
+                            <span>В разработке</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    РАЗДЕЛ 3: ПРОФЕССИОНАЛЬНЫЕ НАВЫКИ
+    ============================================================ -->
+    <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="title">🛠️ Профессиональные навыки</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+            <div class="cards-grid">
+
+                <!-- 16. Интерактивный тренажёр -->
+                <div class="card">
+                    <div class="card-icon">🧠⚙️</div>
+                    <div class="card-title">Интерактивный тренажёр</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Тренажёр по ветеринарным инструментам и их применению в практике.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/custom_trainer_1.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 17. Своя игра -->
+                <div class="card">
+                    <div class="card-icon">🎮🏆</div>
+                    <div class="card-title">Своя игра</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Викторина по типу Jeopardy! с категориями для ветеринарных специалистов.
+                    </div>
+                    <div class="card-action">
+                        <a href="https://vet-sim.github.io/svoya_igra_1.html" class="btn btn-primary">
+                            <span>Открыть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 18. Навыки общения (заглушка) -->
+                <div class="card">
+                    <div class="card-icon">💬🦮</div>
+                    <div class="card-title">Общение с владельцами</div>
+                    <div class="card-badge soon">⏳ Скоро</div>
+                    <div class="card-desc">
+                        Симуляция приёма пациента: сбор анамнеза, объяснение диагноза и рекомендаций.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-disabled">
+                            <span>В разработке</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Дополнительный информационный блок -->
+    <div style="text-align: center; margin: 1rem 0 1rem;">
+        <p style="color: #8BA47B; font-size: 0.85rem;">✨ По мере развития проекта появятся новые тренажёры.</p>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+        <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+        <p>💬 Сообщество: <a href="#" target="_blank">ВКонтакт https://vk.ru/vetsimpros (</a> | По всем вопросам: https://vk.ru/vet_sim </p>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // ФУНКЦИЯ ДЛЯ АККОРДЕОНОВ
+    // ============================================================
+    function toggleAccordion(header) {
+        const body = header.nextElementSibling;
+        const arrow = header.querySelector('.arrow');
+        const isOpen = body.classList.contains('open');
+
+        if (isOpen) {
+            body.classList.remove('open');
+            arrow.classList.remove('open');
+        } else {
+            body.classList.add('open');
+            arrow.classList.add('open');
+        }
+    }
+
+    // Открываем первый аккордеон по умолчанию
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstHeader = document.querySelector('.accordion-header');
+        if (firstHeader) {
+            const firstBody = firstHeader.nextElementSibling;
+            const firstArrow = firstHeader.querySelector('.arrow');
+            if (firstBody && firstArrow) {
+                firstBody.classList.add('open');
+                firstArrow.classList.add('open');
             }
         }
-    </script>
+    });
+</script>
 
 </body>
 </html>

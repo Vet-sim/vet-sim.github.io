@@ -1,28 +1,18 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-        ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>VetSim — Профессиональный цикл</title>
+    <title>VetSim — Готовые материалы для занятий</title>
     <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ (сохранены из старого дизайна)
+           ============================================================ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background: #F4F7F9;
             font-family: system-ui, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
@@ -30,13 +20,11 @@
             line-height: 1.4;
             padding: 2rem 1.5rem;
         }
-
         .container {
             max-width: 1280px;
             margin: 0 auto;
         }
 
-        /* навигация */
         .nav-back {
             margin-bottom: 2rem;
         }
@@ -58,7 +46,6 @@
             gap: 12px;
         }
 
-        /* заголовок */
         .page-header {
             text-align: center;
             margin-bottom: 2.5rem;
@@ -78,15 +65,67 @@
             margin-top: 0.5rem;
         }
 
-        /* ===== СЕТКА КАРТОЧЕК ===== */
+        /* ============================================================
+           АККОРДЕОНЫ
+           ============================================================ */
+        .accordion-section {
+            margin-bottom: 2rem;
+        }
+        .accordion-header {
+            background: #FFFFFF;
+            border-radius: 1.8rem;
+            padding: 1.2rem 2rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #E7EDE2;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            margin-bottom: 1.5rem;
+        }
+        .accordion-header:hover {
+            border-color: #C9D6BA;
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.06);
+        }
+        .accordion-header .title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .accordion-header .arrow {
+            font-size: 1.5rem;
+            color: #8AAE7A;
+            transition: transform 0.3s;
+        }
+        .accordion-header .arrow.open {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            display: none;
+        }
+        .accordion-body.open {
+            display: block;
+        }
+
+        /* ============================================================
+           СЕТКА КАРТОЧЕК (3 в ряд)
+           ============================================================ */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
-            margin: 2rem 0 3rem;
+            margin: 0 0 1rem 0;
         }
 
-        /* ===== КАРТОЧКА ===== */
+        /* ============================================================
+           СТИЛИ КАРТОЧЕК (старый дизайн)
+           ============================================================ */
         .card {
             background: #FFFFFF;
             border-radius: 1.8rem;
@@ -97,11 +136,7 @@
             display: flex;
             flex-direction: column;
             height: 100%;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
         }
-
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 28px -8px rgba(0, 0, 0, 0.1);
@@ -135,10 +170,18 @@
             width: fit-content;
             color: #8A9B7A;
         }
+        .card-badge.ready {
+            background: #D4E8CA;
+            color: #3E724A;
+        }
+        .card-badge.soon {
+            background: #FDEAD8;
+            color: #B5794A;
+        }
+
         .card-action {
             margin-top: 0.5rem;
         }
-
         .btn {
             display: inline-flex;
             align-items: center;
@@ -170,35 +213,12 @@
         .btn:hover:not(.btn-disabled) {
             gap: 0.7rem;
         }
-        .arrow {
+        .arrow-icon {
             font-size: 1rem;
             transition: transform 0.2s;
         }
-        .btn:hover .arrow {
+        .btn:hover .arrow-icon {
             transform: translateX(3px);
-        }
-
-        /* ===== АДАПТИВНОСТЬ ===== */
-        @media (max-width: 900px) {
-            .cards-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
-            }
-            body {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-        }
-        @media (max-width: 580px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-                gap: 1.2rem;
-            }
-            .card-title {
-                font-size: 1.3rem;
-            }
         }
 
         /* футер */
@@ -218,10 +238,38 @@
         .footer a:hover {
             color: #2F6B47;
         }
+
+        /* ============================================================
+           АДАПТИВ
+           ============================================================ */
+        @media (max-width: 900px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            body {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+        @media (max-width: 580px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .accordion-header {
+                padding: 1rem 1.2rem;
+            }
+            .accordion-header .title {
+                font-size: 1.1rem;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="container">
+
     <!-- навигация назад -->
     <div class="nav-back">
         <a href="index.html" class="back-link">
@@ -230,191 +278,230 @@
     </div>
 
     <div class="page-header">
-        <h1>🩺 Профессиональный цикл</h1>
-        <div class="subhead">Тренажёры для отработки клинических навыков</div>
+        <h1>📦 Готовые материалы для занятий</h1>
+        <div class="subhead">Сценарии, наборы терминов, банки вопросов, чек-листы и шаблоны — берите и адаптируйте под свой урок.</div>
     </div>
 
-    <!-- ===== НАЧАЛО СЕТКИ КАРТОЧЕК ===== -->
-    <div class="cards-grid">
+    <!-- ============================================================
+    РАЗДЕЛ 1: ТЕОРЕТИЧЕСКИЕ ДИСЦИПЛИНЫ
+    ============================================================ -->
+    <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="title">📚 Теоретические дисциплины</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+            <div class="cards-grid">
 
-        <!-- Карточка 1 — Сбор анамнеза по алгоритму (GOSCE) -->
-        <div class="card">
-            <div class="card-icon">📋🩺</div>
-            <div class="card-title">Сбор анамнеза (GOSCE)</div>
-            <div class="card-badge">✅ Готов к использованию</div>
-            <div class="card-desc">
-                2 клинических сценария (собака и телёнок) для отработки навыка сбора анамнеза.
-                Расставьте вопросы в правильной последовательности: anamnesis vitae, anamnesis morbi, системный опрос.
-                Проверка, баллы и пояснения.
-            </div>
-            <div class="card-action">
-                <a href="gosce_trainer.html" class="btn btn-primary">
-                    <span>Перейти к тренажёру</span>
-                    <span class="arrow">→</span>
-                </a>
+                <!-- 1. Анатомия и физиология животных -->
+                <div class="card">
+                    <div class="card-icon">🦴❤️</div>
+                    <div class="card-title">Анатомия и физиология животных</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Сценарии уроков, наборы терминов, тесты по анатомии и физиологии животных. 15+ материалов.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 2. Латинский язык -->
+                <div class="card">
+                    <div class="card-icon">📜✏️</div>
+                    <div class="card-title">Латинский язык</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Наборы терминов, карточки для запоминания латинских названий, упражнения.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 3. Ветеринарная фармакология -->
+                <div class="card">
+                    <div class="card-icon">💊🧪</div>
+                    <div class="card-title">Ветеринарная фармакология</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Задания по расчёту доз, классификация препаратов, клинические кейсы.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 4. Основы микробиологии -->
+                <div class="card">
+                    <div class="card-icon">🔬🦠</div>
+                    <div class="card-title">Основы микробиологии</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Материалы по бактериям, вирусам, методам диагностики и лабораторной работе.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 5. Основы животноводства и зоотехнии -->
+                <div class="card">
+                    <div class="card-icon">🐄🌾</div>
+                    <div class="card-title">Основы животноводства и зоотехнии</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Материалы по кормлению, разведению, содержанию и продуктивности животных.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 6. Патоморфология болезней животных -->
+                <div class="card">
+                    <div class="card-icon">🔍🩺</div>
+                    <div class="card-title">Патоморфология болезней животных</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Сценарии занятий по патологической анатомии, макропрепараты, гистология.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-        <!-- Карточка 2 — Сборник задач по терапии с/х животных -->
-        <div class="card">
-            <div class="card-icon">🐄💉</div>
-            <div class="card-title">Сборник задач по терапии с/х животных</div>
-            <div class="card-badge">✅ Готов к использованию</div>
-            <div class="card-desc">
-                4 клинические задачи: глюкозо-инсулиновая смесь (гиперкалиемия),
-                инфузия при диарее телёнка, кетоз у коровы, молочная лихорадка.
-                Расчёты доз, объёмов, скоростей инфузий. Проверка ответов и пояснения.
-            </div>
-            <div class="card-action">
-                <a href="farm_tasks_trainer.html" class="btn btn-primary">
-                    <span>Перейти к тренажёру</span>
-                    <span class="arrow">→</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Карточка 3 — План лечения и мониторинг (с/х животные) -->
-        <div class="card">
-            <div class="card-icon">💊🐄</div>
-            <div class="card-title">План лечения и мониторинг (с/х животные)</div>
-            <div class="card-badge">✅ Готов к использованию</div>
-            <div class="card-desc">
-                20 клинических сценариев по болезням сельскохозяйственных животных.
-                Отработка навыков выбора этиотропного, патогенетического и симптоматического лечения,
-                а также мониторинга состояния пациента.
-                Проверка ответов и пояснения.
-            </div>
-            <div class="card-action">
-                <a href="treatment_trainer.html" class="btn btn-primary">
-                    <span>Перейти к тренажёру</span>
-                    <span class="arrow">→</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- Карточка 4 Конструктор ветвящихся клинических сценариев -->
-<div class="card">
-    <div class="card-icon">🧩🩺</div>
-    <div class="card-title">Конструктор клинических сценариев</div>
-    <div class="card-badge">✅ Готов к использованию</div>
-    <div class="card-desc">
-        Создавайте интерактивные симуляторы принятия решений с ветвлением.
-        Каждый выбор студента влияет на развитие клинического случая.
-        Встроенный пример: <strong>«ОРИТ: пациент в критическом состоянии»</strong>
-        (интубация, ИВЛ, пневмоторакс, удаление инородного тела).
-        <br><br>
-        <em>✅ Экспортируйте готовые тренажёры для студентов.</em>
     </div>
-    <div class="card-action">
-        <a href="branching_scenario_constructor.html" class="btn btn-primary">
-            <span>Создать сценарий</span>
-            <span class="arrow">→</span>
-        </a>
-    </div>
-</div>
-        <!-- Карточка 5 — Симулятор хирургических швов -->
-<div class="card">
-    <div class="card-icon">🪡🔪</div>
-    <div class="card-title">Симулятор хирургических швов</div>
-    <div class="card-badge">✅ Готов к использованию</div>
-    <div class="card-desc">
-        2D-симулятор для отработки навыков наложения стежков. 
-        Поддерживаются три типа швов: узловой, непрерывный и внутрикожный. 
-        Интуитивное управление, визуальная обратная связь, счётчик стежков.
-    </div>
-    <div class="card-action">
-        <a href="suture_simulator.html" class="btn btn-primary">
-            <span>Попробовать</span>
-            <span class="arrow">→</span>
-        </a>
-    </div>
-</div>
 
-        <!-- 6. Акушерство: положение плода -->
-        <div class="card">
-            <div class="card-icon">🐮🐄</div>
-            <div class="card-title">Акушерство: положение плода</div>
-            <div class="card-badge">⏳ В разработке</div>
-            <div class="card-desc">
-                Интерактивная схема предлежания, позиции и членорасположения плода. Диагностика и тактика при трудных родах.
-            </div>
-            <div class="card-action">
-                <a href="#" class="btn btn-disabled">
-                    <span>Скоро</span>
-                    <span class="arrow">→</span>
-                </a>
+    <!-- ============================================================
+    РАЗДЕЛ 2: ПРОФЕССИОНАЛЬНЫЕ МОДУЛИ
+    ============================================================ -->
+    <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="title">🧩 Профессиональные модули</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+            <div class="cards-grid">
+
+                <!-- 7. ПМ 01 -->
+                <div class="card">
+                    <div class="card-icon">🩺💉</div>
+                    <div class="card-title">ПМ 01</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Материалы по диагностике, терапии и профилактике болезней животных.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 8. ПМ 02 -->
+                <div class="card">
+                    <div class="card-icon">🔬🧪</div>
+                    <div class="card-title">ПМ 02</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Материалы по лабораторной диагностике и работе с биоматериалом.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 9. ПМ 03 -->
+                <div class="card">
+                    <div class="card-icon">🏥💊</div>
+                    <div class="card-title">ПМ 03</div>
+                    <div class="card-badge ready">✅ Готов</div>
+                    <div class="card-desc">
+                        Материалы по лечебной деятельности, фармакологии и уходу за животными.
+                    </div>
+                    <div class="card-action">
+                        <a href="#" class="btn btn-primary">
+                            <span>Смотреть</span>
+                            <span class="arrow-icon">→</span>
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </div>
-
-        <!-- 7. Диагностика внутренних болезней -->
-        <div class="card">
-            <div class="card-icon">🩻📋</div>
-            <div class="card-title">Диагностика внутренних болезней</div>
-            <div class="card-badge">⏳ В разработке</div>
-            <div class="card-desc">
-                Клинические кейсы: сбор анамнеза, интерпретация симптомов, постановка предварительного диагноза и план лечения.
-            </div>
-            <div class="card-action">
-                <a href="#" class="btn btn-disabled">
-                    <span>Скоро</span>
-                    <span class="arrow">→</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- 8. Эпизоотология: дифференциальная диагностика инфекций -->
-        <div class="card">
-            <div class="card-icon">🦠🔬</div>
-            <div class="card-title">Эпизоотология: дифференциальная диагностика инфекций</div>
-            <div class="card-badge">⏳ В разработке</div>
-            <div class="card-desc">
-                Викторина по особо опасным и заразным болезням животных. Распознавание по эпизоотическим данным и патогенезу.
-            </div>
-            <div class="card-action">
-                <a href="#" class="btn btn-disabled">
-                    <span>Скоро</span>
-                    <span class="arrow">→</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- 9. Ветсанэкспертиза: определение мяса -->
-        <div class="card">
-            <div class="card-icon">🥩🔍</div>
-            <div class="card-title">Ветсанэкспертиза: определение мяса</div>
-            <div class="card-badge">⏳ В разработке</div>
-            <div class="card-desc">
-                Тренажёр по органолептической оценке мяса. Учитесь отличать свежее мясо от сомнительного качества.
-            </div>
-            <div class="card-action">
-                <a href="#" class="btn btn-disabled">
-                    <span>Скоро</span>
-                    <span class="arrow">→</span>
-                </a>
-            </div>
-        </div>
-
     </div>
-    <!-- ===== КОНЕЦ СЕТКИ КАРТОЧЕК ===== -->
 
-    <!-- Блок анонса -->
+    <!-- Дополнительный информационный блок -->
     <div style="text-align: center; margin: 1rem 0 1rem;">
-        <p style="color: #8BA47B; font-size: 0.85rem;">✨ В этом разделе появятся тренажёры для отработки реальных клинических навыков. Следите за обновлениями.</p>
+        <p style="color: #8BA47B; font-size: 0.85rem;">✨ Материалы создаются преподавателями ВетСим и регулярно обновляются.</p>
     </div>
 
-    <!-- Футер -->
     <div class="footer">
         <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
         <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
         <p>💬 Сообщество: <a href="#" target="_blank">ВКонтакте (заглушка)</a> | По всем вопросам: edu@vetsim.ru</p>
-        <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
-            🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования
-        </p>
-        <p style="font-size: 0.7rem; color: #89A07B;">
-            © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
-        </p>
     </div>
 </div>
+
+<script>
+    // ============================================================
+    // ФУНКЦИЯ ДЛЯ АККОРДЕОНОВ
+    // ============================================================
+    function toggleAccordion(header) {
+        const body = header.nextElementSibling;
+        const arrow = header.querySelector('.arrow');
+        const isOpen = body.classList.contains('open');
+
+        if (isOpen) {
+            body.classList.remove('open');
+            arrow.classList.remove('open');
+        } else {
+            body.classList.add('open');
+            arrow.classList.add('open');
+        }
+    }
+
+    // Открываем первый аккордеон по умолчанию
+    document.addEventListener('DOMContentLoaded', function() {
+        const firstHeader = document.querySelector('.accordion-header');
+        if (firstHeader) {
+            const firstBody = firstHeader.nextElementSibling;
+            const firstArrow = firstHeader.querySelector('.arrow');
+            if (firstBody && firstArrow) {
+                firstBody.classList.add('open');
+                firstArrow.classList.add('open');
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
 <!-- конец .container -->
 </body>
 </html>

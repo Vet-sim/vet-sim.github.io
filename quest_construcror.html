@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>Квест-комната | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #F4F7F9;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #1A2A3A;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px 16px 20px;
+        }
+
+        /* --- Хедер --- */
+        .header {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 12px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+        }
+        .header .logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #1A2A3A;
+        }
+        .header .logo span {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .logo i {
+            color: #2C7DA0;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .header-actions .btn {
+            font-size: 0.75rem;
+            padding: 6px 14px;
+        }
+
+        /* --- Кнопки --- */
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.82rem;
+            font-family: inherit;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-2px); }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary { background: #2C7DA0; color: #fff; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: #fff; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-danger { background: #D4A373; color: #fff; }
+        .btn-danger:hover { background: #C99464; }
+        .btn-warning { background: #E2CFB0; color: #4D3E2A; }
+        .btn-warning:hover { background: #D6C09B; }
+        .btn-outline { background: transparent; border: 2px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-sm { padding: 4px 12px; font-size: 0.7rem; }
+
+        /* --- Режимы --- */
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .mode-tab {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .mode-tab:hover { opacity: 0.85; }
+        .mode-tab.active {
+            background: #2C7DA0;
+            color: #fff;
+        }
+
+        /* --- Основная сетка --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 820px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Левая панель (список сцен) --- */
+        .panel {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 16px 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            border: 1px solid #E7EDE2;
+        }
+        .panel-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #1A2A3A;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .scene-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .scene-list .scene-item {
+            padding: 8px 12px;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.82rem;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid transparent;
+        }
+        .scene-list .scene-item:hover {
+            background: #F4EFE4;
+        }
+        .scene-list .scene-item.active {
+            background: #D4E3ED;
+            border-left-color: #2C7DA0;
+            font-weight: 600;
+        }
+        .scene-list .scene-item .badge-start {
+            font-size: 0.6rem;
+            background: #6B9E6B;
+            color: #fff;
+            padding: 0 8px;
+            border-radius: 1rem;
+        }
+        .scene-list .scene-item .badge-final {
+            font-size: 0.6rem;
+            background: #D4A373;
+            color: #fff;
+            padding: 0 8px;
+            border-radius: 1rem;
+        }
+
+        /* --- Правая панель (редактор) --- */
+        .editor-panel {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 18px 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            border: 1px solid #E7EDE2;
+        }
+        .editor-panel .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8A9B7A;
+        }
+        .editor-panel .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- Формы --- */
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: #5F7C62;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px 14px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FEFAF2;
+            color: #1A2A3A;
+            transition: 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        /* --- Варианты выбора --- */
+        .choice-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin: 6px 0;
+        }
+        .choice-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            background: #F9F6EF;
+            padding: 6px 12px;
+            border-radius: 1rem;
+            border-left: 3px solid #A3B18A;
+        }
+        .choice-item input[type="text"] {
+            flex: 2;
+            min-width: 100px;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 0.82rem;
+            padding: 4px 6px;
+            border-bottom: 1px dashed #D9D0BD;
+            outline: none;
+        }
+        .choice-item input[type="text"]:focus {
+            border-bottom-color: #2C7DA0;
+        }
+        .choice-item select {
+            flex: 1;
+            min-width: 80px;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 0.78rem;
+            outline: none;
+            padding: 4px 4px;
+            cursor: pointer;
+        }
+        .choice-item .btn-remove {
+            background: none;
+            border: none;
+            color: #D4A373;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0 4px;
+        }
+        .choice-item .btn-remove:hover {
+            color: #C99464;
+        }
+
+        /* --- Превью --- */
+        .preview-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .preview-container .scene-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #E7EDE2;
+        }
+        .preview-container .scene-card .scene-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1A2A3A;
+            margin-bottom: 8px;
+        }
+        .preview-container .scene-card .scene-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #3E5C4A;
+            margin-bottom: 12px;
+        }
+        .preview-container .scene-card .scene-media img {
+            max-width: 100%;
+            border-radius: 1rem;
+            margin-bottom: 10px;
+        }
+        .preview-container .scene-card .scene-media video {
+            max-width: 100%;
+            border-radius: 1rem;
+            margin-bottom: 10px;
+        }
+        .preview-container .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .preview-container .choices .choice-btn {
+            background: #F4EFE4;
+            border: 2px solid #D9D0BD;
+            border-radius: 2.5rem;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #1A2A3A;
+            text-align: left;
+        }
+        .preview-container .choices .choice-btn:hover {
+            border-color: #2C7DA0;
+            background: #D4E3ED;
+            transform: translateX(4px);
+        }
+        .preview-container .progress-info {
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: #7B8D6E;
+        }
+        .preview-container .history-log {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            font-size: 0.8rem;
+            color: #5F7C62;
+        }
+        .preview-container .history-log .entry {
+            padding: 2px 0;
+            border-bottom: 1px dashed #E2EAD9;
+        }
+
+        /* --- Шаблоны (демо-стили) --- */
+        .template-preview {
+            padding: 4px 12px;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .template-1 { background: #D4E3ED; color: #1F4E6E; }
+        .template-2 { background: #F0E6D8; color: #7A5A3A; }
+        .template-3 { background: #1A1A2E; color: #00E5FF; }
+        .template-4 { background: #C8E6C9; color: #2E7D32; }
+
+        /* --- Toast --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+
+        /* --- Адаптив --- */
+        @media (max-width: 600px) {
+            .app { padding: 8px; }
+            .header { flex-direction: column; align-items: stretch; gap: 6px; padding: 12px 14px; }
+            .header-actions { justify-content: center; flex-wrap: wrap; }
+            .editor-panel { padding: 14px; }
+            .choice-item { flex-wrap: wrap; }
+            .preview-container .scene-card { padding: 1.2rem; }
+            .mode-tabs .mode-tab { flex: 1; text-align: center; padding: 6px 12px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app" id="app">
+    <!-- ===== ХЕДЕР ===== -->
+    <header class="header">
+        <div class="logo">🧩 <span>Квест-комната</span> <span style="font-weight:400;font-size:0.8rem;color:#7B8D6E;">ВетСим</span></div>
+        <div class="header-actions">
+            <button class="btn btn-sm btn-primary" id="loadExampleBtn">📂 Пример</button>
+            <button class="btn btn-sm btn-success" id="saveJsonBtn">💾 JSON</button>
+            <button class="btn btn-sm btn-warning" id="loadJsonBtn">📂 JSON</button>
+            <button class="btn btn-sm btn-danger" id="exportHtmlBtn">📤 HTML</button>
+            <button class="btn btn-sm btn-outline" id="resetBtn">🔄 Сброс</button>
+        </div>
+    </header>
+
+    <!-- ===== РЕЖИМЫ ===== -->
+    <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="editor">✏️ Конструктор</button>
+        <button class="mode-tab" data-mode="preview">👁️ Превью</button>
+    </div>
+
+    <!-- ===== ОСНОВНАЯ ОБЛАСТЬ ===== -->
+    <div id="mainArea">
+        <!-- Режим конструктора -->
+        <div id="editorMode" class="main-grid">
+            <!-- Левая панель: список сцен -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>📋 Сцены</span>
+                    <button class="btn btn-sm btn-primary" id="addSceneBtn">➕</button>
+                </div>
+                <div class="scene-list" id="sceneList"></div>
+                <div style="margin-top:10px; padding-top:10px; border-top:1px solid #E7EDE2;">
+                    <div class="form-group" style="margin-bottom:6px;">
+                        <label>Название квеста</label>
+                        <input type="text" id="projectTitle" value="Новый квест" />
+                    </div>
+                    <div class="form-group" style="margin-bottom:6px;">
+                        <label>Шаблон оформления</label>
+                        <select id="templateSelect">
+                            <option value="1">🏥 Ветеринарная клиника</option>
+                            <option value="2">🗺️ Приключение</option>
+                            <option value="3">🔬 Техно-лаб</option>
+                            <option value="4">🌿 Сказочный лес</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Описание</label>
+                        <input type="text" id="projectDesc" placeholder="Краткое описание квеста" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая панель: редактор сцены -->
+            <div class="editor-panel" id="editorPanel">
+                <div class="empty-state" id="emptyState">
+                    <div class="icon">🎯</div>
+                    <p>Выберите сцену из списка слева<br>или создайте новую</p>
+                    <button class="btn btn-primary btn-sm" id="emptyAddBtn" style="margin-top:10px;">➕ Создать сцену</button>
+                </div>
+                <div id="sceneEditor" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+                        <h3 style="font-size:1rem;font-weight:700;color:#1A2A3A;" id="sceneEditorTitle">Редактор сцены</h3>
+                        <div>
+                            <button class="btn btn-sm btn-danger" id="deleteSceneBtn">🗑️ Удалить</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Название сцены</label>
+                        <input type="text" id="sceneTitle" placeholder="Название сцены" />
+                    </div>
+                    <div class="form-group">
+                        <label>Текст сцены (поддерживает HTML)</label>
+                        <textarea id="sceneText" rows="4" placeholder="Опишите ситуацию..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group" style="flex:1;">
+                            <label>Изображение (URL)</label>
+                            <input type="text" id="sceneImage" placeholder="https://example.com/image.jpg" />
+                        </div>
+                        <div class="form-group" style="flex:1;">
+                            <label>Видео (URL)</label>
+                            <input type="text" id="sceneVideo" placeholder="https://youtube.com/embed/..." />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Аудио (URL)</label>
+                        <input type="text" id="sceneAudio" placeholder="https://example.com/audio.mp3" />
+                    </div>
+                    <div class="form-group">
+                        <label>Варианты выбора</label>
+                        <div class="choice-list" id="choiceList"></div>
+                        <button class="btn btn-sm btn-primary" id="addChoiceBtn">➕ Добавить вариант</button>
+                    </div>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-sm btn-success" id="saveSceneBtn">💾 Сохранить сцену</button>
+                        <button class="btn btn-sm btn-outline" id="setStartBtn">🏁 Сделать стартовой</button>
+                        <button class="btn btn-sm btn-outline" id="setFinalBtn">🏆 Сделать финальной</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Режим превью -->
+        <div id="previewMode" style="display:none;">
+            <div class="panel" style="padding:20px;">
+                <div class="preview-container" id="previewContainer">
+                    <!-- рендерится JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ================================================================
+    //  КВЕСТ-КОМНАТА — ПОЛНАЯ ЛОГИКА
+    // ================================================================
+
+    // --- ВСТРОЕННЫЙ ПРИМЕР ---
+    const EXAMPLE_DATA = {
+        title: 'Спасение Барсика',
+        description: 'Квест по диагностике и лечению кота с отравлением',
+        template: 1,
+        startSceneId: 1,
+        scenes: [
+            {
+                id: 1,
+                title: 'Приём пациента',
+                text: 'К вам на приём привели кота Барсика. Хозяин сообщает, что кот стал вялым, у него рвота и расширенные зрачки. Ваши действия?',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [
+                    { text: 'Собрать анамнез', nextSceneId: 2 },
+                    { text: 'Назначить антидот', nextSceneId: 5 }
+                ]
+            },
+            {
+                id: 2,
+                title: 'Анамнез',
+                text: 'Владелец вспоминает, что кот съел ядовитое растение. Какое именно — он не знает. Ваши действия?',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [
+                    { text: 'Идентифицировать растение', nextSceneId: 3 },
+                    { text: 'Назначить сорбенты', nextSceneId: 4 }
+                ]
+            },
+            {
+                id: 3,
+                title: 'Идентификация растения',
+                text: 'Вы определили растение — это лилия (Lilium spp.), которая вызывает острую почечную недостаточность у кошек. Ваши действия?',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [
+                    { text: 'Назначить антидот (ацетилцистеин + форсированный диурез)', nextSceneId: 6 },
+                    { text: 'Назначить поддерживающую терапию (инфузии, симптоматика)', nextSceneId: 4 }
+                ]
+            },
+            {
+                id: 4,
+                title: 'Поддерживающая терапия',
+                text: 'Вы назначили инфузионную терапию и симптоматические средства. Состояние Барсика улучшилось, но причина не устранена. Через 24 часа развивается острая почечная недостаточность...',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [
+                    { text: 'Продолжить терапию', nextSceneId: 5 }
+                ]
+            },
+            {
+                id: 5,
+                title: 'Печальный финал',
+                text: '😢 К сожалению, Барсик погиб от острой почечной недостаточности. Ошибка в диагностике и лечении привела к трагедии. Помните: при отравлениях всегда нужно идентифицировать токсин!',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [],
+                isFinal: true
+            },
+            {
+                id: 6,
+                title: 'Спасение!',
+                text: '🎉 Вы правильно идентифицировали токсин и назначили ацетилцистеин (антидот) с форсированным диурезом. Барсик идёт на поправку! Через 3 дня его выписывают домой. Вы спасли жизнь пациенту!',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [],
+                isFinal: true
+            }
+        ]
+    };
+
+    // --- СОСТОЯНИЕ ---
+    let project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
+    let selectedSceneId = project.startSceneId || (project.scenes.length > 0 ? project.scenes[0].id : null);
+    let currentMode = 'editor';
+    let nextId = 100;
+
+    // --- DOM ---
+    const sceneListEl = document.getElementById('sceneList');
+    const editorPanel = document.getElementById('editorPanel');
+    const emptyState = document.getElementById('emptyState');
+    const sceneEditor = document.getElementById('sceneEditor');
+    const sceneEditorTitle = document.getElementById('sceneEditorTitle');
+
+    const projectTitle = document.getElementById('projectTitle');
+    const projectDesc = document.getElementById('projectDesc');
+    const templateSelect = document.getElementById('templateSelect');
+
+    const sceneTitle = document.getElementById('sceneTitle');
+    const sceneText = document.getElementById('sceneText');
+    const sceneImage = document.getElementById('sceneImage');
+    const sceneVideo = document.getElementById('sceneVideo');
+    const sceneAudio = document.getElementById('sceneAudio');
+    const choiceList = document.getElementById('choiceList');
+
+    const addSceneBtn = document.getElementById('addSceneBtn');
+    const emptyAddBtn = document.getElementById('emptyAddBtn');
+    const addChoiceBtn = document.getElementById('addChoiceBtn');
+    const saveSceneBtn = document.getElementById('saveSceneBtn');
+    const deleteSceneBtn = document.getElementById('deleteSceneBtn');
+    const setStartBtn = document.getElementById('setStartBtn');
+    const setFinalBtn = document.getElementById('setFinalBtn');
+
+    const loadExampleBtn = document.getElementById('loadExampleBtn');
+    const saveJsonBtn = document.getElementById('saveJsonBtn');
+    const loadJsonBtn = document.getElementById('loadJsonBtn');
+    const exportHtmlBtn = document.getElementById('exportHtmlBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const modeTabs = document.querySelectorAll('.mode-tab');
+    const previewContainer = document.getElementById('previewContainer');
+
+    const toast = document.getElementById('toast');
+    let toastTimer = null;
+
+    // ================================================================
+    //  ВСПОМОГАТЕЛЬНЫЕ
+    // ================================================================
+
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function generateId() {
+        return nextId++;
+    }
+
+    function getScene(id) {
+        return project.scenes.find(s => s.id === id);
+    }
+
+    function getSceneIndex(id) {
+        return project.scenes.findIndex(s => s.id === id);
+    }
+
+    function getSceneChoices(id) {
+        const scene = getScene(id);
+        return scene ? scene.choices : [];
+    }
+
+    function getSceneTitle(id) {
+        const scene = getScene(id);
+        return scene ? scene.title : 'Без названия';
+    }
+
+    // ================================================================
+    //  РЕНДЕР СПИСКА СЦЕН
+    // ================================================================
+
+    function renderSceneList() {
+        sceneListEl.innerHTML = '';
+        project.scenes.forEach(scene => {
+            const div = document.createElement('div');
+            div.className = 'scene-item' + (scene.id === selectedSceneId ? ' active' : '');
+            const isStart = scene.id === project.startSceneId;
+            const isFinal = scene.isFinal || false;
+            div.innerHTML = `
+                <span>${escapeHtml(scene.title || 'Без названия')}</span>
+                <span>
+                    ${isStart ? '<span class="badge-start">START</span>' : ''}
+                    ${isFinal ? '<span class="badge-final">FIN</span>' : ''}
+                </span>
+            `;
+            div.addEventListener('click', () => {
+                selectedSceneId = scene.id;
+                renderSceneList();
+                loadSceneToEditor(scene.id);
+            });
+            sceneListEl.appendChild(div);
+        });
+    }
+
+    // ================================================================
+    //  ЗАГРУЗКА СЦЕНЫ В РЕДАКТОР
+    // ================================================================
+
+    function loadSceneToEditor(id) {
+        const scene = getScene(id);
+        if (!scene) {
+            emptyState.style.display = 'block';
+            sceneEditor.style.display = 'none';
+            return;
+        }
+        emptyState.style.display = 'none';
+        sceneEditor.style.display = 'block';
+        sceneEditorTitle.textContent = `✏️ ${escapeHtml(scene.title || 'Без названия')}`;
+
+        sceneTitle.value = scene.title || '';
+        sceneText.value = scene.text || '';
+        sceneImage.value = scene.image || '';
+        sceneVideo.value = scene.video || '';
+        sceneAudio.value = scene.audio || '';
+
+        renderChoices(id);
+    }
+
+    function renderChoices(sceneId) {
+        const scene = getScene(sceneId);
+        if (!scene) return;
+        choiceList.innerHTML = '';
+        scene.choices.forEach((choice, index) => {
+            const div = document.createElement('div');
+            div.className = 'choice-item';
+            div.innerHTML = `
+                <input type="text" value="${escapeHtml(choice.text)}" placeholder="Текст кнопки" data-index="${index}" class="choice-text">
+                <select data-index="${index}" class="choice-target">
+                    ${project.scenes.map(s => `<option value="${s.id}" ${s.id === choice.nextSceneId ? 'selected' : ''}>${escapeHtml(s.title || 'Без названия')} (id:${s.id})</option>`).join('')}
+                </select>
+                <button class="btn-remove" data-index="${index}" title="Удалить">✕</button>
+            `;
+            choiceList.appendChild(div);
+        });
+
+        // События для полей выбора
+        document.querySelectorAll('.choice-text').forEach(inp => {
+            inp.addEventListener('input', function() {
+                const idx = parseInt(this.dataset.index);
+                const scene = getScene(sceneId);
+                if (scene && scene.choices[idx]) {
+                    scene.choices[idx].text = this.value;
+                }
+            });
+        });
+
+        document.querySelectorAll('.choice-target').forEach(sel => {
+            sel.addEventListener('change', function() {
+                const idx = parseInt(this.dataset.index);
+                const scene = getScene(sceneId);
+                if (scene && scene.choices[idx]) {
+                    scene.choices[idx].nextSceneId = parseInt(this.value);
+                }
+            });
+        });
+
+        document.querySelectorAll('.choice-item .btn-remove').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.index);
+                const scene = getScene(sceneId);
+                if (scene) {
+                    scene.choices.splice(idx, 1);
+                    renderChoices(sceneId);
+                    renderSceneList();
+                }
+            });
+        });
+    }
+
+    // ================================================================
+    //  СОХРАНЕНИЕ СЦЕНЫ
+    // ================================================================
+
+    function saveCurrentScene() {
+        if (!selectedSceneId) {
+            showToast('⚠️ Выберите сцену для сохранения');
+            return;
+        }
+        const scene = getScene(selectedSceneId);
+        if (!scene) return;
+
+        scene.title = sceneTitle.value.trim() || 'Без названия';
+        scene.text = sceneText.value.trim() || '';
+        scene.image = sceneImage.value.trim() || '';
+        scene.video = sceneVideo.value.trim() || '';
+        scene.audio = sceneAudio.value.trim() || '';
+
+        // Сохраняем выборы (уже через события)
+        renderSceneList();
+        loadSceneToEditor(selectedSceneId);
+        showToast('✅ Сцена сохранена');
+        saveToStorage();
+    }
+
+    // ================================================================
+    //  УПРАВЛЕНИЕ СЦЕНАМИ
+    // ================================================================
+
+    function addScene() {
+        const newScene = {
+            id: generateId(),
+            title: `Новая сцена ${project.scenes.length + 1}`,
+            text: 'Опишите ситуацию...',
+            image: '',
+            video: '',
+            audio: '',
+            choices: [],
+            isFinal: false
+        };
+        project.scenes.push(newScene);
+        selectedSceneId = newScene.id;
+        renderSceneList();
+        loadSceneToEditor(selectedSceneId);
+        saveToStorage();
+        showToast('➕ Сцена добавлена');
+    }
+
+    function deleteScene(id) {
+        if (project.scenes.length <= 1) {
+            showToast('⚠️ Нельзя удалить последнюю сцену');
+            return;
+        }
+        if (!confirm('Удалить сцену?')) return;
+        const idx = getSceneIndex(id);
+        if (idx === -1) return;
+        project.scenes.splice(idx, 1);
+
+        // Если удалили стартовую — переназначаем
+        if (project.startSceneId === id) {
+            project.startSceneId = project.scenes[0].id;
+        }
+
+        // Переназначаем ссылки на удалённую сцену
+        project.scenes.forEach(s => {
+            s.choices = s.choices.filter(c => c.nextSceneId !== id);
+        });
+
+        selectedSceneId = project.scenes.length > 0 ? project.scenes[0].id : null;
+        renderSceneList();
+        if (selectedSceneId) loadSceneToEditor(selectedSceneId);
+        else { emptyState.style.display = 'block'; sceneEditor.style.display = 'none'; }
+        saveToStorage();
+        showToast('🗑️ Сцена удалена');
+    }
+
+    function setStartScene(id) {
+        project.startSceneId = id;
+        renderSceneList();
+        loadSceneToEditor(id);
+        saveToStorage();
+        showToast('🏁 Стартовая сцена обновлена');
+    }
+
+    function toggleFinalScene(id) {
+        const scene = getScene(id);
+        if (!scene) return;
+        scene.isFinal = !scene.isFinal;
+        renderSceneList();
+        loadSceneToEditor(id);
+        saveToStorage();
+        showToast(scene.isFinal ? '🏆 Сцена отмечена как финальная' : '🔓 Финальная отметка снята');
+    }
+
+    // ================================================================
+    //  ПРОЕКТ
+    // ================================================================
+
+    function updateProjectMeta() {
+        project.title = projectTitle.value.trim() || 'Новый квест';
+        project.description = projectDesc.value.trim() || '';
+        project.template = parseInt(templateSelect.value) || 1;
+    }
+
+    function loadProjectMeta() {
+        projectTitle.value = project.title || 'Новый квест';
+        projectDesc.value = project.description || '';
+        templateSelect.value = project.template || 1;
+    }
+
+    function saveToStorage() {
+        updateProjectMeta();
+        try {
+            localStorage.setItem('vetsim_quest_data', JSON.stringify(project));
+        } catch (e) {}
+    }
+
+    function loadFromStorage() {
+        try {
+            const raw = localStorage.getItem('vetsim_quest_data');
+            if (raw) {
+                const data = JSON.parse(raw);
+                if (data.scenes && data.scenes.length > 0) {
+                    project = data;
+                    // Обновляем nextId
+                    let maxId = 0;
+                    project.scenes.forEach(s => { if (s.id > maxId) maxId = s.id; });
+                    nextId = maxId + 1;
+                    selectedSceneId = project.startSceneId || project.scenes[0].id;
+                    loadProjectMeta();
+                    renderSceneList();
+                    if (selectedSceneId) loadSceneToEditor(selectedSceneId);
+                    else { emptyState.style.display = 'block'; sceneEditor.style.display = 'none'; }
+                    return true;
+                }
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    // ================================================================
+    //  ЗАГРУЗКА ПРИМЕРА
+    // ================================================================
+
+    function loadExample() {
+        if (!confirm('Загрузить пример? Текущие изменения будут потеряны.')) return;
+        project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
+        let maxId = 0;
+        project.scenes.forEach(s => { if (s.id > maxId) maxId = s.id; });
+        nextId = maxId + 1;
+        selectedSceneId = project.startSceneId || project.scenes[0].id;
+        loadProjectMeta();
+        renderSceneList();
+        loadSceneToEditor(selectedSceneId);
+        saveToStorage();
+        showToast('📂 Пример загружен');
+    }
+
+    // ================================================================
+    //  ЭКСПОРТ/ИМПОРТ JSON
+    // ================================================================
+
+    function exportJSON() {
+        updateProjectMeta();
+        const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${project.title.replace(/\s+/g, '_')}_quest.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 JSON экспортирован');
+    }
+
+    function importJSON(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.scenes && data.scenes.length > 0) {
+                    project = data;
+                    let maxId = 0;
+                    project.scenes.forEach(s => { if (s.id > maxId) maxId = s.id; });
+                    nextId = maxId + 1;
+                    selectedSceneId = project.startSceneId || project.scenes[0].id;
+                    loadProjectMeta();
+                    renderSceneList();
+                    loadSceneToEditor(selectedSceneId);
+                    saveToStorage();
+                    showToast('📂 Проект загружен');
+                } else {
+                    showToast('❌ Неверный формат JSON');
+                }
+            } catch (err) {
+                showToast('❌ Ошибка чтения файла');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // ================================================================
+    //  ЭКСПОРТ В HTML (С ОБНОВЛЁННЫМ ШАБЛОНОМ 1)
+    // ================================================================
+
+    function exportHTML() {
+        updateProjectMeta();
+        const data = JSON.stringify(project);
+
+        const html = `<!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+        <title>${escapeHtml(project.title)} | ВетСим</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <style>
+            /* ===== ОБЩИЕ СТИЛИ ===== */
+            * { margin:0; padding:0; box-sizing:border-box; }
+            body { font-family: 'Montserrat', system-ui, sans-serif; min-height:100vh; padding:20px; display:flex; justify-content:center; align-items:center; background:#E8F4F8; }
+            .container { max-width:800px; width:100%; }
+
+            /* ===== ШАБЛОН 1: ВЕТЕРИНАРНАЯ КЛИНИКА (МЕДИЦИНСКИЙ ГОЛУБОЙ) ===== */
+            .template-1 { 
+                background: #E8F4F8; 
+                color: #1A2A3A; 
+            }
+            .template-1 .scene-card { 
+                background: #F8FBFF; 
+                border-radius: 2rem; 
+                padding: 2rem 2.5rem; 
+                box-shadow: 0 4px 20px rgba(0, 128, 128, 0.08); 
+                border: 1px solid rgba(0, 128, 128, 0.12); 
+            }
+            .template-1 .scene-title { 
+                color: #008080; 
+                font-size: 1.5rem; 
+                font-weight: 700; 
+                margin-bottom: 8px; 
+            }
+            .template-1 .choice-btn { 
+                background: #F0F7FA; 
+                border: 2px solid #B8D8E8; 
+                border-radius: 2.5rem; 
+                padding: 10px 20px; 
+                font-weight: 600; 
+                font-size: 0.9rem; 
+                cursor: pointer; 
+                transition: 0.2s; 
+                font-family: inherit; 
+                color: #1A2A3A; 
+                text-align: left; 
+            }
+            .template-1 .choice-btn:hover { 
+                border-color: #008080; 
+                background: #E0F0F8; 
+                transform: translateX(4px); 
+            }
+            .template-1 .progress-info { 
+                color: #008080; 
+                margin-bottom: 12px; 
+                font-size: 0.8rem; 
+            }
+            .template-1 .scene-text { 
+                font-size: 1rem; 
+                line-height: 1.7; 
+                margin-bottom: 12px; 
+            }
+            .template-1 .scene-media img, 
+            .template-1 .scene-media video { 
+                max-width: 100%; 
+                border-radius: 1rem; 
+                margin-bottom: 10px; 
+            }
+            .template-1 .history-log { 
+                margin-top: 16px; 
+                padding: 12px 16px; 
+                background: #F0F7FA; 
+                border-radius: 1.2rem; 
+                font-size: 0.8rem; 
+                color: #5F7C62; 
+            }
+            .template-1 .history-log .entry { 
+                padding: 2px 0; 
+                border-bottom: 1px dashed #D4E8F0; 
+            }
+
+            /* ===== ШАБЛОН 2: ПРИКЛЮЧЕНИЕ ===== */
+            .template-2 { background:#F5EDE0; color:#4A3520; }
+            .template-2 .scene-card { background:#FDF8F0; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:2px solid #D4C4A0; }
+            .template-2 .choice-btn { background:#EDE4D0; border:2px solid #C4B090; font-family:Georgia, serif; }
+            .template-2 .choice-btn:hover { border-color:#8A7A5A; background:#E0D4C0; }
+
+            /* ===== ШАБЛОН 3: ТЕХНО-ЛАБ ===== */
+            .template-3 { background:#0D0D1A; color:#E0E0F0; }
+            .template-3 .scene-card { background:#1A1A2E; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 30px rgba(0,229,255,0.05); border:1px solid #2A2A4A; }
+            .template-3 .choice-btn { background:#2A2A4A; border:2px solid #3A3A6A; color:#E0E0F0; font-family:'Courier New',monospace; }
+            .template-3 .choice-btn:hover { border-color:#00E5FF; background:#1A2A4A; }
+            .template-3 .scene-title { color:#00E5FF; }
+
+            /* ===== ШАБЛОН 4: СКАЗОЧНЫЙ ЛЕС ===== */
+            .template-4 { background:#E8F5E9; color:#2E4A2E; }
+            .template-4 .scene-card { background:#F5FFF5; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:2px solid #A8C8A8; }
+            .template-4 .choice-btn { background:#E0F0E0; border:2px solid #A8C8A8; font-family:'Comic Sans MS',cursive; }
+            .template-4 .choice-btn:hover { border-color:#6B9E6B; background:#C8E8C8; }
+
+            /* ===== ОБЩИЕ ЭЛЕМЕНТЫ ===== */
+            .scene-card { margin-bottom:16px; }
+            .scene-title { font-size:1.5rem; font-weight:700; margin-bottom:8px; }
+            .scene-text { font-size:1rem; line-height:1.7; margin-bottom:12px; }
+            .scene-media img, .scene-media video { max-width:100%; border-radius:1rem; margin-bottom:10px; }
+            .choices { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+            .choice-btn { padding:10px 20px; border-radius:2.5rem; font-weight:600; font-size:0.9rem; cursor:pointer; transition:0.2s; font-family:inherit; text-align:left; }
+            .choice-btn:hover { transform:translateX(4px); }
+            .progress-info { margin-bottom:12px; font-size:0.8rem; }
+            .history-log { margin-top:16px; padding:12px 16px; border-radius:1.2rem; font-size:0.8rem; }
+            .history-log .entry { padding:2px 0; border-bottom:1px dashed; }
+            .footer { margin-top:24px; text-align:center; font-size:0.75rem; color:#7B8D6E; }
+            @media (max-width:600px) { .scene-card { padding:1.2rem; } }
+        </style>
+    </head>
+    <body class="template-${project.template}">
+    <div class="container">
+        <div id="app">
+            <div class="scene-card" id="sceneCard">
+                <div class="progress-info" id="progressInfo">Шаг 1</div>
+                <div class="scene-title" id="sceneTitle">Загрузка...</div>
+                <div class="scene-text" id="sceneText"></div>
+                <div class="scene-media" id="sceneMedia"></div>
+                <div class="choices" id="choicesContainer"></div>
+                <div class="history-log" id="historyLog"><div class="entry">📜 История выбора:</div></div>
+            </div>
+        </div>
+        <div class="footer">🐾 ВетСим — ветеринарное образование</div>
+    </div>
+
+    <script>
+        const PROJECT = ${data};
+        let currentSceneId = PROJECT.startSceneId || (PROJECT.scenes.length > 0 ? PROJECT.scenes[0].id : null);
+        let history = [];
+
+        function getScene(id) { return PROJECT.scenes.find(s => s.id === id); }
+
+        function renderScene(id) {
+            const scene = getScene(id);
+            if (!scene) return;
+
+            document.getElementById('sceneTitle').textContent = scene.title || 'Без названия';
+            document.getElementById('sceneText').innerHTML = scene.text || '';
+
+            const mediaEl = document.getElementById('sceneMedia');
+            mediaEl.innerHTML = '';
+            if (scene.image) mediaEl.innerHTML += \`<img src="\${scene.image}" alt="Изображение" loading="lazy">\`;
+            if (scene.video) mediaEl.innerHTML += \`<video src="\${scene.video}" controls></video>\`;
+            if (scene.audio) mediaEl.innerHTML += \`<audio src="\${scene.audio}" controls style="width:100%;margin-top:8px;"></audio>\`;
+
+            const choicesEl = document.getElementById('choicesContainer');
+            choicesEl.innerHTML = '';
+            if (scene.choices && scene.choices.length > 0) {
+                scene.choices.forEach(choice => {
+                    const btn = document.createElement('button');
+                    btn.className = 'choice-btn';
+                    btn.textContent = choice.text || 'Далее';
+                    btn.addEventListener('click', () => {
+                        history.push(scene.title);
+                        renderScene(choice.nextSceneId);
+                        updateHistory();
+                        updateProgress();
+                    });
+                    choicesEl.appendChild(btn);
+                });
+            } else {
+                const msg = document.createElement('p');
+                msg.style.color = '#7B8D6E';
+                msg.textContent = '🏁 Конец квеста';
+                choicesEl.appendChild(msg);
+            }
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const total = PROJECT.scenes.length;
+            const idx = PROJECT.scenes.findIndex(s => s.id === currentSceneId);
+            document.getElementById('progressInfo').textContent = \`Шаг \${idx + 1} из \${total}\`;
+        }
+
+        function updateHistory() {
+            const log = document.getElementById('historyLog');
+            log.innerHTML = '<div class="entry">📜 История выбора:</div>';
+            history.slice(-5).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'entry';
+                div.textContent = \`→ \${item}\`;
+                log.appendChild(div);
+            });
+        }
+
+        // Старт
+        if (currentSceneId) renderScene(currentSceneId);
+    <\/script>
+    </body>
+    </html>`;
+
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${project.title.replace(/\s+/g, '_')}_quest.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 HTML экспортирован');
+    }
+
+    // ================================================================
+    //  РЕЖИМ ПРЕВЬЮ
+    // ================================================================
+
+    function renderPreview() {
+        updateProjectMeta();
+        const scene = getScene(project.startSceneId) || project.scenes[0];
+        if (!scene) {
+            previewContainer.innerHTML = '<p style="text-align:center;color:#8A9B7A;">Нет сцен для отображения</p>';
+            return;
+        }
+
+        let html = `<div class="scene-card" style="background:white;border-radius:2rem;padding:2rem 2.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.06);border:1px solid #E7EDE2;">`;
+        html += `<div class="progress-info">🧩 ${escapeHtml(project.title)}</div>`;
+        html += `<div class="scene-title" style="font-size:1.5rem;font-weight:700;margin-bottom:8px;">${escapeHtml(scene.title)}</div>`;
+        html += `<div class="scene-text" style="font-size:1rem;line-height:1.7;margin-bottom:12px;">${scene.text || ''}</div>`;
+        if (scene.image) html += `<div class="scene-media"><img src="${escapeHtml(scene.image)}" alt="Изображение" style="max-width:100%;border-radius:1rem;margin-bottom:10px;"></div>`;
+        if (scene.video) html += `<div class="scene-media"><video src="${escapeHtml(scene.video)}" controls style="max-width:100%;border-radius:1rem;margin-bottom:10px;"></video></div>`;
+        if (scene.audio) html += `<div class="scene-media"><audio src="${escapeHtml(scene.audio)}" controls style="width:100%;margin-top:8px;"></audio></div>`;
+        html += `<div class="choices" style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">`;
+        if (scene.choices && scene.choices.length > 0) {
+            scene.choices.forEach(choice => {
+                const target = getScene(choice.nextSceneId);
+                html += `<div class="choice-btn" style="background:#F4EFE4;border:2px solid #D9D0BD;border-radius:2.5rem;padding:10px 20px;font-weight:600;font-size:0.9rem;cursor:default;font-family:inherit;color:#1A2A3A;text-align:left;">→ ${escapeHtml(choice.text)} ${target ? '→ ' + escapeHtml(target.title) : ''}</div>`;
+            });
+        } else {
+            html += `<p style="color:#7B8D6E;">🏁 Финальная сцена</p>`;
+        }
+        html += `</div></div>`;
+        previewContainer.innerHTML = html;
+    }
+
+    // ================================================================
+    //  ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
+    // ================================================================
+
+    function switchMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.mode === mode);
+        });
+        if (mode === 'editor') {
+            document.getElementById('editorMode').style.display = 'grid';
+            document.getElementById('previewMode').style.display = 'none';
+        } else {
+            document.getElementById('editorMode').style.display = 'none';
+            document.getElementById('previewMode').style.display = 'block';
+            renderPreview();
+        }
+    }
+
+    // ================================================================
+    //  ОБРАБОТЧИКИ СОБЫТИЙ
+    // ================================================================
+
+    // Режимы
+    modeTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            switchMode(this.dataset.mode);
+        });
+    });
+
+    // Сцены
+    addSceneBtn.addEventListener('click', addScene);
+    emptyAddBtn.addEventListener('click', addScene);
+
+    addChoiceBtn.addEventListener('click', function() {
+        const scene = getScene(selectedSceneId);
+        if (!scene) return;
+        const targetId = project.scenes.length > 0 ? project.scenes[0].id : null;
+        scene.choices.push({ text: 'Новый вариант', nextSceneId: targetId });
+        renderChoices(selectedSceneId);
+        renderSceneList();
+        saveToStorage();
+    });
+
+    saveSceneBtn.addEventListener('click', saveCurrentScene);
+
+    deleteSceneBtn.addEventListener('click', function() {
+        if (selectedSceneId) deleteScene(selectedSceneId);
+    });
+
+    setStartBtn.addEventListener('click', function() {
+        if (selectedSceneId) setStartScene(selectedSceneId);
+    });
+
+    setFinalBtn.addEventListener('click', function() {
+        if (selectedSceneId) toggleFinalScene(selectedSceneId);
+    });
+
+    // Проект
+    projectTitle.addEventListener('input', saveToStorage);
+    projectDesc.addEventListener('input', saveToStorage);
+    templateSelect.addEventListener('change', function() {
+        project.template = parseInt(this.value);
+        saveToStorage();
+    });
+
+    // Пример
+    loadExampleBtn.addEventListener('click', loadExample);
+
+    // JSON
+    saveJsonBtn.addEventListener('click', exportJSON);
+
+    loadJsonBtn.addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = function(e) {
+            if (e.target.files.length > 0) importJSON(e.target.files[0]);
+        };
+        input.click();
+    });
+
+    // Экспорт HTML
+    exportHtmlBtn.addEventListener('click', exportHTML);
+
+    // Сброс
+    resetBtn.addEventListener('click', function() {
+        if (!confirm('Сбросить проект? Все данные будут потеряны.')) return;
+        localStorage.removeItem('vetsim_quest_data');
+        project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
+        let maxId = 0;
+        project.scenes.forEach(s => { if (s.id > maxId) maxId = s.id; });
+        nextId = maxId + 1;
+        selectedSceneId = project.startSceneId || project.scenes[0].id;
+        loadProjectMeta();
+        renderSceneList();
+        loadSceneToEditor(selectedSceneId);
+        saveToStorage();
+        showToast('🔄 Проект сброшен');
+    });
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+
+    function init() {
+        const loaded = loadFromStorage();
+        if (!loaded) {
+            project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
+            let maxId = 0;
+            project.scenes.forEach(s => { if (s.id > maxId) maxId = s.id; });
+            nextId = maxId + 1;
+            selectedSceneId = project.startSceneId || project.scenes[0].id;
+            loadProjectMeta();
+            renderSceneList();
+            loadSceneToEditor(selectedSceneId);
+            saveToStorage();
+        }
+        // Проверяем наличие сцен
+        if (project.scenes.length === 0) {
+            emptyState.style.display = 'block';
+            sceneEditor.style.display = 'none';
+        }
+        showToast('🐾 Добро пожаловать в Квест-комнату!');
+    }
+
+    init();
+
+    // Делаем функции глобальными для консоли (отладка)
+    window.project = project;
+    window.getScene = getScene;
+</script>
+
+</body>
+</html>

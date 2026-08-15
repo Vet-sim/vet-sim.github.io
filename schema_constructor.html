@@ -11,11 +11,7 @@
         /* ============================================================
            БАЗОВЫЕ СТИЛИ VetSim
            ============================================================ */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background: #FDF8F0;
             font-family: 'Montserrat', system-ui, sans-serif;
@@ -32,7 +28,6 @@
             flex-direction: column;
         }
 
-        /* --- Верхняя панель --- */
         .header {
             display: flex;
             flex-wrap: wrap;
@@ -45,36 +40,13 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             flex-shrink: 0;
         }
-        .logo {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #3E5C4A;
-            white-space: nowrap;
-        }
-        .logo span {
-            background: linear-gradient(135deg, #6B8C5C, #A38B60);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .header-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-        }
+        .logo { font-size: 1.3rem; font-weight: 700; color: #3E5C4A; white-space: nowrap; }
+        .logo span { background: linear-gradient(135deg, #6B8C5C, #A38B60); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .header-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
         .btn {
-            background: #EBE3D2;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.85rem;
-            font-family: inherit;
-            color: #3E5C4A;
-            white-space: nowrap;
+            background: #EBE3D2; border: none; padding: 6px 14px; border-radius: 2rem;
+            font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.85rem;
+            font-family: inherit; color: #3E5C4A; white-space: nowrap;
         }
         .btn:hover { opacity: 0.85; }
         .btn-primary { background: #A3B18A; color: #2C4027; }
@@ -84,7 +56,6 @@
         .btn-warning { background: #E2CFB0; color: #4D3E2A; }
         .btn-sm { padding: 4px 10px; font-size: 0.75rem; }
 
-        /* Переключатель режимов */
         .mode-toggle {
             display: flex;
             background: #F0EEE5;
@@ -103,7 +74,6 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
 
-        /* --- Основная рабочая область --- */
         .workspace {
             display: flex;
             flex: 1;
@@ -112,7 +82,6 @@
             min-height: 0;
         }
 
-        /* --- Холст --- */
         .canvas-wrapper {
             flex: 1;
             background: white;
@@ -139,11 +108,11 @@
             background: #faf8f4;
             border-radius: 1.8rem;
         }
-        /* Стили для узлов в SVG */
+
         .node-group { cursor: pointer; }
         .node-group.dragging { cursor: grabbing; }
         .node-rect {
-            fill: white;
+            fill: #A3B18A;
             stroke: #A3B18A;
             stroke-width: 2;
             rx: 12;
@@ -161,7 +130,7 @@
             filter: drop-shadow(0 0 0 3px rgba(44,125,160,0.15));
         }
         .node-text {
-            fill: #3E5C4A;
+            fill: #FFFFFF;
             font-size: 13px;
             font-weight: 600;
             font-family: 'Montserrat', sans-serif;
@@ -181,7 +150,6 @@
         .node-group:hover .node-delete { opacity: 1; }
         .node-delete:hover { fill: #C99464; }
 
-        /* Стили для связей */
         .link-line {
             stroke: #2C7DA0;
             stroke-width: 2;
@@ -198,11 +166,7 @@
             pointer-events: none;
             user-select: none;
         }
-        .link-delete-area {
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
+        .link-delete-area { cursor: pointer; opacity: 0; transition: opacity 0.2s; }
         .link-group:hover .link-delete-area { opacity: 1; }
         .link-delete-area:hover circle { fill: #D4A373; }
 
@@ -220,11 +184,7 @@
             flex-shrink: 0;
             max-height: 100%;
         }
-        .side-panel h3 {
-            font-size: 1rem;
-            color: #3E5C4A;
-            margin-bottom: 6px;
-        }
+        .side-panel h3 { font-size: 1rem; color: #3E5C4A; margin-bottom: 6px; }
         .panel-section {
             border-bottom: 1px solid #EDE8DC;
             padding-bottom: 12px;
@@ -271,45 +231,25 @@
             font-size: 0.8rem;
             gap: 6px;
         }
-        .item-list .item .name {
-            flex: 1;
-            cursor: pointer;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+        .item-list .item .name { flex: 1; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .item-list .item .name:hover { color: #2C7DA0; }
-        .item-list .item .actions {
-            display: flex;
-            gap: 4px;
-            flex-shrink: 0;
-        }
+        .item-list .item .actions { display: flex; gap: 4px; flex-shrink: 0; }
         .item-list .item .actions button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 0.9rem;
-            padding: 0 2px;
-            transition: 0.2s;
+            background: none; border: none; cursor: pointer;
+            font-size: 0.9rem; padding: 0 2px; transition: 0.2s;
         }
         .item-list .item .actions button:hover { transform: scale(1.1); }
         .item-list .item .actions .edit-btn { color: #2C7DA0; }
         .item-list .item .actions .del-btn { color: #D4A373; }
         .item-list .item .color-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            border: 1px solid rgba(0,0,0,0.1);
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
             flex-shrink: 0;
         }
 
-        .empty-msg {
-            color: #7B8D6E;
-            font-size: 0.8rem;
-            padding: 4px 0;
-        }
+        .empty-msg { color: #7B8D6E; font-size: 0.8rem; padding: 4px 0; }
 
-        /* --- Модальное окно --- */
+        /* Модальное окно */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -342,23 +282,15 @@
         .modal .modal-body .info-row { margin-bottom: 8px; }
         .modal .modal-body .info-row strong { color: #2C7DA0; }
 
-        /* --- Адаптивность --- */
         @media (max-width: 900px) {
             .workspace { flex-direction: column; }
             .side-panel {
-                width: 100%;
-                min-width: unset;
-                max-height: 300px;
-                flex-direction: row;
-                flex-wrap: wrap;
-                gap: 8px;
+                width: 100%; min-width: unset; max-height: 300px;
+                flex-direction: row; flex-wrap: wrap; gap: 8px;
             }
             .side-panel .panel-section {
-                flex: 1;
-                min-width: 200px;
-                border-bottom: none;
-                padding-bottom: 0;
-                margin-bottom: 0;
+                flex: 1; min-width: 200px;
+                border-bottom: none; padding-bottom: 0; margin-bottom: 0;
             }
             .header { flex-direction: column; align-items: stretch; }
             .header-actions { justify-content: center; }
@@ -373,7 +305,6 @@
 </head>
 <body>
 <div class="main-container">
-    <!-- Верхняя панель -->
     <header class="header">
         <div class="logo">🐾 <span>ВетСим</span> — Конструктор схем связей</div>
         <div class="header-actions">
@@ -387,9 +318,7 @@
         </div>
     </header>
 
-    <!-- Рабочая область -->
     <div class="workspace">
-        <!-- Холст -->
         <div class="canvas-wrapper">
             <div id="canvasContainer">
                 <svg id="schemaSvg" xmlns="http://www.w3.org/2000/svg">
@@ -402,7 +331,6 @@
             </div>
         </div>
 
-        <!-- Боковая панель -->
         <div class="side-panel" id="sidePanel">
             <div class="panel-section">
                 <h3>➕ Добавить узел</h3>
@@ -429,22 +357,17 @@
 
             <div class="panel-section">
                 <h3>📋 Узлы</h3>
-                <div class="item-list" id="nodeList">
-                    <span class="empty-msg">Нет узлов</span>
-                </div>
+                <div class="item-list" id="nodeList"><span class="empty-msg">Нет узлов</span></div>
             </div>
 
             <div class="panel-section">
                 <h3>🔗 Связи</h3>
-                <div class="item-list" id="linkList">
-                    <span class="empty-msg">Нет связей</span>
-                </div>
+                <div class="item-list" id="linkList"><span class="empty-msg">Нет связей</span></div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Модальное окно для просмотра узла -->
 <div class="modal-overlay" id="nodeModal">
     <div class="modal">
         <button class="close-btn" id="modalCloseBtn">&times;</button>
@@ -459,7 +382,7 @@
 
 <script>
     // ================================================================
-    //  ОСНОВНАЯ ЛОГИКА КОНСТРУКТОРА СХЕМ СВЯЗЕЙ
+    //  ОСНОВНАЯ ЛОГИКА
     // ================================================================
 
     let nodes = [];
@@ -473,9 +396,9 @@
     let dragOffsetX = 0;
     let dragOffsetY = 0;
     let svg = document.getElementById('schemaSvg');
-    let svgDefs = null;
 
-    const NODE_COLORS = ['#A3B18A', '#2C7DA0', '#D4A373', '#6B9E6B', '#CBE0C0', '#F4EFE4', '#E2CFB0', '#BDB2FF', '#FFD6A5', '#FFADAD'];
+    // Цвет по умолчанию для всех узлов
+    const DEFAULT_COLOR = '#A3B18A';
 
     const nodeNameInput = document.getElementById('nodeNameInput');
     const nodeDescInput = document.getElementById('nodeDescInput');
@@ -499,11 +422,10 @@
     const modalNodeId = document.getElementById('modalNodeId');
 
     // ================================================================
-    //  РАБОТА С ХОЛСТОМ (SVG)
+    //  РЕНДЕР
     // ================================================================
 
     function render() {
-        // Получаем или создаём defs
         let defs = svg.querySelector('defs');
         if (!defs) {
             defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
@@ -522,17 +444,12 @@
             svg.appendChild(defs);
         }
 
-        // Очищаем всё, кроме defs
         while (svg.firstChild) {
-            if (svg.firstChild === defs) {
-                // Перемещаем defs в конец, чтобы он остался
-                svg.appendChild(defs);
-                break;
-            }
+            if (svg.firstChild === defs) { svg.appendChild(defs); break; }
             svg.removeChild(svg.firstChild);
         }
 
-        // Рисуем связи
+        // Связи
         for (const link of links) {
             const fromNode = nodes.find(n => n.id === link.from);
             const toNode = nodes.find(n => n.id === link.to);
@@ -571,7 +488,6 @@
                 g.appendChild(labelText);
             }
 
-            // Кнопка удаления связи (только в редакторе)
             if (currentMode === 'editor') {
                 const fromX = fromNode.x || 0;
                 const fromY = fromNode.y || 0;
@@ -608,7 +524,7 @@
             svg.appendChild(g);
         }
 
-        // Рисуем узлы
+        // Узлы
         for (const node of nodes) {
             const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             g.setAttribute('class', 'node-group');
@@ -624,8 +540,8 @@
             rect.setAttribute('height', height);
             rect.setAttribute('x', -width/2);
             rect.setAttribute('y', -height/2);
-            rect.setAttribute('fill', 'white');
-            rect.setAttribute('stroke', node.color || '#A3B18A');
+            rect.setAttribute('fill', DEFAULT_COLOR);
+            rect.setAttribute('stroke', DEFAULT_COLOR);
             rect.setAttribute('stroke-width', '2');
             rect.setAttribute('rx', '12');
             rect.setAttribute('ry', '12');
@@ -668,7 +584,7 @@
     }
 
     // ================================================================
-    //  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ (без изменений)
+    //  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
     // ================================================================
 
     function updateNodeList() {
@@ -681,7 +597,7 @@
             const div = document.createElement('div');
             div.className = 'item';
             div.innerHTML = `
-                <span class="color-dot" style="background:${node.color || '#A3B18A'};"></span>
+                <span class="color-dot" style="background:${DEFAULT_COLOR};"></span>
                 <span class="name" data-id="${node.id}">${node.emoji || ''} ${node.label}</span>
                 <span class="actions">
                     <button class="edit-btn" data-id="${node.id}" title="Редактировать">✏️</button>
@@ -735,22 +651,16 @@
     }
 
     // ================================================================
-    //  ВЗАИМОДЕЙСТВИЕ С УЗЛАМИ (без изменений)
+    //  ВЗАИМОДЕЙСТВИЕ С УЗЛАМИ
     // ================================================================
 
     function onNodeClick(e, nodeId) {
-        if (currentMode === 'view') {
-            showNodeInfo(nodeId);
-        } else {
-            selectedNodeId = nodeId;
-            render();
-        }
+        if (currentMode === 'view') { showNodeInfo(nodeId); }
+        else { selectedNodeId = nodeId; render(); }
     }
 
     function onNodeDblClick(e, nodeId) {
-        if (currentMode === 'editor') {
-            showNodeInfo(nodeId);
-        }
+        if (currentMode === 'editor') showNodeInfo(nodeId);
     }
 
     function onNodeMouseDown(e, nodeId) {
@@ -830,14 +740,11 @@
     }
 
     // ================================================================
-    //  УПРАВЛЕНИЕ УЗЛАМИ И СВЯЗЯМИ (без изменений)
+    //  УПРАВЛЕНИЕ УЗЛАМИ И СВЯЗЯМИ
     // ================================================================
 
-    function addNode(label, description = '', emoji = '', color = null) {
-        if (!label || !label.trim()) {
-            alert('Введите название узла');
-            return null;
-        }
+    function addNode(label, description = '', emoji = '') {
+        if (!label || !label.trim()) { alert('Введите название узла'); return null; }
         label = label.trim();
         if (nodes.some(n => n.label.toLowerCase() === label.toLowerCase())) {
             alert('Узел с таким названием уже существует');
@@ -849,8 +756,7 @@
             y: 150 + Math.random() * 200,
             label: label,
             description: description.trim() || '',
-            emoji: emoji || '',
-            color: color || NODE_COLORS[nodes.length % NODE_COLORS.length]
+            emoji: emoji || ''
         };
         nodes.push(node);
         render();
@@ -881,24 +787,13 @@
     function addLink(fromId, toId, label = '') {
         fromId = parseInt(fromId);
         toId = parseInt(toId);
-        if (!fromId || !toId) {
-            alert('Выберите оба узла');
-            return null;
-        }
-        if (fromId === toId) {
-            alert('Нельзя создать связь узла с самим собой');
-            return null;
-        }
+        if (!fromId || !toId) { alert('Выберите оба узла'); return null; }
+        if (fromId === toId) { alert('Нельзя создать связь узла с самим собой'); return null; }
         if (links.some(l => l.from === fromId && l.to === toId)) {
             alert('Такая связь уже существует');
             return null;
         }
-        const link = {
-            id: nextLinkId++,
-            from: fromId,
-            to: toId,
-            label: label.trim() || ''
-        };
+        const link = { id: nextLinkId++, from: fromId, to: toId, label: label.trim() || '' };
         links.push(link);
         render();
         saveToLocalStorage();
@@ -953,16 +848,12 @@
     }
 
     // ================================================================
-    //  СОХРАНЕНИЕ И ЗАГРУЗКА
+    //  СОХРАНЕНИЕ / ЗАГРУЗКА
     // ================================================================
 
     function saveToLocalStorage() {
-        const data = { nodes, links, nextNodeId, nextLinkId };
-        try {
-            localStorage.setItem('schema_data', JSON.stringify(data));
-        } catch (e) {
-            console.warn('Не удалось сохранить в localStorage', e);
-        }
+        try { localStorage.setItem('schema_data', JSON.stringify({ nodes, links, nextNodeId, nextLinkId })); }
+        catch (e) { console.warn('Не удалось сохранить в localStorage', e); }
     }
 
     function loadFromLocalStorage() {
@@ -980,26 +871,19 @@
             }
             render();
             return true;
-        } catch (e) {
-            console.warn('Не удалось загрузить данные', e);
-            return false;
-        }
+        } catch (e) { console.warn('Не удалось загрузить данные', e); return false; }
     }
 
     function loadExample() {
-        nodes = [];
-        links = [];
-        nextNodeId = 1;
-        nextLinkId = 1;
-
+        nodes = []; links = []; nextNodeId = 1; nextLinkId = 1;
         const exampleData = {
             nodes: [
-                { label: 'Недостаток энергии', description: 'Снижение поступления глюкозы с кормом или повышенный расход', emoji: '⚡', color: '#FFADAD' },
-                { label: 'Мобилизация жира', description: 'Расщепление жировых запасов для получения энергии', emoji: '🔥', color: '#FFD6A5' },
-                { label: '↑ Кетоновые тела', description: 'Накопление ацетона, ацетоуксусной и бета-гидроксимасляной кислот', emoji: '🧪', color: '#FDFFB6' },
-                { label: 'Снижение аппетита', description: 'Угнетение пищевого центра из-за кетонемии', emoji: '🍽️', color: '#CAFFBF' },
-                { label: 'Потеря веса', description: 'Катаболизм мышечной ткани и жира', emoji: '⚖️', color: '#9BF6FF' },
-                { label: 'Жировая дистрофия печени', description: 'Накопление жира в гепатоцитах', emoji: '🫁', color: '#A0C4FF' }
+                { label: 'Недостаток энергии', description: 'Снижение поступления глюкозы с кормом или повышенный расход', emoji: '⚡' },
+                { label: 'Мобилизация жира', description: 'Расщепление жировых запасов для получения энергии', emoji: '🔥' },
+                { label: '↑ Кетоновые тела', description: 'Накопление ацетона, ацетоуксусной и бета-гидроксимасляной кислот', emoji: '🧪' },
+                { label: 'Снижение аппетита', description: 'Угнетение пищевого центра из-за кетонемии', emoji: '🍽️' },
+                { label: 'Потеря веса', description: 'Катаболизм мышечной ткани и жира', emoji: '⚖️' },
+                { label: 'Жировая дистрофия печени', description: 'Накопление жира в гепатоцитах', emoji: '🫁' }
             ],
             links: [
                 { from: 0, to: 1, label: 'вызывает' },
@@ -1013,29 +897,18 @@
 
         const nodeMap = {};
         for (const en of exampleData.nodes) {
-            const node = addNode(en.label, en.description, en.emoji, en.color);
-            if (node) {
-                nodeMap[en.label] = node.id;
-            }
+            const node = addNode(en.label, en.description, en.emoji);
+            if (node) nodeMap[en.label] = node.id;
         }
-
         for (const el of exampleData.links) {
-            const fromLabel = exampleData.nodes[el.from].label;
-            const toLabel = exampleData.nodes[el.to].label;
-            const fromId = nodeMap[fromLabel];
-            const toId = nodeMap[toLabel];
-            if (fromId && toId) {
-                addLink(fromId, toId, el.label);
-            }
+            const fromId = nodeMap[exampleData.nodes[el.from].label];
+            const toId = nodeMap[exampleData.nodes[el.to].label];
+            if (fromId && toId) addLink(fromId, toId, el.label);
         }
 
         const positions = [
-            { x: 200, y: 150 },
-            { x: 500, y: 100 },
-            { x: 500, y: 350 },
-            { x: 800, y: 200 },
-            { x: 800, y: 400 },
-            { x: 500, y: 550 }
+            { x: 200, y: 150 }, { x: 500, y: 100 }, { x: 500, y: 350 },
+            { x: 800, y: 200 }, { x: 800, y: 400 }, { x: 500, y: 550 }
         ];
         for (let i = 0; i < nodes.length && i < positions.length; i++) {
             nodes[i].x = positions[i].x;
@@ -1048,7 +921,7 @@
     }
 
     // ================================================================
-    //  ИСПРАВЛЕННАЯ ФУНКЦИЯ ЭКСПОРТА В HTML
+    //  ЭКСПОРТ В HTML
     // ================================================================
 
     function exportHTML() {
@@ -1057,7 +930,6 @@
             return;
         }
 
-        // Подготавливаем данные для экспорта
         const exportData = {
             nodes: nodes.map(n => ({
                 id: n.id,
@@ -1065,8 +937,7 @@
                 y: n.y || 0,
                 label: n.label,
                 description: n.description || '',
-                emoji: n.emoji || '',
-                color: n.color || '#A3B18A'
+                emoji: n.emoji || ''
             })),
             links: links.map(l => ({
                 id: l.id,
@@ -1077,10 +948,8 @@
         };
 
         const jsonStr = JSON.stringify(exportData);
-        // Экранируем только внутри данных
         const safeJson = jsonStr.replace(/<\/script>/g, '<\\/script>');
 
-        // Создаём полный HTML с встроенными данными
         const htmlContent = `<!DOCTYPE html>
     <html lang="ru">
     <head>
@@ -1101,9 +970,9 @@
             #canvasContainer { width: 100%; height: 100%; position: relative; overflow: auto; }
             #schemaSvg { display: block; width: 100%; height: 100%; min-width: 1200px; min-height: 800px; background: #faf8f4; border-radius: 1.8rem; }
             .node-group { cursor: pointer; }
-            .node-rect { fill: white; stroke: #A3B18A; stroke-width: 2; rx: 12; ry: 12; transition: stroke 0.2s; }
+            .node-rect { fill: #A3B18A; stroke: #A3B18A; stroke-width: 2; rx: 12; ry: 12; transition: stroke 0.2s; }
             .node-group:hover .node-rect { stroke: #2C7DA0; }
-            .node-text { fill: #3E5C4A; font-size: 13px; font-weight: 600; font-family: 'Montserrat', sans-serif; text-anchor: middle; dominant-baseline: central; pointer-events: none; user-select: none; }
+            .node-text { fill: #FFFFFF; font-size: 13px; font-weight: 600; font-family: 'Montserrat', sans-serif; text-anchor: middle; dominant-baseline: central; pointer-events: none; user-select: none; }
             .link-line { stroke: #2C7DA0; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
             .link-label { fill: #3E5C4A; font-size: 10px; font-weight: 600; font-family: 'Montserrat', sans-serif; text-anchor: middle; dominant-baseline: central; pointer-events: none; user-select: none; }
             .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 1000; justify-content: center; align-items: center; }
@@ -1161,16 +1030,12 @@
         const modalNodeDesc = document.getElementById('modalNodeDesc');
 
         function render() {
-            // Очищаем SVG, сохраняя defs
             let defs = svg.querySelector('defs');
             while (svg.firstChild) {
-                if (svg.firstChild === defs) {
-                    break;
-                }
+                if (svg.firstChild === defs) { break; }
                 svg.removeChild(svg.firstChild);
             }
 
-            // Рисуем связи
             for (const link of links) {
                 const fromNode = nodes.find(n => n.id === link.from);
                 const toNode = nodes.find(n => n.id === link.to);
@@ -1202,7 +1067,6 @@
                 svg.appendChild(g);
             }
 
-            // Рисуем узлы
             for (const node of nodes) {
                 const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                 g.setAttribute('class', 'node-group');
@@ -1216,8 +1080,8 @@
                 rect.setAttribute('height', height);
                 rect.setAttribute('x', -width/2);
                 rect.setAttribute('y', -height/2);
-                rect.setAttribute('fill', 'white');
-                rect.setAttribute('stroke', node.color || '#A3B18A');
+                rect.setAttribute('fill', '#A3B18A');
+                rect.setAttribute('stroke', '#A3B18A');
                 rect.setAttribute('stroke-width', '2');
                 rect.setAttribute('rx', '12');
                 rect.setAttribute('ry', '12');
@@ -1261,25 +1125,19 @@
     }
 
     // ================================================================
-    //  ИНИЦИАЛИЗАЦИЯ И СОБЫТИЯ
+    //  ИНИЦИАЛИЗАЦИЯ
     // ================================================================
 
     function init() {
-        if (!loadFromLocalStorage()) {
-            loadExample();
-        }
+        if (!loadFromLocalStorage()) loadExample();
 
         const savedMode = localStorage.getItem('schema_mode');
-        if (savedMode === 'view') {
-            setMode('view');
-        } else {
-            setMode('editor');
-        }
+        setMode(savedMode === 'view' ? 'view' : 'editor');
 
-        modeEditor.addEventListener('click', function() { setMode('editor'); });
-        modeView.addEventListener('click', function() { setMode('view'); });
+        modeEditor.addEventListener('click', () => setMode('editor'));
+        modeView.addEventListener('click', () => setMode('view'));
 
-        addNodeBtn.addEventListener('click', function() {
+        addNodeBtn.addEventListener('click', () => {
             const label = nodeNameInput.value.trim();
             const desc = nodeDescInput.value.trim();
             if (label) {
@@ -1291,38 +1149,25 @@
             }
         });
 
-        nodeNameInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') addNodeBtn.click();
-        });
+        nodeNameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') addNodeBtn.click(); });
 
-        addLinkBtn.addEventListener('click', function() {
+        addLinkBtn.addEventListener('click', () => {
             const from = parseInt(linkFromSelect.value);
             const to = parseInt(linkToSelect.value);
             const label = linkLabelInput.value.trim();
-            if (from && to) {
-                addLink(from, to, label);
-                linkLabelInput.value = '';
-            }
+            if (from && to) { addLink(from, to, label); linkLabelInput.value = ''; }
         });
 
-        saveBtn.addEventListener('click', function() {
-            saveToLocalStorage();
-            alert('Схема сохранена!');
-        });
-
+        saveBtn.addEventListener('click', () => { saveToLocalStorage(); alert('Схема сохранена!'); });
         exportBtn.addEventListener('click', exportHTML);
 
-        loadExampleBtn.addEventListener('click', function() {
-            if (nodes.length > 0) {
-                if (!confirm('Загрузить пример? Текущая схема будет заменена.')) return;
-            }
+        loadExampleBtn.addEventListener('click', () => {
+            if (nodes.length > 0 && !confirm('Загрузить пример? Текущая схема будет заменена.')) return;
             loadExample();
         });
 
-        modalCloseBtn.addEventListener('click', function() { modalOverlay.classList.remove('active'); });
-        modalOverlay.addEventListener('click', function(e) {
-            if (e.target === modalOverlay) modalOverlay.classList.remove('active');
-        });
+        modalCloseBtn.addEventListener('click', () => modalOverlay.classList.remove('active'));
+        modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); });
 
         render();
     }

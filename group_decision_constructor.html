@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>Групповое принятие решений | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #F4F7F9;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #1A2A3A;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .app {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px 16px 20px;
+        }
+
+        /* --- Хедер --- */
+        .header {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 12px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+        }
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #1A2A3A;
+        }
+        .header .logo a {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+        .header .logo .divider {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: #7B8D6E;
+            margin-left: 4px;
+        }
+        .header .logo .tool-name {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: #7B8D6E;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .header-actions .btn {
+            font-size: 0.75rem;
+            padding: 6px 14px;
+        }
+
+        /* --- Кнопки --- */
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.82rem;
+            font-family: inherit;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-2px); }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary { background: #2C7DA0; color: #fff; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: #fff; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-danger { background: #D4A373; color: #fff; }
+        .btn-danger:hover { background: #C99464; }
+        .btn-warning { background: #E2CFB0; color: #4D3E2A; }
+        .btn-warning:hover { background: #D6C09B; }
+        .btn-outline { background: transparent; border: 2px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-sm { padding: 4px 12px; font-size: 0.7rem; }
+
+        /* --- Режимы --- */
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .mode-tab {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .mode-tab:hover { opacity: 0.85; }
+        .mode-tab.active {
+            background: #2C7DA0;
+            color: #fff;
+        }
+
+        /* --- Основная сетка --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 820px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- Левая панель (список этапов) --- */
+        .panel {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 16px 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            border: 1px solid #E7EDE2;
+        }
+        .panel-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #1A2A3A;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .stage-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .stage-list .stage-item {
+            padding: 8px 12px;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.82rem;
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid transparent;
+            user-select: none;
+        }
+        .stage-list .stage-item:hover {
+            background: #F4EFE4;
+        }
+        .stage-list .stage-item.active {
+            background: #D4E3ED;
+            border-left-color: #2C7DA0;
+            font-weight: 600;
+        }
+        .stage-list .stage-item .drag-handle {
+            cursor: grab;
+            color: #B8C8B0;
+            font-size: 0.9rem;
+            margin-right: 6px;
+        }
+        .stage-list .stage-item .stage-index {
+            background: #E7EDE2;
+            border-radius: 40px;
+            padding: 0 10px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #5F7C62;
+        }
+
+        /* --- Правая панель (редактор) --- */
+        .editor-panel {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 18px 22px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            border: 1px solid #E7EDE2;
+        }
+        .editor-panel .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8A9B7A;
+        }
+        .editor-panel .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+
+        /* --- Формы --- */
+        .form-group {
+            margin-bottom: 12px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: #5F7C62;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 8px 14px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FEFAF2;
+            color: #1A2A3A;
+            transition: 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .form-row .form-group {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        /* --- Контекст --- */
+        .context-block {
+            background: #F5F8F0;
+            border-radius: 1rem;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #2C7DA0;
+        }
+        .context-block label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: #2C7DA0;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .context-block textarea {
+            width: 100%;
+            padding: 8px 14px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FEFAF2;
+            color: #1A2A3A;
+            transition: 0.2s;
+            resize: vertical;
+            min-height: 60px;
+        }
+        .context-block textarea:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
+        }
+
+        /* --- Варианты выбора --- */
+        .choice-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 6px 0;
+        }
+        .choice-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: flex-start;
+            background: #F9F6EF;
+            padding: 10px 14px;
+            border-radius: 1rem;
+            border-left: 3px solid #A3B18A;
+        }
+        .choice-item .choice-main {
+            flex: 1;
+            min-width: 160px;
+        }
+        .choice-item .choice-main input[type="text"] {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 0.85rem;
+            padding: 4px 6px;
+            border-bottom: 1px dashed #D9D0BD;
+            outline: none;
+        }
+        .choice-item .choice-main input[type="text"]:focus {
+            border-bottom-color: #2C7DA0;
+        }
+        .choice-item .choice-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .choice-item .choice-meta label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #5F7C62;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+        .choice-item .choice-meta input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #2C7DA0;
+            cursor: pointer;
+        }
+        .choice-item .choice-meta textarea {
+            width: 200px;
+            min-height: 36px;
+            padding: 4px 10px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.75rem;
+            background: white;
+            resize: vertical;
+            outline: none;
+        }
+        .choice-item .choice-meta textarea:focus {
+            border-color: #2C7DA0;
+        }
+        .choice-item .btn-remove {
+            background: none;
+            border: none;
+            color: #D4A373;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            align-self: center;
+        }
+        .choice-item .btn-remove:hover {
+            color: #C99464;
+        }
+        .choice-item.correct {
+            border-left-color: #6B9E6B;
+            background: #F0F7EE;
+        }
+        .choice-item .correct-badge {
+            font-size: 0.65rem;
+            background: #6B9E6B;
+            color: white;
+            padding: 0 10px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+
+        /* --- Превью --- */
+        .preview-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .preview-container .stage-card {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem 2.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #E7EDE2;
+            margin-bottom: 16px;
+        }
+        .preview-container .stage-card .stage-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1A2A3A;
+            margin-bottom: 8px;
+        }
+        .preview-container .stage-card .stage-context {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #2C7DA0;
+            background: #F0F7FA;
+            padding: 12px 18px;
+            border-radius: 1rem;
+            margin-bottom: 12px;
+            border-left: 4px solid #2C7DA0;
+        }
+        .preview-container .stage-card .stage-text {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #3E5C4A;
+            margin-bottom: 12px;
+        }
+        .preview-container .stage-card .stage-media img {
+            max-width: 100%;
+            border-radius: 1rem;
+            margin-bottom: 10px;
+        }
+        .preview-container .stage-card .stage-media video {
+            max-width: 100%;
+            border-radius: 1rem;
+            margin-bottom: 10px;
+        }
+        .preview-container .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .preview-container .choices .choice-preview {
+            padding: 10px 20px;
+            border-radius: 2.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+            border: 2px solid #D9D0BD;
+            background: #F4EFE4;
+            color: #1A2A3A;
+        }
+        .preview-container .choices .choice-preview.correct {
+            border-color: #6B9E6B;
+            background: #E8F5E8;
+        }
+        .preview-container .choices .choice-preview .feedback {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: #5F7C62;
+            margin-top: 4px;
+            padding: 6px 12px;
+            background: #F9F6EF;
+            border-radius: 1rem;
+        }
+        .preview-container .progress-info {
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: #7B8D6E;
+        }
+
+        /* --- Общие --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+
+        /* --- Адаптив --- */
+        @media (max-width: 600px) {
+            .app { padding: 8px; }
+            .header { flex-direction: column; align-items: stretch; gap: 6px; padding: 12px 14px; }
+            .header-actions { justify-content: center; flex-wrap: wrap; }
+            .editor-panel { padding: 14px; }
+            .choice-item { flex-direction: column; align-items: stretch; }
+            .choice-item .choice-meta { flex-direction: column; align-items: stretch; }
+            .choice-item .choice-meta textarea { width: 100%; }
+            .preview-container .stage-card { padding: 1.2rem; }
+            .mode-tabs .mode-tab { flex: 1; text-align: center; padding: 6px 12px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app" id="app">
+    <!-- ===== ХЕДЕР ===== -->
+    <header class="header">
+        <div class="logo">
+            <a href="https://vet-sim.github.io/index.html">
+                🐾 <span class="gradient">ВетСим</span>
+            </a>
+            <span class="divider">—</span>
+            <span class="tool-name">Групповое принятие решений</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-sm btn-primary" id="loadExampleBtn">📂 Пример</button>
+            <button class="btn btn-sm btn-success" id="saveJsonBtn">💾 JSON</button>
+            <button class="btn btn-sm btn-warning" id="loadJsonBtn">📂 JSON</button>
+            <button class="btn btn-sm btn-danger" id="exportHtmlBtn">📤 HTML</button>
+            <button class="btn btn-sm btn-outline" id="resetBtn">🔄 Сброс</button>
+        </div>
+    </header>
+
+    <!-- ===== РЕЖИМЫ ===== -->
+    <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="editor">✏️ Конструктор</button>
+        <button class="mode-tab" data-mode="preview">👁️ Превью</button>
+    </div>
+
+    <!-- ===== ОСНОВНАЯ ОБЛАСТЬ ===== -->
+    <div id="mainArea">
+        <!-- Режим конструктора -->
+        <div id="editorMode" class="main-grid">
+            <!-- Левая панель: список этапов -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>📋 Этапы</span>
+                    <button class="btn btn-sm btn-primary" id="addStageBtn">➕</button>
+                </div>
+                <div class="stage-list" id="stageList"></div>
+                <div style="margin-top:10px; padding-top:10px; border-top:1px solid #E7EDE2;">
+                    <div class="form-group" style="margin-bottom:6px;">
+                        <label>Название сценария</label>
+                        <input type="text" id="projectTitle" value="Новый сценарий" />
+                    </div>
+                    <div class="form-group" style="margin-bottom:6px;">
+                        <label>Описание</label>
+                        <input type="text" id="projectDesc" placeholder="Краткое описание" />
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>⏱️ Таймер (минут)</label>
+                        <input type="number" id="projectTimer" value="10" min="1" max="60" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая панель: редактор этапа -->
+            <div class="editor-panel" id="editorPanel">
+                <div class="empty-state" id="emptyState">
+                    <div class="icon">🎯</div>
+                    <p>Выберите этап из списка слева<br>или создайте новый</p>
+                    <button class="btn btn-primary btn-sm" id="emptyAddBtn" style="margin-top:10px;">➕ Создать этап</button>
+                </div>
+                <div id="stageEditor" style="display:none;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+                        <h3 style="font-size:1rem;font-weight:700;color:#1A2A3A;" id="stageEditorTitle">Редактор этапа</h3>
+                        <div>
+                            <button class="btn btn-sm btn-danger" id="deleteStageBtn">🗑️ Удалить</button>
+                        </div>
+                    </div>
+
+                    <!-- БЛОК КОНТЕКСТА -->
+                    <div class="context-block">
+                        <label>📋 Контекст ситуации</label>
+                        <textarea id="stageContext" rows="3" placeholder="Опишите общий контекст клинического случая, который остаётся неизменным на всех этапах..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Название этапа</label>
+                        <input type="text" id="stageTitle" placeholder="Название этапа" />
+                    </div>
+                    <div class="form-group">
+                        <label>Текст ситуации (поддерживает HTML)</label>
+                        <textarea id="stageText" rows="4" placeholder="Опишите клиническую ситуацию на этом этапе..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Изображение (URL)</label>
+                            <input type="text" id="stageImage" placeholder="https://example.com/image.jpg" />
+                        </div>
+                        <div class="form-group">
+                            <label>Видео (URL)</label>
+                            <input type="text" id="stageVideo" placeholder="https://youtube.com/embed/..." />
+                        </div>
+                        <div class="form-group">
+                            <label>Аудио (URL)</label>
+                            <input type="text" id="stageAudio" placeholder="https://example.com/audio.mp3" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Варианты действий</label>
+                        <div class="choice-list" id="choiceList"></div>
+                        <button class="btn btn-sm btn-primary" id="addChoiceBtn">➕ Добавить вариант</button>
+                        <span style="font-size:0.7rem;color:#8A9B7A;margin-left:8px;">(от 2 до 6 вариантов)</span>
+                    </div>
+                    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-sm btn-success" id="saveStageBtn">💾 Сохранить этап</button>
+                        <button class="btn btn-sm btn-outline" id="moveUpBtn">⬆ Вверх</button>
+                        <button class="btn btn-sm btn-outline" id="moveDownBtn">⬇ Вниз</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Режим превью -->
+        <div id="previewMode" style="display:none;">
+            <div class="panel" style="padding:20px;">
+                <div class="preview-container" id="previewContainer">
+                    <!-- рендерится JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ================================================================
+    //  ГРУППОВОЕ ПРИНЯТИЕ РЕШЕНИЙ — ПОЛНАЯ ЛОГИКА
+    // ================================================================
+
+    // ================================================================
+    //  ВСТРОЕННЫЙ ПРИМЕР «СПАСЕНИЕ СТАДА»
+    // ================================================================
+    const EXAMPLE_DATA = {
+        title: 'Спасение стада',
+        description: 'Клинический случай вспышки пастереллёза на ферме КРС',
+        timer: 10,
+        stages: [
+            {
+                id: 1,
+                title: 'Первичный сбор информации',
+                context: 'Вы — ветеринарный врач, работающий в клинике для сельскохозяйственных животных. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
+                text: 'Вы звоните фермеру. Какие вопросы вы зададите в первую очередь, чтобы оценить ситуацию? (выберите 3 вопроса из 6 представленных)',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [
+                    { text: '«Точно ли вы уверены, что это сибирская язва?»', isCorrect: false, feedback: 'Этот вопрос неконструктивен. Нужно собирать объективные данные, а не пытаться подтвердить необоснованную гипотезу.' },
+                    { text: '«Прививали ли вы скот против сибирской язвы?»', isCorrect: true, feedback: 'Да, это важный вопрос, чтобы оценить статус вакцинации и исключить или подтвердить риск особо опасных инфекций.' },
+                    { text: '«Были ли на ферме падежи в последнее время и у соседей?»', isCorrect: true, feedback: 'Верно! Это позволяет оценить эпизоотическую ситуацию и распространённость заболевания.' },
+                    { text: '«Как именно вы утилизируете трупы?»', isCorrect: true, feedback: 'Правильно! Способ утилизации трупов критически важен для предотвращения распространения инфекции.' },
+                    { text: '«Вы кормите животных силосом?»', isCorrect: false, feedback: 'Силос — это корм, но он не является ключевым фактором в данной ситуации. Сначала нужно оценить эпизоотические риски.' },
+                    { text: '«Вы замечали у животных признаки поражения нервной системы?»', isCorrect: false, feedback: 'Это уточняющий вопрос, но не первоочередной. Сначала нужно оценить вакцинацию и эпизоотическую ситуацию.' }
+                ]
+            },
+            {
+                id: 2,
+                title: 'Осмотр и дифференциальная диагностика',
+                context: 'Вы — ветеринарный врач, работающий в клинике для сельскохозяйственных животных. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
+                text: 'Вы прибыли на ферму. После осмотра больных животных и вскрытия павшего, вы исключаете сибирскую язву. Но симптомы (лихорадка, отказ от корма, одышка, тахикардия, признаки общей интоксикации) остаются. Каков ваш следующий шаг?',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [
+                    { text: 'Назначить антибиотики широкого спектра (цефалоспорины), так как клиническая картина указывает на бактериальную инфекцию.', isCorrect: false, feedback: 'Назначение антибиотиков вслепую без диагностики может быть неэффективно и опасно. Симптомы не являются строго специфичными для бактериальной инфекции.' },
+                    { text: 'Взять кровь и другие биоматериалы для лабораторного исследования, чтобы точно идентифицировать возбудителя и проверить чувствительность к антибиотикам.', isCorrect: true, feedback: 'Верно! Лабораторная диагностика — золотой стандарт. Это позволяет точно определить возбудителя и выбрать эффективное лечение.' },
+                    { text: 'Предположить, что это вирусное заболевание, и назначить симптоматическое лечение (жаропонижающие, витамины), так как антибиотики бесполезны.', isCorrect: false, feedback: 'Вирусная инфекция — лишь одна из гипотез. Без диагностики нельзя исключить бактериальную инфекцию. Нужно провести лабораторные исследования.' }
+                ]
+            },
+            {
+                id: 3,
+                title: 'Интерпретация результатов и тактика',
+                context: 'Вы — ветеринарный врач, работающий в клинике для сельскохозяйственных животных. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
+                text: 'Анализ ПЦР подтверждает наличие пастереллёза (геморрагическая септицемия). Штамм чувствителен к тетрациклинам. Каков ваш план действий?',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [
+                    { text: 'Назначить всем животным в стаде тетрациклин внутримышечно, чтобы остановить распространение инфекции.', isCorrect: false, feedback: 'Внутримышечное лечение всех животных — стрессовый и трудоёмкий подход. Также это не решает проблему профилактики здоровых животных.' },
+                    { text: 'Организовать массовую вакцинацию здоровых животных против пастереллёза.', isCorrect: false, feedback: 'Вакцинация важна, но только её недостаточно. Больных животных нужно лечить, а здоровых — вакцинировать. Комплексный подход эффективнее.' },
+                    { text: 'Немедленно изолировать всех больных животных в отдельное помещение и начать лечение in-feed (с кормом) или in-water (с водой) тетрациклином, а здоровым — провести вакцинацию.', isCorrect: true, feedback: 'Верно! Это комплексный подход. Лечение всех животных in-feed менее стрессово и эффективно при массовых инфекциях. Изоляция больных снижает нагрузку на здоровое стадо. Вакцинация здоровых — важная профилактическая мера.' }
+                ]
+            },
+            {
+                id: 4,
+                title: 'Профилактика и меры биобезопасности',
+                context: 'Вы — ветеринарный врач, работающий в клинике для сельскохозяйственных животных. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
+                text: 'Вы успешно купировали вспышку. Какие долгосрочные меры вы предложите фермеру, чтобы предотвратить повторение подобных ситуаций?',
+                image: '',
+                video: '',
+                audio: '',
+                choices: [
+                    { text: 'Провести полную дезинфекцию всех помещений и оборудования.', isCorrect: true, feedback: 'Верно! Дезинфекция — обязательный этап после вспышки для уничтожения возбудителя в окружающей среде.' },
+                    { text: 'Рекомендовать изменить поставщика кормов, так как инфекция могла быть занесена именно через корма.', isCorrect: false, feedback: 'Это скорее рабочий процесс, а не стратегическое решение. Корма не являются основным путём передачи пастереллёза.' },
+                    { text: 'Разработать график вакцинации и усилить контроль за состоянием новых животных при вводе в стадо.', isCorrect: true, feedback: 'Верно! График вакцинации и контроль новых животных — ключевые меры профилактики для предотвращения повторных вспышек.' }
+                ]
+            }
+        ]
+    };
+
+    // ================================================================
+    //  СОСТОЯНИЕ
+    // ================================================================
+    let project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
+    let selectedStageId = project.stages.length > 0 ? project.stages[0].id : null;
+    let currentMode = 'editor';
+    let nextId = 100;
+
+    // ================================================================
+    //  DOM-СВЯЗИ
+    // ================================================================
+    const stageListEl = document.getElementById('stageList');
+    const emptyState = document.getElementById('emptyState');
+    const stageEditor = document.getElementById('stageEditor');
+    const stageEditorTitle = document.getElementById('stageEditorTitle');
+
+    const projectTitle = document.getElementById('projectTitle');
+    const projectDesc = document.getElementById('projectDesc');
+    const projectTimer = document.getElementById('projectTimer');
+
+    const stageContext = document.getElementById('stageContext');
+    const stageTitle = document.getElementById('stageTitle');
+    const stageText = document.getElementById('stageText');
+    const stageImage = document.getElementById('stageImage');
+    const stageVideo = document.getElementById('stageVideo');
+    const stageAudio = document.getElementById('stageAudio');
+    const choiceList = document.getElementById('choiceList');
+
+    const addStageBtn = document.getElementById('addStageBtn');
+    const emptyAddBtn = document.getElementById('emptyAddBtn');
+    const addChoiceBtn = document.getElementById('addChoiceBtn');
+    const saveStageBtn = document.getElementById('saveStageBtn');
+    const deleteStageBtn = document.getElementById('deleteStageBtn');
+    const moveUpBtn = document.getElementById('moveUpBtn');
+    const moveDownBtn = document.getElementById('moveDownBtn');
+
+    const loadExampleBtn = document.getElementById('loadExampleBtn');
+    const saveJsonBtn = document.getElementById('saveJsonBtn');
+    const loadJsonBtn = document.getElementById('loadJsonBtn');
+    const exportHtmlBtn = document.getElementById('exportHtmlBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const modeTabs = document.querySelectorAll('.mode-tab');
+    const previewContainer = document.getElementById('previewContainer');
+
+    const toast = document.getElementById('toast');
+    let toastTimer = null;
+
+    // ================================================================
+    //  ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+    // ================================================================
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function generateId() {
+        return nextId++;
+    }
+
+    function getStage(id) {
+        return project.stages.find(s => s.id === id);
+    }
+
+    function getStageIndex(id) {
+        return project.stages.findIndex(s => s.id === id);
+    }
+
+    function getStageChoices(id) {
+        const stage = getStage(id);
+        return stage ? stage.choices : [];
+    }
+
+    // ================================================================
+    //  РЕНДЕР СПИСКА ЭТАПОВ
+    // ================================================================
+    function renderStageList() {
+        stageListEl.innerHTML = '';
+        project.stages.forEach((stage, index) => {
+            const div = document.createElement('div');
+            div.className = 'stage-item' + (stage.id === selectedStageId ? ' active' : '');
+            div.innerHTML = `
+                <span>
+                    <span class="drag-handle">⠿</span>
+                    ${escapeHtml(stage.title || 'Без названия')}
+                </span>
+                <span class="stage-index">${index + 1}</span>
+            `;
+            div.addEventListener('click', () => {
+                selectedStageId = stage.id;
+                renderStageList();
+                loadStageToEditor(stage.id);
+            });
+            stageListEl.appendChild(div);
+        });
+
+        // Drag-and-drop
+        let dragItem = null;
+        document.querySelectorAll('.stage-item').forEach(item => {
+            item.addEventListener('dragstart', function(e) {
+                dragItem = this;
+                this.style.opacity = '0.4';
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', this.querySelector('.stage-index')?.textContent || '');
+            });
+            item.addEventListener('dragend', function() {
+                this.style.opacity = '1';
+            });
+            item.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                this.style.borderTop = '2px solid #2C7DA0';
+            });
+            item.addEventListener('dragleave', function() {
+                this.style.borderTop = 'none';
+            });
+            item.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderTop = 'none';
+                if (!dragItem || dragItem === this) return;
+                const fromIndex = Array.from(stageListEl.children).indexOf(dragItem);
+                const toIndex = Array.from(stageListEl.children).indexOf(this);
+                if (fromIndex < toIndex) {
+                    const [moved] = project.stages.splice(fromIndex, 1);
+                    project.stages.splice(toIndex, 0, moved);
+                } else {
+                    const [moved] = project.stages.splice(fromIndex, 1);
+                    project.stages.splice(toIndex, 0, moved);
+                }
+                renderStageList();
+                saveToStorage();
+                showToast('🔄 Порядок этапов изменён');
+            });
+        });
+    }
+
+    // ================================================================
+    //  ЗАГРУЗКА ЭТАПА В РЕДАКТОР
+    // ================================================================
+    function loadStageToEditor(id) {
+        const stage = getStage(id);
+        if (!stage) {
+            emptyState.style.display = 'block';
+            stageEditor.style.display = 'none';
+            return;
+        }
+        emptyState.style.display = 'none';
+        stageEditor.style.display = 'block';
+        stageEditorTitle.textContent = `✏️ ${escapeHtml(stage.title || 'Без названия')}`;
+
+        stageContext.value = stage.context || '';
+        stageTitle.value = stage.title || '';
+        stageText.value = stage.text || '';
+        stageImage.value = stage.image || '';
+        stageVideo.value = stage.video || '';
+        stageAudio.value = stage.audio || '';
+
+        renderChoices(id);
+    }
+
+    // ================================================================
+    //  РЕНДЕР ВАРИАНТОВ
+    // ================================================================
+    function renderChoices(stageId) {
+        const stage = getStage(stageId);
+        if (!stage) return;
+        choiceList.innerHTML = '';
+        stage.choices.forEach((choice, index) => {
+            const div = document.createElement('div');
+            div.className = 'choice-item' + (choice.isCorrect ? ' correct' : '');
+            div.innerHTML = `
+                <div class="choice-main">
+                    <input type="text" value="${escapeHtml(choice.text)}" placeholder="Текст варианта" data-index="${index}" class="choice-text">
+                </div>
+                <div class="choice-meta">
+                    <label>
+                        <input type="checkbox" class="choice-correct" data-index="${index}" ${choice.isCorrect ? 'checked' : ''}>
+                        ✅ Правильный
+                    </label>
+                    <textarea class="choice-feedback" data-index="${index}" placeholder="Обратная связь">${escapeHtml(choice.feedback || '')}</textarea>
+                    <button class="btn-remove" data-index="${index}" title="Удалить">✕</button>
+                </div>
+                ${choice.isCorrect ? '<span class="correct-badge">ВЕРНО</span>' : ''}
+            `;
+            choiceList.appendChild(div);
+        });
+
+        // Обработчики
+        document.querySelectorAll('.choice-text').forEach(inp => {
+            inp.addEventListener('input', function() {
+                const idx = parseInt(this.dataset.index);
+                const stage = getStage(stageId);
+                if (stage && stage.choices[idx]) {
+                    stage.choices[idx].text = this.value;
+                }
+            });
+        });
+
+        document.querySelectorAll('.choice-correct').forEach(chk => {
+            chk.addEventListener('change', function() {
+                const idx = parseInt(this.dataset.index);
+                const stage = getStage(stageId);
+                if (stage && stage.choices[idx]) {
+                    // Если отмечаем как правильный, снимаем отметки с других
+                    if (this.checked) {
+                        stage.choices.forEach((_, i) => {
+                            if (i !== idx) stage.choices[i].isCorrect = false;
+                        });
+                    }
+                    stage.choices[idx].isCorrect = this.checked;
+                    renderChoices(stageId);
+                }
+            });
+        });
+
+        document.querySelectorAll('.choice-feedback').forEach(ta => {
+            ta.addEventListener('input', function() {
+                const idx = parseInt(this.dataset.index);
+                const stage = getStage(stageId);
+                if (stage && stage.choices[idx]) {
+                    stage.choices[idx].feedback = this.value;
+                }
+            });
+        });
+
+        document.querySelectorAll('.choice-item .btn-remove').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.index);
+                const stage = getStage(stageId);
+                if (stage) {
+                    if (stage.choices.length <= 2) {
+                        showToast('⚠️ Минимум 2 варианта на этап');
+                        return;
+                    }
+                    stage.choices.splice(idx, 1);
+                    renderChoices(stageId);
+                    renderStageList();
+                }
+            });
+        });
+    }
+
+    // ================================================================
+    //  СОХРАНЕНИЕ ЭТАПА
+    // ================================================================
+    function saveCurrentStage() {
+        if (!selectedStageId) {
+            showToast('⚠️ Выберите этап для сохранения');
+            return;
+        }
+        const stage = getStage(selectedStageId);
+        if (!stage) return;
+
+        stage.context = stageContext.value.trim() || '';
+        stage.title = stageTitle.value.trim() || 'Без названия';
+        stage.text = stageText.value.trim() || '';
+        stage.image = stageImage.value.trim() || '';
+        stage.video = stageVideo.value.trim() || '';
+        stage.audio = stageAudio.value.trim() || '';
+
+        // Удаляем пустые варианты
+        stage.choices = stage.choices.filter(c => c.text.trim().length > 0);
+
+        renderStageList();
+        loadStageToEditor(selectedStageId);
+        showToast('✅ Этап сохранён');
+        saveToStorage();
+    }
+
+    // ================================================================
+    //  УПРАВЛЕНИЕ ЭТАПАМИ
+    // ================================================================
+    function addStage() {
+        const newStage = {
+            id: generateId(),
+            title: `Новый этап ${project.stages.length + 1}`,
+            context: '',
+            text: 'Опишите клиническую ситуацию...',
+            image: '',
+            video: '',
+            audio: '',
+            choices: [
+                { text: 'Вариант 1', isCorrect: false, feedback: '' },
+                { text: 'Вариант 2', isCorrect: false, feedback: '' },
+                { text: 'Вариант 3', isCorrect: false, feedback: '' }
+            ]
+        };
+        project.stages.push(newStage);
+        selectedStageId = newStage.id;
+        renderStageList();
+        loadStageToEditor(selectedStageId);
+        saveToStorage();
+        showToast('➕ Этап добавлен');
+    }
+
+    function deleteStage(id) {
+        if (project.stages.length <= 1) {
+            showToast('⚠️ Нельзя удалить последний этап');
+            return;
+        }
+        if (!confirm('Удалить этап?')) return;
+        const idx = getStageIndex(id);
+        if (idx === -1) return;
+        project.stages.splice(idx, 1);
+        selectedStageId = project.stages.length > 0 ? project.stages[0].id : null;
+        renderStageList();
+        if (selectedStageId) loadStageToEditor(selectedStageId);
+        else { emptyState.style.display = 'block'; stageEditor.style.display = 'none'; }
+        saveToStorage();
+        showToast('🗑️ Этап удалён');
+    }
+
+    function moveStage(direction) {
+        if (!selectedStageId) return;
+        const idx = getStageIndex(selectedStageId);
+        if (direction === 'up' && idx > 0) {
+            [project.stages[idx], project.stages[idx - 1]] = [project.stages[idx - 1], project.stages[idx]];
+        } else if (direction === 'down' && idx < project.stages.length - 1) {
+            [project.stages[idx], project.stages[idx + 1]] = [project.stages[idx + 1], project.stages[idx]];
+        } else {
+            showToast('⚠️ Этап уже на краю списка');
+            return;
+        }
+        renderStageList();
+        loadStageToEditor(selectedStageId);
+        saveToStorage();
+        showToast(direction === 'up' ? '⬆ Перемещён вверх' : '⬇ Перемещён вниз');
+    }
+
+    // ================================================================
+    //  ПРОЕКТ
+    // ================================================================
+    function updateProjectMeta() {
+        project.title = projectTitle.value.trim() || 'Новый сценарий';
+        project.description = projectDesc.value.trim() || '';
+        project.timer = parseInt(projectTimer.value) || 10;
+    }
+
+    function loadProjectMeta() {
+        projectTitle.value = project.title || 'Новый сценарий';
+        projectDesc.value = project.description || '';
+        projectTimer.value = project.timer || 10;
+    }
+
+    function saveToStorage() {
+        updateProjectMeta();
+        try {
+            localStorage.setItem('vetsim_group_decision_data', JSON.stringify(project));
+        } catch (e) {}
+    }
+
+    function loadFromStorage() {
+        try {
+            const raw = localStorage.getItem('vetsim_group_decision_data');
+            if (raw) {
+                const data = JSON.parse(raw);
+                if (data.stages && data.stages.length > 0) {
+                    project = data;
+                    let maxId = 0;
+                    project.stages.forEach(s => { if (s.id > maxId) maxId = s.id; });
+                    nextId = maxId + 1;
+                    selectedStageId = project.stages[0].id;
+                    loadProjectMeta();
+                    renderStageList();
+                    loadStageToEditor(selectedStageId);
+                    return true;
+                }
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    // ================================================================
+    //  ЗАГРУЗКА ПРИМЕРА
+    // ================================================================
+    function loadExample() {
+        if (!confirm('Загрузить пример? Текущие изменения будут потеряны.')) return;
+        project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
+        let maxId = 0;
+        project.stages.forEach(s => { if (s.id > maxId) maxId = s.id; });
+        nextId = maxId + 1;
+        selectedStageId = project.stages[0].id;
+        loadProjectMeta();
+        renderStageList();
+        loadStageToEditor(selectedStageId);
+        saveToStorage();
+        showToast('📂 Пример «Спасение стада» загружен');
+    }
+
+    // ================================================================
+    //  ЭКСПОРТ/ИМПОРТ JSON
+    // ================================================================
+    function exportJSON() {
+        updateProjectMeta();
+        const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${project.title.replace(/\s+/g, '_')}_scenario.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 JSON экспортирован');
+    }
+
+    function importJSON(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.stages && data.stages.length > 0) {
+                    project = data;
+                    let maxId = 0;
+                    project.stages.forEach(s => { if (s.id > maxId) maxId = s.id; });
+                    nextId = maxId + 1;
+                    selectedStageId = project.stages[0].id;
+                    loadProjectMeta();
+                    renderStageList();
+                    loadStageToEditor(selectedStageId);
+                    saveToStorage();
+                    showToast('📂 Проект загружен');
+                } else {
+                    showToast('❌ Неверный формат JSON');
+                }
+            } catch (err) {
+                showToast('❌ Ошибка чтения файла');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // ================================================================
+    //  ЭКСПОРТ В HTML (ИСПРАВЛЕНАЯ ВЕРСИЯ)
+    // ================================================================
+    function exportHTML() {
+        updateProjectMeta();
+
+        // Проверяем, что есть этапы и варианты
+        if (project.stages.length === 0) {
+            showToast('⚠️ Добавьте хотя бы один этап!');
+            return;
+        }
+
+        // Экранируем данные для безопасной вставки в JS
+        const safeProject = JSON.stringify(project)
+            .replace(/\\/g, '\\\\')
+            .replace(/\$/g, '\\$')
+            .replace(/`/g, '\\`')
+            .replace(/<\/script>/gi, '<\\/script>');
+
+        const html = `<!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+        <title>${escapeHtml(project.title)} | Групповое принятие решений</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        <style>
+            * { margin:0; padding:0; box-sizing:border-box; }
+            body { font-family: 'Montserrat', system-ui, sans-serif; background:#F4F7F9; color:#1A2A3A; min-height:100vh; padding:20px; }
+            .container { max-width:900px; margin:0 auto; }
+            .header { background:white; border-radius:1.5rem; padding:16px 24px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.04); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; }
+            .header .logo { font-weight:800; font-size:1.1rem; color:#1A2A3A; }
+            .header .logo span { color:#2C7DA0; }
+            .header .timer { background:#F0F7FA; padding:4px 16px; border-radius:40px; font-size:0.8rem; font-weight:600; color:#2C7DA0; }
+            .stage-card { background:white; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:1px solid #E7EDE2; margin-bottom:20px; }
+            .stage-context { font-size:0.95rem; line-height:1.6; color:#2C7DA0; background:#F0F7FA; padding:12px 18px; border-radius:1rem; margin-bottom:12px; border-left:4px solid #2C7DA0; }
+            .stage-title { font-size:1.5rem; font-weight:700; color:#1A2A3A; margin-bottom:8px; }
+            .stage-text { font-size:1rem; line-height:1.7; color:#3E5C4A; margin-bottom:12px; }
+            .stage-media img, .stage-media video { max-width:100%; border-radius:1rem; margin-bottom:10px; }
+            .choices { display:flex; flex-direction:column; gap:10px; margin:16px 0; }
+            .choice-btn { padding:12px 20px; border-radius:2.5rem; font-weight:600; font-size:0.9rem; cursor:pointer; transition:0.2s; font-family:inherit; text-align:left; background:#F4EFE4; border:2px solid #D9D0BD; color:#1A2A3A; width:100%; }
+            .choice-btn:hover { border-color:#2C7DA0; background:#D4E3ED; transform:translateX(4px); }
+            .choice-btn.selected { border-color:#2C7DA0; background:#D4E3ED; }
+            .choice-btn.reveal-correct { border-color:#6B9E6B; background:#E8F5E8; }
+            .choice-btn.reveal-wrong { border-color:#D4A373; background:#FDF0E8; }
+            .choice-btn .feedback { font-weight:400; font-size:0.8rem; color:#5F7C62; margin-top:4px; padding:6px 12px; background:#F9F6EF; border-radius:1rem; display:none; }
+            .choice-btn .feedback.show { display:block; }
+            .choice-btn .votes { font-weight:400; font-size:0.75rem; color:#7B8D6E; margin-left:8px; }
+            .progress-info { font-size:0.8rem; color:#7B8D6E; margin-bottom:8px; display:flex; justify-content:space-between; flex-wrap:wrap; }
+            .progress-bar { height:6px; background:#E7EDE2; border-radius:40px; overflow:hidden; margin-top:12px; }
+            .progress-bar .fill { height:100%; background:linear-gradient(90deg,#2C7DA0,#6B9E6B); border-radius:40px; transition:width 0.4s ease; }
+            .controls { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+            .btn { background:#EBE3D2; border:none; padding:8px 20px; border-radius:2.5rem; font-weight:600; cursor:pointer; font-family:inherit; font-size:0.85rem; color:#1A2A3A; }
+            .btn-primary { background:#2C7DA0; color:#fff; }
+            .btn-primary:hover { background:#236B8A; }
+            .btn-success { background:#6B9E6B; color:#fff; }
+            .btn-success:hover { background:#5A865A; }
+            .btn-outline { background:transparent; border:2px solid #D9D0BD; }
+            .btn-outline:hover { background:#F0EEE5; }
+            .footer { text-align:center; font-size:0.75rem; color:#7B8D6E; margin-top:24px; padding-top:16px; border-top:1px solid #E7EDE2; }
+            .footer a { color:#2C7DA0; text-decoration:none; }
+            @media (max-width:600px) { .stage-card { padding:1.2rem; } .header { flex-direction:column; align-items:stretch; } }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🧩 <span>${escapeHtml(project.title)}</span></div>
+            <div class="timer">⏱️ ${project.timer || 10} мин на обсуждение</div>
+        </div>
+
+        <div id="app">
+            <div class="progress-info">
+                <span id="stageCounter">Шаг 1 из ${project.stages.length}</span>
+                <span id="stageTitleHeader">${escapeHtml(project.stages[0]?.title || '')}</span>
+            </div>
+            <div class="progress-bar"><div class="fill" id="progressFill" style="width:${project.stages.length > 0 ? (1 / project.stages.length * 100) : 0}%;"></div></div>
+
+            <div class="stage-card" id="stageCard">
+                ${project.stages[0]?.context ? `<div class="stage-context">📋 ${escapeHtml(project.stages[0].context)}</div>` : ''}
+                <div class="stage-title" id="stageTitle">${escapeHtml(project.stages[0]?.title || '')}</div>
+                <div class="stage-text" id="stageText">${(project.stages[0]?.text || '').replace(/`/g, '\\`')}</div>
+                <div class="stage-media" id="stageMedia"></div>
+                <div class="choices" id="choicesContainer"></div>
+                <div class="controls">
+                    <button class="btn btn-primary" id="revealBtn">📊 Показать результаты</button>
+                    <button class="btn btn-outline" id="resetVotesBtn">🔄 Сбросить голоса</button>
+                    ${project.stages.length > 1 ? `<button class="btn btn-outline" id="nextBtn">➡️ Следующий этап</button>` : ''}
+                </div>
+            </div>
+        </div>
+        <div class="footer">🐾 ВетСим — ветеринарное образование · <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a></div>
+    </div>
+
+    <script>
+        const PROJECT = ${safeProject};
+        let currentStageIndex = 0;
+        let votes = {};
+        let revealed = false;
+
+        function getStage(index) { return PROJECT.stages[index] || null; }
+
+        function renderStage(index) {
+            const stage = getStage(index);
+            if (!stage) return;
+
+            // Контекст
+            const contextEl = document.querySelector('.stage-context');
+            if (stage.context) {
+                if (contextEl) {
+                    contextEl.textContent = '📋 ' + stage.context;
+                    contextEl.style.display = 'block';
+                } else {
+                    const newContext = document.createElement('div');
+                    newContext.className = 'stage-context';
+                    newContext.textContent = '📋 ' + stage.context;
+                    document.getElementById('stageCard').prepend(newContext);
+                }
+            } else if (contextEl) {
+                contextEl.style.display = 'none';
+            }
+
+            document.getElementById('stageTitle').textContent = stage.title || 'Без названия';
+            document.getElementById('stageText').innerHTML = stage.text || '';
+            document.getElementById('stageCounter').textContent = 'Шаг ' + (index + 1) + ' из ' + PROJECT.stages.length;
+            document.getElementById('stageTitleHeader').textContent = stage.title || '';
+            document.getElementById('progressFill').style.width = ((index + 1) / PROJECT.stages.length * 100) + '%';
+
+            const mediaEl = document.getElementById('stageMedia');
+            mediaEl.innerHTML = '';
+            if (stage.image) mediaEl.innerHTML += '<img src="' + stage.image + '" alt="Изображение" loading="lazy">';
+            if (stage.video) mediaEl.innerHTML += '<video src="' + stage.video + '" controls></video>';
+            if (stage.audio) mediaEl.innerHTML += '<audio src="' + stage.audio + '" controls style="width:100%;margin-top:8px;"></audio>';
+
+            const container = document.getElementById('choicesContainer');
+            container.innerHTML = '';
+
+            if (!votes[index]) {
+                votes[index] = {};
+                stage.choices.forEach(function(_, i) { votes[index][i] = 0; });
+            }
+
+            stage.choices.forEach(function(choice, i) {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.dataset.index = i;
+                const voteCount = votes[index][i] || 0;
+                btn.innerHTML = choice.text + ' <span class="votes">(' + voteCount + ' голос' + (voteCount !== 1 ? 'а' : '') + ')</span><div class="feedback" id="feedback-' + index + '-' + i + '">' + (choice.feedback || '') + '</div>';
+                btn.addEventListener('click', function() {
+                    if (revealed) return;
+                    votes[index][i] = (votes[index][i] || 0) + 1;
+                    renderStage(index);
+                });
+                container.appendChild(btn);
+            });
+
+            revealed = false;
+            document.getElementById('revealBtn').textContent = '📊 Показать результаты';
+            document.getElementById('revealBtn').disabled = false;
+        }
+
+        function revealResults() {
+            const stage = getStage(currentStageIndex);
+            if (!stage) return;
+            revealed = true;
+
+            const btns = document.querySelectorAll('.choice-btn');
+            btns.forEach(function(btn, i) {
+                const choice = stage.choices[i];
+                if (choice.isCorrect) {
+                    btn.classList.add('reveal-correct');
+                } else {
+                    btn.classList.add('reveal-wrong');
+                }
+                const feedback = btn.querySelector('.feedback');
+                if (feedback) feedback.classList.add('show');
+            });
+
+            document.getElementById('revealBtn').textContent = '✅ Результаты показаны';
+            document.getElementById('revealBtn').disabled = true;
+        }
+
+        function resetVotes() {
+            if (votes[currentStageIndex]) {
+                const stage = getStage(currentStageIndex);
+                if (stage) {
+                    stage.choices.forEach(function(_, i) { votes[currentStageIndex][i] = 0; });
+                }
+            }
+            revealed = false;
+            renderStage(currentStageIndex);
+            document.getElementById('revealBtn').textContent = '📊 Показать результаты';
+            document.getElementById('revealBtn').disabled = false;
+        }
+
+        function nextStage() {
+            if (currentStageIndex < PROJECT.stages.length - 1) {
+                currentStageIndex++;
+                renderStage(currentStageIndex);
+                document.getElementById('revealBtn').textContent = '📊 Показать результаты';
+                document.getElementById('revealBtn').disabled = false;
+            } else {
+                alert('🎉 Вы прошли все этапы сценария!');
+            }
+        }
+
+        // Старт
+        renderStage(0);
+
+        document.getElementById('revealBtn').addEventListener('click', revealResults);
+        document.getElementById('resetVotesBtn').addEventListener('click', resetVotes);
+        var nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) nextBtn.addEventListener('click', nextStage);
+    <\/script>
+    </body>
+    </html>`;
+
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${project.title.replace(/\s+/g, '_')}_decision_scenario.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 HTML экспортирован');
+    }
+
+    // ================================================================
+    //  РЕЖИМ ПРЕВЬЮ
+    // ================================================================
+    function renderPreview() {
+        updateProjectMeta();
+        if (project.stages.length === 0) {
+            previewContainer.innerHTML = '<p style="text-align:center;color:#8A9B7A;">Нет этапов для отображения</p>';
+            return;
+        }
+
+        let html = '';
+        project.stages.forEach((stage, idx) => {
+            html += `
+                <div class="stage-card" style="margin-bottom:16px;background:white;border-radius:2rem;padding:1.5rem;box-shadow:0 4px 20px rgba(0,0,0,0.06);border:1px solid #E7EDE2;">
+                    <div class="progress-info" style="font-size:0.8rem;color:#7B8D6E;margin-bottom:8px;">Этап ${idx + 1} из ${project.stages.length}</div>
+                    ${stage.context ? `<div class="stage-context" style="font-size:0.95rem;line-height:1.6;color:#2C7DA0;background:#F0F7FA;padding:12px 18px;border-radius:1rem;margin-bottom:12px;border-left:4px solid #2C7DA0;">📋 ${escapeHtml(stage.context)}</div>` : ''}
+                    <div class="stage-title" style="font-size:1.2rem;font-weight:700;color:#1A2A3A;margin-bottom:6px;">${escapeHtml(stage.title)}</div>
+                    <div class="stage-text" style="font-size:0.95rem;line-height:1.6;color:#3E5C4A;margin-bottom:10px;">${stage.text || ''}</div>
+                    ${stage.image ? `<div class="stage-media"><img src="${escapeHtml(stage.image)}" alt="Изображение" style="max-width:100%;border-radius:1rem;margin-bottom:8px;"></div>` : ''}
+                    ${stage.video ? `<div class="stage-media"><video src="${escapeHtml(stage.video)}" controls style="max-width:100%;border-radius:1rem;margin-bottom:8px;"></video></div>` : ''}
+                    ${stage.audio ? `<div class="stage-media"><audio src="${escapeHtml(stage.audio)}" controls style="width:100%;margin-top:4px;"></audio></div>` : ''}
+                    <div class="choices" style="display:flex;flex-direction:column;gap:6px;margin-top:10px;">
+            `;
+            stage.choices.forEach(choice => {
+                const isCorrect = choice.isCorrect ? 'correct' : '';
+                html += `
+                        <div class="choice-preview ${isCorrect}" style="padding:8px 16px;border-radius:2rem;font-weight:500;font-size:0.85rem;border:2px solid ${choice.isCorrect ? '#6B9E6B' : '#D9D0BD'};background:${choice.isCorrect ? '#E8F5E8' : '#F4EFE4'};color:#1A2A3A;">
+                            ${escapeHtml(choice.text)}
+                            ${choice.feedback ? `<div class="feedback" style="font-weight:400;font-size:0.75rem;color:#5F7C62;margin-top:4px;padding:4px 10px;background:#F9F6EF;border-radius:1rem;">💡 ${escapeHtml(choice.feedback)}</div>` : ''}
+                            ${choice.isCorrect ? ' ✅' : ''}
+                        </div>
+                `;
+            });
+            html += `
+                    </div>
+                </div>
+            `;
+        });
+        previewContainer.innerHTML = html;
+    }
+
+    // ================================================================
+    //  ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
+    // ================================================================
+    function switchMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.mode-tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.mode === mode);
+        });
+        if (mode === 'editor') {
+            document.getElementById('editorMode').style.display = 'grid';
+            document.getElementById('previewMode').style.display = 'none';
+        } else {
+            document.getElementById('editorMode').style.display = 'none';
+            document.getElementById('previewMode').style.display = 'block';
+            renderPreview();
+        }
+    }
+
+    // ================================================================
+    //  ОБРАБОТЧИКИ СОБЫТИЙ
+    // ================================================================
+
+    // Режимы
+    modeTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            switchMode(this.dataset.mode);
+        });
+    });
+
+    // Этапы
+    addStageBtn.addEventListener('click', addStage);
+    emptyAddBtn.addEventListener('click', addStage);
+
+    addChoiceBtn.addEventListener('click', function() {
+        const stage = getStage(selectedStageId);
+        if (!stage) return;
+        if (stage.choices.length >= 6) {
+            showToast('⚠️ Максимум 6 вариантов на этап');
+            return;
+        }
+        stage.choices.push({ text: `Вариант ${stage.choices.length + 1}`, isCorrect: false, feedback: '' });
+        renderChoices(selectedStageId);
+        saveToStorage();
+    });
+
+    saveStageBtn.addEventListener('click', saveCurrentStage);
+
+    deleteStageBtn.addEventListener('click', function() {
+        if (selectedStageId) deleteStage(selectedStageId);
+    });
+
+    moveUpBtn.addEventListener('click', function() { moveStage('up'); });
+    moveDownBtn.addEventListener('click', function() { moveStage('down'); });
+
+    // Проект
+    projectTitle.addEventListener('input', saveToStorage);
+    projectDesc.addEventListener('input', saveToStorage);
+    projectTimer.addEventListener('input', saveToStorage);
+
+    // Пример
+    loadExampleBtn.addEventListener('click', loadExample);
+
+    // JSON
+    saveJsonBtn.addEventListener('click', exportJSON);
+
+    loadJsonBtn.addEventListener('click', function() {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = function(e) {
+            if (e.target.files.length > 0) importJSON(e.target.files[0]);
+        };
+        input.click();
+    });
+
+    // Экспорт HTML
+    exportHtmlBtn.addEventListener('click', exportHTML);
+
+    // Сброс
+    resetBtn.addEventListener('click', function() {
+        if (!confirm('Сбросить проект? Все данные будут потеряны.')) return;
+        localStorage.removeItem('vetsim_group_decision_data');
+        project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
+        let maxId = 0;
+        project.stages.forEach(s => { if (s.id > maxId) maxId = s.id; });
+        nextId = maxId + 1;
+        selectedStageId = project.stages[0].id;
+        loadProjectMeta();
+        renderStageList();
+        loadStageToEditor(selectedStageId);
+        saveToStorage();
+        showToast('🔄 Проект сброшен');
+    });
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+    function init() {
+        const loaded = loadFromStorage();
+        if (!loaded) {
+            project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
+            let maxId = 0;
+            project.stages.forEach(s => { if (s.id > maxId) maxId = s.id; });
+            nextId = maxId + 1;
+            selectedStageId = project.stages[0].id;
+            loadProjectMeta();
+            renderStageList();
+            loadStageToEditor(selectedStageId);
+            saveToStorage();
+        }
+        if (project.stages.length === 0) {
+            emptyState.style.display = 'block';
+            stageEditor.style.display = 'none';
+        }
+        showToast('🐾 Групповое принятие решений');
+    }
+
+    init();
+
+    // Для отладки
+    window.project = project;
+    window.getStage = getStage;
+</script>
+
+</body>
+</html>

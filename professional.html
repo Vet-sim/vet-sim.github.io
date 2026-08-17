@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>VetSim — Готовые материалы для занятий</title>
+    <title>VetSim — Инструкции по работе с конструкторами</title>
     <style>
         /* ============================================================
-           БАЗОВЫЕ СТИЛИ (сохранены из старого дизайна)
+           БАЗОВЫЕ СТИЛИ
            ============================================================ */
         * {
             margin: 0;
@@ -17,11 +17,11 @@
             background: #F4F7F9;
             font-family: system-ui, 'Segoe UI', 'Roboto', 'Inter', sans-serif;
             color: #3E5C4A;
-            line-height: 1.4;
+            line-height: 1.5;
             padding: 2rem 1.5rem;
         }
         .container {
-            max-width: 1280px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -63,18 +63,21 @@
             font-size: 1rem;
             color: #5F7C62;
             margin-top: 0.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* ============================================================
            АККОРДЕОНЫ
            ============================================================ */
         .accordion-section {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         .accordion-header {
             background: #FFFFFF;
             border-radius: 1.8rem;
-            padding: 1.2rem 2rem;
+            padding: 1rem 1.8rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
             border: 1px solid #E7EDE2;
             cursor: pointer;
@@ -83,14 +86,13 @@
             justify-content: space-between;
             align-items: center;
             user-select: none;
-            margin-bottom: 1.5rem;
         }
         .accordion-header:hover {
             border-color: #C9D6BA;
             box-shadow: 0 12px 20px rgba(0, 0, 0, 0.06);
         }
         .accordion-header .title {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: #1F4E6E;
             display: flex;
@@ -98,7 +100,7 @@
             gap: 0.8rem;
         }
         .accordion-header .arrow {
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             color: #8AAE7A;
             transition: transform 0.3s;
         }
@@ -108,124 +110,93 @@
 
         .accordion-body {
             display: none;
+            padding-top: 1rem;
         }
         .accordion-body.open {
             display: block;
         }
 
         /* ============================================================
-           СЕТКА КАРТОЧЕК (3 в ряд)
+           ТАБЛИЦА / СПИСОК КОНСТРУКТОРОВ
            ============================================================ */
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            margin: 0 0 1rem 0;
-        }
-
-        /* ============================================================
-           СТИЛИ КАРТОЧЕК (старый дизайн)
-           ============================================================ */
-        .card {
-            background: #FFFFFF;
-            border-radius: 1.8rem;
-            padding: 1.8rem 1.5rem;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid #E7EDE2;
-            transition: all 0.25s ease;
+        .constructors-list {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            gap: 0.5rem;
         }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 28px -8px rgba(0, 0, 0, 0.1);
+        .constructor-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #FFFFFF;
+            padding: 0.8rem 1.2rem;
+            border-radius: 1.2rem;
+            border: 1px solid #E7EDE2;
+            transition: 0.15s;
+            flex-wrap: wrap;
+        }
+        .constructor-item:hover {
             border-color: #C9D6BA;
+            background: #FCFDFB;
         }
-
-        .card-icon {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
+        .constructor-item .icon {
+            font-size: 1.4rem;
+            width: 2.2rem;
+            text-align: center;
+            flex-shrink: 0;
         }
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 600;
+        .constructor-item .name {
+            font-weight: 500;
             color: #1F4E6E;
-            margin-bottom: 0.7rem;
+            flex: 1 1 200px;
+            font-size: 0.95rem;
         }
-        .card-desc {
-            font-size: 0.9rem;
-            line-height: 1.45;
-            color: #537A5A;
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
+        .constructor-item .actions {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-left: auto;
         }
-        .card-badge {
-            font-size: 0.7rem;
-            background: #F0EEE5;
-            display: inline-block;
-            padding: 0.2rem 0.8rem;
-            border-radius: 2rem;
-            margin-bottom: 1rem;
-            width: fit-content;
-            color: #8A9B7A;
-        }
-        .card-badge.ready {
-            background: #D4E8CA;
-            color: #3E724A;
-        }
-        .card-badge.soon {
-            background: #FDEAD8;
-            color: #B5794A;
-        }
-
-        .card-action {
-            margin-top: 0.5rem;
-        }
-        .btn {
+        .btn-sm {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             text-decoration: none;
-            font-weight: 600;
-            padding: 0.6rem 1.2rem;
-            border-radius: 2.5rem;
+            font-weight: 500;
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
             transition: 0.2s;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            border: none;
+            cursor: pointer;
             background: #F0F5EA;
             color: #2C7DA0;
         }
-        .btn-primary {
+        .btn-sm.primary {
             background: #2C7DA0;
             color: white;
         }
-        .btn-primary:hover {
+        .btn-sm.primary:hover {
             background: #236B8A;
-            gap: 0.7rem;
         }
-        .btn-disabled {
+        .btn-sm.disabled {
             background: #EFF3EA;
             color: #9AAE8A;
             cursor: default;
             pointer-events: none;
             opacity: 0.7;
         }
-        .btn:hover:not(.btn-disabled) {
-            gap: 0.7rem;
-        }
-        .arrow-icon {
-            font-size: 1rem;
-            transition: transform 0.2s;
-        }
-        .btn:hover .arrow-icon {
-            transform: translateX(3px);
+        .btn-sm:hover:not(.disabled) {
+            gap: 0.6rem;
         }
 
-        /* футер */
+        /* ============================================================
+           ФУТЕР
+           ============================================================ */
         .footer {
             text-align: center;
             padding-top: 2rem;
-            margin-top: 1rem;
+            margin-top: 2rem;
             border-top: 1px solid #E2E9DC;
             font-size: 0.75rem;
             color: #89A07B;
@@ -242,27 +213,22 @@
         /* ============================================================
            АДАПТИВ
            ============================================================ */
-        @media (max-width: 900px) {
-            .cards-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1.5rem;
+        @media (max-width: 700px) {
+            .constructor-item {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+                padding: 1rem;
+            }
+            .constructor-item .actions {
+                margin-left: 0;
+                justify-content: flex-start;
+            }
+            .page-header h1 {
+                font-size: 1.6rem;
             }
             body {
-                padding: 1.5rem;
-            }
-            h1 {
-                font-size: 1.8rem;
-            }
-        }
-        @media (max-width: 580px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-            .accordion-header {
-                padding: 1rem 1.2rem;
-            }
-            .accordion-header .title {
-                font-size: 1.1rem;
+                padding: 1rem;
             }
         }
     </style>
@@ -278,193 +244,270 @@
     </div>
 
     <div class="page-header">
-        <h1>📦 Готовые материалы для занятий</h1>
-        <div class="subhead">Сценарии, наборы терминов, банки вопросов, чек-листы и шаблоны — берите и адаптируйте под свой урок.</div>
+        <h1>📚 Инструкции по работе с конструкторами</h1>
+        <div class="subhead">
+            Здесь вы найдёте пошаговые инструкции для каждого конструктора платформы «ВетСим». 
+            Инструкции помогут понять логику и механику работы, даже если вы пока не подготовили свой контент. 
+            Просто откройте нужный конструктор и следуйте шагам.
+        </div>
     </div>
 
     <!-- ============================================================
-    РАЗДЕЛ 1: ТЕОРЕТИЧЕСКИЕ ДИСЦИПЛИНЫ
+    РАЗДЕЛ 1: ЗАПОМИНАНИЕ И ОТРАБОТКА ТЕРМИНОВ
     ============================================================ -->
     <div class="accordion-section">
         <div class="accordion-header" onclick="toggleAccordion(this)">
-            <span class="title">📚 Теоретические дисциплины</span>
-            <span class="arrow">▼</span>
+            <span class="title">🧠 Запоминание и отработка терминов</span>
+            <span class="arrow open">▼</span>
         </div>
-        <div class="accordion-body">
-            <div class="cards-grid">
-
-                <!-- 1. Анатомия и физиология животных -->
-                <div class="card">
-                    <div class="card-icon">🦴❤️</div>
-                    <div class="card-title">Анатомия и физиология животных</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Сценарии уроков, наборы терминов, тесты по анатомии и физиологии животных. 15+ материалов.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+        <div class="accordion-body open">
+            <div class="constructors-list">
+                <div class="constructor-item">
+                    <span class="icon">✏️🔍</span>
+                    <span class="name">Генератор филвордов</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
-                <!-- 2. Латинский язык -->
-                <div class="card">
-                    <div class="card-icon">📜✏️</div>
-                    <div class="card-title">Латинский язык</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Наборы терминов, карточки для запоминания латинских названий, упражнения.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+                <div class="constructor-item">
+                    <span class="icon">🧩📐</span>
+                    <span class="name">Генератор кроссвордов</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
-                <!-- 3. Ветеринарная фармакология -->
-                <div class="card">
-                    <div class="card-icon">💊🧪</div>
-                    <div class="card-title">Ветеринарная фармакология</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Задания по расчёту доз, классификация препаратов, клинические кейсы.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+                <div class="constructor-item">
+                    <span class="icon">🃏🔁</span>
+                    <span class="name">Flip‑карточки</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
-                <!-- 4. Основы микробиологии -->
-                <div class="card">
-                    <div class="card-icon">🔬🦠</div>
-                    <div class="card-title">Основы микробиологии</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Материалы по бактериям, вирусам, методам диагностики и лабораторной работе.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+                <div class="constructor-item">
+                    <span class="icon">🧩📖</span>
+                    <span class="name">Соедини термин с определением</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
-                <!-- 5. Основы животноводства и зоотехнии -->
-                <div class="card">
-                    <div class="card-icon">🐄🌾</div>
-                    <div class="card-title">Основы животноводства и зоотехнии</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Материалы по кормлению, разведению, содержанию и продуктивности животных.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+                <div class="constructor-item">
+                    <span class="icon">📝🔍</span>
+                    <span class="name">Текст с пропусками</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
-                <!-- 6. Патоморфология болезней животных -->
-                <div class="card">
-                    <div class="card-icon">🔍🩺</div>
-                    <div class="card-title">Патоморфология болезней животных</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Сценарии занятий по патологической анатомии, макропрепараты, гистология.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+                <div class="constructor-item">
+                    <span class="icon">🔗🎯</span>
+                    <span class="name">Сопоставление групп</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
             </div>
         </div>
     </div>
 
     <!-- ============================================================
-    РАЗДЕЛ 2: ПРОФЕССИОНАЛЬНЫЕ МОДУЛИ
+    РАЗДЕЛ 2: ПРОВЕРКА ПОНИМАНИЯ И ПРИМЕНЕНИЯ ЗНАНИЙ
     ============================================================ -->
     <div class="accordion-section">
         <div class="accordion-header" onclick="toggleAccordion(this)">
-            <span class="title">🧩 Профессиональные модули</span>
+            <span class="title">🧩 Проверка понимания и применения знаний</span>
             <span class="arrow">▼</span>
         </div>
         <div class="accordion-body">
-            <div class="cards-grid">
-
-                <!-- 7. ПМ 01 -->
-                <div class="card">
-                    <div class="card-icon">🩺💉</div>
-                    <div class="card-title">ПМ 01</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Материалы по диагностике, терапии и профилактике болезней животных.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+            <div class="constructors-list">
+                <div class="constructor-item">
+                    <span class="icon">📝🧪</span>
+                    <span class="name">Конструктор викторин</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
-                <!-- 8. ПМ 02 -->
-                <div class="card">
-                    <div class="card-icon">🔬🧪</div>
-                    <div class="card-title">ПМ 02</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Материалы по лабораторной диагностике и работе с биоматериалом.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+                <div class="constructor-item">
+                    <span class="icon">🖼️📝</span>
+                    <span class="name">Конструктор теста по изображению</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
-                <!-- 9. ПМ 03 -->
-                <div class="card">
-                    <div class="card-icon">🏥💊</div>
-                    <div class="card-title">ПМ 03</div>
-                    <div class="card-badge ready">✅ Готов</div>
-                    <div class="card-desc">
-                        Материалы по лечебной деятельности, фармакологии и уходу за животными.
-                    </div>
-                    <div class="card-action">
-                        <a href="#" class="btn btn-primary">
-                            <span>Смотреть</span>
-                            <span class="arrow-icon">→</span>
-                        </a>
-                    </div>
+                <div class="constructor-item">
+                    <span class="icon">📊✏️</span>
+                    <span class="name">Конструктор таблиц</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
                 </div>
-
+                <div class="constructor-item">
+                    <span class="icon">🧩🏷️</span>
+                    <span class="name">Сортировка по категориям</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">⏳📋</span>
+                    <span class="name">Хронология / Последовательность</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🧩📋</span>
+                    <span class="name">Конструктор алгоритмов</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Дополнительный информационный блок -->
-    <div style="text-align: center; margin: 1rem 0 1rem;">
-        <p style="color: #8BA47B; font-size: 0.85rem;">✨ Материалы создаются преподавателями ВетСим и регулярно обновляются.</p>
+    <!-- ============================================================
+    РАЗДЕЛ 3: ИНТЕРАКТИВНЫЕ ИГРЫ И ГРУППОВАЯ РАБОТА
+    ============================================================ -->
+    <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="title">🎮 Интерактивные игры и групповая работа</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+            <div class="constructors-list">
+                <div class="constructor-item">
+                    <span class="icon">🎮🏆</span>
+                    <span class="name">Конструктор «Своя игра»</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🎲🏁</span>
+                    <span class="name">Игра-бродилка (викторина)</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🎮🧩</span>
+                    <span class="name">Кто хочет стать ветеринаром?</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🎡🎮</span>
+                    <span class="name">Конструктор «Колесо фортуны»</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🎯📢</span>
+                    <span class="name">Конструктор «Квест-комната»</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🤝🧑🤝🧑</span>
+                    <span class="name">Конструктор «Групповое принятие решений»</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <!-- ============================================================
+    РАЗДЕЛ 4: ВИЗУАЛИЗАЦИЯ И СОЗДАНИЕ УЧЕБНЫХ МАТЕРИАЛОВ
+    ============================================================ -->
+    <div class="accordion-section">
+        <div class="accordion-header" onclick="toggleAccordion(this)">
+            <span class="title">🖼️ Визуализация и создание учебных материалов</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-body">
+            <div class="constructors-list">
+                <div class="constructor-item">
+                    <span class="icon">🖼️📍</span>
+                    <span class="name">Интерактивный плакат</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🗺️</span>
+                    <span class="name">Конструктор учебных атласов</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🧩🔗</span>
+                    <span class="name">Конструктор схем связей</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🎨🖌️</span>
+                    <span class="name">Конструктор раскрасок</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🏛️🖼️</span>
+                    <span class="name">Виртуальный музей</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+                <div class="constructor-item">
+                    <span class="icon">🧩📚</span>
+                    <span class="name">Конструктор урока</span>
+                    <span class="actions">
+                        <a href="#" class="btn-sm primary">Инструкция</a>
+                        <span class="btn-sm disabled">В разработке</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+    ФУТЕР
+    ============================================================ -->
     <div class="footer">
         <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
-        <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
-        <p>💬 Сообщество: <a href="#" target="_blank">ВКонтакте (заглушка)</a> | По всем вопросам: edu@vetsim.ru</p>
+        <p>©  Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+        <p>💬 Сообщество: <a href="#">ВКонтакте</a> | По всем вопросам: https://vk.ru/vet_sim</p>
+        <p>Лицензия Creative Commons BY‑NC 4.0 — свободное некоммерческое использование с указанием авторства.</p>
     </div>
 </div>
 
@@ -485,23 +528,7 @@
             arrow.classList.add('open');
         }
     }
-
-    // Открываем первый аккордеон по умолчанию
-    document.addEventListener('DOMContentLoaded', function() {
-        const firstHeader = document.querySelector('.accordion-header');
-        if (firstHeader) {
-            const firstBody = firstHeader.nextElementSibling;
-            const firstArrow = firstHeader.querySelector('.arrow');
-            if (firstBody && firstArrow) {
-                firstBody.classList.add('open');
-                firstArrow.classList.add('open');
-            }
-        }
-    });
 </script>
 
-</body>
-</html>
-<!-- конец .container -->
 </body>
 </html>

@@ -103,6 +103,7 @@
             background: #A3B18A;
             color: #2C4027;
         }
+
         .btn-primary:hover {
             background: #8FA375;
         }
@@ -111,6 +112,7 @@
             background: #2C7DA0;
             color: white;
         }
+
         .btn-accent:hover {
             background: #236B8A;
         }
@@ -119,6 +121,7 @@
             background: #D4A373;
             color: white;
         }
+
         .btn-danger:hover {
             background: #C99464;
         }
@@ -127,6 +130,7 @@
             background: #6B9E6B;
             color: white;
         }
+
         .btn-success:hover {
             background: #5A865A;
         }
@@ -135,6 +139,7 @@
             background: #E2CFB0;
             color: #4D3E2A;
         }
+
         .btn-warning:hover {
             background: #D6C09B;
         }
@@ -143,6 +148,7 @@
             background: transparent;
             border: 2px solid #A3B18A;
         }
+
         .btn-outline:hover {
             background: #F0EEE5;
         }
@@ -458,16 +464,14 @@
 
         /* ========== РЕЖИМ ПРОСМОТРА ========== */
         .view-container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
             background: white;
             border-radius: 1.8rem;
             padding: 2rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            min-height: 60vh;
+            min-height: 400px;
             border: 1px solid #E7EDE2;
-            display: flex;
-            flex-direction: column;
         }
 
         .view-container .view-title {
@@ -486,7 +490,6 @@
         }
 
         .view-container .view-block {
-            flex: 1;
             margin-bottom: 1.5rem;
         }
 
@@ -503,7 +506,6 @@
             color: #3E5C4A;
         }
 
-        /* видео */
         .view-container .view-block .view-block-content .video-wrapper {
             position: relative;
             padding-bottom: 56.25%;
@@ -512,6 +514,7 @@
             border-radius: 0.8rem;
             background: #000;
         }
+
         .view-container .view-block .view-block-content .video-wrapper iframe {
             position: absolute;
             top: 0;
@@ -521,55 +524,35 @@
             border: none;
         }
 
-        /* PDF */
         .view-container .view-block .view-block-content .pdf-wrapper {
             width: 100%;
-            min-height: 60vh;
+            min-height: 500px;
             background: #f5f0e8;
             border-radius: 0.8rem;
             border: 1px dashed #D9D0BD;
             overflow: hidden;
         }
+
         .view-container .view-block .view-block-content .pdf-wrapper iframe {
             width: 100%;
-            height: 60vh;
+            height: 500px;
             border: none;
         }
 
-        /* тренажёр */
         .view-container .view-block .view-block-content .trainer-wrapper {
             width: 100%;
-            min-height: 60vh;
+            min-height: 400px;
             border: 1px solid #E2EAD9;
             border-radius: 0.8rem;
             overflow: hidden;
         }
+
         .view-container .view-block .view-block-content .trainer-wrapper iframe {
             width: 100%;
-            height: 60vh;
+            height: 500px;
             border: none;
         }
 
-        /* изображения */
-        .view-container .view-block .view-block-content .image-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0.5rem;
-        }
-        .view-container .view-block .view-block-content .image-wrapper img {
-            max-width: 100%;
-            max-height: 70vh;
-            border-radius: 0.8rem;
-            border: 1px solid #E2EAD9;
-        }
-        .view-container .view-block .view-block-content .image-wrapper .image-caption {
-            font-size: 0.75rem;
-            color: #7B8D6E;
-            margin-top: 0.3rem;
-        }
-
-        /* EXE */
         .view-container .view-block .view-block-content .exe-wrapper {
             display: flex;
             flex-direction: column;
@@ -582,10 +565,12 @@
             border-radius: 0.8rem;
             border: 2px dashed #D4A373;
         }
+
         .view-container .view-block .view-block-content .exe-wrapper .exe-icon {
             font-size: 4rem;
             margin-bottom: 0.5rem;
         }
+
         .view-container .view-block .view-block-content .exe-wrapper .exe-btn {
             background: #D4A373;
             color: white;
@@ -603,17 +588,38 @@
             gap: 8px;
             margin-top: 0.8rem;
         }
+
         .view-container .view-block .view-block-content .exe-wrapper .exe-btn:hover {
             background: #C99464;
             transform: translateY(-1px);
         }
+
         .view-container .view-block .view-block-content .exe-wrapper .exe-warning-text {
             font-size: 0.75rem;
             color: #7B8D6E;
             margin-top: 0.5rem;
         }
 
-        /* задания */
+        .view-container .view-block .view-block-content .image-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.5rem;
+        }
+
+        .view-container .view-block .view-block-content .image-wrapper img {
+            max-width: 100%;
+            max-height: 600px;
+            border-radius: 0.8rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        .view-container .view-block .view-block-content .image-wrapper .image-caption {
+            font-size: 0.75rem;
+            color: #7B8D6E;
+            margin-top: 0.3rem;
+        }
+
         .view-container .view-block .view-block-content .task-answer {
             width: 100%;
             min-height: 100px;
@@ -626,13 +632,13 @@
             background: #FEFCF9;
             transition: 0.2s;
         }
+
         .view-container .view-block .view-block-content .task-answer:focus {
             outline: none;
             border-color: #2C7DA0;
             box-shadow: 0 0 0 2px rgba(44, 125, 160, 0.1);
         }
 
-        /* навигация в просмотре */
         .view-container .view-nav {
             display: flex;
             justify-content: space-between;
@@ -640,7 +646,6 @@
             gap: 10px;
             margin-top: 1.5rem;
             flex-wrap: wrap;
-            flex-shrink: 0;
         }
 
         .view-container .view-nav .btn {
@@ -662,7 +667,6 @@
         .view-container .view-bottom-actions {
             text-align: center;
             margin-top: 0.8rem;
-            flex-shrink: 0;
         }
 
         /* ========== TOAST ========== */
@@ -734,7 +738,6 @@
 
             .view-container {
                 padding: 1.2rem;
-                min-height: 50vh;
             }
 
             .block-item .block-header {
@@ -760,22 +763,6 @@
 
             .modal .form-row .form-group {
                 min-width: auto;
-            }
-
-            .view-container .view-block .view-block-content .pdf-wrapper {
-                min-height: 40vh;
-            }
-            .view-container .view-block .view-block-content .pdf-wrapper iframe {
-                height: 40vh;
-            }
-            .view-container .view-block .view-block-content .trainer-wrapper {
-                min-height: 40vh;
-            }
-            .view-container .view-block .view-block-content .trainer-wrapper iframe {
-                height: 40vh;
-            }
-            .view-container .view-block .view-block-content .image-wrapper img {
-                max-height: 50vh;
             }
         }
 
@@ -803,7 +790,6 @@
 
             .view-container {
                 padding: 0.8rem;
-                min-height: 40vh;
             }
 
             .view-container .view-title {
@@ -826,7 +812,6 @@
             .view-container {
                 box-shadow: none;
                 border: 1px solid #ddd;
-                min-height: auto;
             }
 
             body {
@@ -846,7 +831,7 @@
     <div class="container">
         <!-- ШАПКА -->
         <header class="header" id="mainHeader">
-            <div class="logo">🛠️ <span>ВетСим</span> — Конструктор занятия</div>
+            <div class="logo">🛠️ <span>ВетСим</span> — Конструктор урока</div>
             <div class="header-actions">
                 <span class="version-badge">v3.2</span>
                 <button class="btn btn-primary no-print" id="saveBtn">💾 Сохранить</button>
@@ -861,20 +846,20 @@
         <!-- РЕДАКТОР -->
         <div id="editorView">
             <div class="card">
-                <div class="card-title">📝 Название занятия</div>
-                <input type="text" id="lessonTitle" placeholder="Введите название занятия..." style="width:100%; padding:8px 14px; border:1px solid #D9D0BD; border-radius:2rem; font-size:0.95rem; font-family:inherit; background:#FEFAF2; color:#3E5C4A;">
+                <div class="card-title">📝 Название урока</div>
+                <input type="text" id="lessonTitle" placeholder="Введите название урока..." style="width:100%; padding:8px 14px; border:1px solid #D9D0BD; border-radius:2rem; font-size:0.95rem; font-family:inherit; background:#FEFAF2; color:#3E5C4A;">
             </div>
 
             <div class="card">
                 <div class="card-title">
-                    📋 Блоки занятия
+                    📋 Блоки урока
                     <span class="counter" id="blocksCounter">(0)</span>
                     <span style="font-size:0.6rem; font-weight:400; color:#7B8D6E; margin-left:auto;">перетащите для изменения порядка</span>
                 </div>
                 <div class="block-list" id="blockList"></div>
                 <div class="empty-state" id="emptyState">
                     <div class="icon">📦</div>
-                    <p>Нет блоков. Нажмите «➕ Добавить блок», чтобы начать создание занятия.</p>
+                    <p>Нет блоков. Нажмите «➕ Добавить блок», чтобы начать создание урока.</p>
                 </div>
             </div>
         </div>
@@ -943,7 +928,7 @@
 
     <script>
         // ================================================================
-        //  КОНСТРУКТОР ЗАНЯТИЯ v3.2 (адаптивный экспорт)
+        //  КОНСТРУКТОР ЗАНЯТИЯ v3.1 (с поддержкой изображений и EXE)
         // ================================================================
 
         // --- СОСТОЯНИЕ ---
@@ -992,7 +977,7 @@
             loadFromLocalStorage();
             renderBlocks();
             setupEventListeners();
-            showToast('🛠️ Конструктор готов! v3.2');
+            showToast('🛠️ Конструктор готов!');
         }
 
         function loadFromLocalStorage() {
@@ -1749,7 +1734,7 @@
         }
 
         // ================================================================
-        //  ЭКСПОРТ (АДАПТИВНАЯ ВЕРСИЯ 3.2)
+        //  ЭКСПОРТ
         // ================================================================
 
         function exportLesson() {
@@ -1787,317 +1772,52 @@
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
             <style>
-                /* ===== АДАПТИВНЫЙ БАЗОВЫЙ СТИЛЬ ===== */
-                * {
-                    box-sizing: border-box;
-                    margin: 0;
-                    padding: 0;
-                }
-                body {
-                    background: #FDF8F0;
-                    font-family: 'Montserrat', system-ui, sans-serif;
-                    color: #3E5C4A;
-                    min-height: 100vh;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 1rem;
-                }
-                .container {
-                    max-width: 900px;
-                    width: 100%;
-                    margin: 0 auto;
-                    background: white;
-                    border-radius: 1.8rem;
-                    padding: 1.5rem;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                    border: 1px solid #E7EDE2;
-                    display: flex;
-                    flex-direction: column;
-                    min-height: 80vh;
-                }
-                .header {
-                    text-align: center;
-                    margin-bottom: 1.5rem;
-                    flex-shrink: 0;
-                }
-                .header h1 {
-                    font-size: 1.8rem;
-                    font-weight: 700;
-                    color: #1F4E6E;
-                    word-break: break-word;
-                }
-                .header .sub {
-                    color: #7B8D6E;
-                    font-size: 0.9rem;
-                }
-
-                .view-container {
-                    flex: 1;
-                    display: flex;
-                    flex-direction: column;
-                }
-                .view-title {
-                    font-size: 1.5rem;
-                    font-weight: 700;
-                    color: #1F4E6E;
-                    text-align: center;
-                    margin-bottom: 1.2rem;
-                }
-                .view-progress {
-                    text-align: center;
-                    font-size: 0.85rem;
-                    color: #7B8D6E;
-                    margin-bottom: 1rem;
-                    flex-shrink: 0;
-                }
-                .view-block {
-                    flex: 1;
-                    margin-bottom: 1.5rem;
-                    overflow: auto;
-                }
-                .view-block .view-block-title {
-                    font-weight: 600;
-                    font-size: 1.1rem;
-                    color: #1F4E6E;
-                    margin-bottom: 0.4rem;
-                }
-                .view-block .view-block-content {
-                    font-size: 0.95rem;
-                    line-height: 1.6;
-                    color: #3E5C4A;
-                }
-                /* видео */
-                .view-block .view-block-content .video-wrapper {
-                    position: relative;
-                    padding-bottom: 56.25%;
-                    height: 0;
-                    overflow: hidden;
-                    border-radius: 0.8rem;
-                    background: #000;
-                }
-                .view-block .view-block-content .video-wrapper iframe {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    border: none;
-                }
-                /* PDF */
-                .view-block .view-block-content .pdf-wrapper {
-                    width: 100%;
-                    min-height: 60vh;
-                    background: #f5f0e8;
-                    border-radius: 0.8rem;
-                    border: 1px dashed #D9D0BD;
-                    overflow: hidden;
-                }
-                .view-block .view-block-content .pdf-wrapper iframe {
-                    width: 100%;
-                    height: 60vh;
-                    border: none;
-                }
-                /* тренажёр */
-                .view-block .view-block-content .trainer-wrapper {
-                    width: 100%;
-                    min-height: 60vh;
-                    border: 1px solid #E2EAD9;
-                    border-radius: 0.8rem;
-                    overflow: hidden;
-                }
-                .view-block .view-block-content .trainer-wrapper iframe {
-                    width: 100%;
-                    height: 60vh;
-                    border: none;
-                }
-                /* изображения */
-                .view-block .view-block-content .image-wrapper {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    padding: 0.5rem;
-                }
-                .view-block .view-block-content .image-wrapper img {
-                    max-width: 100%;
-                    max-height: 70vh;
-                    border-radius: 0.8rem;
-                    border: 1px solid #E2EAD9;
-                }
-                .view-block .view-block-content .image-wrapper .image-caption {
-                    font-size: 0.75rem;
-                    color: #7B8D6E;
-                    margin-top: 0.3rem;
-                }
-                /* EXE */
-                .view-block .view-block-content .exe-wrapper {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 2rem;
-                    text-align: center;
-                    min-height: 200px;
-                    background: #F9F6EF;
-                    border-radius: 0.8rem;
-                    border: 2px dashed #D4A373;
-                }
-                .view-block .view-block-content .exe-wrapper .exe-icon {
-                    font-size: 4rem;
-                    margin-bottom: 0.5rem;
-                }
-                .view-block .view-block-content .exe-wrapper .exe-btn {
-                    background: #D4A373;
-                    color: white;
-                    border: none;
-                    padding: 10px 28px;
-                    border-radius: 2rem;
-                    font-weight: 600;
-                    font-size: 1rem;
-                    cursor: pointer;
-                    transition: 0.2s;
-                    font-family: inherit;
-                    text-decoration: none;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    margin-top: 0.8rem;
-                }
-                .view-block .view-block-content .exe-wrapper .exe-btn:hover {
-                    background: #C99464;
-                    transform: translateY(-1px);
-                }
-                .view-block .view-block-content .exe-wrapper .exe-warning-text {
-                    font-size: 0.75rem;
-                    color: #7B8D6E;
-                    margin-top: 0.5rem;
-                }
-                /* задания */
-                .view-block .view-block-content .task-answer {
-                    width: 100%;
-                    min-height: 100px;
-                    padding: 10px 14px;
-                    border: 2px solid #D1DEC2;
-                    border-radius: 1rem;
-                    font-family: inherit;
-                    font-size: 0.9rem;
-                    resize: vertical;
-                    background: #FEFCF9;
-                    transition: 0.2s;
-                }
-                .view-block .view-block-content .task-answer:focus {
-                    outline: none;
-                    border-color: #2C7DA0;
-                    box-shadow: 0 0 0 2px rgba(44,125,160,0.1);
-                }
-                /* навигация */
-                .view-nav {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    gap: 10px;
-                    margin-top: 1.5rem;
-                    flex-wrap: wrap;
-                    flex-shrink: 0;
-                }
-                .view-nav .btn {
-                    min-width: 120px;
-                    justify-content: center;
-                }
-                .view-nav .btn:disabled {
-                    opacity: 0.4;
-                    cursor: not-allowed;
-                }
-                .view-bottom-actions {
-                    text-align: center;
-                    margin-top: 0.8rem;
-                    flex-shrink: 0;
-                }
-                .btn {
-                    background: #EBE3D2;
-                    border: none;
-                    padding: 6px 16px;
-                    border-radius: 2rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: 0.2s;
-                    font-size: 0.85rem;
-                    font-family: inherit;
-                    color: #3E5C4A;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 4px;
-                }
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                body { background: #FDF8F0; font-family: 'Montserrat', system-ui, sans-serif; color: #3E5C4A; padding: 1.2rem; min-height: 100vh; }
+                .container { max-width: 800px; margin: 0 auto; }
+                .header { text-align: center; margin-bottom: 1.5rem; }
+                .header h1 { font-size: 1.8rem; font-weight: 700; color: #1F4E6E; }
+                .header .sub { color: #7B8D6E; font-size: 0.9rem; }
+                .view-container { background: white; border-radius: 1.8rem; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); min-height: 400px; }
+                .view-title { font-size: 1.5rem; font-weight: 700; color: #1F4E6E; text-align: center; margin-bottom: 1.2rem; }
+                .view-progress { text-align: center; font-size: 0.85rem; color: #7B8D6E; margin-bottom: 1rem; }
+                .view-block { margin-bottom: 1.5rem; }
+                .view-block .view-block-title { font-weight: 600; font-size: 1.1rem; color: #1F4E6E; margin-bottom: 0.4rem; }
+                .view-block .view-block-content { font-size: 0.95rem; line-height: 1.6; color: #3E5C4A; }
+                .view-block .view-block-content .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 0.8rem; background: #000; }
+                .view-block .view-block-content .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+                .view-block .view-block-content .pdf-wrapper { width: 100%; min-height: 500px; background: #f5f0e8; border-radius: 0.8rem; border: 1px dashed #D9D0BD; overflow: hidden; }
+                .view-block .view-block-content .pdf-wrapper iframe { width: 100%; height: 500px; border: none; }
+                .view-block .view-block-content .trainer-wrapper { width: 100%; min-height: 400px; border: 1px solid #E2EAD9; border-radius: 0.8rem; overflow: hidden; }
+                .view-block .view-block-content .trainer-wrapper iframe { width: 100%; height: 500px; border: none; }
+                .view-block .view-block-content .image-wrapper { display: flex; flex-direction: column; align-items: center; padding: 0.5rem; }
+                .view-block .view-block-content .image-wrapper img { max-width: 100%; max-height: 600px; border-radius: 0.8rem; border: 1px solid #E2EAD9; }
+                .view-block .view-block-content .image-wrapper .image-caption { font-size: 0.75rem; color: #7B8D6E; margin-top: 0.3rem; }
+                .view-block .view-block-content .exe-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; text-align: center; min-height: 200px; background: #F9F6EF; border-radius: 0.8rem; border: 2px dashed #D4A373; }
+                .view-block .view-block-content .exe-wrapper .exe-icon { font-size: 4rem; margin-bottom: 0.5rem; }
+                .view-block .view-block-content .exe-wrapper .exe-btn { background: #D4A373; color: white; border: none; padding: 10px 28px; border-radius: 2rem; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.2s; font-family: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; margin-top: 0.8rem; }
+                .view-block .view-block-content .exe-wrapper .exe-btn:hover { background: #C99464; transform: translateY(-1px); }
+                .view-block .view-block-content .exe-wrapper .exe-warning-text { font-size: 0.75rem; color: #7B8D6E; margin-top: 0.5rem; }
+                .view-block .view-block-content .task-answer { width: 100%; min-height: 100px; padding: 10px 14px; border: 2px solid #D1DEC2; border-radius: 1rem; font-family: inherit; font-size: 0.9rem; resize: vertical; background: #FEFCF9; transition: 0.2s; }
+                .view-block .view-block-content .task-answer:focus { outline: none; border-color: #2C7DA0; box-shadow: 0 0 0 2px rgba(44,125,160,0.1); }
+                .btn { background: #EBE3D2; border: none; padding: 6px 16px; border-radius: 2rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.85rem; font-family: inherit; color: #3E5C4A; }
                 .btn:hover { opacity: 0.85; }
                 .btn-warning { background: #E2CFB0; color: #4D3E2A; }
                 .btn-accent { background: #2C7DA0; color: white; }
                 .btn-primary { background: #A3B18A; color: #2C4027; }
                 .btn-success { background: #6B9E6B; color: white; }
                 .btn-danger { background: #D4A373; color: white; }
-                .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-                .toast {
-                    position: fixed;
-                    bottom: 30px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: #1F4E6E;
-                    color: #fff;
-                    padding: 10px 24px;
-                    border-radius: 40px;
-                    font-weight: 600;
-                    font-size: 0.9rem;
-                    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-                    opacity: 0;
-                    transition: opacity 0.3s ease;
-                    z-index: 1000;
-                    pointer-events: none;
-                    max-width: 90%;
-                    text-align: center;
-                }
+                .view-nav { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: 1.5rem; flex-wrap: wrap; }
+                .view-nav .btn { min-width: 120px; justify-content: center; }
+                .view-nav .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+                .view-bottom-actions { text-align: center; margin-top: 0.8rem; }
+                .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1F4E6E; color: #fff; padding: 10px 24px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 4px 16px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.3s ease; z-index: 1000; pointer-events: none; max-width: 90%; text-align: center; }
                 .toast.show { opacity: 1; }
-
-                .empty-state {
-                    text-align: center;
-                    padding: 3rem 1rem;
-                    color: #7B8D6E;
-                }
+                footer { text-align: center; margin-top: 1.5rem; font-size: 0.7rem; color: #B0BC9C; border-top: 1px solid #E5DDCF; padding-top: 1rem; }
+                .empty-state { text-align: center; padding: 3rem 1rem; color: #7B8D6E; }
                 .empty-state .icon { font-size: 3rem; margin-bottom: 1rem; }
-
-                footer {
-                    text-align: center;
-                    margin-top: 1.5rem;
-                    font-size: 0.7rem;
-                    color: #B0BC9C;
-                    border-top: 1px solid #E5DDCF;
-                    padding-top: 1rem;
-                    flex-shrink: 0;
-                }
-
-                @media (max-width: 768px) {
-                    body { padding: 0.8rem; }
-                    .container { padding: 1rem; min-height: 70vh; }
-                    .header h1 { font-size: 1.4rem; }
-                    .view-title { font-size: 1.2rem; }
-                    .view-nav { flex-direction: column; }
-                    .view-nav .btn { width: 100%; }
-                    .view-block .view-block-content .pdf-wrapper { min-height: 40vh; }
-                    .view-block .view-block-content .pdf-wrapper iframe { height: 40vh; }
-                    .view-block .view-block-content .trainer-wrapper { min-height: 40vh; }
-                    .view-block .view-block-content .trainer-wrapper iframe { height: 40vh; }
-                    .view-block .view-block-content .image-wrapper img { max-height: 50vh; }
-                }
-                @media (max-width: 480px) {
-                    body { padding: 0.5rem; }
-                    .container { padding: 0.8rem; border-radius: 1.2rem; min-height: 60vh; }
-                    .header h1 { font-size: 1.2rem; }
-                }
-                @media print {
-                    .view-nav .btn { display: none !important; }
-                    .container { box-shadow: none; border: 1px solid #ddd; }
-                    body { background: #fff; }
-                }
+                @media (max-width: 600px) { body { padding: 0.8rem; } .view-container { padding: 1rem; } .view-nav { flex-direction: column; } .view-nav .btn { width: 100%; } }
+                @media print { .view-nav .btn { display: none !important; } .view-container { box-shadow: none; border: 1px solid #ddd; } body { background: #fff; } }
             </style>
         </head>
         <body>
@@ -2106,7 +1826,7 @@
                 <h1>📚 ${escapeFn(title)}</h1>
                 <div class="sub">🐾 ВетСим — образовательная платформа</div>
             </div>
-            <div id="app" style="flex:1; display:flex; flex-direction:column;"></div>
+            <div id="app"></div>
             <footer>© ВетСим — ветеринарное просвещение</footer>
         </div>
         <div class="toast" id="toast"></div>
@@ -2144,7 +1864,7 @@
                 document.querySelectorAll('.task-answer').forEach(function(el) {
                     answers[el.dataset.blockId] = el.value;
                 });
-                let text = 'Результаты: ${escapeFn(title)}\\n';
+                let text = 'Результаты: ' + '${escapeFn(title)}' + '\\n';
                 text += '='.repeat(40) + '\\n\\n';
                 blocksData.forEach(function(b) {
                     if (b.type === 'task') {
@@ -2160,13 +1880,6 @@
                 link.click();
                 URL.revokeObjectURL(link.href);
                 showToast('📥 Результаты скачаны');
-            }
-
-            function showToast(msg) {
-                toast.textContent = msg;
-                toast.classList.add('show');
-                clearTimeout(toastTimer);
-                toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 2500);
             }
 
             function render() {
@@ -2252,7 +1965,7 @@
                             <button class="btn btn-accent" id="nextBtn" \${currentIndex === total - 1 ? 'disabled' : ''}>Вперёд ▶</button>
                         </div>
                         <div class="view-bottom-actions">
-                            <button class="btn btn-primary" id="downloadResultsBtn">📥 Скачать результаты</button>
+                            <button class="btn btn-primary btn-sm" id="downloadResultsBtn">📥 Скачать результаты</button>
                         </div>
                     </div>
                 \`;
@@ -2274,6 +1987,13 @@
                 }
 
                 document.getElementById('downloadResultsBtn')?.addEventListener('click', downloadResults);
+            }
+
+            function showToast(msg) {
+                toast.textContent = msg;
+                toast.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(function() { toast.classList.remove('show'); }, 2500);
             }
 
             render();

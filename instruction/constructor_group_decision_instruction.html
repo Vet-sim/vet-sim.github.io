@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Инструкция: Групповое принятие решений | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: #7B8D6E;
+        }
+
+        .subtitle {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBE3D2;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        /* ===== ОГЛАВЛЕНИЕ ===== */
+        .toc {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #A3B18A;
+        }
+
+        .toc h2 {
+            font-size: 1rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .toc ul li {
+            padding: 2px 0;
+            font-size: 0.85rem;
+        }
+
+        .toc ul li a {
+            color: #2C7DA0;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+            color: #1F4E6E;
+        }
+
+        /* ===== ЗАГОЛОВКИ ===== */
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h2 .badge {
+            font-size: 0.6rem;
+            background: #2C7DA0;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            font-weight: 600;
+            margin: 1rem 0 0.3rem 0;
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== СПИСКИ ===== */
+        ul,
+        ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* ===== ВЫДЕЛЕНИЯ ===== */
+        .highlight {
+            background: #F0EEE5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tag {
+            background: #E2EAD9;
+            color: #3E5C4A;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .badge-type {
+            display: inline-block;
+            background: #2C7DA0;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: 4px;
+        }
+
+        /* ===== БЛОКИ ПРИМЕРОВ ===== */
+        .example-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #A3B18A;
+            font-size: 0.9rem;
+        }
+
+        .example-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .example-box code {
+            background: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+        }
+
+        table th {
+            background: #1F4E6E;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #E2EAD9;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) td {
+            background: #F9F6EF;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== СХЕМА ===== */
+        .schema {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .schema .step {
+            background: #FDFCF9;
+            border: 2px solid #E2EAD9;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+            max-width: 160px;
+        }
+
+        .schema .step .step-icon {
+            font-size: 1.8rem;
+        }
+
+        .schema .step .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-top: 0.2rem;
+        }
+
+        .schema .arrow {
+            font-size: 1.5rem;
+            color: #A3B18A;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ===== БЛОКИ ВНИМАНИЯ ===== */
+        .note {
+            background: #F0F6FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .note strong {
+            color: #1F4E6E;
+        }
+
+        .warning {
+            background: #FDE8E0;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D47A6A;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .warning strong {
+            color: #D47A6A;
+        }
+
+        .tip {
+            background: #E8F5E8;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #6B9E6B;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tip strong {
+            color: #6B9E6B;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .toc ul {
+                columns: 1;
+            }
+
+            .schema {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .schema .step {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .schema .arrow {
+                transform: rotate(90deg);
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 1.5rem;
+            }
+
+            .toc {
+                break-inside: avoid;
+            }
+
+            .schema .step {
+                break-inside: avoid;
+            }
+
+            .example-box {
+                break-inside: avoid;
+            }
+
+            table {
+                break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo">🤝 <span>ВетСим</span> — Групповое принятие решений</div>
+            <span class="version">v1.0</span>
+            <div class="subtitle">Инструкция по работе для преподавателей ветеринарных дисциплин</div>
+            <div class="header-actions no-print">
+                <a href="https://vet-sim.github.io/group_decision_constructor.html" target="_blank" class="btn btn-primary">
+                    🚀 Перейти к конструктору
+                </a>
+                <button class="btn btn-success" onclick="window.print()">
+                    🖨️ Распечатать инструкцию
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ВСТУПЛЕНИЕ ===== -->
+        <p>
+            <strong>Добро пожаловать!</strong> Конструктор «Групповое принятие решений» — это инструмент для создания интерактивных сценариев, где студенты работают в группах, обсуждают клинические случаи и голосуют за лучший вариант действий. Это развивает навыки командной работы, аргументации и профессионального общения.
+        </p>
+
+        <div class="note">
+            <strong>💡 Главная идея:</strong> Вы создаёте сценарий (например, клинический случай), в котором группа студентов должна пройти несколько этапов и на каждом выбрать один из вариантов действий. Система подсчитывает голоса и показывает результат.
+        </div>
+
+        <!-- ===== ОГЛАВЛЕНИЕ ===== -->
+        <div class="toc">
+            <h2>📋 Оглавление</h2>
+            <ul>
+                <li><a href="#s1">1. Что такое Групповое принятие решений</a></li>
+                <li><a href="#s2">2. Интерфейс и инструменты</a></li>
+                <li><a href="#s3">3. Создание этапов</a></li>
+                <li><a href="#s4">4. Добавление вариантов решений</a></li>
+                <li><a href="#s5">5. Настройка сценария</a></li>
+                <li><a href="#s6">6. Режим групповой работы</a></li>
+                <li><a href="#s7">7. Экспорт сценария</a></li>
+                <li><a href="#s8">8. Практические примеры</a></li>
+                <li><a href="#s9">9. Частые вопросы (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 1 ===== -->
+        <h2 id="s1">1. Что такое Групповое принятие решений</h2>
+
+        <p>
+            Конструктор «Групповое принятие решений» — это инструмент для организации <strong>интерактивной групповой работы</strong>. Он решает несколько задач преподавателя:
+        </p>
+        <ul>
+            <li><strong>Развитие коммуникативных навыков</strong> — студенты учатся аргументировать свою позицию.</li>
+            <li><strong>Отработка профессиональных решений</strong> — имитация клинических ситуаций.</li>
+            <li><strong>Командная работа</strong> — студенты учатся договариваться и приходить к общему решению.</li>
+            <li><strong>Объективная оценка</strong> — голосование позволяет увидеть распределение мнений в группе.</li>
+        </ul>
+
+        <div class="schema">
+            <div class="step">
+                <div class="step-icon">📋</div>
+                <div class="step-label">Этапы</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Создайте последовательность шагов</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">🗳️</div>
+                <div class="step-label">Варианты</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Добавьте 2-6 вариантов решений</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📦</div>
+                <div class="step-label">Экспорт</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Готовый сценарий в HTML-файле</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">🎓</div>
+                <div class="step-label">Студенты</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Обсуждают, голосуют, учатся</div>
+            </div>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 2 ===== -->
+        <h2 id="s2">2. Интерфейс и инструменты</h2>
+
+        <p>Конструктор состоит из нескольких ключевых зон:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Зона</th>
+                        <th>Что находится</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Шапка</strong></td>
+                        <td>Название конструктора, кнопки управления</td>
+                        <td>Экспорт, сброс</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Список этапов</strong></td>
+                        <td>Все созданные этапы сценария</td>
+                        <td>Добавление, перетаскивание (изменение порядка), удаление</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Редактор этапа</strong></td>
+                        <td>Настройка текущего этапа (название, варианты решений)</td>
+                        <td>Добавление и редактирование вариантов</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 3 ===== -->
+        <h2 id="s3">3. Создание этапов</h2>
+
+        <p>Этапы — это последовательные шаги вашего сценария.</p>
+
+        <h3>3.1 Как добавить этап</h3>
+        <ol>
+            <li>Нажмите кнопку <span class="highlight">«➕ Добавить этап»</span>.</li>
+            <li>Введите <strong>название</strong> этапа (например, «Сбор анамнеза», «Осмотр», «Диагностика»).</li>
+            <li>Нажмите <span class="highlight">«Сохранить»</span>.</li>
+        </ol>
+
+        <h3>3.2 Как изменить порядок</h3>
+        <ul>
+            <li>Перетащите этап за значок <span class="highlight">⠿</span> в нужное место.</li>
+            <li>Порядок этапов сохраняется автоматически.</li>
+        </ul>
+
+        <h3>3.3 Как редактировать или удалить этап</h3>
+        <ul>
+            <li>Чтобы отредактировать, нажмите на название этапа в списке.</li>
+            <li>Чтобы удалить, нажмите значок <span class="highlight">🗑️</span> рядом с этапом.</li>
+        </ul>
+
+        <!-- ===== РАЗДЕЛ 4 ===== -->
+        <h2 id="s4">4. Добавление вариантов решений</h2>
+
+        <p>Для каждого этапа нужно добавить варианты решений, из которых группа будет выбирать.</p>
+
+        <h3>4.1 Как добавить варианты</h3>
+        <ol>
+            <li>Выберите этап в списке.</li>
+            <li>В разделе редактора найдите поле для вариантов.</li>
+            <li>Введите <strong>текст</strong> варианта (до 200 символов).</li>
+            <li>Нажмите <span class="highlight">«➕ Добавить вариант»</span>.</li>
+            <li>Повторите для всех вариантов (минимум 2, максимум 6).</li>
+        </ol>
+
+        <h3>4.2 Как удалить вариант</h3>
+        <ul>
+            <li>Нажмите значок <span class="highlight">🗑️</span> рядом с вариантом.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Для корректной работы группового голосования на каждом этапе должно быть от 2 до 6 вариантов.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 5 ===== -->
+        <h2 id="s5">5. Настройка сценария</h2>
+
+        <p>Вы можете настроить общие параметры сценария:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Настройка</th>
+                        <th>Что делает</th>
+                        <th>Как использовать</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Название сценария</strong></td>
+                        <td>Заголовок для студентов</td>
+                        <td>Опишите тему (например, «Клинический случай: острая задержка мочи у кота»)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Описание</strong></td>
+                        <td>Краткое пояснение для группы</td>
+                        <td>Введите вводную информацию, инструкцию для студентов</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Порядок этапов</strong></td>
+                        <td>Последовательность шагов</td>
+                        <td>Перетаскивайте этапы для изменения порядка</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Чётко опишите вводную информацию и инструкцию для студентов, чтобы они понимали, в чём их задача на каждом этапе.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 6 ===== -->
+        <h2 id="s6">6. Режим групповой работы</h2>
+
+        <p>В режиме студента сценарий становится инструментом для группового обсуждения.</p>
+
+        <h3>6.1 Что видит студент</h3>
+        <ul>
+            <li><strong>Название и описание</strong> сценария.</li>
+            <li><strong>Текущий этап</strong> с вариантами решений.</li>
+            <li><strong>Прогресс</strong> — сколько этапов пройдено.</li>
+            <li><strong>Результаты голосования</strong> — распределение голосов по вариантам.</li>
+        </ul>
+
+        <h3>6.2 Как проходит групповая работа</h3>
+        <ol>
+            <li>Группа обсуждает текущий этап и варианты решений.</li>
+            <li>Каждый студент в группе (или группа как целое) выбирает вариант.</li>
+            <li>Система подсчитывает голоса и показывает результаты.</li>
+            <li>Группа переходит к следующему этапу.</li>
+            <li>В конце сценария отображается итоговый результат и обратная связь.</li>
+        </ol>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> В режиме студента голосование анонимное или открытое — зависит от настроек. Это позволяет объективно оценить мнение группы.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 7 ===== -->
+        <h2 id="s7">7. Экспорт сценария</h2>
+
+        <p>Готовый сценарий можно экспортировать в <strong>автономный HTML-файл</strong>.</p>
+
+        <h3>7.1 Как экспортировать</h3>
+        <ol>
+            <li>Убедитесь, что все этапы и варианты настроены.</li>
+            <li>Нажмите кнопку <span class="highlight">«📤 Экспорт»</span>.</li>
+            <li>Скачайте файл <span class="highlight">group_decision.html</span>.</li>
+        </ol>
+
+        <h3>7.2 Что получает студент</h3>
+        <ul>
+            <li><strong>Один HTML-файл</strong> — всё встроено, ничего не нужно скачивать дополнительно.</li>
+            <li><strong>Интерактивный сценарий</strong> для групповой работы.</li>
+            <li><strong>Голосование и обратная связь</strong> — автоматический подсчёт результатов.</li>
+            <li><strong>Работает офлайн</strong> — открывается в любом браузере без интернета.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Файл работает в любом современном браузере (Chrome, Edge, Firefox). Для открытия достаточно двойного клика по файлу.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 8 ===== -->
+        <h2 id="s8">8. Практические примеры</h2>
+
+        <h3>Пример 1: Клинический случай «Острая задержка мочи у кота»</h3>
+        <div class="example-box">
+            <div class="label">📘 Сценарий</div>
+            <p>
+                <strong>Этап 1: Сбор информации</strong><br>
+                Варианты:
+            </p>
+            <ul>
+                <li>Спросить владельца о мочеиспускании в последние сутки.</li>
+                <li>Провести пальпацию мочевого пузыря.</li>
+                <li>Назначить УЗИ брюшной полости.</li>
+                <li>Взять кровь на биохимию.</li>
+            </ul>
+            <p>
+                <strong>Этап 2: Интерпретация результатов</strong><br>
+                Варианты (на основе ответов):
+            </p>
+            <ul>
+                <li>Диагноз: мочекаменная болезнь.</li>
+                <li>Диагноз: идиопатический цистит.</li>
+                <li>Диагноз: новообразование мочевого пузыря.</li>
+            </ul>
+            <p>
+                <strong>Этап 3: Тактика лечения</strong><br>
+                Варианты:
+            </p>
+            <ul>
+                <li>Экстренный цистоцентез.</li>
+                <li>Катетеризация.</li>
+                <li>Медикаментозная терапия.</li>
+                <li>Хирургическое вмешательство.</li>
+            </ul>
+        </div>
+
+        <h3>Пример 2: Ситуация «Профилактика и меры биобезопасности»</h3>
+        <div class="example-box">
+            <div class="label">📘 Сценарий</div>
+            <p>
+                <strong>Этап 1: Оценка рисков</strong><br>
+                Варианты:
+            </p>
+            <ul>
+                <li>Низкий риск.</li>
+                <li>Средний риск.</li>
+                <li>Высокий риск.</li>
+            </ul>
+            <p>
+                <strong>Этап 2: Выбор мер профилактики</strong><br>
+                Варианты:
+            </p>
+            <ul>
+                <li>Вакцинация всех животных.</li>
+                <li>Карантин для вновь поступивших.</li>
+                <li>Усиленная дезинфекция.</li>
+                <li>Все вышеперечисленное.</li>
+            </ul>
+            <p>
+                <strong>Этап 3: Информирование персонала</strong><br>
+                Варианты:
+            </p>
+            <ul>
+                <li>Провести инструктаж.</li>
+                <li>Разослать памятки.</li>
+                <li>Организовать тренинг.</li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 9 ===== -->
+        <h2 id="s9">9. Частые вопросы (FAQ)</h2>
+
+        <h4>❓ Сколько этапов можно добавить?</h4>
+        <p>Количество этапов не ограничено. Рекомендуется 3–5 этапов для поддержания внимания группы.</p>
+
+        <h4>❓ Сколько вариантов должно быть на этапе?</h4>
+        <p>От 2 до 6 вариантов. Оптимально — 3–4 варианта для удобства выбора.</p>
+
+        <h4>❓ Работает ли сценарий без интернета?</h4>
+        <p>Да, готовый HTML-файл работает полностью офлайн.</p>
+
+        <h4>❓ Можно ли использовать этот конструктор для других дисциплин?</h4>
+        <p>Да, конструктор универсален. Вы можете создавать сценарии для любых ситуаций, где нужно групповое обсуждение и принятие решений.</p>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> Для групповой работы рекомендуется использовать проектор или большой экран, чтобы все студенты видели этапы и результаты голосования.
+        </div>
+
+        <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+        <h2>🎯 Заключение</h2>
+
+        <p>
+            Конструктор «Групповое принятие решений» — это инструмент, который превращает групповое обсуждение в <strong>структурированный и управляемый процесс</strong>.
+        </p>
+
+        <p><strong>Ключевые преимущества:</strong></p>
+        <ul>
+            <li><strong>Развитие коммуникации</strong> — студенты учатся аргументировать.</li>
+            <li><strong>Имитация практики</strong> — моделирование реальных ситуаций.</li>
+            <li><strong>Объективность</strong> — голосование позволяет увидеть распределение мнений.</li>
+            <li><strong>Гибкость</strong> — подходит для любых дисциплин.</li>
+            <li><strong>Офлайн-доступность</strong> — не нужен интернет.</li>
+        </ul>
+
+        <div class="tip" style="text-align:center; margin: 1.5rem 0;">
+            <p style="font-size:1rem;"><strong>💡 Совет:</strong> Начните с простого сценария на 3 этапа. Проведите пилотную групповую работу, чтобы увидеть, как студенты взаимодействуют, и доработайте сценарий.</p>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+            <p>Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+            <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+            <p>💬 Сообщество: <a href="https://vk.ru/vetsimpros" target="_blank">ВКонтакте</a> | По вопросам: <a href="https://vk.ru/vet_sim" target="_blank">https://vk.ru/vet_sim</a></p>
+        </div>
+
+    </div>
+</body>
+</html>

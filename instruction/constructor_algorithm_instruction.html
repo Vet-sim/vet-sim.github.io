@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Инструкция: Конструктор алгоритмов | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: #7B8D6E;
+        }
+
+        .subtitle {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBE3D2;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        /* ===== ОГЛАВЛЕНИЕ ===== */
+        .toc {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #A3B18A;
+        }
+
+        .toc h2 {
+            font-size: 1rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .toc ul li {
+            padding: 2px 0;
+            font-size: 0.85rem;
+        }
+
+        .toc ul li a {
+            color: #2C7DA0;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+            color: #1F4E6E;
+        }
+
+        /* ===== ЗАГОЛОВКИ ===== */
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h2 .badge {
+            font-size: 0.6rem;
+            background: #2C7DA0;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            font-weight: 600;
+            margin: 1rem 0 0.3rem 0;
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== СПИСКИ ===== */
+        ul,
+        ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* ===== ВЫДЕЛЕНИЯ ===== */
+        .highlight {
+            background: #F0EEE5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tag {
+            background: #E2EAD9;
+            color: #3E5C4A;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .badge-type {
+            display: inline-block;
+            background: #2C7DA0;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: 4px;
+        }
+
+        /* ===== БЛОКИ ПРИМЕРОВ ===== */
+        .example-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #A3B18A;
+            font-size: 0.9rem;
+        }
+
+        .example-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .example-box code {
+            background: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+        }
+
+        table th {
+            background: #1F4E6E;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #E2EAD9;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) td {
+            background: #F9F6EF;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== СХЕМА ===== */
+        .schema {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .schema .step {
+            background: #FDFCF9;
+            border: 2px solid #E2EAD9;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+            max-width: 160px;
+        }
+
+        .schema .step .step-icon {
+            font-size: 1.8rem;
+        }
+
+        .schema .step .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-top: 0.2rem;
+        }
+
+        .schema .arrow {
+            font-size: 1.5rem;
+            color: #A3B18A;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ===== БЛОКИ ВНИМАНИЯ ===== */
+        .note {
+            background: #F0F6FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .note strong {
+            color: #1F4E6E;
+        }
+
+        .warning {
+            background: #FDE8E0;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D47A6A;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .warning strong {
+            color: #D47A6A;
+        }
+
+        .tip {
+            background: #E8F5E8;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #6B9E6B;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tip strong {
+            color: #6B9E6B;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .toc ul {
+                columns: 1;
+            }
+
+            .schema {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .schema .step {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .schema .arrow {
+                transform: rotate(90deg);
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 1.5rem;
+            }
+
+            .toc {
+                break-inside: avoid;
+            }
+
+            .schema .step {
+                break-inside: avoid;
+            }
+
+            .example-box {
+                break-inside: avoid;
+            }
+
+            table {
+                break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo">🧩 <span>ВетСим</span> — Конструктор алгоритмов</div>
+            <span class="version">v1.0</span>
+            <div class="subtitle">Инструкция по работе для преподавателей ветеринарных дисциплин</div>
+            <div class="header-actions no-print">
+                <a href="https://vet-sim.github.io/algorithm_constructor.html" target="_blank" class="btn btn-primary">
+                    🚀 Перейти к конструктору
+                </a>
+                <button class="btn btn-success" onclick="window.print()">
+                    🖨️ Распечатать инструкцию
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ВСТУПЛЕНИЕ ===== -->
+        <p>
+            <strong>Добро пожаловать!</strong> Конструктор алгоритмов — это инструмент для создания интерактивных тренажёров по отработке последовательности действий. Студент видит список перемешанных шагов и должен расположить их в правильном порядке. Это идеальный формат для изучения протоколов лечения, диагностических алгоритмов и любых других последовательных процессов.
+        </p>
+
+        <div class="note">
+            <strong>💡 Главная идея:</strong> Вы создаёте список шагов (например, этапы оказания первой помощи). Студент перетаскивает их в правильном порядке, тренируя логику и понимание последовательности действий.
+        </div>
+
+        <!-- ===== ОГЛАВЛЕНИЕ ===== -->
+        <div class="toc">
+            <h2>📋 Оглавление</h2>
+            <ul>
+                <li><a href="#s1">1. Что такое алгоритм действий</a></li>
+                <li><a href="#s2">2. Интерфейс и инструменты</a></li>
+                <li><a href="#s3">3. Создание алгоритма</a></li>
+                <li><a href="#s4">4. Режим студента</a></li>
+                <li><a href="#s5">5. Экспорт алгоритма</a></li>
+                <li><a href="#s6">6. Практические примеры</a></li>
+                <li><a href="#s7">7. Частые вопросы (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 1 ===== -->
+        <h2 id="s1">1. Что такое алгоритм действий</h2>
+
+        <p>
+            Конструктор алгоритмов — это инструмент для создания <strong>упражнений на упорядочивание шагов</strong>. Он решает несколько задач преподавателя:
+        </p>
+        <ul>
+            <li><strong>Отработка алгоритмов</strong> — студент запоминает правильную последовательность действий.</li>
+            <li><strong>Понимание процессов</strong> — помогает увидеть причинно-следственные связи.</li>
+            <li><strong>Развитие логики</strong> — тренирует аналитическое мышление.</li>
+            <li><strong>Подготовка к практике</strong> — моделирование реальных ситуаций.</li>
+        </ul>
+
+        <div class="schema">
+            <div class="step">
+                <div class="step-icon">📋</div>
+                <div class="step-label">Шаги</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Добавьте этапы процесса</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">🔀</div>
+                <div class="step-label">Перемешивание</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Студент видит их в случайном порядке</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">🔄</div>
+                <div class="step-label">Упорядочивание</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Студент перетаскивает шаги</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">✅</div>
+                <div class="step-label">Проверка</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Автоматическая проверка порядка</div>
+            </div>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 2 ===== -->
+        <h2 id="s2">2. Интерфейс и инструменты</h2>
+
+        <p>Конструктор состоит из нескольких ключевых зон:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Зона</th>
+                        <th>Что находится</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Шапка</strong></td>
+                        <td>Название конструктора, кнопки управления</td>
+                        <td>Экспорт, настройки</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Список шагов</strong></td>
+                        <td>Все добавленные шаги с их номерами</td>
+                        <td>Добавление, редактирование, удаление, перетаскивание</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Область настройки</strong></td>
+                        <td>Поле для ввода текста шага</td>
+                        <td>Ввод названия шага</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 3 ===== -->
+        <h2 id="s3">3. Создание алгоритма</h2>
+
+        <h3>3.1 Как добавить шаг</h3>
+        <ol>
+            <li>В поле ввода введите текст шага (до 100 символов).</li>
+            <li>Нажмите кнопку <span class="highlight">«➕ Добавить шаг»</span>.</li>
+            <li>Повторите для всех шагов алгоритма.</li>
+        </ol>
+
+        <h3>3.2 Рекомендации по созданию шагов</h3>
+        <ul>
+            <li>Каждый шаг должен быть <strong>чётким и конкретным</strong> действием.</li>
+            <li>Используйте глаголы (например, «Провести осмотр», «Назначить анализы»).</li>
+            <li>Количество шагов — оптимально 4-8 для одной задачи.</li>
+        </ul>
+
+        <h3>3.3 Управление шагами</h3>
+        <ul>
+            <li><strong>Редактирование:</strong> Кликните на шаг в списке и измените текст.</li>
+            <li><strong>Удаление:</strong> Нажмите значок <span class="highlight">🗑️</span> рядом с шагом.</li>
+            <li><strong>Изменение порядка:</strong> Перетащите шаг за значок <span class="highlight">⠿</span> в нужное место.</li>
+        </ul>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Начните с 5-7 шагов для простого алгоритма. Слишком много шагов может перегрузить студента.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 4 ===== -->
+        <h2 id="s4">4. Режим студента</h2>
+
+        <p>В режиме студента алгоритм становится интерактивным упражнением.</p>
+
+        <h3>4.1 Что видит студент</h3>
+        <ul>
+            <li><strong>Инструкцию</strong> к заданию.</li>
+            <li><strong>Список шагов</strong> в случайном порядке.</li>
+            <li><strong>Кнопку «Проверить»</strong> — для самопроверки.</li>
+        </ul>
+
+        <h3>4.2 Как работает проверка</h3>
+        <ul>
+            <li>Студент перетаскивает шаги в нужном порядке.</li>
+            <li>Нажимает <span class="highlight">«Проверить»</span>.</li>
+            <li>Правильно расположенные шаги подсвечиваются зелёным.</li>
+            <li>Неправильно — красным, с отображением правильного порядка.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Проверка работает автоматически, что делает задание самодостаточным для самостоятельной работы.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 5 ===== -->
+        <h2 id="s5">5. Экспорт алгоритма</h2>
+
+        <p>Готовое упражнение можно экспортировать в <strong>автономный HTML-файл</strong>.</p>
+
+        <h3>5.1 Как экспортировать</h3>
+        <ol>
+            <li>Убедитесь, что все шаги добавлены и расположены в правильном порядке.</li>
+            <li>Нажмите кнопку <span class="highlight">«📤 Экспорт»</span>.</li>
+            <li>Скачайте файл <span class="highlight">algorithm.html</span>.</li>
+        </ol>
+
+        <h3>5.2 Что получает студент</h3>
+        <ul>
+            <li><strong>Один HTML-файл</strong> — всё встроено, ничего не нужно скачивать дополнительно.</li>
+            <li><strong>Интерактивное упражнение</strong> с перетаскиванием.</li>
+            <li><strong>Автоматическая проверка</strong> — мгновенная обратная связь.</li>
+            <li><strong>Работает офлайн</strong> — открывается в любом браузере без интернета.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Файл работает в любом современном браузере (Chrome, Edge, Firefox). Для открытия достаточно двойного клика по файлу.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 6 ===== -->
+        <h2 id="s6">6. Практические примеры</h2>
+
+        <h3>Пример 1: Алгоритм оказания первой помощи при кровотечении</h3>
+        <div class="example-box">
+            <div class="label">📘 Последовательность шагов (правильный порядок)</div>
+            <p>
+                <strong>Шаг 1:</strong> Оценить состояние пациента (сознание, дыхание).<br>
+                <strong>Шаг 2:</strong> Вызвать ветеринара или скорую помощь.<br>
+                <strong>Шаг 3:</strong> Наложить давящую повязку или жгут (при артериальном кровотечении).<br>
+                <strong>Шаг 4:</strong> Приподнять конечность (если возможно).<br>
+                <strong>Шаг 5:</strong> Контролировать состояние до прибытия врача.
+            </p>
+            <p><strong>Цель:</strong> Закрепить алгоритм действий при неотложном состоянии.</p>
+        </div>
+
+        <h3>Пример 2: Алгоритм диагностики пироплазмоза</h3>
+        <div class="example-box">
+            <div class="label">📘 Последовательность шагов (правильный порядок)</div>
+            <p>
+                <strong>Шаг 1:</strong> Сбор анамнеза (укусы клещей, симптомы).<br>
+                <strong>Шаг 2:</strong> Клинический осмотр (температура, слизистые).<br>
+                <strong>Шаг 3:</strong> Взятие крови для анализа.<br>
+                <strong>Шаг 4:</strong> Микроскопия мазка крови (поиск паразитов).<br>
+                <strong>Шаг 5:</strong> Интерпретация результатов и постановка диагноза.
+            </p>
+            <p><strong>Цель:</strong> Закрепить алгоритм диагностического поиска.</p>
+        </div>
+
+        <h3>Пример 3: Алгоритм действий при задержании последа у коровы</h3>
+        <div class="example-box">
+            <div class="label">📘 Последовательность шагов (правильный порядок)</div>
+            <p>
+                <strong>Шаг 1:</strong> Оценка состояния и сбор анамнеза.<br>
+                <strong>Шаг 2:</strong> Клинический осмотр и диагностика.<br>
+                <strong>Шаг 3:</strong> Лабораторная диагностика (кальций, глюкоза).<br>
+                <strong>Шаг 4:</strong> Медикаментозная коррекция (окситоцин, кальций).<br>
+                <strong>Шаг 5:</strong> Акушерское пособие (мануальная коррекция).<br>
+                <strong>Шаг 6:</strong> Хирургическое вмешательство (кесарево сечение).<br>
+                <strong>Шаг 7:</strong> Реанимация новорождённых.<br>
+                <strong>Шаг 8:</strong> Послеродовый мониторинг и терапия.<br>
+                <strong>Шаг 9:</strong> Профилактика в будущем.
+            </p>
+            <p><strong>Цель:</strong> Закрепить алгоритм действий при осложнённых родах у коровы.</p>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 7 ===== -->
+        <h2 id="s7">7. Частые вопросы (FAQ)</h2>
+
+        <h4>❓ Сколько шагов можно добавить?</h4>
+        <p>Количество шагов не ограничено. Рекомендуется 5-9 шагов для поддержания внимания и простоты восприятия.</p>
+
+        <h4>❓ Можно ли использовать изображения в шагах?</h4>
+        <p>На данный момент конструктор поддерживает только текстовые шаги.</p>
+
+        <h4>❓ Работает ли упражнение без интернета?</h4>
+        <p>Да, готовый HTML-файл работает полностью офлайн.</p>
+
+        <h4>❓ Можно ли изменить порядок шагов после создания?</h4>
+        <p>Да, вы можете перетаскивать шаги в списке в любое время.</p>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> При создании упражнения убедитесь, что порядок шагов в конструкторе соответствует правильному ответу. Студент будет видеть шаги в случайном порядке и должен восстановить ваш порядок.
+        </div>
+
+        <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+        <h2>🎯 Заключение</h2>
+
+        <p>
+            Конструктор алгоритмов — это инструмент, который превращает запоминание алгоритмов и протоколов в <strong>интерактивное упражнение на логику</strong>.
+        </p>
+
+        <p><strong>Ключевые преимущества:</strong></p>
+        <ul>
+            <li><strong>Понимание процесса</strong> — студент видит логику шагов.</li>
+            <li><strong>Интерактивность</strong> — перетаскивание активирует моторную память.</li>
+            <li><strong>Автоматическая проверка</strong> — мгновенная обратная связь.</li>
+            <li><strong>Гибкость</strong> — подходит для любых дисциплин.</li>
+            <li><strong>Офлайн-доступность</strong> — не нужен интернет.</li>
+        </ul>
+
+        <div class="tip" style="text-align:center; margin: 1.5rem 0;">
+            <p style="font-size:1rem;"><strong>💡 Совет:</strong> Начните с создания алгоритма из 4-5 шагов для простого процесса (например, алгоритма оказания первой помощи). Постепенно усложняйте, добавляя больше шагов.</p>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+            <p>Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+            <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+            <p>💬 Сообщество: <a href="https://vk.ru/vetsimpros" target="_blank">ВКонтакте</a> | По вопросам: <a href="https://vk.ru/vet_sim" target="_blank">https://vk.ru/vet_sim</a></p>
+        </div>
+
+    </div>
+</body>
+</html>

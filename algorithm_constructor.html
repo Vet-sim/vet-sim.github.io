@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Конструктор «Алгоритм действий» | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           СТИЛИ ВетСим
+           ============================================================ */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #F4F7F9;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.5rem;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* --- Заголовок --- */
+        .header {
+            background: white;
+            padding: 1.2rem 1.8rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3E5C4A;
+        }
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .badge {
+            background: #2C7DA0;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* --- Режимы --- */
+        .mode-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .mode-tab {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .mode-tab:hover { opacity: 0.85; }
+        .mode-tab.active {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        /* --- Карточки --- */
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem 1.8rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 1.5rem;
+        }
+        .card-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #2C7DA0;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* --- Формы --- */
+        .form-group {
+            margin-bottom: 0.8rem;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            color: #3E5C4A;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FEFAF2;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        /* --- Список этапов (редактор) --- */
+        .steps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 0.5rem 0;
+        }
+        .step-editor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #F9F6EF;
+            padding: 8px 14px;
+            border-radius: 1rem;
+            border-left: 4px solid #A3B18A;
+        }
+        .step-editor .step-num {
+            font-weight: 700;
+            color: #7B8D6E;
+            min-width: 28px;
+            font-size: 0.8rem;
+        }
+        .step-editor input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 0.85rem;
+            padding: 4px 0;
+            color: #3E5C4A;
+            outline: none;
+            border-bottom: 1px dashed #D9D0BD;
+        }
+        .step-editor input:focus {
+            border-bottom-color: #2C7DA0;
+        }
+        .step-editor .btn-remove {
+            background: none;
+            border: none;
+            color: #D4A373;
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 0 4px;
+            transition: 0.2s;
+        }
+        .step-editor .btn-remove:hover {
+            color: #C99464;
+            transform: scale(1.2);
+        }
+
+        /* --- Кнопки --- */
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+            font-family: inherit;
+            color: #3E5C4A;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-2px); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-danger { background: #D4A373; color: white; }
+        .btn-warning { background: #E2CFB0; color: #4D3E2A; }
+        .btn-sm { padding: 4px 14px; font-size: 0.75rem; }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 0.5rem;
+        }
+
+        /* --- Превью тренажёра (в режиме редактора) --- */
+        .preview-area {
+            background: #F9F6EF;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border: 2px dashed #D9D0BD;
+            min-height: 100px;
+        }
+        .preview-area .step-preview {
+            display: inline-block;
+            background: white;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            margin: 4px 6px 4px 0;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #3E5C4A;
+            border: 1px solid #E2EAD9;
+        }
+
+        /* --- Список сохранённых --- */
+        .saved-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .saved-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F9F6EF;
+            padding: 10px 16px;
+            border-radius: 1rem;
+            border-left: 4px solid #2C7DA0;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .saved-item .info {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .saved-item .info .meta {
+            font-weight: 400;
+            color: #7B8D6E;
+            font-size: 0.75rem;
+        }
+        .saved-item .actions {
+            margin-top: 0;
+        }
+
+        .empty-msg {
+            color: #8A9B7A;
+            font-style: italic;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        /* --- Адаптив --- */
+        @media (max-width: 768px) {
+            body { padding: 0.8rem; }
+            .header { flex-direction: column; align-items: stretch; gap: 8px; }
+            .step-editor { flex-wrap: wrap; }
+            .step-editor input { min-width: 120px; }
+            .saved-item { flex-direction: column; align-items: stretch; }
+        }
+        @media (max-width: 480px) {
+            .mode-tabs .mode-tab { flex: 1; text-align: center; padding: 6px 12px; font-size: 0.75rem; }
+            .card { padding: 1rem; }
+        }
+
+        /* --- Toast --- */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: #fff;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ШАПКА -->
+    <header class="header">
+        <div class="logo">🐾 <span>ВетСим</span> — Конструктор алгоритмов</div>
+        <span class="badge">🧩 Создай свой тренажёр</span>
+    </header>
+
+    <!-- Режимы -->
+    <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="editor">✏️ Редактор</button>
+        <button class="mode-tab" data-mode="saved">📚 Мои тренажёры</button>
+    </div>
+
+    <!-- РЕЖИМ РЕДАКТОРА -->
+    <div id="editorMode">
+        <div class="card">
+            <div class="card-title">📋 Настройка задания</div>
+
+            <div class="form-group">
+                <label for="scenarioTitle">Название клинического случая</label>
+                <input type="text" id="scenarioTitle" value="Дистоция у собаки" placeholder="Например: Дистоция у собаки">
+            </div>
+
+            <div class="form-group">
+                <label for="scenarioDesc">Описание случая (контекст для студентов)</label>
+                <textarea id="scenarioDesc" rows="3">У суки породы французский бульдог на 65-й день беременности отмечаются слабые потуги в течение 6 часов, плоды не рождаются. При вагинальном исследовании обнаружено полное открытие шейки матки, плод в тазовой полости, признаков обструкции нет. Ваша задача — расставить мероприятия в правильной хронологической последовательности от первичной оценки до послеродового ухода.</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Этапы алгоритма (в правильном порядке)</label>
+                <div class="steps-list" id="stepsEditor"></div>
+                <button class="btn btn-sm btn-primary" id="addStepBtn">➕ Добавить этап</button>
+            </div>
+
+            <div class="form-group">
+                <label>Предпросмотр (как увидят студенты)</label>
+                <div class="preview-area" id="previewArea"></div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-success" id="saveScenarioBtn">💾 Сохранить тренажёр</button>
+                <button class="btn btn-primary" id="exportBtn">📤 Экспортировать в HTML</button>
+                <button class="btn btn-danger" id="resetDefaultBtn">🔄 Восстановить пример</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- РЕЖИМ СОХРАНЁННЫХ -->
+    <div id="savedMode" style="display:none;">
+        <div class="card">
+            <div class="card-title">📚 Сохранённые тренажёры</div>
+            <div id="savedListContainer">
+                <div class="empty-msg">Нет сохранённых тренажёров. Создайте свой!</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ================================================================
+    //  КОНСТРУКТОР «АЛГОРИТМ ДЕЙСТВИЙ»
+    // ================================================================
+
+    // --- ВСТРОЕННЫЙ ПРИМЕР (этапы в правильном порядке) ---
+    const DEFAULT_SCENARIO = {
+        id: 'default',
+        title: 'Дистоция у собаки',
+        description: 'У суки породы французский бульдог на 65-й день беременности отмечаются слабые потуги в течение 6 часов, плоды не рождаются. При вагинальном исследовании обнаружено полное открытие шейки матки, плод в тазовой полости, признаков обструкции нет. Ваша задача — расставить мероприятия в правильной хронологической последовательности от первичной оценки до послеродового ухода.',
+        steps: [
+            'Оценка состояния и сбор анамнеза',
+            'Клинический осмотр и диагностика',
+            'Лабораторная диагностика (кальций, глюкоза)',
+            'Медикаментозная коррекция (окситоцин, кальций)',
+            'Акушерское пособие (мануальная коррекция)',
+            'Хирургическое вмешательство (кесарево сечение)',
+            'Реанимация новорождённых',
+            'Послеродовый мониторинг и терапия',
+            'Профилактика в будущем'
+        ]
+    };
+
+    // --- СОСТОЯНИЕ ---
+    let currentSteps = [...DEFAULT_SCENARIO.steps];
+    let currentTitle = DEFAULT_SCENARIO.title;
+    let currentDesc = DEFAULT_SCENARIO.description;
+    let savedScenarios = JSON.parse(localStorage.getItem('vetsim_algorithm_scenarios') || '[]');
+
+    // --- DOM ---
+    const editorMode = document.getElementById('editorMode');
+    const savedMode = document.getElementById('savedMode');
+    const modeTabs = document.querySelectorAll('.mode-tab');
+    const stepsEditor = document.getElementById('stepsEditor');
+    const previewArea = document.getElementById('previewArea');
+    const scenarioTitle = document.getElementById('scenarioTitle');
+    const scenarioDesc = document.getElementById('scenarioDesc');
+    const addStepBtn = document.getElementById('addStepBtn');
+    const saveBtn = document.getElementById('saveScenarioBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const resetBtn = document.getElementById('resetDefaultBtn');
+    const savedListContainer = document.getElementById('savedListContainer');
+    const toast = document.getElementById('toast');
+
+    let toastTimer = null;
+
+    // ================================================================
+    //  ВСПОМОГАТЕЛЬНЫЕ
+    // ================================================================
+
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function shuffleArray(arr) {
+        const shuffled = [...arr];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        return shuffled;
+    }
+
+    function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // ================================================================
+    //  РЕНДЕР РЕДАКТОРА
+    // ================================================================
+
+    function renderSteps() {
+        stepsEditor.innerHTML = '';
+        currentSteps.forEach((step, index) => {
+            const div = document.createElement('div');
+            div.className = 'step-editor';
+            div.innerHTML = `
+                <span class="step-num">${index + 1}.</span>
+                <input type="text" value="${escapeHtml(step)}" data-index="${index}" class="step-input" placeholder="Введите этап...">
+                <button class="btn-remove" data-index="${index}" title="Удалить">✕</button>
+            `;
+            stepsEditor.appendChild(div);
+        });
+
+        document.querySelectorAll('.step-input').forEach(input => {
+            input.addEventListener('input', function() {
+                const idx = parseInt(this.dataset.index);
+                if (currentSteps[idx] !== undefined) {
+                    currentSteps[idx] = this.value;
+                    renderPreview();
+                }
+            });
+        });
+
+        document.querySelectorAll('.step-editor .btn-remove').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.index);
+                if (currentSteps.length <= 2) {
+                    showToast('⚠️ Минимум 2 этапа');
+                    return;
+                }
+                currentSteps.splice(idx, 1);
+                renderSteps();
+                renderPreview();
+            });
+        });
+
+        renderPreview();
+    }
+
+    function renderPreview() {
+        previewArea.innerHTML = '';
+        if (currentSteps.length === 0) {
+            previewArea.innerHTML = '<span style="color:#8A9B7A;font-style:italic;">Добавьте этапы алгоритма</span>';
+            return;
+        }
+        const shuffled = shuffleArray([...currentSteps]);
+        shuffled.forEach((step) => {
+            const span = document.createElement('span');
+            span.className = 'step-preview';
+            span.textContent = step;
+            previewArea.appendChild(span);
+        });
+    }
+
+    // ================================================================
+    //  ДОБАВЛЕНИЕ ЭТАПА
+    // ================================================================
+
+    addStepBtn.addEventListener('click', function() {
+        currentSteps.push(`Новый этап ${currentSteps.length + 1}`);
+        renderSteps();
+        showToast('➕ Этап добавлен');
+    });
+
+    // ================================================================
+    //  СИНХРОНИЗАЦИЯ ПОЛЕЙ
+    // ================================================================
+
+    scenarioTitle.addEventListener('input', function() {
+        currentTitle = this.value;
+    });
+
+    scenarioDesc.addEventListener('input', function() {
+        currentDesc = this.value;
+    });
+
+    // ================================================================
+    //  СОХРАНЕНИЕ В localStorage
+    // ================================================================
+
+    function saveScenario() {
+        const title = scenarioTitle.value.trim() || 'Без названия';
+        const description = scenarioDesc.value.trim() || 'Описание отсутствует';
+        const steps = currentSteps.filter(s => s.trim());
+
+        if (steps.length < 2) {
+            showToast('⚠️ Добавьте минимум 2 этапа');
+            return;
+        }
+
+        const scenario = {
+            id: generateId(),
+            title: title,
+            description: description,
+            steps: steps,
+            createdAt: new Date().toLocaleString()
+        };
+
+        savedScenarios.push(scenario);
+        localStorage.setItem('vetsim_algorithm_scenarios', JSON.stringify(savedScenarios));
+        renderSavedList();
+        showToast('✅ Тренажёр сохранён!');
+    }
+
+    function loadScenario(id) {
+        const scenario = savedScenarios.find(s => s.id === id);
+        if (!scenario) return;
+
+        currentSteps = [...scenario.steps];
+        currentTitle = scenario.title;
+        currentDesc = scenario.description;
+
+        scenarioTitle.value = currentTitle;
+        scenarioDesc.value = currentDesc;
+        renderSteps();
+        showToast('📂 Загружено: ' + currentTitle);
+        switchMode('editor');
+    }
+
+    function deleteScenario(id) {
+        if (!confirm('Удалить тренажёр?')) return;
+        savedScenarios = savedScenarios.filter(s => s.id !== id);
+        localStorage.setItem('vetsim_algorithm_scenarios', JSON.stringify(savedScenarios));
+        renderSavedList();
+        showToast('🗑️ Тренажёр удалён');
+    }
+
+    // ================================================================
+    //  РЕНДЕР СПИСКА СОХРАНЁННЫХ
+    // ================================================================
+
+    function renderSavedList() {
+        if (savedScenarios.length === 0) {
+            savedListContainer.innerHTML = `<div class="empty-msg">Нет сохранённых тренажёров. Создайте свой!</div>`;
+            return;
+        }
+
+        let html = '<div class="saved-list">';
+        savedScenarios.forEach(s => {
+            html += `
+                <div class="saved-item">
+                    <div class="info">
+                        ${escapeHtml(s.title)}
+                        <span class="meta">(${s.steps.length} этапов) • ${s.createdAt || 'недавно'}</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-sm btn-primary" onclick="loadScenario('${s.id}')">✏️ Редактировать</button>
+                        <button class="btn btn-sm btn-success" onclick="exportScenario('${s.id}')">📤 Экспорт</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteScenario('${s.id}')">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        savedListContainer.innerHTML = html;
+    }
+
+    // ================================================================
+    //  ЭКСПОРТ В HTML (самостоятельный тренажёр для студентов)
+    // ================================================================
+
+    function exportScenario(id) {
+        const scenario = savedScenarios.find(s => s.id === id);
+        if (!scenario) {
+            exportCurrent();
+            return;
+        }
+        exportToHTML(scenario.title, scenario.description, scenario.steps);
+    }
+
+    function exportCurrent() {
+        const title = scenarioTitle.value.trim() || 'Алгоритм действий';
+        const description = scenarioDesc.value.trim() || 'Расставьте этапы в правильной последовательности.';
+        const steps = currentSteps.filter(s => s.trim());
+        if (steps.length < 2) {
+            showToast('⚠️ Добавьте минимум 2 этапа');
+            return;
+        }
+        exportToHTML(title, description, steps);
+    }
+
+    function exportToHTML(title, description, steps) {
+        // Перемешиваем этапы для студентов
+        const shuffledSteps = shuffleArray([...steps]);
+
+        const stepsData = JSON.stringify(shuffledSteps);
+        const correctSteps = JSON.stringify(steps);
+
+        const html = `<!DOCTYPE html>
+    <html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+        <title>${escapeHtml(title)} | ВетСим</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+        <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { background: #F4F7F9; font-family: 'Montserrat', system-ui, sans-serif; color: #3E5C4A; padding: 1.5rem; min-height: 100vh; }
+            .container { max-width: 1100px; margin: 0 auto; }
+            .header { background: white; padding: 1.2rem 1.8rem; border-radius: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 1.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+            .logo { font-size: 1.2rem; font-weight: 700; color: #3E5C4A; }
+            .logo span { background: linear-gradient(135deg, #6B8C5C, #A38B60); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+            .badge { background: #2C7DA0; color: white; padding: 4px 16px; border-radius: 2rem; font-size: 0.75rem; font-weight: 600; }
+            .scenario { background: white; padding: 1.2rem 1.8rem; border-radius: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 1.5rem; border-left: 5px solid #D4A373; }
+            .scenario h2 { font-size: 1rem; color: #2C7DA0; margin-bottom: 4px; }
+            .scenario p { font-size: 0.95rem; color: #5F7C62; line-height: 1.5; }
+            .sort-area { display: flex; flex-direction: column; gap: 1.5rem; }
+            .item-pool { background: white; border-radius: 1.5rem; padding: 1.2rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); min-height: 80px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border: 2px dashed #D9D0BD; transition: border-color 0.3s; }
+            .item-pool.drag-over { border-color: #2C7DA0; background: #F0F7FA; }
+            .item-pool .placeholder { width: 100%; text-align: center; color: #8A9B7A; font-size: 0.85rem; padding: 8px 0; }
+            .step-item { background: #F4EFE4; padding: 10px 18px; border-radius: 2rem; font-size: 0.85rem; font-weight: 600; color: #3E5C4A; cursor: grab; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: 0.2s; user-select: none; touch-action: none; border: 2px solid transparent; display: inline-flex; align-items: center; gap: 8px; }
+            .step-item:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+            .step-item:active { cursor: grabbing; }
+            .step-item.dragging { opacity: 0.4; transform: scale(0.95); }
+            .step-item.correct { border-color: #6B9E6B; background: #E2F0DA; }
+            .step-item.wrong { border-color: #D4A373; background: #FDE8E0; }
+            .step-item.locked { opacity: 0.7; cursor: default; pointer-events: none; }
+            .result-zone { background: white; border-radius: 1.5rem; padding: 1.2rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); min-height: 80px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border: 2px solid #E7EDE2; }
+            .result-zone .placeholder { width: 100%; text-align: center; color: #8A9B7A; font-size: 0.85rem; padding: 8px 0; }
+            .result-zone .step-item { cursor: default; }
+            .result-zone .step-item .remove-btn { background: none; border: none; color: #D4A373; cursor: pointer; font-size: 1rem; padding: 0 2px; transition: 0.2s; }
+            .result-zone .step-item .remove-btn:hover { color: #B8860B; transform: scale(1.2); }
+            .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 0.5rem; }
+            .btn { background: #EBE3D2; border: none; padding: 8px 20px; border-radius: 2rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.85rem; font-family: inherit; color: #3E5C4A; display: inline-flex; align-items: center; gap: 8px; }
+            .btn:hover { opacity: 0.85; transform: translateY(-2px); }
+            .btn-primary { background: #2C7DA0; color: white; }
+            .btn-success { background: #6B9E6B; color: white; }
+            .btn-danger { background: #D4A373; color: white; }
+            .btn-warning { background: #E2CFB0; color: #4D3E2A; }
+            .status { background: white; border-radius: 1.5rem; padding: 0.8rem 1.5rem; margin-top: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; }
+            .status .message { font-weight: 600; font-size: 0.9rem; color: #5F7C62; }
+            .status .message.success { color: #6B9E6B; }
+            .status .message.error { color: #D4A373; }
+            .progress-bar { width: 200px; height: 6px; background: #EDE8DC; border-radius: 2rem; overflow: hidden; }
+            .progress-bar .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #6B9E6B, #A3B18A); border-radius: 2rem; transition: width 0.4s ease; }
+            .footer { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.04); text-align: center; font-size: 0.8rem; color: #7B8D6E; }
+            @media (max-width: 600px) { body { padding: 0.8rem; } .header { flex-direction: column; align-items: stretch; gap: 8px; } .step-item { padding: 8px 14px; font-size: 0.8rem; } .result-zone, .item-pool { min-height: 60px; padding: 0.8rem 1rem; } .status { flex-direction: column; align-items: stretch; } .progress-bar { width: 100%; } }
+        </style>
+    </head>
+    <body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">🐾 <span>ВетСим</span> — Тренажёр</div>
+            <span class="badge">🧩 Сортировка</span>
+        </header>
+
+        <div class="scenario">
+            <h2>📋 ${escapeHtml(title)}</h2>
+            <p>${escapeHtml(description)}</p>
+        </div>
+
+        <div class="sort-area">
+            <div class="item-pool" id="itemPool">
+                <div class="placeholder">Перетащите этапы в правильном порядке в зону ниже</div>
+            </div>
+            <div class="result-zone" id="resultZone">
+                <div class="placeholder">Сюда перетаскивайте этапы в нужном порядке</div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" id="checkBtn">✅ Проверить порядок</button>
+                <button class="btn btn-warning" id="shuffleBtn">🔀 Перемешать</button>
+                <button class="btn btn-danger" id="resetBtn">🔄 Сбросить</button>
+            </div>
+            <div class="status" id="statusBar">
+                <span class="message" id="statusMessage">Расставьте этапы в правильной последовательности</span>
+                <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🐾 <strong>ВетСим</strong> — ветеринарное образование нового поколения</p>
+        </div>
+    </div>
+
+    <script>
+        const CORRECT_STEPS = ${correctSteps};
+        let shuffledSteps = ${stepsData};
+
+        let currentItems = [...shuffledSteps];
+        let resultItems = [];
+        let draggedItemId = null;
+
+        const poolEl = document.getElementById('itemPool');
+        const resultEl = document.getElementById('resultZone');
+        const statusMsg = document.getElementById('statusMessage');
+        const progressFill = document.getElementById('progressFill');
+        const checkBtn = document.getElementById('checkBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const resetBtn = document.getElementById('resetBtn');
+
+        function shuffleArray(arr) {
+            const shuffled = [...arr];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function render() {
+            poolEl.innerHTML = '';
+            resultEl.innerHTML = '';
+
+            if (currentItems.length === 0) {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'placeholder';
+                placeholder.textContent = '✅ Все этапы расставлены';
+                poolEl.appendChild(placeholder);
+            } else {
+                currentItems.forEach((item) => {
+                    const el = createItemElement(item);
+                    poolEl.appendChild(el);
+                });
+            }
+
+            if (resultItems.length === 0) {
+                const placeholder = document.createElement('div');
+                placeholder.className = 'placeholder';
+                placeholder.textContent = 'Сюда перетаскивайте этапы в нужном порядке';
+                resultEl.appendChild(placeholder);
+            } else {
+                resultItems.forEach((item, index) => {
+                    const el = createResultItemElement(item, index);
+                    resultEl.appendChild(el);
+                });
+            }
+
+            updateProgress();
+            updateStatusMessage();
+            clearCheckStatus();
+        }
+
+        function createItemElement(item) {
+            const div = document.createElement('div');
+            div.className = 'step-item';
+            div.dataset.id = item;
+            div.draggable = true;
+            div.textContent = item;
+
+            div.addEventListener('dragstart', handleDragStart);
+            div.addEventListener('dragend', handleDragEnd);
+            div.addEventListener('touchstart', handleTouchStart, { passive: true });
+            div.addEventListener('touchmove', handleTouchMove, { passive: false });
+            div.addEventListener('touchend', handleTouchEnd, { passive: true });
+
+            return div;
+        }
+
+        function createResultItemElement(item, index) {
+            const div = document.createElement('div');
+            div.className = 'step-item';
+            div.dataset.id = index;
+            div.draggable = false;
+            div.innerHTML = \`
+                \${item}
+                <button class="remove-btn" data-id="\${index}" title="Убрать">✕</button>
+            \`;
+
+            const removeBtn = div.querySelector('.remove-btn');
+            removeBtn.addEventListener('click', () => {
+                removeFromResult(index);
+            });
+
+            return div;
+        }
+
+        function handleDragStart(e) {
+            const id = this.dataset.id;
+            draggedItemId = id;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', id);
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        poolEl.addEventListener('dragover', (e) => { e.preventDefault(); poolEl.classList.add('drag-over'); });
+        poolEl.addEventListener('dragleave', () => { poolEl.classList.remove('drag-over'); });
+        poolEl.addEventListener('drop', handlePoolDrop);
+
+        resultEl.addEventListener('dragover', (e) => { e.preventDefault(); resultEl.classList.add('drag-over'); });
+        resultEl.addEventListener('dragleave', () => { resultEl.classList.remove('drag-over'); });
+        resultEl.addEventListener('drop', handleResultDrop);
+
+        function handlePoolDrop(e) {
+            e.preventDefault();
+            poolEl.classList.remove('drag-over');
+            const id = e.dataTransfer.getData('text/plain');
+            if (!id) return;
+            if (resultItems.some(item => item === id)) return;
+
+            const idx = currentItems.indexOf(id);
+            if (idx !== -1) {
+                const movedItem = currentItems.splice(idx, 1)[0];
+                resultItems.push(movedItem);
+                render();
+            }
+        }
+
+        function handleResultDrop(e) {
+            e.preventDefault();
+            resultEl.classList.remove('drag-over');
+            const id = e.dataTransfer.getData('text/plain');
+            if (!id) return;
+
+            const idx = currentItems.indexOf(id);
+            if (idx !== -1) {
+                const movedItem = currentItems.splice(idx, 1)[0];
+                resultItems.push(movedItem);
+                render();
+            }
+        }
+
+        let touchDragData = null;
+
+        function handleTouchStart(e) {
+            const touch = e.touches[0];
+            const rect = this.getBoundingClientRect();
+            touchDragData = {
+                id: this.dataset.id,
+                element: this,
+                offsetX: touch.clientX - rect.left,
+                offsetY: touch.clientY - rect.top
+            };
+            this.classList.add('dragging');
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+        }
+
+        function handleTouchEnd(e) {
+            if (!touchDragData) return;
+            const id = touchDragData.id;
+            touchDragData.element.classList.remove('dragging');
+
+            const touch = e.changedTouches[0];
+            const resultRect = resultEl.getBoundingClientRect();
+            const poolRect = poolEl.getBoundingClientRect();
+
+            if (touch.clientX >= resultRect.left && touch.clientX <= resultRect.right &&
+                touch.clientY >= resultRect.top && touch.clientY <= resultRect.bottom) {
+                const idx = currentItems.indexOf(id);
+                if (idx !== -1) {
+                    const movedItem = currentItems.splice(idx, 1)[0];
+                    resultItems.push(movedItem);
+                    render();
+                }
+            } else if (touch.clientX >= poolRect.left && touch.clientX <= poolRect.right &&
+                touch.clientY >= poolRect.top && touch.clientY <= poolRect.bottom) {
+                render();
+            }
+
+            touchDragData = null;
+        }
+
+        function removeFromResult(index) {
+            if (index < resultItems.length) {
+                const removedItem = resultItems.splice(index, 1)[0];
+                currentItems.push(removedItem);
+                render();
+            }
+        }
+
+        function updateProgress() {
+            const total = CORRECT_STEPS.length;
+            const done = resultItems.length;
+            const percent = Math.min((done / total) * 100, 100);
+            progressFill.style.width = percent + '%';
+        }
+
+        function updateStatusMessage() {
+            const total = CORRECT_STEPS.length;
+            const done = resultItems.length;
+            if (done === 0) {
+                statusMsg.textContent = '📌 Перетащите этапы в правильной последовательности';
+                statusMsg.className = 'message';
+            } else if (done < total) {
+                statusMsg.textContent = \`⏳ Расставлено \${done} из \${total} этапов\`;
+                statusMsg.className = 'message';
+            } else {
+                statusMsg.textContent = '✅ Все этапы расставлены! Нажмите "Проверить"';
+                statusMsg.className = 'message';
+            }
+        }
+
+        function clearCheckStatus() {
+            document.querySelectorAll('.step-item.correct, .step-item.wrong').forEach(el => {
+                el.classList.remove('correct', 'wrong');
+            });
+        }
+
+        function checkOrder() {
+            if (resultItems.length !== CORRECT_STEPS.length) {
+                statusMsg.textContent = \`⚠️ Расставьте все \${CORRECT_STEPS.length} этапов. Сейчас: \${resultItems.length}\`;
+                statusMsg.className = 'message error';
+                return;
+            }
+
+            let allCorrect = true;
+            let wrongIndices = [];
+
+            resultItems.forEach((item, index) => {
+                const correctItem = CORRECT_STEPS[index];
+                const els = resultEl.querySelectorAll('.step-item');
+                const el = els[index];
+                if (el) {
+                    if (item === correctItem) {
+                        el.classList.add('correct');
+                        el.classList.remove('wrong');
+                    } else {
+                        el.classList.add('wrong');
+                        el.classList.remove('correct');
+                        allCorrect = false;
+                        wrongIndices.push(index + 1);
+                    }
+                }
+            });
+
+            if (allCorrect) {
+                statusMsg.textContent = '🎉 Отлично! Все этапы расставлены в правильном порядке!';
+                statusMsg.className = 'message success';
+            } else {
+                statusMsg.textContent = \`❌ Ошибка на этапах: \${wrongIndices.join(', ')}. Проверьте последовательность.\`;
+                statusMsg.className = 'message error';
+            }
+        }
+
+        function shuffleItems() {
+            const allItems = [...resultItems, ...currentItems];
+            const uniqueItems = [];
+            const seen = new Set();
+            for (const item of allItems) {
+                if (!seen.has(item)) {
+                    seen.add(item);
+                    uniqueItems.push(item);
+                }
+            }
+            currentItems = shuffleArray(uniqueItems);
+            resultItems = [];
+            render();
+            statusMsg.textContent = '🔀 Этапы перемешаны! Расставьте их заново.';
+            statusMsg.className = 'message';
+            document.querySelectorAll('.step-item.correct, .step-item.wrong').forEach(el => {
+                el.classList.remove('correct', 'wrong');
+            });
+        }
+
+        function resetGame() {
+            const allItems = [...resultItems, ...currentItems];
+            const uniqueItems = [];
+            const seen = new Set();
+            for (const item of allItems) {
+                if (!seen.has(item)) {
+                    seen.add(item);
+                    uniqueItems.push(item);
+                }
+            }
+            // Перемешиваем
+            currentItems = shuffleArray(uniqueItems);
+            resultItems = [];
+            render();
+            statusMsg.textContent = '🔄 Порядок сброшен. Расставьте этапы заново.';
+            statusMsg.className = 'message';
+            document.querySelectorAll('.step-item.correct, .step-item.wrong').forEach(el => {
+                el.classList.remove('correct', 'wrong');
+            });
+        }
+
+        checkBtn.addEventListener('click', checkOrder);
+        shuffleBtn.addEventListener('click', shuffleItems);
+        resetBtn.addEventListener('click', resetGame);
+
+        render();
+    <\/script>
+    </body>
+    </html>`;
+
+        // Скачиваем файл
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${title.replace(/\s+/g, '_')}_trainer.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 Тренажёр экспортирован!');
+    }
+
+    // ================================================================
+    //  ВОССТАНОВЛЕНИЕ ПРИМЕРА
+    // ================================================================
+
+    function resetToDefault() {
+        if (!confirm('Восстановить встроенный пример? Все текущие изменения будут потеряны.')) return;
+        currentSteps = [...DEFAULT_SCENARIO.steps];
+        currentTitle = DEFAULT_SCENARIO.title;
+        currentDesc = DEFAULT_SCENARIO.description;
+        scenarioTitle.value = currentTitle;
+        scenarioDesc.value = currentDesc;
+        renderSteps();
+        showToast('🔄 Пример восстановлен');
+    }
+
+    // ================================================================
+    //  ПЕРЕКЛЮЧЕНИЕ РЕЖИМОВ
+    // ================================================================
+
+    function switchMode(mode) {
+        modeTabs.forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.mode === mode);
+        });
+
+        if (mode === 'editor') {
+            editorMode.style.display = 'block';
+            savedMode.style.display = 'none';
+            renderSteps();
+        } else {
+            editorMode.style.display = 'none';
+            savedMode.style.display = 'block';
+            renderSavedList();
+        }
+    }
+
+    modeTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            switchMode(this.dataset.mode);
+        });
+    });
+
+    // ================================================================
+    //  ОБРАБОТЧИКИ
+    // ================================================================
+
+    saveBtn.addEventListener('click', saveScenario);
+    exportBtn.addEventListener('click', exportCurrent);
+    resetBtn.addEventListener('click', resetToDefault);
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+
+    renderSteps();
+    renderSavedList();
+    showToast('🐾 Добро пожаловать в конструктор алгоритмов!');
+
+    // Делаем функции глобальными для вызова из HTML
+    window.loadScenario = loadScenario;
+    window.deleteScenario = deleteScenario;
+    window.exportScenario = exportScenario;
+</script>
+
+</body>
+</html>

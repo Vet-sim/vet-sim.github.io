@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Инструкция: Конструктор кроссвордов | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: #7B8D6E;
+        }
+
+        .subtitle {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBE3D2;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        /* ===== ОГЛАВЛЕНИЕ ===== */
+        .toc {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #A3B18A;
+        }
+
+        .toc h2 {
+            font-size: 1rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .toc ul li {
+            padding: 2px 0;
+            font-size: 0.85rem;
+        }
+
+        .toc ul li a {
+            color: #2C7DA0;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+            color: #1F4E6E;
+        }
+
+        /* ===== ЗАГОЛОВКИ ===== */
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h2 .badge {
+            font-size: 0.6rem;
+            background: #2C7DA0;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            font-weight: 600;
+            margin: 1rem 0 0.3rem 0;
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== СПИСКИ ===== */
+        ul,
+        ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* ===== ВЫДЕЛЕНИЯ ===== */
+        .highlight {
+            background: #F0EEE5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tag {
+            background: #E2EAD9;
+            color: #3E5C4A;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .badge-type {
+            display: inline-block;
+            background: #2C7DA0;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: 4px;
+        }
+
+        /* ===== БЛОКИ ПРИМЕРОВ ===== */
+        .example-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #A3B18A;
+            font-size: 0.9rem;
+        }
+
+        .example-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .example-box code {
+            background: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+        }
+
+        table th {
+            background: #1F4E6E;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #E2EAD9;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) td {
+            background: #F9F6EF;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== СХЕМА ===== */
+        .schema {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .schema .step {
+            background: #FDFCF9;
+            border: 2px solid #E2EAD9;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+            max-width: 160px;
+        }
+
+        .schema .step .step-icon {
+            font-size: 1.8rem;
+        }
+
+        .schema .step .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-top: 0.2rem;
+        }
+
+        .schema .arrow {
+            font-size: 1.5rem;
+            color: #A3B18A;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ===== БЛОКИ ВНИМАНИЯ ===== */
+        .note {
+            background: #F0F6FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .note strong {
+            color: #1F4E6E;
+        }
+
+        .warning {
+            background: #FDE8E0;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D47A6A;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .warning strong {
+            color: #D47A6A;
+        }
+
+        .tip {
+            background: #E8F5E8;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #6B9E6B;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tip strong {
+            color: #6B9E6B;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .toc ul {
+                columns: 1;
+            }
+
+            .schema {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .schema .step {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .schema .arrow {
+                transform: rotate(90deg);
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 1.5rem;
+            }
+
+            .toc {
+                break-inside: avoid;
+            }
+
+            .schema .step {
+                break-inside: avoid;
+            }
+
+            .example-box {
+                break-inside: avoid;
+            }
+
+            table {
+                break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo">🧩 <span>ВетСим</span> — Конструктор кроссвордов</div>
+            <span class="version">v1.0</span>
+            <div class="subtitle">Инструкция по работе для преподавателей ветеринарных дисциплин</div>
+            <div class="header-actions no-print">
+                <a href="https://vet-sim.github.io/crossword_constructor.html" target="_blank" class="btn btn-primary">
+                    🚀 Перейти к конструктору
+                </a>
+                <button class="btn btn-success" onclick="window.print()">
+                    🖨️ Распечатать инструкцию
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ВСТУПЛЕНИЕ ===== -->
+        <p>
+            <strong>Добро пожаловать!</strong> Конструктор кроссвордов — это инструмент для автоматического создания интерактивных кроссвордов из вашего списка терминов. Вы загружаете текстовый файл со словами, программа автоматически размещает их в сетке, а вам остаётся только добавить определения для каждого слова. Это идеальный способ для запоминания терминологии в игровой форме.
+        </p>
+
+        <div class="note">
+            <strong>💡 Главная идея:</strong> Вы создаёте список терминов (одно слово на строку). Конструктор размещает их в кроссвордной сетке. Вы добавляете определения, и получаете готовый интерактивный кроссворд для студентов.
+        </div>
+
+        <!-- ===== ОГЛАВЛЕНИЕ ===== -->
+        <div class="toc">
+            <h2>📋 Оглавление</h2>
+            <ul>
+                <li><a href="#s1">1. Что такое Конструктор кроссвордов</a></li>
+                <li><a href="#s2">2. Интерфейс и инструменты</a></li>
+                <li><a href="#s3">3. Подготовка и загрузка слов</a></li>
+                <li><a href="#s4">4. Размещение слов в сетке</a></li>
+                <li><a href="#s5">5. Добавление определений</a></li>
+                <li><a href="#s6">6. Экспорт кроссворда</a></li>
+                <li><a href="#s7">7. Практические примеры</a></li>
+                <li><a href="#s8">8. Частые вопросы (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 1 ===== -->
+        <h2 id="s1">1. Что такое Конструктор кроссвордов</h2>
+
+        <p>
+            Конструктор кроссвордов — это инструмент для создания <strong>интерактивных кроссвордов</strong>. Он решает несколько задач преподавателя:
+        </p>
+        <ul>
+            <li><strong>Запоминание терминов</strong> — кроссворд помогает связать термин и определение.</li>
+            <li><strong>Игровая форма</strong> — повышает вовлечённость и интерес.</li>
+            <li><strong>Автоматизация</strong> — не нужно рисовать сетку вручную.</li>
+            <li><strong>Интерактивность</strong> — студент вводит ответы и проверяет себя.</li>
+        </ul>
+
+        <div class="schema">
+            <div class="step">
+                <div class="step-icon">📋</div>
+                <div class="step-label">Слова</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Загрузите список терминов</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">🔀</div>
+                <div class="step-label">Размещение</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Автоматическая сетка</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">✏️</div>
+                <div class="step-label">Определения</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Добавьте описания</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📤</div>
+                <div class="step-label">Экспорт</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Готовый кроссворд</div>
+            </div>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 2 ===== -->
+        <h2 id="s2">2. Интерфейс и инструменты</h2>
+
+        <p>Конструктор состоит из нескольких ключевых зон:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Зона</th>
+                        <th>Что находится</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Шапка</strong></td>
+                        <td>Название конструктора, кнопки управления</td>
+                        <td>Экспорт, настройки</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Панель загрузки</strong></td>
+                        <td>Кнопка для загрузки TXT-файла</td>
+                        <td>Загрузка списка слов</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Сетка кроссворда</strong></td>
+                        <td>Графическое отображение кроссворда</td>
+                        <td>Просмотр размещённых слов</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Список слов и определений</strong></td>
+                        <td>Список размещённых слов с полями для определений</td>
+                        <td>Ввод определений для каждого слова</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 3 ===== -->
+        <h2 id="s3">3. Подготовка и загрузка слов</h2>
+
+        <h3>3.1 Как подготовить файл со словами</h3>
+        <ul>
+            <li>Создайте текстовый файл (<span class="highlight">.txt</span>).</li>
+            <li>Каждое слово пишите с <strong>новой строки</strong>.</li>
+            <li>Используйте только <strong>одно слово</strong> на строку (без определений).</li>
+            <li>Слова должны быть написаны <strong>заглавными буквами</strong> (кириллица или латиница).</li>
+        </ul>
+
+        <div class="example-box">
+            <div class="label">📘 Пример файла для загрузки</div>
+            <p>
+                <code>
+                АНТИБИОТИК<br>
+                ТЕТРАЦИКЛИН<br>
+                ПЕНИЦИЛЛИН<br>
+                ЦЕФАЛОСПОРИН<br>
+                ЭНРОФЛОКСАЦИН
+                </code>
+            </p>
+        </div>
+
+        <h3>3.2 Как загрузить файл</h3>
+        <ol>
+            <li>Нажмите кнопку <span class="highlight">«Выбрать файл»</span> или область загрузки.</li>
+            <li>Выберите подготовленный TXT-файл.</li>
+            <li>Дождитесь загрузки слов.</li>
+        </ol>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Используйте 10-20 слов для кроссворда. Слишком много слов может сделать сетку громоздкой.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 4 ===== -->
+        <h2 id="s4">4. Размещение слов в сетке</h2>
+
+        <p>После загрузки слов конструктор автоматически пытается разместить их в сетке кроссворда.</p>
+
+        <h3>4.1 Что такое авторазмещение</h3>
+        <ul>
+            <li>Конструктор анализирует список слов и пытается найти оптимальное расположение.</li>
+            <li>Слова размещаются по горизонтали и вертикали.</li>
+            <li>Не все слова могут быть размещены. Некоторые могут не войти в сетку.</li>
+        </ul>
+
+        <h3>4.2 Что делать, если слово не разместилось</h3>
+        <ul>
+            <li>Попробуйте <strong>изменить список</strong> (добавить или убрать слова).</li>
+            <li>Попробуйте <strong>перезагрузить</strong> файл.</li>
+            <li>Слишком длинные или редкие слова могут не найти места.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> В списке после авторазмещения появятся <strong>только те слова</strong>, которые были успешно размещены. Именно для них нужно вводить определения.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 5 ===== -->
+        <h2 id="s5">5. Добавление определений</h2>
+
+        <p>После авторазмещения для каждого слова нужно ввести определение.</p>
+
+        <h3>5.1 Как добавить определение</h3>
+        <ol>
+            <li>В списке слов найдите нужное слово.</li>
+            <li>В поле рядом со словом введите <strong>определение</strong> (краткое описание, вопрос).</li>
+            <li>Определение должно быть чётким и однозначным.</li>
+            <li>Повторите для всех размещённых слов.</li>
+        </ol>
+
+        <h3>5.2 Рекомендации по определениям</h3>
+        <ul>
+            <li>Определение должно быть <strong>кратким</strong> (до 100 символов).</li>
+            <li>Оно должно <strong>однозначно</strong> указывать на слово.</li>
+            <li>Можно использовать формулировку вопроса или описания.</li>
+        </ul>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Для лучшего запоминания формулируйте определения как вопросы, на которые нужно дать ответ.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 6 ===== -->
+        <h2 id="s6">6. Экспорт кроссворда</h2>
+
+        <p>Готовый кроссворд можно экспортировать в <strong>автономный HTML-файл</strong>.</p>
+
+        <h3>6.1 Как экспортировать</h3>
+        <ol>
+            <li>Убедитесь, что все слова имеют определения.</li>
+            <li>Нажмите кнопку <span class="highlight">«📤 Экспортировать кроссворд»</span>.</li>
+            <li>Скачайте файл <span class="highlight">crossword.html</span>.</li>
+        </ol>
+
+        <h3>6.2 Что получает студент</h3>
+        <ul>
+            <li><strong>Один HTML-файл</strong> — всё встроено, ничего не нужно скачивать дополнительно.</li>
+            <li><strong>Интерактивный кроссворд</strong> с полями для ввода.</li>
+            <li><strong>Автоматическая проверка</strong> — мгновенная обратная связь.</li>
+            <li><strong>Работает офлайн</strong> — открывается в любом браузере без интернета.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Файл работает в любом современном браузере (Chrome, Edge, Firefox). Для открытия достаточно двойного клика по файлу.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 7 ===== -->
+        <h2 id="s7">7. Практические примеры</h2>
+
+        <h3>Пример 1: Ветеринарная терминология</h3>
+        <div class="example-box">
+            <div class="label">📘 Настройка кроссворда</div>
+            <p>
+                <strong>Слова (в файле):</strong>
+            </p>
+            <ul>
+                <li>ПАЛЬПАЦИЯ</li>
+                <li>ПЕРКУССИЯ</li>
+                <li>АУСКУЛЬТАЦИЯ</li>
+                <li>АНАМНЕЗ</li>
+                <li>ДИАГНОЗ</li>
+            </ul>
+            <p>
+                <strong>Определения (в конструкторе):</strong>
+            </p>
+            <ul>
+                <li><strong>ПАЛЬПАЦИЯ</strong> → Метод обследования с помощью ощупывания</li>
+                <li><strong>ПЕРКУССИЯ</strong> → Выстукивание для оценки состояния органов</li>
+                <li><strong>АУСКУЛЬТАЦИЯ</strong> → Выслушивание звуковых явлений</li>
+                <li><strong>АНАМНЕЗ</strong> → Совокупность сведений о развитии болезни</li>
+                <li><strong>ДИАГНОЗ</strong> → Заключение о болезни на основе обследования</li>
+            </ul>
+        </div>
+
+        <h3>Пример 2: Классификация антибиотиков</h3>
+        <div class="example-box">
+            <div class="label">📘 Настройка кроссворда</div>
+            <p>
+                <strong>Слова (в файле):</strong>
+            </p>
+            <ul>
+                <li>ПЕНИЦИЛЛИН</li>
+                <li>ЦЕФАЛОСПОРИН</li>
+                <li>ТЕТРАЦИКЛИН</li>
+                <li>АМИНОГЛИКОЗИД</li>
+                <li>ФТОРХИНОЛОН</li>
+            </ul>
+            <p>
+                <strong>Определения (в конструкторе):</strong>
+            </p>
+            <ul>
+                <li><strong>ПЕНИЦИЛЛИН</strong> → Антибиотик, нарушающий синтез клеточной стенки</li>
+                <li><strong>ЦЕФАЛОСПОРИН</strong> → Антибиотик с широким спектром действия</li>
+                <li><strong>ТЕТРАЦИКЛИН</strong> → Антибиотик, ингибирующий синтез белка</li>
+                <li><strong>АМИНОГЛИКОЗИД</strong> → Антибиотик, нарушающий синтез белка на рибосомах</li>
+                <li><strong>ФТОРХИНОЛОН</strong> → Антибиотик, ингибирующий ДНК-гиразу</li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 8 ===== -->
+        <h2 id="s8">8. Частые вопросы (FAQ)</h2>
+
+        <h4>❓ Сколько слов можно загрузить?</h4>
+        <p>Количество слов не ограничено, но оптимально 10-20 слов. Слишком много слов может сделать сетку громоздкой.</p>
+
+        <h4>❓ Какие символы можно использовать?</h4>
+        <p>Используйте только буквы (кириллица или латиница). Допускаются дефисы и пробелы, но лучше использовать односложные термины.</p>
+
+        <h4>❓ Что делать, если слово не разместилось?</h4>
+        <p>Попробуйте изменить список или перезагрузить файл. Слишком длинные или редкие слова могут не найти места в сетке.</p>
+
+        <h4>❓ Работает ли кроссворд без интернета?</h4>
+        <p>Да, готовый HTML-файл работает полностью офлайн.</p>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> Убедитесь, что файл со словами сохранён в кодировке UTF-8, иначе слова могут отображаться некорректно.
+        </div>
+
+        <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+        <h2>🎯 Заключение</h2>
+
+        <p>
+            Конструктор кроссвордов — это инструмент, который превращает запоминание терминов в <strong>интерактивную игру</strong>.
+        </p>
+
+        <p><strong>Ключевые преимущества:</strong></p>
+        <ul>
+            <li><strong>Игровая форма</strong> — повышает интерес и вовлечённость.</li>
+            <li><strong>Автоматизация</strong> — не нужно рисовать сетку вручную.</li>
+            <li><strong>Интерактивность</strong> — студент вводит ответы и проверяет себя.</li>
+            <li><strong>Гибкость</strong> — подходит для любых дисциплин.</li>
+            <li><strong>Офлайн-доступность</strong> — не нужен интернет.</li>
+        </ul>
+
+        <div class="tip" style="text-align:center; margin: 1.5rem 0;">
+            <p style="font-size:1rem;"><strong>💡 Совет:</strong> Начните с 5-8 слов по одной теме. Проведите тестирование на коллегах, чтобы убедиться, что сетка выглядит аккуратно, а определения понятны.</p>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+            <p>Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+            <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+            <p>💬 Сообщество: <a href="https://vk.ru/vetsimpros" target="_blank">ВКонтакте</a> | По вопросам: <a href="https://vk.ru/vet_sim" target="_blank">https://vk.ru/vet_sim</a></p>
+        </div>
+
+    </div>
+</body>
+</html>

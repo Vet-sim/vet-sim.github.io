@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Инструкция: Конструктор учебных атласов | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: #7B8D6E;
+        }
+
+        .subtitle {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBE3D2;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        /* ===== ОГЛАВЛЕНИЕ ===== */
+        .toc {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #A3B18A;
+        }
+
+        .toc h2 {
+            font-size: 1rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .toc ul li {
+            padding: 2px 0;
+            font-size: 0.85rem;
+        }
+
+        .toc ul li a {
+            color: #2C7DA0;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+            color: #1F4E6E;
+        }
+
+        /* ===== ЗАГОЛОВКИ ===== */
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h2 .badge {
+            font-size: 0.6rem;
+            background: #2C7DA0;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            font-weight: 600;
+            margin: 1rem 0 0.3rem 0;
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== СПИСКИ ===== */
+        ul,
+        ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* ===== ВЫДЕЛЕНИЯ ===== */
+        .highlight {
+            background: #F0EEE5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tag {
+            background: #E2EAD9;
+            color: #3E5C4A;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .badge-type {
+            display: inline-block;
+            background: #2C7DA0;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: 4px;
+        }
+
+        /* ===== БЛОКИ ПРИМЕРОВ ===== */
+        .example-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #A3B18A;
+            font-size: 0.9rem;
+        }
+
+        .example-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .example-box code {
+            background: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+        }
+
+        table th {
+            background: #1F4E6E;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #E2EAD9;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) td {
+            background: #F9F6EF;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== СХЕМА ===== */
+        .schema {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .schema .step {
+            background: #FDFCF9;
+            border: 2px solid #E2EAD9;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+            max-width: 160px;
+        }
+
+        .schema .step .step-icon {
+            font-size: 1.8rem;
+        }
+
+        .schema .step .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-top: 0.2rem;
+        }
+
+        .schema .arrow {
+            font-size: 1.5rem;
+            color: #A3B18A;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ===== БЛОКИ ВНИМАНИЯ ===== */
+        .note {
+            background: #F0F6FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .note strong {
+            color: #1F4E6E;
+        }
+
+        .warning {
+            background: #FDE8E0;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D47A6A;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .warning strong {
+            color: #D47A6A;
+        }
+
+        .tip {
+            background: #E8F5E8;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #6B9E6B;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tip strong {
+            color: #6B9E6B;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .toc ul {
+                columns: 1;
+            }
+
+            .schema {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .schema .step {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .schema .arrow {
+                transform: rotate(90deg);
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 1.5rem;
+            }
+
+            .toc {
+                break-inside: avoid;
+            }
+
+            .schema .step {
+                break-inside: avoid;
+            }
+
+            .example-box {
+                break-inside: avoid;
+            }
+
+            table {
+                break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo">🗺️ <span>ВетСим</span> — Конструктор учебных атласов</div>
+            <span class="version">v1.0</span>
+            <div class="subtitle">Инструкция по работе для преподавателей ветеринарных дисциплин</div>
+            <div class="header-actions no-print">
+                <a href="https://vet-sim.github.io/atlas_editor.html" target="_blank" class="btn btn-primary">
+                    🚀 Перейти к конструктору
+                </a>
+                <button class="btn btn-success" onclick="window.print()">
+                    🖨️ Распечатать инструкцию
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ВСТУПЛЕНИЕ ===== -->
+        <p>
+            <strong>Добро пожаловать!</strong> Конструктор учебных атласов — это инструмент для создания интерактивных карт и схем. Вы загружаете изображение (схему, рентгеновский снимок, географическую карту, план) и добавляете на него кликабельные метки, которые раскрывают информацию. Это идеальный инструмент для изучения анатомии, топографии, лабораторных исследований и любых других дисциплин, где важно визуальное расположение объектов.
+        </p>
+
+        <div class="note">
+            <strong>💡 Главная идея:</strong> Вы создаёте интерактивную карту (атлас), где студент наводит на метку и получает подсказку. Это помогает запоминать расположение структур без зубрёжки.
+        </div>
+
+        <!-- ===== ОГЛАВЛЕНИЕ ===== -->
+        <div class="toc">
+            <h2>📋 Оглавление</h2>
+            <ul>
+                <li><a href="#s1">1. Что такое Конструктор учебных атласов</a></li>
+                <li><a href="#s2">2. Интерфейс и инструменты</a></li>
+                <li><a href="#s3">3. Загрузка изображения</a></li>
+                <li><a href="#s4">4. Добавление меток</a></li>
+                <li><a href="#s5">5. Управление метками</a></li>
+                <li><a href="#s6">6. Настройка отображения</a></li>
+                <li><a href="#s7">7. Экспорт атласа</a></li>
+                <li><a href="#s8">8. Практические примеры</a></li>
+                <li><a href="#s9">9. Частые вопросы (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 1 ===== -->
+        <h2 id="s1">1. Что такое Конструктор учебных атласов</h2>
+
+        <p>
+            Конструктор учебных атласов — это инструмент для создания <strong>интерактивных обучающих карт</strong>. Он решает несколько задач преподавателя:
+        </p>
+        <ul>
+            <li><strong>Визуализация пространственного расположения</strong> — студент видит, где находится структура.</li>
+            <li><strong>Самостоятельное изучение</strong> — студент сам исследует карту, кликая на метки.</li>
+            <li><strong>Запоминание через ассоциации</strong> — визуальная привязка названия к месту.</li>
+            <li><strong>Работа офлайн</strong> — готовый атлас открывается в браузере без интернета.</li>
+        </ul>
+
+        <div class="schema">
+            <div class="step">
+                <div class="step-icon">🖼️</div>
+                <div class="step-label">Загрузить</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Изображение (схема, карта, снимок)</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📍</div>
+                <div class="step-label">Метки</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Клик по изображению → точка с информацией</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📦</div>
+                <div class="step-label">Экспорт</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Готовый атлас в HTML-файле</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">🎓</div>
+                <div class="step-label">Студенты</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Изучают карту, кликая на метки</div>
+            </div>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 2 ===== -->
+        <h2 id="s2">2. Интерфейс и инструменты</h2>
+
+        <p>Конструктор состоит из нескольких ключевых зон:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Зона</th>
+                        <th>Что находится</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Шапка</strong></td>
+                        <td>Название конструктора, кнопки управления</td>
+                        <td>Экспорт, сброс</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Область загрузки</strong></td>
+                        <td>Место для загрузки изображения</td>
+                        <td>Выбор файла (JPG, PNG, SVG, WEBP)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Холст с изображением</strong></td>
+                        <td>Загруженное изображение</td>
+                        <td>Просмотр, клик (левая кнопка) для добавления меток, правый клик для удаления</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Список меток</strong></td>
+                        <td>Все добавленные метки</td>
+                        <td>Редактирование, удаление</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 3 ===== -->
+        <h2 id="s3">3. Загрузка изображения</h2>
+
+        <h3>3.1 Что можно загружать</h3>
+        <ul>
+            <li><strong>Анатомические схемы</strong> — рисунки строения органов, костей, систем.</li>
+            <li><strong>Рентгеновские снимки</strong> — для изучения патологий и нормальной анатомии.</li>
+            <li><strong>Карты и планы</strong> — топографические схемы, планы клиник.</li>
+            <li><strong>Фотографии препаратов</strong> — макропрепараты, гистологические срезы.</li>
+            <li><strong>Любые изображения</strong>, на которых нужно обозначить области.</li>
+        </ul>
+
+        <h3>3.2 Как загрузить</h3>
+        <ol>
+            <li>Нажмите на область загрузки или на кнопку <span class="highlight">«Выбрать файл»</span>.</li>
+            <li>Выберите файл на компьютере (поддерживаются форматы: JPG, PNG, SVG, WEBP).</li>
+            <li>Дождитесь загрузки — изображение отобразится на холсте.</li>
+        </ol>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Используйте изображения с высоким разрешением, чтобы детали были хорошо видны, особенно если вы планируете добавлять много меток.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 4 ===== -->
+        <h2 id="s4">4. Добавление меток</h2>
+
+        <p>Метки — это точки на изображении, которые содержат информацию.</p>
+
+        <h3>4.1 Как добавить метку</h3>
+        <ol>
+            <li><strong>Кликните левой кнопкой мыши</strong> на изображение в том месте, где хотите разместить метку.</li>
+            <li>Появится окно редактирования метки.</li>
+            <li>Введите <strong>название</strong> метки (обязательно).</li>
+            <li>При необходимости добавьте <strong>описание</strong> (до 500 символов).</li>
+            <li>Нажмите <span class="highlight">«Сохранить»</span>.</li>
+        </ol>
+
+        <!-- ===== РАЗДЕЛ 5 ===== -->
+        <h2 id="s5">5. Управление метками</h2>
+
+        <h3>5.1 Редактирование</h3>
+        <ul>
+            <li>В списке меток найдите нужную.</li>
+            <li>Нажмите на неё — откроется окно редактирования.</li>
+            <li>Измените название или описание и нажмите <span class="highlight">«Сохранить»</span>.</li>
+        </ul>
+
+        <h3>5.2 Удаление</h3>
+        <ul>
+            <li><strong>Способ 1:</strong> Кликните правой кнопкой мыши по метке на изображении.</li>
+            <li><strong>Способ 2:</strong> Нажмите значок <span class="highlight">🗑️</span> рядом с меткой в списке.</li>
+            <li>Подтвердите удаление.</li>
+        </ul>
+
+        <h3>5.3 Перемещение</h3>
+        <ul>
+            <li>Кликните на метку на изображении и, не отпуская кнопку мыши, перетащите её в нужное место.</li>
+            <li>Отпустите кнопку — метка зафиксируется на новом месте.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Удаление метки необратимо. Если вы случайно удалили метку, вам придётся добавить её заново.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 6 ===== -->
+        <h2 id="s6">6. Настройка отображения</h2>
+
+        <p>Вы можете настроить внешний вид меток, чтобы они были заметны и не перекрывали важные детали:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Настройка</th>
+                        <th>Что делает</th>
+                        <th>Как использовать</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Цвет метки</strong></td>
+                        <td>Меняет цвет точки</td>
+                        <td>Выделите разные группы структур разными цветами</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Размер метки</strong></td>
+                        <td>Увеличивает или уменьшает точку</td>
+                        <td>Для важных структур сделайте метки крупнее</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Прозрачность</strong></td>
+                        <td>Делает метку полупрозрачной</td>
+                        <td>Если метки перекрывают детали изображения</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 7 ===== -->
+        <h2 id="s7">7. Экспорт атласа</h2>
+
+        <p>Готовый атлас можно экспортировать в <strong>автономный HTML-файл</strong>.</p>
+
+        <h3>7.1 Как экспортировать</h3>
+        <ol>
+            <li>Убедитесь, что все метки добавлены и настроены.</li>
+            <li>Нажмите кнопку <span class="highlight">«📤 Экспорт»</span>.</li>
+            <li>Скачайте файл <span class="highlight">atlas.html</span>.</li>
+        </ol>
+
+        <h3>7.2 Что получает студент</h3>
+        <ul>
+            <li><strong>Один HTML-файл</strong> — всё встроено, ничего не нужно скачивать дополнительно.</li>
+            <li><strong>Интерактивное изображение</strong> — метки появляются при наведении или клике.</li>
+            <li><strong>Информация по клику</strong> — при клике на метку открывается окно с названием и описанием.</li>
+            <li><strong>Работает офлайн</strong> — открывается в любом браузере без интернета.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Файл работает в любом современном браузере (Chrome, Edge, Firefox). Для открытия достаточно двойного клика по файлу.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 8 ===== -->
+        <h2 id="s8">8. Практические примеры</h2>
+
+        <h3>Пример 1: Анатомический атлас «Строение скелета собаки»</h3>
+        <div class="example-box">
+            <div class="label">📘 Состав атласа</div>
+            <p>
+                <strong>Изображение:</strong> Схема скелета собаки (вид сбоку).<br>
+                <strong>Метки:</strong>
+            </p>
+            <ul>
+                <li>Череп — описание, функции.</li>
+                <li>Позвоночник — отделы, количество позвонков.</li>
+                <li>Грудная клетка — рёбра, грудина.</li>
+                <li>Лопатка — описание, функция.</li>
+                <li>Плечевая кость — описание.</li>
+                <li>Лучевая и локтевая кости — описание.</li>
+                <li>Таз — описание.</li>
+                <li>Бедренная кость — описание.</li>
+                <li>Голень — большеберцовая и малоберцовая кости.</li>
+                <li>Хвост — количество позвонков.</li>
+            </ul>
+        </div>
+
+        <h3>Пример 2: Рентгенологический атлас «Патологии грудной клетки»</h3>
+        <div class="example-box">
+            <div class="label">📘 Состав атласа</div>
+            <p>
+                <strong>Изображение:</strong> Рентгеновский снимок грудной клетки собаки.<br>
+                <strong>Метки (патологии):</strong>
+            </p>
+            <ul>
+                <li>Сердце — увеличение, смещение.</li>
+                <li>Лёгочные поля — затемнения, уплотнения.</li>
+                <li>Трахея — смещение.</li>
+                <li>Диафрагма — контуры, положение.</li>
+                <li>Ребра — переломы.</li>
+            </ul>
+            <p><strong>Цель:</strong> Научить студентов распознавать патологии на рентгеновских снимках.</p>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 9 ===== -->
+        <h2 id="s9">9. Частые вопросы (FAQ)</h2>
+
+        <h4>❓ Какие изображения можно загружать?</h4>
+        <p>Поддерживаются форматы: JPG, PNG, SVG, WEBP. Рекомендуемое разрешение — 1920x1080 пикселей.</p>
+
+        <h4>❓ Можно ли добавлять изображения к меткам?</h4>
+        <p>На данный момент конструктор поддерживает только текстовые метки (название и описание). Изображения к меткам не добавляются.</p>
+
+        <h4>❓ Работает ли атлас без интернета?</h4>
+        <p>Да, готовый HTML-файл работает полностью офлайн.</p>
+
+        <h4>❓ Сколько меток можно добавить?</h4>
+        <p>Количество меток не ограничено.</p>
+
+        <h4>❓ Что делать, если метка не отображается?</h4>
+        <p>Проверьте, что вы кликнули на изображение и сохранили метку. Если метка есть в списке, но не видна на холсте, возможно, она находится за пределами изображения. Попробуйте удалить её и добавить заново.</p>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> Метки добавляются по клику левой кнопкой мыши. Удаляются по правому клику. Будьте внимательны, чтобы случайно не удалить нужную метку.
+        </div>
+
+        <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+        <h2>🎯 Заключение</h2>
+
+        <p>
+            Конструктор учебных атласов — это инструмент, который превращает статичное изображение в <strong>интерактивное учебное пособие</strong>.
+        </p>
+
+        <p><strong>Ключевые преимущества:</strong></p>
+        <ul>
+            <li><strong>Наглядность</strong> — студенты видят расположение структур.</li>
+            <li><strong>Интерактивность</strong> — самостоятельное исследование.</li>
+            <li><strong>Гибкость</strong> — подходит для любых дисциплин.</li>
+            <li><strong>Офлайн-доступность</strong> — не нужен интернет.</li>
+        </ul>
+
+        <div class="tip" style="text-align:center; margin: 1.5rem 0;">
+            <p style="font-size:1rem;"><strong>💡 Совет:</strong> Начните с создания простого атласа (например, схема тела собаки с 5-6 метками). Постепенно усложняйте, добавляя больше деталей.</p>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+            <p>Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+            <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+            <p>💬 Сообщество: <a href="https://vk.ru/vetsimpros" target="_blank">ВКонтакте</a> | По вопросам: <a href="https://vk.ru/vet_sim" target="_blank">https://vk.ru/vet_sim</a></p>
+        </div>
+
+    </div>
+</body>
+</html>

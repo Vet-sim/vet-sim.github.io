@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Инструкция: Виртуальный музей | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: #7B8D6E;
+        }
+
+        .subtitle {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBE3D2;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        /* ===== ОГЛАВЛЕНИЕ ===== */
+        .toc {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #A3B18A;
+        }
+
+        .toc h2 {
+            font-size: 1rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .toc ul li {
+            padding: 2px 0;
+            font-size: 0.85rem;
+        }
+
+        .toc ul li a {
+            color: #2C7DA0;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+            color: #1F4E6E;
+        }
+
+        /* ===== ЗАГОЛОВКИ ===== */
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h2 .badge {
+            font-size: 0.6rem;
+            background: #2C7DA0;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            font-weight: 600;
+            margin: 1rem 0 0.3rem 0;
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== СПИСКИ ===== */
+        ul,
+        ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* ===== ВЫДЕЛЕНИЯ ===== */
+        .highlight {
+            background: #F0EEE5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tag {
+            background: #E2EAD9;
+            color: #3E5C4A;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .badge-type {
+            display: inline-block;
+            background: #2C7DA0;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: 4px;
+        }
+
+        /* ===== БЛОКИ ПРИМЕРОВ ===== */
+        .example-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #A3B18A;
+            font-size: 0.9rem;
+        }
+
+        .example-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .example-box code {
+            background: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+        }
+
+        table th {
+            background: #1F4E6E;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #E2EAD9;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) td {
+            background: #F9F6EF;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== СХЕМА ===== */
+        .schema {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .schema .step {
+            background: #FDFCF9;
+            border: 2px solid #E2EAD9;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+            max-width: 160px;
+        }
+
+        .schema .step .step-icon {
+            font-size: 1.8rem;
+        }
+
+        .schema .step .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-top: 0.2rem;
+        }
+
+        .schema .arrow {
+            font-size: 1.5rem;
+            color: #A3B18A;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ===== БЛОКИ ВНИМАНИЯ ===== */
+        .note {
+            background: #F0F6FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .note strong {
+            color: #1F4E6E;
+        }
+
+        .warning {
+            background: #FDE8E0;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D47A6A;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .warning strong {
+            color: #D47A6A;
+        }
+
+        .tip {
+            background: #E8F5E8;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #6B9E6B;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tip strong {
+            color: #6B9E6B;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .toc ul {
+                columns: 1;
+            }
+
+            .schema {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .schema .step {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .schema .arrow {
+                transform: rotate(90deg);
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 1.5rem;
+            }
+
+            .toc {
+                break-inside: avoid;
+            }
+
+            .schema .step {
+                break-inside: avoid;
+            }
+
+            .example-box {
+                break-inside: avoid;
+            }
+
+            table {
+                break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo">🖼️ <span>ВетСим</span> — Виртуальный музей</div>
+            <span class="version">v1.0</span>
+            <div class="subtitle">Инструкция по работе для преподавателей ветеринарных дисциплин</div>
+            <div class="header-actions no-print">
+                <a href="https://vet-sim.github.io/museum_constructor.html" target="_blank" class="btn btn-primary">
+                    🚀 Перейти к конструктору
+                </a>
+                <button class="btn btn-success" onclick="window.print()">
+                    🖨️ Распечатать инструкцию
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ВСТУПЛЕНИЕ ===== -->
+        <p>
+            <strong>Добро пожаловать!</strong> Конструктор «Виртуальный музей» — это инструмент, который позволяет создать интерактивную экспозицию с метками, звуком и изображениями. Вы загружаете изображение (схему, фотографию, препарат) и добавляете на него кликабельные метки, которые раскрывают информацию при наведении или клике.
+        </p>
+
+        <div class="note">
+            <strong>💡 Главная идея:</strong> Вы создаёте интерактивный плакат или музейный стенд, который студенты могут исследовать самостоятельно. Метки могут содержать текст, изображения и аудио, что делает экспозицию живой и увлекательной.
+        </div>
+
+        <!-- ===== ОГЛАВЛЕНИЕ ===== -->
+        <div class="toc">
+            <h2>📋 Оглавление</h2>
+            <ul>
+                <li><a href="#s1">1. Что такое Виртуальный музей</a></li>
+                <li><a href="#s2">2. Интерфейс и инструменты</a></li>
+                <li><a href="#s3">3. Загрузка изображения</a></li>
+                <li><a href="#s4">4. Добавление меток</a></li>
+                <li><a href="#s5">5. Настройка меток (текст, изображения, аудио)</a></li>
+                <li><a href="#s6">6. Редактирование и удаление меток</a></li>
+                <li><a href="#s7">7. Экспорт музея</a></li>
+                <li><a href="#s8">8. Практические примеры</a></li>
+                <li><a href="#s9">9. Частые вопросы (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 1 ===== -->
+        <h2 id="s1">1. Что такое Виртуальный музей</h2>
+
+        <p>
+            Конструктор «Виртуальный музей» — это инструмент для создания <strong>интерактивных экспонатов</strong>. Он решает несколько задач преподавателя:
+        </p>
+        <ul>
+            <li><strong>Визуализация сложных объектов</strong> — анатомические схемы, гистологические препараты, рентгеновские снимки.</li>
+            <li><strong>Самодеятельное изучение</strong> — студент сам исследует объект, кликая на метки и получая информацию.</li>
+            <li><strong>Использование разных форматов</strong> — текст, изображения, аудио — всё в одном месте.</li>
+            <li><strong>Работа офлайн</strong> — готовый музей открывается в браузере без интернета.</li>
+        </ul>
+
+        <div class="schema">
+            <div class="step">
+                <div class="step-icon">🖼️</div>
+                <div class="step-label">Загрузить</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Изображение (схема, фото, препарат)</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📍</div>
+                <div class="step-label">Добавить метки</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Клик по изображению → точка с информацией</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📦</div>
+                <div class="step-label">Экспортировать</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Готовый музей в HTML-файле</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">🎓</div>
+                <div class="step-label">Студенты</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Исследуют, кликают, изучают</div>
+            </div>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 2 ===== -->
+        <h2 id="s2">2. Интерфейс и инструменты</h2>
+
+        <p>Конструктор состоит из нескольких ключевых зон:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Зона</th>
+                        <th>Что находится</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Шапка</strong></td>
+                        <td>Название конструктора, кнопки управления</td>
+                        <td>Экспорт, сброс</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Область загрузки</strong></td>
+                        <td>Место для загрузки изображения</td>
+                        <td>Выбор файла (JPG, PNG, SVG, WEBP)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Холст с изображением</strong></td>
+                        <td>Загруженное изображение</td>
+                        <td>Просмотр, клик для добавления меток</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Редактор меток</strong></td>
+                        <td>Список добавленных меток, настройки</td>
+                        <td>Редактирование, удаление, изменение позиции</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 3 ===== -->
+        <h2 id="s3">3. Загрузка изображения</h2>
+
+        <h3>3.1 Что можно загружать</h3>
+        <ul>
+            <li><strong>Анатомические схемы</strong> — рисунки строения органов, костей, систем.</li>
+            <li><strong>Фотографии препаратов</strong> — макропрепараты, гистологические срезы.</li>
+            <li><strong>Рентгеновские снимки</strong> — для изучения патологий.</li>
+            <li><strong>Схемы алгоритмов</strong> — этапы диагностики, лечения, профилактики.</li>
+            <li><strong>Фотографии оборудования и инструментов</strong> — с пояснениями.</li>
+        </ul>
+
+        <h3>3.2 Как загрузить</h3>
+        <ol>
+            <li>Нажмите на область загрузки или на кнопку <span class="highlight">«Загрузить изображение»</span>.</li>
+            <li>Выберите файл на компьютере (поддерживаются форматы: JPG, PNG, SVG, WEBP).</li>
+            <li>Дождитесь загрузки — изображение отобразится на холсте.</li>
+        </ol>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Используйте изображения с разрешением не менее 1920x1080 пикселей, чтобы детали были хорошо видны, особенно если вы планируете использовать много меток.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 4 ===== -->
+        <h2 id="s4">4. Добавление меток</h2>
+
+        <p>Метки — это кликабельные точки на изображении, которые раскрывают информацию при наведении или клике.</p>
+
+        <h3>4.1 Как добавить метку</h3>
+        <ol>
+            <li><strong>Кликните</strong> на изображение в том месте, где хотите разместить метку.</li>
+            <li>Появится окно редактирования метки.</li>
+            <li>Введите <strong>заголовок</strong> и <strong>описание</strong> (до 1000 символов).</li>
+            <li>При необходимости добавьте <strong>изображение</strong> для этой метки (например, микрофотографию или дополнительную схему).</li>
+            <li>При необходимости добавьте <strong>аудиофайл</strong> (озвучивание, пояснение).</li>
+            <li>Нажмите <span class="highlight">«Сохранить»</span>.</li>
+        </ol>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Метка появляется в том месте, где вы кликнули. Если нужно переместить метку, вы можете отредактировать её позицию в настройках.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 5 ===== -->
+        <h2 id="s5">5. Настройка меток</h2>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Параметр</th>
+                        <th>Что настраивает</th>
+                        <th>Как использовать</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Заголовок</strong></td>
+                        <td>Название метки</td>
+                        <td>Краткое название структуры или объекта</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Описание</strong></td>
+                        <td>Основной текст</td>
+                        <td>Подробное пояснение, функция, клиническое значение</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Изображение</strong></td>
+                        <td>Дополнительное изображение</td>
+                        <td>Микрофотография, схема, снимок для иллюстрации</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Аудио</strong></td>
+                        <td>Озвучивание</td>
+                        <td>Запись пояснения, произношения термина</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Позиция X / Y</strong></td>
+                        <td>Координаты метки</td>
+                        <td>Точное позиционирование на изображении</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="example-box">
+            <div class="label">📘 Пример настройки метки</div>
+            <p>
+                <strong>Изображение:</strong> Схема сердца собаки<br>
+                <strong>Метка:</strong> Левый желудочек<br>
+                <strong>Заголовок:</strong> Левый желудочек<br>
+                <strong>Описание:</strong> Основная камера сердца, отвечающая за перекачивание крови в аорту. Имеет самую толстую стенку (12–15 мм).<br>
+                <strong>Изображение:</strong> (загружается микрофотография миокарда)<br>
+                <strong>Аудио:</strong> (озвучивание: «Левый желудочек — основная насосная камера...»)
+            </p>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 6 ===== -->
+        <h2 id="s6">6. Редактирование и удаление меток</h2>
+
+        <h3>6.1 Редактирование</h3>
+        <ul>
+            <li>В списке меток (в редакторе) найдите нужную метку.</li>
+            <li>Нажмите на неё — откроется окно редактирования.</li>
+            <li>Измените нужные поля и нажмите <span class="highlight">«Сохранить»</span>.</li>
+        </ul>
+
+        <h3>6.2 Удаление</h3>
+        <ul>
+            <li>Нажмите значок <span class="highlight">🗑️</span> рядом с меткой в списке.</li>
+            <li>Подтвердите удаление.</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> Удаление метки необратимо. Если вы случайно удалили метку, вам придётся добавить её заново.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 7 ===== -->
+        <h2 id="s7">7. Экспорт музея</h2>
+
+        <p>После того как все метки добавлены и настроены, музей можно экспортировать в <strong>автономный HTML-файл</strong>.</p>
+
+        <h3>7.1 Как экспортировать</h3>
+        <ol>
+            <li>Убедитесь, что все метки добавлены и настроены.</li>
+            <li>Нажмите кнопку <span class="highlight">«📤 Экспорт»</span>.</li>
+            <li>Скачайте файл <span class="highlight">museum.html</span>.</li>
+        </ol>
+
+        <h3>7.2 Что получает студент</h3>
+        <ul>
+            <li><strong>Один HTML-файл</strong> — всё встроено, ничего не нужно скачивать дополнительно.</li>
+            <li><strong>Интерактивное изображение</strong> — метки появляются при наведении или клике.</li>
+            <li><strong>Мультимедиа</strong> — текст, изображения, аудио в одной экспозиции.</li>
+            <li><strong>Работает офлайн</strong> — открывается в любом браузере без интернета.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Файл работает в любом современном браузере (Chrome, Edge, Firefox). Для открытия достаточно двойного клика по файлу.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 8 ===== -->
+        <h2 id="s8">8. Практические примеры</h2>
+
+        <h3>Пример 1: Анатомический атлас «Строение сердца собаки»</h3>
+        <div class="example-box">
+            <div class="label">📘 Состав музея</div>
+            <p>
+                <strong>Изображение:</strong> Схема сердца в разрезе.<br>
+                <strong>Метки:</strong>
+            </p>
+            <ul>
+                <li><strong>Левое предсердие</strong> — описание, функция, фото.</li>
+                <li><strong>Левый желудочек</strong> — описание, толщина стенки, микрофотография.</li>
+                <li><strong>Правое предсердие</strong> — описание, функция.</li>
+                <li><strong>Правый желудочек</strong> — описание, функция.</li>
+                <li><strong>Аорта</strong> — описание, аудио-пояснение.</li>
+                <li><strong>Лёгочная артерия</strong> — описание.</li>
+            </ul>
+        </div>
+
+        <h3>Пример 2: Патологоанатомический музей «Паразиты»</h3>
+        <div class="example-box">
+            <div class="label">📘 Состав музея</div>
+            <p>
+                <strong>Изображение:</strong> Фотография препарата с паразитами.<br>
+                <strong>Метки:</strong>
+            </p>
+            <ul>
+                <li><strong>Головной конец</strong> — описание, строение.</li>
+                <li><strong>Присоски</strong> — описание, функция.</li>
+                <li><strong>Туловище</strong> — описание, сегменты.</li>
+                <li><strong>Половое отверстие</strong> — описание.</li>
+                <li><strong>Жизненный цикл</strong> — изображение схемы.</li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 9 ===== -->
+        <h2 id="s9">9. Частые вопросы (FAQ)</h2>
+
+        <h4>❓ Какие изображения можно загружать?</h4>
+        <p>Поддерживаются форматы: JPG, PNG, SVG, WEBP. Рекомендуемое разрешение — 1920x1080 пикселей.</p>
+
+        <h4>❓ Можно ли добавлять аудио к меткам?</h4>
+        <p>Да, вы можете загрузить аудиофайлы (MP3, WAV) для каждой метки. Это полезно для озвучивания названий терминов или сложных пояснений.</p>
+
+        <h4>❓ Работает ли музей без интернета?</h4>
+        <p>Да, весь музей (изображения, текст, аудио) встроен в один HTML-файл и работает полностью офлайн.</p>
+
+        <h4>❓ Можно ли изменить размер метки?</h4>
+        <p>Да, в настройках конструктора вы можете регулировать размер метки (масштабирование).</p>
+
+        <h4>❓ Что делать, если метка не отображается?</h4>
+        <p>Проверьте, что вы кликнули на изображение и сохранили метку. Если метка есть в списке, но не видна на холсте, проверьте её координаты (X/Y).</p>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> Изображения и аудиофайлы встраиваются в HTML. Рекомендуемый размер файла — до 20 МБ, чтобы музей открывался быстро.
+        </div>
+
+        <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+        <h2>🎯 Заключение</h2>
+
+        <p>
+            Конструктор «Виртуальный музей» — это инструмент, который превращает статичное изображение в <strong>интерактивную обучающую среду</strong>.
+        </p>
+
+        <p><strong>Ключевые преимущества:</strong></p>
+        <ul>
+            <li><strong>Наглядность</strong> — студенты видят объект и детали.</li>
+            <li><strong>Интерактивность</strong> — самостоятельное исследование.</li>
+            <li><strong>Мультимедиа</strong> — текст, изображения, аудио.</li>
+            <li><strong>Офлайн-доступность</strong> — не нужен интернет.</li>
+            <li><strong>Гибкость</strong> — подходит для любых дисциплин.</li>
+        </ul>
+
+        <div class="tip" style="text-align:center; margin: 1.5rem 0;">
+            <p style="font-size:1rem;"><strong>💡 Совет:</strong> Начните с создания одного музея по своей дисциплине, чтобы освоить логику. Затем создавайте музеи для разных тем и делитесь ими с коллегами.</p>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+            <p>Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+            <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+            <p>💬 Сообщество: <a href="https://vk.ru/vetsimpros" target="_blank">ВКонтакте</a> | По вопросам: <a href="https://vk.ru/vet_sim" target="_blank">https://vk.ru/vet_sim</a></p>
+        </div>
+
+    </div>
+</body>
+</html>

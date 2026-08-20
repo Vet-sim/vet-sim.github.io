@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Клинический конструктор промтов | ВетСим</title>
+    <style>
+        /* ============================================================
+           БАЗОВЫЕ СТИЛИ (фирменные цвета клиники)
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #F4F7F9;
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, sans-serif;
+            color: #2D3748;
+            padding: 1.5rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: #FFFFFF;
+            border-radius: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            padding: 2rem 2rem 1.8rem;
+            border: 1px solid #E8EDE2;
+        }
+
+        /* ============================================================
+           ШАПКА (логотип и название)
+           ============================================================ */
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 2px solid #E8EDE2;
+            gap: 0.5rem;
+        }
+
+        .header .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .header .logo-area .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: #1A3A5C;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .header .logo-area .brand {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1A3A5C;
+            line-height: 1.2;
+        }
+
+        .header .logo-area .brand span {
+            color: #3B7A5E;
+        }
+
+        .header .logo-area .subtitle {
+            font-size: 0.8rem;
+            color: #5F7C62;
+            font-weight: 400;
+            display: block;
+        }
+
+        .header .version {
+            font-size: 0.7rem;
+            color: #8A9B7A;
+            background: #F0F2EB;
+            padding: 0.2rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+        }
+
+        /* ============================================================
+           ВКЛАДКИ (НАПРАВЛЕНИЯ)
+           ============================================================ */
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #E8EDE2;
+        }
+
+        .tab-btn {
+            background: #F0F2EB;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #2D3748;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tab-btn:hover {
+            background: #E0E6D6;
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            background: #1A3A5C;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(26, 58, 92, 0.2);
+        }
+
+        /* ============================================================
+           РЕЖИМЫ (ГЕНЕРАЦИЯ, УТОЧНЕНИЕ, ИДЕИ, ДОРАБОТКА)
+           ============================================================ */
+        .mode-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-bottom: 1.2rem;
+            padding: 0.4rem 0.8rem;
+            background: #F9F8F4;
+            border-radius: 2.5rem;
+            border: 1px solid #E8EDE2;
+        }
+
+        .mode-btn {
+            background: transparent;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #5F7C62;
+        }
+
+        .mode-btn:hover {
+            background: #E8EDE2;
+        }
+
+        .mode-btn.active {
+            background: #3B7A5E;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(59, 122, 94, 0.2);
+        }
+
+        /* ============================================================
+           ОСНОВНОЙ КОНТЕНТ
+           ============================================================ */
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .task-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .task-selector label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1A3A5C;
+        }
+
+        .task-selector select {
+            padding: 0.6rem 1rem;
+            border-radius: 2.5rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fff;
+            color: #2D3748;
+            width: 100%;
+            max-width: 500px;
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232D3748' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        .task-selector select:focus {
+            outline: none;
+            border-color: #3B7A5E;
+            box-shadow: 0 0 0 3px rgba(59, 122, 94, 0.1);
+        }
+
+        /* ============================================================
+           РОЛЬ И ШАБЛОН
+           ============================================================ */
+        .role-box {
+            background: #F9F8F4;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 5px solid #D4A84B;
+        }
+
+        .role-box .role-label {
+            font-weight: 600;
+            color: #1A3A5C;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .role-box .role-text {
+            font-size: 0.95rem;
+            color: #2D3748;
+            margin-top: 0.2rem;
+            line-height: 1.5;
+        }
+
+        .template-box {
+            background: #FDFCF9;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            border: 1px solid #E8EDE2;
+        }
+
+        .template-box .template-label {
+            font-weight: 600;
+            color: #1A3A5C;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.2rem;
+        }
+
+        .template-box .template-text {
+            font-size: 0.9rem;
+            color: #2D3748;
+            line-height: 1.6;
+            white-space: pre-wrap;
+        }
+
+        /* ============================================================
+           ПОЛЯ ДЛЯ ВВОДА
+           ============================================================ */
+        .fields {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin-top: 0.3rem;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .field-group label {
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #2D3748;
+        }
+
+        .field-group label .required {
+            color: #D47A6A;
+            margin-left: 2px;
+        }
+
+        .field-group label .hint {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+            margin-left: 4px;
+        }
+
+        .field-group input,
+        .field-group textarea,
+        .field-group select {
+            padding: 0.5rem 1rem;
+            border-radius: 2.5rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fff;
+            color: #2D3748;
+            width: 100%;
+            transition: 0.15s;
+        }
+
+        .field-group input:focus,
+        .field-group textarea:focus,
+        .field-group select:focus {
+            outline: none;
+            border-color: #3B7A5E;
+            box-shadow: 0 0 0 3px rgba(59, 122, 94, 0.1);
+        }
+
+        .field-group textarea {
+            border-radius: 1.2rem;
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .field-group input.error,
+        .field-group textarea.error,
+        .field-group select.error {
+            border-color: #D47A6A;
+            box-shadow: 0 0 0 3px rgba(212, 122, 106, 0.1);
+        }
+
+        /* ============================================================
+           ДОПОЛНИТЕЛЬНОЕ ПОЛЕ ДЛЯ РЕЖИМОВ
+           ============================================================ */
+        .extra-field {
+            margin-top: 0.3rem;
+            padding: 0.8rem 1rem;
+            background: #FDFCF9;
+            border-radius: 1rem;
+            border: 1px solid #E8EDE2;
+        }
+
+        .extra-field label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1A3A5C;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .extra-field textarea {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fff;
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        .extra-field textarea:focus {
+            outline: none;
+            border-color: #3B7A5E;
+            box-shadow: 0 0 0 3px rgba(59, 122, 94, 0.1);
+        }
+
+        /* ============================================================
+           КНОПКИ ДЕЙСТВИЙ
+           ============================================================ */
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-top: 0.3rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: #F0F2EB;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #2D3748;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            background: #3B7A5E;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #2F644C;
+        }
+
+        .btn-gold {
+            background: #D4A84B;
+            color: #fff;
+        }
+
+        .btn-gold:hover {
+            background: #C4953A;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #3B7A5E;
+            color: #3B7A5E;
+        }
+
+        .btn-outline:hover {
+            background: #3B7A5E;
+            color: #fff;
+        }
+
+        .btn-sm {
+            padding: 0.3rem 1rem;
+            font-size: 0.7rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            pointer-events: none;
+            transform: none;
+        }
+
+        /* ============================================================
+           РЕЗУЛЬТАТ
+           ============================================================ */
+        .result-box {
+            background: #F9F8F4;
+            border-radius: 1.2rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid #E8EDE2;
+            display: none;
+            margin-top: 0.3rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-box .result-label {
+            font-weight: 600;
+            color: #1A3A5C;
+            font-size: 0.85rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .result-box .result-text {
+            font-size: 0.9rem;
+            color: #2D3748;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            background: #fff;
+            padding: 1rem;
+            border-radius: 1rem;
+            border: 1px solid #E8EDE2;
+            min-height: 50px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .result-box .result-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* ============================================================
+           ИСТОРИЯ
+           ============================================================ */
+        .history-box {
+            background: #FCFAF5;
+            border-radius: 1.2rem;
+            padding: 0.7rem 1.2rem;
+            border: 1px solid #E8EDE2;
+            margin-top: 0.5rem;
+        }
+
+        .history-box .history-label {
+            font-weight: 600;
+            color: #1A3A5C;
+            font-size: 0.75rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .history-box .history-item {
+            font-size: 0.8rem;
+            color: #2D3748;
+            padding: 0.3rem 0;
+            border-bottom: 1px dashed #E8EDE2;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .history-box .history-item:hover {
+            background: #F4F1E4;
+            padding-left: 6px;
+            border-radius: 0.5rem;
+        }
+
+        .history-box .history-item .badge {
+            background: #3B7A5E;
+            color: #fff;
+            font-size: 0.5rem;
+            padding: 1px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        /* ============================================================
+           TOAST (ВСПЛЫВАЮЩЕЕ СООБЩЕНИЕ)
+           ============================================================ */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1A3A5C;
+            color: #fff;
+            padding: 0.6rem 1.8rem;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* ============================================================
+           ПОДВАЛ
+           ============================================================ */
+        .footer {
+            text-align: center;
+            margin-top: 1.8rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E8EDE2;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.3rem 1rem;
+        }
+
+        .footer a {
+            color: #3B7A5E;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ============================================================
+           АДАПТИВНОСТЬ
+           ============================================================ */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.8rem;
+            }
+            .container {
+                padding: 1.2rem 1rem;
+                border-radius: 1.2rem;
+            }
+            .header .logo-area .brand {
+                font-size: 1.3rem;
+            }
+            .tab-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+            .mode-btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.65rem;
+            }
+            .task-selector select {
+                max-width: 100%;
+            }
+            .btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.75rem;
+            }
+            .result-box .result-text {
+                max-height: 250px;
+            }
+            .header .logo-area .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+            .container {
+                padding: 0.8rem;
+            }
+            .header .logo-area .brand {
+                font-size: 1.1rem;
+            }
+            .header .logo-area .subtitle {
+                font-size: 0.65rem;
+            }
+            .tab-btn {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.6rem;
+            }
+            .mode-btn {
+                font-size: 0.6rem;
+                padding: 0.2rem 0.5rem;
+            }
+            .field-group input,
+            .field-group textarea,
+            .field-group select {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+            .result-box .result-text {
+                max-height: 200px;
+                padding: 0.8rem;
+            }
+            .header .logo-area .logo-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo-icon">В</div>
+                <div>
+                    <div class="brand">Вет<span>Сим</span></div>
+                    <span class="subtitle">Клинический конструктор промтов</span>
+                </div>
+            </div>
+            <span class="version">v1.0</span>
+        </div>
+
+        <!-- ===== ВКЛАДКИ ===== -->
+        <div class="tabs" id="tabsContainer">
+            <button class="tab-btn active" data-direction="admission">🩺 Клинический прием</button>
+            <button class="tab-btn" data-direction="diagnostics">🧬 Диагностика</button>
+            <button class="tab-btn" data-direction="pharmacology">💊 Фармакология</button>
+            <button class="tab-btn" data-direction="communication">🤝 Коммуникация</button>
+            <button class="tab-btn" data-direction="legal">⚖️ Юридическая безопасность</button>
+        </div>
+
+        <!-- ===== РЕЖИМЫ ===== -->
+        <div class="mode-selector" id="modeSelector">
+            <button class="mode-btn active" data-mode="generate">📝 Генерация</button>
+            <button class="mode-btn" data-mode="clarify">❓ Уточнение</button>
+            <button class="mode-btn" data-mode="ideas">💡 Идеи</button>
+            <button class="mode-btn" data-mode="improve">🔧 Доработка</button>
+        </div>
+
+        <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+        <div class="content" id="contentArea">
+            <!-- Выбор задачи -->
+            <div class="task-selector">
+                <label for="taskSelect">📌 Выберите задачу:</label>
+                <select id="taskSelect"></select>
+            </div>
+
+            <!-- Роль -->
+            <div class="role-box" id="roleBox">
+                <div class="role-label">🧠 Роль ИИ:</div>
+                <div class="role-text" id="roleText">Выберите задачу</div>
+            </div>
+
+            <!-- Шаблон -->
+            <div class="template-box" id="templateBox">
+                <div class="template-label">📝 Шаблон промпта:</div>
+                <div class="template-text" id="templateText">Здесь будет шаблон</div>
+            </div>
+
+            <!-- Поля для ввода -->
+            <div class="fields" id="fieldsContainer"></div>
+
+            <!-- Дополнительное поле для режимов -->
+            <div class="extra-field" id="extraField" style="display:none;">
+                <label id="extraLabel">📝 Дополнительный контекст:</label>
+                <textarea id="extraTextarea" placeholder="Опишите вашу задачу подробнее..."></textarea>
+            </div>
+
+            <!-- Кнопки -->
+            <div class="actions">
+                <button class="btn btn-primary" id="generateBtn">🔄 Сгенерировать</button>
+                <button class="btn btn-gold" id="copyBtn" disabled>📋 Копировать</button>
+            </div>
+
+            <!-- Результат -->
+            <div class="result-box" id="resultBox">
+                <div class="result-label">
+                    <span>📄 Результат:</span>
+                    <span style="font-size:0.75rem; color:#8A9B7A; font-weight:400;" id="resultMeta"></span>
+                </div>
+                <div class="result-text" id="resultText"></div>
+                <div class="result-actions">
+                    <button class="btn btn-outline" id="copyResultBtn">📋 Копировать</button>
+                    <button class="btn btn-primary" id="saveHistoryBtn" style="display:none;">💾 Сохранить</button>
+                </div>
+            </div>
+
+            <!-- История -->
+            <div class="history-box" id="historyBox" style="display:none;">
+                <div class="history-label">
+                    <span>📜 История запросов</span>
+                    <button class="btn btn-outline btn-sm" id="clearHistoryBtn">Очистить</button>
+                </div>
+                <div id="historyList"></div>
+            </div>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <span>🐾 <strong>ВетСим</strong> — ветеринарное просвещение</span>
+            <span>·</span>
+            <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a>
+            <span>·</span>
+            <a href="https://vk.com/VetSimPros" target="_blank">vk.com/VetSimPros</a>
+            <span>·</span>
+            <span style="color:#B5C4A5;">для ветеринарных врачей</span>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ================================================================
+        // 1. ДАННЫЕ
+        // ================================================================
+
+        // Направления и задачи (полная логика из обсуждения)
+        const directions = {
+            admission: {
+                label: '🩺 Клинический прием',
+                tasks: {
+                    anamnesis: {
+                        label: '1. Сбор анамнеза',
+                        role: 'Ветеринарный терапевт',
+                        template: `Ты — опытный ветеринарный терапевт. Составь список вопросов для сбора анамнеза у владельца пациента ({species}, {breed}, {age}, {gender}) с жалобами на {complaint}.
+
+        Задай вопросы по следующим блокам:
+        1. **Жалобы и их динамика:** частота, связь с кормлением, характер.
+        2. **Анамнез жизни:** кормление, режим, содержание, контакты.
+        3. **Анамнез болезни:** когда началось, развитие, лечение.
+        4. **Общее состояние:** аппетит, жажда, мочеиспускание, активность.
+        5. **Аллергии и хронические заболевания.**
+        6. **Прививки и обработки от паразитов.**
+
+        Оформи в виде структурированного диалога, который врач может использовать как опросник. После вопросов добавь резюме для себя — какие ключевые данные нужно зафиксировать.`,
+                        fields: [
+                            { id: 'species', label: 'Вид', type: 'text', required: true, placeholder: 'Собака/Кошка/Лошадь' },
+                            { id: 'breed', label: 'Порода', type: 'text', required: true, placeholder: 'Лабрадор' },
+                            { id: 'age', label: 'Возраст', type: 'text', required: true, placeholder: '5 лет' },
+                            { id: 'gender', label: 'Пол', type: 'select', options: ['Самка', 'Самец', 'Кастрирован/Стерилизована'], required: true },
+                            { id: 'complaint', label: 'Основная жалоба', type: 'text', required: true, placeholder: 'Хромота на левую переднюю конечность' }
+                        ]
+                    },
+                    exam: {
+                        label: '2. Клинический осмотр',
+                        role: 'Ветеринарный терапевт',
+                        template: `Ты — ветеринарный врач-терапевт. На основе данных осмотра пациента ({species}, {breed}, {age}, {gender}) составь структурированный протокол клинического осмотра.
+
+        Поведение: {behavior}
+        Температура: {temp}°C
+        Пульс: {pulse} уд/мин
+        Дыхание: {respiration} дых/мин
+        Вес: {weight} кг
+        Кондиция: {condition}
+        Состояние слизистых: {mucous}
+        Пальпация: {palpation}
+        Аускультация: {auscultation}
+        Другие системы: {others}
+
+        Оформи протокол по системам органов (Общее состояние, Дыхательная, Сердечно-сосудистая, Пищеварительная, Опорно-двигательная, Нервная). Для каждой системы укажи норму и отклонение. Добавь раздел «Выводы по осмотру» с ключевыми находками.`,
+                        fields: [
+                            { id: 'species', label: 'Вид', type: 'text', required: true, placeholder: 'Собака' },
+                            { id: 'breed', label: 'Порода', type: 'text', required: true, placeholder: 'Джек-Рассел-терьер' },
+                            { id: 'age', label: 'Возраст', type: 'text', required: true, placeholder: '3 года' },
+                            { id: 'gender', label: 'Пол', type: 'select', options: ['Самка', 'Самец', 'Кастрирован/Стерилизована'], required: true },
+                            { id: 'behavior', label: 'Поведение', type: 'select', options: ['Возбужденное', 'Спокойное', 'Угнетенное'], required: true },
+                            { id: 'temp', label: 'Температура (°C)', type: 'text', required: true, placeholder: '39.2' },
+                            { id: 'pulse', label: 'Пульс (уд/мин)', type: 'text', required: true, placeholder: '120' },
+                            { id: 'respiration', label: 'Дыхание (дых/мин)', type: 'text', required: true, placeholder: '24' },
+                            { id: 'weight', label: 'Вес (кг)', type: 'text', required: true, placeholder: '8.5' },
+                            { id: 'condition', label: 'Кондиция', type: 'select', options: ['Идеальная', 'Худая', 'Ожирение'], required: true },
+                            { id: 'mucous', label: 'Состояние слизистых', type: 'text', required: true, placeholder: 'Розовые, влажные' },
+                            { id: 'palpation', label: 'Пальпация', type: 'textarea', required: true, placeholder: 'Болезненность в краниальной части брюшной полости' },
+                            { id: 'auscultation', label: 'Аускультация', type: 'textarea', required: true, placeholder: 'Дыхание везикулярное, тоны сердца ясные, ритмичные' },
+                            { id: 'others', label: 'Другие системы', type: 'textarea', required: false, placeholder: 'Лимфоузлы не увеличены' }
+                        ]
+                    },
+                    differential: {
+                        label: '3. Дифференциальный диагноз',
+                        role: 'Ветеринарный врач',
+                        template: `Ты — ветеринарный врач. Составь список дифференциальных диагнозов для пациента ({species}, {breed}, {age}) с симптомами: {symptoms}. Локализация: {location}.
+
+        Дополнительные данные: {additional}.
+
+        Выстрой дифференциальный ряд от наиболее вероятного к наименее вероятному. Для каждого диагноза укажи:
+        1. Краткое обоснование, почему он возможен.
+        2. Ключевые симптомы, которые подтверждают этот диагноз.
+        3. Какие дополнительные исследования нужны для подтверждения или исключения.
+        4. Породную предрасположенность, если она есть.
+
+        Добавь раздел «Критические состояния» — что требует немедленного исключения.`,
+                        fields: [
+                            { id: 'species', label: 'Вид', type: 'text', required: true, placeholder: 'Собака' },
+                            { id: 'breed', label: 'Порода', type: 'text', required: true, placeholder: 'Лабрадор' },
+                            { id: 'age', label: 'Возраст', type: 'text', required: true, placeholder: '7 лет' },
+                            { id: 'symptoms', label: 'Основные симптомы', type: 'textarea', required: true, placeholder: 'Хромота на левую переднюю конечность' },
+                            { id: 'location', label: 'Локализация', type: 'text', required: true, placeholder: 'Плечевой сустав' },
+                            { id: 'additional', label: 'Дополнительные данные', type: 'textarea', required: false, placeholder: 'Рентген: остеофиты в плечевом суставе' }
+                        ]
+                    },
+                    diagnosis_plan: {
+                        label: '4. План диагностики',
+                        role: 'Ветеринарный терапевт',
+                        template: `Ты — ветеринарный терапевт. Разработай план диагностики для пациента ({species}, {age}) с дифференциальным рядом: {differential_list}.
+
+        Предположительный диагноз: {suspected}.
+
+        Распредели исследования по этапам:
+        1. **Экспресс-диагностика** (то, что можно сделать на приеме).
+        2. **Лабораторная диагностика** (анализы с отсроченным результатом).
+        3. **Инструментальная диагностика** (рентген, УЗИ, эндоскопия).
+        4. **Консультации узких специалистов** (если нужны).
+
+        Для каждого исследования кратко укаж:
+        — Что оно позволяет исключить/подтвердить.
+        — Примерные сроки выполнения.
+        — Особенности подготовки пациента.
+        Добавь ориентировочную стоимость (для врача: ориентир для обсуждения с владельцем).`,
+                        fields: [
+                            { id: 'species', label: 'Вид', type: 'text', required: true, placeholder: 'Кот' },
+                            { id: 'age', label: 'Возраст', type: 'text', required: true, placeholder: '10 лет' },
+                            { id: 'differential_list', label: 'Дифференциальный ряд', type: 'textarea', required: true, placeholder: 'Хроническая почечная недостаточность, гипертиреоз, сахарный диабет' },
+                            { id: 'suspected', label: 'Подозреваемый диагноз (опционально)', type: 'text', required: false, placeholder: 'Хроническая почечная недостаточность' }
+                        ]
+                    },
+                    treatment_plan: {
+                        label: '5. План лечения',
+                        role: 'Ветеринарный терапевт',
+                        template: `Ты — ветеринарный терапевт. Разработай план лечения для пациента с диагнозом {diagnosis}, с учетом сопутствующих патологий {concurrent_diseases} и приоритетов {priorities}.
+
+        Оформи план по блокам:
+        1. **Стационарное/амбулаторное лечение:** рекомендация.
+        2. **Инфузионная терапия:** состав, объем, скорость введения.
+        3. **Медикаментозная терапия:** группы препаратов, конкретные названия, дозировки (в мг/кг), кратность, путь введения, курс лечения.
+        4. **Диетотерапия:** рекомендации по кормлению.
+        5. **Мониторинг:** какие показатели и как часто контролировать, сроки контрольных визитов.
+        6. **Прогноз:** благоприятный / осторожный / неблагоприятный с обоснованием.
+        Добавь раздел «Инструкция для владельца» (кратко, простым языком).`,
+                        fields: [
+                            { id: 'diagnosis', label: 'Диагноз', type: 'text', required: true, placeholder: 'Острый гастроэнтерит' },
+                            { id: 'concurrent_diseases', label: 'Сопутствующие патологии', type: 'text', required: false, placeholder: 'Нет' },
+                            { id: 'priorities', label: 'Приоритеты лечения', type: 'text', required: false, placeholder: 'Инфузионная терапия, антибиотики, диета' }
+                        ]
+                    }
+                }
+            },
+            diagnostics: {
+                label: '🧬 Диагностика',
+                tasks: {
+                    lab_interpretation: {
+                        label: '1. Интерпретация лабораторных анализов',
+                        role: 'Ветеринарный врач-диагност',
+                        template: `Ты — ветеринарный терапевт-диагност. Проанализируй результаты лабораторных исследований пациента ({patient}). Тип анализа: {type}.
+
+        Отклонения от нормы: {deviations}.
+        Клинический контекст: {context}.
+
+        Выполни следующие действия:
+        1. Для каждого отклонения укажи его клиническое значение.
+        2. Определи, какие отклонения могут быть взаимосвязаны (синдромы).
+        3. Сформулируй список дифференциальных диагнозов, основанный на данных анализа.
+        4. Укажи, какие дополнительные исследования необходимы для подтверждения диагноза.
+        5. Составь краткое клиническое заключение с предварительным диагнозом и рекомендациями.
+        Добавь раздел «Критические показатели» — требующие немедленного вмешательства.`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Собака, 5 лет' },
+                            { id: 'type', label: 'Тип анализа', type: 'select', options: ['Общий анализ крови', 'Биохимия', 'Анализ мочи', 'Гормональный профиль'], required: true },
+                            { id: 'deviations', label: 'Отклонения от нормы', type: 'textarea', required: true, placeholder: 'Мочевина 12,5 ммоль/л (норма 2,5-8,3), креатинин 150 мкмоль/л (норма 44-106)' },
+                            { id: 'context', label: 'Клинический контекст', type: 'textarea', required: false, placeholder: 'Полиурия, полидипсия, рвота' }
+                        ]
+                    },
+                    symptoms_dd: {
+                        label: '2. Дифференциальная диагностика по симптомам',
+                        role: 'Ветеринарный терапевт',
+                        template: `Ты — ветеринарный терапевт. Проведи дифференциальную диагностику для пациента ({patient}) (система: {system}).
+
+        Ключевые симптомы: {symptoms}.
+        Дополнительные данные: {additional}.
+
+        Составь дифференциальный ряд, следуя алгоритму:
+        1. **Группы возможных причин:** инфекционные, паразитарные, воспалительные, метаболические, онкологические.
+        2. **Наиболее вероятные диагнозы** (до 3) с обоснованием.
+        3. **Менее вероятные, но возможные диагнозы** с кратким обоснованием.
+        4. **Диагнозы, требующие немедленного исключения** (life-threatening).
+        5. **План диагностического поиска:** какие исследования и в каком порядке.
+        Добавь таблицу «Критерии сравнения» для двух наиболее вероятных диагнозов.`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Кот, 7 лет' },
+                            { id: 'system', label: 'Система органов', type: 'select', options: ['Пищеварительная', 'Дыхательная', 'Мочевыделительная', 'Нервная', 'Опорно-двигательная'], required: true },
+                            { id: 'symptoms', label: 'Ключевые симптомы', type: 'textarea', required: true, placeholder: 'Рвота (2 недели), потеря веса (0,5 кг), полидипсия' },
+                            { id: 'additional', label: 'Дополнительные данные', type: 'textarea', required: false, placeholder: 'УЗИ: стенка желудка утолщена' }
+                        ]
+                    },
+                    xray_interpretation: {
+                        label: '3. Интерпретация рентгеновских снимков',
+                        role: 'Ветеринарный рентгенолог',
+                        template: `Ты — ветеринарный рентгенолог. Опиши рентгеновский снимок {area} пациента {patient}.
+
+        Визуальные изменения: {changes}.
+        Предполагаемый диагноз: {diagnosis}.
+
+        Составь структурированное описание снимка по плану:
+        1. **Качество снимка:** положение, экспозиция, артефакты.
+        2. **Описание анатомических структур:** кости, мягкие ткани, органы.
+        3. **Выявленные патологии:** локализация, размеры, форма, контуры.
+        4. **Заключение:** что говорит за предполагаемый диагноз, что против.
+        5. **Рекомендации по дополнительным исследованиям.**
+        Добавьте описание нормы для сравнения.`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Собака, 9 лет' },
+                            { id: 'area', label: 'Область исследования', type: 'text', required: true, placeholder: 'Грудная клетка' },
+                            { id: 'changes', label: 'Визуальные изменения', type: 'textarea', required: true, placeholder: 'Очаговое затемнение в средне-краниальной части лёгочных полей' },
+                            { id: 'diagnosis', label: 'Предполагаемый диагноз', type: 'text', required: false, placeholder: 'Пневмония' }
+                        ]
+                    },
+                    ultrasound_interpretation: {
+                        label: '4. Интерпретация УЗИ-исследования',
+                        role: 'Ветеринарный врач УЗИ-диагностики',
+                        template: `Ты — ветеринарный врач-ультразвуковой диагностики. Опиши УЗИ-картину {organ} пациента {patient}.
+
+        Эхографические изменения: {changes}.
+        Предполагаемый диагноз: {diagnosis}.
+
+        Выполни описание по плану:
+        1. **Общие данные:** положение, контуры, размеры органа.
+        2. **Эхоструктура:** эхогенность, эхотекстура, наличие образований.
+        3. **Сосудистый рисунок:** васкуляризация, наличие аномалий.
+        4. **Взаимосвязь с соседними органами:** смещение, инфильтрация.
+        5. **Заключение:** соответствует ли картина предполагаемому диагнозу, какие ещё возможны варианты.
+        6. **Рекомендации:** требуется ли биопсия, как часто повторять УЗИ.
+        Добавьте описание нормы для органа.`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Кот, 11 лет' },
+                            { id: 'organ', label: 'Орган/система', type: 'text', required: true, placeholder: 'Брюшная полость, печень' },
+                            { id: 'changes', label: 'Эхографические изменения', type: 'textarea', required: true, placeholder: 'Печень увеличена, неоднородная эхоструктура, очаговые образования' },
+                            { id: 'diagnosis', label: 'Предполагаемый диагноз', type: 'text', required: false, placeholder: 'Гепатопатия' }
+                        ]
+                    }
+                }
+            },
+            pharmacology: {
+                label: '💊 Фармакология',
+                tasks: {
+                    dosage_check: {
+                        label: '1. Проверка дозировок препарата',
+                        role: 'Ветеринарный фармаколог-клиницист',
+                        template: `Ты — ветеринарный фармаколог-клиницист. Проверь дозировку препарата {drug} для пациента (вид: {patient}, вес: {weight} кг, путь введения: {route}).
+
+        Предполагаемая доза: {dose} мг/кг.
+
+        Выполни проверку по алгоритму:
+        1. **Рекомендуемая доза** для данного вида, пути введения и показания.
+        2. **Сравнение с предполагаемой дозой:** в пределах нормы, ниже или выше.
+        3. **Расчет общей дозы** на прием и на курс.
+        4. **Особые указания:** требуется ли коррекция при печеночной/почечной недостаточности, для молодых или пожилых животных, для конкретной породы.
+        5. **Терапевтический диапазон:** безопасные границы.
+        6. **Симптомы передозировки** и действия при передозировке.
+        Добавьте раздел «Важно!» — критические предупреждения.`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Собака, 5 лет' },
+                            { id: 'weight', label: 'Вес (кг)', type: 'text', required: true, placeholder: '12' },
+                            { id: 'drug', label: 'Препарат', type: 'text', required: true, placeholder: 'Доксициклин' },
+                            { id: 'route', label: 'Путь введения', type: 'select', options: ['Перорально', 'Внутримышечно', 'Внутривенно', 'Подкожно'], required: true },
+                            { id: 'dose', label: 'Предполагаемая доза (мг/кг)', type: 'text', required: true, placeholder: '10' }
+                        ]
+                    },
+                    compatibility: {
+                        label: '2. Проверка совместимости препаратов',
+                        role: 'Ветеринарный фармаколог',
+                        template: `Ты — ветеринарный фармаколог. Проверь совместимость и взаимодействие следующих препаратов для пациента: {drugs}.
+
+        Пути введения: {routes}.
+
+        Выполни анализ по каждому препарату:
+        1. **Фармакодинамическое взаимодействие.**
+        2. **Фармакокинетическое взаимодействие.**
+        3. **Физико-химическое взаимодействие.**
+        4. **Клинические последствия** взаимодействия.
+        5. **Рекомендации:** можно ли применять вместе, если да — какие интервалы между введениями, какие дозы скорректировать.
+        6. **Альтернативные варианты** при несовместимости.
+        7. **Признаки нежелательных эффектов.**
+        Добавьте раздел «Срочно сообщить врачу» — симптомы, требующие немедленного вмешательства.`,
+                        fields: [
+                            { id: 'drugs', label: 'Список препаратов', type: 'textarea', required: true, placeholder: 'Амоксициллин, Преднизолон, Фуросемид' },
+                            { id: 'routes', label: 'Пути введения', type: 'text', required: false, placeholder: 'Все перорально' }
+                        ]
+                    },
+                    dose_calculation: {
+                        label: '3. Расчет дозы по весу',
+                        role: 'Ветеринарный фармаколог',
+                        template: `Выполни расчет дозировки для ветеринарного пациента.
+
+        Препарат: {drug}.
+        Вес пациента: {weight} кг.
+        Рекомендуемая доза: {dose} мг/кг.
+        Путь введения: {route}.
+        Форма выпуска: {form}.
+
+        Выполни следующие расчеты:
+        1. Общая доза (мг) = вес (кг) × доза (мг/кг).
+        2. Объем инъекции (мл) = общая доза (мг) ÷ концентрация (мг/мл).
+        3. Курсовая доза (если указан курс).
+        4. **Таблица дозировок для разных видов** (если применимо).
+        5. **Проверка терапевтического диапазона.**
+        6. **Интервал между введениями** (если требуется).
+        Добавьте раздел «Особенности для данного пути введения».`,
+                        fields: [
+                            { id: 'weight', label: 'Вес (кг)', type: 'text', required: true, placeholder: '22' },
+                            { id: 'drug', label: 'Препарат', type: 'text', required: true, placeholder: 'Энрофлоксацин' },
+                            { id: 'dose', label: 'Рекомендуемая доза (мг/кг)', type: 'text', required: true, placeholder: '5' },
+                            { id: 'route', label: 'Путь введения', type: 'select', options: ['Перорально', 'Внутримышечно', 'Внутривенно', 'Подкожно'], required: true },
+                            { id: 'form', label: 'Форма выпуска', type: 'text', required: true, placeholder: 'Раствор 50 мг/мл' }
+                        ]
+                    },
+                    antibiotic_choice: {
+                        label: '4. Выбор антибиотика',
+                        role: 'Ветеринарный фармаколог',
+                        template: `Ты — ветеринарный фармаколог. Помоги выбрать антибиотик для лечения пациента с диагнозом {diagnosis}.
+
+        Предполагаемый возбудитель: {pathogen}.
+        Результаты посева: {culture}.
+
+        Предложи три варианта терапии (основной, альтернативный, резервный) с учетом:
+        1. Спектра действия на предполагаемый возбудитель.
+        2. Способности проникать в очаг инфекции.
+        3. Профиля безопасности для данного вида.
+        4. Удобства применения (кратность, путь введения).
+        5. Стоимости (ориентир для врача).
+        6. Риска развития резистентности.
+        7. Влияния на кишечную микрофлору.
+        Добавьте раздел «Что исключить» — препараты, которые нельзя назначать в данной ситуации.`,
+                        fields: [
+                            { id: 'diagnosis', label: 'Диагноз', type: 'text', required: true, placeholder: 'Инфекция мочевыводящих путей' },
+                            { id: 'pathogen', label: 'Предполагаемый возбудитель', type: 'text', required: false, placeholder: 'E. coli' },
+                            { id: 'culture', label: 'Результаты посева', type: 'text', required: false, placeholder: 'Чувствительность к амоксициллину, резистентность к тетрациклину' }
+                        ]
+                    }
+                }
+            },
+            communication: {
+                label: '🤝 Коммуникация',
+                tasks: {
+                    diagnosis_explanation: {
+                        label: '1. Объяснение диагноза и плана лечения',
+                        role: 'Ветеринарный терапевт',
+                        template: `Ты — ветеринарный терапевт. Подготовь структурированное объяснение диагноза и плана лечения для владельца пациента ({patient}).
+
+        Диагноз: {diagnosis}.
+        Сложность диагноза: {complexity}.
+        План лечения: {plan}.
+
+        Выстрой объяснение по плану:
+        1. **Введение:** «Я осмотрел(а) {patient}. Хочу поделиться результатами, и мы вместе обсудим, что делать дальше.»
+        2. **Объяснение диагноза простыми словами:** Используй понятные аналогии. Избегай сложных терминов.
+        3. **Предложение плана лечения:** «Я хотел бы предложить следующий план...» Объясни каждый шаг.
+        4. **Обсуждение альтернатив и рисков:** Предложи 1-2 альтернативных варианта, если есть, и расскажи о возможных рисках.
+        5. **Вовлечение владельца:** «Как вам кажется, что сейчас подходит лучше?»
+        6. **Инструкция по действиям:** Четкие шаги, которые должен сделать владелец.
+        7. **Закрепление:** «Давайте я резюмирую, чтобы мы оба были уверены, что всё поняли.»`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Кот, Мурка' },
+                            { id: 'diagnosis', label: 'Диагноз', type: 'text', required: true, placeholder: 'Острый цистит' },
+                            { id: 'complexity', label: 'Сложность диагноза', type: 'select', options: ['Простой', 'Средний', 'Сложный для понимания'], required: true },
+                            { id: 'plan', label: 'План лечения', type: 'textarea', required: false, placeholder: 'Медикаментозная терапия, диета' }
+                        ]
+                    },
+                    memo_owner: {
+                        label: '2. Памятка для владельца',
+                        role: 'Ветеринарный терапевт',
+                        template: `Составь памятку для владельца пациента {patient}, у которого диагностирован {diagnosis}.
+
+        Ключевые рекомендации: {recommendations}.
+
+        Оформи памятку в виде понятных пунктов:
+        1. **Что сейчас происходит с {patient}** (объясни диагноз простыми словами).
+        2. **Что я рекомендую делать:**
+           — Препараты: названия, дозировки, как давать.
+           — Процедуры: что, как часто, как именно.
+        3. **Что важно помнить:**
+           — Чего нельзя делать.
+           — На что обращать внимание.
+        4. **Когда нужно срочно обратиться к врачу:**
+           — Симптомы, которые требуют немедленного звонка.
+        5. **Контакты для связи** (телефон клиники, личный номер врача).
+        Добавьте раздел «Важно!» — один главный совет, который должен запомнить владелец. Используй простой, «человеческий» язык.`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Собака, Лайма' },
+                            { id: 'diagnosis', label: 'Диагноз', type: 'text', required: true, placeholder: 'Аллергический дерматит' },
+                            { id: 'recommendations', label: 'Ключевые рекомендации', type: 'textarea', required: true, placeholder: 'Давать антигистаминные, купать в специальном шампуне' }
+                        ]
+                    },
+                    reminder_letter: {
+                        label: '3. Письмо-напоминание владельцу',
+                        role: 'Ветеринарный врач',
+                        template: `Составь теплое и профессиональное письмо-напоминание для владельца пациента {patient}.
+
+        Тема: {topic}.
+        Дата: {date}.
+
+        Письмо должно:
+        1. Начинаться с обращения по имени владельца.
+        2. Напоминать о теме.
+        3. Содержать инструкцию (что нужно сделать).
+        4. Быть вежливым и заботливым.
+        5. Заканчиваться контактами для связи («Если у вас есть вопросы, позвоните мне»).
+        Используй тёплый, но профессиональный тон.`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Кот, Симба' },
+                            { id: 'topic', label: 'Тема напоминания', type: 'text', required: true, placeholder: 'Профилактическая обработка от паразитов' },
+                            { id: 'date', label: 'Дата напоминания', type: 'text', required: true, placeholder: 'Через 2 месяца' }
+                        ]
+                    }
+                }
+            },
+            legal: {
+                label: '⚖️ Юридическая безопасность',
+                tasks: {
+                    drug_legality: {
+                        label: '1. Проверка законности назначения препарата',
+                        role: 'Юридический консультант ветклиники',
+                        template: `Ты — юридический консультант ветеринарной клиники с глубокими знаниями ветеринарного законодательства.
+
+        Проанализируй законность назначения препарата {drug} для {species} с целью {purpose}.
+
+        Выполни проверку по плану:
+        1. **Регистрация:** зарегистрирован ли препарат Россельхознадзором для применения у животных?
+        2. **Инструкция по применению:** есть ли в инструкции дозировки для данного вида животных?
+        3. **Юридические риски:** существуют ли судебные прецеденты по применению этого препарата у животных?
+        4. **Рекомендации:** как безопасно применить препарат с юридической точки зрения?
+        5. **Альтернативы:** предложи зарегистрированные ветеринарные аналоги, если они существуют.
+        Выдели раздел "Красная зона" — когда применение этого препарата абсолютно недопустимо с юридической точки зрения.`,
+                        fields: [
+                            { id: 'drug', label: 'Название препарата', type: 'text', required: true, placeholder: 'Пропофол' },
+                            { id: 'species', label: 'Вид животного', type: 'text', required: true, placeholder: 'Собака' },
+                            { id: 'purpose', label: 'Цель применения', type: 'text', required: true, placeholder: 'Анестезия при кесаревом сечении' }
+                        ]
+                    },
+                    informed_consent: {
+                        label: '2. Проверка информированного согласия',
+                        role: 'Юридический консультант ветклиники',
+                        template: `Ты — юридический консультант ветеринарной клиники.
+
+        Проанализируй готовность информированного согласия на {intervention}.
+        Указанные риски: {risks}.
+        Особые условия: {conditions}.
+
+        Проверь наличие следующих обязательных элементов в согласии:
+        1. **Точный диагноз.**
+        2. **Подробное описание вмешательства.**
+        3. **Альтернативные методы лечения.**
+        4. **Полный перечень рисков:**
+           — Специфические для процедуры.
+           — Анестезиологические риски.
+        5. **Прогноз и послеоперационный уход.**
+        6. **Стоимость.**
+        7. **Данные владельца.**
+        8. **Данные животного.**
+        9. **Пункт о понимании.**
+        10. **Для сложных случаев:** необходимость нотариально заверенной доверенности.
+        Выдели критически важные разделы, которые нельзя упустить. Добавь примерные формулировки для «языка понятного владельцу».`,
+                        fields: [
+                            { id: 'intervention', label: 'Тип вмешательства', type: 'text', required: true, placeholder: 'Удаление новообразования' },
+                            { id: 'risks', label: 'Список рисков (если есть)', type: 'text', required: false, placeholder: 'Кровотечение, инфекция' },
+                            { id: 'conditions', label: 'Особые условия', type: 'text', required: false, placeholder: 'Собака пожилого возраста' }
+                        ]
+                    },
+                    refusal_form: {
+                        label: '3. Оформление отказа от лечения',
+                        role: 'Юридический консультант ветклиники',
+                        template: `Ты — юридический консультант ветеринарной клиники. Разработай шаблон информированного отказа владельца от рекомендаций врача для пациента {patient}.
+
+        Отказ от: {refusal}.
+        Причина отказа: {reason}.
+
+        Документ должен содержать:
+        1. **Подтверждение информирования:** "Я, владелец животного, подтверждаю, что врач разъяснил мне важность и необходимость процедуры {refusal} и возможные риски ее непроведения".
+        2. **Добровольный отказ:** "Я добровольно отказываюсь от проведения {refusal}".
+        3. **Снятие ответственности:** "Обязуюсь не предъявлять претензий к клинике и врачу в связи с возможными негативными последствиями для здоровья животного, связанными с моим отказом".
+        4. **Дата и подпись владельца.**
+        5. **Подпись врача.**
+        Добавьте строку: "Настоящий отказ сделан мной в здравом уме и твердой памяти".`,
+                        fields: [
+                            { id: 'patient', label: 'Пациент', type: 'text', required: true, placeholder: 'Кот, 7 лет' },
+                            { id: 'refusal', label: 'Отказ от', type: 'text', required: true, placeholder: 'УЗИ брюшной полости' },
+                            { id: 'reason', label: 'Причина отказа', type: 'text', required: true, placeholder: 'Финансовые трудности' }
+                        ]
+                    }
+                }
+            }
+        };
+
+        // ================================================================
+        // 2. СОСТОЯНИЕ
+        // ================================================================
+        let currentDirection = 'admission';
+        let currentTask = 'anamnesis';
+        let currentMode = 'generate';
+        let history = JSON.parse(localStorage.getItem('vetsim_clinic_prompt_history') || '[]');
+
+        // ================================================================
+        // 3. DOM
+        // ================================================================
+        const tabsContainer = document.getElementById('tabsContainer');
+        const taskSelect = document.getElementById('taskSelect');
+        const roleText = document.getElementById('roleText');
+        const templateText = document.getElementById('templateText');
+        const fieldsContainer = document.getElementById('fieldsContainer');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const resultBox = document.getElementById('resultBox');
+        const resultText = document.getElementById('resultText');
+        const resultMeta = document.getElementById('resultMeta');
+        const copyResultBtn = document.getElementById('copyResultBtn');
+        const saveHistoryBtn = document.getElementById('saveHistoryBtn');
+        const historyBox = document.getElementById('historyBox');
+        const historyList = document.getElementById('historyList');
+        const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+        const toast = document.getElementById('toast');
+        const modeSelector = document.getElementById('modeSelector');
+        const extraField = document.getElementById('extraField');
+        const extraTextarea = document.getElementById('extraTextarea');
+        const extraLabel = document.getElementById('extraLabel');
+
+        // ================================================================
+        // 4. ФУНКЦИИ
+        // ================================================================
+
+        function renderTabs() {
+            tabsContainer.innerHTML = '';
+            for (const [key, dir] of Object.entries(directions)) {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn${key === currentDirection ? ' active' : ''}`;
+                btn.textContent = dir.label;
+                btn.dataset.direction = key;
+                btn.addEventListener('click', () => {
+                    currentDirection = key;
+                    const tasks = Object.keys(directions[key].tasks);
+                    currentTask = tasks[0] || '';
+                    renderTabs();
+                    renderTaskSelect();
+                    renderContent();
+                });
+                tabsContainer.appendChild(btn);
+            }
+        }
+
+        function renderTaskSelect() {
+            const tasks = directions[currentDirection].tasks;
+            taskSelect.innerHTML = '';
+            for (const [key, task] of Object.entries(tasks)) {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.textContent = task.label;
+                if (key === currentTask) opt.selected = true;
+                taskSelect.appendChild(opt);
+            }
+            taskSelect.addEventListener('change', (e) => {
+                currentTask = e.target.value;
+                renderContent();
+            });
+        }
+
+        function renderContent() {
+            const task = directions[currentDirection].tasks[currentTask];
+            if (!task) return;
+
+            roleText.textContent = task.role;
+            templateText.textContent = task.template;
+
+            fieldsContainer.innerHTML = '';
+            task.fields.forEach((field) => {
+                const group = document.createElement('div');
+                group.className = 'field-group';
+
+                const label = document.createElement('label');
+                label.textContent = field.label;
+                if (field.required) {
+                    const req = document.createElement('span');
+                    req.className = 'required';
+                    req.textContent = '*';
+                    label.appendChild(req);
+                }
+                if (field.placeholder && field.type !== 'select') {
+                    const hint = document.createElement('span');
+                    hint.className = 'hint';
+                    hint.textContent = field.placeholder;
+                    label.appendChild(hint);
+                }
+                group.appendChild(label);
+
+                let input;
+                if (field.type === 'select') {
+                    input = document.createElement('select');
+                    const defaultOpt = document.createElement('option');
+                    defaultOpt.value = '';
+                    defaultOpt.textContent = 'Выберите...';
+                    input.appendChild(defaultOpt);
+                    field.options.forEach(opt => {
+                        const o = document.createElement('option');
+                        o.value = opt;
+                        o.textContent = opt;
+                        input.appendChild(o);
+                    });
+                } else if (field.type === 'textarea') {
+                    input = document.createElement('textarea');
+                    input.placeholder = field.placeholder || '';
+                    input.rows = 2;
+                } else {
+                    input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = field.placeholder || '';
+                }
+
+                input.id = 'field_' + field.id;
+                input.dataset.fieldId = field.id;
+                input.dataset.required = field.required ? 'true' : 'false';
+                if (field.required) input.required = true;
+
+                input.addEventListener('input', () => {
+                    input.classList.remove('error');
+                });
+                input.addEventListener('change', () => {
+                    input.classList.remove('error');
+                });
+
+                group.appendChild(input);
+                fieldsContainer.appendChild(group);
+            });
+
+            updateExtraField();
+
+            resultBox.style.display = 'none';
+            resultText.textContent = '';
+            resultMeta.textContent = '';
+            copyBtn.disabled = true;
+            saveHistoryBtn.style.display = 'none';
+
+            renderHistory();
+        }
+
+        function updateExtraField() {
+            const modeLabels = {
+                'generate': '',
+                'clarify': '❓ Опишите вашу задачу подробнее: что нужно уточнить? Какие аспекты вызывают вопросы?',
+                'ideas': '💡 Укажите тему и особенности ситуации для генерации идей:',
+                'improve': '🔧 Вставьте текст, который нужно проанализировать и доработать:'
+            };
+
+            if (currentMode === 'generate') {
+                extraField.style.display = 'none';
+            } else {
+                extraField.style.display = 'block';
+                extraLabel.textContent = modeLabels[currentMode] || 'Дополнительный контекст:';
+                extraTextarea.value = '';
+            }
+        }
+
+        function getFieldValues() {
+            const fields = document.querySelectorAll('.field-group input, .field-group textarea, .field-group select');
+            const values = {};
+            let hasError = false;
+            fields.forEach(el => {
+                const id = el.dataset.fieldId;
+                const required = el.dataset.required === 'true';
+                const val = el.value?.trim() || '';
+                if (required && !val) {
+                    el.classList.add('error');
+                    hasError = true;
+                } else {
+                    el.classList.remove('error');
+                }
+                values[id] = val;
+            });
+            if (hasError) {
+                showToast('⚠️ Заполните все обязательные поля (отмечены *)', 3000);
+                return null;
+            }
+            return values;
+        }
+
+        function generatePrompt() {
+            const values = getFieldValues();
+            if (!values) return;
+
+            const task = directions[currentDirection].tasks[currentTask];
+            if (!task) return;
+
+            let prompt = '';
+
+            // Режимы
+            if (currentMode === 'ideas') {
+                const extra = extraTextarea.value.trim();
+                prompt = `Как креативный методист, предложи 5-7 нестандартных идей для клинической задачи. ${extra ? 'Учти: ' + extra : ''}`;
+                resultMeta.textContent = '💡 Режим: Генератор идей';
+                resultText.textContent = prompt;
+                resultBox.style.display = 'block';
+                copyBtn.disabled = false;
+                saveHistoryBtn.style.display = 'inline-flex';
+                showToast('💡 Идеи сгенерированы!', 2000);
+                return;
+            }
+
+            if (currentMode === 'clarify') {
+                const extra = extraTextarea.value.trim();
+                prompt = `Как методист-эксперт, задай 3-4 наводящих вопроса, чтобы лучше понять клиническую задачу. ${extra ? 'Учти: ' + extra : ''}`;
+                resultMeta.textContent = '❓ Режим: Уточнение задачи';
+                resultText.textContent = prompt;
+                resultBox.style.display = 'block';
+                copyBtn.disabled = false;
+                saveHistoryBtn.style.display = 'inline-flex';
+                showToast('❓ Вопросы сгенерированы!', 2000);
+                return;
+            }
+
+            if (currentMode === 'improve') {
+                const extra = extraTextarea.value.trim();
+                if (!extra) {
+                    showToast('⚠️ Вставьте текст для анализа в поле "Дополнительный контекст"', 3000);
+                    return;
+                }
+                prompt = `Проанализируй следующий текст и предложи способы его улучшения:
+
+        --- НАЧАЛО ТЕКСТА ---
+        ${extra}
+        --- КОНЕЦ ТЕКСТА ---
+
+        Проанализируй по критериям:
+        1. Структура и логика изложения
+        2. Ясность и доступность
+        3. Практическая применимость
+        Предложи конкретные правки.`;
+                resultMeta.textContent = '🔧 Режим: Анализ и доработка';
+                resultText.textContent = prompt;
+                resultBox.style.display = 'block';
+                copyBtn.disabled = false;
+                saveHistoryBtn.style.display = 'inline-flex';
+                showToast('🔧 Анализ выполнен!', 2000);
+                return;
+            }
+
+            // Режим "Генерация" (стандартный)
+            let template = task.template;
+
+            // Заменяем все {field_id} на значения
+            for (const [key, val] of Object.entries(values)) {
+                template = template.replace(new RegExp(`\\{${key}\\}`, 'g'), val || '[не указано]');
+            }
+
+            prompt = template;
+            resultMeta.textContent = `📝 ${directions[currentDirection].label} | ${task.label}`;
+            resultText.textContent = prompt;
+            resultBox.style.display = 'block';
+            copyBtn.disabled = false;
+            saveHistoryBtn.style.display = 'inline-flex';
+            showToast('✅ Промпт сгенерирован!', 2000);
+        }
+
+        function copyResult() {
+            const text = resultText.textContent;
+            if (!text) return;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('📋 Промпт скопирован!', 2000);
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('📋 Промпт скопирован!', 2000);
+            });
+        }
+
+        function saveToHistory() {
+            const text = resultText.textContent;
+            if (!text) return;
+
+            const entry = {
+                text: text,
+                mode: currentMode,
+                direction: directions[currentDirection].label,
+                task: directions[currentDirection].tasks[currentTask]?.label || 'Неизвестно',
+                date: new Date().toLocaleString()
+            };
+
+            history.unshift(entry);
+            if (history.length > 10) history.pop();
+            localStorage.setItem('vetsim_clinic_prompt_history', JSON.stringify(history));
+            renderHistory();
+            showToast('💾 Сохранено в историю!', 2000);
+        }
+
+        function renderHistory() {
+            if (history.length === 0) {
+                historyBox.style.display = 'none';
+                return;
+            }
+            historyBox.style.display = 'block';
+            historyList.innerHTML = '';
+            history.slice(0, 5).forEach((item) => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                const modeIcon = item.mode === 'generate' ? '📝' : item.mode === 'clarify' ? '❓' : item.mode === 'ideas' ? '💡' : '🔧';
+                div.innerHTML = `
+                    <span class="badge">${modeIcon}</span>
+                    <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.text.slice(0, 60)}${item.text.length > 60 ? '…' : ''}</span>
+                    <span style="font-size:0.6rem; color:#8A9B7A; flex-shrink:0;">${item.date}</span>
+                `;
+                div.addEventListener('click', () => {
+                    resultText.textContent = item.text;
+                    resultMeta.textContent = `📜 Из истории: ${item.direction} | ${item.task}`;
+                    resultBox.style.display = 'block';
+                    copyBtn.disabled = false;
+                    saveHistoryBtn.style.display = 'inline-flex';
+                });
+                historyList.appendChild(div);
+            });
+        }
+
+        function clearHistory() {
+            if (!confirm('Очистить всю историю?')) return;
+            history = [];
+            localStorage.removeItem('vetsim_clinic_prompt_history');
+            renderHistory();
+            showToast('🗑️ История очищена', 1500);
+        }
+
+        let toastTimeout = null;
+
+        function showToast(message, duration = 2500) {
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // ================================================================
+        // 5. ОБРАБОТЧИКИ СОБЫТИЙ
+        // ================================================================
+
+        modeSelector.addEventListener('click', (e) => {
+            const btn = e.target.closest('.mode-btn');
+            if (!btn) return;
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentMode = btn.dataset.mode;
+            updateExtraField();
+            resultBox.style.display = 'none';
+            copyBtn.disabled = true;
+            saveHistoryBtn.style.display = 'none';
+            showToast(`Режим: ${btn.textContent}`, 1500);
+        });
+
+        generateBtn.addEventListener('click', generatePrompt);
+        copyBtn.addEventListener('click', copyResult);
+        copyResultBtn.addEventListener('click', copyResult);
+        saveHistoryBtn.addEventListener('click', saveToHistory);
+        clearHistoryBtn.addEventListener('click', clearHistory);
+
+        // ================================================================
+        // 6. ИНИЦИАЛИЗАЦИЯ
+        // ================================================================
+
+        function init() {
+            renderTabs();
+            renderTaskSelect();
+            renderContent();
+            renderHistory();
+        }
+
+        init();
+    </script>
+
+</body>
+</html>

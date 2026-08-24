@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Маршрутный лист ветврача · ВетСим</title>
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #F4F7F9;
+            color: #1A2A3A;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            padding: 24px 28px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E7EDE2;
+            margin-bottom: 20px;
+        }
+        .header .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .meta {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #5F7C62;
+        }
+        .header .meta input {
+            border: none;
+            border-bottom: 1px dashed #D9D0BD;
+            background: transparent;
+            font-size: 0.85rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        /* ===== ВКЛАДКИ ===== */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .tab-btn:hover { opacity: 0.85; }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        /* ===== РАЗДЕЛЫ ===== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== ВЫБОР ДВОРА ===== */
+        .yard-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .yard-btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .yard-btn:hover { opacity: 0.85; }
+        .yard-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .yard-btn .del-yard {
+            margin-left: 4px;
+            opacity: 0.5;
+            font-size: 0.7rem;
+        }
+        .yard-btn .del-yard:hover { opacity: 1; }
+
+        /* ===== КАРТОЧКИ ЖИВОТНЫХ ===== */
+        .animal-card {
+            background: #F9FBF8;
+            border-radius: 1.2rem;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-left: 4px solid #A3B18A;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 6px 14px;
+        }
+        .animal-card .id {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: #2C7DA0;
+            min-width: 70px;
+        }
+        .animal-card .task {
+            flex: 1;
+            min-width: 120px;
+            font-size: 0.85rem;
+        }
+        .animal-card .task .due {
+            font-size: 0.7rem;
+            color: #5F7C62;
+        }
+        .animal-card .task .note {
+            font-size: 0.75rem;
+            color: #8A9B7A;
+            font-style: italic;
+        }
+        .animal-card .status {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 40px;
+        }
+        .status.done { background: #6B9E6B; color: white; }
+        .status.pending { background: #D4A373; color: white; }
+        .status.overdue { background: #b13e3e; color: white; }
+
+        .animal-card .actions {
+            display: flex;
+            gap: 4px;
+        }
+        .animal-card .actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 40px;
+            transition: 0.1s;
+        }
+        .animal-card .actions button:hover { background: #ede7dd; }
+        .animal-card .actions .edit-btn { color: #2C7DA0; }
+        .animal-card .actions .delete-btn { color: #b13e3e; }
+
+        /* ===== ФОРМЫ ===== */
+        .form-card {
+            background: #F0F7FA;
+            border-radius: 1.2rem;
+            padding: 16px 18px;
+            margin-top: 12px;
+            border: 1px solid #D4E8F0;
+        }
+        .form-card .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            align-items: center;
+        }
+        .form-card .row .field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 100px;
+        }
+        .form-card .row .field label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #5F7C62;
+            text-transform: uppercase;
+        }
+        .form-card input,
+        .form-card select,
+        .form-card textarea {
+            padding: 6px 12px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.8rem;
+            background: white;
+            outline: none;
+            width: 100%;
+        }
+        .form-card input:focus,
+        .form-card select:focus,
+        .form-card textarea:focus {
+            border-color: #2C7DA0;
+        }
+        .form-card textarea {
+            resize: vertical;
+            min-height: 40px;
+        }
+        .form-card .btn {
+            background: #2C7DA0;
+            color: white;
+            border: none;
+            padding: 6px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.8rem;
+            transition: 0.15s;
+            white-space: nowrap;
+            height: 36px;
+            align-self: flex-end;
+        }
+        .form-card .btn:hover { background: #236B8A; }
+        .form-card .btn-success { background: #6B9E6B; }
+        .form-card .btn-success:hover { background: #5A865A; }
+        .form-card .btn-danger { background: #b13e3e; }
+        .form-card .btn-danger:hover { background: #8f2e2e; }
+        .form-card .btn-outline { background: transparent; border: 1px solid #D9D0BD; color: #1A2A3A; }
+        .form-card .btn-outline:hover { background: #F0EEE5; }
+
+        /* ===== СВОДКА ===== */
+        .summary {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid #f0ebe3;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 28px;
+            font-size: 0.85rem;
+        }
+        .summary .item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .summary .item .num {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2C7DA0;
+        }
+        .summary .item .num.danger { color: #b13e3e; }
+        .summary .item .num.success { color: #6B9E6B; }
+
+        /* ===== ОБЩИЕ КНОПКИ ===== */
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            font-size: 0.8rem;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-danger { background: #b13e3e; color: white; }
+        .btn-danger:hover { background: #8f2e2e; }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #E7EDE2;
+            justify-content: center;
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; padding: 16px 20px; }
+            .no-print { display: none !important; }
+            .yard-btn { border: 1px solid #ccc; background: #f9f9f9; }
+            .yard-btn.active { background: #2C7DA0; color: white; }
+            .summary { border-top: 1px solid #ccc; }
+            .tab-content { display: block !important; }
+            .tab-btn { display: none; }
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            .container { padding: 14px; }
+            .header { flex-direction: column; align-items: stretch; }
+            .header .meta { text-align: left; }
+            .form-card .row { flex-direction: column; align-items: stretch; }
+            .form-card .btn { align-self: stretch; }
+            .animal-card { flex-direction: column; align-items: stretch; }
+            .animal-card .id { min-width: unset; }
+            .yard-selector { gap: 4px; }
+            .yard-btn { font-size: 0.7rem; padding: 4px 10px; }
+        }
+        @media (max-width: 420px) {
+            .container { padding: 10px; }
+            .tabs .tab-btn { flex: 1; text-align: center; font-size: 0.7rem; padding: 4px 8px; }
+            .actions .btn { flex: 1; justify-content: center; font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <!-- ===== ШАПКА ===== -->
+    <header class="header">
+        <div class="logo">🐾 <span class="gradient">ВетСим</span> · Маршрутный лист</div>
+        <div class="meta">
+            <div>Дата: <span id="currentDate"></span></div>
+            <div>Врач: <input type="text" id="doctorName" placeholder="ФИО" /></div>
+        </div>
+    </header>
+
+    <!-- ===== ВКЛАДКИ ===== -->
+    <div class="tabs no-print">
+        <button class="tab-btn active" data-tab="tasks">📋 Задачи</button>
+        <button class="tab-btn" data-tab="animals">🐄 Управление животными</button>
+        <button class="tab-btn" data-tab="yards">🏠 Управление дворами</button>
+        <button class="tab-btn" data-tab="notes">📝 Заметки</button>
+    </div>
+
+    <!-- ===== ВКЛАДКА 1: ЗАДАЧИ ===== -->
+    <div class="tab-content active" id="tab-tasks">
+        <div class="yard-selector no-print" id="yardSelector">
+            <!-- рендерится JS -->
+        </div>
+
+        <div id="animalList">
+            <!-- рендерится JS -->
+        </div>
+
+        <!-- БЫСТРАЯ РЕГИСТРАЦИЯ -->
+        <div class="form-card no-print">
+            <div class="row">
+                <div class="field">
+                    <label>Животное</label>
+                    <select id="quickAnimal"><option value="">Выберите...</option></select>
+                </div>
+                <div class="field">
+                    <label>Действие</label>
+                    <select id="quickEvent">
+                        <option value="Осмотр">🩺 Осмотр</option>
+                        <option value="Вакцинация">💉 Вакцинация</option>
+                        <option value="Обработка">🧪 Обработка</option>
+                        <option value="Лечение">💊 Лечение</option>
+                        <option value="Осеменение">🐮 Осеменение</option>
+                        <option value="Отел">🐣 Отел</option>
+                        <option value="Запуск">⏸️ Запуск</option>
+                        <option value="Выбытие">📤 Выбытие</option>
+                    </select>
+                </div>
+                <button class="btn btn-success" id="quickSubmit">✅ Выполнено</button>
+            </div>
+        </div>
+
+        <!-- СВОДКА -->
+        <div class="summary" id="summary">
+            <div class="item">📋 Всего задач: <span class="num" id="totalTasks">0</span></div>
+            <div class="item">✅ Выполнено: <span class="num success" id="doneTasks">0</span></div>
+            <div class="item">⏳ Ожидает: <span class="num" id="pendingTasks">0</span></div>
+            <div class="item">🔴 Просрочено: <span class="num danger" id="overdueTasks">0</span></div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 2: УПРАВЛЕНИЕ ЖИВОТНЫМИ ===== -->
+    <div class="tab-content" id="tab-animals">
+        <div style="margin-bottom:12px;">
+            <button class="btn btn-primary" id="addAnimalBtn">➕ Добавить животное</button>
+        </div>
+        <div id="animalManagementList">
+            <!-- рендерится JS -->
+        </div>
+
+        <!-- Форма редактирования животного -->
+        <div class="form-card no-print" id="animalForm" style="display:none;">
+            <h4 style="font-size:0.9rem;margin-bottom:8px;color:#2C7DA0;" id="animalFormTitle">➕ Новое животное</h4>
+            <div class="row">
+                <div class="field"><label>Бирка / ID</label><input type="text" id="animalFormTag" placeholder="101" /></div>
+                <div class="field"><label>Двор</label><select id="animalFormYard"></select></div>
+                <div class="field" style="flex:2;"><label>Задача</label><input type="text" id="animalFormTask" placeholder="Вакцинация..." /></div>
+            </div>
+            <div class="row" style="margin-top:6px;">
+                <div class="field"><label>Срок</label><input type="date" id="animalFormDue" /></div>
+                <div class="field"><label>Статус</label>
+                    <select id="animalFormStatus">
+                        <option value="pending">⏳ Ожидает</option>
+                        <option value="done">✅ Выполнено</option>
+                        <option value="overdue">🔴 Просрочено</option>
+                    </select>
+                </div>
+                <div class="field" style="flex:2;"><label>Примечание</label>
+                    <textarea id="animalFormNote" rows="1" placeholder="Дополнительная информация..."></textarea>
+                </div>
+            </div>
+            <div class="row" style="margin-top:8px;">
+                <button class="btn btn-success" id="animalFormSave">💾 Сохранить</button>
+                <button class="btn btn-outline" id="animalFormCancel">Отмена</button>
+                <button class="btn btn-danger" id="animalFormDelete" style="display:none;">🗑️ Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 3: УПРАВЛЕНИЕ ДВОРАМИ ===== -->
+    <div class="tab-content" id="tab-yards">
+        <div style="margin-bottom:12px;">
+            <button class="btn btn-primary" id="addYardBtn">➕ Добавить двор</button>
+        </div>
+        <div id="yardManagementList">
+            <!-- рендерится JS -->
+        </div>
+
+        <div class="form-card no-print" id="yardForm" style="display:none;">
+            <h4 style="font-size:0.9rem;margin-bottom:8px;color:#2C7DA0;" id="yardFormTitle">➕ Новый двор</h4>
+            <div class="row">
+                <div class="field"><label>Название двора</label><input type="text" id="yardFormName" placeholder="Двор №5" /></div>
+                <div class="field"><label>Примечание</label><input type="text" id="yardFormNote" placeholder="Например: молодняк" /></div>
+                <button class="btn btn-success" id="yardFormSave">💾 Сохранить</button>
+                <button class="btn btn-outline" id="yardFormCancel">Отмена</button>
+                <button class="btn btn-danger" id="yardFormDelete" style="display:none;">🗑️ Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 4: ЗАМЕТКИ ===== -->
+    <div class="tab-content" id="tab-notes">
+        <div class="form-card">
+            <div class="row">
+                <div class="field" style="flex:1;">
+                    <label>Свободные заметки / План на день</label>
+                    <textarea id="freeNotes" rows="6" placeholder="План обхода, особые замечания, напоминания..."></textarea>
+                </div>
+            </div>
+            <div style="margin-top:8px;">
+                <button class="btn btn-primary" id="saveNotesBtn">💾 Сохранить заметки</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ДЕЙСТВИЯ ===== -->
+    <div class="actions no-print">
+        <button class="btn btn-primary" id="resetBtn">🔄 Сбросить день</button>
+        <button class="btn btn-success" id="printBtn">🖨️ Печать</button>
+        <button class="btn btn-outline" id="exportBtn">📤 Экспорт HTML</button>
+        <button class="btn btn-outline" id="fillExampleBtn">📂 Пример</button>
+    </div>
+
+    <div style="margin-top:16px; text-align:center; font-size:0.75rem; color:#8A9B7A; border-top:1px solid #f0ebe3; padding-top:14px;">
+        © ВетСим — ветеринарное просвещение · Маршрутный лист ветврача
+    </div>
+</div>
+
+<script>
+    // ================================================================
+    //  МАРШРУТНЫЙ ЛИСТ — ПОЛНАЯ ЛОГИКА С РЕДАКТОРОМ
+    // ================================================================
+
+    // ===== ДАННЫЕ ПРИМЕРА =====
+    const EXAMPLE_DATA = {
+        doctor: 'Иванов И.И.',
+        yards: [
+            { id: 1, name: 'Двор №1', note: 'основное стадо' },
+            { id: 2, name: 'Двор №2', note: '' },
+            { id: 3, name: 'Двор №3', note: '' },
+            { id: 4, name: 'Родильное', note: 'телята до 10 дней' },
+            { id: 5, name: 'Карантин', note: '' }
+        ],
+        animals: [
+            { id: 101, yardId: 1, tag: '101', task: 'Вакцинация против сибирской язвы', due: '2026-08-24', status: 'pending', note: '' },
+            { id: 102, yardId: 1, tag: '102', task: 'Осмотр после отёла', due: '2026-08-23', status: 'overdue', note: '' },
+            { id: 103, yardId: 1, tag: '103', task: 'Взятие крови на лейкоз', due: '2026-08-24', status: 'pending', note: '' },
+            { id: 104, yardId: 2, tag: '104', task: 'Осеменение (2-й цикл)', due: '2026-08-24', status: 'pending', note: '' },
+            { id: 105, yardId: 2, tag: '105', task: 'Лечение мастита', due: '2026-08-22', status: 'overdue', note: '' },
+            { id: 106, yardId: 3, tag: '106', task: 'Вакцинация против лептоспироза', due: '2026-08-25', status: 'pending', note: '' },
+            { id: 107, yardId: 3, tag: '107', task: 'Осмотр копыт', due: '2026-08-24', status: 'done', note: '' },
+            { id: 108, yardId: 4, tag: '108', task: 'Отел (в процессе)', due: '2026-08-24', status: 'pending', note: '' },
+            { id: 109, yardId: 4, tag: '109', task: 'Запуск перед отёлом', due: '2026-08-26', status: 'pending', note: '' },
+            { id: 110, yardId: 5, tag: '110', task: 'Карантинное наблюдение', due: '2026-08-23', status: 'overdue', note: '' }
+        ],
+        notes: 'План на день:\n1. Двор №1 — вакцинация (10 голов)\n2. Двор №2 — осмотр мастита\n3. Заполнить акты по итогам'
+    };
+
+    // ===== СОСТОЯНИЕ =====
+    let state = {
+        doctor: '',
+        yards: [],
+        animals: [],
+        notes: '',
+        currentYard: 1,
+        editingAnimalId: null,
+        editingYardId: null,
+        nextId: 1000
+    };
+
+    // ===== DOM-СВЯЗИ =====
+    const yardSelector = document.getElementById('yardSelector');
+    const animalList = document.getElementById('animalList');
+    const quickAnimal = document.getElementById('quickAnimal');
+    const quickEvent = document.getElementById('quickEvent');
+    const quickSubmit = document.getElementById('quickSubmit');
+    const doctorName = document.getElementById('doctorName');
+    const freeNotes = document.getElementById('freeNotes');
+    const saveNotesBtn = document.getElementById('saveNotesBtn');
+
+    // Статистика
+    const totalTasks = document.getElementById('totalTasks');
+    const doneTasks = document.getElementById('doneTasks');
+    const pendingTasks = document.getElementById('pendingTasks');
+    const overdueTasks = document.getElementById('overdueTasks');
+
+    // Животные — управление
+    const animalManagementList = document.getElementById('animalManagementList');
+    const addAnimalBtn = document.getElementById('addAnimalBtn');
+    const animalForm = document.getElementById('animalForm');
+    const animalFormTitle = document.getElementById('animalFormTitle');
+    const animalFormTag = document.getElementById('animalFormTag');
+    const animalFormYard = document.getElementById('animalFormYard');
+    const animalFormTask = document.getElementById('animalFormTask');
+    const animalFormDue = document.getElementById('animalFormDue');
+    const animalFormStatus = document.getElementById('animalFormStatus');
+    const animalFormNote = document.getElementById('animalFormNote');
+    const animalFormSave = document.getElementById('animalFormSave');
+    const animalFormCancel = document.getElementById('animalFormCancel');
+    const animalFormDelete = document.getElementById('animalFormDelete');
+
+    // Дворы — управление
+    const yardManagementList = document.getElementById('yardManagementList');
+    const addYardBtn = document.getElementById('addYardBtn');
+    const yardForm = document.getElementById('yardForm');
+    const yardFormTitle = document.getElementById('yardFormTitle');
+    const yardFormName = document.getElementById('yardFormName');
+    const yardFormNote = document.getElementById('yardFormNote');
+    const yardFormSave = document.getElementById('yardFormSave');
+    const yardFormCancel = document.getElementById('yardFormCancel');
+    const yardFormDelete = document.getElementById('yardFormDelete');
+
+    // ================================================================
+    //  ФУНКЦИИ РЕНДЕРА
+    // ================================================================
+
+    function renderYardSelector() {
+        let html = '';
+        state.yards.forEach(yard => {
+            const active = yard.id === state.currentYard ? 'active' : '';
+            html += `
+                <button class="yard-btn ${active}" data-yard="${yard.id}">
+                    ${yard.name}
+                    <span class="del-yard no-print" data-yard="${yard.id}" title="Удалить">✕</span>
+                </button>
+            `;
+        });
+        yardSelector.innerHTML = html;
+
+        // Обработчики
+        yardSelector.querySelectorAll('.yard-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (e.target.classList.contains('del-yard')) return;
+                state.currentYard = parseInt(this.dataset.yard, 10);
+                renderAll();
+            });
+        });
+
+        yardSelector.querySelectorAll('.del-yard').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const id = parseInt(this.dataset.yard, 10);
+                if (!confirm('Удалить двор? Все животные в нём будут переназначены.')) return;
+                // Переназначаем животных в первый двор
+                if (state.yards.length > 1) {
+                    const firstYard = state.yards.find(y => y.id !== id);
+                    if (firstYard) {
+                        state.animals.forEach(a => { if (a.yardId === id) a.yardId = firstYard.id; });
+                    }
+                }
+                state.yards = state.yards.filter(y => y.id !== id);
+                if (state.currentYard === id) {
+                    state.currentYard = state.yards.length > 0 ? state.yards[0].id : null;
+                }
+                renderAll();
+                saveState();
+                showToast('🗑️ Двор удалён');
+            });
+        });
+    }
+
+    function renderAnimals() {
+        const filtered = state.animals.filter(a => a.yardId === state.currentYard);
+        const yard = state.yards.find(y => y.id === state.currentYard);
+
+        if (!yard || filtered.length === 0) {
+            animalList.innerHTML = `
+                <div style="text-align:center;padding:30px 10px;color:#8A9B7A;">
+                    <span style="font-size:2rem;display:block;margin-bottom:8px;">🐄</span>
+                    В этом дворе нет животных с задачами
+                </div>
+            `;
+            return;
+        }
+
+        let html = `<div style="font-weight:600;font-size:0.8rem;color:#2C7DA0;margin-bottom:10px;">📍 ${yard.name} ${yard.note ? '— ' + yard.note : ''}</div>`;
+
+        filtered.forEach(animal => {
+            const statusMap = {
+                'done': '<span class="status done">✅ Выполнено</span>',
+                'pending': '<span class="status pending">⏳ Ожидает</span>',
+                'overdue': '<span class="status overdue">🔴 Просрочено</span>'
+            };
+
+            const dueStr = animal.due ? new Date(animal.due).toLocaleDateString('ru-RU') : '—';
+            const noteStr = animal.note ? `<div class="note">📌 ${animal.note}</div>` : '';
+
+            html += `
+                <div class="animal-card" data-id="${animal.id}">
+                    <span class="id">🏷️ ${animal.tag || animal.id}</span>
+                    <span class="task">
+                        ${animal.task}
+                        <span class="due">срок: ${dueStr}</span>
+                        ${noteStr}
+                    </span>
+                    ${statusMap[animal.status] || statusMap.pending}
+                    <div class="actions no-print">
+                        <button class="edit-btn" data-id="${animal.id}" title="Редактировать">✏️</button>
+                        <button class="delete-btn" data-id="${animal.id}" title="Удалить">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        animalList.innerHTML = html;
+
+        // Обработчики для кнопок
+        animalList.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id, 10);
+                openAnimalForm(id);
+            });
+        });
+
+        animalList.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id, 10);
+                if (confirm('Удалить животное?')) {
+                    state.animals = state.animals.filter(a => a.id !== id);
+                    renderAll();
+                    saveState();
+                    showToast('🗑️ Животное удалено');
+                }
+            });
+        });
+    }
+
+    function renderAnimalManagement() {
+        let html = '';
+        state.animals.forEach(a => {
+            const yard = state.yards.find(y => y.id === a.yardId);
+            const yardName = yard ? yard.name : '—';
+            const statusMap = {
+                'done': '✅ Выполнено',
+                'pending': '⏳ Ожидает',
+                'overdue': '🔴 Просрочено'
+            };
+            html += `
+                <div class="animal-card" style="border-left-color:#2C7DA0;">
+                    <span class="id">🏷️ ${a.tag || a.id}</span>
+                    <span class="task">
+                        ${a.task}
+                        <span class="due">📍 ${yardName} · срок: ${a.due || '—'} · ${statusMap[a.status] || a.status}</span>
+                        ${a.note ? `<div class="note">📌 ${a.note}</div>` : ''}
+                    </span>
+                    <div class="actions no-print">
+                        <button class="edit-btn" data-id="${a.id}" style="background:none;border:none;cursor:pointer;color:#2C7DA0;">✏️</button>
+                        <button class="delete-btn" data-id="${a.id}" style="background:none;border:none;cursor:pointer;color:#b13e3e;">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        if (state.animals.length === 0) {
+            html = '<div style="text-align:center;padding:20px;color:#8A9B7A;">Нет животных. Добавьте первое!</div>';
+        }
+
+        animalManagementList.innerHTML = html;
+
+        animalManagementList.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id, 10);
+                openAnimalForm(id);
+            });
+        });
+
+        animalManagementList.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id, 10);
+                if (confirm('Удалить животное?')) {
+                    state.animals = state.animals.filter(a => a.id !== id);
+                    renderAll();
+                    saveState();
+                    showToast('🗑️ Животное удалено');
+                }
+            });
+        });
+    }
+
+    function renderYardManagement() {
+        let html = '';
+        state.yards.forEach(y => {
+            const count = state.animals.filter(a => a.yardId === y.id).length;
+            html += `
+                <div class="animal-card" style="border-left-color:#D4A373;">
+                    <span class="id">🏠 ${y.name}</span>
+                    <span class="task">
+                        ${y.note || 'без описания'}
+                        <span class="due">🐄 ${count} голов</span>
+                    </span>
+                    <div class="actions no-print">
+                        <button class="edit-yard-btn" data-id="${y.id}" style="background:none;border:none;cursor:pointer;color:#2C7DA0;">✏️</button>
+                        <button class="delete-yard-btn" data-id="${y.id}" style="background:none;border:none;cursor:pointer;color:#b13e3e;">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        yardManagementList.innerHTML = html;
+
+        yardManagementList.querySelectorAll('.edit-yard-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id, 10);
+                openYardForm(id);
+            });
+        });
+
+        yardManagementList.querySelectorAll('.delete-yard-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id, 10);
+                if (!confirm('Удалить двор? Животные будут переназначены.')) return;
+                if (state.yards.length > 1) {
+                    const firstYard = state.yards.find(y => y.id !== id);
+                    if (firstYard) {
+                        state.animals.forEach(a => { if (a.yardId === id) a.yardId = firstYard.id; });
+                    }
+                }
+                state.yards = state.yards.filter(y => y.id !== id);
+                if (state.currentYard === id) {
+                    state.currentYard = state.yards.length > 0 ? state.yards[0].id : null;
+                }
+                renderAll();
+                saveState();
+                showToast('🗑️ Двор удалён');
+            });
+        });
+    }
+
+    // ================================================================
+    //  ФОРМЫ РЕДАКТИРОВАНИЯ
+    // ================================================================
+
+    function openAnimalForm(id) {
+        const animal = state.animals.find(a => a.id === id);
+        if (animal) {
+            animalFormTitle.textContent = '✏️ Редактирование животного';
+            animalFormTag.value = animal.tag || '';
+            animalFormTask.value = animal.task || '';
+            animalFormDue.value = animal.due || '';
+            animalFormStatus.value = animal.status || 'pending';
+            animalFormNote.value = animal.note || '';
+            state.editingAnimalId = id;
+            animalFormDelete.style.display = 'inline-block';
+        } else {
+            animalFormTitle.textContent = '➕ Новое животное';
+            animalFormTag.value = '';
+            animalFormTask.value = '';
+            animalFormDue.value = '';
+            animalFormStatus.value = 'pending';
+            animalFormNote.value = '';
+            state.editingAnimalId = null;
+            animalFormDelete.style.display = 'none';
+        }
+
+        // Обновляем список дворов
+        animalFormYard.innerHTML = state.yards.map(y =>
+            `<option value="${y.id}" ${animal && animal.yardId === y.id ? 'selected' : ''}>${y.name}</option>`
+        ).join('');
+
+        animalForm.style.display = 'block';
+        document.getElementById('tab-animals').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function saveAnimalForm() {
+        const tag = animalFormTag.value.trim() || String(state.nextId++);
+        const yardId = parseInt(animalFormYard.value, 10);
+        const task = animalFormTask.value.trim();
+        const due = animalFormDue.value || '';
+        const status = animalFormStatus.value;
+        const note = animalFormNote.value.trim();
+
+        if (!task) {
+            showToast('⚠️ Введите задачу');
+            return;
+        }
+
+        if (state.editingAnimalId) {
+            const animal = state.animals.find(a => a.id === state.editingAnimalId);
+            if (animal) {
+                animal.tag = tag;
+                animal.yardId = yardId;
+                animal.task = task;
+                animal.due = due;
+                animal.status = status;
+                animal.note = note;
+            }
+        } else {
+            state.animals.push({
+                id: state.nextId++,
+                yardId: yardId,
+                tag: tag,
+                task: task,
+                due: due,
+                status: status,
+                note: note
+            });
+        }
+
+        animalForm.style.display = 'none';
+        renderAll();
+        saveState();
+        showToast('💾 Животное сохранено');
+    }
+
+    function openYardForm(id) {
+        const yard = state.yards.find(y => y.id === id);
+        if (yard) {
+            yardFormTitle.textContent = '✏️ Редактирование двора';
+            yardFormName.value = yard.name || '';
+            yardFormNote.value = yard.note || '';
+            state.editingYardId = id;
+            yardFormDelete.style.display = 'inline-block';
+        } else {
+            yardFormTitle.textContent = '➕ Новый двор';
+            yardFormName.value = '';
+            yardFormNote.value = '';
+            state.editingYardId = null;
+            yardFormDelete.style.display = 'none';
+        }
+        yardForm.style.display = 'block';
+        document.getElementById('tab-yards').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function saveYardForm() {
+        const name = yardFormName.value.trim();
+        const note = yardFormNote.value.trim();
+
+        if (!name) {
+            showToast('⚠️ Введите название двора');
+            return;
+        }
+
+        if (state.editingYardId) {
+            const yard = state.yards.find(y => y.id === state.editingYardId);
+            if (yard) {
+                yard.name = name;
+                yard.note = note;
+            }
+        } else {
+            state.yards.push({ id: state.nextId++, name: name, note: note });
+        }
+
+        yardForm.style.display = 'none';
+        renderAll();
+        saveState();
+        showToast('💾 Двор сохранён');
+    }
+
+    // ================================================================
+    //  ОБНОВЛЕНИЕ QUICK SELECT
+    // ================================================================
+
+    function updateQuickSelect() {
+        const filtered = state.animals.filter(a => a.yardId === state.currentYard && a.status !== 'done');
+        quickAnimal.innerHTML = '<option value="">Выберите животное...</option>';
+        filtered.forEach(a => {
+            const opt = document.createElement('option');
+            opt.value = a.id;
+            opt.textContent = `${a.tag || a.id} — ${a.task}`;
+            quickAnimal.appendChild(opt);
+        });
+    }
+
+    // ================================================================
+    //  БЫСТРОЕ ДЕЙСТВИЕ
+    // ================================================================
+
+    function quickAction() {
+        const animalId = parseInt(quickAnimal.value, 10);
+        const event = quickEvent.value;
+
+        if (!animalId) {
+            showToast('⚠️ Выберите животное');
+            return;
+        }
+
+        const animal = state.animals.find(a => a.id === animalId);
+        if (!animal) {
+            showToast('⚠️ Животное не найдено');
+            return;
+        }
+
+        if (animal.status === 'done') {
+            showToast('⚠️ Задача уже выполнена');
+            return;
+        }
+
+        animal.status = 'done';
+        animal.task = event;
+
+        renderAll();
+        saveState();
+        showToast(`✅ ${event} выполнено для ${animal.tag || animal.id}`);
+    }
+
+    // ================================================================
+    //  ОБНОВЛЕНИЕ СТАТИСТИКИ
+    // ================================================================
+
+    function updateSummary() {
+        const total = state.animals.length;
+        const done = state.animals.filter(a => a.status === 'done').length;
+        const pending = state.animals.filter(a => a.status === 'pending').length;
+        const overdue = state.animals.filter(a => a.status === 'overdue').length;
+
+        totalTasks.textContent = total;
+        doneTasks.textContent = done;
+        pendingTasks.textContent = pending;
+        overdueTasks.textContent = overdue;
+    }
+
+    // ================================================================
+    //  ОСНОВНЫЕ ФУНКЦИИ
+    // ================================================================
+
+    function renderAll() {
+        renderYardSelector();
+        renderAnimals();
+        renderAnimalManagement();
+        renderYardManagement();
+        updateQuickSelect();
+        updateSummary();
+        // Заметки
+        if (freeNotes) freeNotes.value = state.notes || '';
+        // Доктор
+        doctorName.value = state.doctor || '';
+    }
+
+    function resetDay() {
+        if (!confirm('Сбросить все задачи в статус "Ожидает"?')) return;
+        state.animals.forEach(a => {
+            if (a.status === 'done') a.status = 'pending';
+        });
+        renderAll();
+        saveState();
+        showToast('🔄 День сброшен');
+    }
+
+    // ================================================================
+    //  СОХРАНЕНИЕ
+    // ================================================================
+
+    function saveState() {
+        try {
+            localStorage.setItem('vetsim_route_sheet', JSON.stringify({
+                doctor: state.doctor,
+                yards: state.yards,
+                animals: state.animals,
+                notes: state.notes,
+                currentYard: state.currentYard,
+                nextId: state.nextId
+            }));
+        } catch (e) {}
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem('vetsim_route_sheet');
+            if (raw) {
+                const data = JSON.parse(raw);
+                if (data.doctor) state.doctor = data.doctor;
+                if (data.yards) state.yards = data.yards;
+                if (data.animals) state.animals = data.animals;
+                if (data.notes !== undefined) state.notes = data.notes;
+                if (data.currentYard) state.currentYard = data.currentYard;
+                if (data.nextId) state.nextId = data.nextId;
+                return true;
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    // ================================================================
+    //  TOAST
+    // ================================================================
+
+    function showToast(msg) {
+        const existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = msg;
+        Object.assign(toast.style, {
+            position: 'fixed',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#1F4E6E',
+            color: 'white',
+            padding: '10px 24px',
+            borderRadius: '40px',
+            fontWeight: '600',
+            fontSize: '0.85rem',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+            zIndex: '2000',
+            maxWidth: '90%',
+            textAlign: 'center',
+            opacity: '0',
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none'
+        });
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.style.opacity = '1');
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+
+    // ================================================================
+    //  ВКЛАДКИ
+    // ================================================================
+
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+            });
+        });
+    }
+
+    // ================================================================
+    //  ЗАГРУЗКА ПРИМЕРА
+    // ================================================================
+
+    function fillExample() {
+        if (!confirm('Загрузить пример? Текущие изменения будут потеряны.')) return;
+        state.doctor = EXAMPLE_DATA.doctor;
+        state.yards = EXAMPLE_DATA.yards.map(y => ({ ...y }));
+        state.animals = EXAMPLE_DATA.animals.map(a => ({ ...a }));
+        state.notes = EXAMPLE_DATA.notes || '';
+        state.currentYard = 1;
+        state.nextId = 200;
+        renderAll();
+        saveState();
+        showToast('📂 Пример загружен');
+    }
+
+    // ================================================================
+    //  ЭКСПОРТ HTML
+    // ================================================================
+
+    function exportHTML() {
+        saveState();
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([`<!DOCTYPE html>\n${htmlContent}`], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `route_sheet_${new Date().toISOString().slice(0,10)}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 Маршрутный лист экспортирован');
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+
+    function init() {
+        const now = new Date();
+        document.getElementById('currentDate').textContent = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+        initTabs();
+
+        // Обработчики форм
+        addAnimalBtn.addEventListener('click', () => openAnimalForm(null));
+        addYardBtn.addEventListener('click', () => openYardForm(null));
+
+        animalFormSave.addEventListener('click', saveAnimalForm);
+        animalFormCancel.addEventListener('click', () => { animalForm.style.display = 'none'; });
+        animalFormDelete.addEventListener('click', function() {
+            if (!confirm('Удалить животное?')) return;
+            if (state.editingAnimalId) {
+                state.animals = state.animals.filter(a => a.id !== state.editingAnimalId);
+                animalForm.style.display = 'none';
+                renderAll();
+                saveState();
+                showToast('🗑️ Животное удалено');
+            }
+        });
+
+        yardFormSave.addEventListener('click', saveYardForm);
+        yardFormCancel.addEventListener('click', () => { yardForm.style.display = 'none'; });
+        yardFormDelete.addEventListener('click', function() {
+            if (!confirm('Удалить двор?')) return;
+            if (state.editingYardId) {
+                const id = state.editingYardId;
+                if (state.yards.length > 1) {
+                    const firstYard = state.yards.find(y => y.id !== id);
+                    if (firstYard) {
+                        state.animals.forEach(a => { if (a.yardId === id) a.yardId = firstYard.id; });
+                    }
+                }
+                state.yards = state.yards.filter(y => y.id !== id);
+                if (state.currentYard === id) {
+                    state.currentYard = state.yards.length > 0 ? state.yards[0].id : null;
+                }
+                yardForm.style.display = 'none';
+                renderAll();
+                saveState();
+                showToast('🗑️ Двор удалён');
+            }
+        });
+
+        quickSubmit.addEventListener('click', quickAction);
+
+        saveNotesBtn.addEventListener('click', function() {
+            state.notes = freeNotes.value;
+            saveState();
+            showToast('💾 Заметки сохранены');
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', resetDay);
+        document.getElementById('printBtn').addEventListener('click', () => window.print());
+        document.getElementById('exportBtn').addEventListener('click', exportHTML);
+        document.getElementById('fillExampleBtn').addEventListener('click', fillExample);
+
+        doctorName.addEventListener('change', function() {
+            state.doctor = this.value;
+            saveState();
+        });
+
+        // Загрузка состояния
+        const loaded = loadState();
+        if (!loaded || state.animals.length === 0) {
+            fillExample();
+        } else {
+            renderAll();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

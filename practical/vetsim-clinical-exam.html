@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Протокол клинического исследования МДЖ · ВетСим</title>
+    <style>
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #F4F7F9;
+            color: #1A2A3A;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            padding: 32px 36px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E7EDE2;
+            margin-bottom: 20px;
+        }
+        .header .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .meta {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #5F7C62;
+        }
+
+        /* ===== ОБЩИЕ ПОЛЯ ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 24px;
+            margin-bottom: 20px;
+        }
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .field label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #5F7C62;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .field input,
+        .field select,
+        .field textarea {
+            padding: 8px 14px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FEFAF2;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.15s;
+            width: 100%;
+        }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
+        }
+        .field textarea {
+            resize: vertical;
+            min-height: 40px;
+        }
+
+        /* ===== РАЗДЕЛЫ ===== */
+        .section {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0ebe3;
+        }
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .section-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .badge {
+            font-size: 0.6rem;
+            background: #E7EDE2;
+            color: #5F7C62;
+            padding: 0 10px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        /* ===== КАРТОЧКИ ПАРАМЕТРОВ ===== */
+        .param-card {
+            background: #F9FBF8;
+            border-radius: 1rem;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-left: 4px solid #A3B18A;
+        }
+        .param-card .param-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .param-card .param-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #1A2A3A;
+        }
+        .param-card .param-select {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border: 1px solid #D9D0BD;
+            border-radius: 40px;
+            background: white;
+            font-family: inherit;
+            outline: none;
+        }
+        .param-card .param-select:focus {
+            border-color: #2C7DA0;
+        }
+        .param-card .param-details {
+            display: none;
+            margin-top: 8px;
+        }
+        .param-card .param-details.open {
+            display: block;
+        }
+        .param-details .field {
+            margin-bottom: 6px;
+        }
+        .param-details .field label {
+            font-size: 0.7rem;
+        }
+        .param-details .field textarea {
+            min-height: 36px;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+
+        /* ===== КНОПКИ ===== */
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #E7EDE2;
+            justify-content: center;
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20px 24px;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .param-card .param-select {
+                border: none;
+                background: transparent;
+                padding: 0;
+                font-weight: 600;
+            }
+            .param-details .field textarea {
+                border: none;
+                background: transparent;
+                padding: 0;
+                min-height: auto;
+                resize: none;
+            }
+            .param-details .field textarea:focus {
+                box-shadow: none;
+            }
+            .param-card {
+                border-left-color: #6B9E6B;
+                background: transparent;
+                padding: 6px 0;
+                margin-bottom: 4px;
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .section-title .badge {
+                display: none;
+            }
+            .form-grid .field input,
+            .form-grid .field select {
+                border: none;
+                background: transparent;
+                padding: 2px 0;
+                font-weight: 600;
+            }
+            .field textarea {
+                border: none;
+                background: transparent;
+                padding: 2px 0;
+            }
+            .field label {
+                font-size: 0.65rem;
+            }
+            .header .meta {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            .container { padding: 16px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: stretch; }
+            .header .meta { text-align: left; }
+        }
+        @media (max-width: 420px) {
+            .container { padding: 12px; }
+            .param-card { padding: 10px 12px; }
+            .param-card .param-header { flex-direction: column; align-items: stretch; }
+            .actions .btn { flex: 1; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <!-- ===== ШАПКА ===== -->
+    <header class="header">
+        <div class="logo">🐾 <span class="gradient">ВетСим</span> · Протокол клинического исследования</div>
+        <div class="meta">
+            <div id="dateDisplay">Дата: <span id="currentDate"></span></div>
+            <div style="font-size:0.75rem; color:#8A9B7A;">v.1.0 · Полное клиническое исследование МДЖ</div>
+        </div>
+    </header>
+
+    <!-- ===== 1. РЕГИСТРАЦИЯ И АНАМНЕЗ ===== -->
+    <div class="section">
+        <div class="section-title">📋 Регистрация и анамнез <span class="badge">предварительные сведения</span></div>
+
+        <div class="form-grid">
+            <div class="field">
+                <label>Владелец</label>
+                <input type="text" id="owner" placeholder="Иванов И.И." />
+            </div>
+            <div class="field">
+                <label>Телефон владельца</label>
+                <input type="text" id="phone" placeholder="+7 (xxx) xxx-xx-xx" />
+            </div>
+            <div class="field">
+                <label>Пациент (кличка)</label>
+                <input type="text" id="patientName" placeholder="Рекс" />
+            </div>
+            <div class="field">
+                <label>Микрочип / клеймо</label>
+                <input type="text" id="chip" placeholder="Номер микрочипа" />
+            </div>
+            <div class="field">
+                <label>Вид</label>
+                <select id="species">
+                    <option value="Собака">Собака</option>
+                    <option value="Кошка">Кошка</option>
+                    <option value="Другое">Другое</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Порода</label>
+                <input type="text" id="breed" placeholder="Немецкая овчарка" />
+            </div>
+            <div class="field">
+                <label>Пол</label>
+                <select id="sex">
+                    <option value="Кобель">Кобель</option>
+                    <option value="Сука">Сука</option>
+                    <option value="Кот">Кот</option>
+                    <option value="Кошка">Кошка</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Возраст</label>
+                <input type="text" id="age" placeholder="5 лет" />
+            </div>
+            <div class="field">
+                <label>Окрас / приметы</label>
+                <input type="text" id="color" placeholder="Чёрно-подпалый" />
+            </div>
+            <div class="field">
+                <label>Вес (кг)</label>
+                <input type="text" id="weight" placeholder="28" />
+            </div>
+            <div class="field full-width">
+                <label>Анамнез жизни (содержание, кормление, обработки, перенесённые заболевания)</label>
+                <textarea id="anamnesisVitae" rows="2" placeholder="Условия содержания, тип кормления, дата последней вакцинации и дегельминтизации, перенесённые заболевания..."></textarea>
+            </div>
+            <div class="field full-width">
+                <label>Анамнез болезни</label>
+                <textarea id="anamnesisMorbi" rows="2" placeholder="Когда и как началось заболевание, прогрессия симптомов, проводимое лечение..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 2. ОБЩЕЕ ИССЛЕДОВАНИЕ ===== -->
+    <div class="section">
+        <div class="section-title">🔬 Общее исследование <span class="badge">габитус, кожа, слизистые, лимфоузлы, TPR</span></div>
+
+        <!-- Габитус -->
+        <div class="param-card" data-param="habitus">
+            <div class="param-header">
+                <span class="param-name">Габитус (общий вид)</span>
+                <select class="param-select" data-target="habitus">
+                    <option value="normal">Норма</option>
+                    <option value="depressed">Угнетён</option>
+                    <option value="excited">Возбуждён</option>
+                    <option value="comatose">Коматозное состояние</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="habitus">
+                <div class="field"><label>Телосложение</label><textarea rows="1" placeholder="Сильное/среднее/слабое"></textarea></div>
+                <div class="field"><label>Упитанность</label><textarea rows="1" placeholder="Нормальная/средняя/ниже нормы/истощение"></textarea></div>
+                <div class="field"><label>Положение тела</label><textarea rows="1" placeholder="Естественное/вынужденное, стоячее/лежачее"></textarea></div>
+                <div class="field"><label>Темперамент</label><textarea rows="1" placeholder="Живой/спокойный/флегматичный/агрессивный"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Кожа и шерстный покров -->
+        <div class="param-card" data-param="skin">
+            <div class="param-header">
+                <span class="param-name">Кожа и шерстный покров</span>
+                <select class="param-select" data-target="skin">
+                    <option value="normal">Норма</option>
+                    <option value="dry">Сухая</option>
+                    <option value="greasy">Жирная</option>
+                    <option value="scaly">Шелушение</option>
+                    <option value="erosion">Эрозии/язвы</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="skin">
+                <div class="field"><label>Шерстный покров</label><textarea rows="1" placeholder="Густой/редкий, блестящий/тусклый, взъерошенный/гладкий"></textarea></div>
+                <div class="field"><label>Цвет кожи</label><textarea rows="1" placeholder="Бледно-розовый/розовый/цианотичный/желтушный/гиперемия"></textarea></div>
+                <div class="field"><label>Эластичность кожи</label><textarea rows="1" placeholder="Нормальная/снижена (симптом «кожной складки»), дегидратация: <5% / 5-6% / 6-8% / 8-10% / >10%"></textarea></div>
+                <div class="field"><label>Патологические изменения</label><textarea rows="1" placeholder="Сыпь, папулы, пустулы, алопеция, эктопаразиты, новообразования"></textarea></div>
+                <div class="field"><label>Температура кожи</label><textarea rows="1" placeholder="Нормальная/повышена/понижена (локально/диффузно)"></textarea></div>
+                <div class="field"><label>Запах кожи</label><textarea rows="1" placeholder="Специфический/гнилостный/ихтиозный"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Слизистые оболочки -->
+        <div class="param-card" data-param="mucous">
+            <div class="param-header">
+                <span class="param-name">Видимые слизистые оболочки</span>
+                <select class="param-select" data-target="mucous">
+                    <option value="normal">Норма</option>
+                    <option value="pale">Бледные</option>
+                    <option value="icteric">Иктеричные</option>
+                    <option value="cyanotic">Цианотичные</option>
+                    <option value="hyperemic">Гиперемированы</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="mucous">
+                <div class="field"><label>Конъюнктива</label><textarea rows="1" placeholder="Цвет, влажность, выделения (гнойные/серозные)"></textarea></div>
+                <div class="field"><label>Слизистая ротовой полости</label><textarea rows="1" placeholder="Цвет, влажность, наличие изъязвлений, налёта"></textarea></div>
+                <div class="field"><label>Слизистая носа</label><textarea rows="1" placeholder="Цвет, влажность, выделения (характер)"></textarea></div>
+                <div class="field"><label>Слизистая влагалища / препуция</label><textarea rows="1" placeholder="Цвет, влажность, выделения"></textarea></div>
+                <div class="field"><label>Время наполнения капилляров (ВНК)</label><textarea rows="1" placeholder="< 2 сек / 2-3 сек / > 3 сек"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Лимфатические узлы -->
+        <div class="param-card" data-param="lymph_nodes">
+            <div class="param-header">
+                <span class="param-name">Периферические лимфатические узлы</span>
+                <select class="param-select" data-target="lymph_nodes">
+                    <option value="normal">Норма</option>
+                    <option value="enlarged">Увеличены</option>
+                    <option value="painful">Болезненны</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="lymph_nodes">
+                <div class="field"><label>Подчелюстные</label><textarea rows="1" placeholder="Размер, консистенция, подвижность, болезненность"></textarea></div>
+                <div class="field"><label>Предлопаточные</label><textarea rows="1" placeholder="Размер, консистенция, подвижность, болезненность"></textarea></div>
+                <div class="field"><label>Подколенные</label><textarea rows="1" placeholder="Размер, консистенция, подвижность, болезненность"></textarea></div>
+                <div class="field"><label>Паховые</label><textarea rows="1" placeholder="Размер, консистенция, подвижность, болезненность"></textarea></div>
+            </div>
+        </div>
+
+        <!-- TPR -->
+        <div class="param-card" data-param="tpr">
+            <div class="param-header">
+                <span class="param-name">TPR (температура, пульс, дыхание)</span>
+                <select class="param-select" data-target="tpr">
+                    <option value="normal">Норма</option>
+                    <option value="fever">Лихорадка</option>
+                    <option value="hypothermia">Гипотермия</option>
+                    <option value="abnormal">Отклонения</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="tpr">
+                <div class="field"><label>Температура (°C)</label><textarea rows="1" placeholder="Норма: собака 37.8-39.2°C, кошка 37.8-39.4°C"></textarea></div>
+                <div class="field"><label>Пульс (уд/мин)</label><textarea rows="1" placeholder="Норма: собака 60-120, кошка 120-220, ритмичность, наполнение"></textarea></div>
+                <div class="field"><label>Дыхание (вдох/мин)</label><textarea rows="1" placeholder="Норма: собака 10-30, кошка 15-30, тип дыхания (грудной/брюшной)"></textarea></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 3. СПЕЦИАЛЬНЫЕ ИССЛЕДОВАНИЯ ===== -->
+    <div class="section">
+        <div class="section-title">🩺 Специальные исследования <span class="badge">системы организма</span></div>
+
+        <!-- Сердечно-сосудистая система -->
+        <div class="param-card" data-param="cardiovascular">
+            <div class="param-header">
+                <span class="param-name">Сердечно-сосудистая система</span>
+                <select class="param-select" data-target="cardiovascular">
+                    <option value="normal">Норма</option>
+                    <option value="murmur">Шумы</option>
+                    <option value="arrhythmia">Аритмия</option>
+                    <option value="abnormal">Изменения</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="cardiovascular">
+                <div class="field"><label>Аускультация сердца</label><textarea rows="1" placeholder="Тоны сердца, ритмичность, шумы (систолические/диастолические, локализация)"></textarea></div>
+                <div class="field"><label>Пальпация пульса</label><textarea rows="1" placeholder="Ритмичность, наполнение, частота, симметричность"></textarea></div>
+                <div class="field"><label>Артериальное давление</label><textarea rows="1" placeholder="Систолическое/диастолическое (мм рт.ст.)"></textarea></div>
+                <div class="field"><label>Периферические вены</label><textarea rows="1" placeholder="Наполнение, пульсация, отёки"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Дыхательная система -->
+        <div class="param-card" data-param="respiratory">
+            <div class="param-header">
+                <span class="param-name">Дыхательная система</span>
+                <select class="param-select" data-target="respiratory">
+                    <option value="normal">Норма</option>
+                    <option value="cough">Кашель</option>
+                    <option value="dyspnea">Одышка</option>
+                    <option value="abnormal">Изменения</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="respiratory">
+                <div class="field"><label>Осмотр дыхательных путей</label><textarea rows="1" placeholder="Носовые ходы, выделения, цвет слизистой носа"></textarea></div>
+                <div class="field"><label>Аускультация лёгких</label><textarea rows="1" placeholder="Дыхательные шумы, хрипы (влажные/сухие), крепитация, плевральные шумы"></textarea></div>
+                <div class="field"><label>Перкуссия грудной клетки</label><textarea rows="1" placeholder="Притупление/тимпанический звук, зоны поражения"></textarea></div>
+                <div class="field"><label>Дыхание</label><textarea rows="1" placeholder="Тип (грудной/брюшной), частота, глубина, симметричность"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Пищеварительная система -->
+        <div class="param-card" data-param="digestive">
+            <div class="param-header">
+                <span class="param-name">Пищеварительная система</span>
+                <select class="param-select" data-target="digestive">
+                    <option value="normal">Норма</option>
+                    <option value="vomiting">Рвота</option>
+                    <option value="diarrhea">Диарея</option>
+                    <option value="abnormal">Изменения</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="digestive">
+                <div class="field"><label>Осмотр ротовой полости</label><textarea rows="1" placeholder="Зубы, дёсны, язык, слюна, запах, налёт, изъязвления"></textarea></div>
+                <div class="field"><label>Пальпация брюшной полости</label><textarea rows="1" placeholder="Болезненность, напряжение, увеличение органов, новообразования, свободная жидкость"></textarea></div>
+                <div class="field"><label>Аускультация кишечника</label><textarea rows="1" placeholder="Перистальтика: активная/ослаблена/отсутствует"></textarea></div>
+                <div class="field"><label>Характер дефекации</label><textarea rows="1" placeholder="Частота, консистенция, цвет, примеси (кровь, слизь)"></textarea></div>
+                <div class="field"><label>Аппетит и жажда</label><textarea rows="1" placeholder="Сохранён/снижен/отсутствует, полидипсия/полиурия"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Мочеполовая система -->
+        <div class="param-card" data-param="urogenital">
+            <div class="param-header">
+                <span class="param-name">Мочеполовая система</span>
+                <select class="param-select" data-target="urogenital">
+                    <option value="normal">Норма</option>
+                    <option value="abnormal">Изменения</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="urogenital">
+                <div class="field"><label>Осмотр наружных половых органов</label><textarea rows="1" placeholder="Слизистые, выделения, отёк, новообразования"></textarea></div>
+                <div class="field"><label>Пальпация почек и мочевого пузыря</label><textarea rows="1" placeholder="Размер, контур, болезненность, наполнение мочевого пузыря"></textarea></div>
+                <div class="field"><label>Мочеиспускание</label><textarea rows="1" placeholder="Частота, болезненность, цвет мочи, наличие крови"></textarea></div>
+                <div class="field"><label>Молочные железы (у самок)</label><textarea rows="1" placeholder="Размер, симметричность, уплотнения, выделения"></textarea></div>
+                <div class="field"><label>Предстательная железа (у самцов)</label><textarea rows="1" placeholder="Размер, пальпаторные изменения"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Нервная система -->
+        <div class="param-card" data-param="nervous">
+            <div class="param-header">
+                <span class="param-name">Нервная система</span>
+                <select class="param-select" data-target="nervous">
+                    <option value="normal">Норма</option>
+                    <option value="depression">Угнетение</option>
+                    <option value="excitation">Возбуждение</option>
+                    <option value="ataxia">Атаксия</option>
+                    <option value="seizures">Судороги</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="nervous">
+                <div class="field"><label>Общее состояние сознания</label><textarea rows="1" placeholder="Ясное/угнетённое/коматозное"></textarea></div>
+                <div class="field"><label>Двигательная активность</label><textarea rows="1" placeholder="Координация, парезы, параличи, гиперкинезы"></textarea></div>
+                <div class="field"><label>Черепно-мозговые нервы (зрачки)</label><textarea rows="1" placeholder="Размер зрачков, реакция на свет, нистагм"></textarea></div>
+                <div class="field"><label>Болевая чувствительность</label><textarea rows="1" placeholder="Сохранена/снижена/отсутствует"></textarea></div>
+                <div class="field"><label>Рефлексы</label><textarea rows="1" placeholder="Коленные, пателлярные, анальные, роговичные"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Опорно-двигательный аппарат -->
+        <div class="param-card" data-param="msk">
+            <div class="param-header">
+                <span class="param-name">Опорно-двигательный аппарат</span>
+                <select class="param-select" data-target="msk">
+                    <option value="normal">Норма</option>
+                    <option value="lameness">Хромота</option>
+                    <option value="atrophy">Атрофия мышц</option>
+                    <option value="deformity">Деформация</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="msk">
+                <div class="field"><label>Осмотр конечностей</label><textarea rows="1" placeholder="Симметричность, отёки, деформации, состояние когтей"></textarea></div>
+                <div class="field"><label>Пальпация суставов и мышц</label><textarea rows="1" placeholder="Болезненность, отёк, крепитация, атрофия, температура"></textarea></div>
+                <div class="field"><label>Тесты на стабильность</label><textarea rows="1" placeholder="Коленный сустав (тест выдвижного ящика), другие суставы"></textarea></div>
+                <div class="field"><label>Походка</label><textarea rows="1" placeholder="Хромота (опорная/височная), скованность, слабость"></textarea></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 4. ДОПОЛНИТЕЛЬНЫЕ ИССЛЕДОВАНИЯ ===== -->
+    <div class="section">
+        <div class="section-title">🧪 Дополнительные исследования <span class="badge">лабораторная диагностика</span></div>
+
+        <div class="param-card" data-param="laboratory">
+            <div class="param-header">
+                <span class="param-name">Лабораторные данные</span>
+                <select class="param-select" data-target="laboratory">
+                    <option value="normal">Норма</option>
+                    <option value="abnormal">Отклонения</option>
+                    <option value="pending">В работе</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="laboratory">
+                <div class="field"><label>Гематология</label><textarea rows="1" placeholder="Ht, Hb, эритроциты, лейкоциты, тромбоциты, лейкоформула"></textarea></div>
+                <div class="field"><label>Биохимия крови</label><textarea rows="1" placeholder="Общий белок, альбумин, глобулин, ALT, AST, щелочная фосфатаза, мочевина, креатинин, глюкоза, электролиты"></textarea></div>
+                <div class="field"><label>Анализ мочи</label><textarea rows="1" placeholder="pH, белок, глюкоза, кетоны, уробилиноген, осадок, плотность"></textarea></div>
+                <div class="field"><label>Исследование кала</label><textarea rows="1" placeholder="Яйца гельминтов, простейшие, переваримость"></textarea></div>
+                <div class="field"><label>Инструментальная диагностика</label><textarea rows="1" placeholder="Рентгенография, УЗИ, ЭКГ, эндоскопия (результаты)"></textarea></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 5. ЗАКЛЮЧЕНИЕ ===== -->
+    <div class="section">
+        <div class="section-title">📝 Заключение и рекомендации</div>
+        <div class="field">
+            <label>Предварительный диагноз</label>
+            <input type="text" id="preliminaryDiagnosis" placeholder="Предварительный диагноз" />
+        </div>
+        <div class="field" style="margin-top:8px;">
+            <label>Клинический диагноз</label>
+            <input type="text" id="clinicalDiagnosis" placeholder="Клинический диагноз после всех исследований" />
+        </div>
+        <div class="field" style="margin-top:8px;">
+            <label>Рекомендации / Назначения</label>
+            <textarea id="recommendations" rows="3" placeholder="План лечения, дополнительные исследования, наблюдение, профилактика..."></textarea>
+        </div>
+        <div class="field" style="margin-top:8px;">
+            <label>Врач / Подпись</label>
+            <input type="text" id="doctor" placeholder="Иванов И.И." />
+        </div>
+    </div>
+
+    <!-- ===== ДЕЙСТВИЯ ===== -->
+    <div class="actions no-print">
+        <button class="btn btn-primary" id="resetBtn">🔄 Очистить</button>
+        <button class="btn btn-success" id="printBtn">🖨️ Печать</button>
+        <button class="btn btn-outline" id="exportBtn">📤 Экспорт HTML</button>
+        <button class="btn btn-outline" id="fillExampleBtn">📂 Заполнить пример</button>
+    </div>
+
+    <div style="margin-top:16px; text-align:center; font-size:0.75rem; color:#8A9B7A; border-top:1px solid #f0ebe3; padding-top:14px;">
+        © ВетСим — ветеринарное просвещение · Протокол клинического исследования
+    </div>
+</div>
+
+<script>
+    // ================================================================
+    //  ПРОТОКОЛ КЛИНИЧЕСКОГО ИССЛЕДОВАНИЯ — ЛОГИКА
+    // ================================================================
+
+    // ===== ДАННЫЕ ПРИМЕРА =====
+    const EXAMPLE = {
+        owner: 'Смирнов А.В.',
+        phone: '+7 (999) 123-45-67',
+        patientName: 'Рекс',
+        chip: '156-789-456',
+        species: 'Собака',
+        breed: 'Немецкая овчарка',
+        sex: 'Кобель',
+        age: '5 лет',
+        color: 'Чёрно-подпалый',
+        weight: '28',
+        anamnesisVitae: 'Содержится в частном доме, активный выгул 2 раза в день. Кормление сухим кормом премиум-класса. Вакцинация: год назад (DHPPI, бешенство). Дегельминтизация: 1 раз в квартал. Ранее не болел.',
+        anamnesisMorbi: 'Заболел 3 дня назад: появилась вялость, снижение аппетита, рвота после еды. Владелец отмечает жажду. Лечение не проводилось.',
+        habitus: { status: 'depressed', details: ['Телосложение: среднее', 'Упитанность: нормальная', 'Положение тела: естественное стоячее', 'Темперамент: спокойный, уравновешенный'] },
+        skin: { status: 'normal', details: ['Шерстный покров: густой, блестящий', 'Цвет кожи: бледно-розовый', 'Эластичность кожи: нормальная (дегидратация < 5%)', 'Патологические изменения: не выявлены', 'Температура кожи: нормальная', 'Запах кожи: специфический'] },
+        mucous: { status: 'pale', details: ['Конъюнктива: бледно-розовая, влажная, выделений нет', 'Слизистая ротовой полости: бледно-розовая, влажная, без нарушений', 'Слизистая носа: бледно-розовая, влажная', 'Слизистая препуция: бледно-розовая', 'ВНК: < 2 сек'] },
+        lymph_nodes: { status: 'normal', details: ['Подчелюстные: не увеличены, безболезненны', 'Предлопаточные: не увеличены, безболезненны', 'Подколенные: не увеличены, безболезненны', 'Паховые: не увеличены, безболезненны'] },
+        tpr: { status: 'fever', details: ['Температура: 39.6°C (норма 37.8-39.2°C) — повышена', 'Пульс: 128 уд/мин, ритмичный, среднего наполнения', 'Дыхание: 28 вдох/мин, грудной тип, без патологий'] },
+        cardiovascular: { status: 'normal', details: ['Аускультация сердца: тоны ясные, ритмичные, шумов нет', 'Пульс: ритмичный, симметричный, хорошее наполнение', 'АД: 130/85 мм рт.ст.', 'Периферические вены: без изменений'] },
+        respiratory: { status: 'normal', details: ['Носовые ходы: свободные, выделений нет', 'Аускультация лёгких: везикулярное дыхание, хрипов нет', 'Перкуссия: ясный лёгочный звук', 'Дыхание: грудной тип, частота 28 вдох/мин'] },
+        digestive: { status: 'vomiting', details: ['Ротовая полость: зубы без налёта, дёсны розовые, язык влажный', 'Пальпация брюшной полости: болезненность в краниальной области, кишечник спазмирован', 'Аускультация: перистальтика активная', 'Дефекация: в норме, без примесей', 'Аппетит: снижен, жажда: усилена'] },
+        urogenital: { status: 'normal', details: ['Наружные половые органы: без видимых изменений', 'Почки: не увеличены, безболезненны', 'Мочевой пузырь: умеренно наполнен, безболезненный', 'Мочеиспускание: учащённое, болезненности нет', 'Простата: не увеличена, безболезненна'] },
+        nervous: { status: 'depression', details: ['Сознание: ясное, но угнетённое', 'Двигательная активность: снижена, координация сохранена', 'Зрачки: нормальные, реакция на свет сохранена', 'Болевая чувствительность: сохранена', 'Рефлексы: в норме'] },
+        msk: { status: 'normal', details: ['Конечности: симметричные, без деформаций', 'Суставы: безболезненны, отёков нет', 'Походка: свободная, хромоты нет'] },
+        laboratory: { status: 'pending', details: ['Гематология: в работе', 'Биохимия: в работе', 'Анализ мочи: в работе', 'Кал: в работе'] },
+        preliminaryDiagnosis: 'Гастроэнтерит неуточнённой этиологии. Исключить инородное тело, вирусную инфекцию.',
+        clinicalDiagnosis: 'Острый гастроэнтерит, предположительно алиментарного происхождения.',
+        recommendations: 'Диета: голодная 12 часов, затем лёгкий корм. Инфузионная терапия (раствор Рингера) 20 мл/кг в/в. Антибиотикотерапия — цефалоспорины 20 мг/кг 2 раза в день. Контроль состояния, повторный приём через 3 дня.',
+        doctor: 'Зуева Н.М.'
+    };
+
+    // ===== DOM-СВЯЗИ =====
+    const fields = {
+        owner: document.getElementById('owner'),
+        phone: document.getElementById('phone'),
+        patientName: document.getElementById('patientName'),
+        chip: document.getElementById('chip'),
+        species: document.getElementById('species'),
+        breed: document.getElementById('breed'),
+        sex: document.getElementById('sex'),
+        age: document.getElementById('age'),
+        color: document.getElementById('color'),
+        weight: document.getElementById('weight'),
+        anamnesisVitae: document.getElementById('anamnesisVitae'),
+        anamnesisMorbi: document.getElementById('anamnesisMorbi'),
+        preliminaryDiagnosis: document.getElementById('preliminaryDiagnosis'),
+        clinicalDiagnosis: document.getElementById('clinicalDiagnosis'),
+        recommendations: document.getElementById('recommendations'),
+        doctor: document.getElementById('doctor')
+    };
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    function init() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('currentDate').textContent = dateStr;
+
+        document.querySelectorAll('.param-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const target = this.dataset.target;
+                const details = document.querySelector(`.param-details[data-param="${target}"]`);
+                if (details) {
+                    const isOpen = this.value !== 'normal' && this.value !== 'none' &&
+                                  this.value !== 'pending' && this.value !== 'not_evaluated';
+                    details.classList.toggle('open', isOpen);
+                }
+            });
+        });
+
+        document.getElementById('printBtn').addEventListener('click', () => window.print());
+        document.getElementById('resetBtn').addEventListener('click', resetForm);
+        document.getElementById('exportBtn').addEventListener('click', exportHTML);
+        document.getElementById('fillExampleBtn').addEventListener('click', fillExample);
+
+        loadState();
+    }
+
+    // ===== ЗАПОЛНЕНИЕ ПРИМЕРОМ =====
+    function fillExample() {
+        if (!confirm('Заполнить форму примером?')) return;
+
+        Object.keys(fields).forEach(key => {
+            if (fields[key] && EXAMPLE[key] !== undefined) {
+                fields[key].value = EXAMPLE[key];
+            }
+        });
+
+        const paramMap = {
+            habitus: EXAMPLE.habitus,
+            skin: EXAMPLE.skin,
+            mucous: EXAMPLE.mucous,
+            lymph_nodes: EXAMPLE.lymph_nodes,
+            tpr: EXAMPLE.tpr,
+            cardiovascular: EXAMPLE.cardiovascular,
+            respiratory: EXAMPLE.respiratory,
+            digestive: EXAMPLE.digestive,
+            urogenital: EXAMPLE.urogenital,
+            nervous: EXAMPLE.nervous,
+            msk: EXAMPLE.msk,
+            laboratory: EXAMPLE.laboratory
+        };
+
+        Object.keys(paramMap).forEach(key => {
+            const data = paramMap[key];
+            const select = document.querySelector(`.param-select[data-target="${key}"]`);
+            const details = document.querySelector(`.param-details[data-param="${key}"]`);
+            if (select) select.value = data.status || 'normal';
+            if (details && data.details) {
+                const textareas = details.querySelectorAll('textarea');
+                textareas.forEach((ta, idx) => {
+                    if (idx < data.details.length) {
+                        ta.value = data.details[idx];
+                    }
+                });
+                const isOpen = data.status !== 'normal' && data.status !== 'none' &&
+                              data.status !== 'pending' && data.status !== 'not_evaluated';
+                details.classList.toggle('open', isOpen);
+            }
+        });
+
+        saveState();
+        showToast('✅ Пример загружен');
+    }
+
+    // ===== СБРОС =====
+    function resetForm() {
+        if (!confirm('Очистить все поля?')) return;
+
+        Object.values(fields).forEach(field => {
+            if (field.tagName === 'SELECT') field.selectedIndex = 0;
+            else field.value = '';
+        });
+
+        document.querySelectorAll('.param-select').forEach(select => {
+            select.value = 'normal';
+            const details = document.querySelector(`.param-details[data-param="${select.dataset.target}"]`);
+            if (details) {
+                details.querySelectorAll('textarea').forEach(ta => ta.value = '');
+                details.classList.remove('open');
+            }
+        });
+
+        saveState();
+        showToast('🔄 Форма очищена');
+    }
+
+    // ===== ЭКСПОРТ HTML =====
+    function exportHTML() {
+        saveState();
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([`<!DOCTYPE html>\n${htmlContent}`], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `protocol_clinical_exam_${new Date().toISOString().slice(0,10)}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 Протокол экспортирован');
+    }
+
+    // ===== СОХРАНЕНИЕ =====
+    function saveState() {
+        try {
+            const data = { fields: {}, params: {} };
+
+            Object.keys(fields).forEach(key => {
+                data.fields[key] = fields[key].value;
+            });
+
+            document.querySelectorAll('.param-card').forEach(card => {
+                const param = card.dataset.param;
+                const select = card.querySelector('.param-select');
+                const details = card.querySelector('.param-details');
+                const textareas = details ? details.querySelectorAll('textarea') : [];
+                const texts = [];
+                textareas.forEach(ta => texts.push(ta.value));
+                data.params[param] = {
+                    status: select ? select.value : 'normal',
+                    details: texts
+                };
+            });
+
+            localStorage.setItem('vetsim_clinical_exam_protocol', JSON.stringify(data));
+        } catch (e) {}
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem('vetsim_clinical_exam_protocol');
+            if (!raw) return;
+            const data = JSON.parse(raw);
+
+            if (data.fields) {
+                Object.keys(data.fields).forEach(key => {
+                    if (fields[key]) fields[key].value = data.fields[key];
+                });
+            }
+
+            if (data.params) {
+                Object.keys(data.params).forEach(param => {
+                    const pData = data.params[param];
+                    const select = document.querySelector(`.param-select[data-target="${param}"]`);
+                    const details = document.querySelector(`.param-details[data-param="${param}"]`);
+                    if (select) select.value = pData.status || 'normal';
+                    if (details && pData.details) {
+                        const textareas = details.querySelectorAll('textarea');
+                        textareas.forEach((ta, idx) => {
+                            if (idx < pData.details.length) {
+                                ta.value = pData.details[idx];
+                            }
+                        });
+                        const isOpen = pData.status !== 'normal' && pData.status !== 'none' &&
+                                      pData.status !== 'pending' && pData.status !== 'not_evaluated';
+                        details.classList.toggle('open', isOpen);
+                    }
+                });
+            }
+        } catch (e) {}
+    }
+
+    // ===== TOAST =====
+    function showToast(msg) {
+        const existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = msg;
+        Object.assign(toast.style, {
+            position: 'fixed',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#1F4E6E',
+            color: 'white',
+            padding: '10px 24px',
+            borderRadius: '40px',
+            fontWeight: '600',
+            fontSize: '0.85rem',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+            zIndex: '2000',
+            maxWidth: '90%',
+            textAlign: 'center',
+            opacity: '0',
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none'
+        });
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.style.opacity = '1');
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+
+    // ===== ЗАПУСК =====
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Акт противоэпизоотического мероприятия · ВетСим</title>
+    <style>
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #F4F7F9;
+            color: #1A2A3A;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            padding: 32px 36px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E7EDE2;
+            margin-bottom: 20px;
+        }
+        .header .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .meta {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #5F7C62;
+        }
+
+        /* ===== ФОРМА ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 24px;
+            margin-bottom: 20px;
+        }
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .field label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #5F7C62;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .field input,
+        .field select,
+        .field textarea {
+            padding: 8px 14px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FEFAF2;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.15s;
+            width: 100%;
+        }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
+        }
+        .field textarea {
+            resize: vertical;
+            min-height: 36px;
+        }
+
+        /* ===== РАЗДЕЛЫ ===== */
+        .section {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0ebe3;
+        }
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .section-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .badge {
+            font-size: 0.6rem;
+            background: #E7EDE2;
+            color: #5F7C62;
+            padding: 0 10px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        /* ===== КАРТОЧКИ ПАРАМЕТРОВ ===== */
+        .param-card {
+            background: #F9FBF8;
+            border-radius: 1rem;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-left: 4px solid #A3B18A;
+        }
+        .param-card .param-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .param-card .param-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #1A2A3A;
+        }
+        .param-card .param-select {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border: 1px solid #D9D0BD;
+            border-radius: 40px;
+            background: white;
+            font-family: inherit;
+            outline: none;
+        }
+        .param-card .param-select:focus {
+            border-color: #2C7DA0;
+        }
+        .param-card .param-details {
+            display: none;
+            margin-top: 8px;
+        }
+        .param-card .param-details.open {
+            display: block;
+        }
+        .param-details .field {
+            margin-bottom: 6px;
+        }
+        .param-details .field label {
+            font-size: 0.7rem;
+        }
+        .param-details .field textarea {
+            min-height: 36px;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+
+        /* ===== БЛОК ВЫБОРА ТИПА МЕРОПРИЯТИЯ ===== */
+        .type-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .type-btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .type-btn:hover { opacity: 0.85; }
+        .type-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        /* ===== КНОПКИ ===== */
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #E7EDE2;
+            justify-content: center;
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20px 24px;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .param-card .param-select {
+                border: none;
+                background: transparent;
+                padding: 0;
+                font-weight: 600;
+            }
+            .param-details .field textarea {
+                border: none;
+                background: transparent;
+                padding: 0;
+                min-height: auto;
+                resize: none;
+            }
+            .param-details .field textarea:focus {
+                box-shadow: none;
+            }
+            .param-card {
+                border-left-color: #6B9E6B;
+                background: transparent;
+                padding: 6px 0;
+                margin-bottom: 4px;
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .section-title .badge {
+                display: none;
+            }
+            .form-grid .field input,
+            .form-grid .field select {
+                border: none;
+                background: transparent;
+                padding: 2px 0;
+                font-weight: 600;
+            }
+            .field textarea {
+                border: none;
+                background: transparent;
+                padding: 2px 0;
+            }
+            .field label {
+                font-size: 0.65rem;
+            }
+            .header .meta {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            .container { padding: 16px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: stretch; }
+            .header .meta { text-align: left; }
+            .type-selector { justify-content: center; }
+            .type-btn { flex: 1; text-align: center; }
+        }
+        @media (max-width: 420px) {
+            .container { padding: 12px; }
+            .param-card { padding: 10px 12px; }
+            .param-card .param-header { flex-direction: column; align-items: stretch; }
+            .actions .btn { flex: 1; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <!-- ===== ШАПКА ===== -->
+    <header class="header">
+        <div class="logo">🐾 <span class="gradient">ВетСим</span> · Акт противоэпизоотического мероприятия</div>
+        <div class="meta">
+            <div id="dateDisplay">Дата: <span id="currentDate"></span></div>
+            <div style="font-size:0.75rem; color:#8A9B7A;">v.1.0 · Универсальный шаблон</div>
+        </div>
+    </header>
+
+    <!-- ===== ВЫБОР ТИПА МЕРОПРИЯТИЯ ===== -->
+    <div class="type-selector no-print">
+        <button class="type-btn active" data-type="vaccination">💉 Вакцинация</button>
+        <button class="type-btn" data-type="tuberculinization">🧪 Туберкулинизация / Маллеинизация</button>
+        <button class="type-btn" data-type="deworming">🪱 Дегельминтизация</button>
+        <button class="type-btn" data-type="other">📋 Другое</button>
+    </div>
+
+    <!-- ===== 1. ОБЩИЕ СВЕДЕНИЯ ===== -->
+    <div class="section">
+        <div class="section-title">📋 Общие сведения <span class="badge">реквизиты акта</span></div>
+
+        <div class="form-grid">
+            <div class="field full-width">
+                <label>Наименование мероприятия</label>
+                <input type="text" id="eventName" placeholder="Вакцинация против сибирской язвы" />
+            </div>
+            <div class="field">
+                <label>Акт №</label>
+                <input type="text" id="actNumber" placeholder="12" />
+            </div>
+            <div class="field">
+                <label>Дата составления</label>
+                <input type="date" id="actDate" />
+            </div>
+            <div class="field full-width">
+                <label>Место составления (населённый пункт)</label>
+                <input type="text" id="location" placeholder="г. Краснодар" />
+            </div>
+            <div class="field full-width">
+                <label>Хозяйство / Владелец животного</label>
+                <input type="text" id="farm" placeholder="КФХ «Заря», ИП Петрова Е.В." />
+            </div>
+            <div class="field full-width">
+                <label>Адрес хозяйства</label>
+                <input type="text" id="farmAddress" placeholder="Краснодарский край, Динской р-н, ул. Колхозная, д. 5" />
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 2. ДАННЫЕ О ЖИВОТНЫХ ===== -->
+    <div class="section">
+        <div class="section-title">🐄 Данные о животных <span class="badge">подвергнутых мероприятию</span></div>
+
+        <div class="form-grid">
+            <div class="field">
+                <label>Вид животных</label>
+                <select id="animalSpecies">
+                    <option value="КРС">Крупный рогатый скот (КРС)</option>
+                    <option value="МРС">Мелкий рогатый скот (МРС)</option>
+                    <option value="Свиньи">Свиньи</option>
+                    <option value="Лошади">Лошади</option>
+                    <option value="Собаки">Собаки</option>
+                    <option value="Кошки">Кошки</option>
+                    <option value="Птица">Птица</option>
+                    <option value="Другое">Другое</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Количество голов</label>
+                <input type="number" id="animalCount" placeholder="50" />
+            </div>
+            <div class="field">
+                <label>Возрастная группа</label>
+                <input type="text" id="ageGroup" placeholder="Взрослые / молодняк / поросята" />
+            </div>
+            <div class="field full-width">
+                <label>Инвентарные номера (или иная идентификация)</label>
+                <textarea id="animalIds" rows="1" placeholder="1234, 1235, 1236... или поименный список в приложении"></textarea>
+            </div>
+            <div class="field full-width">
+                <label>Клинический осмотр перед мероприятием</label>
+                <textarea id="preExam" rows="1" placeholder="Животные клинически здоровы / выявлены отклонения (указать)"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 3. СОСТАВ КОМИССИИ ===== -->
+    <div class="section">
+        <div class="section-title">👨‍⚕️ Состав комиссии <span class="badge">проводившие и присутствовавшие</span></div>
+
+        <div class="param-card" data-param="commission">
+            <div class="param-header">
+                <span class="param-name">Председатель комиссии</span>
+                <select class="param-select" data-target="commission">
+                    <option value="veterinarian">Ветеринарный врач</option>
+                    <option value="paravet">Ветеринарный фельдшер</option>
+                    <option value="inspector">Госветинспектор</option>
+                    <option value="other">Иное</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="commission">
+                <div class="field"><label>Должность</label><textarea rows="1" placeholder="Главный ветеринарный врач"></textarea></div>
+                <div class="field"><label>ФИО</label><textarea rows="1" placeholder="Иванов И.И."></textarea></div>
+            </div>
+        </div>
+
+        <div class="param-card" data-param="members">
+            <div class="param-header">
+                <span class="param-name">Члены комиссии</span>
+                <select class="param-select" data-target="members">
+                    <option value="veterinarian">Ветеринарный врач</option>
+                    <option value="paravet">Ветеринарный фельдшер</option>
+                    <option value="owner">Представитель владельца</option>
+                    <option value="other">Иное</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="members">
+                <div class="field"><label>Члены комиссии</label><textarea rows="2" placeholder="1. Петров П.П. — ветеринарный врач\n2. Сидорова С.С. — фельдшер\n3. Представитель хозяйства"></textarea></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 4. ПРОВЕДЁННОЕ МЕРОПРИЯТИЕ ===== -->
+    <div class="section">
+        <div class="section-title">💊 Проведённое мероприятие <span class="badge">препараты и процедуры</span></div>
+
+        <!-- Блок для вакцинации / дегельминтизации -->
+        <div class="param-card" id="drugBlock" data-param="drug">
+            <div class="param-header">
+                <span class="param-name">Препарат (для вакцинации и дегельминтизации)</span>
+                <select class="param-select" data-target="drug">
+                    <option value="vaccine">Вакцина</option>
+                    <option value="anthelmintic">Антигельминтик</option>
+                    <option value="other_drug">Другой препарат</option>
+                    <option value="not_applicable">Не применимо</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="drug">
+                <div class="field"><label>Название препарата</label><textarea rows="1" placeholder="Вакцина против сибирской язвы (Су-Са)"></textarea></div>
+                <div class="field"><label>Производитель</label><textarea rows="1" placeholder="ФГБУ «ВНИИЗЖ»"></textarea></div>
+                <div class="field"><label>Серия</label><textarea rows="1" placeholder="№ 123"></textarea></div>
+                <div class="field"><label>Госконтроль / Сертификат</label><textarea rows="1" placeholder="№ 456 от 01.01.2026"></textarea></div>
+                <div class="field"><label>Срок годности</label><textarea rows="1" placeholder="до 01.01.2027"></textarea></div>
+                <div class="field"><label>Способ введения</label><textarea rows="1" placeholder="Внутримышечно / подкожно / перорально / внутрикожно"></textarea></div>
+                <div class="field"><label>Доза на животное</label><textarea rows="1" placeholder="2 мл"></textarea></div>
+                <div class="field"><label>Общее количество</label><textarea rows="1" placeholder="Израсходовано 150 мл (для 75 голов)"></textarea></div>
+                <div class="field"><label>Обработка места инъекции</label><textarea rows="1" placeholder="70% спирт, антисептик"></textarea></div>
+            </div>
+        </div>
+
+        <!-- Блок для аллергических исследований -->
+        <div class="param-card" id="allergenBlock" data-param="allergen">
+            <div class="param-header">
+                <span class="param-name">Аллерген (для туберкулинизации / маллеинизации)</span>
+                <select class="param-select" data-target="allergen">
+                    <option value="tuberculin">Туберкулин</option>
+                    <option value="mallein">Маллеин</option>
+                    <option value="other_allergen">Другой аллерген</option>
+                    <option value="not_applicable">Не применимо</option>
+                </select>
+            </div>
+            <div class="param-details" data-param="allergen">
+                <div class="field"><label>Название аллергена</label><textarea rows="1" placeholder="Туберкулин очищенный (ППД)"></textarea></div>
+                <div class="field"><label>Производитель</label><textarea rows="1" placeholder="ФГБУ «ВНИИЗЖ»"></textarea></div>
+                <div class="field"><label>Серия</label><textarea rows="1" placeholder="№ 789"></textarea></div>
+                <div class="field"><label>Госконтроль</label><textarea rows="1" placeholder="№ 012"></textarea></div>
+                <div class="field"><label>Срок годности</label><textarea rows="1" placeholder="до 01.01.2027"></textarea></div>
+                <div class="field"><label>Способ введения</label><textarea rows="1" placeholder="Внутрикожно (в складку кожи)"></textarea></div>
+                <div class="field"><label>Доза на животное</label><textarea rows="1" placeholder="0.2 мл"></textarea></div>
+                <div class="field"><label>Время учёта реакции</label><textarea rows="1" placeholder="Через 48-72 часа"></textarea></div>
+                <div class="field"><label>Результаты учёта</label><textarea rows="1" placeholder="Положительных: 0, сомнительных: 0, отрицательных: 75, не исследовано: 0"></textarea></div>
+                <div class="field"><label>Приложение</label><textarea rows="1" placeholder="Ведомость учёта животных и результатов (прилагается)"></textarea></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== 5. ДОПОЛНИТЕЛЬНАЯ ИНФОРМАЦИЯ ===== -->
+    <div class="section">
+        <div class="section-title">📝 Дополнительная информация <span class="badge">замечания и приложения</span></div>
+
+        <div class="field full-width">
+            <label>Приложения к акту</label>
+            <textarea id="attachments" rows="2" placeholder="1. Ведомость учёта животных, подвергнутых вакцинации\n2. Список животных с инвентарными номерами"></textarea>
+        </div>
+        <div class="field full-width">
+            <label>Отметка о внесении в журнал</label>
+            <input type="text" id="journalNote" placeholder="Данные внесены в журнал противоэпизоотических мероприятий № ___" />
+        </div>
+        <div class="field full-width">
+            <label>Особые отметки / Замечания</label>
+            <textarea id="remarks" rows="2" placeholder="Животные с отклонениями (указать номера и причину)"></textarea>
+        </div>
+    </div>
+
+    <!-- ===== 6. ЗАКЛЮЧЕНИЕ И ПОДПИСИ ===== -->
+    <div class="section">
+        <div class="section-title">✍️ Заключение и подписи</div>
+
+        <div class="field full-width">
+            <label>Заключение комиссии</label>
+            <textarea id="conclusion" rows="2" placeholder="Мероприятие проведено в соответствии с планом. Препарат применён в соответствии с инструкцией. Мероприятие признано выполненным."></textarea>
+        </div>
+        <div class="field full-width" style="margin-top:8px;">
+            <label>Подписи членов комиссии</label>
+            <textarea id="signatures" rows="3" placeholder="Председатель комиссии: ______________ / Иванов И.И. /\nЧлены комиссии: ______________ / Петров П.П. /\n______________ / Сидорова С.С. /\nПредставитель владельца: ______________ / Смирнов А.В. /"></textarea>
+        </div>
+    </div>
+
+    <!-- ===== ДЕЙСТВИЯ ===== -->
+    <div class="actions no-print">
+        <button class="btn btn-primary" id="resetBtn">🔄 Очистить</button>
+        <button class="btn btn-success" id="printBtn">🖨️ Печать</button>
+        <button class="btn btn-outline" id="exportBtn">📤 Экспорт HTML</button>
+        <button class="btn btn-outline" id="fillExampleBtn">📂 Заполнить пример</button>
+    </div>
+
+    <div style="margin-top:16px; text-align:center; font-size:0.75rem; color:#8A9B7A; border-top:1px solid #f0ebe3; padding-top:14px;">
+        © ВетСим — ветеринарное просвещение · Акт противоэпизоотического мероприятия
+    </div>
+</div>
+
+<script>
+    // ================================================================
+    //  АКТ ПРОТИВОЭПИЗООТИЧЕСКОГО МЕРОПРИЯТИЯ — ЛОГИКА
+    // ================================================================
+
+        // ===== ДАННЫЕ ПРИМЕРА (ИСПРАВЛЕННЫЕ) =====
+    const EXAMPLE = {
+        eventName: 'Вакцинация против сибирской язвы',
+        actNumber: '12',
+        actDate: '2026-08-24',
+        location: 'г. Краснодар',
+        farm: 'КФХ «Заря»',
+        farmAddress: 'Краснодарский край, Динской р-н, ул. Колхозная, д. 5',
+        animalSpecies: 'КРС',
+        animalCount: '75',
+        ageGroup: 'Взрослые (от 1 года)',
+        animalIds: 'Инвентарные номера: 101-175 (поименная ведомость прилагается)',
+        preExam: 'Животные клинически здоровы, температура в норме (38.0-39.2°C)',
+        commission: {
+            status: 'veterinarian',
+            details: ['Должность: Главный ветеринарный врач', 'ФИО: Иванов И.И.']
+        },
+        members: {
+            status: 'veterinarian',
+            details: ['1. Петров П.П. — ветеринарный врач', '2. Сидорова С.С. — ветеринарный фельдшер', '3. Смирнов А.В. — представитель владельца']
+        },
+        drug: {
+            status: 'vaccine',
+            details: [
+                'Название: Вакцина против сибирской язвы животных из штамма 55-ВНИИВВиМ (живая сухая)',
+                'Производитель: ФГБУ «ВНИИВВиМ» (ВНИИ ветеринарной вирусологии и микробиологии)',
+                'Серия: № 456',
+                'Госконтроль: № 789 от 01.06.2026',
+                'Срок годности: до 01.06.2028',
+                'Способ введения: Подкожно (в область средней трети шеи)',
+                'Доза: 2 см³ (по инструкции для КРС)',
+                'Общее количество: 150 см³ (на 75 голов)',
+                'Обработка места инъекции: 70% этиловый спирт'
+            ]
+        },
+        allergen: {
+            status: 'not_applicable',
+            details: []
+        },
+        attachments: '1. Ведомость учёта животных, подвергнутых вакцинации (на 2 листах)\n2. Акт на списание израсходованных препаратов',
+        journalNote: 'Данные внесены в журнал противоэпизоотических мероприятий № 5, запись № 128',
+        remarks: 'Животные с отклонениями не выявлены. Вакцинация прошла без осложнений.',
+        conclusion: 'Мероприятие проведено в соответствии с планом противоэпизоотических мероприятий на 2026 год. Вакцина применена в соответствии с наставлением по применению. Животные клинически здоровы. Мероприятие признано выполненным.',
+        signatures: 'Председатель комиссии: ______________ / Иванов И.И. /\nЧлены комиссии: ______________ / Петров П.П. /\n______________ / Сидорова С.С. /\nПредставитель владельца: ______________ / Смирнов А.В. /'
+    };
+
+    // ===== DOM-СВЯЗИ =====
+    const fields = {
+        eventName: document.getElementById('eventName'),
+        actNumber: document.getElementById('actNumber'),
+        actDate: document.getElementById('actDate'),
+        location: document.getElementById('location'),
+        farm: document.getElementById('farm'),
+        farmAddress: document.getElementById('farmAddress'),
+        animalSpecies: document.getElementById('animalSpecies'),
+        animalCount: document.getElementById('animalCount'),
+        ageGroup: document.getElementById('ageGroup'),
+        animalIds: document.getElementById('animalIds'),
+        preExam: document.getElementById('preExam'),
+        attachments: document.getElementById('attachments'),
+        journalNote: document.getElementById('journalNote'),
+        remarks: document.getElementById('remarks'),
+        conclusion: document.getElementById('conclusion'),
+        signatures: document.getElementById('signatures')
+    };
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    function init() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('currentDate').textContent = dateStr;
+
+        // Устанавливаем сегодняшнюю дату в поле date
+        const today = now.toISOString().slice(0, 10);
+        document.getElementById('actDate').value = today;
+
+        // Обработчики для select параметров
+        document.querySelectorAll('.param-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const target = this.dataset.target;
+                const details = document.querySelector(`.param-details[data-param="${target}"]`);
+                if (details) {
+                    const isOpen = this.value !== 'normal' && this.value !== 'none' &&
+                                  this.value !== 'not_applicable' && this.value !== 'not_evaluated';
+                    details.classList.toggle('open', isOpen);
+                }
+            });
+        });
+
+        // Переключение типа мероприятия
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                updateBlocks(this.dataset.type);
+            });
+        });
+
+        // Кнопки
+        document.getElementById('printBtn').addEventListener('click', () => window.print());
+        document.getElementById('resetBtn').addEventListener('click', resetForm);
+        document.getElementById('exportBtn').addEventListener('click', exportHTML);
+        document.getElementById('fillExampleBtn').addEventListener('click', fillExample);
+
+        loadState();
+    }
+
+    // ===== ОБНОВЛЕНИЕ БЛОКОВ =====
+    function updateBlocks(type) {
+        const drugBlock = document.getElementById('drugBlock');
+        const allergenBlock = document.getElementById('allergenBlock');
+
+        // Показываем/скрываем блоки в зависимости от типа
+        if (type === 'vaccination' || type === 'deworming' || type === 'other') {
+            drugBlock.style.display = 'block';
+            allergenBlock.style.display = 'none';
+            // Обновляем название
+            const drugLabel = drugBlock.querySelector('.param-name');
+            if (type === 'deworming') drugLabel.textContent = 'Антигельминтик (для дегельминтизации)';
+            else if (type === 'vaccination') drugLabel.textContent = 'Вакцина (для вакцинации)';
+            else drugLabel.textContent = 'Препарат';
+        } else if (type === 'tuberculinization') {
+            drugBlock.style.display = 'none';
+            allergenBlock.style.display = 'block';
+        }
+    }
+
+    // ===== ЗАПОЛНЕНИЕ ПРИМЕРОМ =====
+    function fillExample() {
+        if (!confirm('Заполнить форму примером?')) return;
+
+        Object.keys(fields).forEach(key => {
+            if (fields[key] && EXAMPLE[key] !== undefined) {
+                fields[key].value = EXAMPLE[key];
+            }
+        });
+
+        // Параметры комиссии
+        const commissionSelect = document.querySelector('.param-select[data-target="commission"]');
+        const commissionDetails = document.querySelector('.param-details[data-param="commission"]');
+        if (commissionSelect) commissionSelect.value = EXAMPLE.commission.status || 'veterinarian';
+        if (commissionDetails && EXAMPLE.commission.details) {
+            const textareas = commissionDetails.querySelectorAll('textarea');
+            textareas.forEach((ta, idx) => {
+                if (idx < EXAMPLE.commission.details.length) {
+                    ta.value = EXAMPLE.commission.details[idx];
+                }
+            });
+            commissionDetails.classList.toggle('open', EXAMPLE.commission.status !== 'normal');
+        }
+
+        // Члены комиссии
+        const membersSelect = document.querySelector('.param-select[data-target="members"]');
+        const membersDetails = document.querySelector('.param-details[data-param="members"]');
+        if (membersSelect) membersSelect.value = EXAMPLE.members.status || 'veterinarian';
+        if (membersDetails && EXAMPLE.members.details) {
+            const textareas = membersDetails.querySelectorAll('textarea');
+            textareas.forEach((ta, idx) => {
+                if (idx < EXAMPLE.members.details.length) {
+                    ta.value = EXAMPLE.members.details[idx];
+                }
+            });
+            membersDetails.classList.toggle('open', EXAMPLE.members.status !== 'normal');
+        }
+
+        // Препарат
+        const drugSelect = document.querySelector('.param-select[data-target="drug"]');
+        const drugDetails = document.querySelector('.param-details[data-param="drug"]');
+        if (drugSelect) drugSelect.value = EXAMPLE.drug.status || 'vaccine';
+        if (drugDetails && EXAMPLE.drug.details) {
+            const textareas = drugDetails.querySelectorAll('textarea');
+            textareas.forEach((ta, idx) => {
+                if (idx < EXAMPLE.drug.details.length) {
+                    ta.value = EXAMPLE.drug.details[idx];
+                }
+            });
+            drugDetails.classList.toggle('open', EXAMPLE.drug.status !== 'not_applicable');
+        }
+
+        // Аллерген
+        const allergenSelect = document.querySelector('.param-select[data-target="allergen"]');
+        const allergenDetails = document.querySelector('.param-details[data-param="allergen"]');
+        if (allergenSelect) allergenSelect.value = EXAMPLE.allergen.status || 'not_applicable';
+        if (allergenDetails && EXAMPLE.allergen.details) {
+            const textareas = allergenDetails.querySelectorAll('textarea');
+            textareas.forEach((ta, idx) => {
+                if (idx < EXAMPLE.allergen.details.length) {
+                    ta.value = EXAMPLE.allergen.details[idx];
+                }
+            });
+            allergenDetails.classList.toggle('open', EXAMPLE.allergen.status !== 'not_applicable');
+        }
+
+        saveState();
+        showToast('✅ Пример загружен');
+    }
+
+    // ===== СБРОС =====
+    function resetForm() {
+        if (!confirm('Очистить все поля?')) return;
+
+        Object.values(fields).forEach(field => {
+            if (field.tagName === 'SELECT') field.selectedIndex = 0;
+            else field.value = '';
+        });
+
+        document.querySelectorAll('.param-select').forEach(select => {
+            select.value = 'normal';
+            const details = document.querySelector(`.param-details[data-param="${select.dataset.target}"]`);
+            if (details) {
+                details.querySelectorAll('textarea').forEach(ta => ta.value = '');
+                details.classList.remove('open');
+            }
+        });
+
+        document.getElementById('actDate').value = new Date().toISOString().slice(0, 10);
+
+        saveState();
+        showToast('🔄 Форма очищена');
+    }
+
+    // ===== ЭКСПОРТ HTML =====
+    function exportHTML() {
+        saveState();
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([`<!DOCTYPE html>\n${htmlContent}`], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `act_epizootic_${new Date().toISOString().slice(0,10)}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 Акт экспортирован');
+    }
+
+    // ===== СОХРАНЕНИЕ =====
+    function saveState() {
+        try {
+            const data = { fields: {}, params: {} };
+
+            Object.keys(fields).forEach(key => {
+                data.fields[key] = fields[key].value;
+            });
+
+            document.querySelectorAll('.param-card').forEach(card => {
+                const param = card.dataset.param;
+                const select = card.querySelector('.param-select');
+                const details = card.querySelector('.param-details');
+                const textareas = details ? details.querySelectorAll('textarea') : [];
+                const texts = [];
+                textareas.forEach(ta => texts.push(ta.value));
+                data.params[param] = {
+                    status: select ? select.value : 'normal',
+                    details: texts
+                };
+            });
+
+            localStorage.setItem('vetsim_epizootic_act', JSON.stringify(data));
+        } catch (e) {}
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem('vetsim_epizootic_act');
+            if (!raw) return;
+            const data = JSON.parse(raw);
+
+            if (data.fields) {
+                Object.keys(data.fields).forEach(key => {
+                    if (fields[key]) fields[key].value = data.fields[key];
+                });
+            }
+
+            if (data.params) {
+                Object.keys(data.params).forEach(param => {
+                    const pData = data.params[param];
+                    const select = document.querySelector(`.param-select[data-target="${param}"]`);
+                    const details = document.querySelector(`.param-details[data-param="${param}"]`);
+                    if (select) select.value = pData.status || 'normal';
+                    if (details && pData.details) {
+                        const textareas = details.querySelectorAll('textarea');
+                        textareas.forEach((ta, idx) => {
+                            if (idx < pData.details.length) {
+                                ta.value = pData.details[idx];
+                            }
+                        });
+                        const isOpen = pData.status !== 'normal' && pData.status !== 'none' &&
+                                      pData.status !== 'not_applicable' && pData.status !== 'not_evaluated';
+                        details.classList.toggle('open', isOpen);
+                    }
+                });
+            }
+        } catch (e) {}
+    }
+
+    // ===== TOAST =====
+    function showToast(msg) {
+        const existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = msg;
+        Object.assign(toast.style, {
+            position: 'fixed',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#1F4E6E',
+            color: 'white',
+            padding: '10px 24px',
+            borderRadius: '40px',
+            fontWeight: '600',
+            fontSize: '0.85rem',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+            zIndex: '2000',
+            maxWidth: '90%',
+            textAlign: 'center',
+            opacity: '0',
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none'
+        });
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.style.opacity = '1');
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+
+    // ===== ЗАПУСК =====
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

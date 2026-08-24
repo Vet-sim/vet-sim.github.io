@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Протокол УЗИ брюшной полости · ВетСим</title>
+    <style>
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #F4F7F9;
+            color: #1A2A3A;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            padding: 32px 36px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E7EDE2;
+            margin-bottom: 20px;
+        }
+        .header .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .meta {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #5F7C62;
+        }
+
+        /* ===== ОБЩИЕ ПОЛЯ ===== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 24px;
+            margin-bottom: 20px;
+        }
+        .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .field label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #5F7C62;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .field input,
+        .field select,
+        .field textarea {
+            padding: 8px 14px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FEFAF2;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.15s;
+            width: 100%;
+        }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
+        }
+        .field textarea {
+            resize: vertical;
+            min-height: 50px;
+        }
+
+        /* ===== РАЗДЕЛЫ ===== */
+        .section {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0ebe3;
+        }
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        .section-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .badge {
+            font-size: 0.6rem;
+            background: #E7EDE2;
+            color: #5F7C62;
+            padding: 0 10px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        /* ===== ОРГАНЫ (карточки описания) ===== */
+        .organ-card {
+            background: #F9FBF8;
+            border-radius: 1rem;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-left: 4px solid #A3B18A;
+        }
+        .organ-card .organ-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .organ-card .organ-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #1A2A3A;
+        }
+        .organ-card .organ-select {
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            border: 1px solid #D9D0BD;
+            border-radius: 40px;
+            background: white;
+            font-family: inherit;
+            outline: none;
+        }
+        .organ-card .organ-select:focus {
+            border-color: #2C7DA0;
+        }
+        .organ-card .organ-details {
+            display: none;
+            margin-top: 8px;
+        }
+        .organ-card .organ-details.open {
+            display: block;
+        }
+        .organ-details .field {
+            margin-bottom: 6px;
+        }
+        .organ-details .field label {
+            font-size: 0.7rem;
+        }
+        .organ-details .field textarea {
+            min-height: 40px;
+            font-size: 0.85rem;
+            padding: 6px 12px;
+        }
+
+        /* ===== КНОПКИ ===== */
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #E7EDE2;
+            justify-content: center;
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 20px 24px;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .organ-card .organ-select {
+                border: none;
+                background: transparent;
+                padding: 0;
+                font-weight: 600;
+            }
+            .organ-details .field textarea {
+                border: none;
+                background: transparent;
+                padding: 0;
+                min-height: auto;
+                resize: none;
+            }
+            .organ-details .field textarea:focus {
+                box-shadow: none;
+            }
+            .organ-card {
+                border-left-color: #6B9E6B;
+                background: transparent;
+                padding: 6px 0;
+                margin-bottom: 4px;
+            }
+            .section {
+                page-break-inside: avoid;
+            }
+            .section-title .badge {
+                display: none;
+            }
+            .form-grid .field input,
+            .form-grid .field select {
+                border: none;
+                background: transparent;
+                padding: 2px 0;
+                font-weight: 600;
+            }
+            .field textarea {
+                border: none;
+                background: transparent;
+                padding: 2px 0;
+            }
+            .field label {
+                font-size: 0.65rem;
+            }
+            .header .meta {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            .container { padding: 16px; }
+            .form-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: stretch; }
+            .header .meta { text-align: left; }
+        }
+        @media (max-width: 420px) {
+            .container { padding: 12px; }
+            .organ-card { padding: 10px 12px; }
+            .organ-card .organ-header { flex-direction: column; align-items: stretch; }
+            .actions .btn { flex: 1; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <!-- ===== ШАПКА ===== -->
+    <header class="header">
+        <div class="logo">🐾 <span class="gradient">ВетСим</span> · Протокол УЗИ</div>
+        <div class="meta">
+            <div id="dateDisplay">Дата: <span id="currentDate"></span></div>
+            <div style="font-size:0.75rem; color:#8A9B7A;">v.1.0 · Брюшная полость</div>
+        </div>
+    </header>
+
+    <!-- ===== ДАННЫЕ ПАЦИЕНТА ===== -->
+    <div class="form-grid">
+        <div class="field">
+            <label>Владелец</label>
+            <input type="text" id="owner" placeholder="Иванов И.И." />
+        </div>
+        <div class="field">
+            <label>Пациент (кличка)</label>
+            <input type="text" id="patientName" placeholder="Рекс" />
+        </div>
+        <div class="field">
+            <label>Вид</label>
+            <select id="species">
+                <option value="Собака">Собака</option>
+                <option value="Кошка">Кошка</option>
+                <option value="Другое">Другое</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Порода</label>
+            <input type="text" id="breed" placeholder="Лабрадор" />
+        </div>
+        <div class="field">
+            <label>Возраст</label>
+            <input type="text" id="age" placeholder="5 лет" />
+        </div>
+        <div class="field">
+            <label>Пол / Кастрация</label>
+            <select id="sex">
+                <option value="Кобель/Кот (целый)">Кобель/Кот (целый)</option>
+                <option value="Кобель/Кот (кастрированный)">Кобель/Кот (кастрированный)</option>
+                <option value="Сука/Кошка (целая)">Сука/Кошка (целая)</option>
+                <option value="Сука/Кошка (стерилизованная)">Сука/Кошка (стерилизованная)</option>
+            </select>
+        </div>
+        <div class="field full-width">
+            <label>Вес (кг)</label>
+            <input type="text" id="weight" placeholder="32" />
+        </div>
+        <div class="field full-width">
+            <label>Причина исследования / Анамнез</label>
+            <textarea id="reason" rows="2" placeholder="Рвота, потеря аппетита, подозрение на инородное тело..."></textarea>
+        </div>
+    </div>
+
+    <!-- ===== ОРГАНЫ ===== -->
+    <div class="section">
+        <div class="section-title">🔬 Описание органов <span class="badge">по системе SPEEDS</span></div>
+
+        <!-- 1. Печень и желчный пузырь -->
+        <div class="organ-card" data-organ="liver">
+            <div class="organ-header">
+                <span class="organ-name">1. Печень и желчный пузырь</span>
+                <select class="organ-select" data-target="liver">
+                    <option value="normal">Норма</option>
+                    <option value="diffuse">Диффузные изменения</option>
+                    <option value="focal">Очаговые изменения</option>
+                    <option value="not_visualized">Не визуализируется</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="liver">
+                <div class="field"><label>Размер, контур</label><textarea rows="1" placeholder="Увеличен/норма, ровный/неровный"></textarea></div>
+                <div class="field"><label>Эхогенность, эхоструктура</label><textarea rows="1" placeholder="Гипер/гипо/нормоэхогенная, однородная/неоднородная"></textarea></div>
+                <div class="field"><label>Дополнительно</label><textarea rows="1" placeholder="Желчный пузырь: стенка, содержимое, холелиты"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 2. Селезёнка -->
+        <div class="organ-card" data-organ="spleen">
+            <div class="organ-header">
+                <span class="organ-name">2. Селезёнка</span>
+                <select class="organ-select" data-target="spleen">
+                    <option value="normal">Норма</option>
+                    <option value="diffuse">Диффузные изменения</option>
+                    <option value="focal">Очаговые изменения</option>
+                    <option value="not_visualized">Не визуализируется</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="spleen">
+                <div class="field"><label>Размер, контур</label><textarea rows="1" placeholder="Норма/увеличен, ровный/бугристый"></textarea></div>
+                <div class="field"><label>Эхогенность, эхоструктура</label><textarea rows="1" placeholder="Нормальная/изменена, однородная/неоднородная"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 3. Поджелудочная железа -->
+        <div class="organ-card" data-organ="pancreas">
+            <div class="organ-header">
+                <span class="organ-name">3. Поджелудочная железа</span>
+                <select class="organ-select" data-target="pancreas">
+                    <option value="normal">Норма</option>
+                    <option value="diffuse">Диффузные изменения</option>
+                    <option value="focal">Очаговые изменения</option>
+                    <option value="not_visualized">Не визуализируется</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="pancreas">
+                <div class="field"><label>Размер, контур</label><textarea rows="1" placeholder="Норма/увеличен, чёткий/нечёткий"></textarea></div>
+                <div class="field"><label>Эхогенность, эхоструктура</label><textarea rows="1" placeholder="Гипер/гипо/нормоэхогенная, однородная/неоднородная"></textarea></div>
+                <div class="field"><label>Проток, перипанкреатическая клетчатка</label><textarea rows="1" placeholder="Проток не расширен, клетчатка без изменений"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 4. Желудочно-кишечный тракт -->
+        <div class="organ-card" data-organ="gi">
+            <div class="organ-header">
+                <span class="organ-name">4. Желудочно-кишечный тракт</span>
+                <select class="organ-select" data-target="gi">
+                    <option value="normal">Норма</option>
+                    <option value="diffuse">Диффузные изменения</option>
+                    <option value="focal">Очаговые изменения</option>
+                    <option value="not_visualized">Не визуализируется</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="gi">
+                <div class="field"><label>Желудок</label><textarea rows="1" placeholder="Стенка, содержимое, перистальтика"></textarea></div>
+                <div class="field"><label>Тонкий кишечник</label><textarea rows="1" placeholder="Толщина стенки, слоистость, перистальтика"></textarea></div>
+                <div class="field"><label>Толстый кишечник</label><textarea rows="1" placeholder="Толщина стенки, слоистость, содержимое"></textarea></div>
+                <div class="field"><label>Илеоцекальный угол</label><textarea rows="1" placeholder="Структура, проходимость"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 5. Почки -->
+        <div class="organ-card" data-organ="kidneys">
+            <div class="organ-header">
+                <span class="organ-name">5. Почки</span>
+                <select class="organ-select" data-target="kidneys">
+                    <option value="normal">Норма</option>
+                    <option value="diffuse">Диффузные изменения</option>
+                    <option value="focal">Очаговые изменения</option>
+                    <option value="not_visualized">Не визуализируются</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="kidneys">
+                <div class="field"><label>Правая почка</label><textarea rows="1" placeholder="Размер (длина/ширина), кортико-медуллярная дифференциация, лоханка"></textarea></div>
+                <div class="field"><label>Левая почка</label><textarea rows="1" placeholder="Размер (длина/ширина), кортико-медуллярная дифференциация, лоханка"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 6. Надпочечники -->
+        <div class="organ-card" data-organ="adrenals">
+            <div class="organ-header">
+                <span class="organ-name">6. Надпочечники</span>
+                <select class="organ-select" data-target="adrenals">
+                    <option value="normal">Норма</option>
+                    <option value="enlarged">Увеличены</option>
+                    <option value="focal">Очаговые изменения</option>
+                    <option value="not_visualized">Не визуализируются</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="adrenals">
+                <div class="field"><label>Правый надпочечник</label><textarea rows="1" placeholder="Размер, эхогенность, форма"></textarea></div>
+                <div class="field"><label>Левый надпочечник</label><textarea rows="1" placeholder="Размер, эхогенность, форма"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 7. Мочевой пузырь и уретра -->
+        <div class="organ-card" data-organ="bladder">
+            <div class="organ-header">
+                <span class="organ-name">7. Мочевой пузырь и уретра</span>
+                <select class="organ-select" data-target="bladder">
+                    <option value="normal">Норма</option>
+                    <option value="wall">Изменения стенки</option>
+                    <option value="content">Изменения содержимого</option>
+                    <option value="not_visualized">Не визуализируется</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="bladder">
+                <div class="field"><label>Стенка мочевого пузыря</label><textarea rows="1" placeholder="Толщина, слоистость, контур"></textarea></div>
+                <div class="field"><label>Содержимое</label><textarea rows="1" placeholder="Анехогенное, взвесь, конкременты"></textarea></div>
+                <div class="field"><label>Уретра</label><textarea rows="1" placeholder="Просвет, стенка"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 8. Лимфатические узлы -->
+        <div class="organ-card" data-organ="lymph">
+            <div class="organ-header">
+                <span class="organ-name">8. Лимфатические узлы</span>
+                <select class="organ-select" data-target="lymph">
+                    <option value="normal">Норма</option>
+                    <option value="enlarged">Увеличены</option>
+                    <option value="not_visualized">Не визуализируются</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="lymph">
+                <div class="field"><label>Мезентериальные ЛУ</label><textarea rows="1" placeholder="Размер, эхогенность, структура"></textarea></div>
+                <div class="field"><label>Медиальные подвздошные ЛУ</label><textarea rows="1" placeholder="Размер, эхогенность, структура"></textarea></div>
+                <div class="field"><label>Другие ЛУ</label><textarea rows="1" placeholder="Печёночные, желудочные и др."></textarea></div>
+            </div>
+        </div>
+
+        <!-- 9. Репродуктивные органы -->
+        <div class="organ-card" data-organ="repro">
+            <div class="organ-header">
+                <span class="organ-name">9. Репродуктивные органы</span>
+                <select class="organ-select" data-target="repro">
+                    <option value="normal">Норма</option>
+                    <option value="changed">Изменения</option>
+                    <option value="not_visualized">Не визуализируются</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="repro">
+                <div class="field"><label>Матка / Простата</label><textarea rows="1" placeholder="Размер, эхогенность, структура"></textarea></div>
+                <div class="field"><label>Яичники / Семенники</label><textarea rows="1" placeholder="Размер, эхогенность, структура"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 10. Аорта и каудальная полая вена -->
+        <div class="organ-card" data-organ="vessels">
+            <div class="organ-header">
+                <span class="organ-name">10. Аорта и каудальная полая вена</span>
+                <select class="organ-select" data-target="vessels">
+                    <option value="normal">Норма</option>
+                    <option value="changed">Изменения</option>
+                    <option value="not_visualized">Не визуализируется</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="vessels">
+                <div class="field"><label>Аорта</label><textarea rows="1" placeholder="Диаметр, стенка, кровоток (при ЦДК)"></textarea></div>
+                <div class="field"><label>Каудальная полая вена</label><textarea rows="1" placeholder="Диаметр, стенка, кровоток (при ЦДК)"></textarea></div>
+            </div>
+        </div>
+
+        <!-- 11. FAST-обследование -->
+        <div class="organ-card" data-organ="fast">
+            <div class="organ-header">
+                <span class="organ-name">11. FAST-обследование (жидкость, газ, пневмоторакс)</span>
+                <select class="organ-select" data-target="fast">
+                    <option value="normal">В норме</option>
+                    <option value="effusion">Жидкость</option>
+                    <option value="gas">Газ</option>
+                    <option value="changed">Другие изменения</option>
+                </select>
+            </div>
+            <div class="organ-details" data-organ="fast">
+                <div class="field"><label>Свободная жидкость</label><textarea rows="1" placeholder="Объём, локализация, эхогенность"></textarea></div>
+                <div class="field"><label>Газ / Пневмоторакс</label><textarea rows="1" placeholder="Наличие, локализация"></textarea></div>
+                <div class="field"><label>Другие находки</label><textarea rows="1" placeholder="Массы, новообразования и др."></textarea></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+    <div class="section">
+        <div class="section-title">📝 Заключение и рекомендации</div>
+        <div class="field">
+            <label>Заключение</label>
+            <textarea id="conclusion" rows="3" placeholder="Структурированное заключение по результатам УЗИ..."></textarea>
+        </div>
+        <div class="field" style="margin-top:8px;">
+            <label>Рекомендации</label>
+            <textarea id="recommendations" rows="2" placeholder="Дополнительные диагностические мероприятия, лечение, динамика..."></textarea>
+        </div>
+        <div class="field" style="margin-top:8px;">
+            <label>Врач УЗИ / Подпись</label>
+            <input type="text" id="doctor" placeholder="Иванов И.И." />
+        </div>
+    </div>
+
+    <!-- ===== ДЕЙСТВИЯ ===== -->
+    <div class="actions no-print">
+        <button class="btn btn-primary" id="resetBtn">🔄 Очистить</button>
+        <button class="btn btn-success" id="printBtn">🖨️ Печать</button>
+        <button class="btn btn-outline" id="exportBtn">📤 Экспорт HTML</button>
+        <button class="btn btn-outline" id="fillExampleBtn">📂 Заполнить пример</button>
+    </div>
+
+    <div style="margin-top:16px; text-align:center; font-size:0.75rem; color:#8A9B7A; border-top:1px solid #f0ebe3; padding-top:14px;">
+        © ВетСим — ветеринарное просвещение · Протокол УЗИ брюшной полости
+    </div>
+</div>
+
+<script>
+    // ================================================================
+    //  ПРОТОКОЛ УЗИ — ЛОГИКА
+    // ================================================================
+
+    // ===== ДАННЫЕ ПРИМЕРА =====
+    const EXAMPLE = {
+        owner: 'Петрова Е.В.',
+        patientName: 'Барон',
+        species: 'Собака',
+        breed: 'Немецкая овчарка',
+        age: '7 лет',
+        sex: 'Кобель (кастрированный)',
+        weight: '38',
+        reason: 'Периодическая рвота, снижение аппетита в течение 2 недель. При пальпации болезненность в краниальной части брюшной полости. Исключить инородное тело, гепатопатию.',
+        liver: { status: 'diffuse', details: ['Печень: незначительно увеличена, контур ровный. Эхогенность диффузно повышена, структура неоднородная. Внутрипечёночные сосуды не расширены. Желчный пузырь: стенка 1.5 мм, содержимое с мелкодисперсной взвесью, холелитов нет.'] },
+        spleen: { status: 'normal', details: ['Селезёнка: нормальных размеров (длина 13 см), контур ровный. Эхогенность нормальная, структура однородная.'] },
+        pancreas: { status: 'not_visualized', details: ['Поджелудочная железа: левая и правая доли не визуализируются, область без изменений.'] },
+        gi: { status: 'focal', details: ['Желудок: стенка 5 мм, слоистость сохранена. Содержимое с газом. Тонкий кишечник: стенка 3.5 мм, слоистость сохранена. Перистальтика активная. Толстый кишечник: стенка 2.5 мм, содержимое оформленное. Илеоцекальный угол не изменён.'] },
+        kidneys: { status: 'normal', details: ['Правая почка: длина 5.2 см, кортико-медуллярная дифференциация сохранена, лоханка не расширена. Левая почка: длина 5.4 см, кортико-медуллярная дифференциация сохранена, лоханка не расширена.'] },
+        adrenals: { status: 'normal', details: ['Правый надпочечник: 0.5×0.3 см, нормальной эхогенности. Левый надпочечник: 0.6×0.3 см, нормальной эхогенности.'] },
+        bladder: { status: 'normal', details: ['Мочевой пузырь: стенка 2 мм, контур ровный. Содержимое анехогенное, взвеси нет. Уретра не визуализируется.'] },
+        lymph: { status: 'normal', details: ['Мезентериальные лимфоузлы: размер до 0.4 см, эхогенность нормальная. Медиальные подвздошные: не визуализируются.'] },
+        repro: { status: 'not_visualized', details: ['Простата: не визуализируется (кастрирован).'] },
+        vessels: { status: 'normal', details: ['Аорта: диаметр 1.0 см, стенка не изменена. Каудальная полая вена: диаметр 0.8 см, не расширена.'] },
+        fast: { status: 'normal', details: ['Свободная жидкость в брюшной полости: не обнаружена. Газ в кишечнике в пределах нормы. Новообразований не выявлено.'] },
+        conclusion: 'УЗ-картина соответствует диффузной гепатопатии (предположительно жировой гепатоз). Признаков инородного тела и обструкции ЖКТ не выявлено. Рекомендовано: биохимический анализ крови (печёночные ферменты, билирубин), исследование на лептоспироз, диета с гепатопротекторами, контроль УЗИ через 2 недели.',
+        recommendations: 'Биохимический анализ крови, диета с гепатопротекторами, контроль УЗИ через 14 дней.',
+        doctor: 'Зуева Н.М.'
+    };
+
+    // ===== DOM-СВЯЗИ =====
+    const fields = {
+        owner: document.getElementById('owner'),
+        patientName: document.getElementById('patientName'),
+        species: document.getElementById('species'),
+        breed: document.getElementById('breed'),
+        age: document.getElementById('age'),
+        sex: document.getElementById('sex'),
+        weight: document.getElementById('weight'),
+        reason: document.getElementById('reason'),
+        conclusion: document.getElementById('conclusion'),
+        recommendations: document.getElementById('recommendations'),
+        doctor: document.getElementById('doctor')
+    };
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    function init() {
+        // Устанавливаем текущую дату
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        document.getElementById('currentDate').textContent = dateStr;
+
+        // Обработчики для select органов
+        document.querySelectorAll('.organ-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const target = this.dataset.target;
+                const details = document.querySelector(`.organ-details[data-organ="${target}"]`);
+                if (details) {
+                    details.classList.toggle('open', this.value !== 'normal');
+                }
+            });
+        });
+
+        // Кнопки
+        document.getElementById('printBtn').addEventListener('click', () => window.print());
+        document.getElementById('resetBtn').addEventListener('click', resetForm);
+        document.getElementById('exportBtn').addEventListener('click', exportHTML);
+        document.getElementById('fillExampleBtn').addEventListener('click', fillExample);
+
+        // Если есть сохранённые данные в localStorage — загружаем
+        loadState();
+    }
+
+    // ===== ЗАПОЛНЕНИЕ ПРИМЕРОМ =====
+    function fillExample() {
+        if (!confirm('Заполнить форму примером?')) return;
+
+        // Основные поля
+        fields.owner.value = EXAMPLE.owner;
+        fields.patientName.value = EXAMPLE.patientName;
+        fields.species.value = EXAMPLE.species;
+        fields.breed.value = EXAMPLE.breed;
+        fields.age.value = EXAMPLE.age;
+        fields.sex.value = EXAMPLE.sex;
+        fields.weight.value = EXAMPLE.weight;
+        fields.reason.value = EXAMPLE.reason;
+        fields.conclusion.value = EXAMPLE.conclusion;
+        fields.recommendations.value = EXAMPLE.recommendations;
+        fields.doctor.value = EXAMPLE.doctor;
+
+        // Описания органов
+        const organMap = {
+            liver: EXAMPLE.liver,
+            spleen: EXAMPLE.spleen,
+            pancreas: EXAMPLE.pancreas,
+            gi: EXAMPLE.gi,
+            kidneys: EXAMPLE.kidneys,
+            adrenals: EXAMPLE.adrenals,
+            bladder: EXAMPLE.bladder,
+            lymph: EXAMPLE.lymph,
+            repro: EXAMPLE.repro,
+            vessels: EXAMPLE.vessels,
+            fast: EXAMPLE.fast
+        };
+
+        Object.keys(organMap).forEach(key => {
+            const data = organMap[key];
+            const select = document.querySelector(`.organ-select[data-target="${key}"]`);
+            const details = document.querySelector(`.organ-details[data-organ="${key}"]`);
+            if (select) select.value = data.status;
+            if (details && data.details) {
+                const textareas = details.querySelectorAll('textarea');
+                textareas.forEach((ta, idx) => {
+                    if (idx < data.details.length) {
+                        ta.value = data.details[idx];
+                    }
+                });
+                details.classList.toggle('open', data.status !== 'normal');
+            }
+        });
+
+        saveState();
+        showToast('✅ Пример загружен');
+    }
+
+    // ===== СБРОС =====
+    function resetForm() {
+        if (!confirm('Очистить все поля?')) return;
+
+        // Основные поля
+        Object.values(fields).forEach(field => {
+            if (field.tagName === 'SELECT') field.selectedIndex = 0;
+            else field.value = '';
+        });
+
+        // Описания органов
+        document.querySelectorAll('.organ-select').forEach(select => {
+            select.value = 'normal';
+            const details = document.querySelector(`.organ-details[data-organ="${select.dataset.target}"]`);
+            if (details) {
+                details.querySelectorAll('textarea').forEach(ta => ta.value = '');
+                details.classList.remove('open');
+            }
+        });
+
+        saveState();
+        showToast('🔄 Форма очищена');
+    }
+
+    // ===== ЭКСПОРТ HTML =====
+    function exportHTML() {
+        saveState();
+        const htmlContent = document.documentElement.outerHTML;
+        const blob = new Blob([`<!DOCTYPE html>\n${htmlContent}`], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `protocol_uzi_${new Date().toISOString().slice(0,10)}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 Протокол экспортирован');
+    }
+
+    // ===== СОХРАНЕНИЕ В LOCALSTORAGE =====
+    function saveState() {
+        try {
+            const data = {
+                fields: {},
+                organs: {}
+            };
+
+            // Основные поля
+            Object.keys(fields).forEach(key => {
+                data.fields[key] = fields[key].value;
+            });
+
+            // Органы
+            document.querySelectorAll('.organ-card').forEach(card => {
+                const organ = card.dataset.organ;
+                const select = card.querySelector('.organ-select');
+                const details = card.querySelector('.organ-details');
+                const textareas = details ? details.querySelectorAll('textarea') : [];
+                const texts = [];
+                textareas.forEach(ta => texts.push(ta.value));
+                data.organs[organ] = {
+                    status: select ? select.value : 'normal',
+                    details: texts
+                };
+            });
+
+            localStorage.setItem('vetsim_uzi_protocol', JSON.stringify(data));
+        } catch (e) {}
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem('vetsim_uzi_protocol');
+            if (!raw) return;
+            const data = JSON.parse(raw);
+
+            // Основные поля
+            if (data.fields) {
+                Object.keys(data.fields).forEach(key => {
+                    if (fields[key]) fields[key].value = data.fields[key];
+                });
+            }
+
+            // Органы
+            if (data.organs) {
+                Object.keys(data.organs).forEach(organ => {
+                    const orgData = data.organs[organ];
+                    const select = document.querySelector(`.organ-select[data-target="${organ}"]`);
+                    const details = document.querySelector(`.organ-details[data-organ="${organ}"]`);
+                    if (select) select.value = orgData.status || 'normal';
+                    if (details && orgData.details) {
+                        const textareas = details.querySelectorAll('textarea');
+                        textareas.forEach((ta, idx) => {
+                            if (idx < orgData.details.length) {
+                                ta.value = orgData.details[idx];
+                            }
+                        });
+                        details.classList.toggle('open', orgData.status !== 'normal');
+                    }
+                });
+            }
+        } catch (e) {}
+    }
+
+    // ===== TOAST =====
+    function showToast(msg) {
+        const existing = document.querySelector('.toast-message');
+        if (existing) existing.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'toast-message';
+        toast.textContent = msg;
+        Object.assign(toast.style, {
+            position: 'fixed',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: '#1F4E6E',
+            color: 'white',
+            padding: '10px 24px',
+            borderRadius: '40px',
+            fontWeight: '600',
+            fontSize: '0.85rem',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+            zIndex: '2000',
+            maxWidth: '90%',
+            textAlign: 'center',
+            opacity: '0',
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none'
+        });
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.style.opacity = '1');
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+
+    // ===== ЗАПУСК =====
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

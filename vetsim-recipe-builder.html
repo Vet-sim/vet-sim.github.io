@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Фармакологическая рецептура · ВетСим</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+            background: #FDF8F0;
+            color: #1A2A3A;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 12px 24px;
+            border-radius: 1.5rem;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+        }
+
+        .header .logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .logo .sub {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #7B8D6E;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            font-size: 0.8rem;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-danger { background: #b13e3e; color: white; }
+        .btn-danger:hover { background: #8f2e2e; }
+        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-sm { padding: 3px 12px; font-size: 0.7rem; }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .tab-btn:hover { opacity: 0.85; }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 18px 22px;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #2C7DA0;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-bottom: 8px;
+        }
+        .field label {
+            font-weight: 600;
+            font-size: 0.65rem;
+            color: #5F7C62;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .field input,
+        .field select,
+        .field textarea {
+            padding: 6px 12px;
+            border: 1px solid #D9D0BD;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.82rem;
+            background: #FEFAF2;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.15s;
+            width: 100%;
+        }
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
+        }
+        .field textarea {
+            resize: vertical;
+            min-height: 36px;
+        }
+        .field-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 12px;
+            align-items: flex-end;
+        }
+        .field-row .field {
+            flex: 1;
+            min-width: 120px;
+            margin-bottom: 0;
+        }
+        .field-row .field-sm {
+            flex: 0.5;
+            min-width: 80px;
+        }
+
+        .task-item {
+            background: #F9FBF8;
+            border-radius: 1rem;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border-left: 4px solid #2C7DA0;
+        }
+        .task-item .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+        .task-item .task-header .task-num {
+            font-weight: 700;
+            color: #2C7DA0;
+            font-size: 0.78rem;
+        }
+        .task-item .task-text {
+            font-size: 0.85rem;
+            color: #3E5C4A;
+            margin-bottom: 4px;
+        }
+
+        .recipe-fields {
+            background: #F0F7FA;
+            padding: 14px 18px;
+            border-radius: 1rem;
+            border: 1px solid #D4E8F0;
+            margin: 6px 0 10px;
+        }
+        .recipe-fields .rp-line {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding: 4px 0;
+            border-bottom: 1px dashed #d4e8f0;
+        }
+        .recipe-fields .rp-line:last-child {
+            border-bottom: none;
+        }
+        .recipe-fields .rp-label {
+            font-weight: 700;
+            color: #1F4E6E;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            min-width: 30px;
+        }
+        .recipe-fields .rp-field {
+            flex: 1;
+            min-width: 80px;
+        }
+        .recipe-fields .rp-field select,
+        .recipe-fields .rp-field input {
+            width: 100%;
+            padding: 4px 10px;
+            border: 2px solid #D9D0BD;
+            border-radius: 0.8rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.82rem;
+            background: white;
+            outline: none;
+            transition: 0.15s;
+        }
+        .recipe-fields .rp-field select:focus,
+        .recipe-fields .rp-field input:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
+        }
+        .recipe-fields .rp-field select.correct,
+        .recipe-fields .rp-field input.correct {
+            border-color: #6B9E6B;
+            background: #E8F5E8;
+        }
+        .recipe-fields .rp-field select.wrong,
+        .recipe-fields .rp-field input.wrong {
+            border-color: #b13e3e;
+            background: #FDF0E8;
+        }
+        .recipe-fields .rp-field .placeholder-hint {
+            font-size: 0.65rem;
+            color: #8A9B7A;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .ingredient-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px dashed #e8edf0;
+        }
+        .ingredient-group .ing-label {
+            font-size: 0.7rem;
+            color: #5F7C62;
+            font-weight: 600;
+            min-width: 20px;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #E7EDE2;
+            border-radius: 40px;
+            overflow: hidden;
+            margin: 6px 0 10px;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2C7DA0, #6B9E6B);
+            border-radius: 40px;
+            transition: width 0.4s ease;
+        }
+
+        .drug-item {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            align-items: center;
+            background: #F9FBF8;
+            padding: 6px 12px;
+            border-radius: 1rem;
+            margin-bottom: 4px;
+            border-left: 3px solid #A3B18A;
+            font-size: 0.82rem;
+        }
+        .drug-item .name { font-weight: 600; flex: 1; min-width: 80px; }
+        .drug-item .gen { color: #2C7DA0; font-style: italic; flex: 1; min-width: 80px; }
+        .drug-item .form { color: #5F7C62; flex: 0.5; min-width: 60px; }
+        .drug-item .dose { color: #5F7C62; flex: 0.5; min-width: 60px; }
+        .drug-item .actions { display: flex; gap: 4px; }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+
+        @media (max-width: 700px) {
+            .header { flex-direction: column; align-items: stretch; padding: 10px 14px; }
+            .card { padding: 12px 14px; }
+            .field-row { flex-direction: column; }
+            .field-row .field { min-width: unset; }
+            .tabs .tab-btn { flex: 1; text-align: center; font-size: 0.7rem; padding: 4px 8px; }
+            .header .logo { font-size: 0.95rem; }
+            .recipe-fields { padding: 10px 12px; }
+            .rp-line { flex-direction: column; align-items: stretch; }
+            .rp-line .rp-label { min-width: unset; }
+            .recipe-fields .rp-field { min-width: unset; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header class="header">
+        <div class="logo">
+            📋 <span class="gradient">Фармакологическая рецептура</span>
+            <span class="sub">· Конструктор</span>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-sm btn-primary" id="exportBtn">📤 Экспорт</button>
+            <button class="btn btn-sm btn-outline" id="resetBtn">🔄 Сброс</button>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="editor">✏️ Конструктор</button>
+        <button class="tab-btn" data-tab="trainer">🎮 Тренажёр</button>
+        <button class="tab-btn" data-tab="drugs">💊 Банк препаратов</button>
+        <button class="tab-btn" data-tab="reference">📖 Справочник</button>
+    </div>
+
+    <!-- ===== КОНСТРУКТОР ===== -->
+    <div class="tab-content active" id="tab-editor">
+        <div class="card">
+            <div class="card-title">📝 Задачи</div>
+            <div id="taskList"></div>
+            <button class="btn btn-primary" id="addTaskBtn">➕ Добавить задачу</button>
+        </div>
+
+        <div class="card" id="taskEditor" style="display:none;">
+            <div class="card-title">
+                <span id="taskEditorTitle">✏️ Редактирование задачи</span>
+                <button class="btn btn-sm btn-danger" id="deleteTaskBtn">🗑️ Удалить</button>
+            </div>
+
+            <div class="field">
+                <label>Задача (клиническая ситуация)</label>
+                <textarea id="taskText" rows="2" placeholder="Собаке с отитом назначить ушные капли..."></textarea>
+            </div>
+
+            <div style="background:#F0F7FA;border-radius:1rem;padding:12px 16px;border:1px solid #D4E8F0;">
+                <div style="font-weight:600;font-size:0.8rem;color:#2C7DA0;margin-bottom:8px;">📝 Настройка рецепта</div>
+
+                <div class="field-row">
+                    <div class="field" style="flex:0.4;min-width:100px;">
+                        <label>Форма (Gen.) в Rp.:</label>
+                        <select id="editForm">
+                            <option value="">— выберите —</option>
+                            <option value="Solutionis">Solutionis (Solutio)</option>
+                            <option value="Unguenti">Unguenti (Unguentum)</option>
+                            <option value="Tabulettarum">Tabulettarum (Tabulettae)</option>
+                            <option value="Mixturae">Mixturae (Mixtura)</option>
+                            <option value="Pulveris">Pulveris (Pulvis)</option>
+                            <option value="Suspensionis">Suspensionis (Suspensio)</option>
+                            <option value="Suppositorii">Suppositorii (Suppositorium)</option>
+                            <option value="Guttarum">Guttarum (Guttae)</option>
+                            <option value="Linimenti">Linimenti (Linimentum)</option>
+                            <option value="Pastae">Pastae (Pasta)</option>
+                            <option value="Extracti">Extracti (Extractum)</option>
+                            <option value="Emulsi">Emulsi (Emulsum)</option>
+                            <option value="Infusi">Infusi (Infusum)</option>
+                            <option value="Decocti">Decocti (Decoctum)</option>
+                            <option value="Sirupi">Sirupi (Sirupus)</option>
+                            <option value="Specierum">Specierum (Species)</option>
+                            <option value="Granulorum">Granulorum (Granula)</option>
+                            <option value="Olei">Olei (Oleum)</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:1.2;">
+                        <label>Название препарата (Gen.)</label>
+                        <input type="text" id="editDrugName" placeholder="Natrii chloridi" />
+                    </div>
+                    <div class="field" style="flex:0.8;">
+                        <label>Доза</label>
+                        <input type="text" id="editDose" placeholder="0,9% – 100 ml" />
+                    </div>
+                </div>
+
+                <div class="field" style="margin-top:6px;">
+                    <label>Дополнительные ингредиенты (для сложных рецептов, каждый с новой строки)</label>
+                    <textarea id="editIngredients" rows="2" placeholder="Extracti Valerianae fluidi 6 ml&#10;Aquae destillatae 100 ml"></textarea>
+                </div>
+
+                <div class="field-row">
+                    <div class="field" style="flex:0.4;min-width:100px;">
+                        <label>M.f. (форма в Nom.)</label>
+                        <select id="editMf">
+                            <option value="">— не используется —</option>
+                            <option value="Solutio">Solutio</option>
+                            <option value="Unguentum">Unguentum</option>
+                            <option value="Tabulettae">Tabulettae</option>
+                            <option value="Mixtura">Mixtura</option>
+                            <option value="Pulvis">Pulvis</option>
+                            <option value="Suspensio">Suspensio</option>
+                            <option value="Suppositorium">Suppositorium</option>
+                            <option value="Guttae">Guttae</option>
+                            <option value="Linimentum">Linimentum</option>
+                            <option value="Pasta">Pasta</option>
+                            <option value="Emulsum">Emulsum</option>
+                            <option value="Infusum">Infusum</option>
+                            <option value="Decoctum">Decoctum</option>
+                            <option value="Sirupus">Sirupus</option>
+                            <option value="Oleum">Oleum</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:0.6;">
+                        <label>D.t.d. (количество и форма выпуска)</label>
+                        <input type="text" id="editDtd" placeholder="N.10 in ampullis" />
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field" style="flex:0.25;min-width:80px;">
+                        <label>S. / D.S.</label>
+                        <select id="editSignaType">
+                            <option value="S.">S.</option>
+                            <option value="D.S.">D.S.</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:0.3;min-width:100px;">
+                        <label>Способ применения</label>
+                        <select id="editRoute">
+                            <option value="">— выберите —</option>
+                            <option value="Внутреннее">Внутреннее</option>
+                            <option value="Наружное">Наружное</option>
+                            <option value="Внутримышечное">Внутримышечное</option>
+                            <option value="Подкожное">Подкожное</option>
+                            <option value="Внутривенное">Внутривенное</option>
+                            <option value="Внутрицистернальное">Внутрицистернальное</option>
+                            <option value="Ректальное">Ректальное</option>
+                            <option value="Внутриматочное">Внутриматочное</option>
+                            <option value="Аэрозольное">Аэрозольное</option>
+                        </select>
+                    </div>
+                    <div class="field" style="flex:1;">
+                        <label>Дополнительно в сигнатуре</label>
+                        <input type="text" id="editSignaExtra" placeholder="По 1 столовой ложке 3 раза в день" />
+                    </div>
+                </div>
+
+                <div style="margin-top:8px;font-size:0.75rem;color:#5F7C62;">
+                    💡 Студент будет заполнять каждое поле отдельно. Подсказок с готовым текстом не будет.
+                </div>
+            </div>
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+                <button class="btn btn-success" id="saveTaskBtn">💾 Сохранить</button>
+                <button class="btn btn-outline" id="cancelTaskBtn">✖ Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ТРЕНАЖЁР ===== -->
+    <div class="tab-content" id="tab-trainer">
+        <div id="trainerArea"></div>
+    </div>
+
+    <!-- ===== БАНК ПРЕПАРАТОВ ===== -->
+    <div class="tab-content" id="tab-drugs">
+        <div class="card">
+            <div class="card-title">💊 Банк препаратов</div>
+            <div id="drugList"></div>
+            <div class="field-row" style="margin-top:8px;">
+                <div class="field"><label>Название (Nom.)</label><input type="text" id="drugName" placeholder="Natrii chloridum" /></div>
+                <div class="field"><label>Родительный (Gen.)</label><input type="text" id="drugGen" placeholder="Natrii chloridi" /></div>
+                <div class="field"><label>Форма (Gen.)</label><input type="text" id="drugForm" placeholder="Solutionis" /></div>
+                <div class="field"><label>Дозировка</label><input type="text" id="drugDose" placeholder="0,9% – 100 ml" /></div>
+                <button class="btn btn-primary" id="addDrugBtn" style="align-self:flex-end;">➕</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== СПРАВОЧНИК ===== -->
+    <div class="tab-content" id="tab-reference">
+        <div class="card">
+            <div class="card-title">📖 Справочник по рецептуре</div>
+            <div style="font-size:0.82rem;line-height:1.7;color:#3E5C4A;">
+                <p><strong>Формы в родительном падеже для Rp.:</strong></p>
+                <ul style="padding-left:20px;margin:4px 0 8px;">
+                    <li><strong>Solutionis</strong> — раствор (Solutio)</li>
+                    <li><strong>Unguenti</strong> — мазь (Unguentum)</li>
+                    <li><strong>Tabulettarum</strong> — таблетки (Tabulettae)</li>
+                    <li><strong>Guttarum</strong> — капли (Guttae)</li>
+                    <li><strong>Pulveris</strong> — порошок (Pulvis)</li>
+                    <li><strong>Mixturae</strong> — микстура (Mixtura)</li>
+                </ul>
+                <p><strong>Структура рецепта:</strong></p>
+                <ul style="padding-left:20px;margin:4px 0 8px;">
+                    <li><strong>Rp.:</strong> — форма (Gen.) + название (Gen.) + доза</li>
+                    <li><strong>M.f.:</strong> — смешай, чтобы получилась форма (опционально)</li>
+                    <li><strong>D.t.d.:</strong> — выдай такие дозы (опционально)</li>
+                    <li><strong>S. / D.S.:</strong> — обозначь (способ применения)</li>
+                </ul>
+                <div style="background:#F0F7FA;padding:8px 12px;border-radius:0.8rem;font-family:'Courier New',monospace;font-size:0.78rem;border:1px solid #D4E8F0;margin-top:6px;">
+                    <strong>Пример:</strong><br>
+                    Rp.: Solutionis Natrii chloridi 0,9% – 100 ml<br>
+                    D.S. Внутривенно капельно.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ================================================================
+    //  ФАРМАКОЛОГИЧЕСКАЯ РЕЦЕПТУРА — ПОЛНАЯ ЛОГИКА
+    // ================================================================
+
+    let state = {
+        tasks: [],
+        drugs: [],
+        editingTaskId: null,
+        currentTaskIndex: 0,
+        answers: {}
+    };
+
+    let nextTaskId = 1;
+
+    const EXAMPLE_DATA = {
+        drugs: [
+            { name: 'Natrii chloridum', gen: 'Natrii chloridi', form: 'Solutionis', dose: '0,9% – 100 ml' },
+            { name: 'Amoxicillinum', gen: 'Amoxicillini', form: 'Tabulettarum', dose: '0,25 – N.20' },
+            { name: 'Levomecolum', gen: 'Levomecoli', form: 'Unguenti', dose: '40 g' },
+            { name: 'Otipaxum', gen: 'Otipaxi', form: 'Guttarum', dose: '15 ml' },
+            { name: 'Natrii bromidum', gen: 'Natrii bromidi', form: 'Pulveris', dose: '3,0' },
+            { name: 'Extractum Valerianae', gen: 'Extracti Valerianae fluidi', form: '', dose: '6 ml' }
+        ],
+        tasks: [
+            {
+                id: 1,
+                text: 'Собаке с отитом назначить ушные капли «Отипакс» по 3 капли в каждое ухо 2 раза в день, 5 дней.',
+                form: 'Guttarum',
+                drugName: 'Otipaxi',
+                dose: '15 ml',
+                ingredients: [],
+                mf: '',
+                dtd: '',
+                signaType: 'D.S.',
+                route: 'Наружное',
+                signaExtra: 'По 3 капли в каждое ухо 2 раза в день, 5 дней'
+            },
+            {
+                id: 2,
+                text: 'Кошке с бактериальной инфекцией назначить антибиотик «Амоксициллин» в таблетках по 250 мг, 20 таблеток. По 1 таблетке 2 раза в день, 7 дней.',
+                form: 'Tabulettarum',
+                drugName: 'Amoxicillini',
+                dose: '0,25 – N.20',
+                ingredients: [],
+                mf: '',
+                dtd: '',
+                signaType: 'D.S.',
+                route: 'Внутреннее',
+                signaExtra: 'По 1 таблетке 2 раза в день, 7 дней'
+            },
+            {
+                id: 3,
+                text: 'Собаке с гнойной раной назначить мазь «Левомеколь» 40 г для наружного применения. Наносить на рану 1 раз в день, 10 дней.',
+                form: 'Unguenti',
+                drugName: 'Levomecoli',
+                dose: '40 g',
+                ingredients: [],
+                mf: '',
+                dtd: '',
+                signaType: 'D.S.',
+                route: 'Наружное',
+                signaExtra: 'Наносить на рану 1 раз в день, 10 дней'
+            },
+            {
+                id: 4,
+                text: 'Корове с гипонатриемией назначить 0,9% раствор натрия хлорида 100 мл внутривенно капельно.',
+                form: 'Solutionis',
+                drugName: 'Natrii chloridi',
+                dose: '0,9% – 100 ml',
+                ingredients: [],
+                mf: '',
+                dtd: '',
+                signaType: 'D.S.',
+                route: 'Внутривенное',
+                signaExtra: 'Капельно'
+            },
+            {
+                id: 5,
+                text: 'Собаке с нарушением сна назначить натрия бромид 3,0, настойку валерианы 6 мл, воду дистиллированную 100 мл. По 1 столовой ложке 3 раза в день.',
+                form: '',
+                drugName: '',
+                dose: '',
+                ingredients: ['Natrii bromidi 3,0', 'Extracti Valerianae fluidi 6 ml', 'Aquae destillatae 100 ml'],
+                mf: 'Mixtura',
+                dtd: '',
+                signaType: 'D.S.',
+                route: 'Внутреннее',
+                signaExtra: 'По 1 столовой ложке 3 раза в день'
+            }
+        ]
+    };
+
+    // DOM
+    const taskList = document.getElementById('taskList');
+    const taskEditor = document.getElementById('taskEditor');
+    const taskEditorTitle = document.getElementById('taskEditorTitle');
+    const taskText = document.getElementById('taskText');
+    const editForm = document.getElementById('editForm');
+    const editDrugName = document.getElementById('editDrugName');
+    const editDose = document.getElementById('editDose');
+    const editIngredients = document.getElementById('editIngredients');
+    const editMf = document.getElementById('editMf');
+    const editDtd = document.getElementById('editDtd');
+    const editSignaType = document.getElementById('editSignaType');
+    const editRoute = document.getElementById('editRoute');
+    const editSignaExtra = document.getElementById('editSignaExtra');
+    const saveTaskBtn = document.getElementById('saveTaskBtn');
+    const cancelTaskBtn = document.getElementById('cancelTaskBtn');
+    const deleteTaskBtn = document.getElementById('deleteTaskBtn');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+
+    const drugList = document.getElementById('drugList');
+    const drugName = document.getElementById('drugName');
+    const drugGen = document.getElementById('drugGen');
+    const drugForm = document.getElementById('drugForm');
+    const drugDose = document.getElementById('drugDose');
+    const addDrugBtn = document.getElementById('addDrugBtn');
+
+    const trainerArea = document.getElementById('trainerArea');
+    const exportBtn = document.getElementById('exportBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const toast = document.getElementById('toast');
+
+    let toastTimer = null;
+
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function saveState() {
+        try {
+            localStorage.setItem('vetsim_recipe_constructor', JSON.stringify({
+                tasks: state.tasks,
+                drugs: state.drugs,
+                nextTaskId: nextTaskId
+            }));
+        } catch (e) {}
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem('vetsim_recipe_constructor');
+            if (raw) {
+                const data = JSON.parse(raw);
+                if (data.tasks) state.tasks = data.tasks;
+                if (data.drugs) state.drugs = data.drugs;
+                if (data.nextTaskId) nextTaskId = data.nextTaskId;
+                return true;
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    function getFormOptions() {
+        const forms = state.drugs.map(d => d.form).filter(f => f);
+        const allForms = ['Solutionis', 'Unguenti', 'Tabulettarum', 'Mixturae', 'Pulveris', 'Suspensionis', 'Suppositorii', 'Guttarum', 'Linimenti', 'Pastae', 'Extracti', 'Emulsi', 'Infusi', 'Decocti', 'Sirupi', 'Specierum', 'Granulorum', 'Olei'];
+        return [...new Set([...forms, ...allForms])];
+    }
+
+    function getMfOptions() {
+        return ['Solutio', 'Unguentum', 'Tabulettae', 'Mixtura', 'Pulvis', 'Suspensio', 'Suppositorium', 'Guttae', 'Linimentum', 'Pasta', 'Emulsum', 'Infusum', 'Decoctum', 'Sirupus', 'Oleum'];
+    }
+
+    function getRouteOptions() {
+        return ['Внутреннее', 'Наружное', 'Внутримышечное', 'Подкожное', 'Внутривенное', 'Внутрицистернальное', 'Ректальное', 'Внутриматочное', 'Аэрозольное'];
+    }
+
+    function renderAll() {
+        renderTaskList();
+        renderDrugList();
+        renderTrainer();
+        saveState();
+    }
+
+    function renderTaskList() {
+        if (state.tasks.length === 0) {
+            taskList.innerHTML = `<div style="text-align:center;padding:16px;color:#8A9B7A;font-size:0.85rem;">Нет задач. Нажмите «Добавить задачу».</div>`;
+            return;
+        }
+
+        let html = '';
+        state.tasks.forEach((task, idx) => {
+            let recipePreview = 'Rp.: ';
+            if (task.form) recipePreview += task.form + ' ';
+            if (task.drugName) recipePreview += task.drugName + ' ';
+            if (task.dose) recipePreview += task.dose;
+            if (task.ingredients.length > 0) {
+                recipePreview += '\n' + task.ingredients.map(ing => '     ' + ing).join('\n');
+            }
+            if (task.mf) recipePreview += '\nM.f. ' + task.mf;
+            if (task.dtd) recipePreview += '\nD.t.d. ' + task.dtd;
+            if (task.signaType && task.route) {
+                recipePreview += '\n' + task.signaType + ' ' + task.route + (task.signaExtra ? ' ' + task.signaExtra : '');
+            }
+
+            html += `
+                <div class="task-item" data-id="${task.id}">
+                    <div class="task-header">
+                        <span class="task-num">Задача ${idx + 1}</span>
+                        <div style="display:flex;gap:4px;">
+                            <button class="btn btn-sm btn-outline edit-task-btn" data-id="${task.id}">✏️</button>
+                            <button class="btn btn-sm btn-danger delete-task-btn" data-id="${task.id}">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="task-text">${escapeHtml(task.text)}</div>
+                    <div style="background:#F0F7FA;padding:6px 12px;border-radius:0.8rem;font-family:'Courier New',monospace;font-size:0.78rem;border:1px solid #D4E8F0;white-space:pre-wrap;margin-top:4px;">${escapeHtml(recipePreview)}</div>
+                </div>
+            `;
+        });
+        taskList.innerHTML = html;
+
+        taskList.querySelectorAll('.edit-task-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id, 10);
+                openTaskEditor(id);
+            });
+        });
+
+        taskList.querySelectorAll('.delete-task-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const id = parseInt(this.dataset.id, 10);
+                if (confirm('Удалить задачу?')) {
+                    state.tasks = state.tasks.filter(t => t.id !== id);
+                    if (state.editingTaskId === id) closeTaskEditor();
+                    renderAll();
+                    showToast('🗑️ Задача удалена');
+                }
+            });
+        });
+    }
+
+    function renderDrugList() {
+        if (state.drugs.length === 0) {
+            drugList.innerHTML = `<div style="text-align:center;padding:12px;color:#8A9B7A;font-size:0.8rem;">Банк препаратов пуст.</div>`;
+            return;
+        }
+
+        let html = '';
+        state.drugs.forEach((drug, idx) => {
+            html += `
+                <div class="drug-item">
+                    <span class="name">${escapeHtml(drug.name)}</span>
+                    <span class="gen">${escapeHtml(drug.gen)}</span>
+                    <span class="form">${escapeHtml(drug.form)}</span>
+                    <span class="dose">${escapeHtml(drug.dose)}</span>
+                    <div class="actions">
+                        <button class="btn btn-sm btn-danger delete-drug-btn" data-index="${idx}">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+        drugList.innerHTML = html;
+
+        drugList.querySelectorAll('.delete-drug-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.index, 10);
+                if (confirm(`Удалить препарат "${state.drugs[idx].name}"?`)) {
+                    state.drugs.splice(idx, 1);
+                    renderAll();
+                    showToast('🗑️ Препарат удалён');
+                }
+            });
+        });
+    }
+
+    function renderTrainer() {
+        if (state.tasks.length === 0) {
+            trainerArea.innerHTML = `
+                <div class="card" style="text-align:center;padding:30px 20px;color:#8A9B7A;">
+                    <div style="font-size:2.5rem;margin-bottom:8px;">📋</div>
+                    <p>Нет задач для тренажёра.</p>
+                    <button class="btn btn-primary" style="margin-top:10px;" onclick="document.querySelector('[data-tab=\\'editor\\']').click()">✏️ Перейти в конструктор</button>
+                </div>
+            `;
+            return;
+        }
+
+        const task = state.tasks[state.currentTaskIndex];
+        if (!task) {
+            state.currentTaskIndex = 0;
+            renderTrainer();
+            return;
+        }
+
+        const total = state.tasks.length;
+        const completed = Object.keys(state.answers).filter(id => state.answers[id] && state.answers[id].form).length;
+        const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+        const userAns = state.answers[task.id] || {};
+
+        // Собираем ингредиенты для отображения
+        const allIngredients = [];
+        if (task.drugName && task.dose) {
+            allIngredients.push({ label: 'A', value: (task.drugName || '') + ' ' + (task.dose || '') });
+        }
+        task.ingredients.forEach((ing, idx) => {
+            allIngredients.push({ label: String.fromCharCode(65 + (task.drugName ? idx + 1 : idx)), value: ing });
+        });
+
+        let html = `
+            <div class="card">
+                <div class="card-title">
+                    <span>📋 Задача ${state.currentTaskIndex + 1} из ${total}</span>
+                    <span style="font-size:0.75rem;color:#5F7C62;">✅ ${completed} / ${total} выполнено</span>
+                </div>
+                <div class="progress-bar"><div class="fill" style="width:${progress}%;"></div></div>
+                <div style="font-size:0.9rem;color:#3E5C4A;margin-bottom:10px;">${escapeHtml(task.text)}</div>
+
+                <div class="recipe-fields">
+                    <div class="rp-line">
+                        <span class="rp-label">Rp.:</span>
+                        ${task.form ? `
+                            <div class="rp-field">
+                                <select data-task="${task.id}" data-field="form" class="${userAns.form ? (userAns.form === task.form ? 'correct' : 'wrong') : ''}">
+                                    <option value="">[форма]</option>
+                                    ${getFormOptions().map(f => `<option value="${f}" ${userAns.form === f ? 'selected' : ''}>${f}</option>`).join('')}
+                                </select>
+                            </div>
+                        ` : ''}
+                        ${task.drugName ? `
+                            <div class="rp-field">
+                                <input type="text" data-task="${task.id}" data-field="drugName" 
+                                       value="${escapeHtml(userAns.drugName || '')}"
+                                       placeholder="${task.form ? '[название]' : '[препарат]'}" 
+                                       class="${userAns.drugName ? (userAns.drugName === task.drugName ? 'correct' : 'wrong') : ''}" />
+                            </div>
+                        ` : ''}
+                        ${task.dose ? `
+                            <div class="rp-field" style="flex:0.6;">
+                                <input type="text" data-task="${task.id}" data-field="dose" 
+                                       value="${escapeHtml(userAns.dose || '')}"
+                                       placeholder="[доза]" 
+                                       class="${userAns.dose ? (userAns.dose === task.dose ? 'correct' : 'wrong') : ''}" />
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    ${task.ingredients.map((ing, idx) => `
+                        <div class="ingredient-group">
+                            <span class="ing-label">${String.fromCharCode(65 + (task.drugName ? idx + 1 : idx))}.</span>
+                            <div class="rp-field">
+                                <input type="text" data-task="${task.id}" data-field="ing_${idx}" 
+                                       value="${escapeHtml(userAns['ing_' + idx] || '')}"
+                                       placeholder="[ингредиент]" 
+                                       class="${userAns['ing_' + idx] ? (userAns['ing_' + idx] === ing ? 'correct' : 'wrong') : ''}" />
+                            </div>
+                        </div>
+                    `).join('')}
+
+                    ${task.mf ? `
+                    <div class="rp-line">
+                        <span class="rp-label">M.f.:</span>
+                        <div class="rp-field">
+                            <select data-task="${task.id}" data-field="mf" class="${userAns.mf ? (userAns.mf === task.mf ? 'correct' : 'wrong') : ''}">
+                                <option value="">[форма]</option>
+                                ${getMfOptions().map(f => `<option value="${f}" ${userAns.mf === f ? 'selected' : ''}>${f}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${task.dtd ? `
+                    <div class="rp-line">
+                        <span class="rp-label">D.t.d.:</span>
+                        <div class="rp-field">
+                            <input type="text" data-task="${task.id}" data-field="dtd" 
+                                   value="${escapeHtml(userAns.dtd || '')}"
+                                   placeholder="[количество и форма]" 
+                                   class="${userAns.dtd ? (userAns.dtd === task.dtd ? 'correct' : 'wrong') : ''}" />
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="rp-line">
+                        <span class="rp-label">${task.signaType || 'S.:'}</span>
+                        <div class="rp-field" style="flex:0.35;min-width:100px;">
+                            <select data-task="${task.id}" data-field="route" class="${userAns.route ? (userAns.route === task.route ? 'correct' : 'wrong') : ''}">
+                                <option value="">[способ]</option>
+                                ${getRouteOptions().map(r => `<option value="${r}" ${userAns.route === r ? 'selected' : ''}>${r}</option>`).join('')}
+                            </select>
+                        </div>
+                        <div class="rp-field" style="flex:1;">
+                            <input type="text" data-task="${task.id}" data-field="signaExtra" 
+                                   value="${escapeHtml(userAns.signaExtra || '')}"
+                                   placeholder="[дополнительно]" 
+                                   class="${userAns.signaExtra ? (userAns.signaExtra === task.signaExtra ? 'correct' : 'wrong') : ''}" />
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+                    <button class="btn btn-success" id="checkBtn">✅ Проверить</button>
+                    ${state.currentTaskIndex < total - 1 ? `<button class="btn btn-primary" id="nextBtn">➡️ Следующая задача</button>` : ''}
+                    <button class="btn btn-outline" id="resetTrainerBtn">🔄 Сбросить</button>
+                </div>
+
+                <div id="trainerFeedback" style="margin-top:8px;font-size:0.82rem;"></div>
+            </div>
+        `;
+
+        trainerArea.innerHTML = html;
+
+        trainerArea.querySelectorAll('select[data-task], input[data-task]').forEach(el => {
+            el.addEventListener('change', function() {
+                const taskId = parseInt(this.dataset.task, 10);
+                const field = this.dataset.field;
+                if (!state.answers[taskId]) state.answers[taskId] = {};
+                state.answers[taskId][field] = this.value;
+                saveState();
+                renderTrainer();
+            });
+            el.addEventListener('input', function() {
+                const taskId = parseInt(this.dataset.task, 10);
+                const field = this.dataset.field;
+                if (!state.answers[taskId]) state.answers[taskId] = {};
+                state.answers[taskId][field] = this.value;
+                saveState();
+                renderTrainer();
+            });
+        });
+
+        document.getElementById('checkBtn')?.addEventListener('click', function() {
+            checkAnswers(task);
+        });
+
+        document.getElementById('nextBtn')?.addEventListener('click', function() {
+            state.currentTaskIndex++;
+            renderTrainer();
+        });
+
+        document.getElementById('resetTrainerBtn')?.addEventListener('click', function() {
+            if (confirm('Сбросить прогресс в тренажёре?')) {
+                state.answers = {};
+                renderTrainer();
+                showToast('🔄 Прогресс сброшен');
+            }
+        });
+    }
+
+    function checkAnswers(task) {
+        const userAns = state.answers[task.id] || {};
+        let errors = [];
+        let allCorrect = true;
+
+        if (task.form && userAns.form !== task.form) {
+            allCorrect = false;
+            errors.push(`❌ Форма: "${userAns.form || '—'}", правильно "${task.form}"`);
+        }
+        if (task.drugName && userAns.drugName !== task.drugName) {
+            allCorrect = false;
+            errors.push(`❌ Название: "${userAns.drugName || '—'}", правильно "${task.drugName}"`);
+        }
+        if (task.dose && userAns.dose !== task.dose) {
+            allCorrect = false;
+            errors.push(`❌ Доза: "${userAns.dose || '—'}", правильно "${task.dose}"`);
+        }
+        task.ingredients.forEach((ing, idx) => {
+            const field = 'ing_' + idx;
+            if (userAns[field] !== ing) {
+                allCorrect = false;
+                errors.push(`❌ Ингредиент ${String.fromCharCode(65 + (task.drugName ? idx + 1 : idx))}: "${userAns[field] || '—'}", правильно "${ing}"`);
+            }
+        });
+        if (task.mf && userAns.mf !== task.mf) {
+            allCorrect = false;
+            errors.push(`❌ M.f.: "${userAns.mf || '—'}", правильно "${task.mf}"`);
+        }
+        if (task.dtd && userAns.dtd !== task.dtd) {
+            allCorrect = false;
+            errors.push(`❌ D.t.d.: "${userAns.dtd || '—'}", правильно "${task.dtd}"`);
+        }
+        if (userAns.route !== task.route) {
+            allCorrect = false;
+            errors.push(`❌ Способ применения: "${userAns.route || '—'}", правильно "${task.route}"`);
+        }
+        if (task.signaExtra && userAns.signaExtra !== task.signaExtra) {
+            allCorrect = false;
+            errors.push(`❌ Сигнатура: "${userAns.signaExtra || '—'}", правильно "${task.signaExtra}"`);
+        }
+
+        const feedback = document.getElementById('trainerFeedback');
+        if (allCorrect) {
+            feedback.innerHTML = `
+                <div style="background:#E8F5E8;padding:10px 14px;border-radius:1rem;color:#2E7D32;font-weight:600;">
+                    🎉 Отлично! Рецепт выписан правильно!
+                </div>
+            `;
+            showToast('✅ Рецепт выписан верно!');
+        } else {
+            feedback.innerHTML = `
+                <div style="background:#FDF0E8;padding:10px 14px;border-radius:1rem;color:#b13e3e;">
+                    <strong>❌ Найдены ошибки:</strong><br>
+                    ${errors.join('<br>')}
+                </div>
+            `;
+            showToast('❌ Есть ошибки. Проверьте выделенные поля.');
+        }
+    }
+
+    function openTaskEditor(id) {
+        const task = state.tasks.find(t => t.id === id);
+        if (task) {
+            taskText.value = task.text;
+            editForm.value = task.form || '';
+            editDrugName.value = task.drugName || '';
+            editDose.value = task.dose || '';
+            editIngredients.value = task.ingredients.join('\n');
+            editMf.value = task.mf || '';
+            editDtd.value = task.dtd || '';
+            editSignaType.value = task.signaType || 'S.';
+            editRoute.value = task.route || '';
+            editSignaExtra.value = task.signaExtra || '';
+            state.editingTaskId = id;
+            taskEditorTitle.textContent = '✏️ Редактирование задачи';
+            deleteTaskBtn.style.display = 'inline-flex';
+        } else {
+            taskText.value = '';
+            editForm.value = '';
+            editDrugName.value = '';
+            editDose.value = '';
+            editIngredients.value = '';
+            editMf.value = '';
+            editDtd.value = '';
+            editSignaType.value = 'S.';
+            editRoute.value = '';
+            editSignaExtra.value = '';
+            state.editingTaskId = null;
+            taskEditorTitle.textContent = '➕ Новая задача';
+            deleteTaskBtn.style.display = 'none';
+        }
+        taskEditor.style.display = 'block';
+        taskEditor.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function closeTaskEditor() {
+        taskEditor.style.display = 'none';
+        state.editingTaskId = null;
+    }
+
+    function saveTask() {
+        const text = taskText.value.trim();
+        const form = editForm.value;
+        const drugName = editDrugName.value.trim();
+        const dose = editDose.value.trim();
+        const ingredients = editIngredients.value.split('\n').filter(s => s.trim());
+        const mf = editMf.value;
+        const dtd = editDtd.value.trim();
+        const signaType = editSignaType.value;
+        const route = editRoute.value;
+        const signaExtra = editSignaExtra.value.trim();
+
+        if (!text || (!form && !drugName && !dose && ingredients.length === 0)) {
+            showToast('⚠️ Заполните задачу и хотя бы один элемент рецепта');
+            return;
+        }
+
+        const taskData = {
+            text: text,
+            form: form,
+            drugName: drugName,
+            dose: dose,
+            ingredients: ingredients,
+            mf: mf,
+            dtd: dtd,
+            signaType: signaType,
+            route: route,
+            signaExtra: signaExtra
+        };
+
+        if (state.editingTaskId) {
+            const task = state.tasks.find(t => t.id === state.editingTaskId);
+            if (task) {
+                Object.assign(task, taskData);
+                showToast('✅ Задача обновлена');
+            }
+        } else {
+            taskData.id = nextTaskId++;
+            state.tasks.push(taskData);
+            showToast('✅ Задача добавлена');
+        }
+
+        closeTaskEditor();
+        renderAll();
+    }
+
+    function deleteTask() {
+        if (state.editingTaskId && confirm('Удалить задачу?')) {
+            state.tasks = state.tasks.filter(t => t.id !== state.editingTaskId);
+            closeTaskEditor();
+            renderAll();
+            showToast('🗑️ Задача удалена');
+        }
+    }
+
+    function addDrug() {
+        const name = drugName.value.trim();
+        const gen = drugGen.value.trim();
+        const form = drugForm.value.trim();
+        const dose = drugDose.value.trim();
+
+        if (!name || !gen || !dose) {
+            showToast('⚠️ Заполните название, родительный падеж и дозировку');
+            return;
+        }
+
+        if (state.drugs.some(d => d.gen.toLowerCase() === gen.toLowerCase())) {
+            showToast('⚠️ Такой препарат уже есть в банке');
+            return;
+        }
+
+        state.drugs.push({ name, gen, form, dose });
+        drugName.value = '';
+        drugGen.value = '';
+        drugForm.value = '';
+        drugDose.value = '';
+        renderAll();
+        showToast('✅ Препарат добавлен');
+    }
+
+    function exportHTML() {
+        if (state.tasks.length === 0) {
+            showToast('⚠️ Добавьте хотя бы одну задачу');
+            return;
+        }
+
+        const data = JSON.stringify({
+            tasks: state.tasks,
+            drugs: state.drugs
+        });
+
+        // Генерируем полный экспорт — в отдельном файле
+        const htmlContent = `<!DOCTYPE html>
+        <html lang="ru">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+            <title>Тренажёр по рецептуре · ВетСим</title>
+            <style>
+                * { margin:0; padding:0; box-sizing:border-box; }
+                body { font-family: 'Montserrat','Segoe UI',system-ui,sans-serif; background:#FDF8F0; color:#1A2A3A; padding:16px; min-height:100vh; }
+                .container { max-width:900px; margin:0 auto; }
+                .header { background:white; padding:12px 20px; border-radius:1.5rem; border:1px solid #E7EDE2; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+                .header .logo { font-size:1rem; font-weight:700; color:#2C7DA0; }
+                .header .logo .gradient { background:linear-gradient(135deg,#2C7DA0,#6B9E6B); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+                .card { background:white; border-radius:1.5rem; padding:16px 20px; border:1px solid #E7EDE2; margin-bottom:14px; }
+                .card-title { font-weight:700; font-size:0.9rem; color:#2C7DA0; margin-bottom:8px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; }
+                .progress-bar { height:6px; background:#E7EDE2; border-radius:40px; overflow:hidden; margin:6px 0 10px; }
+                .progress-bar .fill { height:100%; background:linear-gradient(90deg,#2C7DA0,#6B9E6B); border-radius:40px; transition:width 0.4s ease; }
+                .recipe-fields { background:#F0F7FA; padding:12px 16px; border-radius:1rem; border:1px solid #D4E8F0; margin:6px 0 10px; }
+                .recipe-fields .rp-line { display:flex; align-items:center; gap:6px; flex-wrap:wrap; padding:4px 0; border-bottom:1px dashed #d4e8f0; }
+                .recipe-fields .rp-line:last-child { border-bottom:none; }
+                .recipe-fields .rp-label { font-weight:700; color:#1F4E6E; font-family:'Courier New',monospace; font-size:0.85rem; min-width:30px; }
+                .recipe-fields .rp-field { flex:1; min-width:80px; }
+                .recipe-fields .rp-field select, .recipe-fields .rp-field input { width:100%; padding:4px 10px; border:2px solid #D9D0BD; border-radius:0.8rem; font-family:'Courier New',monospace; font-size:0.8rem; background:white; outline:none; transition:0.15s; }
+                .recipe-fields .rp-field select:focus, .recipe-fields .rp-field input:focus { border-color:#2C7DA0; box-shadow:0 0 0 3px rgba(44,125,160,0.08); }
+                .recipe-fields .rp-field select.correct, .recipe-fields .rp-field input.correct { border-color:#6B9E6B; background:#E8F5E8; }
+                .recipe-fields .rp-field select.wrong, .recipe-fields .rp-field input.wrong { border-color:#b13e3e; background:#FDF0E8; }
+                .ingredient-group { display:flex; flex-wrap:wrap; gap:6px; align-items:center; padding:4px 0; border-bottom:1px dashed #e8edf0; }
+                .ingredient-group .ing-label { font-size:0.7rem; color:#5F7C62; font-weight:600; min-width:20px; }
+                .ingredient-group .rp-field { flex:2; min-width:120px; }
+                .btn { background:#EBE3D2; border:none; padding:5px 16px; border-radius:40px; font-weight:600; cursor:pointer; transition:0.15s; font-family:inherit; font-size:0.78rem; color:#1A2A3A; display:inline-flex; align-items:center; gap:4px; }
+                .btn:hover { opacity:0.85; transform:translateY(-1px); }
+                .btn-primary { background:#2C7DA0; color:white; }
+                .btn-primary:hover { background:#236B8A; }
+                .btn-success { background:#6B9E6B; color:white; }
+                .btn-success:hover { background:#5A865A; }
+                .btn-outline { background:transparent; border:1px solid #D9D0BD; }
+                .btn-outline:hover { background:#F0EEE5; }
+                .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#1F4E6E; color:white; padding:8px 20px; border-radius:40px; font-weight:600; font-size:0.8rem; box-shadow:0 4px 16px rgba(0,0,0,0.15); opacity:0; transition:opacity 0.3s ease; z-index:2000; pointer-events:none; max-width:90%; text-align:center; }
+                .toast.show { opacity:1; }
+                @media (max-width:600px) { .card { padding:12px 14px; } .recipe-fields { padding:8px 10px; } .header .logo { font-size:0.85rem; } .rp-line { flex-direction:column; align-items:stretch; } .rp-line .rp-label { min-width:unset; } }
+            </style>
+        </head>
+        <body>
+        <div class="container">
+            <header class="header">
+                <div class="logo">📋 <span class="gradient">Фармакологическая рецептура</span></div>
+                <span style="font-size:0.75rem;color:#7B8D6E;">Тренажёр</span>
+            </header>
+            <div id="app"></div>
+            <div style="text-align:center;font-size:0.7rem;color:#8A9B7A;margin-top:12px;padding-top:10px;border-top:1px solid #f0ebe3;">
+                🐾 ВетСим — ветеринарное просвещение
+            </div>
+        </div>
+        <div class="toast" id="toast"></div>
+        <script>
+            const DATA = ${data};
+            let tasks = DATA.tasks || [];
+            let drugs = DATA.drugs || [];
+            let currentIndex = 0;
+            let answers = {};
+            let toastTimer = null;
+
+            function showToast(msg) {
+                const el = document.getElementById('toast');
+                el.textContent = msg;
+                el.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+            }
+
+            function escapeHtml(str) {
+                if (!str) return '';
+                return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            }
+
+            function getFormOptions() {
+                const forms = drugs.map(d => d.form).filter(f => f);
+                const allForms = ['Solutionis', 'Unguenti', 'Tabulettarum', 'Mixturae', 'Pulveris', 'Suspensionis', 'Suppositorii', 'Guttarum', 'Linimenti', 'Pastae', 'Extracti', 'Emulsi', 'Infusi', 'Decocti', 'Sirupi', 'Specierum', 'Granulorum', 'Olei'];
+                return [...new Set([...forms, ...allForms])];
+            }
+
+            function getMfOptions() {
+                return ['Solutio', 'Unguentum', 'Tabulettae', 'Mixtura', 'Pulvis', 'Suspensio', 'Suppositorium', 'Guttae', 'Linimentum', 'Pasta', 'Emulsum', 'Infusum', 'Decoctum', 'Sirupus', 'Oleum'];
+            }
+
+            function getRouteOptions() {
+                return ['Внутреннее', 'Наружное', 'Внутримышечное', 'Подкожное', 'Внутривенное', 'Внутрицистернальное', 'Ректальное', 'Внутриматочное', 'Аэрозольное'];
+            }
+
+            function render() {
+                const app = document.getElementById('app');
+                if (tasks.length === 0) {
+                    app.innerHTML = '<div class="card" style="text-align:center;padding:30px 20px;color:#8A9B7A;">Нет задач.</div>';
+                    return;
+                }
+
+                const task = tasks[currentIndex];
+                const total = tasks.length;
+                const completed = Object.keys(answers).filter(id => answers[id] && answers[id].form).length;
+                const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+                const userAns = answers[task.id] || {};
+
+                let html = \`
+                    <div class="card">
+                        <div class="card-title">
+                            <span>📋 Задача \${currentIndex + 1} из \${total}</span>
+                            <span style="font-size:0.7rem;color:#5F7C62;">✅ \${completed} / \${total}</span>
+                        </div>
+                        <div class="progress-bar"><div class="fill" style="width:\${progress}%;"></div></div>
+                        <div style="font-size:0.85rem;color:#3E5C4A;margin-bottom:8px;">\${escapeHtml(task.text)}</div>
+
+                        <div class="recipe-fields">
+                            <div class="rp-line">
+                                <span class="rp-label">Rp.:</span>
+                                \${task.form ? \`
+                                    <div class="rp-field">
+                                        <select data-task="\${task.id}" data-field="form" class="\${userAns.form ? (userAns.form === task.form ? 'correct' : 'wrong') : ''}">
+                                            <option value="">[форма]</option>
+                                            \${getFormOptions().map(f => \`<option value="\${f}" \${userAns.form === f ? 'selected' : ''}>\${f}</option>\`).join('')}
+                                        </select>
+                                    </div>
+                                \` : ''}
+                                \${task.drugName ? \`
+                                    <div class="rp-field">
+                                        <input type="text" data-task="\${task.id}" data-field="drugName" 
+                                               value="\${escapeHtml(userAns.drugName || '')}"
+                                               placeholder="\${task.form ? '[название]' : '[препарат]'}" 
+                                               class="\${userAns.drugName ? (userAns.drugName === task.drugName ? 'correct' : 'wrong') : ''}" />
+                                    </div>
+                                \` : ''}
+                                \${task.dose ? \`
+                                    <div class="rp-field" style="flex:0.6;">
+                                        <input type="text" data-task="\${task.id}" data-field="dose" 
+                                               value="\${escapeHtml(userAns.dose || '')}"
+                                               placeholder="[доза]" 
+                                               class="\${userAns.dose ? (userAns.dose === task.dose ? 'correct' : 'wrong') : ''}" />
+                                    </div>
+                                \` : ''}
+                            </div>
+
+                            \${task.ingredients.map((ing, idx) => \`
+                                <div class="ingredient-group">
+                                    <span class="ing-label">\${String.fromCharCode(65 + (task.drugName ? idx + 1 : idx))}.</span>
+                                    <div class="rp-field">
+                                        <input type="text" data-task="\${task.id}" data-field="ing_\${idx}" 
+                                               value="\${escapeHtml(userAns['ing_' + idx] || '')}"
+                                               placeholder="[ингредиент]" 
+                                               class="\${userAns['ing_' + idx] ? (userAns['ing_' + idx] === ing ? 'correct' : 'wrong') : ''}" />
+                                    </div>
+                                </div>
+                            \`).join('')}
+
+                            \${task.mf ? \`
+                            <div class="rp-line">
+                                <span class="rp-label">M.f.:</span>
+                                <div class="rp-field">
+                                    <select data-task="\${task.id}" data-field="mf" class="\${userAns.mf ? (userAns.mf === task.mf ? 'correct' : 'wrong') : ''}">
+                                        <option value="">[форма]</option>
+                                        \${getMfOptions().map(f => \`<option value="\${f}" \${userAns.mf === f ? 'selected' : ''}>\${f}</option>\`).join('')}
+                                    </select>
+                                </div>
+                            </div>
+                            \` : ''}
+
+                            \${task.dtd ? \`
+                            <div class="rp-line">
+                                <span class="rp-label">D.t.d.:</span>
+                                <div class="rp-field">
+                                    <input type="text" data-task="\${task.id}" data-field="dtd" 
+                                           value="\${escapeHtml(userAns.dtd || '')}"
+                                           placeholder="[количество и форма]" 
+                                           class="\${userAns.dtd ? (userAns.dtd === task.dtd ? 'correct' : 'wrong') : ''}" />
+                                </div>
+                            </div>
+                            \` : ''}
+
+                            <div class="rp-line">
+                                <span class="rp-label">\${task.signaType || 'S.:'}</span>
+                                <div class="rp-field" style="flex:0.35;min-width:100px;">
+                                    <select data-task="\${task.id}" data-field="route" class="\${userAns.route ? (userAns.route === task.route ? 'correct' : 'wrong') : ''}">
+                                        <option value="">[способ]</option>
+                                        \${getRouteOptions().map(r => \`<option value="\${r}" \${userAns.route === r ? 'selected' : ''}>\${r}</option>\`).join('')}
+                                    </select>
+                                </div>
+                                <div class="rp-field" style="flex:1;">
+                                    <input type="text" data-task="\${task.id}" data-field="signaExtra" 
+                                           value="\${escapeHtml(userAns.signaExtra || '')}"
+                                           placeholder="[дополнительно]" 
+                                           class="\${userAns.signaExtra ? (userAns.signaExtra === task.signaExtra ? 'correct' : 'wrong') : ''}" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;">
+                            <button class="btn btn-success" id="checkBtn">✅ Проверить</button>
+                            \${currentIndex < total - 1 ? '<button class="btn btn-primary" id="nextBtn">➡️ Следующая задача</button>' : ''}
+                            <button class="btn btn-outline" id="resetBtn">🔄 Сбросить</button>
+                        </div>
+                        <div id="feedback" style="margin-top:6px;font-size:0.78rem;"></div>
+                    </div>
+                \`;
+                app.innerHTML = html;
+
+                app.querySelectorAll('select[data-task], input[data-task]').forEach(el => {
+                    el.addEventListener('change', function() {
+                        const tid = parseInt(this.dataset.task, 10);
+                        const field = this.dataset.field;
+                        if (!answers[tid]) answers[tid] = {};
+                        answers[tid][field] = this.value;
+                        render();
+                    });
+                    el.addEventListener('input', function() {
+                        const tid = parseInt(this.dataset.task, 10);
+                        const field = this.dataset.field;
+                        if (!answers[tid]) answers[tid] = {};
+                        answers[tid][field] = this.value;
+                        render();
+                    });
+                });
+
+                document.getElementById('checkBtn')?.addEventListener('click', function() {
+                    const task = tasks[currentIndex];
+                    const ua = answers[task.id] || {};
+                    let errors = [];
+                    let allCorrect = true;
+
+                    if (task.form && ua.form !== task.form) {
+                        allCorrect = false;
+                        errors.push('❌ Форма: "' + (ua.form || '—') + '", правильно "' + task.form + '"');
+                    }
+                    if (task.drugName && ua.drugName !== task.drugName) {
+                        allCorrect = false;
+                        errors.push('❌ Название: "' + (ua.drugName || '—') + '", правильно "' + task.drugName + '"');
+                    }
+                    if (task.dose && ua.dose !== task.dose) {
+                        allCorrect = false;
+                        errors.push('❌ Доза: "' + (ua.dose || '—') + '", правильно "' + task.dose + '"');
+                    }
+                    task.ingredients.forEach((ing, idx) => {
+                        const field = 'ing_' + idx;
+                        if (ua[field] !== ing) {
+                            allCorrect = false;
+                            errors.push('❌ Ингредиент ' + String.fromCharCode(65 + (task.drugName ? idx + 1 : idx)) + ': "' + (ua[field] || '—') + '", правильно "' + ing + '"');
+                        }
+                    });
+                    if (task.mf && ua.mf !== task.mf) {
+                        allCorrect = false;
+                        errors.push('❌ M.f.: "' + (ua.mf || '—') + '", правильно "' + task.mf + '"');
+                    }
+                    if (task.dtd && ua.dtd !== task.dtd) {
+                        allCorrect = false;
+                        errors.push('❌ D.t.d.: "' + (ua.dtd || '—') + '", правильно "' + task.dtd + '"');
+                    }
+                    if (ua.route !== task.route) {
+                        allCorrect = false;
+                        errors.push('❌ Способ применения: "' + (ua.route || '—') + '", правильно "' + task.route + '"');
+                    }
+                    if (task.signaExtra && ua.signaExtra !== task.signaExtra) {
+                        allCorrect = false;
+                        errors.push('❌ Сигнатура: "' + (ua.signaExtra || '—') + '", правильно "' + task.signaExtra + '"');
+                    }
+
+                    const fb = document.getElementById('feedback');
+                    if (allCorrect) {
+                        fb.innerHTML = '<div style="background:#E8F5E8;padding:8px 12px;border-radius:1rem;color:#2E7D32;font-weight:600;">🎉 Отлично! Рецепт выписан правильно!</div>';
+                        showToast('✅ Рецепт выписан верно!');
+                    } else {
+                        fb.innerHTML = '<div style="background:#FDF0E8;padding:8px 12px;border-radius:1rem;color:#b13e3e;"><strong>❌ Найдены ошибки:</strong><br>' + errors.join('<br>') + '</div>';
+                        showToast('❌ Есть ошибки.');
+                    }
+                });
+
+                document.getElementById('nextBtn')?.addEventListener('click', function() {
+                    currentIndex++;
+                    render();
+                });
+
+                document.getElementById('resetBtn')?.addEventListener('click', function() {
+                    if (confirm('Сбросить прогресс?')) { answers = {}; render(); showToast('🔄 Сброшено'); }
+                });
+            }
+
+            render();
+        <\/script>
+        </body>
+        </html>`;
+
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'recipe_trainer.html';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+        showToast('📤 Тренажёр экспортирован');
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+    function init() {
+        const loaded = loadState();
+        if (!loaded || state.tasks.length === 0) {
+            state.drugs = EXAMPLE_DATA.drugs.map(d => ({ ...d }));
+            state.tasks = EXAMPLE_DATA.tasks.map(t => ({ ...t }));
+            nextTaskId = state.tasks.reduce((max, t) => Math.max(max, t.id), 0) + 1;
+            saveState();
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+                if (this.dataset.tab === 'trainer') {
+                    renderTrainer();
+                }
+            });
+        });
+
+        addTaskBtn.addEventListener('click', () => openTaskEditor(null));
+        saveTaskBtn.addEventListener('click', saveTask);
+        cancelTaskBtn.addEventListener('click', closeTaskEditor);
+        deleteTaskBtn.addEventListener('click', deleteTask);
+
+        addDrugBtn.addEventListener('click', addDrug);
+
+        exportBtn.addEventListener('click', exportHTML);
+
+        resetBtn.addEventListener('click', function() {
+            if (confirm('Сбросить все данные?')) {
+                localStorage.removeItem('vetsim_recipe_constructor');
+                state.tasks = EXAMPLE_DATA.tasks.map(t => ({ ...t }));
+                state.drugs = EXAMPLE_DATA.drugs.map(d => ({ ...d }));
+                state.answers = {};
+                state.currentTaskIndex = 0;
+                nextTaskId = state.tasks.reduce((max, t) => Math.max(max, t.id), 0) + 1;
+                renderAll();
+                showToast('🔄 Данные сброшены');
+            }
+        });
+
+        renderAll();
+    }
+
+    init();
+</script>
+
+</body>
+</html>

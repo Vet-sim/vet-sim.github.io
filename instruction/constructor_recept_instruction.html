@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Инструкция: Фармакологическая рецептура | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: #7B8D6E;
+        }
+
+        .subtitle {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBE3D2;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        /* ===== ОГЛАВЛЕНИЕ ===== */
+        .toc {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #A3B18A;
+        }
+
+        .toc h2 {
+            font-size: 1rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            column-gap: 2rem;
+        }
+
+        .toc ul li {
+            padding: 2px 0;
+            font-size: 0.85rem;
+        }
+
+        .toc ul li a {
+            color: #2C7DA0;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+            color: #1F4E6E;
+        }
+
+        @media (max-width: 768px) {
+            .toc ul {
+                columns: 1;
+            }
+        }
+
+        /* ===== ЗАГОЛОВКИ ===== */
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h2 .badge {
+            font-size: 0.6rem;
+            background: #2C7DA0;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            font-weight: 600;
+            margin: 1rem 0 0.3rem 0;
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== СПИСКИ ===== */
+        ul,
+        ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* ===== ВЫДЕЛЕНИЯ ===== */
+        .highlight {
+            background: #F0EEE5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tag {
+            background: #E2EAD9;
+            color: #3E5C4A;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        /* ===== БЛОКИ ПРИМЕРОВ ===== */
+        .example-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #A3B18A;
+            font-size: 0.9rem;
+        }
+
+        .example-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .example-box code {
+            background: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+        }
+
+        table th {
+            background: #1F4E6E;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #E2EAD9;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) td {
+            background: #F9F6EF;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== БЛОКИ ВНИМАНИЯ ===== */
+        .note {
+            background: #F0F6FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .note strong {
+            color: #1F4E6E;
+        }
+
+        .warning {
+            background: #FDE8E0;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D47A6A;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .warning strong {
+            color: #D47A6A;
+        }
+
+        .tip {
+            background: #E8F5E8;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #6B9E6B;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tip strong {
+            color: #6B9E6B;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .toc ul {
+                columns: 1;
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 1.5rem;
+            }
+
+            .toc {
+                break-inside: avoid;
+            }
+
+            .example-box {
+                break-inside: avoid;
+            }
+
+            table {
+                break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo">📋 <span>Фармакологическая рецептура</span> — Конструктор</div>
+            <span class="version">v1.0</span>
+            <div class="subtitle">Инструкция по работе с конструктором рецептов</div>
+            <div class="header-actions no-print">
+                <a href="https://vet-sim.github.io/vetsim-recipe-builder.html" target="_blank" class="btn btn-primary">
+                    🚀 Перейти к конструктору
+                </a>
+                <button class="btn btn-success" onclick="window.print()">
+                    🖨️ Распечатать инструкцию
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ВСТУПЛЕНИЕ ===== -->
+        <p>
+            <strong>Добро пожаловать!</strong> «Фармакологическая рецептура» — это конструктор для создания интерактивных тренажёров по ветеринарной рецептуре. Инструмент позволяет преподавателям создавать клинические задачи с рецептами, а студентам — тренироваться в правильном написании рецептов в реальной практике.
+        </p>
+
+        <div class="note">
+            <strong>💡 Главная идея:</strong> Вы создаёте клинические задачи с описанием ситуации, и для каждой задачи настраиваете правильный рецепт. Студент в тренажёре должен заполнить все поля рецепта (форму, название препарата, дозу, способ применения) и получить обратную связь. Весь процесс не требует программирования.
+        </div>
+
+        <!-- ===== ОГЛАВЛЕНИЕ ===== -->
+        <div class="toc">
+            <h2>📋 Оглавление</h2>
+            <ul>
+                <li><a href="#s1">1. Что такое конструктор рецептуры</a></li>
+                <li><a href="#s2">2. Общая структура интерфейса</a></li>
+                <li><a href="#s3">3. Конструктор задач</a></li>
+                <li><a href="#s4">4. Банк препаратов</a></li>
+                <li><a href="#s5">5. Тренажёр</a></li>
+                <li><a href="#s6">6. Экспорт</a></li>
+                <li><a href="#s7">7. Практические примеры</a></li>
+                <li><a href="#s8">8. Частые вопросы (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 1 ===== -->
+        <h2 id="s1">1. Что такое конструктор рецептуры</h2>
+
+        <p>
+            <strong>Фармакологическая рецептура</strong> — это специализированный конструктор для обучения правильному выписыванию рецептов в ветеринарной практике. Он помогает:
+        </p>
+        <ul>
+            <li><strong>Преподавателям</strong> — быстро создавать клинические задачи по любой теме (фармакология, терапия, хирургия).</li>
+            <li><strong>Студентам</strong> — тренироваться в написании рецептов, запоминать латинские названия и формы препаратов.</li>
+            <li><strong>Автоматизировать проверку</strong> — мгновенная обратная связь показывает, какие поля заполнены неверно.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Правильное оформление рецепта — обязательный навык ветеринарного врача. Ошибки в написании могут привести к неправильной дозировке или даже к летальному исходу.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 2 ===== -->
+        <h2 id="s2">2. Общая структура интерфейса</h2>
+
+        <p>Конструктор состоит из четырёх вкладок:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Вкладка</th>
+                        <th>Иконка</th>
+                        <th>Что находится</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Конструктор</strong></td>
+                        <td>✏️</td>
+                        <td>Список задач, редактор рецептов</td>
+                        <td>Создание, редактирование, удаление задач</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Тренажёр</strong></td>
+                        <td>🎮</td>
+                        <td>Интерактивный тренажёр для студентов</td>
+                        <td>Заполнение полей рецепта, проверка, обратная связь</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Банк препаратов</strong></td>
+                        <td>💊</td>
+                        <td>Справочник препаратов</td>
+                        <td>Добавление, удаление препаратов</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Справочник</strong></td>
+                        <td>📖</td>
+                        <td>Теоретические основы рецептуры</td>
+                        <td>Просмотр справочной информации</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Начните с изучения справочника, чтобы понять структуру рецепта. Затем перейдите в банк препаратов и добавьте свои препараты. После этого создайте задачи в конструкторе.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 3 ===== -->
+        <h2 id="s3">3. Конструктор задач</h2>
+
+        <h3>3.1 Структура рецепта</h3>
+        <p>Каждый рецепт в конструкторе состоит из следующих элементов:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Элемент</th>
+                        <th>Обозначение</th>
+                        <th>Что указывает</th>
+                        <th>Пример</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Форма (Gen.)</strong></td>
+                        <td>Rp.:</td>
+                        <td>Форма препарата в родительном падеже</td>
+                        <td><code>Solutionis</code> (раствор)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Название (Gen.)</strong></td>
+                        <td>Rp.:</td>
+                        <td>Название препарата в родительном падеже</td>
+                        <td><code>Natrii chloridi</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Доза</strong></td>
+                        <td>Rp.:</td>
+                        <td>Количество и концентрация</td>
+                        <td><code>0,9% – 100 ml</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ингредиенты</strong></td>
+                        <td>Rp.:</td>
+                        <td>Для сложных рецептов</td>
+                        <td><code>Extracti Valerianae fluidi 6 ml</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Форма (Nom.)</strong></td>
+                        <td>M.f.</td>
+                        <td>Готовая форма в именительном падеже</td>
+                        <td><code>Mixtura</code> (микстура)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Количество и форма</strong></td>
+                        <td>D.t.d.</td>
+                        <td>Количество доз и форма выпуска</td>
+                        <td><code>N.10 in ampullis</code></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Способ применения</strong></td>
+                        <td>S. / D.S.</td>
+                        <td>Путь введения и дозировка</td>
+                        <td><code>По 1 таблетке 2 раза в день</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>3.2 Создание задачи</h3>
+        <ol>
+            <li>Нажмите <span class="highlight">«➕ Добавить задачу»</span>.</li>
+            <li>В поле <strong>«Задача (клиническая ситуация)»</strong> опишите ситуацию, в которой нужно выписать рецепт.</li>
+            <li>Заполните поля рецепта:
+                <ul>
+                    <li><strong>Форма (Gen.)</strong> — выберите из выпадающего списка.</li>
+                    <li><strong>Название препарата (Gen.)</strong> — введите латинское название в родительном падеже.</li>
+                    <li><strong>Доза</strong> — укажите концентрацию и количество.</li>
+                    <li><strong>Дополнительные ингредиенты</strong> — для сложных рецептов (каждый с новой строки).</li>
+                    <li><strong>M.f.</strong> — форма в именительном падеже (опционально).</li>
+                    <li><strong>D.t.d.</strong> — количество и форма выпуска (опционально).</li>
+                    <li><strong>S. / D.S.</strong> — способ применения и дополнительные указания.</li>
+                </ul>
+            </li>
+            <li>Нажмите <span class="highlight">«💾 Сохранить»</span>.</li>
+        </ol>
+
+        <div class="example-box">
+            <div class="label">📘 Пример создания задачи</div>
+            <p>
+                <strong>Задача:</strong> Собаке с гнойной раной назначить мазь «Левомеколь» 40 г для наружного применения.<br>
+                <strong>Рецепт:</strong>
+            </p>
+            <pre style="background:#F9F6EF;padding:0.6rem 1rem;border-radius:0.8rem;font-family:'Courier New',monospace;font-size:0.78rem;margin-top:4px;">
+        Rp.: Unguenti Levomecoli 40 g
+        D.S. Наружное. Наносить на рану 1 раз в день, 10 дней.</pre>
+        </div>
+
+        <h3>3.3 Редактирование и удаление</h3>
+        <ul>
+            <li>На карточке задачи нажмите <span class="highlight">✏️</span> — откроется редактор со всеми полями.</li>
+            <li>Нажмите <span class="highlight">🗑️</span> на карточке задачи, чтобы удалить её.</li>
+        </ul>
+
+        <!-- ===== РАЗДЕЛ 4 ===== -->
+        <h2 id="s4">4. Банк препаратов</h2>
+
+        <p>Банк препаратов — это справочник, который помогает быстро заполнять рецепты. Препараты из банка автоматически подставляются в выпадающие списки.</p>
+
+        <h3>4.1 Добавление препарата</h3>
+        <ol>
+            <li>Заполните поля:
+                <ul>
+                    <li><strong>Название (Nom.)</strong> — именительный падеж (например, <code>Natrii chloridum</code>).</li>
+                    <li><strong>Родительный (Gen.)</strong> — родительный падеж (например, <code>Natrii chloridi</code>).</li>
+                    <li><strong>Форма (Gen.)</strong> — форма в родительном падеже (например, <code>Solutionis</code>).</li>
+                    <li><strong>Дозировка</strong> — стандартная доза (например, <code>0,9% – 100 ml</code>).</li>
+                </ul>
+            </li>
+            <li>Нажмите <span class="highlight">«➕»</span>.</li>
+        </ol>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Банк препаратов можно использовать как шпаргалку. Чем больше препаратов вы добавите, тем быстрее будет создавать задачи.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 5 ===== -->
+        <h2 id="s5">5. Тренажёр</h2>
+
+        <p>Вкладка «Тренажёр» предлагает интерактивный способ проверки знаний. Студент должен заполнить все поля рецепта для каждой клинической задачи.</p>
+
+        <h3>5.1 Как проходить тренажёр</h3>
+        <ol>
+            <li>Прочитайте клиническую задачу.</li>
+            <li>Заполните все поля рецепта:
+                <ul>
+                    <li>Выберите форму препарата (Gen.).</li>
+                    <li>Введите название препарата (Gen.).</li>
+                    <li>Укажите дозу.</li>
+                    <li>При необходимости заполните дополнительные ингредиенты, M.f. и D.t.d.</li>
+                    <li>Выберите способ применения и введите дополнительные указания.</li>
+                </ul>
+            </li>
+            <li>Нажмите <span class="highlight">«✅ Проверить»</span>.</li>
+            <li>Получите обратную связь: правильные поля подсвечиваются зелёным, неправильные — красным.</li>
+            <li>Нажмите <span class="highlight">«➡️ Следующая задача»</span> для продолжения.</li>
+        </ol>
+
+        <div class="example-box">
+            <div class="label">📘 Пример работы тренажёра</div>
+            <p>
+                <strong>Задача:</strong> Кошке с бактериальной инфекцией назначить антибиотик «Амоксициллин» в таблетках по 250 мг, 20 таблеток. По 1 таблетке 2 раза в день, 7 дней.<br>
+                <strong>Правильный рецепт:</strong>
+            </p>
+            <pre style="background:#F9F6EF;padding:0.6rem 1rem;border-radius:0.8rem;font-family:'Courier New',monospace;font-size:0.78rem;margin-top:4px;">
+        Rp.: Tabulettarum Amoxicillini 0,25 – N.20
+        D.S. Внутреннее. По 1 таблетке 2 раза в день, 7 дней.</pre>
+            <p style="margin-top:4px;">
+                <strong>Ошибка студента:</strong> ввёл <code>Amoxicillinum</code> вместо <code>Amoxicillini</code>.<br>
+                <strong>Обратная связь:</strong> ❌ Название: "Amoxicillinum", правильно "Amoxicillini"
+            </p>
+        </div>
+
+        <h3>5.2 Статистика</h3>
+        <ul>
+            <li>Вверху отображается <strong>прогресс</strong> (номер текущей задачи из общего количества).</li>
+            <li>Справа — <strong>счёт</strong> (количество выполненных задач).</li>
+            <li>Кнопка <span class="highlight">«🔄 Сбросить»</span> обнуляет прогресс.</li>
+        </ul>
+
+        <!-- ===== РАЗДЕЛ 6 ===== -->
+        <h2 id="s6">6. Экспорт</h2>
+
+        <p>Кнопка <span class="highlight">«📤 Экспорт»</span> создаёт самостоятельный HTML-файл с тренажёром для студентов.</p>
+
+        <ul>
+            <li>Файл содержит все задачи и банк препаратов.</li>
+            <li>Работает <strong>полностью офлайн</strong>.</li>
+            <li>Студент может открыть его в браузере и сразу начать тренироваться.</li>
+            <li>Интерфейс адаптирован для мобильных устройств.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Экспортированный HTML-файл не требует интернета и включает все данные. Идеально для отправки студентам по электронной почте или через облачные сервисы.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 7 ===== -->
+        <h2 id="s7">7. Практические примеры</h2>
+
+        <h3>Пример 1: Терапия отита</h3>
+        <div class="example-box">
+            <div class="label">📘 Задача</div>
+            <p>
+                <strong>Ситуация:</strong> Собаке с отитом назначить ушные капли «Отипакс» по 3 капли в каждое ухо 2 раза в день, 5 дней.<br>
+                <strong>Рецепт:</strong>
+            </p>
+            <pre style="background:#F9F6EF;padding:0.6rem 1rem;border-radius:0.8rem;font-family:'Courier New',monospace;font-size:0.78rem;margin-top:4px;">
+        Rp.: Guttarum Otipaxi 15 ml
+        D.S. Наружное. По 3 капли в каждое ухо 2 раза в день, 5 дней.</pre>
+        </div>
+
+        <h3>Пример 2: Инфузионная терапия</h3>
+        <div class="example-box">
+            <div class="label">📘 Задача</div>
+            <p>
+                <strong>Ситуация:</strong> Корове с гипонатриемией назначить 0,9% раствор натрия хлорида 100 мл внутривенно капельно.<br>
+                <strong>Рецепт:</strong>
+            </p>
+            <pre style="background:#F9F6EF;padding:0.6rem 1rem;border-radius:0.8rem;font-family:'Courier New',monospace;font-size:0.78rem;margin-top:4px;">
+        Rp.: Solutionis Natrii chloridi 0,9% – 100 ml
+        D.S. Внутривенное. Капельно.</pre>
+        </div>
+
+        <h3>Пример 3: Сложный рецепт</h3>
+        <div class="example-box">
+            <div class="label">📘 Задача</div>
+            <p>
+                <strong>Ситуация:</strong> Собаке с нарушением сна назначить натрия бромид 3,0, настойку валерианы 6 мл, воду дистиллированную 100 мл. По 1 столовой ложке 3 раза в день.<br>
+                <strong>Рецепт:</strong>
+            </p>
+            <pre style="background:#F9F6EF;padding:0.6rem 1rem;border-radius:0.8rem;font-family:'Courier New',monospace;font-size:0.78rem;margin-top:4px;">
+        Rp.: Natrii bromidi 3,0
+             Extracti Valerianae fluidi 6 ml
+             Aquae destillatae 100 ml
+        M.f. Mixtura
+        D.S. Внутреннее. По 1 столовой ложке 3 раза в день.</pre>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 8 ===== -->
+        <h2 id="s8">8. Частые вопросы (FAQ)</h2>
+
+        <h4>❓ Сколько задач можно добавить?</h4>
+        <p>Количество задач не ограничено. Вы можете создавать сколько угодно клинических ситуаций.</p>
+
+        <h4>❓ Что делать, если я случайно удалил задачу?</h4>
+        <p>Если вы удалили задачу, она не восстанавливается. Но вы всегда можете создать её заново.</p>
+
+        <h4>❓ Работает ли тренажёр на телефоне?</h4>
+        <p>Да, интерфейс полностью адаптивен. Все поля и кнопки оптимизированы для работы на мобильных устройствах.</p>
+
+        <h4>❓ Могу ли я редактировать экспортированный HTML-файл?</h4>
+        <p>Да, экспортированный файл — это обычный HTML. Вы можете открыть его в любом текстовом редакторе и внести изменения.</p>
+
+        <h4>❓ Сохраняются ли мои данные после закрытия браузера?</h4>
+        <p>Да, все данные автоматически сохраняются в localStorage браузера. При следующем открытии конструктора всё восстановится.</p>
+
+        <h4>❓ Что означают цвета в тренажёре?</h4>
+        <p>Зелёный цвет поля означает, что ответ правильный. Красный — неправильный. При проверке выводится список всех ошибок.</p>
+
+        <div class="tip">
+            <strong>💡 Совет преподавателям:</strong> Начните с 3–5 задач по одной теме (например, антибиотики). Постепенно расширяйте банк задач по мере изучения новых разделов фармакологии.
+        </div>
+
+        <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+        <h2>🎯 Заключение</h2>
+
+        <p>
+            Конструктор «Фармакологическая рецептура» — это простой и эффективный инструмент для обучения правильному выписыванию рецептов в ветеринарной практике. Он превращает изучение рецептуры в увлекательный интерактивный процесс.
+        </p>
+
+        <p><strong>Ключевые преимущества:</strong></p>
+        <ul>
+            <li><strong>Гибкость</strong> — создавайте задачи по любым клиническим ситуациям.</li>
+            <li><strong>Интерактивность</strong> — мгновенная обратная связь помогает учиться на ошибках.</li>
+            <li><strong>Офлайн-работа</strong> — экспортированные тренажёры не требуют интернета.</li>
+            <li><strong>Сохраняемость</strong> — данные автоматически сохраняются в браузере.</li>
+            <li><strong>Адаптивность</strong> — работает на всех устройствах.</li>
+            <li><strong>Бесплатность</strong> — инструмент полностью бесплатен для образовательных целей.</li>
+        </ul>
+
+        <div class="tip" style="text-align:center; margin: 1.5rem 0;">
+            <p style="font-size:1rem;"><strong>💡 Совет:</strong> Используйте конструктор для подготовки к занятиям, создания домашних заданий и экзаменационных тренажёров. Регулярная тренировка в игровой форме значительно повышает усвоение навыков выписывания рецептов.</p>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+            <p>Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+            <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+            <p>💬 Сообщество: <a href="https://vk.ru/vetsimpros" target="_blank">ВКонтакте</a> | По вопросам: <a href="https://vk.ru/vet_sim" target="_blank">https://vk.ru/vet_sim</a></p>
+        </div>
+
+    </div>
+</body>
+</html>

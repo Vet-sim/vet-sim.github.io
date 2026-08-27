@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Онкологический алгоритм · ВетСим</title>
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+            background: #FDF8F0;
+            color: #1A2A3A;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ===== ХЕДЕР ===== */
+        .header {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 14px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+            border: 1px solid #E7EDE2;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1A2A3A;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .logo .sub {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #7B8D6E;
+        }
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+        }
+        .header-stats .score {
+            background: #2C7DA0;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        .header-stats .time-loss {
+            background: #D4A373;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        .header-stats .progress-text {
+            color: #5F7C62;
+        }
+
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            font-size: 0.78rem;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-danger { background: #b13e3e; color: white; }
+        .btn-danger:hover { background: #8f2e2e; }
+        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-sm { padding: 3px 12px; font-size: 0.7rem; }
+
+        /* ===== ВКЛАДКИ ===== */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .tab-btn:hover { opacity: 0.85; }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== КАРТОЧКА ===== */
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 18px 22px;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #2C7DA0;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        /* ===== СЦЕНАРИЙ ===== */
+        .scenario-banner {
+            background: #F0F7FA;
+            border-radius: 1rem;
+            padding: 12px 16px;
+            border-left: 4px solid #2C7DA0;
+            margin-bottom: 12px;
+        }
+        .scenario-banner .label {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #2C7DA0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .scenario-banner .text {
+            font-size: 0.9rem;
+            color: #1A2A3A;
+            margin-top: 2px;
+            line-height: 1.5;
+        }
+
+        .scenario-text {
+            font-size: 0.92rem;
+            line-height: 1.6;
+            color: #3E5C4A;
+            margin-bottom: 12px;
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 10px 0 14px;
+        }
+        .choice-btn {
+            padding: 12px 18px;
+            border-radius: 2.5rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            text-align: left;
+            background: #F4EFE4;
+            border: 2px solid #D9D0BD;
+            color: #1A2A3A;
+            width: 100%;
+        }
+        .choice-btn:hover:not(:disabled) {
+            border-color: #2C7DA0;
+            background: #D4E3ED;
+            transform: translateX(4px);
+        }
+        .choice-btn:disabled { cursor: default; opacity: 0.7; }
+        .choice-btn.correct {
+            border-color: #6B9E6B;
+            background: #E8F5E8;
+        }
+        .choice-btn.wrong {
+            border-color: #b13e3e;
+            background: #FDF0E8;
+        }
+        .choice-btn .feedback {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: #5F7C62;
+            margin-top: 6px;
+            padding: 8px 14px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 1rem;
+            display: none;
+        }
+        .choice-btn .feedback.show { display: block; }
+        .choice-btn .badge-correct {
+            font-size: 0.65rem;
+            background: #6B9E6B;
+            color: white;
+            padding: 0 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .choice-btn .badge-wrong {
+            font-size: 0.65rem;
+            background: #b13e3e;
+            color: white;
+            padding: 0 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .choice-btn .source {
+            font-size: 0.65rem;
+            color: #7B8D6E;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        .time-indicator {
+            background: #FFF5F0;
+            border: 2px solid #D4A373;
+            border-radius: 1rem;
+            padding: 10px 16px;
+            margin: 8px 0 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .time-indicator .label {
+            font-weight: 700;
+            color: #b13e3e;
+            font-size: 0.8rem;
+        }
+        .time-indicator .days {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #b13e3e;
+        }
+        .time-indicator .days.lost {
+            color: #b13e3e;
+        }
+        .time-indicator .days.saved {
+            color: #6B9E6B;
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #E7EDE2;
+            border-radius: 40px;
+            overflow: hidden;
+            margin: 6px 0 10px;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2C7DA0, #6B9E6B);
+            border-radius: 40px;
+            transition: width 0.4s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        /* ===== СПРАВОЧНИК ===== */
+        .reference-block {
+            margin-top: 16px;
+            padding: 14px 18px;
+            background: #F9FBF8;
+            border-radius: 1.2rem;
+            border: 1px solid #E7EDE2;
+        }
+        .reference-block .ref-title {
+            font-weight: 700;
+            color: #2C7DA0;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .reference-block .ref-title .arrow {
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .reference-block .ref-title .arrow.open { transform: rotate(90deg); }
+        .reference-block .ref-section {
+            display: none;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: #3E5C4A;
+        }
+        .reference-block .ref-section.open { display: block; }
+        .reference-block .ref-section .highlight {
+            background: #F0F7FA;
+            padding: 8px 14px;
+            border-radius: 0.8rem;
+            border-left: 3px solid #6B9E6B;
+            margin: 6px 0;
+        }
+        .reference-block .ref-section ul {
+            padding-left: 20px;
+            margin: 4px 0;
+        }
+        .reference-block .ref-section ul li { margin: 3px 0; }
+
+        /* ===== РЕЗУЛЬТАТ ===== */
+        .result-screen {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        .result-screen .icon { font-size: 3.5rem; margin-bottom: 10px; }
+        .result-screen h2 { font-size: 1.5rem; color: #1A2A3A; margin-bottom: 6px; }
+        .result-screen .score-final {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            margin: 10px 0;
+        }
+        .result-screen .details {
+            font-size: 0.9rem;
+            color: #5F7C62;
+            max-width: 500px;
+            margin: 0 auto 16px;
+        }
+        .result-screen .stars {
+            font-size: 2.2rem;
+            margin: 6px 0 12px;
+        }
+
+        /* ===== ТОСТ ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            body { padding: 10px; }
+            .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+            .header .logo { font-size: 0.95rem; }
+            .header-stats { justify-content: space-between; }
+            .card { padding: 14px 16px; }
+            .choice-btn { font-size: 0.8rem; padding: 10px 14px; }
+            .tabs .tab-btn { font-size: 0.7rem; padding: 4px 12px; }
+            .time-indicator { padding: 8px 12px; }
+        }
+        @media (max-width: 420px) {
+            .choice-btn { font-size: 0.75rem; padding: 8px 12px; }
+            .header-stats .score { font-size: 0.7rem; padding: 2px 10px; }
+            .header-stats .time-loss { font-size: 0.7rem; padding: 2px 10px; }
+            .scenario-banner .text { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ===== ХЕДЕР ===== -->
+    <header class="header">
+        <div class="logo">
+            🩺 <span class="gradient">Онкологический алгоритм</span>
+            <span class="sub">· Время — ткань</span>
+        </div>
+        <div class="header-stats">
+            <span class="progress-text" id="progressLabel">Шаг 1 из 0</span>
+            <span class="score" id="scoreDisplay">⭐ 0</span>
+            <span class="time-loss" id="timeDisplay">⏱️ Потеряно: 0 дн.</span>
+        </div>
+    </header>
+
+    <!-- ===== ВКЛАДКИ ===== -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="scenario">📋 Сценарий</button>
+        <button class="tab-btn" data-tab="reference">📖 Справочник</button>
+    </div>
+
+    <!-- ===== ОСНОВНАЯ ОБЛАСТЬ ===== -->
+    <div id="mainArea">
+        <!-- Рендерится JS -->
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ================================================================
+    //  ОНКОЛОГИЧЕСКИЙ АЛГОРИТМ — ПОЛНАЯ ЛОГИКА
+    // ================================================================
+
+    // ================================================================
+    //  ДАННЫЕ СЦЕНАРИЕВ
+    //  ================================================================
+
+    const SCENARIOS = [{
+        id: 0,
+        title: '«Шишка на боку»',
+        icon: '🎯',
+        context: 'К вам пришёл владелец лабрадора 6 лет с подкожным уплотнением на груди. Он считает, что это «жировик», и просит удалить. Вы видите плотный узел 3 см, подвижный, безболезненный. Владелец торопится и говорит: «Давайте просто вырежем и всё».',
+        timeLoss: 0,
+        steps: [{
+            id: 0,
+            title: 'Первичное решение',
+            text: 'Ваши действия при первом обращении?',
+            choices: [
+                { text: 'Согласиться на удаление без дополнительной диагностики — владелец торопится, а жировик явно доброкачественный.', isCorrect: false, feedback: '❌ Удаление новообразования без цитологии/гистологии — одна из самых частых ошибок в онкологии. Даже визуально «доброкачественные» образования могут оказаться злокачественными. Без гистологического диагноза вы не знаете, что удалили и какой риск рецидива.', source: 'AAHA Oncology Guidelines 2026, Section 3' },
+                { text: 'Предложить пункционную биопсию (тонкоигольная аспирация) для цитологического исследования перед принятием решения.', isCorrect: true, feedback: '✅ Правильно! Цитология — это минимально инвазивный метод, позволяющий получить информацию о характере новообразования. Она даёт ответ: воспаление, доброкачественная опухоль или злокачественная. Это позволяет принять решение о необходимости полноценной гистологии.', source: 'AAHA Oncology Guidelines 2026, Section 3' },
+                { text: 'Назначить УЗИ и рентген грудной клетки сразу, так как любое образование нужно стадировать.', isCorrect: false, feedback: '❌ Стадирование проводится после гистологической верификации диагноза. Без понимания типа опухоли невозможно интерпретировать результаты стадирования. Сначала диагноз, потом стадирование.', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }, {
+            id: 1,
+            title: 'Цитология: мастоцитома',
+            text: 'Цитология показала мастоцитому (тучноклеточную опухоль) I–II степени. Владелец спрашивает: «Теперь можно удалить?» Каков ваш следующий шаг?',
+            choices: [
+                { text: 'Да, можно удалить, мастоцитома I–II степени — это низкая злокачественность, удаление решит проблему.', isCorrect: false, feedback: '❌ Мастоцитома I–II степени действительно имеет хороший прогноз, но удаление без стадирования — ошибка. Даже низкодифференцированные мастоцитомы могут метастазировать. Необходимо определить степень дифференцировки (гистология) и стадировать пациента.', source: 'AAHA Oncology Guidelines 2026, Mast Cell Tumors Section' },
+                { text: 'Назначить гистологию с определением степени (Grade I–III) и стадирование (УЗИ брюшной полости, рентген грудной клетки).', isCorrect: true, feedback: '✅ Правильно! Степень мастоцитомы (Grade) — ключевой прогностический фактор. Гистология с определением степени позволяет выбрать правильную тактику. Стадирование (УЗИ, рентген) исключает метастазы. Без этого вы рискуете пропустить генерализацию процесса.', source: 'AAHA Oncology Guidelines 2026, Mast Cell Tumors Section' },
+                { text: 'Назначить МРТ для оценки глубины инвазии и стадирования, так как это самый точный метод.', isCorrect: false, feedback: '❌ МРТ — дорогой и не всегда доступный метод. Для стандартного стадирования мастоцитомы достаточно УЗИ брюшной полости и рентгена грудной клетки. МРТ используется в сложных случаях, когда есть подозрение на поражение костей или нервов.', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }, {
+            id: 2,
+            title: 'Стадирование и план лечения',
+            text: 'Гистология подтвердила мастоцитому I степени. Стадирование: лимфоузлы не увеличены, метастазов нет. Какой план лечения вы предложите?',
+            choices: [
+                { text: 'Широкое иссечение опухоли с захватом 2–3 см здоровых тканей в пределах фасции. Динамическое наблюдение.', isCorrect: true, feedback: '✅ Правильно! Для мастоцитомы I степени с отрицательными лимфоузлами и без метастазов широкое иссечение — оптимальный метод. Дополнительная адъювантная терапия не требуется, но необходим регулярный мониторинг.', source: 'AAHA Oncology Guidelines 2026, Mast Cell Tumors Section' },
+                { text: 'Только лучевая терапия, так как хирургия может привести к рецидиву.', isCorrect: false, feedback: '❌ Лучевая терапия — это метод лечения, но для мастоцитомы I степени стандартом остаётся хирургия с широкими краями. Лучевая терапия применяется при нерезектабельных опухолях или при рецидивах.', source: 'AAHA Oncology Guidelines 2026' },
+                { text: 'Назначить превентивную химиотерапию, так как мастоцитома всегда имеет риск метастазирования.', isCorrect: false, feedback: '❌ Превентивная химиотерапия при мастоцитоме I степени не показана. Адъювантная терапия назначается только при высоком риске рецидива или при наличии метастазов.', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }],
+        reference: {
+            title: '📋 Справочные материалы по сценарию',
+            sections: [{
+                title: 'Алгоритм диагностики новообразований',
+                content: `
+                    <div class="highlight">
+                        <strong>AAHA Oncology Guidelines 2026 — алгоритм:</strong><br>
+                        1. <strong>Обнаружение</strong> — пальпация, визуальный осмотр<br>
+                        2. <strong>Цитология</strong> — тонкоигольная аспирация (первичный скрининг)<br>
+                        3. <strong>Гистология</strong> — биопсия с определением типа и степени<br>
+                        4. <strong>Стадирование</strong> — оценка распространённости процесса<br>
+                        5. <strong>Лечение</strong> — хирургия, химиотерапия, лучевая терапия<br>
+                        6. <strong>Мониторинг</strong> — наблюдение и контроль рецидивов
+                    </div>
+                    <ul>
+                        <li><strong>Цитология</strong> — даёт информацию о типе клеток, но не о степени дифференцировки</li>
+                        <li><strong>Гистология</strong> — золотой стандарт для определения типа опухоли и степени злокачественности</li>
+                        <li><strong>Стадирование</strong> — обязательно <strong>ДО</strong> начала лечения для выбора правильной тактики</li>
+                    </ul>
+                `
+            }, {
+                title: 'Мастоцитома собак: ключевые факты',
+                content: `
+                    <ul>
+                        <li><strong>Мастоцитома</strong> — одна из самых частых кожных опухолей у собак</li>
+                        <li><strong>Grade I (низкая степень)</strong> — хороший прогноз, достаточно широкого иссечения</li>
+                        <li><strong>Grade II (средняя степень)</strong> — требует гистологии с оценкой риска</li>
+                        <li><strong>Grade III (высокая степень)</strong> — агрессивное течение, высокий риск метастазов</li>
+                        <li><strong>Стадирование</strong> обязательно для всех степеней!</li>
+                    </ul>
+                `
+            }]
+        }
+    }, {
+        id: 1,
+        title: '«Всё чисто после операции»',
+        icon: '🔍',
+        context: 'Хирург удалил опухоль молочной железы у кошки 10 лет. Он считает, что «всё чисто», так как удалил опухоль с запасом. Владелец успокоился. Но вы знаете, что это не так.',
+        timeLoss: 7,
+        steps: [{
+            id: 0,
+            title: 'Оценка риска',
+            text: 'Какие действия вы предпримете после получения гистологического заключения?',
+            choices: [
+                { text: 'Успокоить владельца, так как операция проведена «с запасом», риск рецидива минимален.', isCorrect: false, feedback: '❌ Даже при широком иссечении риск рецидива остаётся. Карцинома молочной железы у кошек — агрессивная опухоль. Без стадирования и оценки риска вы не можете исключить микрометастатическую болезнь.', source: 'AAHA Oncology Guidelines 2026, Mammary Tumors' },
+                { text: 'Провести стадирование (рентген грудной клетки, УЗИ брюшной полости), оценить гистологические факторы риска и рассмотреть адъювантную терапию.', isCorrect: true, feedback: '✅ Правильно! Даже после «чистой» операции необходимо стадирование. Микрометастазы могут существовать уже на момент постановки диагноза. Адъювантная терапия может иметь значение даже тогда, когда после операции визуально «всё чисто».', source: 'AAHA Oncology Guidelines 2026, Adjuvant Therapy' },
+                { text: 'Назначить химиотерапию сразу, так как любая карцинома молочной железы требует адъювантной терапии.', isCorrect: false, feedback: '❌ Химиотерапия не показана всем пациентам. Решение о адъювантной терапии принимается на основе стадирования и гистологических факторов риска (размер опухоли, степень дифференцировки, наличие лимфоваскулярной инвазии).', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }, {
+            id: 1,
+            title: 'Стадирование и адъювантная терапия',
+            text: 'Стадирование показало: метастазов нет, но гистология выявила лимфоваскулярную инвазию и высокую степень дифференцировки. Какой план?',
+            choices: [
+                { text: 'Назначить адъювантную химиотерапию, так как риск микрометастазов высок.', isCorrect: true, feedback: '✅ Правильно! Лимфоваскулярная инвазия и высокая степень дифференцировки — факторы высокого риска микрометастатической болезни. Адъювантная химиотерапия снижает риск рецидива.', source: 'AAHA Oncology Guidelines 2026, Adjuvant Therapy' },
+                { text: 'Отказаться от химиотерапии, так как метастазов нет, а химиотерапия токсична.', isCorrect: false, feedback: '❌ Микрометастатическая болезнь не видна при стадировании. Отсутствие видимых метастазов ≠ отсутствие риска. Химиотерапия при высоком риске значительно улучшает прогноз.', source: 'AAHA Oncology Guidelines 2026' },
+                { text: 'Назначить только лучевую терапию, так как это менее токсично, чем химиотерапия.', isCorrect: false, feedback: '❌ Лучевая терапия — локальный метод, она не воздействует на системные микрометастазы. Адъювантная химиотерапия — системный метод, необходимый при высоком риске генерализации.', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }],
+        reference: {
+            title: '📋 Справочные материалы по сценарию',
+            sections: [{
+                title: 'Микрометастатическая болезнь',
+                content: `
+                    <div class="highlight">
+                        <strong>Что такое микрометастатическая болезнь?</strong><br>
+                        Микроскопические метастазы, которые не визуализируются при стандартном стадировании (рентген, УЗИ, КТ). Они могут существовать уже на момент постановки диагноза.
+                    </div>
+                    <ul>
+                        <li><strong>Факторы риска:</strong> размер опухоли > 3 см, высокая степень дифференцировки, лимфоваскулярная инвазия</li>
+                        <li><strong>Адъювантная терапия</strong> — лечение после операции, направленное на уничтожение микрометастазов</li>
+                        <li><strong>Цель:</strong> снизить риск рецидива и улучшить выживаемость</li>
+                    </ul>
+                    <div class="highlight" style="background:#FDF0E8;border-left-color:#D4A373;">
+                        ⚠️ Отсутствие видимых метастазов ≠ отсутствие риска!
+                    </div>
+                `
+            }]
+        }
+    }, {
+        id: 2,
+        title: '«Наблюдаем пока»',
+        icon: '⏳',
+        context: 'К вам пришёл владелец таксы 11 лет с подкожным образованием на бедре, которое медленно растёт в течение нескольких месяцев. Владелец говорит: «Давайте пока понаблюдаем, может, само пройдёт».',
+        timeLoss: 30,
+        steps: [{
+            id: 0,
+            title: 'Оценка ситуации',
+            text: 'Что вы ответите владельцу?',
+            choices: [
+                { text: 'Согласиться на наблюдение, так как образование растёт медленно и, вероятно, доброкачественное.', isCorrect: false, feedback: '❌ В онкологии несколько недель или месяцев могут изменить стадию заболевания. Наблюдение оправдано только в строго определённых случаях (низкий риск, медленный рост). Владелец не должен принимать решение без диагностики.', source: 'AAHA Oncology Guidelines 2026' },
+                { text: 'Предложить провести цитологию, чтобы определить характер образования, и уже потом принимать решение о тактике.', isCorrect: true, feedback: '✅ Правильно! Цитология — минимально инвазивный метод, который даёт ответ: воспаление, доброкачественная или злокачественная опухоль. Только после этого можно принимать решение о наблюдении или лечении.', source: 'AAHA Oncology Guidelines 2026, Section 3' },
+                { text: 'Предложить удалить образование без диагностики, так как оно может оказаться злокачественным.', isCorrect: false, feedback: '❌ Удаление без диагностики — это риск оставить раковые клетки или, наоборот, провести ненужную операцию. Диагностика первична!', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }, {
+            id: 1,
+            title: 'Цитология и принятие решения',
+            text: 'Цитология показала липому (доброкачественная опухоль из жировой ткани). Теперь ваше решение?',
+            choices: [
+                { text: 'Предложить наблюдение, так как липома неопасна, но с условием контроля роста.', isCorrect: true, feedback: '✅ Правильно! Липома — доброкачественная опухоль, которая не метастазирует. Наблюдение — обоснованное решение, если опухоль не мешает и не растёт агрессивно. Но важно: это решение принято на основе ДИАГНОЗА, а не предположения!', source: 'AAHA Oncology Guidelines 2026' },
+                { text: 'Настоять на удалении, так как любая опухоль должна быть удалена.', isCorrect: false, feedback: '❌ Удаление доброкачественной опухоли, которая не беспокоит пациента — не всегда оправдано. Липома удаляется только при косметическом дефекте или при нарушении функции.', source: 'AAHA Oncology Guidelines 2026' },
+                { text: 'Назначить гистологию, чтобы убедиться, что это действительно липома.', isCorrect: false, feedback: '❌ Цитология в большинстве случаев достаточно информативна для диагностики липомы. Гистология не обязательна, если цитологическая картина типична.', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }],
+        reference: {
+            title: '📋 Справочные материалы по сценарию',
+            sections: [{
+                title: 'Когда наблюдение оправдано?',
+                content: `
+                    <ul>
+                        <li><strong>Доброкачественные опухоли</strong> — липомы, гистиоцитомы, атеромы</li>
+                        <li><strong>Медленный рост</strong> — отсутствие агрессивного роста</li>
+                        <li><strong>Отсутствие симптомов</strong> — опухоль не мешает, не болит, не кровоточит</li>
+                        <li><strong>Низкий риск</strong> — визуально и по данным цитологии нет признаков злокачественности</li>
+                    </ul>
+                    <div class="highlight" style="background:#FDF0E8;border-left-color:#D4A373;">
+                        ⚠️ Наблюдение — это осознанное клиническое решение, а не «ничего не делание»!
+                    </div>
+                    <div class="highlight">
+                        <strong>Алгоритм принятия решения:</strong><br>
+                        1. Диагноз (цитология/гистология)<br>
+                        2. Стадирование (при злокачественных опухолях)<br>
+                        3. Оценка риска (размер, степень, локализация)<br>
+                        4. Решение: лечение или наблюдение с планом контроля
+                    </div>
+                `
+            }]
+        }
+    }, {
+        id: 3,
+        title: '«Микрометастазы: невидимая угроза»',
+        icon: '🔬',
+        context: 'Пациент — собака 8 лет с остеосаркомой дистальной части бедренной кости. Проведена ампутация конечности. Владелец считает, что проблема решена.',
+        timeLoss: 0,
+        steps: [{
+            id: 0,
+            title: 'Остеосаркома: следующий шаг',
+            text: 'После ампутации конечности при остеосаркоме, что вы должны обсудить с владельцем?',
+            choices: [
+                { text: 'Поздравить владельца с успешной операцией и назначить контрольный осмотр через 3 месяца.', isCorrect: false, feedback: '❌ Остеосаркома — агрессивная опухоль с высоким риском метастазирования. Без адъювантной химиотерапии медиана выживаемости составляет 3–4 месяца.', source: 'AAHA Oncology Guidelines 2026, Osteosarcoma Section' },
+                { text: 'Обсудить необходимость адъювантной химиотерапии, так как риск микрометастазов крайне высок.', isCorrect: true, feedback: '✅ Правильно! Остеосаркома имеет очень высокий риск микрометастатической болезни. Адъювантная химиотерапия достоверно увеличивает медиану выживаемости (с 3–4 до 10–12 месяцев).', source: 'AAHA Oncology Guidelines 2026, Osteosarcoma Section' },
+                { text: 'Назначить лучевую терапию на место операции, так как это стандарт лечения остеосаркомы.', isCorrect: false, feedback: '❌ Лучевая терапия — локальный метод. При остеосаркоме основная угроза — системные метастазы, поэтому необходима химиотерапия.', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }, {
+            id: 1,
+            title: 'Адъювантная терапия',
+            text: 'Владелец согласен на химиотерапию. Какой план вы предложите?',
+            choices: [
+                { text: 'Карбоплатин каждые 3 недели, 4–6 курсов. Дозу рассчитывать по площади поверхности тела.', isCorrect: true, feedback: '✅ Правильно! Карбоплатин — препарат выбора при остеосаркоме. Схема: 300 мг/м² каждые 3–4 недели, 4–6 курсов.', source: 'AAHA Oncology Guidelines 2026, Osteosarcoma Section' },
+                { text: 'Доксорубицин каждые 2 недели, так как он более эффективен при остеосаркоме.', isCorrect: false, feedback: '❌ Доксорубицин используется в некоторых протоколах, но карбоплатин считается стандартом для остеосаркомы у собак. Выбор препарата зависит от протокола и состояния пациента.', source: 'AAHA Oncology Guidelines 2026' },
+                { text: 'Отказаться от химиотерапии, так как животное уже пожилое и риски токсичности высоки.', isCorrect: false, feedback: '❌ Возраст не является противопоказанием к химиотерапии. Решение принимается на основе оценки общего состояния (кардиологический статус, функция почек).', source: 'AAHA Oncology Guidelines 2026' }
+            ]
+        }],
+        reference: {
+            title: '📋 Справочные материалы по сценарию',
+            sections: [{
+                title: 'Остеосаркома собак: ключевые факты',
+                content: `
+                    <ul>
+                        <li><strong>Остеосаркома</strong> — самая частая первичная злокачественная опухоль костей у собак</li>
+                        <li><strong>Локализация:</strong> дистальный отдел бедренной кости (40%), проксимальный отдел плечевой кости (25%)</li>
+                        <li><strong>Метастазирование:</strong> преимущественно в лёгкие, риск метастазов до 90%</li>
+                        <li><strong>Медиана выживаемости:</strong> ампутация без химиотерапии — 3–4 месяца, с химиотерапией — 10–12 месяцев</li>
+                        <li><strong>Химиотерапия:</strong> карбоплатин (300 мг/м²) — 4–6 курсов каждые 3–4 недели</li>
+                    </ul>
+                `
+            }]
+        }
+    }];
+
+    // ================================================================
+    //  СПРАВОЧНЫЕ МАТЕРИАЛЫ (отдельная вкладка)
+    //  ================================================================
+
+    const REFERENCE_DATA = {
+        sections: [{
+            title: '📋 AAHA Oncology Guidelines 2026 — Ключевые принципы',
+            content: `
+                <div class="highlight">
+                    <strong>Алгоритм диагностики и лечения новообразований:</strong><br>
+                    1. <strong>Обнаружение</strong> — пальпация, визуальный осмотр, владелец<br>
+                    2. <strong>Цитология</strong> — тонкоигольная аспирация (первичный скрининг)<br>
+                    3. <strong>Гистология</strong> — биопсия с определением типа и степени<br>
+                    4. <strong>Стадирование</strong> — оценка распространённости процесса<br>
+                    5. <strong>Лечение</strong> — хирургия, химиотерапия, лучевая терапия<br>
+                    6. <strong>Мониторинг</strong> — наблюдение и контроль рецидивов
+                </div>
+                <ul>
+                    <li><strong>Цитология</strong> — даёт информацию о типе клеток, но не о степени дифференцировки</li>
+                    <li><strong>Гистология</strong> — золотой стандарт для определения типа опухоли и степени злокачественности</li>
+                    <li><strong>Стадирование</strong> — обязательно <strong>ДО</strong> начала лечения для выбора правильной тактики</li>
+                    <li><strong>Микрометастатическая болезнь</strong> — микроскопические метастазы, не видимые при стандартном стадировании</li>
+                </ul>
+            `
+        }, {
+            title: '🩺 Частые ошибки в онкологии',
+            content: `
+                <ul>
+                    <li><strong>Ошибка 1:</strong> Удаление новообразования без цитологии/гистологии</li>
+                    <li><strong>Ошибка 2:</strong> «Сначала удалим, потом разберёмся» — операция без плана</li>
+                    <li><strong>Ошибка 3:</strong> Пропуск стадирования перед операцией</li>
+                    <li><strong>Ошибка 4:</strong> Наблюдение без диагноза</li>
+                    <li><strong>Ошибка 5:</strong> Отказ от адъювантной терапии при высоком риске микрометастазов</li>
+                </ul>
+                <div class="highlight" style="background:#FDF0E8;border-left-color:#D4A373;">
+                    ⚠️ Помните: в онкологии время — ткань. Оптимальное «окно возможностей» может быть упущено за несколько недель.
+                </div>
+            `
+        }, {
+            title: '📊 Стадирование опухолей (TNM)',
+            content: `
+                <div class="highlight">
+                    <strong>TNM-классификация (общая схема):</strong><br>
+                    <strong>T</strong> — размер и распространённость первичной опухоли (T0–T4)<br>
+                    <strong>N</strong> — поражение регионарных лимфоузлов (N0–N3)<br>
+                    <strong>M</strong> — наличие отдалённых метастазов (M0–M1)
+                </div>
+                <ul>
+                    <li><strong>Стадия I</strong> — небольшая опухоль, без метастазов</li>
+                    <li><strong>Стадия II</strong> — большая опухоль, без метастазов</li>
+                    <li><strong>Стадия III</strong> — поражение лимфоузлов</li>
+                    <li><strong>Стадия IV</strong> — отдалённые метастазы</li>
+                </ul>
+            `
+        }, {
+            title: '💊 Адъювантная терапия',
+            content: `
+                <div class="highlight">
+                    <strong>Что такое адъювантная терапия?</strong><br>
+                    Лечение, проводимое после основного (хирургического) удаления опухоли, направленное на уничтожение микрометастазов и снижение риска рецидива.
+                </div>
+                <ul>
+                    <li><strong>Показания:</strong> высокий риск микрометастазов</li>
+                    <li><strong>Методы:</strong> химиотерапия, таргетная терапия</li>
+                    <li><strong>Цель:</strong> улучшить выживаемость и отсрочить рецидив</li>
+                </ul>
+            `
+        }]
+    };
+
+    // ================================================================
+    //  СОСТОЯНИЕ
+    //  ================================================================
+
+    let state = {
+        currentScenario: 0,
+        currentStep: 0,
+        answers: {}, // { scenarioId_stepId: choiceIndex }
+        scores: {}, // { scenarioId: score }
+        timeLost: 0,
+        totalDaysLost: 0
+    };
+
+    // ================================================================
+    //  DOM-СВЯЗИ
+    //  ================================================================
+
+    const mainArea = document.getElementById('mainArea');
+    const toast = document.getElementById('toast');
+    const progressLabel = document.getElementById('progressLabel');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const timeDisplay = document.getElementById('timeDisplay');
+
+    let toastTimer = null;
+
+    // ================================================================
+    //  ВСПОМОГАТЕЛЬНЫЕ
+    //  ================================================================
+
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function getScenario(id) {
+        return SCENARIOS.find(s => s.id === id);
+    }
+
+    function getStep(scenarioId, stepId) {
+        const scenario = getScenario(scenarioId);
+        if (!scenario) return null;
+        return scenario.steps.find(s => s.id === stepId);
+    }
+
+    function getCurrentScenario() {
+        return getScenario(state.currentScenario);
+    }
+
+    function getCurrentStep() {
+        const scenario = getCurrentScenario();
+        if (!scenario) return null;
+        return scenario.steps[state.currentStep] || null;
+    }
+
+    function getScenarioScore(scenarioId) {
+        return state.scores[scenarioId] || 0;
+    }
+
+    function getTotalScore() {
+        let total = 0;
+        for (let key in state.scores) {
+            total += state.scores[key] || 0;
+        }
+        return total;
+    }
+
+    function getTotalTimeLost() {
+        let total = 0;
+        for (let key in state.answers) {
+            // Время теряется при неправильных ответах
+            const parts = key.split('_');
+            if (parts.length === 2) {
+                const scenarioId = parseInt(parts[0], 10);
+                const stepId = parseInt(parts[1], 10);
+                const answer = state.answers[key];
+                const step = getStep(scenarioId, stepId);
+                if (step && step.choices[answer] && !step.choices[answer].isCorrect) {
+                    const scenario = getScenario(scenarioId);
+                    if (scenario) total += scenario.timeLoss || 7;
+                }
+            }
+        }
+        return total;
+    }
+
+    // ================================================================
+    //  СОХРАНЕНИЕ
+    //  ================================================================
+
+    function saveState() {
+        try {
+            localStorage.setItem('vetsim_oncology_algorithm', JSON.stringify({
+                currentScenario: state.currentScenario,
+                currentStep: state.currentStep,
+                answers: state.answers,
+                scores: state.scores
+            }));
+        } catch (e) {}
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem('vetsim_oncology_algorithm');
+            if (raw) {
+                const data = JSON.parse(raw);
+                if (data.currentScenario !== undefined) state.currentScenario = data.currentScenario;
+                if (data.currentStep !== undefined) state.currentStep = data.currentStep;
+                if (data.answers) state.answers = data.answers;
+                if (data.scores) state.scores = data.scores;
+                return true;
+            }
+        } catch (e) {}
+        return false;
+    }
+
+    // ================================================================
+    //  РЕНДЕР
+    //  ================================================================
+
+    function render() {
+        const scenarioId = state.currentScenario;
+
+        // Если выбрана вкладка "Справочник" (id = -1)
+        const activeTab = document.querySelector('.tab-btn.active');
+        if (activeTab && activeTab.dataset.tab === 'reference') {
+            renderReference();
+            return;
+        }
+
+        const scenario = getScenario(scenarioId);
+        if (!scenario) {
+            mainArea.innerHTML = '<p style="text-align:center;padding:40px;color:#8A9B7A;">Сценарий не найден</p>';
+            return;
+        }
+
+        const steps = scenario.steps;
+        const totalSteps = steps.length;
+        const currentStepIndex = state.currentStep;
+        const step = steps[currentStepIndex] || null;
+
+        const isFinished = currentStepIndex >= totalSteps;
+        const totalScore = getTotalScore();
+        const timeLost = getTotalTimeLost();
+
+        progressLabel.textContent = isFinished ? `✅ Завершено` : `Шаг ${currentStepIndex + 1} из ${totalSteps}`;
+        scoreDisplay.textContent = `⭐ ${totalScore}`;
+        timeDisplay.textContent = `⏱️ Потеряно: ${timeLost} дн.`;
+
+        let html = '';
+
+        html += `<div class="card">`;
+
+        // Заголовок сценария
+        html += `
+            <div class="card-title">
+                <span>${scenario.icon} ${escapeHtml(scenario.title)}</span>
+                <span style="font-size:0.7rem;color:#5F7C62;">${isFinished ? '✅ Завершено' : `Шаг ${currentStepIndex + 1} из ${totalSteps}`}</span>
+            </div>
+            <div class="progress-bar"><div class="fill" style="width:${(currentStepIndex / totalSteps * 100) || 0}%;"></div></div>
+        `;
+
+        // Контекст
+        html += `
+            <div class="scenario-banner">
+                <div class="label">📋 Контекст</div>
+                <div class="text">${escapeHtml(scenario.context)}</div>
+            </div>
+        `;
+
+        // Индикатор времени
+        if (scenario.timeLoss > 0) {
+            html += `
+                <div class="time-indicator">
+                    <span class="label">⏱️ Время имеет значение!</span>
+                    <span class="days lost">Каждый день промедления — потеря драгоценного времени.</span>
+                </div>
+            `;
+        }
+
+        if (isFinished) {
+            const score = getScenarioScore(scenarioId);
+            const totalPossible = totalSteps * 10;
+            const percent = totalPossible > 0 ? Math.round(score / totalPossible * 100) : 0;
+            let stars = '';
+            if (percent >= 90) stars = '🌟🌟🌟';
+            else if (percent >= 70) stars = '🌟🌟';
+            else if (percent >= 50) stars = '🌟';
+            else stars = '💪';
+
+            html += `
+                <div class="result-screen">
+                    <div class="icon">${scenario.icon}</div>
+                    <h2>${scenario.title}</h2>
+                    <div class="stars">${stars}</div>
+                    <div class="score-final">${score} баллов из ${totalPossible}</div>
+                    <div class="details">
+                        Вы прошли все ${totalSteps} этапов. ${percent >= 70 ? 'Отличная работа! Вы управляете онкологическим процессом.' : 'Попробуйте пройти сценарий ещё раз, чтобы улучшить результат.'}
+                    </div>
+                    <button class="btn btn-primary" onclick="resetScenario(${scenarioId})">🔄 Пройти заново</button>
+                    ${state.currentScenario < SCENARIOS.length - 1 ? `<button class="btn btn-success" onclick="switchScenario(${state.currentScenario + 1})">➡️ Следующий сценарий</button>` : ''}
+                </div>
+            `;
+        } else if (step) {
+            html += `<div class="scenario-text">${escapeHtml(step.text)}</div>`;
+
+            const answered = state.answers[scenarioId + '_' + step.id] !== undefined;
+            const selectedIndex = answered ? state.answers[scenarioId + '_' + step.id] : -1;
+
+            html += `<div class="choices">`;
+            step.choices.forEach((choice, idx) => {
+                let classes = 'choice-btn';
+                let feedbackClass = '';
+                let badge = '';
+                let disabled = false;
+
+                if (answered) {
+                    disabled = true;
+                    if (idx === selectedIndex) {
+                        if (choice.isCorrect) {
+                            classes += ' correct';
+                            badge = '<span class="badge-correct">✅ Правильно</span>';
+                        } else {
+                            classes += ' wrong';
+                            badge = '<span class="badge-wrong">❌ Неправильно</span>';
+                        }
+                    } else if (choice.isCorrect) {
+                        classes += ' correct';
+                        badge = '<span class="badge-correct">✅ Правильный ответ</span>';
+                    }
+                    feedbackClass = 'show';
+                }
+
+                html += `
+                    <button class="${classes}" onclick="selectChoice(${scenarioId}, ${step.id}, ${idx})" ${disabled ? 'disabled' : ''}>
+                        ${escapeHtml(choice.text)} ${badge}
+                        ${choice.feedback ? `<div class="feedback ${feedbackClass}">💡 ${escapeHtml(choice.feedback)}</div>` : ''}
+                        ${choice.source ? `<div class="source">📚 Источник: ${escapeHtml(choice.source)}</div>` : ''}
+                    </button>
+                `;
+            });
+            html += `</div>`;
+
+            const hasNext = currentStepIndex < totalSteps - 1;
+            html += `
+                <div class="controls">
+                    ${answered ? `<button class="btn btn-primary" onclick="nextStep(${scenarioId})">${hasNext ? '➡️ Следующий шаг' : '📊 Завершить'}</button>` : ''}
+                    ${!answered ? `<span style="font-size:0.8rem;color:#8A9B7A;">Выберите вариант, чтобы продолжить</span>` : ''}
+                </div>
+            `;
+        }
+
+        // Справочный блок для сценария
+        if (scenario.reference && scenario.reference.sections) {
+            html += `
+                <div class="reference-block">
+                    <div class="ref-title" onclick="toggleRef(this)">
+                        <span class="arrow">▶</span> ${escapeHtml(scenario.reference.title)}
+                    </div>
+                    ${scenario.reference.sections.map((section, idx) => `
+                        <div class="ref-section" id="ref-section-${scenarioId}-${idx}">
+                            <div style="font-weight:600;color:#2C7DA0;margin:4px 0;font-size:0.8rem;">${section.title}</div>
+                            ${section.content}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        html += `</div>`;
+        mainArea.innerHTML = html;
+        saveState();
+    }
+
+    // ================================================================
+    //  РЕНДЕР СПРАВОЧНИКА
+    //  ================================================================
+
+    function renderReference() {
+        const totalScore = getTotalScore();
+        const timeLost = getTotalTimeLost();
+
+        progressLabel.textContent = '📖 Справочник';
+        scoreDisplay.textContent = `⭐ ${totalScore}`;
+        timeDisplay.textContent = `⏱️ Потеряно: ${timeLost} дн.`;
+
+        let html = `
+            <div class="card">
+                <div class="card-title">📖 Справочник по онкологии</div>
+        `;
+
+        REFERENCE_DATA.sections.forEach((section, idx) => {
+            html += `
+                <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #f0ebe3;">
+                    <div style="font-weight:700;color:#2C7DA0;font-size:0.9rem;margin-bottom:6px;cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="toggleRefSection('ref-full-${idx}')">
+                        <span id="ref-arrow-${idx}">▶</span> ${section.title}
+                    </div>
+                    <div id="ref-full-${idx}" style="display:none;margin-top:6px;font-size:0.85rem;line-height:1.6;color:#3E5C4A;">
+                        ${section.content}
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+                <div style="margin-top:12px;padding-top:12px;border-top:1px solid #E7EDE2;text-align:center;">
+                    <button class="btn btn-primary" onclick="switchScenario(0)">📋 Вернуться к сценариям</button>
+                </div>
+            </div>
+        `;
+
+        mainArea.innerHTML = html;
+        saveState();
+    }
+
+    // ================================================================
+    //  ДЕЙСТВИЯ
+    //  ================================================================
+
+    function selectChoice(scenarioId, stepId, choiceIndex) {
+        const scenario = getScenario(scenarioId);
+        if (!scenario) return;
+        const step = scenario.steps.find(s => s.id === stepId);
+        if (!step) return;
+
+        const key = scenarioId + '_' + stepId;
+        if (state.answers[key] !== undefined) return;
+
+        state.answers[key] = choiceIndex;
+
+        const choice = step.choices[choiceIndex];
+        if (choice && choice.isCorrect) {
+            if (!state.scores[scenarioId]) state.scores[scenarioId] = 0;
+            state.scores[scenarioId] += 10;
+            showToast('✅ +10 баллов! Правильный ответ!');
+        } else {
+            // Добавляем потерянное время
+            if (scenario.timeLoss) {
+                state.totalDaysLost += scenario.timeLoss;
+                showToast(`⏱️ Потеряно ${scenario.timeLoss} дней. Время имеет значение в онкологии!`);
+            } else {
+                showToast('❌ Неправильный ответ. Прочитайте обратную связь.');
+            }
+        }
+
+        render();
+    }
+
+    function nextStep(scenarioId) {
+        const scenario = getScenario(scenarioId);
+        if (!scenario) return;
+        const totalSteps = scenario.steps.length;
+
+        if (state.currentStep < totalSteps - 1) {
+            state.currentStep++;
+            render();
+        } else {
+            state.currentStep = totalSteps;
+            render();
+        }
+    }
+
+    function resetScenario(scenarioId) {
+        if (!confirm('Сбросить прогресс по этому сценарию?')) return;
+        // Удаляем ответы для этого сценария
+        for (let key in state.answers) {
+            if (key.startsWith(scenarioId + '_')) {
+                delete state.answers[key];
+            }
+        }
+        if (state.scores[scenarioId]) delete state.scores[scenarioId];
+        state.currentStep = 0;
+        render();
+        showToast('🔄 Прогресс сброшен');
+    }
+
+    function switchScenario(scenarioId) {
+        if (scenarioId < 0 || scenarioId >= SCENARIOS.length) return;
+        state.currentScenario = scenarioId;
+        state.currentStep = 0;
+        render();
+        document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+            btn.classList.toggle('active', idx === 0);
+        });
+    }
+
+    function toggleRef(el) {
+        const sections = el.parentElement.querySelectorAll('.ref-section');
+        const arrow = el.querySelector('.arrow');
+        sections.forEach(section => {
+            section.classList.toggle('open');
+        });
+        if (arrow) arrow.classList.toggle('open');
+    }
+
+    function toggleRefSection(id) {
+        const el = document.getElementById(id);
+        const arrow = document.getElementById('ref-arrow-' + id.replace('ref-full-', ''));
+        if (el) {
+            const isOpen = el.style.display === 'block';
+            el.style.display = isOpen ? 'none' : 'block';
+            if (arrow) arrow.textContent = isOpen ? '▶' : '▼';
+        }
+    }
+
+    // ================================================================
+    //  ВКЛАДКИ
+    //  ================================================================
+
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach((btn) => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                render();
+            });
+        });
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    //  ================================================================
+
+    function init() {
+        loadState();
+
+        // Проверяем, что текущий сценарий существует
+        if (state.currentScenario >= SCENARIOS.length) {
+            state.currentScenario = 0;
+            state.currentStep = 0;
+        }
+
+        // Проверяем, что текущий шаг не вышел за пределы
+        const scenario = getScenario(state.currentScenario);
+        if (scenario && state.currentStep >= scenario.steps.length) {
+            state.currentStep = 0;
+        }
+
+        initTabs();
+        render();
+
+        showToast('🩺 Добро пожаловать в онкологический алгоритм!');
+    }
+
+    // Делаем функции глобальными для onclick
+    window.selectChoice = selectChoice;
+    window.nextStep = nextStep;
+    window.resetScenario = resetScenario;
+    window.switchScenario = switchScenario;
+    window.toggleRef = toggleRef;
+    window.toggleRefSection = toggleRefSection;
+
+    init();
+</script>
+
+</body>
+</html>

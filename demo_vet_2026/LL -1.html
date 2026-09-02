@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Латинский язык · Урок 1 · ВетСим</title>
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+            background: #FDF8F0;
+            color: #1A2A3A;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ===== ХЕДЕР ===== */
+        .header {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 14px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+            border: 1px solid #E7EDE2;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1A2A3A;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .logo .sub {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #7B8D6E;
+        }
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+        }
+        .header-stats .score {
+            background: #2C7DA0;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        .header-stats .progress-text {
+            color: #5F7C62;
+        }
+
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            font-size: 0.78rem;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-sm { padding: 3px 12px; font-size: 0.7rem; }
+
+        /* ===== ВКЛАДКИ ===== */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .tab-btn:hover { opacity: 0.85; }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== КАРТОЧКА ===== */
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 18px 22px;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #2C7DA0;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .card-title .badge {
+            font-size: 0.65rem;
+            background: #E7EDE2;
+            color: #5F7C62;
+            padding: 0 12px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        /* ===== ФЛИП-КАРТОЧКИ ===== */
+        .flip-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .flip-card {
+            background: transparent;
+            height: 120px;
+            perspective: 800px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.5s ease;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            border: 2px solid #E7EDE2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .flip-card-front {
+            background: white;
+            color: #1F4E6E;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .flip-card-front .letter-small {
+            font-size: 1rem;
+            color: #8A9B7A;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .flip-card-back {
+            background: #2C7DA0;
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .flip-card-back .name {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .flip-card-back .sound {
+            font-size: 1.1rem;
+            background: rgba(255,255,255,0.15);
+            padding: 2px 12px;
+            border-radius: 40px;
+            margin-top: 2px;
+        }
+
+        .flip-card-back .example {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        /* ===== ТЕСТ ===== */
+        .question-block {
+            background: #F9FBF8;
+            border-radius: 1rem;
+            padding: 14px 18px;
+            margin: 8px 0;
+            border: 1px solid #E7EDE2;
+        }
+
+        .question-block .question-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-bottom: 8px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 8px;
+        }
+
+        .option-btn {
+            padding: 8px 14px;
+            border-radius: 40px;
+            border: 2px solid #D9D0BD;
+            background: white;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 500;
+            transition: 0.15s;
+            color: #1A2A3A;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: #2C7DA0;
+            background: #D4E3ED;
+        }
+
+        .option-btn.selected {
+            border-color: #2C7DA0;
+            background: #D4E3ED;
+        }
+
+        .option-btn.correct {
+            border-color: #6B9E6B;
+            background: #E8F5E8;
+        }
+
+        .option-btn.wrong {
+            border-color: #b13e3e;
+            background: #FDF0E8;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        .feedback-text {
+            margin-top: 8px;
+            padding: 8px 14px;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .feedback-text.show {
+            display: block;
+        }
+
+        .feedback-text.correct-fb {
+            background: #E8F5E8;
+            color: #2E7D32;
+        }
+
+        .feedback-text.wrong-fb {
+            background: #FDF0E8;
+            color: #b13e3e;
+        }
+
+        /* ===== ТРАНСКРИПЦИЯ ===== */
+        .transcription-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin: 6px 0;
+        }
+
+        .transcription-input input[type="text"] {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 14px;
+            border-radius: 40px;
+            border: 2px solid #D9D0BD;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: white;
+            outline: none;
+            transition: 0.15s;
+        }
+
+        .transcription-input input[type="text"]:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44,125,160,0.12);
+        }
+
+        .transcription-input input[type="text"].correct {
+            border-color: #6B9E6B;
+            background: #E8F5E8;
+        }
+
+        .transcription-input input[type="text"].wrong {
+            border-color: #b13e3e;
+            background: #FDF0E8;
+        }
+
+        .transcription-input .check-btn {
+            padding: 8px 20px;
+            border-radius: 40px;
+            border: none;
+            background: #2C7DA0;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            transition: 0.15s;
+        }
+
+        .transcription-input .check-btn:hover {
+            background: #236B8A;
+        }
+
+        /* ===== ПРОГРЕСС ===== */
+        .progress-bar {
+            height: 6px;
+            background: #E7EDE2;
+            border-radius: 40px;
+            overflow: hidden;
+            margin: 6px 0 10px;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2C7DA0, #6B9E6B);
+            border-radius: 40px;
+            transition: width 0.4s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        /* ===== ТОСТ ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            body { padding: 10px; }
+            .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+            .header .logo { font-size: 0.95rem; }
+            .header-stats { justify-content: space-between; }
+            .card { padding: 14px 16px; }
+            .flip-container { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
+            .flip-card { height: 100px; }
+            .flip-card-front { font-size: 1.6rem; }
+            .options-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+        }
+        @media (max-width: 420px) {
+            .flip-container { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+            .flip-card { height: 85px; }
+            .flip-card-front { font-size: 1.2rem; }
+            .flip-card-back { font-size: 0.65rem; }
+            .tabs .tab-btn { font-size: 0.65rem; padding: 4px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ===== ХЕДЕР ===== -->
+    <header class="header">
+        <div class="logo">
+            📚 <span class="gradient">Lingua Latina</span>
+            <span class="sub">· Урок 1. Алфавит и гласные</span>
+        </div>
+        <div class="header-stats">
+            <span class="progress-text" id="progressLabel">Букв: 0/24</span>
+            <span class="score" id="scoreDisplay">⭐ 0</span>
+        </div>
+    </header>
+
+    <!-- ===== ВКЛАДКИ ===== -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="alphabet">🔤 Алфавит</button>
+        <button class="tab-btn" data-tab="vowels">🔊 Гласные</button>
+        <button class="tab-btn" data-tab="practice">✍️ Тренировка</button>
+    </div>
+
+    <!-- ===== ВКЛАДКА 1: АЛФАВИТ ===== -->
+    <div class="tab-content active" id="tab-alphabet">
+        <div class="card">
+            <div class="card-title">
+                <span>🔤 Латинский алфавит</span>
+                <span class="badge">24 буквы</span>
+            </div>
+            <div class="flip-container" id="alphabetCards"></div>
+            <div class="controls">
+                <button class="btn btn-primary" id="flipAllBtn">🔄 Перевернуть все</button>
+                <button class="btn btn-outline" id="resetAlphabetBtn">🔄 Сбросить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 2: ГЛАСНЫЕ ===== -->
+    <div class="tab-content" id="tab-vowels">
+        <div class="card">
+            <div class="card-title">
+                <span>🔊 Гласные звуки и произношение</span>
+                <span class="badge">6 гласных</span>
+            </div>
+            <div style="font-size:0.85rem;color:#3E5C4A;margin-bottom:10px;">
+                <strong>Правило произношения I:</strong> [и] перед согласными и в конце слова, [й] перед гласной и между гласными.
+                <br><strong>Буква J</strong> всегда произносится как [й].
+            </div>
+            <div class="flip-container" id="vowelCards"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <span>📝 Произношение I и J</span>
+                <span class="badge">правила</span>
+            </div>
+            <div id="vowelExamples"></div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 3: ТРЕНИРОВКА ===== -->
+    <div class="tab-content" id="tab-practice">
+        <div class="card">
+            <div class="card-title">
+                <span>✍️ Транскрипция</span>
+                <span class="badge" id="practiceProgress">0 / 10</span>
+            </div>
+            <div class="progress-bar"><div class="fill" id="practiceFill" style="width:0%;"></div></div>
+            <div id="practiceArea"></div>
+        </div>
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ================================================================
+    //  ЛАТИНСКИЙ ЯЗЫК · УРОК 1 — ПОЛНАЯ ЛОГИКА
+    // ================================================================
+
+    // ================================================================
+    //  ДАННЫЕ
+    //  ================================================================
+
+    const ALPHABET = [
+        { letter: 'A', name: 'а', sound: '[а]', example: 'caput — голова' },
+        { letter: 'B', name: 'бэ', sound: '[б]', example: 'bursa — сумка' },
+        { letter: 'C', name: 'цэ', sound: '[ц]/[к]', example: 'cervix — шея' },
+        { letter: 'D', name: 'дэ', sound: '[д]', example: 'digitus — палец' },
+        { letter: 'E', name: 'э', sound: '[э]', example: 'vertebra — позвонок' },
+        { letter: 'F', name: 'эф', sound: '[ф]', example: 'fractura — перелом' },
+        { letter: 'G', name: 'гэ', sound: '[г]', example: 'ganglion — ганглий' },
+        { letter: 'H', name: 'га', sound: '[х]', example: 'humerus — плечевая кость' },
+        { letter: 'I', name: 'и', sound: '[и]/[й]', example: 'injectio — инъекция' },
+        { letter: 'J', name: 'йота', sound: '[й]', example: 'jejunum — тощая кишка' },
+        { letter: 'K', name: 'ка', sound: '[к]', example: 'kalium — калий' },
+        { letter: 'L', name: 'эль', sound: '[ль]', example: 'lingua — язык' },
+        { letter: 'M', name: 'эм', sound: '[м]', example: 'musculus — мышца' },
+        { letter: 'N', name: 'эн', sound: '[н]', example: 'nervus — нерв' },
+        { letter: 'O', name: 'о', sound: '[о]', example: 'ovum — яйцо' },
+        { letter: 'P', name: 'пэ', sound: '[п]', example: 'pulmo — лёгкое' },
+        { letter: 'Q', name: 'ку', sound: '[к]', example: 'quartus — четвёртый' },
+        { letter: 'R', name: 'эр', sound: '[р]', example: 'ren — почка' },
+        { letter: 'S', name: 'эс', sound: '[с]/[з]', example: 'os — кость' },
+        { letter: 'T', name: 'тэ', sound: '[т]', example: 'tibia — большеберцовая кость' },
+        { letter: 'U', name: 'у', sound: '[у]', example: 'ulna — локтевая кость' },
+        { letter: 'V', name: 'вэ', sound: '[в]', example: 'vena — вена' },
+        { letter: 'X', name: 'икс', sound: '[кс]', example: 'thorax — грудная клетка' },
+        { letter: 'Y', name: 'ипсилон', sound: '[и]', example: 'tympanum — барабанная перепонка' },
+        { letter: 'Z', name: 'зэта', sound: '[з]', example: 'zygoma — скуловая кость' }
+    ];
+
+    const VOWELS = [
+        { letter: 'A', sound: '[а]', example: 'caput — голова' },
+        { letter: 'E', sound: '[э]', example: 'vertebra — позвонок' },
+        { letter: 'I', sound: '[и]/[й]', example: 'digitus — палец, iugum — хомут' },
+        { letter: 'O', sound: '[о]', example: 'ovis — овца' },
+        { letter: 'U', sound: '[у]', example: 'bursa — сумка' },
+        { letter: 'Y', sound: '[и]', example: 'gyrus — извилина' }
+    ];
+
+    const VOCAL_EXAMPLES = [
+        { word: 'digitus', rule: 'I перед согласной → [и]', trans: '[дигитус]' },
+        { word: 'nervi', rule: 'I в конце слова → [и]', trans: '[нэрви]' },
+        { word: 'iugum', rule: 'I перед гласной → [й]', trans: '[йугум]' },
+        { word: 'major', rule: 'I между гласными → [й]', trans: '[майор]' },
+        { word: 'jejunum', rule: 'J всегда → [й]', trans: '[йэунум]' },
+        { word: 'inferior', rule: 'I перед согласной → [и]', trans: '[инфэриор]' }
+    ];
+
+    const PRACTICE_WORDS = [
+        { word: 'caput', correct: '[капут]', hint: 'глава' },
+        { word: 'ovum', correct: '[овум]', hint: 'яйцо' },
+        { word: 'vertebra', correct: '[вэртэбра]', hint: 'позвонок' },
+        { word: 'bursa', correct: '[бурса]', hint: 'сумка' },
+        { word: 'gyrus', correct: '[гирус]', hint: 'извилина' },
+        { word: 'ileum', correct: '[илэум]', hint: 'подвздошная кишка' },
+        { word: 'jejunum', correct: '[йэунум]', hint: 'тощая кишка' },
+        { word: 'digitus', correct: '[дигитус]', hint: 'палец' },
+        { word: 'iugum', correct: '[йугум]', hint: 'хомут' },
+        { word: 'major', correct: '[майор]', hint: 'большой' }
+    ];
+
+    // ================================================================
+    //  СОСТОЯНИЕ
+    //  ================================================================
+
+    let state = {
+        flippedCards: [],
+        practiceIndex: 0,
+        practiceAnswers: {},
+        score: 0,
+        totalPractice: PRACTICE_WORDS.length
+    };
+
+    // ================================================================
+    //  DOM-СВЯЗИ
+    //  ================================================================
+
+    const toast = document.getElementById('toast');
+    const progressLabel = document.getElementById('progressLabel');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+    const practiceArea = document.getElementById('practiceArea');
+    const practiceProgress = document.getElementById('practiceProgress');
+    const practiceFill = document.getElementById('practiceFill');
+
+    let toastTimer = null;
+
+    // ================================================================
+    //  ВСПОМОГАТЕЛЬНЫЕ
+    //  ================================================================
+
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function getScore() {
+        let s = 0;
+        for (let key in state.practiceAnswers) {
+            if (state.practiceAnswers[key] === true) s++;
+        }
+        return s;
+    }
+
+    // ================================================================
+    //  РЕНДЕР АЛФАВИТА
+    //  ================================================================
+
+    function renderAlphabet() {
+        const container = document.getElementById('alphabetCards');
+        container.innerHTML = '';
+        ALPHABET.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'flip-card';
+            card.dataset.index = idx;
+            card.innerHTML = `
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        ${item.letter}
+                        <div class="letter-small">${item.name}</div>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="name">${item.name}</div>
+                        <div class="sound">${item.sound}</div>
+                        <div class="example">${item.example}</div>
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', function() {
+                this.classList.toggle('flipped');
+            });
+            container.appendChild(card);
+        });
+
+        progressLabel.textContent = `Букв: ${ALPHABET.length}`;
+    }
+
+    // ================================================================
+    //  РЕНДЕР ГЛАСНЫХ
+    //  ================================================================
+
+    function renderVowels() {
+        const container = document.getElementById('vowelCards');
+        container.innerHTML = '';
+        VOWELS.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'flip-card';
+            card.innerHTML = `
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        ${item.letter}
+                        <div class="letter-small">${item.sound}</div>
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="name">${item.sound}</div>
+                        <div class="example" style="font-size:0.7rem;">${item.example}</div>
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', function() {
+                this.classList.toggle('flipped');
+            });
+            container.appendChild(card);
+        });
+
+        // Примеры произношения I и J
+        const examplesContainer = document.getElementById('vowelExamples');
+        let html = `
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:6px;">
+        `;
+        VOCAL_EXAMPLES.forEach(item => {
+            html += `
+                <div style="background:#F9FBF8;border-radius:1rem;padding:10px 14px;border:1px solid #E7EDE2;">
+                    <div style="font-weight:700;font-size:1.1rem;color:#2C7DA0;">${item.word}</div>
+                    <div style="font-size:0.85rem;color:#3E5C4A;">${item.rule}</div>
+                    <div style="font-size:0.9rem;color:#6B9E6B;font-weight:600;">${item.trans}</div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+        examplesContainer.innerHTML = html;
+    }
+
+    // ================================================================
+    //  ТРЕНИРОВКА (ТРАНСКРИПЦИЯ)
+    //  ================================================================
+
+    function renderPractice() {
+        const word = PRACTICE_WORDS[state.practiceIndex];
+        if (!word) {
+            practiceArea.innerHTML = `
+                <div style="text-align:center;padding:30px 20px;color:#8A9B7A;">
+                    <div style="font-size:2.5rem;margin-bottom:8px;">🎉</div>
+                    <p style="font-size:1.1rem;font-weight:600;color:#2C7DA0;">Все слова пройдены!</p>
+                    <p>Правильных ответов: ${getScore()} из ${PRACTICE_WORDS.length}</p>
+                    <button class="btn btn-primary" onclick="resetPractice()">🔄 Пройти заново</button>
+                </div>
+            `;
+            practiceProgress.textContent = `${getScore()} / ${PRACTICE_WORDS.length}`;
+            practiceFill.style.width = `${(getScore() / PRACTICE_WORDS.length * 100)}%`;
+            return;
+        }
+
+        const isAnswered = state.practiceAnswers[state.practiceIndex] !== undefined;
+        const isCorrect = state.practiceAnswers[state.practiceIndex] === true;
+
+        let html = `
+            <div class="question-block">
+                <div class="question-text">
+                    Слово: <strong style="font-size:1.1rem;color:#2C7DA0;">${word.word}</strong>
+                    <span style="font-weight:400;font-size:0.8rem;color:#8A9B7A;"> (${word.hint})</span>
+                </div>
+                <div class="transcription-input">
+                    <input type="text" id="transcriptionInput" placeholder="Введите транскрипцию..." 
+                           value="${isAnswered ? (isCorrect ? word.correct : state.practiceAnswers[state.practiceIndex] || '') : ''}"
+                           ${isAnswered ? 'disabled' : ''}
+                           style="${isAnswered ? (isCorrect ? 'border-color:#6B9E6B;background:#E8F5E8;' : 'border-color:#b13e3e;background:#FDF0E8;') : ''}" />
+                    ${!isAnswered ? `<button class="check-btn" id="checkTranscriptionBtn">✅ Проверить</button>` : ''}
+                </div>
+                ${isAnswered ? `
+                    <div class="feedback-text show ${isCorrect ? 'correct-fb' : 'wrong-fb'}">
+                        ${isCorrect ? '✅ Правильно!' : `❌ Правильно: ${word.correct}`}
+                    </div>
+                ` : ''}
+                ${isAnswered && state.practiceIndex < PRACTICE_WORDS.length - 1 ? `
+                    <button class="btn btn-primary btn-sm" onclick="nextPracticeWord()" style="margin-top:8px;">➡️ Следующее слово</button>
+                ` : ''}
+                ${isAnswered && state.practiceIndex === PRACTICE_WORDS.length - 1 ? `
+                    <button class="btn btn-success btn-sm" onclick="showPracticeResult()" style="margin-top:8px;">📊 Результат</button>
+                ` : ''}
+            </div>
+        `;
+
+        practiceArea.innerHTML = html;
+
+        // Обработчик для кнопки проверки
+        const checkBtn = document.getElementById('checkTranscriptionBtn');
+        if (checkBtn) {
+            checkBtn.addEventListener('click', function() {
+                const input = document.getElementById('transcriptionInput');
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = word.correct.toLowerCase();
+
+                // Удаляем лишние пробелы и скобки для сравнения
+                const normalizedUser = userAnswer.replace(/[\[\]\s]/g, '');
+                const normalizedCorrect = correctAnswer.replace(/[\[\]\s]/g, '');
+
+                if (normalizedUser === normalizedCorrect) {
+                    state.practiceAnswers[state.practiceIndex] = true;
+                    showToast('✅ Правильно!');
+                } else {
+                    state.practiceAnswers[state.practiceIndex] = userAnswer;
+                    showToast('❌ Неправильно. Попробуйте ещё раз или перейдите к следующему слову.');
+                }
+                renderPractice();
+                updatePracticeProgress();
+            });
+        }
+
+        // Enter в поле ввода
+        const input = document.getElementById('transcriptionInput');
+        if (input && !input.disabled) {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    const checkBtn = document.getElementById('checkTranscriptionBtn');
+                    if (checkBtn) checkBtn.click();
+                }
+            });
+            // Фокус на поле ввода
+            setTimeout(() => input.focus(), 100);
+        }
+
+        updatePracticeProgress();
+    }
+
+    function nextPracticeWord() {
+        if (state.practiceIndex < PRACTICE_WORDS.length - 1) {
+            state.practiceIndex++;
+            renderPractice();
+        }
+    }
+
+    function showPracticeResult() {
+        const total = PRACTICE_WORDS.length;
+        const correct = getScore();
+        const percent = Math.round((correct / total) * 100);
+        let stars = '';
+        if (percent >= 90) stars = '🌟🌟🌟';
+        else if (percent >= 70) stars = '🌟🌟';
+        else if (percent >= 50) stars = '🌟';
+        else stars = '💪';
+
+        practiceArea.innerHTML = `
+            <div style="text-align:center;padding:30px 20px;">
+                <div style="font-size:2.5rem;margin-bottom:8px;">${stars}</div>
+                <p style="font-size:1.2rem;font-weight:700;color:#2C7DA0;">Результат: ${correct} из ${total}</p>
+                <p style="font-size:0.9rem;color:#5F7C62;">${percent >= 70 ? 'Отличная работа!' : 'Попробуйте ещё раз!'}</p>
+                <button class="btn btn-primary" onclick="resetPractice()" style="margin-top:12px;">🔄 Пройти заново</button>
+            </div>
+        `;
+        practiceProgress.textContent = `${correct} / ${total}`;
+        practiceFill.style.width = `${(correct / total * 100)}%`;
+    }
+
+    function resetPractice() {
+        state.practiceIndex = 0;
+        state.practiceAnswers = {};
+        renderPractice();
+        updatePracticeProgress();
+        showToast('🔄 Тренировка сброшена');
+    }
+
+    function updatePracticeProgress() {
+        const total = PRACTICE_WORDS.length;
+        const correct = getScore();
+        practiceProgress.textContent = `${correct} / ${total}`;
+        practiceFill.style.width = `${(correct / total * 100)}%`;
+        scoreDisplay.textContent = `⭐ ${correct}`;
+    }
+
+    // ================================================================
+    //  ВКЛАДКИ
+    //  ================================================================
+
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+            });
+        });
+    }
+
+    // ================================================================
+    //  УПРАВЛЕНИЕ КАРТОЧКАМИ
+    //  ================================================================
+
+    function flipAllCards() {
+        document.querySelectorAll('.flip-card').forEach(card => {
+            card.classList.toggle('flipped');
+        });
+        const btn = document.getElementById('flipAllBtn');
+        if (btn) {
+            const allFlipped = document.querySelectorAll('.flip-card.flipped').length === document.querySelectorAll('.flip-card').length;
+            btn.textContent = allFlipped ? '🔄 Перевернуть обратно' : '🔄 Перевернуть все';
+        }
+    }
+
+    function resetAlphabetCards() {
+        document.querySelectorAll('.flip-card').forEach(card => {
+            card.classList.remove('flipped');
+        });
+        const btn = document.getElementById('flipAllBtn');
+        if (btn) btn.textContent = '🔄 Перевернуть все';
+        showToast('🔄 Карточки сброшены');
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    //  ================================================================
+
+    function init() {
+        renderAlphabet();
+        renderVowels();
+        renderPractice();
+        updatePracticeProgress();
+        initTabs();
+
+        document.getElementById('flipAllBtn').addEventListener('click', flipAllCards);
+        document.getElementById('resetAlphabetBtn').addEventListener('click', resetAlphabetCards);
+
+        showToast('📚 Добро пожаловать на урок латинского языка!');
+    }
+
+    // Делаем функции глобальными для onclick
+    window.nextPracticeWord = nextPracticeWord;
+    window.showPracticeResult = showPracticeResult;
+    window.resetPractice = resetPractice;
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

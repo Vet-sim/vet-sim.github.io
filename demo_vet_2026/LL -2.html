@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Латинский язык · Урок 2 · ВетСим</title>
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+            background: #FDF8F0;
+            color: #1A2A3A;
+            padding: 16px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 14px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 16px;
+            border: 1px solid #E7EDE2;
+        }
+
+        .header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1A2A3A;
+        }
+        .header .logo .gradient {
+            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header .logo .sub {
+            font-weight: 400;
+            font-size: 0.7rem;
+            color: #7B8D6E;
+        }
+        .header-stats {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            font-size: 0.8rem;
+        }
+        .header-stats .score {
+            background: #2C7DA0;
+            color: white;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        .header-stats .progress-text {
+            color: #5F7C62;
+        }
+
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            font-size: 0.78rem;
+            color: #1A2A3A;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn:active { transform: scale(0.96); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-sm { padding: 3px 12px; font-size: 0.7rem; }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .tab-btn:hover { opacity: 0.85; }
+        .tab-btn.active {
+            background: #2C7DA0;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.25s ease;
+        }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 18px 22px;
+            border: 1px solid #E7EDE2;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            margin-bottom: 14px;
+        }
+
+        .card-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #2C7DA0;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .card-title .badge {
+            font-size: 0.65rem;
+            background: #E7EDE2;
+            color: #5F7C62;
+            padding: 0 12px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+
+        /* ===== ФЛИП-КАРТОЧКИ ===== */
+        .flip-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            margin: 10px 0;
+        }
+
+        .flip-card {
+            background: transparent;
+            height: 140px;
+            perspective: 800px;
+            cursor: pointer;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.5s ease;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            border: 2px solid #E7EDE2;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .flip-card-front {
+            background: white;
+            color: #1F4E6E;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .flip-card-front .sub {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #8A9B7A;
+        }
+
+        .flip-card-back {
+            background: #2C7DA0;
+            color: white;
+            transform: rotateY(180deg);
+            font-size: 0.8rem;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .flip-card-back .examples {
+            font-size: 0.7rem;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        /* ===== СОРТИРОВКА ===== */
+        .sort-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin: 10px 0;
+        }
+
+        .sort-category {
+            flex: 1;
+            min-width: 180px;
+            background: #F9FBF8;
+            border-radius: 1rem;
+            padding: 12px 14px;
+            border: 2px dashed #D9D0BD;
+            min-height: 120px;
+        }
+
+        .sort-category .category-title {
+            font-weight: 700;
+            color: #2C7DA0;
+            font-size: 0.8rem;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .sort-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+        }
+
+        .sort-item {
+            background: white;
+            padding: 4px 12px;
+            border-radius: 40px;
+            border: 2px solid #A3B18A;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: 0.15s;
+            user-select: none;
+        }
+
+        .sort-item:hover {
+            background: #D4E3ED;
+            border-color: #2C7DA0;
+        }
+
+        .sort-item.placed {
+            opacity: 0.5;
+            cursor: default;
+            border-color: #6B9E6B;
+            background: #E8F5E8;
+            pointer-events: none;
+        }
+
+        .sort-item.wrong-placement {
+            animation: shake 0.3s ease;
+            border-color: #b13e3e;
+            background: #FDF0E8;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        /* ===== ТРАНСКРИПЦИЯ ===== */
+        .transcription-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin: 4px 0;
+        }
+
+        .transcription-input input[type="text"] {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 14px;
+            border-radius: 40px;
+            border: 2px solid #D9D0BD;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: white;
+            outline: none;
+            transition: 0.15s;
+        }
+
+        .transcription-input input[type="text"]:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44,125,160,0.12);
+        }
+
+        .transcription-input input[type="text"].correct {
+            border-color: #6B9E6B;
+            background: #E8F5E8;
+        }
+
+        .transcription-input input[type="text"].wrong {
+            border-color: #b13e3e;
+            background: #FDF0E8;
+        }
+
+        .transcription-input .check-btn {
+            padding: 6px 18px;
+            border-radius: 40px;
+            border: none;
+            background: #2C7DA0;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.78rem;
+            transition: 0.15s;
+        }
+
+        .transcription-input .check-btn:hover {
+            background: #236B8A;
+        }
+
+        .transcription-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 16px;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid #f0ebe3;
+        }
+
+        .transcription-row .word {
+            font-weight: 700;
+            color: #2C7DA0;
+            min-width: 80px;
+        }
+
+        .transcription-row .hint {
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        /* ===== УДАРЕНИЕ ===== */
+        .stress-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 4px 0;
+        }
+
+        .stress-btn {
+            padding: 4px 14px;
+            border-radius: 40px;
+            border: 2px solid #D9D0BD;
+            background: white;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            transition: 0.15s;
+        }
+
+        .stress-btn:hover:not(:disabled) {
+            border-color: #2C7DA0;
+            background: #D4E3ED;
+        }
+
+        .stress-btn.selected {
+            border-color: #2C7DA0;
+            background: #D4E3ED;
+        }
+
+        .stress-btn.correct {
+            border-color: #6B9E6B;
+            background: #E8F5E8;
+        }
+
+        .stress-btn.wrong {
+            border-color: #b13e3e;
+            background: #FDF0E8;
+        }
+
+        .stress-btn:disabled {
+            cursor: default;
+            opacity: 0.8;
+        }
+
+        /* ===== ТЕКСТ С ПРОПУСКАМИ ===== */
+        .gap-word {
+            display: inline-block;
+            min-width: 60px;
+            border-bottom: 2px dashed #2C7DA0;
+            margin: 0 2px;
+        }
+
+        .gap-word input {
+            width: 100%;
+            min-width: 50px;
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            font-size: 0.9rem;
+            text-align: center;
+            outline: none;
+            padding: 2px 4px;
+        }
+
+        .gap-word input.correct {
+            color: #2E7D32;
+            font-weight: 600;
+        }
+
+        .gap-word input.wrong {
+            color: #b13e3e;
+        }
+
+        /* ===== ПРОГРЕСС ===== */
+        .progress-bar {
+            height: 6px;
+            background: #E7EDE2;
+            border-radius: 40px;
+            overflow: hidden;
+            margin: 6px 0 10px;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2C7DA0, #6B9E6B);
+            border-radius: 40px;
+            transition: width 0.4s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1F4E6E;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { opacity: 1; }
+
+        @media (max-width: 700px) {
+            body { padding: 10px; }
+            .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+            .header .logo { font-size: 0.95rem; }
+            .header-stats { justify-content: space-between; }
+            .card { padding: 14px 16px; }
+            .flip-container { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+            .flip-card { height: 120px; }
+            .sort-container { flex-direction: column; }
+            .sort-category { min-height: 80px; }
+            .tabs .tab-btn { font-size: 0.65rem; padding: 4px 10px; }
+            .transcription-row { flex-direction: column; align-items: stretch; }
+        }
+        @media (max-width: 420px) {
+            .flip-container { grid-template-columns: 1fr 1fr; }
+            .flip-card { height: 100px; }
+            .flip-card-front { font-size: 0.9rem; }
+            .flip-card-back { font-size: 0.65rem; }
+            .stress-options { gap: 4px; }
+            .stress-btn { font-size: 0.7rem; padding: 3px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ===== ХЕДЕР ===== -->
+    <header class="header">
+        <div class="logo">
+            📚 <span class="gradient">Lingua Latina</span>
+            <span class="sub">· Урок 2. Дифтонги, согласные, ударение</span>
+        </div>
+        <div class="header-stats">
+            <span class="progress-text" id="progressLabel">Заданий: 0</span>
+            <span class="score" id="scoreDisplay">⭐ 0</span>
+        </div>
+    </header>
+
+    <!-- ===== ВКЛАДКИ ===== -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="rules">📖 Правила</button>
+        <button class="tab-btn" data-tab="sort">🧩 Сортировка</button>
+        <button class="tab-btn" data-tab="transcription">✍️ Транскрипция</button>
+        <button class="tab-btn" data-tab="stress">🎯 Ударение</button>
+        <button class="tab-btn" data-tab="gaps">📝 Пропуски</button>
+    </div>
+
+    <!-- ===== ВКЛАДКА 1: ПРАВИЛА (флип-карточки) ===== -->
+    <div class="tab-content active" id="tab-rules">
+        <div class="card">
+            <div class="card-title">
+                <span>📖 Правила чтения</span>
+                <span class="badge">дифтонги · диграфы · согласные</span>
+            </div>
+            <div class="flip-container" id="rulesCards"></div>
+            <div class="controls">
+                <button class="btn btn-primary" id="flipAllRulesBtn">🔄 Перевернуть все</button>
+                <button class="btn btn-outline" id="resetRulesBtn">🔄 Сбросить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 2: СОРТИРОВКА ===== -->
+    <div class="tab-content" id="tab-sort">
+        <div class="card">
+            <div class="card-title">
+                <span>🧩 Сортировка по категориям</span>
+                <span class="badge" id="sortProgress">0 / 12</span>
+            </div>
+            <div class="sort-container" id="sortContainer"></div>
+            <div class="controls">
+                <button class="btn btn-primary" id="checkSortBtn">✅ Проверить</button>
+                <button class="btn btn-outline" id="resetSortBtn">🔄 Сбросить</button>
+            </div>
+            <div id="sortFeedback" style="margin-top:8px;font-size:0.85rem;"></div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 3: ТРАНСКРИПЦИЯ ===== -->
+    <div class="tab-content" id="tab-transcription">
+        <div class="card">
+            <div class="card-title">
+                <span>✍️ Транскрипция</span>
+                <span class="badge" id="transProgress">0 / 10</span>
+            </div>
+            <div class="progress-bar"><div class="fill" id="transFill" style="width:0%;"></div></div>
+            <div id="transcriptionArea"></div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 4: УДАРЕНИЕ ===== -->
+    <div class="tab-content" id="tab-stress">
+        <div class="card">
+            <div class="card-title">
+                <span>🎯 Постановка ударения</span>
+                <span class="badge" id="stressProgress">0 / 8</span>
+            </div>
+            <div class="progress-bar"><div class="fill" id="stressFill" style="width:0%;"></div></div>
+            <div id="stressArea"></div>
+        </div>
+    </div>
+
+    <!-- ===== ВКЛАДКА 5: ТЕКСТ С ПРОПУСКАМИ ===== -->
+    <div class="tab-content" id="tab-gaps">
+        <div class="card">
+            <div class="card-title">
+                <span>📝 Вставьте пропущенные буквы</span>
+                <span class="badge" id="gapsProgress">0 / 6</span>
+            </div>
+            <div class="progress-bar"><div class="fill" id="gapsFill" style="width:0%;"></div></div>
+            <div id="gapsArea"></div>
+            <div class="controls">
+                <button class="btn btn-primary" id="checkGapsBtn">✅ Проверить</button>
+                <button class="btn btn-outline" id="resetGapsBtn">🔄 Сбросить</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ================================================================
+    //  ЛАТИНСКИЙ ЯЗЫК · УРОК 2 — ПОЛНАЯ ЛОГИКА
+    // ================================================================
+
+    // ================================================================
+    //  ДАННЫЕ
+    //  ================================================================
+
+    // Правила для флип-карточек
+    const RULES_DATA = [{
+        front: 'ae → [э]',
+        back: 'Дифтонг\nПримеры: caecum [цэкум], gangraena [гангрэна]'
+    }, {
+        front: 'oe → [ё] или [э]',
+        back: 'Дифтонг\nПримеры: oedema [ёдэма], foetus [фэтус]'
+    }, {
+        front: 'au → [ау]',
+        back: 'Дифтонг\nПримеры: auris [аурис], trauma [траума]'
+    }, {
+        front: 'eu → [эу]',
+        back: 'Дифтонг\nПримеры: pleura [плэура], pneumonia [пнэумония]'
+    }, {
+        front: 'ch → [х]',
+        back: 'Диграф\nПримеры: charta [харта], cholera [холэра]'
+    }, {
+        front: 'ph → [ф]',
+        back: 'Диграф\nПримеры: pharynx [фаринкс], ophthalmus [офтальмус]'
+    }, {
+        front: 'rh → [р]',
+        back: 'Диграф\nПримеры: rhaphe [рафэ], rhizoma [ризома]'
+    }, {
+        front: 'th → [т]',
+        back: 'Диграф\nПримеры: thorax [торакс], therapia [тэрапиа]'
+    }, {
+        front: 'sch → [сх]',
+        back: 'Диграф\nПримеры: schola [схола], ischiadicus [исхиадикус]'
+    }, {
+        front: 'C перед e, i, y, ae, oe → [ц]',
+        back: 'Правило\nПримеры: cervix [цэрвикс], acidum [ацидум]'
+    }, {
+        front: 'C перед a, o, u → [к]',
+        back: 'Правило\nПримеры: caput [капут], costa [коста]'
+    }, {
+        front: 'S между гласными → [з]',
+        back: 'Правило\nПримеры: asinus [азинус], nasus [назус]'
+    }];
+
+    // Данные для сортировки
+    const SORT_ITEMS = [
+        { word: 'caecum', category: 'diff' },
+        { word: 'pharynx', category: 'digraph' },
+        { word: 'cervix', category: 'c_rule' },
+        { word: 'oedema', category: 'diff' },
+        { word: 'schola', category: 'digraph' },
+        { word: 'costa', category: 'c_rule' },
+        { word: 'thorax', category: 'digraph' },
+        { word: 'auris', category: 'diff' },
+        { word: 'charta', category: 'digraph' },
+        { word: 'asinus', category: 's_rule' },
+        { word: 'gangraena', category: 'diff' },
+        { word: 'stella', category: 's_rule' }
+    ];
+
+    const SORT_CATEGORIES = {
+        diff: { label: 'Дифтонги (ae, oe, au, eu)', color: '#D4E8F0' },
+        digraph: { label: 'Диграфы (ch, ph, rh, th, sch)', color: '#F0D4D4' },
+        c_rule: { label: 'Особое C ([ц] или [к])', color: '#D4F0D4' },
+        s_rule: { label: 'Особое S ([з])', color: '#F0E8D4' }
+    };
+
+    // Данные для транскрипции
+    const TRANS_DATA = [
+        { word: 'caecum', correct: '[цэкум]', hint: 'слепая кишка' },
+        { word: 'oedema', correct: '[ёдэма]', hint: 'отёк' },
+        { word: 'auris', correct: '[аурис]', hint: 'ухо' },
+        { word: 'pleura', correct: '[плэура]', hint: 'плевра' },
+        { word: 'pharynx', correct: '[фаринкс]', hint: 'глотка' },
+        { word: 'thorax', correct: '[торакс]', hint: 'грудная клетка' },
+        { word: 'schola', correct: '[схола]', hint: 'школа' },
+        { word: 'cervix', correct: '[цэрвикс]', hint: 'шея' },
+        { word: 'asinus', correct: '[азинус]', hint: 'осёл' },
+        { word: 'gangraena', correct: '[гангрэна]', hint: 'омертвение' }
+    ];
+
+    // Данные для ударения
+    const STRESS_DATA = [
+        { word: 'vertebra', correct: 1, syllables: ['vér', 'te', 'bra'] },
+        { word: 'processus', correct: 2, syllables: ['pro', 'cés', 'sus'] },
+        { word: 'incisura', correct: 2, syllables: ['in', 'ci', 'sú', 'ra'] },
+        { word: 'ligamentum', correct: 2, syllables: ['li', 'ga', 'mén', 'tum'] },
+        { word: 'tuberculum', correct: 1, syllables: ['tú', 'ber', 'cu', 'lum'] },
+        { word: 'articulatio', correct: 3, syllables: ['ar', 'ti', 'cu', 'lá', 'ti', 'o'] },
+        { word: 'stomachus', correct: 1, syllables: ['stó', 'ma', 'chus'] },
+        { word: 'ruptura', correct: 2, syllables: ['rup', 'tú', 'ra'] }
+    ];
+
+    // Данные для пропусков
+    const GAPS_DATA = [
+        { word: 'caecum', gap: 1, hint: 'слепая кишка' },
+        { word: 'oedema', gap: 1, hint: 'отёк' },
+        { word: 'pharynx', gap: 1, hint: 'глотка' },
+        { word: 'thorax', gap: 1, hint: 'грудная клетка' },
+        { word: 'rhizoma', gap: 1, hint: 'корневище' },
+        { word: 'ischium', gap: 1, hint: 'седалищная кость' }
+    ];
+
+    // ================================================================
+    //  СОСТОЯНИЕ
+    //  ================================================================
+
+    let state = {
+        sortPlaced: {},
+        transAnswers: {},
+        stressAnswers: {},
+        gapsAnswers: {},
+        score: 0
+    };
+
+    // ================================================================
+    //  DOM-СВЯЗИ
+    //  ================================================================
+
+    const toast = document.getElementById('toast');
+    const progressLabel = document.getElementById('progressLabel');
+    const scoreDisplay = document.getElementById('scoreDisplay');
+
+    let toastTimer = null;
+
+    function showToast(msg) {
+        toast.textContent = msg;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function getTotalScore() {
+        let s = 0;
+        for (let key in state.transAnswers) { if (state.transAnswers[key] === true) s++; }
+        for (let key in state.stressAnswers) { if (state.stressAnswers[key] === true) s++; }
+        for (let key in state.gapsAnswers) { if (state.gapsAnswers[key] === true) s++; }
+        return s;
+    }
+
+    function updateScore() {
+        const total = TRANS_DATA.length + STRESS_DATA.length + GAPS_DATA.length;
+        const score = getTotalScore();
+        scoreDisplay.textContent = `⭐ ${score}`;
+        progressLabel.textContent = `Заданий: ${score}/${total}`;
+    }
+
+    // ================================================================
+    //  1. ФЛИП-КАРТОЧКИ (ПРАВИЛА)
+    //  ================================================================
+
+    function renderRules() {
+        const container = document.getElementById('rulesCards');
+        container.innerHTML = '';
+        RULES_DATA.forEach((item) => {
+            const card = document.createElement('div');
+            card.className = 'flip-card';
+            card.innerHTML = `
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        ${item.front}
+                    </div>
+                    <div class="flip-card-back">
+                        ${item.back.replace(/\n/g, '<br>')}
+                    </div>
+                </div>
+            `;
+            card.addEventListener('click', function() {
+                this.classList.toggle('flipped');
+            });
+            container.appendChild(card);
+        });
+    }
+
+    document.getElementById('flipAllRulesBtn').addEventListener('click', function() {
+        document.querySelectorAll('#rulesCards .flip-card').forEach(c => c.classList.toggle('flipped'));
+        const allFlipped = document.querySelectorAll('#rulesCards .flip-card.flipped').length === RULES_DATA.length;
+        this.textContent = allFlipped ? '🔄 Перевернуть обратно' : '🔄 Перевернуть все';
+    });
+
+    document.getElementById('resetRulesBtn').addEventListener('click', function() {
+        document.querySelectorAll('#rulesCards .flip-card').forEach(c => c.classList.remove('flipped'));
+        document.getElementById('flipAllRulesBtn').textContent = '🔄 Перевернуть все';
+        showToast('🔄 Карточки сброшены');
+    });
+
+    // ================================================================
+    //  2. СОРТИРОВКА
+    //  ================================================================
+
+    function renderSort() {
+        const container = document.getElementById('sortContainer');
+        container.innerHTML = '';
+        const allItems = [...SORT_ITEMS];
+        const placed = state.sortPlaced || {};
+
+        // Создаём категории
+        Object.keys(SORT_CATEGORIES).forEach(catKey => {
+            const cat = SORT_CATEGORIES[catKey];
+            const div = document.createElement('div');
+            div.className = 'sort-category';
+            div.dataset.category = catKey;
+            div.style.borderColor = cat.color;
+            div.innerHTML = `
+                <div class="category-title">${cat.label}</div>
+                <div class="sort-items" id="sort-${catKey}"></div>
+            `;
+            container.appendChild(div);
+        });
+
+        // Размещаем слова
+        allItems.forEach(item => {
+            const categoryKey = placed[item.word] || null;
+            const targetContainer = categoryKey ? document.getElementById(`sort-${categoryKey}`) : null;
+            const btn = document.createElement('span');
+            btn.className = 'sort-item' + (categoryKey ? ' placed' : '');
+            btn.textContent = item.word;
+            btn.dataset.word = item.word;
+            btn.dataset.category = item.category;
+
+            if (!categoryKey) {
+                btn.addEventListener('click', function() {
+                    if (this.classList.contains('placed')) return;
+                    const word = this.dataset.word;
+                    const cat = this.dataset.category;
+                    // Проверяем, есть ли уже этот элемент в какой-то категории
+                    for (let key in state.sortPlaced) {
+                        if (state.sortPlaced[key] === word) delete state.sortPlaced[key];
+                    }
+                    state.sortPlaced[word] = cat;
+                    renderSort();
+                    updateSortProgress();
+                });
+            }
+
+            if (targetContainer) {
+                targetContainer.appendChild(btn);
+            } else {
+                // Неразмещённые — в первый свободный контейнер (временно)
+                const firstContainer = document.querySelector('.sort-category .sort-items');
+                if (firstContainer) firstContainer.appendChild(btn);
+            }
+        });
+
+        updateSortProgress();
+    }
+
+    function updateSortProgress() {
+        const total = SORT_ITEMS.length;
+        const placed = Object.keys(state.sortPlaced).length;
+        document.getElementById('sortProgress').textContent = `${placed} / ${total}`;
+        document.getElementById('sortFeedback').innerHTML = '';
+    }
+
+    document.getElementById('checkSortBtn').addEventListener('click', function() {
+        let correct = 0;
+        let total = SORT_ITEMS.length;
+        let feedbackHtml = '';
+
+        SORT_ITEMS.forEach(item => {
+            const placedCat = state.sortPlaced[item.word];
+            const isCorrect = placedCat === item.category;
+            if (isCorrect) correct++;
+            const icon = isCorrect ? '✅' : '❌';
+            feedbackHtml += `${icon} ${item.word} → ${isCorrect ? 'верно' : 'должно быть в "' + SORT_CATEGORIES[item.category].label + '"'}<br>`;
+        });
+
+        const result = correct === total ? '🎉 Отлично! Все слова распределены верно!' : `🔍 Правильно: ${correct} из ${total}`;
+        document.getElementById('sortFeedback').innerHTML = `<div style="background:${correct === total ? '#E8F5E8' : '#FDF0E8'};padding:10px 14px;border-radius:1rem;font-weight:${correct === total ? '700' : '500'};">${result}<br>${feedbackHtml}</div>`;
+        showToast(correct === total ? '✅ Отлично!' : '❌ Есть ошибки, проверьте');
+    });
+
+    document.getElementById('resetSortBtn').addEventListener('click', function() {
+        state.sortPlaced = {};
+        renderSort();
+        updateSortProgress();
+        document.getElementById('sortFeedback').innerHTML = '';
+        showToast('🔄 Сортировка сброшена');
+    });
+
+    // ================================================================
+    //  3. ТРАНСКРИПЦИЯ
+    //  ================================================================
+
+    function renderTranscription() {
+        const container = document.getElementById('transcriptionArea');
+        let html = '';
+        let answered = 0;
+
+        TRANS_DATA.forEach((item, idx) => {
+            const isAnswered = state.transAnswers[idx] !== undefined;
+            const isCorrect = state.transAnswers[idx] === true;
+            if (isAnswered) answered++;
+
+            html += `
+                <div class="transcription-row">
+                    <span class="word">${item.word}</span>
+                    <span class="hint">${item.hint}</span>
+                    <div class="transcription-input" style="flex:1;min-width:200px;">
+                        <input type="text" id="trans-${idx}" 
+                               placeholder="Введите транскрипцию..."
+                               value="${isAnswered ? (isCorrect ? item.correct : state.transAnswers[idx] || '') : ''}"
+                               ${isAnswered ? 'disabled' : ''}
+                               style="${isAnswered ? (isCorrect ? 'border-color:#6B9E6B;background:#E8F5E8;' : 'border-color:#b13e3e;background:#FDF0E8;') : ''}" />
+                        ${!isAnswered ? `<button class="check-btn" onclick="checkTrans(${idx})">✅ Проверить</button>` : ''}
+                    </div>
+                    ${isAnswered ? (isCorrect ? '✅' : '❌') : ''}
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+        document.getElementById('transProgress').textContent = `${answered} / ${TRANS_DATA.length}`;
+        document.getElementById('transFill').style.width = `${(answered / TRANS_DATA.length * 100)}%`;
+        updateScore();
+    }
+
+    function checkTrans(idx) {
+        const input = document.getElementById(`trans-${idx}`);
+        if (!input) return;
+        const userAnswer = input.value.trim().toLowerCase();
+        const correct = TRANS_DATA[idx].correct.toLowerCase();
+        const normalizedUser = userAnswer.replace(/[\[\]\s]/g, '');
+        const normalizedCorrect = correct.replace(/[\[\]\s]/g, '');
+
+        if (normalizedUser === normalizedCorrect) {
+            state.transAnswers[idx] = true;
+            showToast('✅ Правильно!');
+        } else {
+            state.transAnswers[idx] = userAnswer;
+            showToast('❌ Попробуйте ещё раз');
+        }
+        renderTranscription();
+        updateScore();
+    }
+
+    window.checkTrans = checkTrans;
+
+    // ================================================================
+    //  4. УДАРЕНИЕ
+    //  ================================================================
+
+    function renderStress() {
+        const container = document.getElementById('stressArea');
+        let html = '';
+        let answered = 0;
+
+        STRESS_DATA.forEach((item, idx) => {
+            const isAnswered = state.stressAnswers[idx] !== undefined;
+            const isCorrect = state.stressAnswers[idx] === true;
+            if (isAnswered) answered++;
+
+            const syllables = item.syllables;
+            html += `
+                <div style="padding:8px 0;border-bottom:1px solid #f0ebe3;">
+                    <div style="font-weight:600;color:#2C7DA0;font-size:0.95rem;">${item.word}</div>
+                    <div class="stress-options">
+                        ${syllables.map((syl, sIdx) => {
+                            const isSelected = state.stressAnswers[idx] === sIdx;
+                            const isCorrectAns = isSelected && isCorrect;
+                            const isWrongAns = isSelected && !isCorrect;
+                            let cls = 'stress-btn';
+                            if (isAnswered && isSelected) cls += isCorrect ? ' correct' : ' wrong';
+                            else if (isAnswered && sIdx === item.correct) cls += ' correct';
+                            return `<button class="${cls}" onclick="selectStress(${idx}, ${sIdx})" ${isAnswered ? 'disabled' : ''}>${syl}</button>`;
+                        }).join('')}
+                    </div>
+                    ${isAnswered ? `<div style="font-size:0.8rem;color:${isCorrect ? '#2E7D32' : '#b13e3e'};margin-top:2px;">${isCorrect ? '✅ Правильно!' : '❌ Неправильно. Правильный ударный слог: ' + syllables[item.correct]}</div>` : ''}
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+        document.getElementById('stressProgress').textContent = `${answered} / ${STRESS_DATA.length}`;
+        document.getElementById('stressFill').style.width = `${(answered / STRESS_DATA.length * 100)}%`;
+        updateScore();
+    }
+
+    function selectStress(idx, sIdx) {
+        if (state.stressAnswers[idx] !== undefined) return;
+        state.stressAnswers[idx] = sIdx;
+        const isCorrect = sIdx === STRESS_DATA[idx].correct;
+        if (isCorrect) {
+            state.stressAnswers[idx] = true;
+            showToast('✅ Правильно!');
+        } else {
+            state.stressAnswers[idx] = false;
+            showToast('❌ Неправильно');
+        }
+        renderStress();
+        updateScore();
+    }
+
+    window.selectStress = selectStress;
+
+    // ================================================================
+    //  5. ТЕКСТ С ПРОПУСКАМИ
+    //  ================================================================
+
+    function renderGaps() {
+        const container = document.getElementById('gapsArea');
+        let html = '';
+        let answered = 0;
+
+        GAPS_DATA.forEach((item, idx) => {
+            const isAnswered = state.gapsAnswers[idx] !== undefined;
+            const isCorrect = state.gapsAnswers[idx] === true;
+            if (isAnswered) answered++;
+
+            const chars = item.word.split('');
+            let wordHtml = '';
+            chars.forEach((ch, chIdx) => {
+                if (chIdx === item.gap) {
+                    const val = isAnswered ? (isCorrect ? chars[item.gap] : state.gapsAnswers[idx] || '') : '';
+                    const cls = isAnswered ? (isCorrect ? 'correct' : 'wrong') : '';
+                    wordHtml += `<span class="gap-word"><input type="text" id="gap-${idx}" value="${escapeHtml(val)}" ${isAnswered ? 'disabled' : ''} placeholder="?" class="${cls}" style="width:20px;"></span>`;
+                } else {
+                    wordHtml += ch;
+                }
+            });
+
+            html += `
+                <div style="padding:6px 0;border-bottom:1px solid #f0ebe3;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+                    <span style="font-weight:600;font-size:1rem;">${wordHtml}</span>
+                    <span style="font-size:0.7rem;color:#8A9B7A;">${item.hint}</span>
+                    ${!isAnswered ? `<button class="btn btn-sm btn-primary" onclick="checkGap(${idx})">✅</button>` : ''}
+                    ${isAnswered ? (isCorrect ? '✅' : '❌') : ''}
+                </div>
+            `;
+        });
+
+        container.innerHTML = html;
+        document.getElementById('gapsProgress').textContent = `${answered} / ${GAPS_DATA.length}`;
+        document.getElementById('gapsFill').style.width = `${(answered / GAPS_DATA.length * 100)}%`;
+        updateScore();
+    }
+
+    function checkGap(idx) {
+        const input = document.getElementById(`gap-${idx}`);
+        if (!input) return;
+        const userAnswer = input.value.trim().toLowerCase();
+        const correct = GAPS_DATA[idx].word[GAPS_DATA[idx].gap].toLowerCase();
+
+        if (userAnswer === correct) {
+            state.gapsAnswers[idx] = true;
+            showToast('✅ Правильно!');
+        } else {
+            state.gapsAnswers[idx] = userAnswer;
+            showToast('❌ Неправильно');
+        }
+        renderGaps();
+        updateScore();
+    }
+
+    function checkAllGaps() {
+        GAPS_DATA.forEach((item, idx) => {
+            if (state.gapsAnswers[idx] !== undefined) return;
+            const input = document.getElementById(`gap-${idx}`);
+            if (!input) return;
+            const userAnswer = input.value.trim().toLowerCase();
+            const correct = GAPS_DATA[idx].word[GAPS_DATA[idx].gap].toLowerCase();
+            state.gapsAnswers[idx] = (userAnswer === correct);
+        });
+        renderGaps();
+        updateScore();
+        showToast('✅ Проверка завершена');
+    }
+
+    window.checkGap = checkGap;
+
+    document.getElementById('checkGapsBtn').addEventListener('click', checkAllGaps);
+    document.getElementById('resetGapsBtn').addEventListener('click', function() {
+        state.gapsAnswers = {};
+        renderGaps();
+        updateScore();
+        showToast('🔄 Сброшено');
+    });
+
+    // ================================================================
+    //  ВКЛАДКИ
+    //  ================================================================
+
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+                // Обновляем содержимое при переключении
+                const tab = this.dataset.tab;
+                if (tab === 'sort') renderSort();
+                if (tab === 'transcription') renderTranscription();
+                if (tab === 'stress') renderStress();
+                if (tab === 'gaps') renderGaps();
+            });
+        });
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    //  ================================================================
+
+    function init() {
+        renderRules();
+        renderSort();
+        renderTranscription();
+        renderStress();
+        renderGaps();
+        initTabs();
+        updateScore();
+        showToast('📚 Урок 2. Дифтонги, согласные, ударение');
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

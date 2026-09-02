@@ -170,14 +170,14 @@
         /* ===== ФЛИП-КАРТОЧКИ ===== */
         .flip-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
             gap: 12px;
             margin: 10px 0;
         }
 
         .flip-card {
             background: transparent;
-            height: 120px;
+            height: 110px;
             perspective: 800px;
             cursor: pointer;
         }
@@ -214,15 +214,8 @@
         .flip-card-front {
             background: white;
             color: #1F4E6E;
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             font-weight: 700;
-        }
-
-        .flip-card-front .letter-small {
-            font-size: 1rem;
-            color: #8A9B7A;
-            font-weight: 400;
-            margin-top: 2px;
         }
 
         .flip-card-back {
@@ -235,11 +228,11 @@
 
         .flip-card-back .name {
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .flip-card-back .sound {
-            font-size: 1.1rem;
+            font-size: 1rem;
             background: rgba(255,255,255,0.15);
             padding: 2px 12px;
             border-radius: 40px;
@@ -248,8 +241,9 @@
 
         .flip-card-back .example {
             font-size: 0.7rem;
-            opacity: 0.8;
+            opacity: 0.9;
             margin-top: 2px;
+            font-style: italic;
         }
 
         /* ===== ТЕСТ ===== */
@@ -439,16 +433,18 @@
             .header .logo { font-size: 0.95rem; }
             .header-stats { justify-content: space-between; }
             .card { padding: 14px 16px; }
-            .flip-container { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); }
-            .flip-card { height: 100px; }
-            .flip-card-front { font-size: 1.6rem; }
+            .flip-container { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
+            .flip-card { height: 90px; }
+            .flip-card-front { font-size: 1.8rem; }
             .options-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
         }
         @media (max-width: 420px) {
-            .flip-container { grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); }
-            .flip-card { height: 85px; }
-            .flip-card-front { font-size: 1.2rem; }
-            .flip-card-back { font-size: 0.65rem; }
+            .flip-container { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
+            .flip-card { height: 75px; }
+            .flip-card-front { font-size: 1.4rem; }
+            .flip-card-back { font-size: 0.6rem; }
+            .flip-card-back .name { font-size: 0.75rem; }
+            .flip-card-back .sound { font-size: 0.8rem; }
             .tabs .tab-btn { font-size: 0.65rem; padding: 4px 10px; }
         }
     </style>
@@ -535,44 +531,44 @@
     // ================================================================
 
     // ================================================================
-    //  ДАННЫЕ
+    //  ДАННЫЕ (исправленные: лицевая сторона — только буква)
     //  ================================================================
 
     const ALPHABET = [
-        { letter: 'A', name: 'а', sound: '[а]', example: 'caput — голова' },
-        { letter: 'B', name: 'бэ', sound: '[б]', example: 'bursa — сумка' },
-        { letter: 'C', name: 'цэ', sound: '[ц]/[к]', example: 'cervix — шея' },
-        { letter: 'D', name: 'дэ', sound: '[д]', example: 'digitus — палец' },
-        { letter: 'E', name: 'э', sound: '[э]', example: 'vertebra — позвонок' },
-        { letter: 'F', name: 'эф', sound: '[ф]', example: 'fractura — перелом' },
-        { letter: 'G', name: 'гэ', sound: '[г]', example: 'ganglion — ганглий' },
-        { letter: 'H', name: 'га', sound: '[х]', example: 'humerus — плечевая кость' },
-        { letter: 'I', name: 'и', sound: '[и]/[й]', example: 'injectio — инъекция' },
-        { letter: 'J', name: 'йота', sound: '[й]', example: 'jejunum — тощая кишка' },
-        { letter: 'K', name: 'ка', sound: '[к]', example: 'kalium — калий' },
-        { letter: 'L', name: 'эль', sound: '[ль]', example: 'lingua — язык' },
-        { letter: 'M', name: 'эм', sound: '[м]', example: 'musculus — мышца' },
-        { letter: 'N', name: 'эн', sound: '[н]', example: 'nervus — нерв' },
-        { letter: 'O', name: 'о', sound: '[о]', example: 'ovum — яйцо' },
-        { letter: 'P', name: 'пэ', sound: '[п]', example: 'pulmo — лёгкое' },
-        { letter: 'Q', name: 'ку', sound: '[к]', example: 'quartus — четвёртый' },
-        { letter: 'R', name: 'эр', sound: '[р]', example: 'ren — почка' },
-        { letter: 'S', name: 'эс', sound: '[с]/[з]', example: 'os — кость' },
-        { letter: 'T', name: 'тэ', sound: '[т]', example: 'tibia — большеберцовая кость' },
-        { letter: 'U', name: 'у', sound: '[у]', example: 'ulna — локтевая кость' },
-        { letter: 'V', name: 'вэ', sound: '[в]', example: 'vena — вена' },
-        { letter: 'X', name: 'икс', sound: '[кс]', example: 'thorax — грудная клетка' },
-        { letter: 'Y', name: 'ипсилон', sound: '[и]', example: 'tympanum — барабанная перепонка' },
-        { letter: 'Z', name: 'зэта', sound: '[з]', example: 'zygoma — скуловая кость' }
+        { letter: 'A', name: 'а', sound: '[а]', example: 'caput', trans: '[капут]' },
+        { letter: 'B', name: 'бэ', sound: '[б]', example: 'bursa', trans: '[бурса]' },
+        { letter: 'C', name: 'цэ', sound: '[ц]/[к]', example: 'cervix', trans: '[цэрвикс]' },
+        { letter: 'D', name: 'дэ', sound: '[д]', example: 'digitus', trans: '[дигитус]' },
+        { letter: 'E', name: 'э', sound: '[э]', example: 'vertebra', trans: '[вэртэбра]' },
+        { letter: 'F', name: 'эф', sound: '[ф]', example: 'fractura', trans: '[фрактура]' },
+        { letter: 'G', name: 'гэ', sound: '[г]', example: 'ganglion', trans: '[ганглион]' },
+        { letter: 'H', name: 'га', sound: '[х]', example: 'humerus', trans: '[хумэрус]' },
+        { letter: 'I', name: 'и', sound: '[и]/[й]', example: 'injectio', trans: '[инйэкцио]' },
+        { letter: 'J', name: 'йота', sound: '[й]', example: 'jejunum', trans: '[йэунум]' },
+        { letter: 'K', name: 'ка', sound: '[к]', example: 'kalium', trans: '[калиум]' },
+        { letter: 'L', name: 'эль', sound: '[ль]', example: 'lingua', trans: '[лингуа]' },
+        { letter: 'M', name: 'эм', sound: '[м]', example: 'musculus', trans: '[мускулюс]' },
+        { letter: 'N', name: 'эн', sound: '[н]', example: 'nervus', trans: '[нэрвус]' },
+        { letter: 'O', name: 'о', sound: '[о]', example: 'ovum', trans: '[овум]' },
+        { letter: 'P', name: 'пэ', sound: '[п]', example: 'pulmo', trans: '[пульмо]' },
+        { letter: 'Q', name: 'ку', sound: '[к]', example: 'quartus', trans: '[квартус]' },
+        { letter: 'R', name: 'эр', sound: '[р]', example: 'ren', trans: '[рэн]' },
+        { letter: 'S', name: 'эс', sound: '[с]/[з]', example: 'os', trans: '[ос]' },
+        { letter: 'T', name: 'тэ', sound: '[т]', example: 'tibia', trans: '[тибиа]' },
+        { letter: 'U', name: 'у', sound: '[у]', example: 'ulna', trans: '[ульна]' },
+        { letter: 'V', name: 'вэ', sound: '[в]', example: 'vena', trans: '[вэна]' },
+        { letter: 'X', name: 'икс', sound: '[кс]', example: 'thorax', trans: '[торакс]' },
+        { letter: 'Y', name: 'ипсилон', sound: '[и]', example: 'tympanum', trans: '[тимпанум]' },
+        { letter: 'Z', name: 'зэта', sound: '[з]', example: 'zygoma', trans: '[зигома]' }
     ];
 
     const VOWELS = [
-        { letter: 'A', sound: '[а]', example: 'caput — голова' },
-        { letter: 'E', sound: '[э]', example: 'vertebra — позвонок' },
-        { letter: 'I', sound: '[и]/[й]', example: 'digitus — палец, iugum — хомут' },
-        { letter: 'O', sound: '[о]', example: 'ovis — овца' },
-        { letter: 'U', sound: '[у]', example: 'bursa — сумка' },
-        { letter: 'Y', sound: '[и]', example: 'gyrus — извилина' }
+        { letter: 'A', sound: '[а]', example: 'caput — [капут]' },
+        { letter: 'E', sound: '[э]', example: 'vertebra — [вэртэбра]' },
+        { letter: 'I', sound: '[и]/[й]', example: 'digitus — [дигитус], iugum — [йугум]' },
+        { letter: 'O', sound: '[о]', example: 'ovis — [овис]' },
+        { letter: 'U', sound: '[у]', example: 'bursa — [бурса]' },
+        { letter: 'Y', sound: '[и]', example: 'gyrus — [гирус]' }
     ];
 
     const VOCAL_EXAMPLES = [
@@ -585,7 +581,7 @@
     ];
 
     const PRACTICE_WORDS = [
-        { word: 'caput', correct: '[капут]', hint: 'глава' },
+        { word: 'caput', correct: '[капут]', hint: 'голова' },
         { word: 'ovum', correct: '[овум]', hint: 'яйцо' },
         { word: 'vertebra', correct: '[вэртэбра]', hint: 'позвонок' },
         { word: 'bursa', correct: '[бурса]', hint: 'сумка' },
@@ -650,7 +646,7 @@
     }
 
     // ================================================================
-    //  РЕНДЕР АЛФАВИТА
+    //  РЕНДЕР АЛФАВИТА (исправленный)
     //  ================================================================
 
     function renderAlphabet() {
@@ -664,12 +660,11 @@
                 <div class="flip-card-inner">
                     <div class="flip-card-front">
                         ${item.letter}
-                        <div class="letter-small">${item.name}</div>
                     </div>
                     <div class="flip-card-back">
                         <div class="name">${item.name}</div>
                         <div class="sound">${item.sound}</div>
-                        <div class="example">${item.example}</div>
+                        <div class="example">${item.example} → ${item.trans}</div>
                     </div>
                 </div>
             `;
@@ -696,7 +691,6 @@
                 <div class="flip-card-inner">
                     <div class="flip-card-front">
                         ${item.letter}
-                        <div class="letter-small">${item.sound}</div>
                     </div>
                     <div class="flip-card-back">
                         <div class="name">${item.sound}</div>
@@ -788,7 +782,6 @@
                 const userAnswer = input.value.trim().toLowerCase();
                 const correctAnswer = word.correct.toLowerCase();
 
-                // Удаляем лишние пробелы и скобки для сравнения
                 const normalizedUser = userAnswer.replace(/[\[\]\s]/g, '');
                 const normalizedCorrect = correctAnswer.replace(/[\[\]\s]/g, '');
 
@@ -804,7 +797,6 @@
             });
         }
 
-        // Enter в поле ввода
         const input = document.getElementById('transcriptionInput');
         if (input && !input.disabled) {
             input.addEventListener('keydown', function(e) {
@@ -813,7 +805,6 @@
                     if (checkBtn) checkBtn.click();
                 }
             });
-            // Фокус на поле ввода
             setTimeout(() => input.focus(), 100);
         }
 

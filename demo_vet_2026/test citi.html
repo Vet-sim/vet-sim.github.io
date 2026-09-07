@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Тест по цитологии · ВетСим</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: #FDF8F0;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            border: 1px solid #E7EDE2;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.2rem;
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            color: #1F4E6E;
+        }
+        .header h1 span { color: #2C7DA0; }
+        .header .sub {
+            color: #5F7C62;
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+        }
+        .header .info {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.4rem;
+            font-size: 0.8rem;
+            color: #7B8D6E;
+        }
+
+        /* ===== ПРОГРЕСС ===== */
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #F4EFE4;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #A3B18A, #2C7DA0);
+            border-radius: 1rem;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+        .progress-text {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #2C7DA0;
+            white-space: nowrap;
+        }
+
+        /* ===== СЧЁТЧИК ВОПРОСОВ ===== */
+        .counter {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #5F7C62;
+            margin-bottom: 0.8rem;
+        }
+        .counter strong { color: #1F4E6E; }
+
+        /* ===== ВОПРОС ===== */
+        .question-card {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.5rem 1.5rem;
+            border: 1px solid #E2EAD9;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+        .question-card .q-type {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.6rem;
+            border-radius: 1rem;
+            background: #2C7DA0;
+            color: white;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            align-self: flex-start;
+        }
+        .question-card .q-type.multi { background: #7B6B9E; }
+        .question-card .q-type.match { background: #D4A373; }
+
+        .question-card .q-text {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.5;
+        }
+
+        .question-card .q-options {
+            padding-left: 0;
+            flex: 1;
+        }
+        .question-card .q-options li {
+            list-style: none;
+            padding: 0.4rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-bottom: 1px solid #EDF0E5;
+        }
+        .question-card .q-options li:last-child { border-bottom: none; }
+        .question-card .q-options input[type="radio"],
+        .question-card .q-options input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2C7DA0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .question-card .q-options label {
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .question-card .q-match {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            flex: 1;
+        }
+        .question-card .q-match .match-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1F4E6E;
+        }
+        .question-card .q-match select {
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.8rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: white;
+            width: 100%;
+            cursor: pointer;
+        }
+        .question-card .q-match select:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44,125,160,0.12);
+        }
+        .question-card .q-match .match-left {
+            font-size: 0.9rem;
+            padding: 0.3rem 0;
+        }
+
+        /* ===== КНОПКИ НАВИГАЦИИ ===== */
+        .nav-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .nav-actions .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            border: none;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover:not(:disabled) { background: #236B8A; }
+
+        .btn-success { background: #5B8C5A; color: white; }
+        .btn-success:hover:not(:disabled) { background: #4A7A49; }
+
+        .btn-outline { background: transparent; border: 2px solid #A3B18A; }
+        .btn-outline:hover:not(:disabled) { background: #F0EEE5; }
+
+        .btn-danger { background: #b13e3e; color: white; }
+        .btn-danger:hover:not(:disabled) { background: #8f2e2e; }
+
+        .btn-olive { background: #A3B18A; color: white; }
+        .btn-olive:hover:not(:disabled) { background: #8FA375; }
+
+        /* ===== РЕЗУЛЬТАТ ===== */
+        .result {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: #F0F7EA;
+            border-radius: 1.5rem;
+            border: 2px solid #A3B18A;
+            margin-top: 1.5rem;
+        }
+        .result.show { display: block; }
+        .result .score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #2C7DA0;
+        }
+        .result .detail {
+            font-size: 1.1rem;
+            color: #3E5C4A;
+            margin-top: 0.5rem;
+        }
+        .result .message {
+            font-size: 1rem;
+            color: #5F7C62;
+            margin-top: 0.3rem;
+        }
+        .result .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .result .stats .stat {
+            background: white;
+            border-radius: 1rem;
+            padding: 0.5rem;
+            border: 1px solid #E2EAD9;
+        }
+        .result .stats .stat .num {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .result .stats .stat .label {
+            font-size: 0.7rem;
+            color: #7B8D6E;
+        }
+        .result .retry-area {
+            margin-top: 1rem;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        /* ===== АНИМАЦИЯ ===== */
+        .fade-in {
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            body { padding: 0.8rem; }
+            .container { padding: 1rem; border-radius: 1.5rem; }
+            .question-card .q-match { grid-template-columns: 1fr; }
+            .question-card .q-match .match-left { padding: 0.2rem 0; }
+            .header h1 { font-size: 1.3rem; }
+            .nav-actions { flex-direction: column; }
+            .nav-actions .btn-group { width: 100%; justify-content: center; }
+            .btn { padding: 0.4rem 1rem; font-size: 0.8rem; }
+        }
+        @media print {
+            body { background: white !important; padding: 0.2in !important; }
+            .container { box-shadow: none !important; border: 1px solid #ddd !important; }
+            .btn { display: none !important; }
+            .result { border: 1px solid #ddd !important; }
+            .nav-actions { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== ХЕДЕР ===== -->
+    <div class="header">
+        <h1>🧬 <span>Тест по цитологии</span></h1>
+        <div class="sub">Основы цитологии · 4 курс · 2 семестр</div>
+        <div class="info">
+            <span>📝 <strong id="totalQuestions">0</strong> вопросов</span>
+            <span>⏱️ <strong id="testTime">30</strong> минут</span>
+            <span>🎯 для прохождения нужно <strong>70%</strong></span>
+        </div>
+    </div>
+
+    <!-- ===== ПРОГРЕСС ===== -->
+    <div class="progress-wrapper">
+        <div class="progress-bar">
+            <div class="fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0%</div>
+    </div>
+
+    <!-- ===== СЧЁТЧИК ===== -->
+    <div class="counter" id="counter">Вопрос <strong id="currentNum">1</strong> из <strong id="totalNum">20</strong></div>
+
+    <!-- ===== КАРТОЧКА ВОПРОСА ===== -->
+    <div class="question-card fade-in" id="questionCard">
+        <div id="questionContent"></div>
+    </div>
+
+    <!-- ===== НАВИГАЦИЯ ===== -->
+    <div class="nav-actions" id="navActions">
+        <div class="btn-group">
+            <button class="btn btn-outline" id="prevBtn" disabled>◀ Назад</button>
+            <button class="btn btn-primary" id="nextBtn">Вперёд ▶</button>
+        </div>
+        <button class="btn btn-success" id="submitBtn">📝 Завершить и проверить</button>
+    </div>
+
+    <!-- ===== РЕЗУЛЬТАТ ===== -->
+    <div class="result" id="result">
+        <div class="score" id="scoreNum">0%</div>
+        <div class="detail" id="scoreDetail">0 из 0</div>
+        <div class="message" id="scoreMessage"></div>
+        <div class="stats">
+            <div class="stat">
+                <div class="num" id="statCorrect">0</div>
+                <div class="label">✅ Правильно</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="statWrong">0</div>
+                <div class="label">❌ Неправильно</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="statTime">0</div>
+                <div class="label">⏱️ Времени</div>
+            </div>
+        </div>
+        <div class="retry-area">
+            <button class="btn btn-olive" id="retryBtn">🔄 Пройти заново</button>
+        </div>
+    </div>
+
+    <!-- ===== ПОДВАЛ ===== -->
+    <div class="footer">
+        🧬 ВетСим · Тест по цитологии · Пошаговый режим
+    </div>
+
+</div>
+
+<script>
+    // ================================================================
+    //  ДАННЫЕ ТЕСТА — 20 ВОПРОСОВ ПО ЦИТОЛОГИИ
+    //  ================================================================
+
+    const ALL_QUESTIONS = [
+        {
+            type: 'choice',
+            text: 'Какая органелла является «энергетической станцией» клетки?',
+            options: ['Митохондрия', 'Рибосома', 'Аппарат Гольджи', 'Лизосома'],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Какой процесс обеспечивает движение клетки и её органелл?',
+            options: ['Фагоцитоз', 'Цитоскелет', 'Пиноцитоз', 'Диффузия'],
+            correct: '2'
+        },
+        {
+            type: 'choice',
+            text: 'Где происходит синтез белка в клетке?',
+            options: ['Митохондрия', 'Рибосома', 'Лизосома', 'Ядро'],
+            correct: '2'
+        },
+        {
+            type: 'multi',
+            text: 'Какие структуры относятся к немембранным органоидам? (выберите все верные)',
+            options: ['Рибосома', 'Клеточный центр', 'Митохондрия', 'Реснички', 'ЭПС', 'Миофибриллы'],
+            correct: '1,2,4,6'
+        },
+        {
+            type: 'choice',
+            text: 'Какой органоид отвечает за внутриклеточное переваривание?',
+            options: ['Пероксисома', 'Лизосома', 'ЭПС', 'Аппарат Гольджи'],
+            correct: '2'
+        },
+        {
+            type: 'match',
+            text: 'Соотнесите органоиды с их функциями:',
+            matchLeft: ['Митохондрия', 'Рибосома', 'Лизосома', 'Аппарат Гольджи'],
+            matchRight: ['Синтез АТФ', 'Синтез белка', 'Переваривание', 'Сортировка белков'],
+            matchPairs: ['1:1', '2:2', '3:3', '4:4']
+        },
+        {
+            type: 'choice',
+            text: 'Что такое цитолемма?',
+            options: ['Внутренняя среда клетки', 'Наружная оболочка клетки', 'Ядро клетки', 'Запасное вещество клетки'],
+            correct: '2'
+        },
+        {
+            type: 'multi',
+            text: 'Какие функции выполняет эндоплазматическая сеть? (выберите все верные)',
+            options: ['Синтез белка', 'Синтез липидов', 'Детоксикация', 'Переваривание бактерий', 'Транспорт веществ'],
+            correct: '1,2,3,5'
+        },
+        {
+            type: 'choice',
+            text: 'Какой органоид содержит собственную ДНК и рибосомы?',
+            options: ['Ядро', 'Митохондрия', 'Лизосома', 'Аппарат Гольджи'],
+            correct: '2'
+        },
+        {
+            type: 'choice',
+            text: 'Какой процесс лежит в основе фагоцитоза?',
+            options: ['Активный транспорт', 'Эндоцитоз', 'Экзоцитоз', 'Диффузия'],
+            correct: '2'
+        },
+        {
+            type: 'match',
+            text: 'Соотнесите структуры клетки с их функциями:',
+            matchLeft: ['Микроворсинки', 'Реснички', 'Жгутик', 'Миофибриллы'],
+            matchRight: ['Всасывание', 'Очистка дыхательных путей', 'Движение сперматозоидов', 'Сокращение мышц'],
+            matchPairs: ['1:1', '2:2', '3:3', '4:4']
+        },
+        {
+            type: 'choice',
+            text: 'Какие клетки млекопитающих утратили ядро в процессе созревания?',
+            options: ['Лейкоциты', 'Эритроциты', 'Гепатоциты', 'Нейроны'],
+            correct: '2'
+        },
+        {
+            type: 'multi',
+            text: 'Какие включения относятся к трофическим (питательным)?',
+            options: ['Капли липидов', 'Зерна гликогена', 'Гранулы меланина', 'Секреторные гранулы', 'Частицы угля'],
+            correct: '1,2'
+        },
+        {
+            type: 'choice',
+            text: 'Какой компонент ядра отвечает за синтез рибосомальной РНК?',
+            options: ['Кариоплазма', 'Ядрышко', 'Хроматин', 'Кариолемма'],
+            correct: '2'
+        },
+        {
+            type: 'match',
+            text: 'Соотнесите типы деления клеток с их характеристиками:',
+            matchLeft: ['Митоз', 'Мейоз', 'Амитоз'],
+            matchRight: ['Две идентичные клетки', 'Четыре разные клетки', 'Неравноценное деление'],
+            matchPairs: ['1:1', '2:2', '3:3']
+        },
+        {
+            type: 'choice',
+            text: 'Какие элементы относятся к макроэлементам?',
+            options: ['Fe, Zn, Cu', 'H, C, N, O', 'Na, K, Ca, Mg', 'I, Co, Se'],
+            correct: '2'
+        },
+        {
+            type: 'multi',
+            text: 'Какие функции выполняют белки в клетке? (выберите все верные)',
+            options: ['Структурная', 'Каталитическая', 'Транспортная', 'Защитная', 'Сократительная', 'Энергетическая'],
+            correct: '1,2,3,4,5'
+        },
+        {
+            type: 'choice',
+            text: 'Какие клетки относятся к редко делящимся?',
+            options: ['Эпителий кишечника', 'Гепатоциты', 'Нейроны', 'Клетки красного костного мозга'],
+            correct: '2'
+        },
+        {
+            type: 'choice',
+            text: 'Где в клетке синтезируется АТФ?',
+            options: ['В рибосомах', 'В митохондриях', 'В аппарате Гольджи', 'В лизосомах'],
+            correct: '2'
+        },
+        {
+            type: 'match',
+            text: 'Соотнесите типы клеток с их способностью к делению:',
+            matchLeft: ['Часто делящиеся', 'Редко делящиеся', 'Неделящиеся'],
+            matchRight: ['Эпителий кишечника', 'Гепатоциты', 'Нейроны'],
+            matchPairs: ['1:1', '2:2', '3:3']
+        }
+    ];
+
+    // ================================================================
+    //  СОСТОЯНИЕ
+    //  ================================================================
+
+    let questions = [];
+    let currentIndex = 0;
+    let userAnswers = {}; // { questionIndex: answer }
+    let startTime = null;
+    let timerInterval = null;
+    let seconds = 0;
+    let isFinished = false;
+
+    // ================================================================
+    //  ПЕРЕМЕШИВАНИЕ
+    //  ================================================================
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function prepareQuestions() {
+        // Копируем и перемешиваем вопросы
+        const shuffled = ALL_QUESTIONS.map(q => ({ ...q }));
+        shuffleArray(shuffled);
+
+        // Для каждого вопроса перемешиваем варианты ответов (для choice/multi)
+        shuffled.forEach((q, qIdx) => {
+            if (q.type === 'choice' || q.type === 'multi') {
+                const options = q.options.map((opt, idx) => ({ text: opt, idx: idx + 1 }));
+                shuffleArray(options);
+                const correctNums = q.correct.split(',').map(s => parseInt(s.trim()));
+                const newCorrect = options
+                    .filter(o => correctNums.includes(o.idx))
+                    .map(o => options.indexOf(o) + 1)
+                    .join(',');
+                q.options = options.map(o => o.text);
+                q.correct = newCorrect;
+            }
+            if (q.type === 'match') {
+                const right = q.matchRight.map((opt, idx) => ({ text: opt, idx: idx + 1 }));
+                shuffleArray(right);
+                const pairs = q.matchPairs.map(p => {
+                    const [left, rightIdx] = p.split(':').map(Number);
+                    const newRightIdx = right.findIndex(r => r.idx === rightIdx) + 1;
+                    return `${left}:${newRightIdx}`;
+                });
+                q.matchRight = right.map(r => r.text);
+                q.matchPairs = pairs;
+            }
+            // Инициализируем ответы пустыми
+            userAnswers[qIdx] = null;
+        });
+
+        return shuffled;
+    }
+
+    // ================================================================
+    //  РЕНДЕР ВОПРОСА
+    //  ================================================================
+
+    function renderQuestion(index) {
+        const q = questions[index];
+        if (!q) return;
+
+        const container = document.getElementById('questionContent');
+        const total = questions.length;
+        const num = index + 1;
+
+        const typeLabels = {
+            'choice': '🎯 Одиночный выбор',
+            'multi': '✅ Множественный выбор',
+            'match': '🔗 Соответствие'
+        };
+        const typeClass = {
+            'choice': '',
+            'multi': 'multi',
+            'match': 'match'
+        };
+
+        let html = `
+            <div class="q-type ${typeClass[q.type] || ''}">${typeLabels[q.type] || 'Вопрос'}</div>
+            <div class="q-text">${escapeHtml(q.text)}</div>
+        `;
+
+        if (q.type === 'choice') {
+            html += '<ul class="q-options">';
+            q.options.forEach((opt, i) => {
+                const val = i + 1;
+                const checked = userAnswers[index] === val ? 'checked' : '';
+                html += `
+                    <li>
+                        <input type="radio" name="q${index}" value="${val}" id="q${index}_${val}" ${checked}>
+                        <label for="q${index}_${val}">${escapeHtml(opt)}</label>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+        }
+
+        if (q.type === 'multi') {
+            const selected = userAnswers[index] ? userAnswers[index].split(',').map(s => s.trim()) : [];
+            html += '<ul class="q-options">';
+            q.options.forEach((opt, i) => {
+                const val = i + 1;
+                const checked = selected.includes(String(val)) ? 'checked' : '';
+                html += `
+                    <li>
+                        <input type="checkbox" name="q${index}[]" value="${val}" id="q${index}_${val}" ${checked}>
+                        <label for="q${index}_${val}">${escapeHtml(opt)}</label>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+        }
+
+        if (q.type === 'match') {
+            const leftItems = q.matchLeft || [];
+            const rightItems = q.matchRight || [];
+            const savedPairs = userAnswers[index] ? userAnswers[index].split(',').map(s => s.trim()) : [];
+
+            html += '<div class="q-match">';
+            html += '<div class="match-label">Структура</div>';
+            html += '<div class="match-label">Функция / Описание</div>';
+
+            leftItems.forEach((left, i) => {
+                const leftNum = i + 1;
+                const savedVal = savedPairs.find(p => p.startsWith(`${leftNum}:`));
+                const selectedVal = savedVal ? savedVal.split(':')[1] : '';
+                html += `
+                    <div class="match-left">${escapeHtml(left)}</div>
+                    <div>
+                        <select name="match_${index}_${leftNum}" data-left="${leftNum}">
+                            <option value="">Выберите...</option>
+                            ${rightItems.map((right, rIdx) => {
+                                const val = rIdx + 1;
+                                const sel = selectedVal == val ? 'selected' : '';
+                                return `<option value="${val}" ${sel}>${escapeHtml(right)}</option>`;
+                            }).join('')}
+                        </select>
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
+
+        container.innerHTML = html;
+        document.getElementById('questionCard').classList.remove('fade-in');
+        void document.getElementById('questionCard').offsetWidth;
+        document.getElementById('questionCard').classList.add('fade-in');
+
+        // Обновляем счётчик
+        document.getElementById('currentNum').textContent = num;
+        document.getElementById('totalNum').textContent = total;
+        document.getElementById('totalQuestions').textContent = total;
+
+        // Обновляем кнопки
+        document.getElementById('prevBtn').disabled = index === 0;
+        document.getElementById('nextBtn').disabled = index === total - 1;
+
+        // Привязываем события для сохранения ответов
+        attachEvents(index);
+
+        // Обновляем прогресс
+        updateProgress();
+
+        // Прокрутка к вопросу
+        document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // ================================================================
+    //  СОХРАНЕНИЕ ОТВЕТОВ
+    //  ================================================================
+
+    function attachEvents(index) {
+        const q = questions[index];
+
+        if (q.type === 'choice') {
+            document.querySelectorAll(`input[name="q${index}"]`).forEach(el => {
+                el.addEventListener('change', function() {
+                    userAnswers[index] = this.value;
+                    saveAnswer(index);
+                });
+            });
+        }
+
+        if (q.type === 'multi') {
+            document.querySelectorAll(`input[name="q${index}[]"]`).forEach(el => {
+                el.addEventListener('change', function() {
+                    const checked = document.querySelectorAll(`input[name="q${index}[]"]:checked`);
+                    const values = Array.from(checked).map(el => el.value).join(',');
+                    userAnswers[index] = values || null;
+                    saveAnswer(index);
+                });
+            });
+        }
+
+        if (q.type === 'match') {
+            document.querySelectorAll(`select[name^="match_${index}_"]`).forEach(el => {
+                el.addEventListener('change', function() {
+                    const selects = document.querySelectorAll(`select[name^="match_${index}_"]`);
+                    const pairs = [];
+                    selects.forEach(sel => {
+                        if (sel.value) {
+                            pairs.push(`${sel.dataset.left}:${sel.value}`);
+                        }
+                    });
+                    userAnswers[index] = pairs.length > 0 ? pairs.join(',') : null;
+                    saveAnswer(index);
+                });
+            });
+        }
+
+        // Восстанавливаем значения для match
+        if (q.type === 'match' && userAnswers[index]) {
+            const savedPairs = userAnswers[index].split(',').map(s => s.trim());
+            document.querySelectorAll(`select[name^="match_${index}_"]`).forEach(sel => {
+                const left = sel.dataset.left;
+                const pair = savedPairs.find(p => p.startsWith(`${left}:`));
+                if (pair) {
+                    sel.value = pair.split(':')[1];
+                }
+            });
+        }
+    }
+
+    function saveAnswer(index) {
+        // Запускаем таймер при первом ответе
+        if (!startTime && !timerInterval) {
+            startTimer();
+        }
+        // Сохраняем в localStorage (опционально)
+        try {
+            localStorage.setItem('cytology_test_answers', JSON.stringify(userAnswers));
+        } catch (e) {}
+        updateProgress();
+    }
+
+    // ================================================================
+    //  ПРОГРЕСС
+    //  ================================================================
+
+    function updateProgress() {
+        const total = questions.length;
+        let answered = 0;
+        for (let i = 0; i < total; i++) {
+            const ans = userAnswers[i];
+            if (ans && ans.length > 0) answered++;
+        }
+        const percent = total > 0 ? Math.round((answered / total) * 100) : 0;
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('progressText').textContent = percent + '%';
+    }
+
+    // ================================================================
+    //  ТАЙМЕР
+    //  ================================================================
+
+    function startTimer() {
+        if (timerInterval) return;
+        startTime = Date.now();
+        timerInterval = setInterval(() => {
+            seconds = Math.floor((Date.now() - startTime) / 1000);
+        }, 1000);
+    }
+
+    // ================================================================
+    //  ПРОВЕРКА
+    //  ================================================================
+
+    function checkAllAnswers() {
+        const total = questions.length;
+        let correct = 0;
+        let wrong = 0;
+
+        questions.forEach((q, idx) => {
+            const userAns = userAnswers[idx];
+            let isCorrect = false;
+
+            if (!userAns || userAns.length === 0) {
+                wrong++;
+                return;
+            }
+
+            if (q.type === 'choice') {
+                isCorrect = userAns === q.correct;
+            } else if (q.type === 'multi') {
+                const correctArr = q.correct.split(',').map(s => s.trim()).sort();
+                const userArr = userAns.split(',').map(s => s.trim()).sort();
+                isCorrect = userArr.length === correctArr.length &&
+                    userArr.every((v, i) => v === correctArr[i]);
+            } else if (q.type === 'match') {
+                const pairs = q.matchPairs || [];
+                const correctPairs = pairs.map(p => p.trim()).sort();
+                const userPairs = userAns.split(',').map(s => s.trim()).sort();
+                isCorrect = userPairs.length === correctPairs.length &&
+                    userPairs.every((v, i) => v === correctPairs[i]);
+            }
+
+            if (isCorrect) correct++;
+            else wrong++;
+        });
+
+        return { correct, wrong, total };
+    }
+
+    // ================================================================
+    //  ПОКАЗ РЕЗУЛЬТАТА
+    //  ================================================================
+
+    function showResult() {
+        if (isFinished) return;
+        isFinished = true;
+
+        // Останавливаем таймер
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        const { correct, wrong, total } = checkAllAnswers();
+        const percent = Math.round((correct / total) * 100);
+
+        const resultEl = document.getElementById('result');
+        const scoreNum = document.getElementById('scoreNum');
+        const scoreDetail = document.getElementById('scoreDetail');
+        const scoreMessage = document.getElementById('scoreMessage');
+        const statCorrect = document.getElementById('statCorrect');
+        const statWrong = document.getElementById('statWrong');
+        const statTime = document.getElementById('statTime');
+
+        scoreNum.textContent = percent + '%';
+        scoreDetail.textContent = `${correct} из ${total}`;
+        statCorrect.textContent = correct;
+        statWrong.textContent = wrong;
+
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        statTime.textContent = `${minutes}м ${secs}с`;
+
+        if (percent === 100) {
+            scoreMessage.textContent = '🎉 Отлично! Вы идеально знаете цитологию!';
+        } else if (percent >= 80) {
+            scoreMessage.textContent = '⭐ Отличный результат! Вы хорошо усвоили материал.';
+        } else if (percent >= 70) {
+            scoreMessage.textContent = '👍 Хороший результат! Есть над чем поработать.';
+        } else if (percent >= 50) {
+            scoreMessage.textContent = '📖 Рекомендуем повторить материал по цитологии.';
+        } else {
+            scoreMessage.textContent = '📚 Вам стоит серьёзно пересмотреть тему. Обратитесь к учебнику.';
+        }
+
+        resultEl.classList.add('show');
+        document.getElementById('navActions').style.display = 'none';
+        document.getElementById('submitBtn').disabled = true;
+
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        // Очищаем сохранённые ответы
+        try {
+            localStorage.removeItem('cytology_test_answers');
+        } catch (e) {}
+    }
+
+    // ================================================================
+    //  НАВИГАЦИЯ
+    //  ================================================================
+
+    function goToPrev() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderQuestion(currentIndex);
+        }
+    }
+
+    function goToNext() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            renderQuestion(currentIndex);
+        }
+    }
+
+    // ================================================================
+    //  СБРОС
+    //  ================================================================
+
+    function resetTest() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        seconds = 0;
+        startTime = null;
+        isFinished = false;
+        currentIndex = 0;
+        userAnswers = {};
+
+        questions = prepareQuestions();
+
+        document.getElementById('result').classList.remove('show');
+        document.getElementById('navActions').style.display = 'flex';
+        document.getElementById('submitBtn').disabled = false;
+
+        renderQuestion(0);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        try {
+            localStorage.removeItem('cytology_test_answers');
+        } catch (e) {}
+    }
+
+    // ================================================================
+    //  ВСПОМОГАТЕЛЬНЫЕ
+    //  ================================================================
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m] || m);
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    //  ================================================================
+
+    function init() {
+        // Пытаемся восстановить сохранённые ответы
+        let savedAnswers = null;
+        try {
+            const saved = localStorage.getItem('cytology_test_answers');
+            if (saved) savedAnswers = JSON.parse(saved);
+        } catch (e) {}
+
+        questions = prepareQuestions();
+
+        if (savedAnswers) {
+            // Восстанавливаем ответы, если они есть
+            for (const key in savedAnswers) {
+                const idx = parseInt(key);
+                if (idx < questions.length) {
+                    userAnswers[idx] = savedAnswers[key];
+                }
+            }
+        }
+
+        renderQuestion(0);
+
+        // События
+        document.getElementById('prevBtn').addEventListener('click', goToPrev);
+        document.getElementById('nextBtn').addEventListener('click', goToNext);
+
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            // Проверяем, что все вопросы отвечены
+            let allAnswered = true;
+            for (let i = 0; i < questions.length; i++) {
+                const ans = userAnswers[i];
+                if (!ans || ans.length === 0) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (!allAnswered) {
+                if (!confirm('Не на все вопросы даны ответы. Продолжить проверку?')) {
+                    return;
+                }
+            }
+
+            showResult();
+        });
+
+        document.getElementById('retryBtn').addEventListener('click', resetTest);
+
+        // Клавиши
+        document.addEventListener('keydown', function(e) {
+            if (isFinished) return;
+            if (e.key === 'ArrowLeft') goToPrev();
+            if (e.key === 'ArrowRight') goToNext();
+            if (e.key === 'Enter' && !document.getElementById('submitBtn').disabled) {
+                document.getElementById('submitBtn').click();
+            }
+        });
+
+        document.getElementById('testTime').textContent = '30';
+
+        console.log('🧬 Тест по цитологии (пошаговый) загружен. Всего вопросов:', questions.length);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

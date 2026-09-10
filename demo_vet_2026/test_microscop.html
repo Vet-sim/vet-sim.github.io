@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Тест: Устройство микроскопа · ВетСим</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.2rem;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 850px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== ХЕДЕР ===== */
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 1rem;
+            margin-bottom: 1.2rem;
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            color: #1F4E6E;
+        }
+        .header h1 span { color: #2C7DA0; }
+        .header .sub {
+            color: #5F7C62;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+        .header .info {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #7B8D6E;
+        }
+
+        /* ===== ТАЙМЕР ===== */
+        .timer-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid #E2EAD9;
+        }
+        .timer-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #5F7C62;
+        }
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            letter-spacing: 1px;
+        }
+        .timer.warning { color: #D4A373; animation: pulse 1s infinite; }
+        .timer.danger { color: #b13e3e; animation: pulse 0.6s infinite; }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* ===== ПРОГРЕСС ===== */
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: #F4EFE4;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #A3B18A, #2C7DA0);
+            border-radius: 1rem;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+        .progress-text {
+            font-weight: 700;
+            font-size: 0.8rem;
+            color: #2C7DA0;
+            white-space: nowrap;
+        }
+
+        /* ===== СЧЁТЧИК ===== */
+        .counter {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #5F7C62;
+            margin-bottom: 0.8rem;
+        }
+        .counter strong { color: #1F4E6E; }
+
+        /* ===== ВОПРОС ===== */
+        .question-card {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            border: 1px solid #E2EAD9;
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .q-type {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.15rem 0.7rem;
+            border-radius: 1rem;
+            background: #2C7DA0;
+            color: white;
+            display: inline-block;
+            margin-bottom: 0.6rem;
+            align-self: flex-start;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .q-type.multi { background: #7B6B9E; }
+        .q-type.match { background: #D4A373; }
+
+        .q-text {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .q-options {
+            flex: 1;
+            padding-left: 0;
+            list-style: none;
+        }
+        .q-options li {
+            padding: 0.5rem 0.8rem;
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid #EDF0E5;
+            border-radius: 0.8rem;
+            background: white;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .q-options li:hover {
+            border-color: #A3B18A;
+            background: #F5F8F0;
+        }
+        .q-options input[type="radio"],
+        .q-options input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2C7DA0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .q-options label {
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex: 1;
+        }
+
+        /* ===== СООТВЕТСТВИЕ ===== */
+        .q-match {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem 1rem;
+            margin: 0.5rem 0;
+            flex: 1;
+        }
+        .q-match .match-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1F4E6E;
+            padding-bottom: 0.3rem;
+            border-bottom: 2px solid #E2EAD9;
+        }
+        .q-match .match-left {
+            font-size: 0.9rem;
+            padding: 0.4rem 0;
+            display: flex;
+            align-items: center;
+        }
+        .q-match select {
+            padding: 0.4rem 0.7rem;
+            border-radius: 0.8rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: white;
+            width: 100%;
+            cursor: pointer;
+        }
+        .q-match select:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 2px rgba(44,125,160,0.12);
+        }
+
+        /* ===== КНОПКИ НАВИГАЦИИ ===== */
+        .nav-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .nav-actions .btn-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            border: none;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover:not(:disabled) { background: #236B8A; }
+        .btn-success { background: #5B8C5A; color: white; }
+        .btn-success:hover:not(:disabled) { background: #4A7A49; }
+        .btn-outline { background: transparent; border: 2px solid #A3B18A; }
+        .btn-outline:hover:not(:disabled) { background: #F0EEE5; }
+        .btn-olive { background: #A3B18A; color: white; }
+        .btn-olive:hover:not(:disabled) { background: #8FA375; }
+        .btn-danger { background: #b13e3e; color: white; }
+        .btn-danger:hover:not(:disabled) { background: #8f2e2e; }
+
+        /* ===== РЕЗУЛЬТАТ ===== */
+        .result {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: #F0F7EA;
+            border-radius: 1.5rem;
+            border: 2px solid #A3B18A;
+            margin-top: 1.5rem;
+        }
+        .result.show { display: block; animation: fadeIn 0.4s ease; }
+        .result .score {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #2C7DA0;
+            line-height: 1;
+        }
+        .result .detail {
+            font-size: 1.1rem;
+            color: #3E5C4A;
+            margin-top: 0.6rem;
+        }
+        .result .message {
+            font-size: 1rem;
+            color: #5F7C62;
+            margin-top: 0.4rem;
+        }
+        .result .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.5rem;
+            margin-top: 1.2rem;
+        }
+        .result .stats .stat {
+            background: white;
+            border-radius: 1rem;
+            padding: 0.6rem;
+            border: 1px solid #E2EAD9;
+        }
+        .result .stats .stat .num {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .result .stats .stat .label {
+            font-size: 0.7rem;
+            color: #7B8D6E;
+        }
+        .result .retry-area {
+            margin-top: 1.2rem;
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        /* ===== МОДАЛКА ВРЕМЯ ВЫШЛО ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .modal h2 {
+            color: #b13e3e;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal p {
+            color: #5F7C62;
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            body { padding: 0.8rem; }
+            .container { padding: 1rem; border-radius: 1.5rem; }
+            .header h1 { font-size: 1.3rem; }
+            .timer { font-size: 1.3rem; }
+            .q-match { grid-template-columns: 1fr; }
+            .nav-actions { flex-direction: column; }
+            .nav-actions .btn-group { width: 100%; justify-content: center; }
+            .btn { padding: 0.4rem 1rem; font-size: 0.8rem; }
+        }
+        @media print {
+            body { background: white !important; padding: 0.2in !important; }
+            .container { box-shadow: none !important; border: 1px solid #ddd !important; }
+            .btn { display: none !important; }
+            .nav-actions { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== ХЕДЕР ===== -->
+    <div class="header">
+        <h1>🔬 <span>Устройство микроскопа</span></h1>
+        <div class="sub">Лабораторная работа №1 · Техника микроскопирования</div>
+        <div class="info">
+            <span>📝 <strong id="totalQuestions">20</strong> вопросов</span>
+            <span>⏱️ <strong>20</strong> минут</span>
+            <span>🎯 порог <strong>70%</strong></span>
+        </div>
+    </div>
+
+    <!-- ===== ТАЙМЕР ===== -->
+    <div class="timer-wrapper">
+        <div class="timer-label">⏱️ Осталось времени:</div>
+        <div class="timer" id="timer">20:00</div>
+    </div>
+
+    <!-- ===== ПРОГРЕСС ===== -->
+    <div class="progress-wrapper">
+        <div class="progress-bar">
+            <div class="fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0%</div>
+    </div>
+
+    <!-- ===== СЧЁТЧИК ===== -->
+    <div class="counter">
+        Вопрос <strong id="currentNum">1</strong> из <strong id="totalNum">20</strong>
+    </div>
+
+    <!-- ===== КАРТОЧКА ВОПРОСА ===== -->
+    <div class="question-card" id="questionCard">
+        <div id="questionContent"></div>
+    </div>
+
+    <!-- ===== НАВИГАЦИЯ ===== -->
+    <div class="nav-actions" id="navActions">
+        <div class="btn-group">
+            <button class="btn btn-outline" id="prevBtn" disabled>◀ Назад</button>
+            <button class="btn btn-primary" id="nextBtn">Вперёд ▶</button>
+        </div>
+        <button class="btn btn-success" id="submitBtn">📝 Завершить тест</button>
+    </div>
+
+    <!-- ===== РЕЗУЛЬТАТ ===== -->
+    <div class="result" id="result">
+        <div class="score" id="scoreNum">0%</div>
+        <div class="detail" id="scoreDetail">0 из 0</div>
+        <div class="message" id="scoreMessage"></div>
+        <div class="stats">
+            <div class="stat">
+                <div class="num" id="statCorrect">0</div>
+                <div class="label">✅ Правильно</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="statWrong">0</div>
+                <div class="label">❌ Неправильно</div>
+            </div>
+            <div class="stat">
+                <div class="num" id="statTime">0</div>
+                <div class="label">⏱️ Времени</div>
+            </div>
+        </div>
+        <div class="retry-area">
+            <button class="btn btn-olive" id="retryBtn">🔄 Пройти заново</button>
+        </div>
+    </div>
+
+    <!-- ===== ПОДВАЛ ===== -->
+    <div class="footer">
+        🔬 ВетСим · Лабораторная работа №1 · Тест по устройству микроскопа
+    </div>
+
+</div>
+
+<!-- ===== МОДАЛКА ВРЕМЯ ВЫШЛО ===== -->
+<div class="modal-overlay" id="timeUpModal">
+    <div class="modal">
+        <h2>⏰ Время вышло!</h2>
+        <p>Ваши ответы будут проверены автоматически.</p>
+        <button class="btn btn-primary" id="timeUpOk">Посмотреть результат</button>
+    </div>
+</div>
+
+<script>
+    // ================================================================
+    //  БАНК ВОПРОСОВ — 20 ВОПРОСОВ ПО УСТРОЙСТВУ МИКРОСКОПА
+    //  ================================================================
+
+    const ALL_QUESTIONS = [
+        // --- Одиночный выбор (10) ---
+        {
+            type: 'choice',
+            text: 'Что такое микроскоп?',
+            options: [
+                'Оптический прибор для изучения прозрачных объектов, невидимых простым глазом',
+                'Прибор для измерения температуры',
+                'Прибор для стерилизации инструментов',
+                'Устройство для окраски мазков'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Из каких основных частей состоит световой микроскоп?',
+            options: [
+                'Оптической и механической',
+                'Только оптической',
+                'Электрической и химической',
+                'Механической и биологической'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Как определяется общее увеличение микроскопа?',
+            options: [
+                'Произведением увеличения объектива на увеличение окуляра',
+                'Суммой увеличений объектива и окуляра',
+                'Разностью увеличений',
+                'Только увеличением объектива'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Какие окуляры относятся к слабым?',
+            options: [
+                '5х, 7х',
+                '10х',
+                '15х',
+                '90х'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Какой объектив является иммерсионным?',
+            options: [
+                '90',
+                '8',
+                '40',
+                '10'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Для чего используется кедровое масло при микроскопии?',
+            options: [
+                'Для устранения искажения изображения, так как показатели преломления стекла и масла примерно одинаковые',
+                'Для очистки линз от пыли',
+                'Для окраски препарата',
+                'Для фиксации препарата на столике'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Какая поверхность зеркала служит для отражения рассеянного света?',
+            options: [
+                'Плоская',
+                'Вогнутая',
+                'Обе одновременно',
+                'Ни одна'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Какой винт микроскопа служит для точной настройки резкости?',
+            options: [
+                'Микровинт',
+                'Макровинт',
+                'Винт конденсора',
+                'Винт предметного столика'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'Каким глазом рекомендуется смотреть в окуляр?',
+            options: [
+                'Левым, оставляя правый открытым',
+                'Правым, левый закрыть',
+                'Обоими по очереди',
+                'Только прищуренным глазом'
+            ],
+            correct: '1'
+        },
+        {
+            type: 'choice',
+            text: 'С какого увеличения следует начинать работу с микроскопом?',
+            options: [
+                'С наименьшего',
+                'С наибольшего',
+                'С иммерсионного',
+                'С любого по желанию'
+            ],
+            correct: '1'
+        },
+
+        // --- Множественный выбор (5) ---
+        {
+            type: 'multi',
+            text: 'Что входит в оптическую часть микроскопа? (выберите все верные)',
+            options: [
+                'Окуляр',
+                'Объектив',
+                'Зеркало',
+                'Конденсор',
+                'Штатив',
+                'Предметный столик',
+                'Револьвер'
+            ],
+            correct: '1,2,3,4'
+        },
+        {
+            type: 'multi',
+            text: 'Что входит в механическую часть микроскопа? (выберите все верные)',
+            options: [
+                'Основание',
+                'Штатив',
+                'Предметный столик',
+                'Револьвер',
+                'Макровинт',
+                'Микровинт',
+                'Окуляр',
+                'Зеркало'
+            ],
+            correct: '1,2,3,4,5,6'
+        },
+        {
+            type: 'multi',
+            text: 'Какие правила техники безопасности необходимо соблюдать при работе с микроскопом? (выберите все верные)',
+            options: [
+                'Протирать объективы мягкой салфеткой перед работой',
+                'Не перемещать микроскоп во время работы',
+                'Держать микроскоп у края стола',
+                'Запрещается самостоятельно чинить неисправные электрические приборы',
+                'Работать с микроскопом стоя'
+            ],
+            correct: '1,2,4'
+        },
+        {
+            type: 'multi',
+            text: 'Какие из перечисленных деталей нужны для настройки освещения? (выберите все верные)',
+            options: [
+                'Зеркало',
+                'Конденсор',
+                'Ирисовая диафрагма',
+                'Микровинт',
+                'Револьвер'
+            ],
+            correct: '1,2,3'
+        },
+        {
+            type: 'multi',
+            text: 'Что необходимо сделать в конце работы с микроскопом? (выберите все верные)',
+            options: [
+                'Поднять тубус',
+                'Перевести револьвер на слабое увеличение',
+                'Освободить зажимы и снять препарат',
+                'Протереть все части микроскопа чистой салфеткой',
+                'Накрыть микроскоп защитным чехлом и убрать в шкаф',
+                'Оставить микроскоп на краю стола'
+            ],
+            correct: '1,2,3,4,5'
+        },
+
+        // --- Соответствие (5) ---
+        {
+            type: 'match',
+            text: 'Соотнесите деталь микроскопа с её функцией:',
+            matchLeft: ['Окуляр', 'Объектив', 'Зеркало', 'Конденсор', 'Макровинт'],
+            matchRight: [
+                'Система линз для наблюдения изображения',
+                'Система линз для формирования изображения объекта',
+                'Направляет свет на исследуемый предмет',
+                'Фокусирует пучок света на препарате',
+                'Служит для грубой наводки на резкость'
+            ],
+            matchPairs: ['1:1', '2:2', '3:3', '4:4', '5:5']
+        },
+        {
+            type: 'match',
+            text: 'Соотнесите деталь микроскопа с её назначением:',
+            matchLeft: ['Предметный столик', 'Револьвер', 'Микровинт', 'Ирисовая диафрагма', 'Препаратоводитель'],
+            matchRight: [
+                'Служит для размещения изучаемого объекта',
+                'Позволяет быстро менять объективы',
+                'Служит для точной настройки резкости',
+                'Изменяет уровень освещённости препарата',
+                'Обеспечивает смещение препарата в двух направлениях'
+            ],
+            matchPairs: ['1:1', '2:2', '3:3', '4:4', '5:5']
+        },
+        {
+            type: 'match',
+            text: 'Соотнесите тип окуляра с кратностью увеличения:',
+            matchLeft: ['Слабый', 'Средний', 'Сильный'],
+            matchRight: ['5х, 7х', '10х', '15х'],
+            matchPairs: ['1:1', '2:2', '3:3']
+        },
+        {
+            type: 'match',
+            text: 'Соотнесите объектив с его типом:',
+            matchLeft: ['Сухой объектив 8', 'Сухой объектив 40', 'Иммерсионный объектив 90'],
+            matchRight: [
+                'Даёт малое увеличение',
+                'Даёт среднее увеличение',
+                'Требует нанесения кедрового масла'
+            ],
+            matchPairs: ['1:1', '2:2', '3:3']
+        },
+        {
+            type: 'match',
+            text: 'Соотнесите этап работы с микроскопом с его описанием:',
+            matchLeft: ['Подготовка', 'Начало работы', 'Фокусировка', 'Завершение'],
+            matchRight: [
+                'Протирание линз мягкой салфеткой, установка микроскопа',
+                'Использование наименьшего увеличения и настройка освещения',
+                'Использование макровинта и микровинта',
+                'Уборка микроскопа, снятие препарата'
+            ],
+            matchPairs: ['1:1', '2:2', '3:3', '4:4']
+        }
+    ];
+
+    // ================================================================
+    //  ПЕРЕМЕННЫЕ
+    // ================================================================
+
+    const TOTAL_TIME = 20 * 60; // 20 минут в секундах
+    let questions = [];
+    let currentIndex = 0;
+    let userAnswers = {};
+    let timeLeft = TOTAL_TIME;
+    let timerInterval = null;
+    let isFinished = false;
+
+    // ================================================================
+    //  ПЕРЕМЕШИВАНИЕ
+    // ================================================================
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function prepareQuestions() {
+        const shuffled = ALL_QUESTIONS.map(q => ({ ...q }));
+        shuffleArray(shuffled);
+
+        shuffled.forEach((q, qIdx) => {
+            if (q.type === 'choice' || q.type === 'multi') {
+                const options = q.options.map((opt, idx) => ({ text: opt, idx: idx + 1 }));
+                shuffleArray(options);
+                const correctNums = q.correct.split(',').map(s => parseInt(s.trim()));
+                const newCorrect = options
+                    .filter(o => correctNums.includes(o.idx))
+                    .map(o => options.indexOf(o) + 1)
+                    .join(',');
+                q.options = options.map(o => o.text);
+                q.correct = newCorrect;
+            }
+            if (q.type === 'match') {
+                const right = q.matchRight.map((opt, idx) => ({ text: opt, idx: idx + 1 }));
+                shuffleArray(right);
+                const pairs = q.matchPairs.map(p => {
+                    const [left, rightIdx] = p.split(':').map(Number);
+                    const newRightIdx = right.findIndex(r => r.idx === rightIdx) + 1;
+                    return `${left}:${newRightIdx}`;
+                });
+                q.matchRight = right.map(r => r.text);
+                q.matchPairs = pairs;
+            }
+            userAnswers[qIdx] = null;
+        });
+
+        return shuffled;
+    }
+
+    // ================================================================
+    //  ТАЙМЕР
+    // ================================================================
+
+    function formatTime(sec) {
+        const m = Math.floor(sec / 60);
+        const s = sec % 60;
+        return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+    }
+
+    function updateTimerDisplay() {
+        const timerEl = document.getElementById('timer');
+        timerEl.textContent = formatTime(timeLeft);
+        timerEl.classList.remove('warning', 'danger');
+        if (timeLeft <= 60) {
+            timerEl.classList.add('danger');
+        } else if (timeLeft <= 300) {
+            timerEl.classList.add('warning');
+        }
+    }
+
+    function startTimer() {
+        if (timerInterval) return;
+        timerInterval = setInterval(() => {
+            if (isFinished) {
+                clearInterval(timerInterval);
+                return;
+            }
+            timeLeft--;
+            updateTimerDisplay();
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timeUp();
+            }
+        }, 1000);
+    }
+
+    function timeUp() {
+        if (isFinished) return;
+        document.getElementById('timeUpModal').classList.add('active');
+    }
+
+    // ================================================================
+    //  РЕНДЕР ВОПРОСА
+    // ================================================================
+
+    function renderQuestion(index) {
+        const q = questions[index];
+        if (!q) return;
+
+        const container = document.getElementById('questionContent');
+        const total = questions.length;
+        const num = index + 1;
+
+        const typeLabels = {
+            'choice': '🎯 Одиночный выбор',
+            'multi': '✅ Множественный выбор',
+            'match': '🔗 Соответствие'
+        };
+        const typeClass = {
+            'choice': '',
+            'multi': 'multi',
+            'match': 'match'
+        };
+
+        let html = `
+            <div class="q-type ${typeClass[q.type] || ''}">${typeLabels[q.type] || 'Вопрос'}</div>
+            <div class="q-text">${escapeHtml(q.text)}</div>
+        `;
+
+        if (q.type === 'choice') {
+            html += '<ul class="q-options">';
+            q.options.forEach((opt, i) => {
+                const val = i + 1;
+                const checked = userAnswers[index] == val ? 'checked' : '';
+                html += `
+                    <li>
+                        <input type="radio" name="q${index}" value="${val}" id="q${index}_${val}" ${checked}>
+                        <label for="q${index}_${val}">${escapeHtml(opt)}</label>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+        }
+
+        if (q.type === 'multi') {
+            const selected = userAnswers[index] ? userAnswers[index].split(',').map(s => s.trim()) : [];
+            html += '<ul class="q-options">';
+            q.options.forEach((opt, i) => {
+                const val = i + 1;
+                const checked = selected.includes(String(val)) ? 'checked' : '';
+                html += `
+                    <li>
+                        <input type="checkbox" name="q${index}[]" value="${val}" id="q${index}_${val}" ${checked}>
+                        <label for="q${index}_${val}">${escapeHtml(opt)}</label>
+                    </li>
+                `;
+            });
+            html += '</ul>';
+        }
+
+        if (q.type === 'match') {
+            const leftItems = q.matchLeft || [];
+            const rightItems = q.matchRight || [];
+            const savedPairs = userAnswers[index] ? userAnswers[index].split(',').map(s => s.trim()) : [];
+
+            html += '<div class="q-match">';
+            html += '<div class="match-label">Структура</div>';
+            html += '<div class="match-label">Функция / Назначение</div>';
+
+            leftItems.forEach((left, i) => {
+                const leftNum = i + 1;
+                const savedVal = savedPairs.find(p => p.startsWith(`${leftNum}:`));
+                const selectedVal = savedVal ? savedVal.split(':')[1] : '';
+                html += `
+                    <div class="match-left">${escapeHtml(left)}</div>
+                    <div>
+                        <select name="match_${index}_${leftNum}" data-left="${leftNum}">
+                            <option value="">Выберите...</option>
+                            ${rightItems.map((right, rIdx) => {
+                                const val = rIdx + 1;
+                                const sel = selectedVal == val ? 'selected' : '';
+                                return `<option value="${val}" ${sel}>${escapeHtml(right)}</option>`;
+                            }).join('')}
+                        </select>
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
+
+        container.innerHTML = html;
+
+        document.getElementById('currentNum').textContent = num;
+        document.getElementById('totalNum').textContent = total;
+        document.getElementById('totalQuestions').textContent = total;
+
+        document.getElementById('prevBtn').disabled = index === 0;
+        document.getElementById('nextBtn').disabled = index === total - 1;
+
+        attachEvents(index);
+        updateProgress();
+    }
+
+    // ================================================================
+    //  СОХРАНЕНИЕ ОТВЕТОВ
+    // ================================================================
+
+    function attachEvents(index) {
+        const q = questions[index];
+
+        if (q.type === 'choice') {
+            document.querySelectorAll(`input[name="q${index}"]`).forEach(el => {
+                el.addEventListener('change', function() {
+                    userAnswers[index] = this.value;
+                    updateProgress();
+                });
+            });
+        }
+
+        if (q.type === 'multi') {
+            document.querySelectorAll(`input[name="q${index}[]"]`).forEach(el => {
+                el.addEventListener('change', function() {
+                    const checked = document.querySelectorAll(`input[name="q${index}[]"]:checked`);
+                    const values = Array.from(checked).map(el => el.value).join(',');
+                    userAnswers[index] = values || null;
+                    updateProgress();
+                });
+            });
+        }
+
+        if (q.type === 'match') {
+            document.querySelectorAll(`select[name^="match_${index}_"]`).forEach(el => {
+                el.addEventListener('change', function() {
+                    const selects = document.querySelectorAll(`select[name^="match_${index}_"]`);
+                    const pairs = [];
+                    selects.forEach(sel => {
+                        if (sel.value) {
+                            pairs.push(`${sel.dataset.left}:${sel.value}`);
+                        }
+                    });
+                    userAnswers[index] = pairs.length > 0 ? pairs.join(',') : null;
+                    updateProgress();
+                });
+            });
+        }
+    }
+
+    // ================================================================
+    //  ПРОГРЕСС
+    // ================================================================
+
+    function updateProgress() {
+        const total = questions.length;
+        let answered = 0;
+        for (let i = 0; i < total; i++) {
+            const ans = userAnswers[i];
+            if (ans && ans.length > 0) answered++;
+        }
+        const percent = total > 0 ? Math.round((answered / total) * 100) : 0;
+        document.getElementById('progressFill').style.width = percent + '%';
+        document.getElementById('progressText').textContent = percent + '%';
+    }
+
+    // ================================================================
+    //  ПРОВЕРКА
+    // ================================================================
+
+    function checkAllAnswers() {
+        const total = questions.length;
+        let correct = 0;
+        let wrong = 0;
+
+        questions.forEach((q, idx) => {
+            const userAns = userAnswers[idx];
+            let isCorrect = false;
+
+            if (!userAns || userAns.length === 0) {
+                wrong++;
+                return;
+            }
+
+            if (q.type === 'choice') {
+                isCorrect = userAns == q.correct;
+            } else if (q.type === 'multi') {
+                const correctArr = q.correct.split(',').map(s => s.trim()).sort();
+                const userArr = userAns.split(',').map(s => s.trim()).sort();
+                isCorrect = userArr.length === correctArr.length &&
+                    userArr.every((v, i) => v === correctArr[i]);
+            } else if (q.type === 'match') {
+                const pairs = q.matchPairs || [];
+                const correctPairs = pairs.map(p => p.trim()).sort();
+                const userPairs = userAns.split(',').map(s => s.trim()).sort();
+                isCorrect = userPairs.length === correctPairs.length &&
+                    userPairs.every((v, i) => v === correctPairs[i]);
+            }
+
+            if (isCorrect) correct++;
+            else wrong++;
+        });
+
+        return { correct, wrong, total };
+    }
+
+    // ================================================================
+    //  РЕЗУЛЬТАТ
+    // ================================================================
+
+    function showResult() {
+        if (isFinished) return;
+        isFinished = true;
+
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        const { correct, wrong, total } = checkAllAnswers();
+        const percent = Math.round((correct / total) * 100);
+
+        const resultEl = document.getElementById('result');
+        const scoreNum = document.getElementById('scoreNum');
+        const scoreDetail = document.getElementById('scoreDetail');
+        const scoreMessage = document.getElementById('scoreMessage');
+        const statCorrect = document.getElementById('statCorrect');
+        const statWrong = document.getElementById('statWrong');
+        const statTime = document.getElementById('statTime');
+
+        scoreNum.textContent = percent + '%';
+        scoreDetail.textContent = `${correct} из ${total}`;
+        statCorrect.textContent = correct;
+        statWrong.textContent = wrong;
+
+        const usedSeconds = TOTAL_TIME - timeLeft;
+        const minutes = Math.floor(usedSeconds / 60);
+        const secs = usedSeconds % 60;
+        statTime.textContent = `${minutes}м ${secs}с`;
+
+        if (percent === 100) {
+            scoreMessage.textContent = '🎉 Отлично! Вы идеально знаете устройство микроскопа!';
+        } else if (percent >= 80) {
+            scoreMessage.textContent = '⭐ Отличный результат! Вы хорошо усвоили материал.';
+        } else if (percent >= 70) {
+            scoreMessage.textContent = '👍 Хороший результат! Есть над чем поработать.';
+        } else if (percent >= 50) {
+            scoreMessage.textContent = '📖 Рекомендуем повторить материал лабораторной работы.';
+        } else {
+            scoreMessage.textContent = '📚 Вам стоит серьёзно пересмотреть тему. Обратитесь к учебнику.';
+        }
+
+        resultEl.classList.add('show');
+        document.getElementById('navActions').style.display = 'none';
+        resultEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // ================================================================
+    //  НАВИГАЦИЯ
+    // ================================================================
+
+    function goToPrev() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderQuestion(currentIndex);
+            document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    function goToNext() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            renderQuestion(currentIndex);
+            document.getElementById('questionCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+
+    // ================================================================
+    //  СБРОС
+    // ================================================================
+
+    function resetTest() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+        timeLeft = TOTAL_TIME;
+        isFinished = false;
+        currentIndex = 0;
+        userAnswers = {};
+
+        questions = prepareQuestions();
+
+        document.getElementById('result').classList.remove('show');
+        document.getElementById('navActions').style.display = 'flex';
+        document.getElementById('timeUpModal').classList.remove('active');
+
+        updateTimerDisplay();
+        renderQuestion(0);
+        startTimer();
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ================================================================
+    //  ВСПОМОГАТЕЛЬНЫЕ
+    // ================================================================
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m] || m);
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+
+    function init() {
+        questions = prepareQuestions();
+        updateTimerDisplay();
+        renderQuestion(0);
+        startTimer();
+
+        document.getElementById('prevBtn').addEventListener('click', goToPrev);
+        document.getElementById('nextBtn').addEventListener('click', goToNext);
+
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            let allAnswered = true;
+            for (let i = 0; i < questions.length; i++) {
+                const ans = userAnswers[i];
+                if (!ans || ans.length === 0) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+            if (!allAnswered) {
+                if (!confirm('Не на все вопросы даны ответы. Продолжить проверку?')) {
+                    return;
+                }
+            }
+            showResult();
+        });
+
+        document.getElementById('timeUpOk').addEventListener('click', function() {
+            document.getElementById('timeUpModal').classList.remove('active');
+            showResult();
+        });
+
+        document.getElementById('retryBtn').addEventListener('click', resetTest);
+
+        // Клавиши
+        document.addEventListener('keydown', function(e) {
+            if (isFinished) return;
+            if (e.key === 'ArrowLeft') goToPrev();
+            if (e.key === 'ArrowRight') goToNext();
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>НейроФарм — тренажёр по ветеринарной фармакологии | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --blue: #2C7DA0;
+            --blue-light: #6BB5D4;
+            --orange: #D4A373;
+            --purple: #7B6B9E;
+            --green: #6B9E6B;
+            --brown: #A67B5B;
+            --bg: #FDF8F0;
+            --text: #3E5C4A;
+            --text-dark: #1F4E6E;
+            --border: #E2EAD9;
+            --white: #FFFFFF;
+        }
+
+        body {
+            background: var(--bg);
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: var(--text);
+            padding: 1rem;
+            min-height: 100vh;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            background: var(--white);
+            padding: 0.8rem 1.4rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            border: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logo span { color: var(--blue); }
+        .logo small {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #8A9B7A;
+            margin-left: 0.4rem;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        .tab-btn {
+            background: #EEF2E9;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: var(--text);
+        }
+        .tab-btn:hover { background: #E2EAD9; }
+        .tab-btn.active { background: var(--blue); color: white; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card {
+            background: var(--white);
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.4rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 0.15rem 0.6rem;
+            border-radius: 1rem;
+            background: #F4EFE4;
+            color: #7B8D6E;
+        }
+
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: var(--text);
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .btn-primary { background: var(--blue); color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-green { background: var(--green); color: white; }
+        .btn-orange { background: var(--orange); color: white; }
+        .btn-purple { background: var(--purple); color: white; }
+        .btn-outline { background: transparent; border: 2px solid #A3B18A; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-danger { background: #b13e3e; color: white; }
+
+        .hidden { display: none !important; }
+
+        /* ===== КЛАССИФИКАЦИЯ ===== */
+        .tree-group { margin-bottom: 0.6rem; }
+        .tree-group > .tree-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.6rem 0.9rem;
+            border-radius: 1rem;
+            background: #F9F6EF;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .tree-group > .tree-header:hover { background: #F4EFE4; }
+        .tree-group .tree-subgroup {
+            margin-left: 1.5rem;
+            margin-top: 0.4rem;
+            padding-left: 0.8rem;
+            border-left: 3px solid var(--border);
+        }
+        .tree-subgroup > .tree-header {
+            font-size: 0.82rem;
+            padding: 0.35rem 0.7rem;
+            background: transparent;
+            font-weight: 600;
+            border-radius: 0.8rem;
+        }
+        .tree-subgroup > .tree-header:hover { background: #F4EFE4; }
+        .tree-leaf {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 0.9rem;
+            margin-left: 1.2rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-size: 0.82rem;
+            transition: 0.15s;
+        }
+        .tree-leaf:hover { background: #F4EFE4; }
+        .tree-leaf .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .tree-leaf .lat { color: #8A9B7A; font-style: italic; font-size: 0.75rem; }
+
+        /* ===== КАРТОЧКИ ===== */
+        .cards-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .card-display {
+            perspective: 1400px;
+            width: 100%;
+            max-width: 620px;
+            height: 460px;
+            cursor: pointer;
+        }
+        .card-display-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s;
+            transform-style: preserve-3d;
+        }
+        .card-display.flipped .card-display-inner {
+            transform: rotateY(180deg);
+        }
+        .card-display-front, .card-display-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            overflow-y: auto;
+        }
+        .card-display-front {
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .card-display-front .name {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        .card-display-front .lat {
+            font-size: 1.05rem;
+            color: #8A9B7A;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        .card-display-front .group-badge {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.35rem 1.2rem;
+            border-radius: 1.5rem;
+            color: white;
+        }
+        .card-display-front .hint-flip {
+            position: absolute;
+            bottom: 1rem;
+            font-size: 0.75rem;
+            color: #B0BC9C;
+        }
+        .card-display-back {
+            background: #F9F6EF;
+            transform: rotateY(180deg);
+        }
+        .card-display-back h4 {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 0.3rem;
+            margin-top: 0.9rem;
+            font-weight: 700;
+        }
+        .card-display-back h4:first-child { margin-top: 0; }
+        .card-display-back p {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            color: var(--text);
+        }
+        .card-display-back .warning {
+            background: #FDE8E0;
+            color: #8B3A3A;
+            padding: 0.7rem 0.9rem;
+            border-radius: 0.8rem;
+            font-size: 0.82rem;
+            margin-top: 0.8rem;
+            border-left: 4px solid var(--orange);
+            line-height: 1.4;
+        }
+
+        .cards-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .cards-counter {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            min-width: 160px;
+            text-align: center;
+        }
+
+        /* ===== ТЕСТ ===== */
+        .test-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 0.8rem;
+        }
+        .timer {
+            font-family: 'Courier New', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--blue);
+        }
+        .timer.warning { color: var(--orange); animation: pulse 1s infinite; }
+        .timer.danger { color: #b13e3e; animation: pulse 0.6s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #F4EFE4;
+            border-radius: 1rem;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--green), var(--blue));
+            border-radius: 1rem;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        .question-card {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.4rem;
+            border: 1px solid var(--border);
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+        }
+        .q-type {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.2rem 0.8rem;
+            border-radius: 1rem;
+            background: var(--blue);
+            color: white;
+            display: inline-block;
+            margin-bottom: 0.7rem;
+            align-self: flex-start;
+        }
+        .q-type.multi { background: var(--purple); }
+        .q-type.match { background: var(--orange); }
+
+        .q-text {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.9rem;
+            line-height: 1.5;
+        }
+        .q-options { list-style: none; flex: 1; }
+        .q-options li {
+            padding: 0.6rem 1rem;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border: 1px solid #EDF0E5;
+            border-radius: 0.9rem;
+            background: white;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .q-options li:hover { border-color: #A3B18A; background: #F5F8F0; }
+        .q-options input { width: 18px; height: 18px; accent-color: var(--blue); cursor: pointer; }
+        .q-options label { cursor: pointer; font-size: 0.9rem; flex: 1; }
+
+        .q-match {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.6rem 1rem;
+            flex: 1;
+        }
+        .q-match .match-label {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text-dark);
+            padding-bottom: 0.2rem;
+            border-bottom: 2px solid var(--border);
+        }
+        .q-match select {
+            padding: 0.4rem 0.7rem;
+            border-radius: 0.8rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: white;
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .nav-actions .btn-group { display: flex; gap: 0.5rem; }
+
+        .result {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            background: #F0F7EA;
+            border-radius: 1.5rem;
+            border: 2px solid var(--green);
+            margin-top: 1rem;
+        }
+        .result.show { display: block; }
+        .result .score { font-size: 3rem; font-weight: 800; color: var(--blue); }
+        .result .detail { font-size: 1.05rem; margin-top: 0.4rem; }
+        .result .message { font-size: 0.95rem; color: #5F7C62; margin-top: 0.3rem; }
+
+        /* ===== КЛИНИЧЕСКИЕ ЗАДАЧИ ===== */
+        .scenario-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        .scenario {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 700px;
+        }
+        .scenario .s-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+        }
+        .scenario .s-text {
+            font-size: 0.92rem;
+            line-height: 1.55;
+            margin-bottom: 0.9rem;
+        }
+        .scenario .s-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .scenario .s-option {
+            padding: 0.6rem 1rem;
+            border: 2px solid #D1DEC2;
+            border-radius: 1rem;
+            background: white;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: 0.15s;
+            text-align: left;
+            font-family: inherit;
+            color: var(--text);
+        }
+        .scenario .s-option:hover:not(:disabled) { border-color: var(--blue); background: #F5F8F0; }
+        .scenario .s-option:disabled { cursor: default; }
+        .scenario .s-option.correct { border-color: var(--green); background: #E2F0DA; }
+        .scenario .s-option.wrong { border-color: #b13e3e; background: #FDE8E0; }
+        .scenario .s-feedback {
+            margin-top: 0.8rem;
+            padding: 0.8rem 1rem;
+            border-radius: 0.9rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            display: none;
+        }
+        .scenario .s-feedback.show { display: block; }
+        .scenario .s-feedback.correct { background: #E2F0DA; color: #2C5A2C; }
+        .scenario .s-feedback.wrong { background: #FDE8E0; color: #8B3A3A; }
+
+        /* ===== КАЛЬКУЛЯТОР ДОЗИРОВАНИЯ ===== */
+        .calc-progress {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.6rem;
+        }
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+        .calc-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .calc-field label {
+            font-weight: 600;
+            font-size: 0.72rem;
+            color: var(--text);
+            letter-spacing: 0.02em;
+        }
+        .calc-field select,
+        .calc-field input {
+            padding: 0.5rem 0.9rem;
+            border: 1px solid #D1DEC2;
+            border-radius: 0.9rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: white;
+            color: var(--text);
+            width: 100%;
+        }
+        .calc-field select:focus,
+        .calc-field input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.12);
+        }
+
+        .calc-task-info {
+            display: none;
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 0.9rem 1.1rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            border-left: 4px solid var(--blue);
+            margin-bottom: 0.8rem;
+        }
+        .calc-task-info.show { display: block; }
+
+        .calc-answer-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.6rem;
+        }
+        .calc-answer-row label {
+            font-weight: 600;
+            font-size: 0.82rem;
+            color: var(--text);
+        }
+        .calc-answer-row input {
+            padding: 0.5rem 1rem;
+            border: 1px solid #D1DEC2;
+            border-radius: 0.9rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: white;
+            width: 160px;
+        }
+        .calc-answer-row input:focus {
+            outline: none;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.12);
+        }
+
+        .calc-result {
+            display: none;
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            border-left: 4px solid var(--blue);
+        }
+        .calc-result.show { display: block; }
+        .calc-result.correct { background: #E2F0DA; border-left-color: var(--green); }
+        .calc-result.wrong { background: #FDE8E0; border-left-color: #b13e3e; }
+        .calc-result .step {
+            margin-top: 0.6rem;
+            padding-top: 0.6rem;
+            border-top: 1px dashed #C8D5BD;
+            font-size: 0.85rem;
+            color: #4A6B52;
+        }
+
+        /* ===== СПРАВКА ===== */
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
+        }
+        .ref-table th,
+        .ref-table td {
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.8rem;
+            text-align: left;
+        }
+        .ref-table th {
+            background: #F9F6EF;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .ref-table .color-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            body { padding: 0.6rem; }
+            .header { flex-direction: column; align-items: stretch; }
+            .tabs { justify-content: center; }
+            .q-match { grid-template-columns: 1fr; }
+            .nav-actions { flex-direction: column; }
+            .nav-actions .btn-group { width: 100%; justify-content: center; }
+            .calc-grid { grid-template-columns: 1fr; }
+            .card-display { height: 400px; }
+            .card-display-front .name { font-size: 1.3rem; }
+            .calc-answer-row { flex-direction: column; align-items: stretch; }
+            .calc-answer-row input { width: 100%; }
+        }
+        @media print {
+            body { background: white !important; padding: 0.2in !important; }
+            .btn { display: none !important; }
+            .tabs { display: none !important; }
+            .tab-content { display: block !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <header class="header">
+        <div class="logo">
+            🧠 <span>НейроФарм</span>
+            <small>тренажёр по ветеринарной фармакологии</small>
+        </div>
+        <nav class="tabs" id="tabs">
+            <button class="tab-btn active" data-tab="tab-classification">🌳 Классификация</button>
+            <button class="tab-btn" data-tab="tab-cards">📇 Карточки</button>
+            <button class="tab-btn" data-tab="tab-test">📝 Тест</button>
+            <button class="tab-btn" data-tab="tab-scenarios">🩺 Задачи</button>
+            <button class="tab-btn" data-tab="tab-calc">💊 Дозирование</button>
+            <button class="tab-btn" data-tab="tab-reference">📖 Справка</button>
+        </nav>
+    </header>
+
+    <!-- 1. КЛАССИФИКАЦИЯ -->
+    <div class="tab-content active" id="tab-classification">
+        <div class="card">
+            <div class="card-title">🌳 Классификация средств, действующих на нервную систему</div>
+            <p style="font-size:0.82rem; color:#5F7C62; margin-bottom:0.8rem;">
+                Кликните на препарат, чтобы увидеть полную карточку с дозами и противопоказаниями.
+            </p>
+            <div id="treeContainer"></div>
+        </div>
+    </div>
+
+    <!-- 2. КАРТОЧКИ -->
+    <div class="tab-content" id="tab-cards">
+        <div class="card">
+            <div class="card-title">📇 Флеш-карточки <span class="tag" id="cardsCount">32 препарата</span></div>
+            <div class="cards-view">
+                <div class="card-display" id="cardDisplay" onclick="flipCard()">
+                    <div class="card-display-inner">
+                        <div class="card-display-front" id="cardFront"></div>
+                        <div class="card-display-back" id="cardBack"></div>
+                    </div>
+                </div>
+                <div class="cards-nav">
+                    <button class="btn btn-outline" id="cardPrevBtn">◀ Назад</button>
+                    <span class="cards-counter" id="cardCounter">Карточка 1 из 32</span>
+                    <button class="btn btn-primary" id="cardNextBtn">Вперёд ▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. ТЕСТ -->
+    <div class="tab-content" id="tab-test">
+        <div class="card">
+            <div class="test-header">
+                <div class="card-title" style="margin:0;">📝 Тест по нейрофармакологии</div>
+                <div class="timer" id="timerDisplay">20:00</div>
+            </div>
+            <div class="progress-bar"><div class="fill" id="testProgress"></div></div>
+            <div style="font-size:0.8rem; color:#5F7C62; margin-bottom:0.6rem;">
+                Вопрос <strong id="currentQ">1</strong> из <strong id="totalQ">20</strong>
+            </div>
+            <div class="question-card" id="questionCard">
+                <div id="questionContent"></div>
+            </div>
+            <div class="nav-actions" id="testNav">
+                <div class="btn-group">
+                    <button class="btn btn-outline" id="prevQBtn" disabled>◀ Назад</button>
+                    <button class="btn btn-primary" id="nextQBtn">Вперёд ▶</button>
+                </div>
+                <button class="btn btn-green" id="finishTestBtn">📝 Завершить тест</button>
+            </div>
+            <div class="result" id="testResult">
+                <div class="score" id="scoreNum">0%</div>
+                <div class="detail" id="scoreDetail">0 из 0</div>
+                <div class="message" id="scoreMessage"></div>
+                <div style="margin-top:1rem;">
+                    <button class="btn btn-primary" id="retryTestBtn">🔄 Пройти заново</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. КЛИНИЧЕСКИЕ ЗАДАЧИ -->
+    <div class="tab-content" id="tab-scenarios">
+        <div class="card">
+            <div class="card-title">🩺 Клинические задачи <span class="tag" id="scenarioCounter">Задача 1 из 8</span></div>
+            <div class="scenario-view">
+                <div class="scenario" id="scenarioCard"></div>
+                <div class="cards-nav">
+                    <button class="btn btn-outline" id="scenarioPrevBtn">◀ Назад</button>
+                    <button class="btn btn-primary" id="scenarioNextBtn">Вперёд ▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. КАЛЬКУЛЯТОР -->
+    <div class="tab-content" id="tab-calc">
+        <div class="card">
+            <div class="card-title">💊 Тренажёр дозирования <span class="tag" id="calcCounter">Задача 1 из 24</span></div>
+            <p style="font-size:0.82rem; color:#5F7C62; margin-bottom:0.8rem;">
+                Выберите параметры, рассчитайте объём раствора и введите свой ответ. Допустимое отклонение — 20%.
+            </p>
+
+            <div class="calc-progress" id="calcProgress">Прогресс: 0 / 24</div>
+
+            <div class="calc-grid">
+                <div class="calc-field">
+                    <label>Препарат</label>
+                    <select id="calcDrug"></select>
+                </div>
+                <div class="calc-field">
+                    <label>Вид животного</label>
+                    <select id="calcSpecies"></select>
+                </div>
+                <div class="calc-field">
+                    <label>Масса животного (кг)</label>
+                    <input type="number" id="calcWeight" placeholder="Например: 20" min="0.1" step="0.1">
+                </div>
+            </div>
+
+            <div class="calc-task-info" id="calcTaskInfo"></div>
+
+            <div class="calc-answer-row">
+                <label>Ваш ответ (мл):</label>
+                <input type="number" id="calcUserAnswer" placeholder="Введите объём" min="0" step="0.01">
+                <button class="btn btn-primary" id="calcCheckBtn">✅ Проверить</button>
+                <button class="btn btn-outline" id="calcShowBtn">👁️ Показать ответ</button>
+            </div>
+
+            <div class="calc-result" id="calcResult">
+                <div id="calcAnswer"></div>
+                <div class="step" id="calcStep"></div>
+            </div>
+
+            <div class="nav-actions" style="margin-top:1rem;">
+                <div class="btn-group">
+                    <button class="btn btn-outline" id="calcPrevBtn">◀ Предыдущая</button>
+                    <button class="btn btn-primary" id="calcNextBtn">Следующая ▶</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. СПРАВКА -->
+    <div class="tab-content" id="tab-reference">
+        <div class="card">
+            <div class="card-title">📖 Справка</div>
+
+            <h3 style="font-size:0.95rem; color:var(--text-dark); margin:0.8rem 0 0.4rem;">Цветовая маркировка групп</h3>
+            <table class="ref-table">
+                <thead>
+                    <tr><th>Группа</th><th>Цвет</th><th>Препараты</th></tr>
+                </thead>
+                <tbody id="refColorTable"></tbody>
+            </table>
+
+            <h3 style="font-size:0.95rem; color:var(--text-dark); margin:1rem 0 0.4rem;">Логика тренажёра</h3>
+            <ol style="font-size:0.82rem; line-height:1.6; padding-left:1.2rem;">
+                <li><strong>Классификация</strong> — визуальное дерево с цветовой маркировкой.</li>
+                <li><strong>Карточки</strong> — 32 карточки с навигацией вперёд/назад.</li>
+                <li><strong>Тест</strong> — 20 вопросов, 20 минут, % правильных + комментарий.</li>
+                <li><strong>Клинические задачи</strong> — 8 ситуаций, по одной.</li>
+                <li><strong>Дозирование</strong> — 24 задачи с пошаговым решением.</li>
+                <li><strong>Справка</strong> — таблица и ФГОС.</li>
+            </ol>
+
+            <h3 style="font-size:0.95rem; color:var(--text-dark); margin:1rem 0 0.4rem;">Требования ФГОС СПО 2025</h3>
+            <p style="font-size:0.82rem; line-height:1.5;">
+                Тренажёр покрывает тему «Средства, действующие на нервную систему» из раздела «Частная фармакология»
+                дисциплины ОП.04 «Ветеринарная фармакология» (приказ № 270 от 07.04.2025).
+            </p>
+            <p style="font-size:0.82rem; line-height:1.5; margin-top:0.4rem;">
+                <strong>Формируемые компетенции:</strong> ПК 2.3, ОК 01, ОК 02.
+            </p>
+
+            <h3 style="font-size:0.95rem; color:var(--text-dark); margin:1rem 0 0.4rem;">Важное предупреждение</h3>
+            <div style="background:#FDE8E0; padding:0.8rem 1rem; border-radius:0.8rem; border-left:4px solid #D4A373; font-size:0.82rem; line-height:1.5;">
+                <strong>Ацепромазин:</strong> у брахицефалов (боксёры, мопсы, бульдоги) и собак с мутацией <strong>MDR1</strong>
+                (колли, шелти, австралийские овчарки) дозу снижают на <strong>25–50%</strong> из-за риска глубокой седации,
+                гипотонии и синкопе.
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // ================================================================
+    //  ГРУППЫ И ПРЕПАРАТЫ
+    // ================================================================
+
+    const GROUPS = {
+        cns_depressant: { name: 'Угнетающие ЦНС', color: '#2C7DA0', icon: '🔵' },
+        cns_stimulant: { name: 'Возбуждающие ЦНС', color: '#D4A373', icon: '🟠' },
+        vegetative: { name: 'Вегетотропные', color: '#7B6B9E', icon: '🟣' },
+        afferent: { name: 'Афферентные', color: '#6BB5D4', icon: '🔷' },
+        nsaid: { name: 'НПВС (современные)', color: '#6B9E6B', icon: '🟢' },
+        opioid: { name: 'Опиоидные анальгетики', color: '#A67B5B', icon: '🟤' }
+    };
+
+    const SPECIES_NAMES = { cattle: 'КРС', sheep: 'МРС', horse: 'Лошадь', pig: 'Свинья', dog: 'Собака', cat: 'Кошка', rabbit: 'Кролик' };
+
+    const DRUGS = [
+        { id: 'chloralhydrate', name: 'Хлоралгидрат', lat: 'Chlorali hydras', group: 'cns_depressant', subgroup: 'Наркоз', action: 'Наркотическое, снотворное', indications: 'Наркоз у лошадей и КРС, успокоение', doses: { cattle: '10% р-р в/в 10–15 мл/100 кг', horse: '10% р-р в/в 100–150 мл', pig: '10% р-р в/в 5–10 мл' }, contraindications: 'Заболевания печени, почек, сердца', warning: '' },
+        { id: 'ketamine', name: 'Кетамин', lat: 'Ketaminum', group: 'cns_depressant', subgroup: 'Диссоциативный наркоз', action: 'Диссоциативная анестезия, анальгезия', indications: 'Наркоз кошек, собак, премедикация', doses: { dog: '5–10 мг/кг в/в, в/м', cat: '10–20 мг/кг в/м', horse: '2,2 мг/кг в/в после ксилазина' }, contraindications: 'Гипертензия, ЧМТ, эпилепсия', warning: '' },
+        { id: 'propofol', name: 'Пропофол (Анестофол, Ветофол)', lat: 'Propofolum', group: 'cns_depressant', subgroup: 'Неингаляционный наркоз', action: 'Быстрый наркоз (60 сек), короткий выход', indications: 'Вводный наркоз, кратковременные операции', doses: { dog: '4–7 мг/кг в/в (без премедикации)', cat: '8–13 мг/кг в/в (без премедикации)', rabbit: 'осторожно, уточнить' }, contraindications: 'Тяжёлые заболевания сердца, печени, почек; беременность', warning: 'Не смешивать с другими препаратами' },
+        { id: 'tiletamine', name: 'Тилетамин + Золазепам (Золетил, Телазол)', lat: 'Tiletaminum + Zolazepamum', group: 'cns_depressant', subgroup: 'Диссоциативный наркоз', action: 'Наркоз, миорелаксация, анальгезия', indications: 'Собаки, кошки, дикие животные', doses: { dog: '7–15 мг/кг в/м', cat: '10 мг/кг в/м', rabbit: '15–20 мг/кг в/м (уточнить)' }, contraindications: 'Заболевания поджелудочной, почек; беременность', warning: 'Не сочетать с фенотиазинами (ацепромазин) — угнетение дыхания' },
+        { id: 'isoflurane', name: 'Изофлуран', lat: 'Isofluranum', group: 'cns_depressant', subgroup: 'Ингаляционный наркоз', action: 'Быстрый наркоз, быстрое пробуждение', indications: 'Любые операции, пациенты группы риска', doses: { dog: '2–2,5% вводный, 1,5–1,8% поддержание', cat: '2–3% вводный, 1,5–2% поддержание', horse: '3–5%' }, contraindications: 'Гиперчувствительность', warning: 'Требуется испаритель' },
+        { id: 'phenobarbital', name: 'Фенобарбитал', lat: 'Phenobarbitalum', group: 'cns_depressant', subgroup: 'Снотворные', action: 'Снотворное, противосудорожное', indications: 'Эпилепсия, судороги', doses: { dog: '2–5 мг/кг 2 раза в день', cat: '2–4 мг/кг 2 раза в день' }, contraindications: 'Тяжёлые заболевания печени, почек', warning: 'Кумуляция при длительном приёме' },
+        { id: 'aminazine', name: 'Аминазин', lat: 'Aminazinum', group: 'cns_depressant', subgroup: 'Нейролептики', action: 'Нейролептическое, седативное', indications: 'Психозы, возбуждение, премедикация', doses: { dog: '1–2 мг/кг в/м', cat: '1–2 мг/кг в/м', cattle: '0,5–1 мг/кг в/м' }, contraindications: 'Заболевания печени, почек, гипотония', warning: '' },
+        { id: 'haloperidol', name: 'Галоперидол', lat: 'Haloperidolum', group: 'cns_depressant', subgroup: 'Нейролептики', action: 'Антипсихотическое', indications: 'Психозы, агрессия', doses: { dog: '0,05–0,1 мг/кг в/м' }, contraindications: 'Болезнь Паркинсона, эпилепсия', warning: '' },
+        { id: 'acepromazine', name: 'Ацепромазин', lat: 'Acepromazinum', group: 'cns_depressant', subgroup: 'Нейролептики', action: 'Седативное, противорвотное', indications: 'Седация, премедикация, груминг', doses: { dog: '0,25–0,5 мг/кг в/м, в/в, п/к', cat: '0,5–1 мг/кг в/м', horse: '0,02–0,05 мг/кг в/в' }, contraindications: 'Гиповолемия, шок, эпилепсия', warning: 'У брахицефалов и собак с MDR1 — снижать дозу на 25–50%!' },
+        { id: 'diazepam', name: 'Диазепам', lat: 'Diazepamum', group: 'cns_depressant', subgroup: 'Транквилизаторы', action: 'Анксиолитическое, противосудорожное, миорелаксант', indications: 'Судороги, тревога, премедикация', doses: { dog: '0,2–0,5 мг/кг в/в', cat: '0,2–0,5 мг/кг в/в', horse: '0,05–0,1 мг/кг в/в' }, contraindications: 'Тяжёлая печёночная недостаточность, миастения', warning: '' },
+        { id: 'midazolam', name: 'Мидазолам', lat: 'Midazolamum', group: 'cns_depressant', subgroup: 'Транквилизаторы', action: 'Анксиолитическое, седативное, миорелаксант', indications: 'Премедикация, судороги', doses: { dog: '0,1–0,2 мг/кг в/в, в/м', cat: '0,1–0,2 мг/кг в/в, в/м' }, contraindications: 'Гиперчувствительность, миастения', warning: '' },
+        { id: 'sodium_bromide', name: 'Натрия бромид', lat: 'Natrii bromidum', group: 'cns_depressant', subgroup: 'Седативные', action: 'Седативное, противосудорожное', indications: 'Неврозы, повышенная возбудимость', doses: { dog: '0,5–2 г внутрь', cat: '0,25–1 г внутрь' }, contraindications: 'Гиперчувствительность', warning: '' },
+        { id: 'bromcamphor', name: 'Бромкамфора', lat: 'Bromcamphora', group: 'cns_depressant', subgroup: 'Седативные', action: 'Седативное, кардиотоническое', indications: 'Неврозы, тахикардия', doses: { dog: '0,1–0,3 г внутрь' }, contraindications: 'Гиперчувствительность', warning: '' },
+        { id: 'analgin', name: 'Анальгин (Метамизол)', lat: 'Analginum', group: 'cns_depressant', subgroup: 'Анальгетики, жаропонижающие', action: 'Анальгетическое, жаропонижающее', indications: 'Боль, лихорадка', doses: { dog: '25 мг/кг в/м', cat: '10–25 мг/кг в/м (осторожно)', horse: '20–30 мг/кг в/в' }, contraindications: 'Заболевания крови, почек', warning: 'У кошек — риск агранулоцитоза' },
+        { id: 'promedol', name: 'Промедол', lat: 'Promedolum', group: 'cns_depressant', subgroup: 'Анальгетики', action: 'Опиоидный анальгетик', indications: 'Сильная боль, премедикация', doses: { dog: '0,3–0,5 мг/кг в/м', cat: '0,2–0,4 мг/кг в/м' }, contraindications: 'Угнетение дыхания, ЧМТ', warning: '' },
+        { id: 'trazodone', name: 'Тразодон (Экспресс Успокоин)', lat: 'Trazodonum', group: 'cns_depressant', subgroup: 'Противотревожные', action: 'Анксиолитическое, седативное', indications: 'Тревога, стресс, транспортировка', doses: { dog: '2–8 мг/кг внутрь каждые 8–12 ч', cat: '25 мг на кошку внутрь' }, contraindications: 'Печёночная недостаточность, ССЗ', warning: 'Осторожно с серотонинергическими препаратами' },
+        { id: 'gabapentin', name: 'Габапентин', lat: 'Gabapentinum', group: 'cns_depressant', subgroup: 'Противотревожные', action: 'Анксиолитическое, противосудорожное, анальгетическое', indications: 'Тревога, хроническая боль, транспортировка', doses: { dog: '10–30 мг/кг внутрь', cat: '10–20 мг/кг внутрь (≈100 мг на кошку)' }, contraindications: 'Почечная недостаточность (снижать дозу)', warning: 'Давать за 1–3 часа до события' },
+
+        { id: 'caffeine', name: 'Кофеин-бензоат натрия', lat: 'Coffeinum-natrii benzoas', group: 'cns_stimulant', subgroup: 'Психостимуляторы', action: 'Психостимулирующее, аналептическое', indications: 'Угнетение ЦНС, отравления, слабость', doses: { dog: '0,1–0,2 г в/м', cat: '0,05–0,1 г в/м', cattle: '1–2 г в/м', horse: '2–3 г в/м', pig: '0,5–1 г в/м' }, contraindications: 'Гипертензия, тахикардия, эпилепсия', warning: '' },
+        { id: 'camphor', name: 'Камфора (масляный р-р)', lat: 'Camphora', group: 'cns_stimulant', subgroup: 'Аналептики', action: 'Аналептическое, кардиотоническое', indications: 'Острая сердечная недостаточность, угнетение', doses: { dog: '0,5–1 мл 20% р-ра п/к', cat: '0,2–0,5 мл 20% р-ра п/к' }, contraindications: 'Эпилепсия, гиперчувствительность', warning: '' },
+        { id: 'cordiamin', name: 'Кордиамин (Никетамид)', lat: 'Cordiaminum', group: 'cns_stimulant', subgroup: 'Аналептики', action: 'Аналептическое, возбуждает дыхательный центр', indications: 'Угнетение дыхания, коллапс, отравления', doses: { dog: '0,1–0,2 мл п/к, в/м', cat: '0,05–0,1 мл п/к, в/м', cattle: '2–5 мл в/м' }, contraindications: 'Эпилепсия, гиперчувствительность', warning: '' },
+        { id: 'corazol', name: 'Коразол (Пентилентетразол)', lat: 'Corazolum', group: 'cns_stimulant', subgroup: 'Аналептики', action: 'Аналептическое, возбуждает ЦНС', indications: 'Угнетение ЦНС, отравления', doses: { dog: '0,05–0,1 г в/м', cat: '0,02–0,05 г в/м' }, contraindications: 'Эпилепсия, гипертензия', warning: '' },
+        { id: 'strychnine', name: 'Стрихнин', lat: 'Strychninum', group: 'cns_stimulant', subgroup: 'Стимуляторы спинного мозга', action: 'Стимулирует спинной мозг, повышает тонус', indications: 'Парезы, атония (ограниченно)', doses: { dog: '0,0005–0,001 г в/м' }, contraindications: 'Эпилепсия, повышенная возбудимость', warning: 'Сильно ядовит' },
+        { id: 'eleutherococcus', name: 'Элеутерококк', lat: 'Eleutherococcus', group: 'cns_stimulant', subgroup: 'Растительные стимуляторы', action: 'Адаптогенное, тонизирующее', indications: 'Слабость, переутомление, восстановление', doses: { dog: '10–20 капель внутрь', cat: '5–10 капель внутрь' }, contraindications: 'Гипертензия, бессонница', warning: '' },
+
+        { id: 'atropine', name: 'Атропин', lat: 'Atropinum', group: 'vegetative', subgroup: 'Холинолитики', action: 'М-холинолитик, спазмолитик', indications: 'Брадикардия, отравления ФОС, премедикация', doses: { dog: '0,02–0,05 мг/кг в/м', cat: '0,02–0,05 мг/кг в/м', cattle: '0,02–0,05 мг/кг в/м', horse: '0,01–0,02 мг/кг в/в' }, contraindications: 'Глаукома, тахикардия', warning: '' },
+        { id: 'adrenaline', name: 'Адреналин (Эпинефрин)', lat: 'Adrenalinum', group: 'vegetative', subgroup: 'Адреномиметики', action: 'α,β-адреномиметик', indications: 'Анафилаксия, остановка сердца', doses: { dog: '0,01 мг/кг в/в, в/м', cat: '0,01 мг/кг в/в, в/м' }, contraindications: 'Гипертензия, тахикардия', warning: '' },
+        { id: 'ephedrine', name: 'Эфедрин', lat: 'Ephedrinum', group: 'vegetative', subgroup: 'Адреномиметики', action: 'α,β-адреномиметик непрямого действия', indications: 'Гипотония, бронхоспазм', doses: { dog: '0,5–1 мг/кг в/м', cat: '0,5–1 мг/кг в/м' }, contraindications: 'Гипертензия, тахикардия', warning: '' },
+        { id: 'reserpine', name: 'Резерпин', lat: 'Reserpinum', group: 'vegetative', subgroup: 'Адренолитики', action: 'Симпатолитик', indications: 'Гипертензия', doses: { dog: '0,005–0,01 мг/кг внутрь' }, contraindications: 'Депрессия, язвенная болезнь', warning: '' },
+        { id: 'medetomidine', name: 'Медетомидин (Медитин, Дорбен)', lat: 'Medetomidinum', group: 'vegetative', subgroup: 'α2-агонисты', action: 'Седативное, анальгетическое, миорелаксант', indications: 'Седация, премедикация, осмотр', doses: { dog: '0,01–0,04 мг/кг в/м', cat: '0,05–0,08 мг/кг в/м' }, contraindications: 'ССЗ, беременность', warning: '' },
+        { id: 'dexmedetomidine', name: 'Дексмедетомидин (Дексдомитор, Дексодия)', lat: 'Dexmedetomidinum', group: 'vegetative', subgroup: 'α2-агонисты', action: 'Седативное, анальгетическое, миорелаксант', indications: 'Седация, премедикация, осмотр', doses: { dog: '0,005–0,02 мг/кг в/м', cat: '0,02–0,04 мг/кг в/м' }, contraindications: 'ССЗ, беременность', warning: 'Антагонист — атипамезол' },
+        { id: 'xylazine', name: 'Ксилазин (Рометар, Ксиланит)', lat: 'Xylazinum', group: 'vegetative', subgroup: 'α2-агонисты', action: 'Седативное, анальгетическое, миорелаксант', indications: 'Седация, обездвиживание, премедикация', doses: { cattle: '0,05–0,3 мг/кг в/м', sheep: '0,1–0,5 мг/кг в/м', horse: '0,6–1,0 мг/кг в/в, 1,5–3,0 мг/кг в/м', dog: '1–2 мг/кг в/м', cat: '1–3 мг/кг в/м, п/к', rabbit: 'осторожно, уточнить' }, contraindications: 'Механическая непроходимость ЖКТ, диабет, нарушения проводимости сердца, последняя треть беременности', warning: 'Антагонист — атипамезол' },
+        { id: 'atipamezole', name: 'Атипамезол (Антимедин, Алзан)', lat: 'Atipamezolum', group: 'vegetative', subgroup: 'α2-антагонисты', action: 'Антагонист α2-агонистов', indications: 'Снятие седации, устранение побочных эффектов', doses: { dog: 'в 5 раз выше дозы медетомидина, в/м', cat: 'в 2,5 раза выше дозы медетомидина, в/м' }, contraindications: 'Не применять продуктивным животным', warning: 'Не сочетать с другими средствами центрального действия' },
+
+        { id: 'novocaine', name: 'Новокаин (Прокаин)', lat: 'Novocainum', group: 'afferent', subgroup: 'Местноанестезирующие', action: 'Местная анестезия', indications: 'Инфильтрационная, проводниковая анестезия', doses: { dog: '0,5% р-р до 10 мл', cat: '0,5% р-р до 5 мл', cattle: '0,5% р-р до 50 мл', horse: '0,5% р-р до 100 мл' }, contraindications: 'Гиперчувствительность', warning: '' },
+
+        { id: 'meloxicam', name: 'Мелоксикам (Мелоксивет, Петкам)', lat: 'Meloxicamum', group: 'nsaid', subgroup: 'НПВС 3-го поколения', action: 'Противовоспалительное, анальгетическое, жаропонижающее', indications: 'Остеоартрит, послеоперационная боль, воспаление', doses: { dog: '0,2 мг/кг (1-й день), далее 0,1 мг/кг', cat: '0,1 мг/кг (1-й день), далее 0,05 мг/кг', rabbit: '0,2–0,3 мг/кг внутрь, в/м, п/к каждые 12 ч' }, contraindications: 'Язвенная болезнь, почечная/печёночная недостаточность, беременность', warning: 'У кроликов хорошая переносимость' },
+        { id: 'robenacoxib', name: 'Робенакоксиб (Онсиор, Робексера)', lat: 'Robenacoxibum', group: 'nsaid', subgroup: 'НПВС 4-го поколения (коксибы)', action: 'Селективный ингибитор ЦОГ-2', indications: 'Боль, воспаление, послеоперационная анальгезия', doses: { dog: '1–2 мг/кг 1 раз в день', cat: '1–2,4 мг/кг 1 раз в день' }, contraindications: 'Язвенная болезнь, почечная/печёночная недостаточность', warning: '' },
+        { id: 'carprofen', name: 'Карпрофен (Римадил, Фироко)', lat: 'Carprofenum', group: 'nsaid', subgroup: 'НПВС', action: 'Противовоспалительное, анальгетическое', indications: 'Остеоартрит, послеоперационная боль', doses: { dog: '2–4 мг/кг 1 раз в день', cat: 'осторожно, 1–2 мг/кг однократно' }, contraindications: 'Язвенная болезнь, почечная/печёночная недостаточность', warning: 'У кошек применять с осторожностью' },
+        { id: 'ketoprofen', name: 'Кетопрофен (Флексопрофен, Кетоквин)', lat: 'Ketoprofenum', group: 'nsaid', subgroup: 'НПВС', action: 'Противовоспалительное, анальгетическое, жаропонижающее', indications: 'Воспаление, боль, лихорадка', doses: { cattle: '3 мг/кг в/в, в/м 1 раз в день', horse: '2,2 мг/кг в/в 1 раз в день', dog: '2 мг/кг п/к, в/м, в/в 1 раз в день', cat: '2 мг/кг п/к, в/м, в/в 1 раз в день' }, contraindications: 'Язвенная болезнь, почечная/печёночная недостаточность', warning: 'У лошадей с осторожностью при коликах' },
+        { id: 'flunixin', name: 'Флуниксин (Флуниджект, Фортис)', lat: 'Flunixinum', group: 'nsaid', subgroup: 'НПВС', action: 'Противовоспалительное, анальгетическое, жаропонижающее', indications: 'Колики у лошадей, респираторные и акушерские заболевания у КРС, маститы', doses: { cattle: '2,2 мг/кг в/в, в/м 1 раз в день (не более 3–5 дней)', horse: '1,1 мг/кг в/в 1 раз в день (не более 5 дней)', pig: '2,2 мг/кг в/м однократно' }, contraindications: 'Беременные кобылы, свиноматки, язвенная болезнь, почечная/печёночная недостаточность', warning: 'У пони — риск язвы желудка' },
+
+        { id: 'butorphanol', name: 'Буторфанол', lat: 'Butorphanolum', group: 'opioid', subgroup: 'Агонист-антагонист опиоидных рецепторов', action: 'Анальгетическое, седативное', indications: 'Боль, премедикация', doses: { dog: '0,2–0,4 мг/кг в/м, в/в', cat: '0,2–0,4 мг/кг в/м, в/в' }, contraindications: 'Угнетение дыхания, ЧМТ', warning: '' }
+    ];
+
+    // ================================================================
+    //  ТЕСТ
+    // ================================================================
+
+    const TEST_QUESTIONS = [
+        { type: 'choice', q: 'Какой препарат является α2-агонистом?', options: ['Атропин', 'Ксилазин', 'Пропофол', 'Кофеин'], correct: 1 },
+        { type: 'choice', q: 'Какой препарат является антагонистом α2-агонистов?', options: ['Атипамезол', 'Ацепромазин', 'Диазепам', 'Кетамин'], correct: 0 },
+        { type: 'multi', q: 'Какие препараты относятся к НПВС? (выберите все верные)', options: ['Мелоксикам', 'Кетопрофен', 'Флуниксин', 'Атропин', 'Ксилазин', 'Робенакоксиб'], correct: '1,2,3,6' },
+        { type: 'choice', q: 'Какой препарат применяется для наркоза у кошек и собак и даёт быстрый выход?', options: ['Пропофол', 'Хлоралгидрат', 'Фенобарбитал', 'Резерпин'], correct: 0 },
+        { type: 'match', q: 'Соотнесите препарат и группу:', left: ['Ксилазин', 'Атропин', 'Мелоксикам', 'Ацепромазин'], right: ['α2-агонист', 'Холинолитик', 'НПВС', 'Нейролептик'], pairs: ['1:1', '2:2', '3:3', '4:4'] },
+        { type: 'choice', q: 'У каких животных ацепромазин применяют с осторожностью из-за риска глубокой седации?', options: ['У брахицефалов и собак с MDR1', 'У всех собак', 'У кошек', 'У лошадей'], correct: 0 },
+        { type: 'multi', q: 'Какие препараты относятся к угнетающим ЦНС? (выберите все верные)', options: ['Кетамин', 'Аминазин', 'Кофеин', 'Диазепам', 'Фенобарбитал', 'Кордиамин'], correct: '1,2,4,5' },
+        { type: 'choice', q: 'Какой препарат является аналептиком?', options: ['Кордиамин', 'Атропин', 'Ксилазин', 'Пропофол'], correct: 0 },
+        { type: 'match', q: 'Соотнесите препарат и его антагониста:', left: ['Медетомидин', 'Ксилазин', 'Гепарин'], right: ['Атипамезол', 'Атипамезол', 'Протамин'], pairs: ['1:1', '2:2', '3:3'] },
+        { type: 'choice', q: 'Какой НПВС относится к коксибам (селективным ингибиторам ЦОГ-2)?', options: ['Робенакоксиб', 'Мелоксикам', 'Карпрофен', 'Кетопрофен'], correct: 0 },
+        { type: 'multi', q: 'Для каких видов животных ксилазин применяется? (выберите все верные)', options: ['КРС', 'Лошади', 'Собаки', 'Кошки', 'Птицы', 'Кролики (осторожно)'], correct: '1,2,3,4,6' },
+        { type: 'choice', q: 'Какой препарат применяется при отравлении фосфорорганическими соединениями?', options: ['Атропин', 'Ксилазин', 'Пропофол', 'Мелоксикам'], correct: 0 },
+        { type: 'match', q: 'Соотнесите препарат и показание:', left: ['Атропин', 'Флуниксин', 'Буторфанол', 'Ацепромазин'], right: ['Брадикардия', 'Колики у лошадей', 'Боль', 'Седация'], pairs: ['1:1', '2:2', '3:3', '4:4'] },
+        { type: 'choice', q: 'Какой препарат противопоказан беременным кобылам и свиноматкам?', options: ['Флуниксин', 'Мелоксикам', 'Кетопрофен', 'Атропин'], correct: 0 },
+        { type: 'multi', q: 'Какие препараты относятся к вегетотропным? (выберите все верные)', options: ['Атропин', 'Адреналин', 'Ксилазин', 'Кофеин', 'Атипамезол'], correct: '1,2,3,5' },
+        { type: 'choice', q: 'Какой препарат содержит тилетамин и золазепам?', options: ['Золетил', 'Пропофол', 'Изофлуран', 'Кетамин'], correct: 0 },
+        { type: 'match', q: 'Соотнесите препарат и способ введения:', left: ['Изофлуран', 'Пропофол', 'Ксилазин', 'Атропин'], right: ['Ингаляционно', 'Внутривенно', 'Внутримышечно', 'Подкожно'], pairs: ['1:1', '2:2', '3:3', '4:4'] },
+        { type: 'choice', q: 'Какой препарат относится к противотревожным и применяется для транспортировки кошек?', options: ['Тразодон', 'Ксилазин', 'Атропин', 'Кофеин'], correct: 0 },
+        { type: 'multi', q: 'Какие препараты можно применять кроликам? (выберите все верные)', options: ['Мелоксикам', 'Ксилазин (осторожно)', 'Атропин', 'Флуниксин', 'Ацепромазин'], correct: '1,2,3' },
+        { type: 'choice', q: 'Какой препарат является седативным и применяется для премедикации у лошадей в дозе 0,6–1,0 мг/кг в/в?', options: ['Ксилазин', 'Ацепромазин', 'Атропин', 'Мелоксикам'], correct: 0 }
+    ];
+
+    // ================================================================
+    //  КЛИНИЧЕСКИЕ ЗАДАЧИ
+    // ================================================================
+
+    const SCENARIOS = [
+        { id: 1, title: 'Острая сердечная недостаточность у собаки', text: 'Собака породы боксёр, 8 лет. Сильная одышка, цианоз, тахикардия. Диагностирована острая сердечная недостаточность. Какой препарат показан для стимуляции сердечной деятельности?', options: ['Кофеин-бензоат натрия', 'Атропин', 'Ксилазин', 'Мелоксикам'], correct: 0, explanation: 'Кофеин-бензоат натрия — аналептик, стимулирует сердечную деятельность и дыхательный центр.' },
+        { id: 2, title: 'Тимпания рубца у коровы', text: 'Корова, 4 года. Вздутие левой голодной ямки, беспокойство, одышка. Диагноз: острая тимпания рубца. Какой препарат применяется для снятия спазма и успокоения?', options: ['Атропин', 'Ксилазин', 'Кофеин', 'Анальгин'], correct: 1, explanation: 'Ксилазин (α2-агонист) — седативное, миорелаксант, снимает спазм.' },
+        { id: 3, title: 'Анафилактический шок у кошки', text: 'Кошка, 3 года. После введения антибиотика развился анафилактический шок: резкая гипотония, отёк морды, затруднение дыхания. Какой препарат вводить первым?', options: ['Адреналин', 'Атропин', 'Мелоксикам', 'Ксилазин'], correct: 0, explanation: 'Адреналин — препарат выбора при анафилаксии.' },
+        { id: 4, title: 'Парез после родов у коровы', text: 'Корова после отёла: лежит, не встаёт, гипотония, гипотермия. Диагноз: послеродовой парез. Какой препарат применяется для стимуляции ЦНС?', options: ['Кофеин-бензоат натрия', 'Атропин', 'Мелоксикам', 'Ацепромазин'], correct: 0, explanation: 'Кофеин-бензоат натрия стимулирует ЦНС, повышает тонус сосудов.' },
+        { id: 5, title: 'Перевозбуждение у собаки', text: 'Собака, 5 лет. Сильное возбуждение, агрессия, не даётся для осмотра. Какой препарат обеспечит седацию и миорелаксацию?', options: ['Ксилазин', 'Кофеин', 'Атропин', 'Мелоксикам'], correct: 0, explanation: 'Ксилазин — α2-агонист, вызывает седацию, миорелаксацию и анальгезию.' },
+        { id: 6, title: 'Отравление фосфорорганическими соединениями', text: 'Собака, 2 года. Слюнотечение, миоз, брадикардия, судороги. Подозрение на отравление ФОС. Какой препарат вводить?', options: ['Атропин', 'Ксилазин', 'Мелоксикам', 'Кофеин'], correct: 0, explanation: 'Атропин — М-холинолитик, блокирует эффекты ацетилхолина.' },
+        { id: 7, title: 'Боль после операции у кошки', text: 'Кошка, 1 год. После овариогистерэктомии выраженный болевой синдром. Какой препарат показан для послеоперационной анальгезии?', options: ['Мелоксикам', 'Ксилазин', 'Кофеин', 'Атропин'], correct: 0, explanation: 'Мелоксикам — НПВС 3-го поколения, селективный ингибитор ЦОГ-2.' },
+        { id: 8, title: 'Колики у лошади', text: 'Лошадь, 7 лет. Признаки острой боли в животе: беспокойство, оглядывание на живот, потливость. Какой препарат применяется для обезболивания при коликах?', options: ['Флуниксин', 'Ксилазин', 'Атропин', 'Кофеин'], correct: 0, explanation: 'Флуниксин — НПВС, препарат выбора при коликах у лошадей.' }
+    ];
+
+    // ================================================================
+    //  КАЛЬКУЛЯТОР — 24 ЗАДАЧИ
+    // ================================================================
+
+    const CALC_TASKS = [
+        { drugId: 'xylazine', species: 'cattle', weight: 400, dosePerKg: 0.1, concentration: 20, answer: 2.0, text: 'Корове массой 400 кг назначен ксилазин 2% для седации. Доза — 0,1 мг/кг.' },
+        { drugId: 'xylazine', species: 'horse', weight: 500, dosePerKg: 0.8, concentration: 20, answer: 20.0, text: 'Лошади массой 500 кг назначен ксилазин 2% внутривенно. Доза — 0,8 мг/кг.' },
+        { drugId: 'xylazine', species: 'dog', weight: 20, dosePerKg: 1.5, concentration: 20, answer: 1.5, text: 'Собаке массой 20 кг назначен ксилазин 2% внутримышечно. Доза — 1,5 мг/кг.' },
+        { drugId: 'xylazine', species: 'cat', weight: 4, dosePerKg: 2.0, concentration: 20, answer: 0.4, text: 'Кошке массой 4 кг назначен ксилазин 2% подкожно. Доза — 2,0 мг/кг.' },
+
+        { drugId: 'meloxicam', species: 'dog', weight: 25, dosePerKg: 0.2, concentration: 5, answer: 1.0, text: 'Собаке массой 25 кг назначен мелоксикам 0,5% в первый день лечения. Доза — 0,2 мг/кг.' },
+        { drugId: 'meloxicam', species: 'cat', weight: 4, dosePerKg: 0.1, concentration: 5, answer: 0.08, text: 'Кошке массой 4 кг назначен мелоксикам 0,5% в первый день. Доза — 0,1 мг/кг.' },
+        { drugId: 'meloxicam', species: 'rabbit', weight: 2, dosePerKg: 0.3, concentration: 5, answer: 0.12, text: 'Кролику массой 2 кг назначен мелоксикам 0,5%. Доза — 0,3 мг/кг.' },
+
+        { drugId: 'ketoprofen', species: 'cattle', weight: 450, dosePerKg: 3.0, concentration: 100, answer: 13.5, text: 'Корове массой 450 кг назначен кетопрофен 10%. Доза — 3 мг/кг.' },
+        { drugId: 'ketoprofen', species: 'horse', weight: 500, dosePerKg: 2.2, concentration: 100, answer: 11.0, text: 'Лошади массой 500 кг назначен кетопрофен 10% внутривенно. Доза — 2,2 мг/кг.' },
+        { drugId: 'ketoprofen', species: 'dog', weight: 15, dosePerKg: 2.0, concentration: 100, answer: 0.3, text: 'Собаке массой 15 кг назначен кетопрофен 10%. Доза — 2 мг/кг.' },
+
+        { drugId: 'flunixin', species: 'cattle', weight: 500, dosePerKg: 2.2, concentration: 50, answer: 22.0, text: 'Корове массой 500 кг назначен флуниксин 5% при мастите. Доза — 2,2 мг/кг.' },
+        { drugId: 'flunixin', species: 'horse', weight: 400, dosePerKg: 1.1, concentration: 50, answer: 8.8, text: 'Лошади массой 400 кг назначен флуниксин 5% при коликах. Доза — 1,1 мг/кг.' },
+
+        { drugId: 'propofol', species: 'dog', weight: 20, dosePerKg: 5.0, concentration: 10, answer: 10.0, text: 'Собаке массой 20 кг назначен пропофол 1% для вводного наркоза. Доза — 5 мг/кг.' },
+        { drugId: 'propofol', species: 'cat', weight: 4, dosePerKg: 10.0, concentration: 10, answer: 4.0, text: 'Кошке массой 4 кг назначен пропофол 1% для вводного наркоза. Доза — 10 мг/кг.' },
+
+        { drugId: 'atropine', species: 'dog', weight: 20, dosePerKg: 0.04, concentration: 1, answer: 0.8, text: 'Собаке массой 20 кг назначен атропин 0,1% для премедикации. Доза — 0,04 мг/кг.' },
+        { drugId: 'atropine', species: 'cat', weight: 4, dosePerKg: 0.04, concentration: 1, answer: 0.16, text: 'Кошке массой 4 кг назначен атропин 0,1%. Доза — 0,04 мг/кг.' },
+        { drugId: 'atropine', species: 'cattle', weight: 400, dosePerKg: 0.03, concentration: 1, answer: 12.0, text: 'Корове массой 400 кг назначен атропин 0,1%. Доза — 0,03 мг/кг.' },
+        { drugId: 'atropine', species: 'horse', weight: 500, dosePerKg: 0.015, concentration: 1, answer: 7.5, text: 'Лошади массой 500 кг назначен атропин 0,1% внутривенно. Доза — 0,015 мг/кг.' },
+
+        { drugId: 'medetomidine', species: 'dog', weight: 20, dosePerKg: 0.03, concentration: 1, answer: 0.6, text: 'Собаке массой 20 кг назначен медeтомидин 0,1% для седации. Доза — 0,03 мг/кг.' },
+        { drugId: 'medetomidine', species: 'cat', weight: 4, dosePerKg: 0.06, concentration: 1, answer: 0.24, text: 'Кошке массой 4 кг назначен медeтомидин 0,1%. Доза — 0,06 мг/кг.' },
+
+        { drugId: 'dexmedetomidine', species: 'dog', weight: 20, dosePerKg: 0.01, concentration: 0.5, answer: 0.4, text: 'Собаке массой 20 кг назначен дексмедетомидин 0,05% для седации. Доза — 0,01 мг/кг.' },
+        { drugId: 'dexmedetomidine', species: 'cat', weight: 4, dosePerKg: 0.03, concentration: 0.5, answer: 0.24, text: 'Кошке массой 4 кг назначен дексмедетомидин 0,05%. Доза — 0,03 мг/кг.' },
+
+        { drugId: 'acepromazine', species: 'dog', weight: 20, dosePerKg: 0.4, concentration: 10, answer: 0.8, text: 'Собаке массой 20 кг назначен ацепромазин 1% для седации. Доза — 0,4 мг/кг.' },
+        { drugId: 'acepromazine', species: 'cat', weight: 4, dosePerKg: 0.75, concentration: 10, answer: 0.3, text: 'Кошке массой 4 кг назначен ацепромазин 1%. Доза — 0,75 мг/кг.' }
+    ];
+
+    // ================================================================
+    //  УТИЛИТЫ
+    // ================================================================
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m] || m);
+    }
+    function getDrugById(id) { return DRUGS.find(d => d.id === id); }
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // ================================================================
+    //  КЛАССИФИКАЦИЯ
+    // ================================================================
+
+    function renderTree() {
+        const container = document.getElementById('treeContainer');
+        const groups = {};
+        DRUGS.forEach(drug => {
+            const g = drug.group;
+            if (!groups[g]) groups[g] = {};
+            const sg = drug.subgroup || 'Прочее';
+            if (!groups[g][sg]) groups[g][sg] = [];
+            groups[g][sg].push(drug);
+        });
+
+        let html = '';
+        for (const [groupId, subgroups] of Object.entries(groups)) {
+            const group = GROUPS[groupId];
+            html += `<div class="tree-group">
+                <div class="tree-header" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                    <span style="color:${group.color}; font-size:1.1rem;">${group.icon}</span>
+                    <span>${group.name}</span>
+                    <span class="tag">${Object.values(subgroups).flat().length} препаратов</span>
+                </div>
+                <div class="tree-subgroup">`;
+            for (const [subgroupName, drugs] of Object.entries(subgroups)) {
+                html += `<div class="tree-header" onclick="this.nextElementSibling.classList.toggle('hidden')" style="cursor:pointer;">
+                    <span>📁 ${subgroupName}</span>
+                </div>
+                <div>`;
+                drugs.forEach(drug => {
+                    html += `<div class="tree-leaf" onclick="showDrugCard('${drug.id}')">
+                        <span class="dot" style="background:${group.color};"></span>
+                        <span>${escapeHtml(drug.name)}</span>
+                        <span class="lat">${escapeHtml(drug.lat)}</span>
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+            html += `</div></div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    function showDrugCard(drugId) {
+        const drug = getDrugById(drugId);
+        if (!drug) return;
+        const group = GROUPS[drug.group];
+        const dosesText = Object.entries(drug.doses || {}).map(([species, dose]) => {
+            return `<strong>${SPECIES_NAMES[species] || species}:</strong> ${dose}`;
+        }).join('<br>');
+
+        const existing = document.getElementById('drugCardModal');
+        if (existing) existing.remove();
+
+        const modal = document.createElement('div');
+        modal.id = 'drugCardModal';
+        modal.style.cssText = 'position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:1000; display:flex; align-items:center; justify-content:center; padding:1rem;';
+        modal.innerHTML = `
+            <div style="background:white; border-radius:1.5rem; padding:1.5rem 2rem; max-width:600px; width:100%; max-height:85vh; overflow-y:auto; border-top:6px solid ${group.color};">
+                <button onclick="document.getElementById('drugCardModal').remove()" style="float:right; background:none; border:none; font-size:1.8rem; cursor:pointer; color:#7B8D6E;">&times;</button>
+                <div style="font-size:1.3rem; font-weight:800; color:var(--text-dark); margin-bottom:0.2rem;">${escapeHtml(drug.name)}</div>
+                <div style="font-size:0.95rem; font-style:italic; color:#8A9B7A; margin-bottom:0.8rem;">${escapeHtml(drug.lat)}</div>
+                <div style="display:inline-block; padding:0.25rem 0.8rem; border-radius:1rem; background:${group.color}; color:white; font-size:0.75rem; font-weight:600; margin-bottom:0.8rem;">${group.name} · ${escapeHtml(drug.subgroup)}</div>
+                <h4 style="font-size:0.85rem; color:var(--text-dark); margin-top:0.8rem;">Действие</h4>
+                <p style="font-size:0.85rem; line-height:1.5;">${escapeHtml(drug.action)}</p>
+                <h4 style="font-size:0.85rem; color:var(--text-dark); margin-top:0.8rem;">Показания</h4>
+                <p style="font-size:0.85rem; line-height:1.5;">${escapeHtml(drug.indications)}</p>
+                <h4 style="font-size:0.85rem; color:var(--text-dark); margin-top:0.8rem;">Дозы</h4>
+                <p style="font-size:0.85rem; line-height:1.6;">${dosesText}</p>
+                <h4 style="font-size:0.85rem; color:var(--text-dark); margin-top:0.8rem;">Противопоказания</h4>
+                <p style="font-size:0.85rem; line-height:1.5;">${escapeHtml(drug.contraindications)}</p>
+                ${drug.warning ? `<div style="background:#FDE8E0; padding:0.7rem 0.9rem; border-radius:0.8rem; margin-top:0.8rem; border-left:4px solid ${group.color}; font-size:0.82rem; line-height:1.4;">⚠️ ${escapeHtml(drug.warning)}</div>` : ''}
+            </div>`;
+        modal.addEventListener('click', function(e) { if (e.target === modal) modal.remove(); });
+        document.body.appendChild(modal);
+    }
+
+    // ================================================================
+    //  КАРТОЧКИ
+    // ================================================================
+
+    let cardIndex = 0;
+    let cardsOrder = [];
+
+    function initCards() {
+        cardsOrder = [...DRUGS];
+        shuffleArray(cardsOrder);
+        cardIndex = 0;
+        renderCard();
+    }
+
+    function renderCard() {
+        const drug = cardsOrder[cardIndex];
+        if (!drug) return;
+        const group = GROUPS[drug.group];
+        const front = document.getElementById('cardFront');
+        const back = document.getElementById('cardBack');
+
+        front.innerHTML = `
+            <div class="name">${escapeHtml(drug.name)}</div>
+            <div class="lat">${escapeHtml(drug.lat)}</div>
+            <div class="group-badge" style="background:${group.color};">${group.name}</div>
+            <div class="hint-flip">👆 Кликните, чтобы перевернуть</div>
+        `;
+
+        const dosesText = Object.entries(drug.doses || {}).map(([sp, dose]) =>
+            `<strong>${SPECIES_NAMES[sp] || sp}:</strong> ${dose}`
+        ).join('<br>');
+
+        back.innerHTML = `
+            <h4>Подгруппа</h4><p>${escapeHtml(drug.subgroup)}</p>
+            <h4>Действие</h4><p>${escapeHtml(drug.action)}</p>
+            <h4>Показания</h4><p>${escapeHtml(drug.indications)}</p>
+            <h4>Дозы</h4><p>${dosesText}</p>
+            <h4>Противопоказания</h4><p>${escapeHtml(drug.contraindications)}</p>
+            ${drug.warning ? `<div class="warning">⚠️ ${escapeHtml(drug.warning)}</div>` : ''}
+        `;
+
+        document.getElementById('cardDisplay').classList.remove('flipped');
+        document.getElementById('cardCounter').textContent = `Карточка ${cardIndex + 1} из ${cardsOrder.length}`;
+    }
+
+    function flipCard() {
+        document.getElementById('cardDisplay').classList.toggle('flipped');
+    }
+
+    function cardPrev() {
+        if (cardIndex > 0) { cardIndex--; renderCard(); }
+    }
+    function cardNext() {
+        if (cardIndex < cardsOrder.length - 1) { cardIndex++; renderCard(); }
+    }
+
+    // ================================================================
+    //  ТЕСТ
+    // ================================================================
+
+    let testQuestions = [];
+    let testCurrentIndex = 0;
+    let testAnswers = {};
+    let testTimeLeft = 20 * 60;
+    let testTimerInterval = null;
+    let testFinished = false;
+
+    function prepareTestQuestions() {
+        const shuffled = TEST_QUESTIONS.map(q => ({ ...q }));
+        shuffleArray(shuffled);
+        shuffled.forEach((q, qi) => {
+            if (q.type === 'choice' || q.type === 'multi') {
+                const opts = q.options.map((o, i) => ({ text: o, idx: i + 1 }));
+                shuffleArray(opts);
+                if (q.type === 'choice') {
+                    const newCorrect = opts.findIndex(o => o.idx === parseInt(q.correct)) + 1;
+                    q.options = opts.map(o => o.text);
+                    q.correct = newCorrect;
+                } else {
+                    const correctNums = q.correct.split(',').map(s => parseInt(s.trim()));
+                    const newCorrect = opts.filter(o => correctNums.includes(o.idx)).map(o => opts.indexOf(o) + 1).join(',');
+                    q.options = opts.map(o => o.text);
+                    q.correct = newCorrect;
+                }
+            }
+            if (q.type === 'match') {
+                const right = q.right.map((o, i) => ({ text: o, idx: i + 1 }));
+                shuffleArray(right);
+                const newPairs = q.pairs.map(p => {
+                    const [l, r] = p.split(':').map(Number);
+                    const newR = right.findIndex(x => x.idx === r) + 1;
+                    return `${l}:${newR}`;
+                });
+                q.right = right.map(o => o.text);
+                q.pairs = newPairs;
+            }
+            testAnswers[qi] = null;
+        });
+        return shuffled;
+    }
+
+    function formatTime(sec) {
+        return String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0');
+    }
+
+    function startTestTimer() {
+        if (testTimerInterval) clearInterval(testTimerInterval);
+        testTimerInterval = setInterval(() => {
+            if (testFinished) { clearInterval(testTimerInterval); return; }
+            testTimeLeft--;
+            const el = document.getElementById('timerDisplay');
+            el.textContent = formatTime(testTimeLeft);
+            el.classList.remove('warning', 'danger');
+            if (testTimeLeft <= 60) el.classList.add('danger');
+            else if (testTimeLeft <= 300) el.classList.add('warning');
+            if (testTimeLeft <= 0) { clearInterval(testTimerInterval); finishTest(true); }
+        }, 1000);
+    }
+
+    function renderTestQuestion(index) {
+        const q = testQuestions[index];
+        if (!q) return;
+        const container = document.getElementById('questionContent');
+        document.getElementById('currentQ').textContent = index + 1;
+        document.getElementById('totalQ').textContent = testQuestions.length;
+
+        const typeLabels = { choice: '🎯 Одиночный выбор', multi: '✅ Множественный выбор', match: '🔗 Сопоставление' };
+        const typeClass = { choice: '', multi: 'multi', match: 'match' };
+
+        let html = `<div class="q-type ${typeClass[q.type]}">${typeLabels[q.type]}</div>
+                    <div class="q-text">${escapeHtml(q.q)}</div>`;
+
+        if (q.type === 'choice') {
+            html += '<ul class="q-options">';
+            q.options.forEach((opt, i) => {
+                const val = i + 1;
+                const checked = testAnswers[index] == val ? 'checked' : '';
+                html += `<li><input type="radio" name="tq${index}" value="${val}" id="tq${index}_${val}" ${checked}><label for="tq${index}_${val}">${escapeHtml(opt)}</label></li>`;
+            });
+            html += '</ul>';
+        }
+        if (q.type === 'multi') {
+            const sel = testAnswers[index] ? testAnswers[index].split(',').map(s => s.trim()) : [];
+            html += '<ul class="q-options">';
+            q.options.forEach((opt, i) => {
+                const val = i + 1;
+                const checked = sel.includes(String(val)) ? 'checked' : '';
+                html += `<li><input type="checkbox" name="tq${index}[]" value="${val}" id="tq${index}_${val}" ${checked}><label for="tq${index}_${val}">${escapeHtml(opt)}</label></li>`;
+            });
+            html += '</ul>';
+        }
+        if (q.type === 'match') {
+            const saved = testAnswers[index] ? testAnswers[index].split(',').map(s => s.trim()) : [];
+            html += '<div class="q-match">';
+            html += '<div class="match-label">Препарат</div><div class="match-label">Соответствие</div>';
+            q.left.forEach((left, i) => {
+                const ln = i + 1;
+                const savedVal = saved.find(p => p.startsWith(`${ln}:`));
+                const selVal = savedVal ? savedVal.split(':')[1] : '';
+                html += `<div>${escapeHtml(left)}</div><div><select name="tm${index}_${ln}" data-left="${ln}"><option value="">Выберите...</option>`;
+                q.right.forEach((right, ri) => {
+                    const rv = ri + 1;
+                    html += `<option value="${rv}" ${selVal == rv ? 'selected' : ''}>${escapeHtml(right)}</option>`;
+                });
+                html += `</select></div>`;
+            });
+            html += '</div>';
+        }
+        container.innerHTML = html;
+        attachTestEvents(index);
+        updateTestProgress();
+    }
+
+    function attachTestEvents(index) {
+        const q = testQuestions[index];
+        if (q.type === 'choice') {
+            document.querySelectorAll(`input[name="tq${index}"]`).forEach(el => {
+                el.addEventListener('change', function() { testAnswers[index] = this.value; updateTestProgress(); });
+            });
+        }
+        if (q.type === 'multi') {
+            document.querySelectorAll(`input[name="tq${index}[]"]`).forEach(el => {
+                el.addEventListener('change', function() {
+                    const checked = document.querySelectorAll(`input[name="tq${index}[]"]:checked`);
+                    testAnswers[index] = Array.from(checked).map(x => x.value).join(',') || null;
+                    updateTestProgress();
+                });
+            });
+        }
+        if (q.type === 'match') {
+            document.querySelectorAll(`select[name^="tm${index}_"]`).forEach(el => {
+                el.addEventListener('change', function() {
+                    const selects = document.querySelectorAll(`select[name^="tm${index}_"]`);
+                    const pairs = [];
+                    selects.forEach(s => { if (s.value) pairs.push(`${s.dataset.left}:${s.value}`); });
+                    testAnswers[index] = pairs.length ? pairs.join(',') : null;
+                    updateTestProgress();
+                });
+            });
+        }
+    }
+
+    function updateTestProgress() {
+        const total = testQuestions.length;
+        let answered = 0;
+        for (let i = 0; i < total; i++) { if (testAnswers[i] && testAnswers[i].length > 0) answered++; }
+        document.getElementById('testProgress').style.width = (answered / total * 100) + '%';
+    }
+
+    function finishTest(auto) {
+        if (testFinished) return;
+        testFinished = true;
+        if (testTimerInterval) clearInterval(testTimerInterval);
+
+        let correct = 0;
+        const total = testQuestions.length;
+        testQuestions.forEach((q, i) => {
+            const ans = testAnswers[i];
+            if (!ans) return;
+            let isCorrect = false;
+            if (q.type === 'choice') isCorrect = ans == q.correct;
+            else if (q.type === 'multi') {
+                const ca = q.correct.split(',').map(s => s.trim()).sort();
+                const ua = ans.split(',').map(s => s.trim()).sort();
+                isCorrect = ua.length === ca.length && ua.every((v, j) => v === ca[j]);
+            } else if (q.type === 'match') {
+                const cp = q.pairs.map(p => p.trim()).sort();
+                const up = ans.split(',').map(s => s.trim()).sort();
+                isCorrect = up.length === cp.length && up.every((v, j) => v === cp[j]);
+            }
+            if (isCorrect) correct++;
+        });
+
+        const percent = Math.round(correct / total * 100);
+        document.getElementById('scoreNum').textContent = percent + '%';
+        document.getElementById('scoreDetail').textContent = `${correct} из ${total}`;
+
+        let msg = '';
+        if (percent === 100) msg = '🎉 Отлично! Вы идеально знаете нейрофармакологию!';
+        else if (percent >= 80) msg = '⭐ Отличный результат! Материал усвоен хорошо.';
+        else if (percent >= 70) msg = '👍 Хороший результат! Есть над чем поработать.';
+        else if (percent >= 50) msg = '📖 Рекомендуем повторить материал по нейрофармакологии.';
+        else msg = '📚 Вам стоит серьёзно пересмотреть тему. Обратитесь к учебнику.';
+        document.getElementById('scoreMessage').textContent = msg;
+
+        document.getElementById('testResult').classList.add('show');
+        document.getElementById('testNav').classList.add('hidden');
+        document.getElementById('testResult').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function resetTest() {
+        if (testTimerInterval) clearInterval(testTimerInterval);
+        testTimeLeft = 20 * 60;
+        testFinished = false;
+        testCurrentIndex = 0;
+        testAnswers = {};
+        testQuestions = prepareTestQuestions();
+        document.getElementById('timerDisplay').textContent = '20:00';
+        document.getElementById('timerDisplay').classList.remove('warning', 'danger');
+        document.getElementById('testResult').classList.remove('show');
+        document.getElementById('testNav').classList.remove('hidden');
+        document.getElementById('prevQBtn').disabled = true;
+        document.getElementById('nextQBtn').disabled = false;
+        renderTestQuestion(0);
+        startTestTimer();
+    }
+
+    // ================================================================
+    //  КЛИНИЧЕСКИЕ ЗАДАЧИ
+    // ================================================================
+
+    let scenarioOrder = [];
+    let scenarioIndex = 0;
+    let scenarioAnswered = false;
+
+    function initScenarios() {
+        scenarioOrder = SCENARIOS.map(s => {
+            const options = s.options.map((text, i) => ({ text, isCorrect: i === s.correct }));
+            shuffleArray(options);
+            const newCorrect = options.findIndex(o => o.isCorrect);
+            return { ...s, options: options.map(o => o.text), correct: newCorrect };
+        });
+        shuffleArray(scenarioOrder);
+        scenarioIndex = 0;
+        renderScenario();
+    }
+
+    function renderScenario() {
+        const s = scenarioOrder[scenarioIndex];
+        if (!s) return;
+        const container = document.getElementById('scenarioCard');
+        document.getElementById('scenarioCounter').textContent = `Задача ${scenarioIndex + 1} из ${scenarioOrder.length}`;
+        scenarioAnswered = false;
+
+        let html = `
+            <div class="s-title">🩺 ${escapeHtml(s.title)}</div>
+            <div class="s-text">${escapeHtml(s.text)}</div>
+            <div class="s-options">`;
+        s.options.forEach((opt, i) => {
+            html += `<button class="s-option" data-i="${i}">${escapeHtml(opt)}</button>`;
+        });
+        html += `</div><div class="s-feedback" id="scenarioFeedback"></div>`;
+        container.innerHTML = html;
+
+        container.querySelectorAll('.s-option').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (scenarioAnswered) return;
+                scenarioAnswered = true;
+                const oi = parseInt(this.dataset.i);
+                const feedback = document.getElementById('scenarioFeedback');
+                container.querySelectorAll('.s-option').forEach(b => { b.disabled = true; b.style.cursor = 'default'; });
+                if (oi === s.correct) {
+                    this.classList.add('correct');
+                    feedback.textContent = '✅ Правильно! ' + s.explanation;
+                    feedback.className = 's-feedback correct show';
+                } else {
+                    this.classList.add('wrong');
+                    container.querySelectorAll('.s-option')[s.correct].classList.add('correct');
+                    feedback.textContent = '❌ Неправильно. ' + s.explanation;
+                    feedback.className = 's-feedback wrong show';
+                }
+            });
+        });
+    }
+
+    function scenarioPrev() {
+        if (scenarioIndex > 0) { scenarioIndex--; renderScenario(); }
+    }
+    function scenarioNext() {
+        if (scenarioIndex < scenarioOrder.length - 1) { scenarioIndex++; renderScenario(); }
+    }
+
+    // ================================================================
+    //  КАЛЬКУЛЯТОР — ПОШАГОВЫЙ
+    // ================================================================
+
+    let calcIndex = 0;
+    let calcOrder = [];
+    let calcAnswered = false;
+
+    function initCalc() {
+        calcOrder = CALC_TASKS.map(t => ({ ...t }));
+        shuffleArray(calcOrder);
+        calcIndex = 0;
+
+        const drugSelect = document.getElementById('calcDrug');
+        const speciesSelect = document.getElementById('calcSpecies');
+
+        const uniqueDrugs = [...new Set(calcOrder.map(t => t.drugId))];
+        drugSelect.innerHTML = '<option value="">— выберите —</option>' +
+            uniqueDrugs.map(id => {
+                const d = getDrugById(id);
+                return `<option value="${id}">${escapeHtml(d ? d.name : id)}</option>`;
+            }).join('');
+
+        speciesSelect.innerHTML = '<option value="">— выберите —</option>' +
+            Object.entries(SPECIES_NAMES).map(([k, v]) => `<option value="${k}">${v}</option>`).join('');
+
+        renderCalcTask();
+        updateCalcProgress();
+    }
+
+    function renderCalcTask() {
+        const task = calcOrder[calcIndex];
+        if (!task) return;
+        calcAnswered = false;
+
+        const taskInfo = document.getElementById('calcTaskInfo');
+        document.getElementById('calcCounter').textContent = `Задача ${calcIndex + 1} из ${calcOrder.length}`;
+
+        taskInfo.innerHTML = `
+            <strong>📋 Задача:</strong> ${escapeHtml(task.text)}<br>
+            <strong>Форма выпуска:</strong> концентрация ${task.concentration} мг/мл<br>
+            <strong>Формула расчёта:</strong> объём (мл) = масса (кг) × доза (мг/кг) / концентрация (мг/мл)
+        `;
+        taskInfo.classList.add('show');
+
+        document.getElementById('calcDrug').value = task.drugId;
+        document.getElementById('calcSpecies').value = task.species;
+        document.getElementById('calcWeight').value = task.weight;
+        document.getElementById('calcUserAnswer').value = '';
+
+        const result = document.getElementById('calcResult');
+        result.classList.remove('show', 'correct', 'wrong');
+        document.getElementById('calcAnswer').innerHTML = '';
+        document.getElementById('calcStep').innerHTML = '';
+    }
+
+    function checkCalcAnswer() {
+        const task = calcOrder[calcIndex];
+        if (!task) return;
+
+        const userAnswer = parseFloat(document.getElementById('calcUserAnswer').value);
+        if (isNaN(userAnswer) || userAnswer <= 0) {
+            alert('Введите ваш ответ в миллилитрах.');
+            return;
+        }
+
+        const tolerance = task.answer * 0.2;
+        const isCorrect = Math.abs(userAnswer - task.answer) <= tolerance;
+        const result = document.getElementById('calcResult');
+        const answerEl = document.getElementById('calcAnswer');
+        const stepEl = document.getElementById('calcStep');
+
+        const formulaStep = `${task.weight} кг × ${task.dosePerKg} мг/кг / ${task.concentration} мг/мл = ${task.answer.toFixed(2)} мл`;
+
+        if (isCorrect) {
+            result.className = 'calc-result show correct';
+            answerEl.innerHTML = `✅ <strong>Правильно!</strong> Ваш ответ: ${userAnswer.toFixed(2)} мл. Требуется: ${task.answer.toFixed(2)} мл.`;
+        } else {
+            result.className = 'calc-result show wrong';
+            answerEl.innerHTML = `❌ <strong>Неправильно.</strong> Ваш ответ: ${userAnswer.toFixed(2)} мл. Правильный: ${task.answer.toFixed(2)} мл.`;
+        }
+        stepEl.innerHTML = `📐 <strong>Пошаговое решение:</strong><br>${formulaStep}`;
+        calcAnswered = true;
+    }
+
+    function showCalcAnswer() {
+        const task = calcOrder[calcIndex];
+        if (!task) return;
+
+        const result = document.getElementById('calcResult');
+        const answerEl = document.getElementById('calcAnswer');
+        const stepEl = document.getElementById('calcStep');
+
+        result.className = 'calc-result show';
+        answerEl.innerHTML = `👁️ <strong>Правильный ответ:</strong> ${task.answer.toFixed(2)} мл`;
+        stepEl.innerHTML = `📐 <strong>Пошаговое решение:</strong><br>${task.weight} кг × ${task.dosePerKg} мг/кг / ${task.concentration} мг/мл = ${task.answer.toFixed(2)} мл`;
+        calcAnswered = true;
+    }
+
+    function calcPrev() {
+        if (calcIndex > 0) { calcIndex--; renderCalcTask(); updateCalcProgress(); }
+    }
+    function calcNext() {
+        if (calcIndex < calcOrder.length - 1) { calcIndex++; renderCalcTask(); updateCalcProgress(); }
+    }
+    function updateCalcProgress() {
+        document.getElementById('calcProgress').textContent = `Прогресс: ${calcIndex + 1} / ${calcOrder.length}`;
+    }
+
+    // ================================================================
+    //  СПРАВКА
+    // ================================================================
+
+    function renderReference() {
+        const table = document.getElementById('refColorTable');
+        let html = '';
+        for (const [gid, g] of Object.entries(GROUPS)) {
+            const drugs = DRUGS.filter(d => d.group === gid);
+            html += `<tr>
+                <td><span class="color-dot" style="background:${g.color};"></span>${g.name}</td>
+                <td><code style="font-size:0.72rem;">${g.color}</code></td>
+                <td>${drugs.length} препаратов: ${drugs.map(d => d.name.split(' ')[0]).join(', ')}</td>
+            </tr>`;
+        }
+        table.innerHTML = html;
+    }
+
+    // ================================================================
+    //  ВКЛАДКИ
+    // ================================================================
+
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab).classList.add('active');
+                if (this.dataset.tab === 'tab-test' && !testQuestions.length) resetTest();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+
+    function init() {
+        renderTree();
+        initCards();
+        initCalc();
+        initScenarios();
+        renderReference();
+        initTabs();
+
+        document.getElementById('cardPrevBtn').addEventListener('click', cardPrev);
+        document.getElementById('cardNextBtn').addEventListener('click', cardNext);
+
+        document.getElementById('scenarioPrevBtn').addEventListener('click', scenarioPrev);
+        document.getElementById('scenarioNextBtn').addEventListener('click', scenarioNext);
+
+        document.getElementById('prevQBtn').addEventListener('click', function() {
+            if (testCurrentIndex > 0) {
+                testCurrentIndex--;
+                renderTestQuestion(testCurrentIndex);
+                this.disabled = testCurrentIndex === 0;
+                document.getElementById('nextQBtn').disabled = false;
+            }
+        });
+        document.getElementById('nextQBtn').addEventListener('click', function() {
+            if (testCurrentIndex < testQuestions.length - 1) {
+                testCurrentIndex++;
+                renderTestQuestion(testCurrentIndex);
+                this.disabled = testCurrentIndex === testQuestions.length - 1;
+                document.getElementById('prevQBtn').disabled = false;
+            }
+        });
+        document.getElementById('finishTestBtn').addEventListener('click', function() {
+            if (confirm('Завершить тест и проверить ответы?')) finishTest(false);
+        });
+        document.getElementById('retryTestBtn').addEventListener('click', resetTest);
+
+        document.getElementById('calcCheckBtn').addEventListener('click', checkCalcAnswer);
+        document.getElementById('calcShowBtn').addEventListener('click', showCalcAnswer);
+        document.getElementById('calcPrevBtn').addEventListener('click', calcPrev);
+        document.getElementById('calcNextBtn').addEventListener('click', calcNext);
+
+        testQuestions = prepareTestQuestions();
+        startTestTimer();
+
+        document.addEventListener('keydown', function(e) {
+            if (testFinished) return;
+            if (e.key === 'ArrowLeft' && document.getElementById('tab-test').classList.contains('active')) {
+                document.getElementById('prevQBtn').click();
+            }
+            if (e.key === 'ArrowRight' && document.getElementById('tab-test').classList.contains('active')) {
+                document.getElementById('nextQBtn').click();
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+</body>
+</html>

@@ -1,514 +1,912 @@
-<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Латинский язык · Урок 3 · ВетСим</title><style>
-        /* ===== БАЗОВЫЕ СТИЛИ ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Латинский язык · Урок 3 · ВетСим</title>
+<style>
+/* ===== БАЗОВЫЕ СТИЛИ ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
-            background: #FDF8F0;
-            color: #1A2A3A;
-            padding: 16px;
-            min-height: 100vh;
-        }
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #1A2A3A;
+    padding: 16px;
+    min-height: 100vh;
+}
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+.container { max-width: 1100px; margin: 0 auto; }
 
-        .header {
-            background: white;
-            border-radius: 1.5rem;
-            padding: 14px 24px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            margin-bottom: 16px;
-            border: 1px solid #E7EDE2;
-        }
+.header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 14px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 16px;
+    border: 1px solid #E7EDE2;
+}
+.header .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #1A2A3A;
+}
+.header .logo .gradient {
+    background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.header .logo .sub {
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: #7B8D6E;
+}
+.header-stats {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+}
+.header-stats .score {
+    background: #2C7DA0;
+    color: white;
+    padding: 4px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+}
+.header-stats .progress-text { color: #5F7C62; }
 
-        .header .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            font-size: 1.2rem;
-            color: #1A2A3A;
-        }
-        .header .logo .gradient {
-            background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .header .logo .sub {
-            font-weight: 400;
-            font-size: 0.7rem;
-            color: #7B8D6E;
-        }
-        .header-stats {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            font-size: 0.8rem;
-        }
-        .header-stats .score {
-            background: #2C7DA0;
-            color: white;
-            padding: 4px 16px;
-            border-radius: 40px;
-            font-weight: 600;
-        }
-        .header-stats .progress-text {
-            color: #5F7C62;
-        }
+.btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+    font-size: 0.78rem;
+    color: #1A2A3A;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-success { background: #6B9E6B; color: white; }
+.btn-success:hover { background: #5A865A; }
+.btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+.btn-outline:hover { background: #F0EEE5; }
+.btn-sm { padding: 3px 12px; font-size: 0.7rem; }
 
-        .btn {
-            background: #EBE3D2;
-            border: none;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.15s;
-            font-family: inherit;
-            font-size: 0.78rem;
-            color: #1A2A3A;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
-        .btn:active { transform: scale(0.96); }
-        .btn-primary { background: #2C7DA0; color: white; }
-        .btn-primary:hover { background: #236B8A; }
-        .btn-success { background: #6B9E6B; color: white; }
-        .btn-success:hover { background: #5A865A; }
-        .btn-outline { background: transparent; border: 1px solid #D9D0BD; }
-        .btn-outline:hover { background: #F0EEE5; }
-        .btn-sm { padding: 3px 12px; font-size: 0.7rem; }
+.tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.tab-btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    color: #3E5C4A;
+}
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: #2C7DA0; color: white; }
 
-        .tabs {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-        .tab-btn {
-            background: #EBE3D2;
-            border: none;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: inherit;
-            color: #3E5C4A;
-        }
-        .tab-btn:hover { opacity: 0.85; }
-        .tab-btn.active {
-            background: #2C7DA0;
-            color: white;
-        }
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.25s ease;
-        }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.tab-content { display: none; animation: fadeIn 0.25s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-        .card {
-            background: white;
-            border-radius: 1.5rem;
-            padding: 18px 22px;
-            border: 1px solid #E7EDE2;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
-            margin-bottom: 14px;
-        }
+.card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 18px 22px;
+    border: 1px solid #E7EDE2;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 14px;
+}
+.card-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #2C7DA0;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.card-title .badge {
+    font-size: 0.65rem;
+    background: #E7EDE2;
+    color: #5F7C62;
+    padding: 0 12px;
+    border-radius: 40px;
+    font-weight: 500;
+}
 
-        .card-title {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: #2C7DA0;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
+/* ===== ТЕСТ ===== */
+.q {
+    padding: 12px 0;
+    border-bottom: 1px solid #f0ebe3;
+}
+.q:last-child { border-bottom: none; }
+.q-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+.q-title .num {
+    color: #2C7DA0;
+    font-weight: 700;
+    margin-right: 4px;
+}
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.options label {
+    background: #FEFCF9;
+    border: 2px solid #E7EDE2;
+    border-radius: 40px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.options label:hover { background: #F3F7F2; border-color: #A3B18A; }
+.options input[type="radio"] {
+    accent-color: #2C7DA0;
+    cursor: pointer;
+}
+.options label.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.options label.wrong { border-color: #b13e3e; background: #FDF0E8; }
+.options label.disabled { cursor: default; opacity: 0.7; }
+.feedback {
+    font-size: 0.78rem;
+    margin-top: 6px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    display: none;
+}
+.feedback.show { display: block; }
+.feedback.ok { background: #E8F5E8; color: #2E7D32; }
+.feedback.no { background: #FDF0E8; color: #b13e3e; }
 
-        .card-title .badge {
-            font-size: 0.65rem;
-            background: #E7EDE2;
-            color: #5F7C62;
-            padding: 0 12px;
-            border-radius: 40px;
-            font-weight: 500;
-        }
+/* Прогресс теста */
+.test-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    color: #5F7C62;
+}
+.test-progress .bar {
+    flex: 1;
+    height: 6px;
+    background: #E7EDE2;
+    border-radius: 20px;
+    margin: 0 12px;
+    overflow: hidden;
+}
+.test-progress .bar-fill {
+    height: 100%;
+    background: #2C7DA0;
+    border-radius: 20px;
+    transition: width 0.3s;
+}
 
-        /* ===== ФЛИП-КАРТОЧКИ ===== */
-        .flip-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 12px;
-            margin: 10px 0;
-        }
+/* ===== ТЕОРИЯ ===== */
+.lesson-intro { line-height: 1.55; color: #4b5d61; font-size: 0.85rem; }
+.lesson-intro p { margin: 6px 0; }
+.notice {
+    background: #F7F3E8;
+    border-left: 4px solid #2C7DA0;
+    padding: 10px 14px;
+    border-radius: 0 1rem 1rem 0;
+    margin: 10px 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+.theory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+.theory-box {
+    background: #F9FBF8;
+    border: 1px solid #E7EDE2;
+    border-radius: 1rem;
+    padding: 12px;
+}
+.theory-box h3 {
+    color: #2C7DA0;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+}
+.theory-box ul {
+    padding-left: 18px;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+.theory-box p { font-size: 0.8rem; line-height: 1.55; }
+.latin {
+    font-family: Georgia, serif;
+    color: #1F4E6E;
+    font-weight: 700;
+}
+.table-wrap { overflow-x: auto; }
+.lesson-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+.lesson-table th, .lesson-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #E7EDE2;
+    text-align: left;
+    white-space: nowrap;
+}
+.lesson-table th {
+    background: #F3F7F2;
+    color: #2C7DA0;
+    font-weight: 700;
+}
+.lesson-table input {
+    border: 2px solid #D9D0BD;
+    border-radius: 40px;
+    padding: 5px 10px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    max-width: 130px;
+    background: white;
+}
+.lesson-table input:focus {
+    outline: none;
+    border-color: #2C7DA0;
+}
+.lesson-table input.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.lesson-table input.wrong { border-color: #b13e3e; background: #FDF0E8; }
 
-        .flip-card {
-            background: transparent;
-            height: 140px;
-            perspective: 800px;
-            cursor: pointer;
-        }
+.term-list {
+    columns: 2;
+    column-gap: 30px;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    padding-left: 22px;
+}
+.term-list li { break-inside: avoid; }
 
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.5s ease;
-            transform-style: preserve-3d;
-        }
+.mini-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+    margin: 10px 0;
+}
+.mini-card {
+    background: #F9FBF8;
+    padding: 12px;
+    border-radius: 1rem;
+    border: 1px solid #E7EDE2;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+.mini-card .latin { display: block; font-size: 0.92rem; margin-bottom: 2px; }
 
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
+.controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+.result {
+    padding: 12px 16px;
+    border-radius: 1rem;
+    margin-top: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
 
-        .flip-card-front,
-        .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            border: 2px solid #E7EDE2;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
-        }
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1F4E6E;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+.toast.show { opacity: 1; }
 
-        .flip-card-front {
-            background: white;
-            color: #1F4E6E;
-            font-size: 1.2rem;
-            font-weight: 700;
-            text-align: center;
-        }
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+    .header .logo { font-size: 0.95rem; }
+    .header-stats { justify-content: space-between; }
+    .card { padding: 14px 16px; }
+    .tabs .tab-btn { font-size: 0.65rem; padding: 4px 10px; }
+    .term-list { columns: 1; }
+}
+</style>
+</head>
+<body>
+<div class="container">
 
-        .flip-card-front .sub {
-            font-size: 0.7rem;
-            font-weight: 400;
-            color: #8A9B7A;
-        }
+<header class="header">
+    <div class="logo">📚 <span class="gradient">Lingua Latina</span><span class="sub">· Урок 3. Имя существительное. I склонение</span></div>
+    <div class="header-stats">
+        <span class="progress-text" id="progressLabel">Результат: 0%</span>
+        <span class="score" id="scoreDisplay">⭐ 0</span>
+    </div>
+</header>
 
-        .flip-card-back {
-            background: #2C7DA0;
-            color: white;
-            transform: rotateY(180deg);
-            font-size: 0.8rem;
-            line-height: 1.5;
-            text-align: center;
-        }
+<div class="tabs">
+    <button class="tab-btn active" data-tab="test">🧪 Входной тест</button>
+    <button class="tab-btn" data-tab="theory">📖 Теория</button>
+    <button class="tab-btn" data-tab="lexicon">📚 Лексика</button>
+    <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+    <button class="tab-btn" data-tab="vet">🐾 Ветпрактика</button>
+</div>
 
-        .flip-card-back .examples {
-            font-size: 0.7rem;
-            opacity: 0.9;
-            margin-top: 4px;
-        }
+<!-- ===== ВХОДНОЙ ТЕСТ ===== -->
+<section class="tab-content active" id="tab-test">
+    <div class="card">
+        <div class="card-title">
+            <span>🧪 Входной тест: крылатые выражения</span>
+            <span class="badge" id="testBadge">15 вопросов</span>
+        </div>
+        <div class="notice">
+            Выражения и варианты ответов перемешиваются при каждом запуске. Выберите правильный перевод — вопросы идут по одному. Результат — в процентах.
+        </div>
+        <div class="test-progress" id="testProgress" style="display:none;">
+            <span id="testProgressText">Вопрос 1 из 15</span>
+            <div class="bar"><div class="bar-fill" id="testBarFill"></div></div>
+            <span id="testProgressPercent">0%</span>
+        </div>
+        <div id="testArea"></div>
+        <div class="controls" id="testControls">
+            <button class="btn btn-primary" id="checkTest">✅ Проверить тест</button>
+            <button class="btn btn-outline" id="resetTest">🔄 Новый вариант</button>
+        </div>
+        <div id="testResult"></div>
+    </div>
+</section>
 
-        /* ===== СОРТИРОВКА ===== */
-        .sort-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin: 10px 0;
-        }
+<!-- ===== ТЕОРИЯ ===== -->
+<section class="tab-content" id="tab-theory">
+    <div class="card">
+        <div class="card-title">
+            <span>📖 Имя существительное в латинском языке</span>
+            <span class="badge">опорный конспект</span>
+        </div>
+        <div class="lesson-intro">
+            <p>Латинское существительное имеет четыре грамматические категории: <span class="latin">genus</span> — род, <span class="latin">numerus</span> — число, <span class="latin">casus</span> — падеж, <span class="latin">declinatio</span> — склонение.</p>
+        </div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>1. Род · genus</h3>
+                <ul>
+                    <li><span class="latin">m</span> — masculinum, мужской.</li>
+                    <li><span class="latin">f</span> — femininum, женский.</li>
+                    <li><span class="latin">n</span> — neutrum, средний.</li>
+                    <li><span class="latin">g.c. / mf</span> — общий род.</li>
+                </ul>
+                <p class="notice">Род в русском и латинском может не совпадать: <span class="latin">lingua</span> — женский род.</p>
+            </div>
+            <div class="theory-box">
+                <h3>2. Число · numerus</h3>
+                <ul>
+                    <li><span class="latin">singularis</span> (Sing.) — единственное.</li>
+                    <li><span class="latin">pluralis</span> (Pl.) — множественное.</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>3. Падеж · casus</h3>
+                <ul>
+                    <li><span class="latin">Nom.</span> — именительный.</li>
+                    <li><span class="latin">Gen.</span> — родительный.</li>
+                    <li><span class="latin">Dat.</span> — дательный.</li>
+                    <li><span class="latin">Acc.</span> — винительный.</li>
+                    <li><span class="latin">Abl.</span> — отложительный.</li>
+                    <li><span class="latin">Voc.</span> — звательный.</li>
+                </ul>
+                <p class="notice">В ветеринарной терминологии прежде всего нужны Nom. и Gen.</p>
+            </div>
+            <div class="theory-box">
+                <h3>4. Склонение · declinatio</h3>
+                <p>Склонение определяют по окончанию Gen. sing. В I склонении: Nom. sing. <span class="latin">-a</span>, Gen. sing. <span class="latin">-ae</span>.</p>
+                <p class="latin" style="font-size:1rem;margin-top:8px">costa, ae, f</p>
+                <p>ребро · I склонение · женский род</p>
+            </div>
+        </div>
+    </div>
 
-        .sort-category {
-            flex: 1;
-            min-width: 180px;
-            background: #F9FBF8;
-            border-radius: 1rem;
-            padding: 12px 14px;
-            border: 2px dashed #D9D0BD;
-            min-height: 120px;
-        }
+    <div class="card">
+        <div class="card-title"><span>📌 Словарная форма и основа</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Словарная форма</h3>
+                <p class="latin">vacca, ae, f</p>
+                <p>Nom. sing. + окончание Gen. sing. + род.</p>
+            </div>
+            <div class="theory-box">
+                <h3>Основа</h3>
+                <p>Возьмите Gen. sing. и отбросьте окончание: <span class="latin">cost-ae → cost-</span>.</p>
+                <p>Основа нужна для присоединения падежных окончаний.</p>
+            </div>
+        </div>
+    </div>
 
-        .sort-category .category-title {
-            font-weight: 700;
-            color: #2C7DA0;
-            font-size: 0.8rem;
-            text-align: center;
-            margin-bottom: 6px;
-        }
+    <div class="card">
+        <div class="card-title"><span>📊 Окончания I склонения</span></div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Падеж</th><th>Singularis</th><th>Pluralis</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nom.</td><td class="latin">-a</td><td class="latin">-ae</td></tr>
+                    <tr><td>Gen.</td><td class="latin">-ae</td><td class="latin">-ārum</td></tr>
+                    <tr><td>Dat.</td><td class="latin">-ae</td><td class="latin">-īs</td></tr>
+                    <tr><td>Acc.</td><td class="latin">-am</td><td class="latin">-ās</td></tr>
+                    <tr><td>Abl.</td><td class="latin">-ā</td><td class="latin">-īs</td></tr>
+                    <tr><td>Voc.</td><td class="latin">-a</td><td class="latin">-ae</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="notice"><b>Главное:</b> Gen. sing. = <span class="latin">-ae</span>; Gen. plur. = <span class="latin">-ārum</span>.</div>
+    </div>
+</section>
 
-        .sort-items {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: center;
-        }
+<!-- ===== ЛЕКСИКА ===== -->
+<section class="tab-content" id="tab-lexicon">
+    <div class="card">
+        <div class="card-title">
+            <span>📚 Лексический минимум I склонения</span>
+            <span class="badge">24 слова</span>
+        </div>
+        <ol class="term-list">
+            <li><span class="latin">ala, ae, f</span> — крыло</li>
+            <li><span class="latin">apertura, ae, f</span> — отверстие</li>
+            <li><span class="latin">arteria, ae, f</span> — артерия</li>
+            <li><span class="latin">bursa, ae, f</span> — сумка</li>
+            <li><span class="latin">capra, ae, f</span> — коза</li>
+            <li><span class="latin">cauda, ae, f</span> — хвост</li>
+            <li><span class="latin">costa, ae, f</span> — ребро</li>
+            <li><span class="latin">fascia, ae, f</span> — фасция</li>
+            <li><span class="latin">fibula, ae, f</span> — малоберцовая кость</li>
+            <li><span class="latin">fractura, ae, f</span> — перелом</li>
+            <li><span class="latin">glandula, ae, f</span> — железа</li>
+            <li><span class="latin">incisura, ae, f</span> — вырезка</li>
+            <li><span class="latin">lamina, ae, f</span> — пластинка</li>
+            <li><span class="latin">lingua, ae, f</span> — язык</li>
+            <li><span class="latin">mandibula, ae, f</span> — нижняя челюсть</li>
+            <li><span class="latin">maxilla, ae, f</span> — верхняя челюсть</li>
+            <li><span class="latin">palpebra, ae, f</span> — веко</li>
+            <li><span class="latin">scapula, ae, f</span> — лопатка</li>
+            <li><span class="latin">tibia, ae, f</span> — большеберцовая кость</li>
+            <li><span class="latin">vacca, ae, f</span> — корова</li>
+            <li><span class="latin">vena, ae, f</span> — вена</li>
+            <li><span class="latin">vertebra, ae, f</span> — позвонок</li>
+            <li><span class="latin">vesica, ae, f</span> — пузырь</li>
+            <li><span class="latin">Aloë, ës, f; diabetes, ae, m</span> — греческие особенности</li>
+        </ol>
+    </div>
+</section>
 
-        .sort-item {
-            background: white;
-            padding: 4px 12px;
-            border-radius: 40px;
-            border: 2px solid #A3B18A;
-            font-size: 0.78rem;
-            cursor: pointer;
-            transition: 0.15s;
-            user-select: none;
-        }
+<!-- ===== ПРАКТИКА ===== -->
+<section class="tab-content" id="tab-practice">
+    <div class="card">
+        <div class="card-title">
+            <span>🧩 Практика: форма, основа, окончания</span>
+            <span class="badge">25 минут</span>
+        </div>
+        <div id="practiceArea"></div>
+        <div class="controls">
+            <button class="btn btn-primary" id="checkPractice">✅ Проверить</button>
+            <button class="btn btn-outline" id="resetPractice">🔄 Сбросить</button>
+        </div>
+        <div id="practiceResult"></div>
+    </div>
+</section>
 
-        .sort-item:hover {
-            background: #D4E3ED;
-            border-color: #2C7DA0;
-        }
+<!-- ===== ВЕТПРАКТИКА ===== -->
+<section class="tab-content" id="tab-vet">
+    <div class="card">
+        <div class="card-title">
+            <span>🐾 Профессиональная вставка</span>
+            <span class="badge">ветеринарная практика</span>
+        </div>
+        <div class="mini-cards">
+            <div class="mini-card">
+                <span class="latin">costa vera</span>
+                истинное ребро<br>
+                <span class="latin">fractura costae</span>
+                перелом ребра
+            </div>
+            <div class="mini-card">
+                <span class="latin">vertebra thoracica</span>
+                грудной позвонок<br>
+                <span class="latin">corpus vertebrae</span>
+                тело позвонка
+            </div>
+            <div class="mini-card">
+                <span class="latin">glandula mammaria</span>
+                молочная железа<br>
+                <span class="latin">glandula parotidea</span>
+                околоушная железа
+            </div>
+        </div>
+        <div class="notice">Задание: вы — ветеринарный фельдшер. Заполните карту пациента латинским диагнозом.</div>
+        <div id="vetArea"></div>
+        <div class="controls">
+            <button class="btn btn-primary" id="checkVet">✅ Проверить карту</button>
+            <button class="btn btn-outline" id="resetVet">🔄 Сбросить</button>
+        </div>
+        <div id="vetResult"></div>
+    </div>
+</section>
 
-        .sort-item.placed {
-            opacity: 0.5;
-            cursor: default;
-            border-color: #6B9E6B;
-            background: #E8F5E8;
-            pointer-events: none;
-        }
+<div class="toast" id="toast"></div>
+</div>
 
-        .sort-item.wrong-placement {
-            animation: shake 0.3s ease;
-            border-color: #b13e3e;
-            background: #FDF0E8;
-        }
+<script>
+// ================================================================
+//  ОБЩИЕ УТИЛИТЫ
+// ================================================================
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const norm = s => String(s).toLowerCase().replace(/[.,;:!?\s]/g,'');
+const shuffle = a => [...a].sort(() => Math.random() - 0.5);
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-6px); }
-            75% { transform: translateX(6px); }
-        }
+// ================================================================
+//  1. ВХОДНОЙ ТЕСТ — крылатые выражения
+//  15 выражений, 6 вариантов ответа, вопросы по одному
+// ================================================================
+const phrases = [
+    {q:'Ignorantia non est argumentum.', a:'Незнание не есть аргумент.'},
+    {q:'Invia est in veterinaria via sine lingua Latina.', a:'Нет пути в ветеринарии без латинского языка.'},
+    {q:'In vivo.', a:'Опыт на живом организме.'},
+    {q:'In vitro.', a:'Опыт в лабораторных условиях.'},
+    {q:'Labor omnia vincit.', a:'Труд всё победит.'},
+    {q:'Lapsus linguae.', a:'Ошибка в речи, оговорка.'},
+    {q:'Lapsus memoriae.', a:'Ошибка памяти.'},
+    {q:'Lapsus calami.', a:'Ошибка пера. Описка.'},
+    {q:'Lege artis.', a:'По правилам искусства.'},
+    {q:'Modus vivendi.', a:'Образ жизни.'},
+    {q:'Noli nocere, si juvare non potes.', a:'Не вреди, если не можешь помочь.'},
+    {q:'Non scholae, sed vitae discimus.', a:'Мы учимся не для школы, а для жизни.'},
+    {q:'Nosce te ipsum.', a:'Познай самого себя.'},
+    {q:'Omne nimium nocet.', a:'Всё излишнее вредит.'},
+    {q:'Omne principium difficile.', a:'Всякое начало трудно.'}
+];
 
-        /* ===== ТРАНСКРИПЦИЯ ===== */
-        .transcription-input {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-            margin: 4px 0;
-        }
+let testItems = [];
+let testCurrentIndex = 0;
+let testAnswers = [];      // массив выбранных ответов (или null)
 
-        .transcription-input input[type="text"] {
-            flex: 1;
-            min-width: 150px;
-            padding: 8px 14px;
-            border-radius: 40px;
-            border: 2px solid #D9D0BD;
-            font-family: inherit;
-            font-size: 0.85rem;
-            background: white;
-            outline: none;
-            transition: 0.15s;
-        }
+function renderTest() {
+    testItems = shuffle(phrases);          // все 15, перемешаны
+    testCurrentIndex = 0;
+    testAnswers = new Array(testItems.length).fill(null);
+    document.getElementById('testArea').innerHTML = '';
+    document.getElementById('testResult').innerHTML = '';
+    document.getElementById('testControls').style.display = 'flex';
+    document.getElementById('testProgress').style.display = 'flex';
+    document.getElementById('testBadge').textContent = testItems.length + ' вопросов';
+    renderTestQuestion();
+    updateHeader();
+}
 
-        .transcription-input input[type="text"]:focus {
-            border-color: #2C7DA0;
-            box-shadow: 0 0 0 2px rgba(44,125,160,0.12);
-        }
+function renderTestQuestion() {
+    const i = testCurrentIndex;
+    const x = testItems[i];
 
-        .transcription-input input[type="text"].correct {
-            border-color: #6B9E6B;
-            background: #E8F5E8;
-        }
+    // Формируем 6 вариантов: 1 правильный + 5 случайных дистракторов
+    const pool = phrases.filter(p => p.a !== x.a).map(p => p.a);
+    const wrongs = shuffle(pool).slice(0, 5);
+    const variants = shuffle([x.a, ...wrongs]);
 
-        .transcription-input input[type="text"].wrong {
-            border-color: #b13e3e;
-            background: #FDF0E8;
-        }
+    document.getElementById('testArea').innerHTML = `
+        <div class="q" id="q${i}">
+            <div class="q-title"><span class="num">${i+1}.</span> Что означает <span class="latin">${esc(x.q)}</span>?</div>
+            <div class="options" id="opt${i}">
+                ${variants.map((v) => {
+                    const checked = testAnswers[i] === v ? 'checked' : '';
+                    return `<label>
+                        <input type="radio" name="t${i}" value="${esc(v)}" ${checked}> ${esc(v)}
+                    </label>`;
+                }).join('')}
+            </div>
+        </div>`;
 
-        .transcription-input .check-btn {
-            padding: 6px 18px;
-            border-radius: 40px;
-            border: none;
-            background: #2C7DA0;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.78rem;
-            transition: 0.15s;
-        }
+    // Обработчик выбора варианта
+    document.querySelectorAll(`#opt${i} input`).forEach(inp => {
+        inp.addEventListener('change', () => {
+            testAnswers[i] = inp.value;
+        });
+    });
 
-        .transcription-input .check-btn:hover {
-            background: #236B8A;
-        }
+    // Прогресс
+    const percent = Math.round((i) / testItems.length * 100);
+    document.getElementById('testProgressText').textContent = `Вопрос ${i+1} из ${testItems.length}`;
+    document.getElementById('testBarFill').style.width = percent + '%';
+    document.getElementById('testProgressPercent').textContent = percent + '%';
 
-        .transcription-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 16px;
-            align-items: center;
-            padding: 4px 0;
-            border-bottom: 1px solid #f0ebe3;
-        }
+    // Кнопки навигации
+    let navHtml = '';
+    if (i > 0) {
+        navHtml += `<button class="btn btn-outline" id="prevQuestion">◀ Назад</button> `;
+    }
+    if (i < testItems.length - 1) {
+        navHtml += `<button class="btn btn-primary" id="nextQuestion">Далее ▶</button> `;
+    } else {
+        navHtml += `<button class="btn btn-success" id="finishTest">🏁 Завершить тест</button> `;
+    }
+    document.getElementById('testControls').innerHTML = navHtml;
 
-        .transcription-row .word {
-            font-weight: 700;
-            color: #2C7DA0;
-            min-width: 80px;
+    const prevBtn = document.getElementById('prevQuestion');
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        testCurrentIndex--;
+        renderTestQuestion();
+    });
+    const nextBtn = document.getElementById('nextQuestion');
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        if (testAnswers[i] === null) {
+            showToast('Выберите вариант ответа');
+            return;
         }
+        testCurrentIndex++;
+        renderTestQuestion();
+    });
+    const finishBtn = document.getElementById('finishTest');
+    if (finishBtn) finishBtn.addEventListener('click', () => {
+        if (testAnswers[i] === null) {
+            showToast('Выберите вариант ответа');
+            return;
+        }
+        finishTest();
+    });
+}
 
-        .transcription-row .hint {
-            font-size: 0.7rem;
-            color: #8A9B7A;
-        }
+function finishTest() {
+    let correct = 0;
+    testItems.forEach((x, i) => {
+        if (testAnswers[i] === x.a) correct++;
+    });
+    const total = testItems.length;
+    const percent = Math.round(correct / total * 100);
+    const color = percent >= 80 ? '#E8F5E8' : (percent >= 50 ? '#FFF8E5' : '#FDF0E8');
+    const message = percent === 100 ? '🎉 Отлично! Все выражения усвоены.' :
+                    percent >= 80 ? '⭐ Хороший результат!' :
+                    percent >= 50 ? '📖 Стоит повторить выражения.' :
+                    '📚 Рекомендуется вернуться к теории.';
 
-        /* ===== УДАРЕНИЕ ===== */
-        .stress-options {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 4px 0;
-        }
+    // Показываем сводку по всем вопросам
+    let summary = '<div class="notice"><b>Разбор ответов:</b></div>';
+    testItems.forEach((x, i) => {
+        const user = testAnswers[i];
+        const isCorrect = user === x.a;
+        summary += `<div class="q" style="padding:8px 0;">
+            <div class="q-title" style="font-size:0.8rem;">
+                <span class="num">${i+1}.</span> <span class="latin">${esc(x.q)}</span>
+            </div>
+            <div class="feedback show ${isCorrect ? 'ok' : 'no'}" style="margin-top:4px;">
+                ${isCorrect ? '✅ ' + esc(user) : '❌ Ваш ответ: ' + esc(user || '—') + '<br>✅ Правильно: ' + esc(x.a)}
+            </div>
+        </div>`;
+    });
 
-        .stress-btn {
-            padding: 4px 14px;
-            border-radius: 40px;
-            border: 2px solid #D9D0BD;
-            background: white;
-            cursor: pointer;
-            font-family: inherit;
-            font-size: 0.82rem;
-            transition: 0.15s;
-        }
+    document.getElementById('testArea').innerHTML = summary;
+    document.getElementById('testControls').innerHTML = `
+        <button class="btn btn-outline" id="resetTest">🔄 Новый вариант</button>`;
+    document.getElementById('resetTest').addEventListener('click', renderTest);
 
-        .stress-btn:hover:not(:disabled) {
-            border-color: #2C7DA0;
-            background: #D4E3ED;
-        }
+    document.getElementById('testResult').innerHTML = `
+        <div class="result" style="background:${color}">
+            <strong>Результат: ${percent}%</strong> (${correct} из ${total}).
+            <div style="margin-top:6px; font-size:0.82rem; color:#5F7C62;">${message}</div>
+        </div>`;
 
-        .stress-btn.selected {
-            border-color: #2C7DA0;
-            background: #D4E3ED;
-        }
+    document.getElementById('testProgress').style.display = 'none';
+    updateHeader(percent);
+}
 
-        .stress-btn.correct {
-            border-color: #6B9E6B;
-            background: #E8F5E8;
-        }
+// ================================================================
+//  2. ПРАКТИКА — форма, основа, окончания
+// ================================================================
+const pItems = [
+    ['costa', 'ae', 'f', 'cost'],
+    ['vertebra', 'ae', 'f', 'vertebr'],
+    ['lingua', 'ae', 'f', 'lingu'],
+    ['vena', 'ae', 'f', 'ven'],
+    ['lamina', 'ae', 'f', 'lamin'],
+    ['mandibula', 'ae', 'f', 'mandibul'],
+    ['capsula', 'ae', 'f', 'capsul'],
+    ['palpebra', 'ae', 'f', 'palpebr']
+];
 
-        .stress-btn.wrong {
-            border-color: #b13e3e;
-            background: #FDF0E8;
-        }
+function renderPractice() {
+    let html = `<div class="notice">Заполните Gen. sing., род и основу. Вспомните: Gen. sing. I склонения оканчивается на <span class="latin">-ae</span>.</div>
+    <div class="table-wrap">
+    <table class="lesson-table">
+        <thead>
+            <tr><th>Nom. sing.</th><th>Gen. sing.</th><th>Род</th><th>Основа</th></tr>
+        </thead>
+        <tbody>`;
+    pItems.forEach((x, i) => {
+        html += `<tr>
+            <td class="latin">${x[0]}</td>
+            <td><input id="pg${i}" placeholder="..." aria-label="Gen"></td>
+            <td><input id="pr${i}" placeholder="f" aria-label="Род"></td>
+            <td><input id="ps${i}" placeholder="..." aria-label="Основа"></td>
+        </tr>`;
+    });
+    html += `</tbody></table></div>
+    <div class="notice"><b>Дополнительно:</b> просклоняйте устно <span class="latin">costa, ae, f</span> в Nom. и Gen. единственного и множественного числа.</div>`;
+    document.getElementById('practiceArea').innerHTML = html;
+    document.getElementById('practiceResult').innerHTML = '';
+}
 
-        .stress-btn:disabled {
-            cursor: default;
-            opacity: 0.8;
-        }
+function checkPractice() {
+    let correct = 0;
+    pItems.forEach((x, i) => {
+        const vals = [
+            document.getElementById('pg' + i),
+            document.getElementById('pr' + i),
+            document.getElementById('ps' + i)
+        ];
+        const cor = [x[1], x[2], x[3]];
+        vals.forEach((e, j) => {
+            const ok = norm(e.value) === norm(cor[j]);
+            e.classList.toggle('correct', ok);
+            e.classList.toggle('wrong', !ok);
+            if (ok) correct++;
+        });
+    });
+    const total = pItems.length * 3;
+    const percent = Math.round(correct / total * 100);
+    document.getElementById('practiceResult').innerHTML = `
+        <div class="result" style="background:#F7F3E8">
+            Правильно: <b>${correct} из ${total}</b> (${percent}%).
+            <div style="margin-top:6px; font-size:0.82rem; color:#5F7C62;">Основу определяем по Gen. sing.</div>
+        </div>`;
+}
 
-        /* ===== ТЕКСТ С ПРОПУСКАМИ ===== */
-        .gap-word {
-            display: inline-block;
-            min-width: 60px;
-            border-bottom: 2px dashed #2C7DA0;
-            margin: 0 2px;
-        }
+// ================================================================
+//  3. ВЕТПРАКТИКА — заполнение карты пациента
+// ================================================================
+const vet = [
+    ['Перелом ребра', 'fractura costae'],
+    ['Тело позвонка', 'corpus vertebrae'],
+    ['Молочная железа', 'glandula mammaria'],
+    ['Левая лопатка', 'scapula sinistra'],
+    ['Вырезка позвонка', 'incisura vertebrae'],
+    ['Венозное кровотечение', 'haemorrhagia venosa']
+];
 
-        .gap-word input {
-            width: 100%;
-            min-width: 50px;
-            border: none;
-            background: transparent;
-            font-family: inherit;
-            font-size: 0.9rem;
-            text-align: center;
-            outline: none;
-            padding: 2px 4px;
-        }
+function renderVet() {
+    document.getElementById('vetArea').innerHTML = `
+        <div class="table-wrap">
+        <table class="lesson-table">
+            <thead>
+                <tr><th>Русский диагноз</th><th>Латинский диагноз</th></tr>
+            </thead>
+            <tbody>
+                ${vet.map((x, i) =>
+                    `<tr>
+                        <td>${esc(x[0])}</td>
+                        <td><input id="v${i}" placeholder="Введите термин"></td>
+                    </tr>`
+                ).join('')}
+            </tbody>
+        </table>
+        </div>`;
+    document.getElementById('vetResult').innerHTML = '';
+}
 
-        .gap-word input.correct {
-            color: #2E7D32;
-            font-weight: 600;
-        }
+function checkVet() {
+    let correct = 0;
+    vet.forEach((x, i) => {
+        const e = document.getElementById('v' + i);
+        const ok = norm(e.value) === norm(x[1]);
+        e.classList.toggle('correct', ok);
+        e.classList.toggle('wrong', !ok);
+        if (ok) correct++;
+    });
+    const percent = Math.round(correct / vet.length * 100);
+    document.getElementById('vetResult').innerHTML = `
+        <div class="result" style="background:#F7F3E8">
+            Заполнено верно: <b>${correct} из ${vet.length}</b> (${percent}%).
+        </div>`;
+}
 
-        .gap-word input.wrong {
-            color: #b13e3e;
-        }
+// ================================================================
+//  4. ОБНОВЛЕНИЕ ШАПКИ
+// ================================================================
+function updateHeader(percent) {
+    if (percent !== undefined) {
+        document.getElementById('progressLabel').textContent = 'Результат: ' + percent + '%';
+        document.getElementById('scoreDisplay').textContent = '⭐ ' + percent;
+    } else {
+        document.getElementById('progressLabel').textContent = 'Результат: 0%';
+        document.getElementById('scoreDisplay').textContent = '⭐ 0';
+    }
+}
 
-        /* ===== ПРОГРЕСС ===== */
-        .progress-bar {
-            height: 6px;
-            background: #E7EDE2;
-            border-radius: 40px;
-            overflow: hidden;
-            margin: 6px 0 10px;
-        }
-        .progress-bar .fill {
-            height: 100%;
-            background: linear-gradient(90deg, #2C7DA0, #6B9E6B);
-            border-radius: 40px;
-            transition: width 0.4s ease;
-        }
+// ================================================================
+//  5. ВКЛАДКИ
+// ================================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+});
 
-        .controls {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 12px;
-        }
+// ================================================================
+//  6. ВСПОМОГАТЕЛЬНЫЕ
+// ================================================================
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 1800);
+}
 
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1F4E6E;
-            color: white;
-            padding: 10px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 2000;
-            pointer-events: none;
-            max-width: 90%;
-            text-align: center;
-        }
-        .toast.show { opacity: 1; }
+// ================================================================
+//  7. ИНИЦИАЛИЗАЦИЯ
+// ================================================================
+document.getElementById('resetTest').addEventListener('click', renderTest);
+document.getElementById('checkPractice').addEventListener('click', checkPractice);
+document.getElementById('resetPractice').addEventListener('click', renderPractice);
+document.getElementById('checkVet').addEventListener('click', checkVet);
+document.getElementById('resetVet').addEventListener('click', renderVet);
 
-        @media (max-width: 700px) {
-            body { padding: 10px; }
-            .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
-            .header .logo { font-size: 0.95rem; }
-            .header-stats { justify-content: space-between; }
-            .card { padding: 14px 16px; }
-            .flip-container { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-            .flip-card { height: 120px; }
-            .sort-container { flex-direction: column; }
-            .sort-category { min-height: 80px; }
-            .tabs .tab-btn { font-size: 0.65rem; padding: 4px 10px; }
-            .transcription-row { flex-direction: column; align-items: stretch; }
-        }
-        @media (max-width: 420px) {
-            .flip-container { grid-template-columns: 1fr 1fr; }
-            .flip-card { height: 100px; }
-            .flip-card-front { font-size: 0.9rem; }
-            .flip-card-back { font-size: 0.65rem; }
-            .stress-options { gap: 4px; }
-            .stress-btn { font-size: 0.7rem; padding: 3px 10px; }
-        }
-    </style><style>.answer-input{border:2px solid #D9D0BD;border-radius:40px;padding:7px 12px;font-family:inherit;font-size:.82rem;background:#fff}.answer-input.correct{border-color:#6B9E6B;background:#E8F5E8}.answer-input.wrong{border-color:#b13e3e;background:#FDF0E8}.result{padding:10px 14px;border-radius:1rem;margin-top:10px;font-size:.82rem}</style></head><body><div class="container"><header class="header"><div class="logo">📚 <span class="gradient">Lingua Latina</span><span class="sub">· Урок 3. Имя существительное. I склонение</span></div><div class="header-stats"><span class="progress-text" id="progressLabel">Результат: 0%</span><span class="score" id="scoreDisplay">⭐ 0</span></div></header><div class="tabs"><button class="tab-btn active" data-tab="test">🧪 Входной тест</button><button class="tab-btn" data-tab="theory">📖 Теория</button><button class="tab-btn" data-tab="lexicon">📚 Лексика</button><button class="tab-btn" data-tab="practice">🧩 Практика</button><button class="tab-btn" data-tab="vet">🐾 Ветпрактика</button></div><section class="tab-content active" id="tab-test"><div class="card"><div class="card-title"><span>🧪 Входной тест: крылатые выражения</span><span class="badge">8 вопросов</span></div><div class="notice">Выражения и варианты ответов перемешаны. Каждый вопрос показывается отдельно в списке выбора.</div><div id="testArea"></div><div class="controls"><button class="btn btn-primary" id="checkTest">✅ Проверить тест</button><button class="btn btn-outline" id="resetTest">🔄 Новый вариант</button></div><div id="testResult"></div></div></section><section class="tab-content" id="tab-theory"><div class="card"><div class="card-title"><span>📖 Теория</span></div><p class="lesson-intro">Латинское существительное имеет категории рода, числа, падежа и склонения. В I склонении Nom. sing. обычно имеет окончание <span class="latin">-a</span>, Gen. sing. — <span class="latin">-ae</span>. В ветеринарной терминологии особенно важны Nom. и Gen.</p><div class="theory-grid"><div class="theory-box"><h3>Род · genus</h3><ul><li><span class="latin">m</span> — мужской</li><li><span class="latin">f</span> — женский</li><li><span class="latin">n</span> — средний</li><li><span class="latin">g.c.</span> — общий</li></ul></div><div class="theory-box"><h3>Число · numerus</h3><p>Sing. — единственное; Pl. — множественное.</p></div><div class="theory-box"><h3>Падеж · casus</h3><p><span class="latin">Nom., Gen., Dat., Acc., Abl., Voc.</span></p></div><div class="theory-box"><h3>Словарная форма</h3><p class="latin">costa, ae, f</p><p>Основа: <span class="latin">cost-</span>.</p></div></div><div class="table-wrap"><table class="lesson-table"><thead><tr><th>Падеж</th><th>Sing.</th><th>Pl.</th></tr></thead><tbody><tr><td>Nom.</td><td class="latin">-a</td><td class="latin">-ae</td></tr><tr><td>Gen.</td><td class="latin">-ae</td><td class="latin">-ārum</td></tr><tr><td>Dat.</td><td class="latin">-ae</td><td class="latin">-īs</td></tr><tr><td>Acc.</td><td class="latin">-am</td><td class="latin">-ās</td></tr><tr><td>Abl.</td><td class="latin">-ā</td><td class="latin">-īs</td></tr><tr><td>Voc.</td><td class="latin">-a</td><td class="latin">-ae</td></tr></tbody></table></div></div></section><section class="tab-content" id="tab-lexicon"><div class="card"><div class="card-title"><span>📚 Лексический минимум I склонения</span></div><p class="latin">ala, apertura, arteria, bursa, capra, cauda, costa, fascia, fibula, fractura, glandula, incisura, lamina, lingua, mandibula, maxilla, palpebra, scapula, tibia, vacca, vena, vertebra, vesica</p><p>Подробные переводы и словарные формы представлены в материале урока.</p></div></section><section class="tab-content" id="tab-practice"><div class="card"><div class="card-title"><span>🧩 Практика</span></div><p>Определите Gen. sing., род и основу: <span class="latin">costa, vertebra, lingua, vena, lamina, mandibula</span>.</p></div></section><section class="tab-content" id="tab-vet"><div class="card"><div class="card-title"><span>🐾 Ветеринарная практика</span></div><div class="mini-cards"><div class="mini-card"><span class="latin">fractura costae</span><br>перелом ребра</div><div class="mini-card"><span class="latin">corpus vertebrae</span><br>тело позвонка</div><div class="mini-card"><span class="latin">glandula mammaria</span><br>молочная железа</div></div></div></section><div class="toast" id="toast"></div></div><script>const phrases=[{q:'Ignorantia non est argumentum.',a:'Незнание не есть аргумент.'},{q:'Invia est in veterinaria via sine lingua Latina.',a:'Нет пути в ветеринарии без латинского языка.'},{q:'In vivo.',a:'Опыт на живом организме.'},{q:'In vitro.',a:'Опыт в лабораторных условиях.'},{q:'Labor omnia vincit.',a:'Труд всё победит.'},{q:'Lapsus linguae.',a:'Ошибка в речи, оговорка.'},{q:'Lapsus memoriae.',a:'Ошибка памяти.'},{q:'Lapsus calami.',a:'Ошибка пера. Описка.'},{q:'Lege artis.',a:'По правилам искусства.'},{q:'Modus vivendi.',a:'Образ жизни.'},{q:'Noli nocere, si juvare non potes.',a:'Не вреди, если не можешь помочь.'},{q:'Non scholae, sed vitae discimus.',a:'Мы учимся не для школы, а для жизни.'},{q:'Nosce te ipsum.',a:'Познай самого себя.'},{q:'Omne nimium nocet.',a:'Всё излишнее вредит.'},{q:'Omne principium difficile.',a:'Всякое начало трудно.'}];let testItems=[],score=0;const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));const norm=s=>String(s).toLowerCase().replace(/[.,;:!?\s]/g,'');const shuffle=a=>[...a].sort(()=>Math.random()-.5);function update(){document.getElementById('scoreDisplay').textContent='⭐ '+score;document.getElementById('progressLabel').textContent='Результат: '+score+'%'}function renderTest(){testItems=shuffle(phrases).slice(0,8);let pool=phrases.map(x=>x.a);document.getElementById('testArea').innerHTML=testItems.map((x,i)=>`<div class="q"><div class="q-title">${i+1}. Выберите перевод выражения <span class="latin">${x.q}</span></div><select id="t${i}" class="answer-input" style="width:100%"><option value="">— Выберите вариант ответа —</option>${shuffle(pool).map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}</select><div id="tf${i}" class="feedback"></div></div>`).join('');document.getElementById('testResult').innerHTML='';score=0;update()}document.getElementById('checkTest').onclick=()=>{let c=0;testItems.forEach((x,i)=>{let e=document.getElementById('t'+i),ok=norm(e.value)===norm(x.a);if(ok)c++;e.classList.toggle('correct',ok);e.classList.toggle('wrong',!ok);document.getElementById('tf'+i).textContent=ok?'✅ Верно':'❌ Правильный ответ: '+x.a});score=Math.round(c/testItems.length*100);document.getElementById('testResult').innerHTML=`<div class="result" style="background:${score>=80?'#E8F5E8':'#FDF0E8'}">Результат: <b>${score}%</b> правильных ответов (${c} из ${testItems.length}).</div>`;update()};document.getElementById('resetTest').onclick=renderTest;document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('tab-'+b.dataset.tab).classList.add('active')});renderTest();</script></body></html>
+renderTest();
+renderPractice();
+renderVet();
+</script>
+</body>
+</html>

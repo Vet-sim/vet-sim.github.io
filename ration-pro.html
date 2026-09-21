@@ -1,1331 +1,495 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Рацион PRO — балансирование рационов КРС | ВетСим</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* ============================================================
-           БАЗОВЫЕ СТИЛИ
-           ============================================================ */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            background: #FDF8F0;
-            font-family: 'Montserrat', system-ui, sans-serif;
-            color: #3E5C4A;
-            padding: 1rem;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 1440px;
-            margin: 0 auto;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Рацион PRO · ВетСим</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #3E5C4A;
+    padding: 1rem;
+    min-height: 100vh;
+}
+.container { max-width: 1400px; margin: 0 auto; }
+.header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #E7EDE2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+}
+.header h1 { font-size: 1.3rem; color: #2C7DA0; }
+.header h1 span { color: #6B9E6B; }
+.header .sub { font-size: 0.75rem; color: #8A9B7A; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.2rem 1.5rem;
+    border: 1px solid #E7EDE2;
+    margin-bottom: 1rem;
+}
+.card-title {
+    font-weight: 700;
+    color: #2C7DA0;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+select, input[type="number"] {
+    padding: 0.5rem 0.9rem;
+    border-radius: 1rem;
+    border: 2px solid #D9D0BD;
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: #FEFCF9;
+    color: #3E5C4A;
+}
 
-        /* --- ШАПКА --- */
-        .header {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            align-items: center;
-            justify-content: space-between;
-            background: #FFFFFF;
-            padding: 0.6rem 1.5rem;
-            border-radius: 2rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            margin-bottom: 1.2rem;
-        }
-        .logo {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #2C7DA0;
-        }
-        .logo span {
-            color: #A3B18A;
-        }
-        .logo .accent {
-            color: #D4A373;
-        }
-        .subhead {
-            font-size: 0.7rem;
-            color: #7B8D6E;
-            font-weight: 400;
-            margin-top: 1px;
-        }
-        .header-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            align-items: center;
-        }
-        .btn {
-            background: #EBE3D2;
-            border: none;
-            padding: 0.4rem 1rem;
-            border-radius: 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 0.75rem;
-            font-family: inherit;
-            color: #3E5C4A;
-            white-space: nowrap;
-        }
-        .btn:hover {
-            opacity: 0.85;
-            transform: translateY(-1px);
-        }
-        .btn:active {
-            transform: scale(0.96);
-        }
-        .btn-primary {
-            background: #A3B18A;
-            color: #2C4027;
-        }
-        .btn-primary:hover {
-            background: #8FA375;
-        }
-        .btn-accent {
-            background: #2C7DA0;
-            color: white;
-        }
-        .btn-accent:hover {
-            background: #236B8A;
-        }
-        .btn-success {
-            background: #6B9E6B;
-            color: white;
-        }
-        .btn-success:hover {
-            background: #5A865A;
-        }
-        .btn-danger {
-            background: #D4A373;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #C99464;
-        }
-        .btn-warning {
-            background: #E2CFB0;
-            color: #4D3E2A;
-        }
-        .btn-warning:hover {
-            background: #D6C09B;
-        }
-        .btn-sm {
-            padding: 0.2rem 0.7rem;
-            font-size: 0.65rem;
-        }
+/* Убираем стрелочки у number-полей — они мешают читать значение */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
 
-        /* --- КАРТОЧКИ --- */
-        .card {
-            background: #FFFFFF;
-            border-radius: 1.5rem;
-            padding: 1rem 1.2rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            border: 1px solid #EDE8DC;
-            margin-bottom: 0.8rem;
-        }
-        .card-title {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #2C7DA0;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 0.6rem;
-            border-bottom: 1px solid #EDE8DC;
-            padding-bottom: 0.3rem;
-        }
-        .card-title .icon {
-            font-size: 1rem;
-        }
+/* Поле «Кол-во (кг)» в конструкторе — делаем шире и с внутренним отступом */
+.qty-input {
+    width: 80px !important;
+    padding: 0.4rem 0.7rem !important;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.82rem;
+}
 
-        /* --- ГЛАВНАЯ СЕТКА (3 колонки) --- */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 28% 48% 24%;
-            gap: 1rem;
-        }
-        @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-            .main-grid .right-col {
-                grid-column: 1 / -1;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 1rem;
-            }
-        }
-        @media (max-width: 700px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-            .main-grid .right-col {
-                grid-column: 1;
-                display: block;
-            }
-        }
-
-        /* --- ЛЕВАЯ КОЛОНКА --- */
-        .left-col {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        /* --- ФОРМЫ --- */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            margin-bottom: 0.4rem;
-        }
-        .form-group label {
-            font-weight: 600;
-            font-size: 0.7rem;
-            color: #3E5C4A;
-            letter-spacing: 0.02em;
-        }
-        .form-group input,
-        .form-group select {
-            padding: 5px 10px;
-            border: 1px solid #D9D0BD;
-            border-radius: 2rem;
-            font-size: 0.78rem;
-            font-family: inherit;
-            background: #FEFAF2;
-            color: #3E5C4A;
-            transition: 0.2s;
-            width: 100%;
-        }
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #2C7DA0;
-            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.12);
-        }
-        .form-group .hint {
-            font-size: 0.6rem;
-            color: #8A9B7A;
-            font-style: italic;
-        }
-
-        /* --- БАЗА КОРМОВ (список) --- */
-        .feed-list {
-            max-height: 280px;
-            overflow-y: auto;
-            margin-top: 0.3rem;
-        }
-        .feed-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        .feed-list::-webkit-scrollbar-thumb {
-            background: #C5C9B5;
-            border-radius: 1rem;
-        }
-        .feed-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.3rem 0.6rem;
-            border-bottom: 1px solid #F0EDE2;
-            cursor: pointer;
-            transition: 0.15s;
-            border-radius: 0.5rem;
-            font-size: 0.75rem;
-        }
-        .feed-item:hover {
-            background: #F9F6EF;
-        }
-        .feed-item .name {
-            font-weight: 500;
-        }
-        .feed-item .stats {
-            color: #7B8D6E;
-            font-size: 0.65rem;
-        }
-        .feed-item .add-btn {
-            background: #A3B18A;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .feed-item .add-btn:hover {
-            transform: scale(1.1);
-            background: #8FA375;
-        }
-        .feed-search {
-            margin-bottom: 0.3rem;
-        }
-
-        /* --- ЦЕНТРАЛЬНАЯ КОЛОНКА (таблица) --- */
-        .table-wrap {
-            overflow-x: auto;
-        }
-        .ration-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.72rem;
-            min-width: 600px;
-        }
-        .ration-table th {
-            background: #F9F6EF;
-            font-weight: 600;
-            color: #2C7DA0;
-            padding: 4px 6px;
-            border: 1px solid #E2EAD9;
-            text-align: center;
-            font-size: 0.65rem;
-            white-space: nowrap;
-        }
-        .ration-table td {
-            padding: 3px 6px;
-            border: 1px solid #E2EAD9;
-            text-align: center;
-            vertical-align: middle;
-        }
-        .ration-table tr:nth-child(even) {
-            background: #FDFAF4;
-        }
-        .ration-table .total-row {
-            font-weight: 700;
-            background: #EDE8DC !important;
-            border-top: 2px solid #A3B18A;
-        }
-        .ration-table .total-row td {
-            padding: 5px 6px;
-        }
-        .ration-table input[type="number"] {
-            width: 60px;
-            padding: 2px 4px;
-            border: 1px solid #D9D0BD;
-            border-radius: 1rem;
-            font-size: 0.7rem;
-            text-align: center;
-            font-family: inherit;
-            background: #FEFAF2;
-        }
-        .ration-table input[type="number"]:focus {
-            outline: none;
-            border-color: #2C7DA0;
-        }
-        .ration-table .remove-btn {
-            background: #D4A373;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 22px;
-            height: 22px;
-            font-size: 0.7rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .ration-table .remove-btn:hover {
-            background: #C99464;
-            transform: scale(1.05);
-        }
-        .ration-table .row-num {
-            color: #7B8D6E;
-            font-weight: 600;
-            font-size: 0.65rem;
-        }
-
-        .table-controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.6rem;
-        }
-
-        /* --- ПРАВАЯ КОЛОНКА --- */
-        .right-col {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .summary-block {
-            background: #F9F6EF;
-            border-radius: 1rem;
-            padding: 0.6rem 0.8rem;
-            margin-bottom: 0.4rem;
-        }
-        .summary-block .label {
-            font-size: 0.6rem;
-            font-weight: 600;
-            color: #7B8D6E;
-            text-transform: uppercase;
-            letter-spacing: 0.03em;
-        }
-        .summary-block .value {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #3E5C4A;
-        }
-        .summary-block .value .unit {
-            font-weight: 400;
-            font-size: 0.65rem;
-            color: #7B8D6E;
-        }
-
-        /* --- ИНДИКАТОРЫ --- */
-        .indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.2rem 0;
-            font-size: 0.75rem;
-            border-bottom: 1px solid #EDE8DC;
-        }
-        .indicator:last-child {
-            border-bottom: none;
-        }
-        .indicator .dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-        .indicator .dot.green {
-            background: #6B9E6B;
-        }
-        .indicator .dot.yellow {
-            background: #D4A373;
-        }
-        .indicator .dot.red {
-            background: #D9534F;
-        }
-        .indicator .name {
-            flex: 1;
-            font-weight: 500;
-        }
-        .indicator .values {
-            font-size: 0.65rem;
-            color: #7B8D6E;
-        }
-        .indicator .values .norm {
-            color: #3E5C4A;
-            font-weight: 600;
-        }
-
-        .forecast {
-            background: #E8F0E4;
-            border-radius: 0.8rem;
-            padding: 0.5rem 0.8rem;
-            font-size: 0.75rem;
-            line-height: 1.5;
-            border-left: 3px solid #A3B18A;
-            margin-top: 0.3rem;
-        }
-        .forecast .title {
-            font-weight: 700;
-            color: #2C7DA0;
-            font-size: 0.7rem;
-        }
-
-        /* --- МОДАЛЬНОЕ ОКНО --- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.4);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-        .modal {
-            background: white;
-            border-radius: 2rem;
-            padding: 1.5rem;
-            max-width: 420px;
-            width: 90%;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        }
-        .modal h3 {
-            color: #2C7DA0;
-            margin-bottom: 0.5rem;
-        }
-        .modal .close-btn {
-            float: right;
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: #7B8D6E;
-        }
-        .modal .close-btn:hover {
-            color: #3E5C4A;
-        }
-        .modal .form-group {
-            margin-bottom: 0.6rem;
-        }
-        .modal .btn-row {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: flex-end;
-            margin-top: 0.6rem;
-        }
-
-        /* --- TOAST --- */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2C7DA0;
-            color: #fff;
-            padding: 0.6rem 1.5rem;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 1001;
-            pointer-events: none;
-            max-width: 90%;
-            text-align: center;
-        }
-        .toast.show {
-            opacity: 1;
-        }
-
-        /* --- ПЕЧАТЬ --- */
-        @media print {
-            .header-actions .btn {
-                display: none !important;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .card {
-                break-inside: avoid;
-                box-shadow: none;
-                border-color: #ddd;
-            }
-            .main-grid {
-                display: block;
-            }
-            .left-col,
-            .right-col {
-                display: block;
-                width: 100%;
-            }
-            body {
-                padding: 0.3rem;
-                background: #fff;
-            }
-        }
-
-        @media (max-width: 1024px) {
-            .right-col {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        @media (max-width: 700px) {
-            .right-col {
-                grid-template-columns: 1fr;
-            }
-            .header {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-            .header-actions {
-                justify-content: center;
-            }
-            .main-grid {
-                gap: 0.6rem;
-            }
-            .card {
-                padding: 0.8rem;
-            }
-        }
-    </style>
+select:focus, input:focus {
+    outline: none;
+    border-color: #2C7DA0;
+}
+.btn {
+    padding: 0.5rem 1.2rem;
+    border-radius: 2rem;
+    border: none;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+}
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-green { background: #6B9E6B; color: white; }
+.btn-outline { background: transparent; border: 2px solid #A3B18A; color: #3E5C4A; }
+.btn-danger { background: #D4A373; color: white; }
+.btn-sm { padding: 0.25rem 0.7rem; font-size: 0.7rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
+th, td { padding: 0.5rem 0.4rem; border-bottom: 1px solid #E7EDE2; text-align: left; }
+th { background: #F9F6EF; color: #2C7DA0; font-weight: 700; }
+.indicator-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    border-bottom: 1px solid #f0ebe3;
+    font-size: 0.78rem;
+}
+.indicator-row .label { flex: 1; font-weight: 600; min-width: 100px; }
+.indicator-row .value { font-family: monospace; font-size: 0.75rem; min-width: 100px; }
+.indicator-bar {
+    flex: 1;
+    height: 8px;
+    background: #E7EDE2;
+    border-radius: 1rem;
+    overflow: hidden;
+    min-width: 80px;
+}
+.indicator-fill {
+    height: 100%;
+    border-radius: 1rem;
+    transition: width 0.3s;
+}
+.indicator-fill.green { background: #6B9E6B; }
+.indicator-fill.yellow { background: #D4A373; }
+.indicator-fill.red { background: #b13e3e; }
+.vet-block {
+    background: #FFF8F0;
+    border-left: 4px solid #D4A373;
+    border-radius: 0.5rem 1rem 1rem 0.5rem;
+    padding: 0.6rem 0.8rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.5;
+}
+.vet-block strong { color: #b13e3e; }
+.vet-block .recom { color: #2C7DA0; }
+.prognosis {
+    padding: 1rem;
+    border-radius: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+.prognosis.ok { background: #E8F5E8; color: #2E7D32; }
+.prognosis.warn { background: #FFF8E5; color: #8B6B2A; }
+.prognosis.bad { background: #FDF0E8; color: #b13e3e; }
+.prognosis ul { text-align: left; margin-top: 0.6rem; padding-left: 1.2rem; font-weight: 400; font-size: 0.8rem; }
+@media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { body { padding: 0.5rem; } .card { padding: 0.8rem; } }
+</style>
 </head>
 <body>
+<div class="container">
 
-    <div class="container">
+<header class="header">
+    <div>
+        <h1>🐾 ВетСим · <span>Рацион PRO</span></h1>
+        <div class="sub">Интерактивный тренажёр по балансированию рационов КРС</div>
+    </div>
+    <div style="font-size:0.8rem; color:#8A9B7A;">Данные сохраняются в браузере</div>
+</header>
 
-        <!-- ============================================================
-        ШАПКА
-        ============================================================ -->
-        <header class="header">
-            <div>
-                <div class="logo">🐾 Вет<span>Сим</span> <span class="accent">·</span> Рацион PRO</div>
-                <div class="subhead">Интерактивный тренажёр по балансированию рационов КРС</div>
-            </div>
-            <div class="header-actions">
-                <button class="btn btn-success" id="saveBtn">💾 Сохранить</button>
-                <button class="btn btn-primary" id="exportBtn">📤 Экспорт</button>
-                <button class="btn btn-danger" id="clearBtn">🗑️ Очистить</button>
-            </div>
-        </header>
-
-        <!-- ============================================================
-        ТРИ КОЛОНКИ
-        ============================================================ -->
-        <div class="main-grid">
-
-            <!-- ==================== ЛЕВАЯ КОЛОНКА ==================== -->
-            <div class="left-col">
-
-                <!-- Параметры животного -->
-                <div class="card">
-                    <div class="card-title"><span class="icon">🐄</span> Параметры животного</div>
-                    <div class="form-group">
-                        <label>Вид / Статус</label>
-                        <select id="animalType">
-                            <option value="dry">Корова сухостойная (600 кг)</option>
-                            <option value="lact15">Корова лактирующая (15 л, 550 кг)</option>
-                            <option value="lact25" selected>Корова лактирующая (25 л, 600 кг)</option>
-                            <option value="calf">Телёнок 6 мес. (150 кг)</option>
-                            <option value="bull">Бычок на откорме (350 кг)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Живая масса (кг)</label>
-                        <input type="number" id="weight" value="600" min="30" max="1200">
-                    </div>
-                    <div class="form-group">
-                        <label>Сезон</label>
-                        <select id="season">
-                            <option value="summer">Лето</option>
-                            <option value="winter" selected>Зима</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Цель рациона</label>
-                        <select id="goal">
-                            <option value="maintain">Поддержание продуктивности</option>
-                            <option value="ketosis">Профилактика кетоза</option>
-                            <option value="acidosis">Профилактика ацидоза</option>
-                            <option value="mineral">Коррекция минерального обмена</option>
-                            <option value="digest">Повышение усвояемости кормов</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- База кормов -->
-                <div class="card">
-                    <div class="card-title"><span class="icon">📦</span> Доступные корма</div>
-                    <div class="feed-search form-group">
-                        <input type="text" id="feedSearch" placeholder="🔍 Поиск по названию...">
-                    </div>
-                    <div class="feed-list" id="feedList"></div>
-                </div>
-            </div>
-
-            <!-- ==================== ЦЕНТРАЛЬНАЯ КОЛОНКА ==================== -->
-            <div class="center-col">
-                <div class="card">
-                    <div class="card-title"><span class="icon">📋</span> Конструктор рациона</div>
-                    <div class="table-wrap">
-                        <table class="ration-table" id="rationTable">
-                            <thead>
-                                <tr>
-                                    <th>№</th>
-                                    <th>Название корма</th>
-                                    <th>Кол-во (кг)</th>
-                                    <th>ОЭ (МДж)</th>
-                                    <th>СП (г)</th>
-                                    <th>Ca (г)</th>
-                                    <th>P (г)</th>
-                                    <th>Клетчатка (г)</th>
-                                    <th>Действие</th>
-                                </tr>
-                            </thead>
-                            <tbody id="rationBody">
-                                <!-- строки генерируются JS -->
-                            </tbody>
-                            <tfoot>
-                                <tr class="total-row" id="totalRow">
-                                    <td colspan="2">ИТОГО</td>
-                                    <td id="totalQty">0</td>
-                                    <td id="totalOE">0</td>
-                                    <td id="totalSP">0</td>
-                                    <td id="totalCa">0</td>
-                                    <td id="totalP">0</td>
-                                    <td id="totalFiber">0</td>
-                                    <td></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div class="table-controls">
-                        <button class="btn btn-accent" id="addFeedBtn">➕ Добавить корм</button>
-                        <button class="btn btn-danger" id="clearRationBtn">🗑️ Очистить рацион</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ==================== ПРАВАЯ КОЛОНКА ==================== -->
-            <div class="right-col">
-
-                <!-- Нормы -->
-                <div class="card">
-                    <div class="card-title"><span class="icon">📊</span> Нормы для животного</div>
-                    <div class="summary-block">
-                        <div class="label">Обменная энергия (ОЭ)</div>
-                        <div class="value"><span id="normOE">200</span> <span class="unit">МДж/сут</span></div>
-                    </div>
-                    <div class="summary-block">
-                        <div class="label">Сырой протеин (СП)</div>
-                        <div class="value"><span id="normSP">2800</span> <span class="unit">г/сут</span></div>
-                    </div>
-                    <div class="summary-block">
-                        <div class="label">Кальций (Ca)</div>
-                        <div class="value"><span id="normCa">80</span> <span class="unit">г/сут</span></div>
-                    </div>
-                    <div class="summary-block">
-                        <div class="label">Фосфор (P)</div>
-                        <div class="value"><span id="normP">55</span> <span class="unit">г/сут</span></div>
-                    </div>
-                    <div class="summary-block">
-                        <div class="label">Клетчатка</div>
-                        <div class="value"><span id="normFiber">2200</span> <span class="unit">г/сут</span></div>
-                    </div>
-                </div>
-
-                <!-- Индикаторы -->
-                <div class="card">
-                    <div class="card-title"><span class="icon">🎯</span> Индикаторы баланса</div>
-                    <div id="indicators">
-                        <div class="indicator">
-                            <span class="dot green" id="dotOE"></span>
-                            <span class="name">ОЭ</span>
-                            <span class="values"><span id="factOE">0</span> / <span class="norm" id="normOE_short">200</span></span>
-                        </div>
-                        <div class="indicator">
-                            <span class="dot green" id="dotSP"></span>
-                            <span class="name">СП</span>
-                            <span class="values"><span id="factSP">0</span> / <span class="norm" id="normSP_short">2800</span></span>
-                        </div>
-                        <div class="indicator">
-                            <span class="dot green" id="dotCaP"></span>
-                            <span class="name">Ca/P</span>
-                            <span class="values"><span id="factCaP">0</span> / <span class="norm" id="normCaP_short">1.45</span></span>
-                        </div>
-                        <div class="indicator">
-                            <span class="dot green" id="dotFiber"></span>
-                            <span class="name">Клетчатка</span>
-                            <span class="values"><span id="factFiber">0</span> / <span class="norm" id="normFiber_short">2200</span></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Экономика -->
-                <div class="card">
-                    <div class="card-title"><span class="icon">💰</span> Экономика</div>
-                    <div class="summary-block">
-                        <div class="label">Стоимость рациона</div>
-                        <div class="value"><span id="totalCost">0</span> <span class="unit">у.е.</span></div>
-                    </div>
-                    <div class="summary-block">
-                        <div class="label">Стоимость 1 кг СВ</div>
-                        <div class="value"><span id="costPerKg">0</span> <span class="unit">у.е./кг</span></div>
-                    </div>
-                </div>
-
-                <!-- Прогноз -->
-                <div class="card">
-                    <div class="card-title"><span class="icon">🔮</span> Прогноз</div>
-                    <div class="forecast" id="forecast">
-                        <div class="title">📌 Оценка рациона</div>
-                        <div id="forecastText">Рацион пока не составлен. Добавьте корма.</div>
-                    </div>
-                </div>
-
-            </div>
+<div class="grid-2">
+    <!-- ЛЕВАЯ КОЛОНКА -->
+    <div>
+        <!-- Параметры животного -->
+        <div class="card">
+            <div class="card-title">🐄 Параметры животного</div>
+            <label style="font-size:0.8rem; font-weight:600;">Группа животных</label>
+            <select id="animalGroup" style="width:100%; margin-top:0.3rem;">
+                <option value="dry">Сухостойная корова (500 кг)</option>
+                <option value="lact" selected>Лактирующая корова (550 кг, 20 л)</option>
+                <option value="young">Молодняк (250 кг)</option>
+            </select>
         </div>
 
-        <footer style="text-align:center; margin-top:1.2rem; padding-top:0.6rem; border-top:1px solid #EDE8DC; font-size:0.65rem; color:#B0BC9C;">
-            © ВетСим — Автор проекта и тренажера - Рацион PRO - Тераевич Алла Сергеевна
-        </footer>
-    </div>
+        <!-- Доступные корма -->
+        <div class="card">
+            <div class="card-title">📦 Доступные корма</div>
+            <div id="feedList" style="max-height:300px; overflow-y:auto;"></div>
+        </div>
 
-    <!-- ============================================================
-    МОДАЛЬНОЕ ОКНО ДОБАВЛЕНИЯ КОРМА
-    ============================================================ -->
-    <div class="modal-overlay" id="addModal">
-        <div class="modal">
-            <button class="close-btn" id="modalClose">&times;</button>
-            <h3>➕ Добавить корм</h3>
-            <div class="form-group">
-                <label>Корм</label>
-                <select id="modalFeedSelect"></select>
-            </div>
-            <div class="form-group">
-                <label>Количество (кг)</label>
-                <input type="number" id="modalFeedQty" value="1" step="0.1" min="0.1">
-            </div>
-            <div class="btn-row">
-                <button class="btn btn-warning" id="modalCancel">Отмена</button>
-                <button class="btn btn-accent" id="modalAdd">➕ Добавить</button>
-            </div>
+        <!-- Экономика -->
+        <div class="card">
+            <div class="card-title">💰 Экономика</div>
+            <div style="font-size:0.85rem;">Стоимость рациона: <strong id="totalCost">0</strong> у.е.</div>
+            <div style="font-size:0.85rem;">Стоимость 1 кг СВ: <strong id="costPerKg">0</strong> у.е./кг</div>
         </div>
     </div>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast"></div>
+    <!-- ПРАВАЯ КОЛОНКА -->
+    <div>
+        <!-- Конструктор рациона -->
+        <div class="card">
+            <div class="card-title">📋 Конструктор рациона</div>
+            <div style="overflow-x:auto;">
+                <table id="rationTable">
+                    <thead>
+                        <tr><th>Корм</th><th>Кол-во (кг)</th><th>ОЭ</th><th>СП</th><th>Ca</th><th>P</th><th></th></tr>
+                    </thead>
+                    <tbody id="rationBody"></tbody>
+                </table>
+            </div>
+            <div style="margin-top:0.5rem; font-size:0.8rem;">
+                <strong>Итого:</strong> ОЭ <span id="sumOE">0</span> МДж · СП <span id="sumSP">0</span> г · 
+                Ca <span id="sumCa">0</span> г · P <span id="sumP">0</span> г · СВ <span id="sumDM">0</span> кг
+            </div>
+        </div>
 
-    <script>
-        // ================================================================
-        //  РАЦИОН PRO — ПОЛНАЯ ЛОГИКА
-        // ================================================================
+        <!-- Индикаторы баланса -->
+        <div class="card">
+            <div class="card-title">🎯 Индикаторы баланса</div>
+            <div id="indicators"></div>
+        </div>
+    </div>
+</div>
 
-        // --- БАЗА КОРМОВ ---
-        const FEEDS = [
-            { id: 'hay_meadow', name: 'Сено луговое', oe: 8.5, sp: 80, ca: 6.0, p: 2.5, fiber: 280, price: 1.2 },
-            { id: 'hay_clover', name: 'Сено клеверное', oe: 9.0, sp: 120, ca: 10.0, p: 3.0, fiber: 240, price: 1.5 },
-            { id: 'straw', name: 'Солома ячменная', oe: 6.5, sp: 40, ca: 3.0, p: 1.5, fiber: 350, price: 0.6 },
-            { id: 'silage_corn', name: 'Силос кукурузный', oe: 10.0, sp: 80, ca: 4.0, p: 2.0, fiber: 220, price: 0.8 },
-            { id: 'silage_sunflower', name: 'Силос подсолнечный', oe: 9.0, sp: 70, ca: 5.0, p: 2.5, fiber: 250,
-            price: 0.7 },
-            { id: 'haylage', name: 'Сенаж', oe: 9.5, sp: 100, ca: 8.0, p: 3.0, fiber: 230, price: 0.9 },
-            { id: 'barley', name: 'Ячмень', oe: 12.5, sp: 110, ca: 0.8, p: 3.5, fiber: 80, price: 2.0 },
-            { id: 'wheat', name: 'Пшеница', oe: 13.0, sp: 120, ca: 0.5, p: 3.0, fiber: 70, price: 2.2 },
-            { id: 'oats', name: 'Овёс', oe: 11.0, sp: 100, ca: 1.0, p: 3.0, fiber: 110, price: 1.8 },
-            { id: 'corn', name: 'Кукуруза', oe: 13.5, sp: 90, ca: 0.4, p: 2.8, fiber: 60, price: 2.5 },
-            { id: 'sunflower_cake', name: 'Жмых подсолнечный', oe: 11.0, sp: 400, ca: 3.0, p: 8.0, fiber: 180,
-            price: 3.0 },
-            { id: 'soy_meal', name: 'Шрот соевый', oe: 12.0, sp: 450, ca: 3.5, p: 6.0, fiber: 70, price: 3.5 },
-            { id: 'wheat_bran', name: 'Отруби пшеничные', oe: 8.5, sp: 150, ca: 1.5, p: 8.0, fiber: 120, price: 1.0 },
-            { id: 'molasses', name: 'Патока кормовая', oe: 10.0, sp: 50, ca: 3.0, p: 0.5, fiber: 0, price: 1.5 },
-            { id: 'monocalcium', name: 'Монокальцийфосфат', oe: 0, sp: 0, ca: 180, p: 230, fiber: 0, price: 4.0 },
-            { id: 'chalk', name: 'Мел кормовой', oe: 0, sp: 0, ca: 380, p: 0, fiber: 0, price: 2.5 },
-            { id: 'salt', name: 'Соль поваренная', oe: 0, sp: 0, ca: 0, p: 0, fiber: 0, price: 0.5 },
-            { id: 'premix', name: 'Премикс', oe: 0, sp: 0, ca: 0, p: 0, fiber: 0, price: 5.0 },
-            { id: 'grass_summer', name: 'Трава пастбищная (лето)', oe: 10.5, sp: 180, ca: 5.0, p: 3.0, fiber: 200,
-                price: 0.5 },
-            { id: 'root_crops', name: 'Корнеплоды (свёкла)', oe: 13.0, sp: 100, ca: 1.0, p: 2.5, fiber: 60, price: 1.0 }
-        ];
+<!-- Прогноз -->
+<div class="card">
+    <div class="card-title">🔮 Прогноз и рекомендации</div>
+    <div id="prognosis" class="prognosis">Рацион пока не составлен. Добавьте корма.</div>
+</div>
 
-        // --- НОРМЫ ДЛЯ ЖИВОТНЫХ (базовые) ---
-        const ANIMAL_NORMS = {
-            dry: { label: 'Корова сухостойная', weight: 600, oe: 80, sp: 900, ca: 35, p: 25, fiber: 2800 },
-            lact15: { label: 'Корова лактирующая (15 л)', weight: 550, oe: 150, sp: 1800, ca: 55, p: 40, fiber: 2500 },
-            lact25: { label: 'Корова лактирующая (25 л)', weight: 600, oe: 200, sp: 2800, ca: 80, p: 55, fiber: 2200 },
-            calf: { label: 'Телёнок 6 мес.', weight: 150, oe: 40, sp: 600, ca: 20, p: 15, fiber: 800 },
-            bull: { label: 'Бычок на откорме', weight: 350, oe: 100, sp: 1200, ca: 40, p: 30, fiber: 1500 }
-        };
+</div>
 
-        // --- СОСТОЯНИЕ ---
-        let ration = []; // { feedId, name, qty, oe, sp, ca, p, fiber, price }
-        let currentAnimal = 'lact25';
-        let currentWeight = 600;
+<script>
+// ================================================================
+//  БАЗА КОРМОВ (на 1 кг натурального корма)
+// ================================================================
+const FEEDS = {
+    hay_grass: { name: 'Сено злаково-бобовое', dm: 0.83, oe: 9.0, sp: 120, ca: 6.0, p: 3.0, fiber: 280, car: 15, vd: 300, ve: 30, sugar: 40, starch: 15, fat: 25, salt: 0.5, zn: 25, cu: 4, mn: 40, i: 0.3, se: 0.05, co: 0.1, cost: 5 },
+    hay_legume: { name: 'Сено люцерновое', dm: 0.85, oe: 9.5, sp: 160, ca: 15.0, p: 3.0, fiber: 260, car: 30, vd: 500, ve: 60, sugar: 50, starch: 15, fat: 25, salt: 0.5, zn: 30, cu: 6, mn: 45, i: 0.3, se: 0.1, co: 0.15, cost: 7 },
+    silage_corn: { name: 'Силос кукурузный', dm: 0.25, oe: 10.0, sp: 100, ca: 1.5, p: 0.8, fiber: 90, car: 25, vd: 100, ve: 25, sugar: 10, starch: 60, fat: 10, salt: 0.3, zn: 15, cu: 3, mn: 20, i: 0.1, se: 0.03, co: 0.05, cost: 3 },
+    silage_grass: { name: 'Силос злаковый', dm: 0.30, oe: 9.5, sp: 130, ca: 3.0, p: 1.5, fiber: 110, car: 35, vd: 150, ve: 35, sugar: 20, starch: 20, fat: 15, salt: 0.4, zn: 20, cu: 4, mn: 30, i: 0.2, se: 0.05, co: 0.08, cost: 4 },
+    haylage: { name: 'Сенаж бобово-злаковый', dm: 0.50, oe: 10.0, sp: 150, ca: 8.0, p: 2.5, fiber: 180, car: 30, vd: 200, ve: 50, sugar: 60, starch: 30, fat: 20, salt: 0.4, zn: 25, cu: 5, mn: 35, i: 0.2, se: 0.08, co: 0.1, cost: 6 },
+    oats: { name: 'Овёс (концентрат)', dm: 0.87, oe: 11.5, sp: 90, ca: 1.5, p: 3.5, fiber: 100, car: 0, vd: 0, ve: 20, sugar: 30, starch: 350, fat: 40, salt: 0.3, zn: 25, cu: 5, mn: 40, i: 0.1, se: 0.05, co: 0.05, cost: 12 },
+    barley: { name: 'Ячмень (концентрат)', dm: 0.88, oe: 12.0, sp: 110, ca: 2.0, p: 4.0, fiber: 90, car: 0, vd: 0, ve: 15, sugar: 25, starch: 450, fat: 20, salt: 0.3, zn: 30, cu: 6, mn: 45, i: 0.1, se: 0.05, co: 0.05, cost: 14 },
+    bran: { name: 'Отруби пшеничные', dm: 0.86, oe: 10.5, sp: 140, ca: 2.5, p: 9.0, fiber: 180, car: 0, vd: 100, ve: 40, sugar: 40, starch: 200, fat: 30, salt: 0.5, zn: 60, cu: 10, mn: 100, i: 0.1, se: 0.1, co: 0.1, cost: 10 },
+    premix: { name: 'Премикс П60-3 (витамины+минералы)', dm: 0.95, oe: 0, sp: 0, ca: 150, p: 100, fiber: 0, car: 0, vd: 150000, ve: 4000, sugar: 0, starch: 0, fat: 0, salt: 100, zn: 5000, cu: 1000, mn: 5000, i: 100, se: 30, co: 60, cost: 80 }
+};
 
-        // --- ДОМ ЭЛЕМЕНТЫ ---
-        const $ = id => document.getElementById(id);
-        const rationBody = $('rationBody');
-        const feedList = $('feedList');
-        const feedSearch = $('feedSearch');
-        const animalType = $('animalType');
-        const weightInput = $('weight');
-        const season = $('season');
-        const goal = $('goal');
+// ================================================================
+//  НОРМЫ ДЛЯ ГРУПП ЖИВОТНЫХ
+// ================================================================
+const NORMS = {
+    dry: { name: 'Сухостой', oe: 90, sp: 1600, ca: 60, p: 35, fiber: 2200, car: 400, vd: 10000, ve: 400, sugar: 800, starch: 1000, fat: 350, salt: 50, zn: 500, cu: 80, mn: 500, i: 8, se: 3, co: 6, dm: 11 },
+    lact: { name: 'Лактация 20л', oe: 200, sp: 2800, ca: 80, p: 55, fiber: 2200, car: 500, vd: 12000, ve: 500, sugar: 1000, starch: 2000, fat: 450, salt: 70, zn: 650, cu: 100, mn: 650, i: 10, se: 4, co: 8, dm: 20 },
+    young: { name: 'Молодняк', oe: 80, sp: 1200, ca: 45, p: 30, fiber: 1500, car: 300, vd: 8000, ve: 300, sugar: 500, starch: 800, fat: 250, salt: 35, zn: 350, cu: 60, mn: 350, i: 5, se: 2, co: 4, dm: 8 }
+};
 
-        // --- ИНИЦИАЛИЗАЦИЯ ---
-        function init() {
-            // Загрузка из localStorage
-            const saved = localStorage.getItem('ration_pro_data');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    if (data.ration) ration = data.ration;
-                    if (data.animal) currentAnimal = data.animal;
-                    if (data.weight) currentWeight = data.weight;
-                    animalType.value = currentAnimal;
-                    weightInput.value = currentWeight;
-                } catch (e) { /* ignore */ }
-            }
+// Базовые корма (60% обеспеченности от основных кормов)
+const BASE_FEEDS = ['hay_grass', 'silage_corn', 'haylage'];
+const BASE_SHARE = 0.6;
 
-            renderFeedList();
-            renderRation();
-            updateNorms();
-            updateIndicators();
-            updateEconomics();
-            updateForecast();
+// ================================================================
+//  СОСТОЯНИЕ
+// ================================================================
+let ration = []; // { feedId, qty }
+let currentGroup = 'lact';
 
-            // События
-            animalType.addEventListener('change', onAnimalChange);
-            weightInput.addEventListener('input', onWeightChange);
-            season.addEventListener('change', saveState);
-            goal.addEventListener('change', saveState);
-            feedSearch.addEventListener('input', renderFeedList);
+// ================================================================
+//  РЕНДЕР
+// ================================================================
+function renderFeedList() {
+    const container = document.getElementById('feedList');
+    let html = '';
+    Object.entries(FEEDS).forEach(([id, f]) => {
+        html += `<div style="display:flex; justify-content:space-between; align-items:center; padding:0.4rem 0; border-bottom:1px solid #f0ebe3;">
+            <div style="flex:1;">
+                <div style="font-weight:600; font-size:0.8rem;">${f.name}</div>
+                <div style="font-size:0.65rem; color:#8A9B7A;">ОЭ ${f.oe} МДж · СП ${f.sp} г · Ca ${f.ca} г · P ${f.p} г</div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="addFeed('${id}')">➕</button>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
 
-            $('addFeedBtn').addEventListener('click', openAddModal);
-            $('clearRationBtn').addEventListener('click', clearRation);
-            $('saveBtn').addEventListener('click', saveState);
-            $('exportBtn').addEventListener('click', exportRation);
-            $('clearBtn').addEventListener('click', clearRation);
+function addFeed(feedId) {
+    const existing = ration.find(r => r.feedId === feedId);
+    if (existing) {
+        existing.qty += 0.5;
+    } else {
+        ration.push({ feedId, qty: feedId === 'premix' ? 0.1 : 1 });
+    }
+    renderAll();
+}
 
-            // Модалка
-            $('modalClose').addEventListener('click', closeModal);
-            $('modalCancel').addEventListener('click', closeModal);
-            $('modalAdd').addEventListener('click', addFeedFromModal);
-            document.getElementById('addModal').addEventListener('click', function(e) {
-                if (e.target === this) closeModal();
-            });
+function removeFeed(index) {
+    ration.splice(index, 1);
+    renderAll();
+}
 
-            // Сохранение при закрытии
-            window.addEventListener('beforeunload', saveState);
+function updateQty(index, value) {
+    const qty = parseFloat(value);
+    if (qty <= 0) { removeFeed(index); return; }
+    ration[index].qty = qty;
+    renderAll();
+}
 
-            showToast('🐄 Рацион PRO готов!');
-        }
+function renderRationTable() {
+    const tbody = document.getElementById('rationBody');
+    if (ration.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#C9D6BA; padding:1rem;">Рацион пуст. Добавьте корма из списка слева.</td></tr>';
+        return;
+    }
+    let html = '';
+    ration.forEach((r, i) => {
+        const f = FEEDS[r.feedId];
+        const oe = (f.oe * r.qty).toFixed(1);
+        const sp = (f.sp * r.qty).toFixed(0);
+        const ca = (f.ca * r.qty).toFixed(1);
+        const p = (f.p * r.qty).toFixed(1);
+        html += `<tr>
+            <td>${f.name}</td>
+            <td><input type="number" class="qty-input" value="${r.qty}" step="0.1" min="0" onchange="updateQty(${i}, this.value)"></td>
+            <td>${oe}</td><td>${sp}</td><td>${ca}</td><td>${p}</td>
+            <td><button class="btn btn-danger btn-sm" onclick="removeFeed(${i})">✕</button></td>
+        </tr>`;
+    });
+    tbody.innerHTML = html;
+}
 
-        // --- РЕНДЕР СПИСКА КОРМОВ ---
-        function renderFeedList() {
-            const search = feedSearch.value.toLowerCase().trim();
-            let filtered = FEEDS;
-            if (search) {
-                filtered = FEEDS.filter(f => f.name.toLowerCase().includes(search));
-            }
-            feedList.innerHTML = '';
-            filtered.forEach(feed => {
-                const div = document.createElement('div');
-                div.className = 'feed-item';
-                div.innerHTML = `
-                    <span class="name">${feed.name}</span>
-                    <span class="stats">ОЭ ${feed.oe} · СП ${feed.sp}</span>
-                    <button class="add-btn" data-id="${feed.id}">+</button>
-                `;
-                div.querySelector('.add-btn').addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    openAddModalWithFeed(feed.id);
-                });
-                feedList.appendChild(div);
-            });
-        }
+function calcSums() {
+    const sums = { oe: 0, sp: 0, ca: 0, p: 0, fiber: 0, car: 0, vd: 0, ve: 0, sugar: 0, starch: 0, fat: 0, salt: 0, zn: 0, cu: 0, mn: 0, i: 0, se: 0, co: 0, dm: 0, cost: 0 };
+    ration.forEach(r => {
+        const f = FEEDS[r.feedId];
+        Object.keys(sums).forEach(k => {
+            if (f[k] !== undefined) sums[k] += f[k] * r.qty;
+        });
+    });
+    return sums;
+}
 
-        // --- РЕНДЕР ТАБЛИЦЫ РАЦИОНА ---
-        function renderRation() {
-            if (ration.length === 0) {
-                rationBody.innerHTML = `
-                    <tr>
-                        <td colspan="9" style="text-align:center; color:#B0BC9C; padding:1.5rem 0; font-size:0.8rem;">
-                            Рацион пуст. Добавьте корма из списка слева или нажмите «➕ Добавить корм»
-                        </td>
-                    </tr>
-                `;
-                updateTotals();
-                return;
-            }
+function renderIndicators() {
+    const sums = calcSums();
+    const norms = NORMS[currentGroup];
+    const container = document.getElementById('indicators');
 
-            let html = '';
-            ration.forEach((item, index) => {
-                html += `
-                    <tr>
-                        <td class="row-num">${index + 1}</td>
-                        <td style="text-align:left; padding-left:8px;">${item.name}</td>
-                        <td>
-                            <input type="number" class="qty-input" data-index="${index}" value="${item.qty}" step="0.1" min="0.1">
-                        </td>
-                        <td>${(item.oe * item.qty).toFixed(1)}</td>
-                        <td>${(item.sp * item.qty).toFixed(1)}</td>
-                        <td>${(item.ca * item.qty).toFixed(2)}</td>
-                        <td>${(item.p * item.qty).toFixed(2)}</td>
-                        <td>${(item.fiber * item.qty).toFixed(1)}</td>
-                        <td>
-                            <button class="remove-btn" data-index="${index}">✕</button>
-                        </td>
-                    </tr>
-                `;
-            });
+    const indicators = [
+        { key: 'oe', label: 'ОЭ', unit: 'МДж', norm: norms.oe },
+        { key: 'sp', label: 'СП', unit: 'г', norm: norms.sp },
+        { key: 'ca', label: 'Ca', unit: 'г', norm: norms.ca },
+        { key: 'p', label: 'P', unit: 'г', norm: norms.p },
+        { key: 'fiber', label: 'Клетчатка', unit: 'г', norm: norms.fiber },
+        { key: 'car', label: 'Каротин', unit: 'мг', norm: norms.car },
+        { key: 'vd', label: 'Витамин D', unit: 'МЕ', norm: norms.vd },
+        { key: 've', label: 'Витамин E', unit: 'мг', norm: norms.ve },
+        { key: 'sugar', label: 'Сахар', unit: 'г', norm: norms.sugar },
+        { key: 'starch', label: 'Крахмал', unit: 'г', norm: norms.starch },
+        { key: 'fat', label: 'Сырой жир', unit: 'г', norm: norms.fat },
+        { key: 'salt', label: 'Соль', unit: 'г', norm: norms.salt },
+        { key: 'zn', label: 'Zn', unit: 'мг', norm: norms.zn },
+        { key: 'cu', label: 'Cu', unit: 'мг', norm: norms.cu },
+        { key: 'mn', label: 'Mn', unit: 'мг', norm: norms.mn },
+        { key: 'i', label: 'I', unit: 'мг', norm: norms.i },
+        { key: 'se', label: 'Se', unit: 'мг', norm: norms.se },
+        { key: 'co', label: 'Co', unit: 'мг', norm: norms.co },
+        { key: 'dm', label: 'Сухое вещество', unit: 'кг', norm: norms.dm }
+    ];
 
-            rationBody.innerHTML = html;
+    let html = '';
+    indicators.forEach(ind => {
+        const val = sums[ind.key] || 0;
+        const norm = ind.norm;
+        const percent = norm > 0 ? (val / norm) * 100 : 0;
+        const barPercent = Math.min(150, percent);
+        let color = 'green';
+        if (percent < 70 || percent > 130) color = 'red';
+        else if (percent < 90 || percent > 110) color = 'yellow';
 
-            // События для инпутов количества
-            rationBody.querySelectorAll('.qty-input').forEach(inp => {
-                inp.addEventListener('input', function() {
-                    const idx = parseInt(this.dataset.index);
-                    const val = parseFloat(this.value) || 0;
-                    if (val <= 0) {
-                        ration.splice(idx, 1);
-                        renderRation();
-                        updateAll();
-                        return;
-                    }
-                    ration[idx].qty = val;
-                    renderRation();
-                    updateAll();
-                    saveState();
-                });
-            });
+        html += `<div class="indicator-row">
+            <span class="label">${ind.label}</span>
+            <span class="value">${val.toFixed(1)} / ${norm} ${ind.unit}</span>
+            <div class="indicator-bar"><div class="indicator-fill ${color}" style="width:${barPercent}%"></div></div>
+            <span style="font-size:0.7rem; color:#8A9B7A; min-width:40px;">${Math.round(percent)}%</span>
+        </div>`;
+    });
+    container.innerHTML = html;
 
-            // События для удаления
-            rationBody.querySelectorAll('.remove-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const idx = parseInt(this.dataset.index);
-                    ration.splice(idx, 1);
-                    renderRation();
-                    updateAll();
-                    saveState();
-                });
-            });
+    return { sums, norms, indicators };
+}
 
-            updateTotals();
-        }
+function renderPrognosis() {
+    const { sums, norms, indicators } = renderIndicators();
+    const container = document.getElementById('prognosis');
 
-        // --- ОБНОВЛЕНИЕ ИТОГО ---
-        function updateTotals() {
-            let totalQty = 0,
-                totalOE = 0,
-                totalSP = 0,
-                totalCa = 0,
-                totalP = 0,
-                totalFiber = 0;
-            ration.forEach(item => {
-                const q = item.qty || 0;
-                totalQty += q;
-                totalOE += item.oe * q;
-                totalSP += item.sp * q;
-                totalCa += item.ca * q;
-                totalP += item.p * q;
-                totalFiber += item.fiber * q;
-            });
+    // Подсчёт отклонений
+    let critical = [];
+    let warning = [];
 
-            $('totalQty').textContent = totalQty.toFixed(1);
-            $('totalOE').textContent = totalOE.toFixed(1);
-            $('totalSP').textContent = totalSP.toFixed(1);
-            $('totalCa').textContent = totalCa.toFixed(2);
-            $('totalP').textContent = totalP.toFixed(2);
-            $('totalFiber').textContent = totalFiber.toFixed(1);
+    indicators.forEach(ind => {
+        const val = sums[ind.key] || 0;
+        const percent = (val / ind.norm) * 100;
+        if (percent < 70 || percent > 130) critical.push(ind.label);
+        else if (percent < 90 || percent > 110) warning.push(ind.label);
+    });
 
-            // Для индикаторов
-            window._totals = { totalOE, totalSP, totalCa, totalP, totalFiber };
-        }
+    // Ветеринарные риски
+    const vetRisks = [];
+    const sugarPct = (sums.sugar / norms.sugar) * 100;
+    const starchPct = (sums.starch / norms.starch) * 100;
+    const fiberPct = (sums.fiber / norms.fiber) * 100;
+    const caPct = (sums.ca / norms.ca) * 100;
+    const vdPct = (sums.vd / norms.vd) * 100;
+    const caPRatio = sums.p > 0 ? sums.ca / sums.p : 0;
 
-        // --- ОБНОВЛЕНИЕ НОРМ ---
-        function updateNorms() {
-            const norms = getNorms();
-            $('normOE').textContent = norms.oe;
-            $('normSP').textContent = norms.sp;
-            $('normCa').textContent = norms.ca;
-            $('normP').textContent = norms.p;
-            $('normFiber').textContent = norms.fiber;
-            $('normOE_short').textContent = norms.oe;
-            $('normSP_short').textContent = norms.sp;
-            $('normFiber_short').textContent = norms.fiber;
-            const caP = norms.ca / (norms.p || 0.01);
-            $('normCaP_short').textContent = caP.toFixed(2);
-        }
+    if (sugarPct < 70 || starchPct < 70) {
+        vetRisks.push({ risk: 'Кетоз', desc: 'Дефицит сахара и крахмала → накопление кетоновых тел. Симптомы: гипотония рубца, тахикардия, запах ацетона [citation:1][citation:2].' });
+    }
+    if (starchPct > 130 || fiberPct < 70) {
+        vetRisks.push({ risk: 'Ацидоз рубца', desc: 'Избыток крахмала при недостатке клетчатки → pH рубца ниже 6.0. Причины: концентратный тип кормления [citation:4].' });
+    }
+    if (caPct < 70 || vdPct < 70 || caPRatio < 1.2) {
+        vetRisks.push({ risk: 'Остеодистрофия', desc: `Нарушение Ca:P (${caPRatio.toFixed(2)}:1 при норме 1.5-2.0:1) и дефицит витамина D → размягчение костей, снижение упитанности [citation:5].` });
+    }
 
-        function getNorms() {
-            const base = ANIMAL_NORMS[currentAnimal];
-            const weight = parseFloat(weightInput.value) || base.weight;
-            const weightDiff = weight - base.weight;
-            return {
-                oe: Math.round(base.oe + weightDiff * 0.05),
-                sp: Math.round(base.sp + weightDiff * 0.8),
-                ca: Math.round((base.ca + weightDiff * 0.02) * 10) / 10,
-                p: Math.round((base.p + weightDiff * 0.015) * 10) / 10,
-                fiber: Math.round(base.fiber + weightDiff * 0.5)
-            };
-        }
+    let className = 'ok';
+    let title = '✅ Рацион сбалансирован';
+    let message = 'Все показатели в пределах нормы. Рацион можно применять.';
 
-        // --- ОБНОВЛЕНИЕ ИНДИКАТОРОВ ---
-        function updateIndicators() {
-            const norms = getNorms();
-            const totals = window._totals || { totalOE: 0, totalSP: 0, totalCa: 0, totalP: 0, totalFiber: 0 };
+    if (critical.length > 0) {
+        className = 'bad';
+        title = '❌ Рацион несбалансирован';
+        message = `Критические отклонения: ${critical.join(', ')}. Требуется коррекция.`;
+    } else if (warning.length > 0) {
+        className = 'warn';
+        title = '⚠️ Рацион требует коррекции';
+        message = `Отклонения по показателям: ${warning.join(', ')}.`;
+    }
 
-            const data = [
-                { id: 'OE', fact: totals.totalOE, norm: norms.oe, dot: 'dotOE', factEl: 'factOE' },
-                { id: 'SP', fact: totals.totalSP, norm: norms.sp, dot: 'dotSP', factEl: 'factSP' },
-                { id: 'Fiber', fact: totals.totalFiber, norm: norms.fiber, dot: 'dotFiber', factEl: 'factFiber' }
-            ];
+    let html = `<div class="${className}" style="padding:1rem; border-radius:1rem;">
+        <div style="font-size:1rem; font-weight:700; margin-bottom:0.4rem;">${title}</div>
+        <div style="font-size:0.85rem;">${message}</div>`;
 
-            data.forEach(d => {
-                const fact = d.fact;
-                const norm = d.norm || 1;
-                const ratio = fact / norm;
-                let status = 'green';
-                if (ratio < 0.85 || ratio > 1.15) status = 'red';
-                else if (ratio < 0.95 || ratio > 1.05) status = 'yellow';
-                const dot = $(d.dot);
-                dot.className = 'dot ' + status;
-                $(d.factEl).textContent = fact.toFixed(1);
-            });
+    if (vetRisks.length > 0) {
+        html += `<div style="margin-top:0.8rem; border-top:1px dashed #D9D0BD; padding-top:0.6rem;">
+            <strong>🩺 Ветеринарные риски:</strong>
+            <ul style="margin-top:0.4rem; padding-left:1.2rem; font-size:0.78rem;">`;
+        vetRisks.forEach(r => {
+            html += `<li style="margin-bottom:0.4rem;"><strong>${r.risk}:</strong> ${r.desc}</li>`;
+        });
+        html += `</ul></div>`;
+    }
 
-            // Ca/P отношение
-            const caFact = totals.totalCa || 0;
-            const pFact = totals.totalP || 0.01;
-            const caPRatio = caFact / pFact;
-            const normCaP = norms.ca / (norms.p || 0.01);
-            const caPRatioNorm = caPRatio / normCaP;
-            let caPStatus = 'green';
-            if (caPRatioNorm < 0.85 || caPRatioNorm > 1.15) caPStatus = 'red';
-            else if (caPRatioNorm < 0.95 || caPRatioNorm > 1.05) caPStatus = 'yellow';
-            const dotCaP = $('dotCaP');
-            dotCaP.className = 'dot ' + caPStatus;
-            $('factCaP').textContent = caPRatio.toFixed(2);
+    // Рекомендации
+    if (critical.length > 0 || warning.length > 0) {
+        html += `<div style="margin-top:0.6rem; border-top:1px dashed #D9D0BD; padding-top:0.6rem;">
+            <strong>📋 Рекомендации:</strong>
+            <ul style="margin-top:0.3rem; padding-left:1.2rem; font-size:0.78rem;">`;
+        if (sugarPct < 70) html += `<li>Добавить корма, богатые сахаром (сенаж, корнеплоды)</li>`;
+        if (starchPct < 70) html += `<li>Добавить концентраты (ячмень, овёс)</li>`;
+        if (fiberPct < 70) html += `<li>Увеличить долю грубых кормов (сено)</li>`;
+        if (starchPct > 130) html += `<li>Снизить долю концентратов, добавить сено</li>`;
+        if (caPct < 70) html += `<li>Ввести минеральную подкормку (мел, премикс)</li>`;
+        if (vdPct < 70) html += `<li>Ввести витаминный премикс с витамином D</li>`;
+        if (caPRatio < 1.2) html += `<li>Скорректировать Ca:P — увеличить кальций</li>`;
+        html += `</ul></div>`;
+    }
 
-            // Сохраняем для прогноза
-            window._statuses = { OE: data[0].status, SP: data[1].status, Fiber: data[2].status, CaP: caPStatus };
-        }
+    html += `</div>`;
+    container.innerHTML = html;
+    container.className = 'prognosis ' + className;
 
-        // --- ЭКОНОМИКА ---
-        function updateEconomics() {
-            let totalCost = 0;
-            ration.forEach(item => {
-                totalCost += item.price * (item.qty || 0);
-            });
-            $('totalCost').textContent = totalCost.toFixed(2);
+    // Обновляем суммы в таблице
+    document.getElementById('sumOE').textContent = sums.oe.toFixed(1);
+    document.getElementById('sumSP').textContent = sums.sp.toFixed(0);
+    document.getElementById('sumCa').textContent = sums.ca.toFixed(1);
+    document.getElementById('sumP').textContent = sums.p.toFixed(1);
+    document.getElementById('sumDM').textContent = sums.dm.toFixed(1);
 
-            const totalQty = ration.reduce((sum, i) => sum + (i.qty || 0), 0);
-            if (totalQty > 0) {
-                $('costPerKg').textContent = (totalCost / totalQty).toFixed(2);
-            } else {
-                $('costPerKg').textContent = '0';
-            }
-        }
+    // Экономика
+    document.getElementById('totalCost').textContent = sums.cost.toFixed(1);
+    document.getElementById('costPerKg').textContent = sums.dm > 0 ? (sums.cost / sums.dm).toFixed(2) : '0';
+}
 
-        // --- ПРОГНОЗ ---
-        function updateForecast() {
-            const norms = getNorms();
-            const totals = window._totals || { totalOE: 0, totalSP: 0, totalCa: 0, totalP: 0, totalFiber: 0 };
-            const statuses = window._statuses || { OE: 'green', SP: 'green', Fiber: 'green', CaP: 'green' };
-            const goalVal = goal.value;
+function renderAll() {
+    renderRationTable();
+    renderPrognosis();
+}
 
-            let issues = [];
-            let good = [];
+// Смена группы
+document.getElementById('animalGroup').addEventListener('change', function() {
+    currentGroup = this.value;
+    renderAll();
+});
 
-            if (statuses.OE === 'red') issues.push('❌ Критический дефицит энергии (риск кетоза)');
-            else if (statuses.OE === 'yellow') issues.push('⚠️ Недостаток энергии (скорректируйте зерновыми)');
-            else good.push('✅ Энергия сбалансирована');
-
-            if (statuses.SP === 'red') issues.push('❌ Критический дефицит протеина');
-            else if (statuses.SP === 'yellow') issues.push('⚠️ Недостаток протеина (добавьте жмых или шрот)');
-            else good.push('✅ Протеин в норме');
-
-            if (statuses.CaP === 'red') issues.push('❌ Нарушено соотношение Ca/P');
-            else if (statuses.CaP === 'yellow') issues.push('⚠️ Соотношение Ca/P требует коррекции');
-            else good.push('✅ Соотношение Ca/P в норме');
-
-            if (statuses.Fiber === 'red') issues.push('❌ Критический дефицит клетчатки (риск ацидоза)');
-            else if (statuses.Fiber === 'yellow') issues.push('⚠️ Недостаток клетчатки (увеличьте грубые корма)');
-            else good.push('✅ Клетчатка в норме');
-
-            // Целевые рекомендации
-            let goalAdvice = '';
-            if (goalVal === 'ketosis' && statuses.OE !== 'green') {
-                goalAdvice = '🎯 Для профилактики кетоза: добавьте энергетические корма (патока, зерновые).';
-            } else if (goalVal === 'acidosis' && statuses.Fiber !== 'green') {
-                goalAdvice = '🎯 Для профилактики ацидоза: увеличьте долю грубых кормов (сено, солома).';
-            } else if (goalVal === 'mineral' && statuses.CaP !== 'green') {
-                goalAdvice = '🎯 Для коррекции минерального обмена: отрегулируйте Ca/P добавками.';
-            } else if (goalVal === 'digest') {
-                goalAdvice = '🎯 Для повышения усвояемости: добавьте премикс или ферменты.';
-            } else if (goalVal === 'maintain' && issues.length === 0) {
-                goalAdvice = '✅ Рацион полностью соответствует цели поддержания продуктивности.';
-            }
-
-            let text = '';
-            if (ration.length === 0) {
-                text = 'Рацион пока не составлен. Добавьте корма.';
-            } else if (issues.length === 0) {
-                text = '🌟 Рацион сбалансирован! ' + good.join(' · ');
-            } else {
-                text = issues.join(' · ');
-                if (good.length) text += ' · ' + good.join(' · ');
-            }
-            if (goalAdvice) text += ' ' + goalAdvice;
-
-            // Экономическая эффективность
-            const totalQty = ration.reduce((sum, i) => sum + (i.qty || 0), 0);
-            if (totalQty > 0 && ration.length > 0) {
-                const cost = parseFloat($('totalCost').textContent) || 0;
-                text += ` · 💰 Стоимость рациона: ${cost.toFixed(2)} у.е.`;
-            }
-
-            $('forecastText').textContent = text;
-        }
-
-        // --- ОБНОВЛЕНИЕ ВСЕГО ---
-        function updateAll() {
-            updateTotals();
-            updateIndicators();
-            updateEconomics();
-            updateForecast();
-        }
-
-        // --- ДОБАВЛЕНИЕ КОРМА ---
-        function addFeed(feedId, qty) {
-            const feed = FEEDS.find(f => f.id === feedId);
-            if (!feed || qty <= 0) return;
-            // Проверяем, есть ли уже такой корм
-            const existing = ration.find(item => item.feedId === feedId);
-            if (existing) {
-                existing.qty += qty;
-            } else {
-                ration.push({
-                    feedId: feed.id,
-                    name: feed.name,
-                    qty: qty,
-                    oe: feed.oe,
-                    sp: feed.sp,
-                    ca: feed.ca,
-                    p: feed.p,
-                    fiber: feed.fiber,
-                    price: feed.price
-                });
-            }
-            renderRation();
-            updateAll();
-            saveState();
-            showToast(`✅ Добавлен ${feed.name} (${qty} кг)`);
-        }
-
-        // --- ОЧИСТКА ---
-        function clearRation() {
-            if (ration.length === 0) return;
-            if (!confirm('Удалить все корма из рациона?')) return;
-            ration = [];
-            renderRation();
-            updateAll();
-            saveState();
-            showToast('🗑️ Рацион очищен');
-        }
-
-        // --- МОДАЛКА ---
-        function openAddModal() {
-            const select = $('modalFeedSelect');
-            select.innerHTML = '';
-            FEEDS.forEach(f => {
-                const opt = document.createElement('option');
-                opt.value = f.id;
-                opt.textContent = f.name + ' (ОЭ ' + f.oe + ', СП ' + f.sp + ')';
-                select.appendChild(opt);
-            });
-            $('modalFeedQty').value = 1;
-            document.getElementById('addModal').classList.add('active');
-        }
-
-        function openAddModalWithFeed(feedId) {
-            openAddModal();
-            $('modalFeedSelect').value = feedId;
-        }
-
-        function closeModal() {
-            document.getElementById('addModal').classList.remove('active');
-        }
-
-        function addFeedFromModal() {
-            const feedId = $('modalFeedSelect').value;
-            const qty = parseFloat($('modalFeedQty').value) || 1;
-            if (qty <= 0) { showToast('⚠️ Количество должно быть > 0'); return; }
-            addFeed(feedId, qty);
-            closeModal();
-        }
-
-        // --- СОХРАНЕНИЕ ---
-        function saveState() {
-            const data = {
-                ration: ration,
-                animal: currentAnimal,
-                weight: parseFloat(weightInput.value) || 600
-            };
-            localStorage.setItem('ration_pro_data', JSON.stringify(data));
-        }
-
-        // --- ЭКСПОРТ ---
-        function exportRation() {
-            if (ration.length === 0) {
-                showToast('⚠️ Рацион пуст, нечего экспортировать');
-                return;
-            }
-            const norms = getNorms();
-            const totals = window._totals || { totalOE: 0, totalSP: 0, totalCa: 0, totalP: 0, totalFiber: 0 };
-            let text = '=== ОТЧЁТ ПО РАЦИОНУ ===\n';
-            text += `Животное: ${ANIMAL_NORMS[currentAnimal].label}\n`;
-            text += `Живая масса: ${weightInput.value} кг\n`;
-            text += `Сезон: ${season.options[season.selectedIndex].text}\n`;
-            text += `Цель: ${goal.options[goal.selectedIndex].text}\n\n`;
-            text += '--- СОСТАВ РАЦИОНА ---\n';
-            ration.forEach((item, i) => {
-                text += `${i+1}. ${item.name}: ${item.qty.toFixed(1)} кг\n`;
-            });
-            text += '\n--- ИТОГО ---\n';
-            text += `ОЭ: ${totals.totalOE.toFixed(1)} МДж (норма: ${norms.oe})\n`;
-            text += `СП: ${totals.totalSP.toFixed(1)} г (норма: ${norms.sp})\n`;
-            text += `Кальций: ${totals.totalCa.toFixed(2)} г (норма: ${norms.ca})\n`;
-            text += `Фосфор: ${totals.totalP.toFixed(2)} г (норма: ${norms.p})\n`;
-            text += `Клетчатка: ${totals.totalFiber.toFixed(1)} г (норма: ${norms.fiber})\n`;
-            text += `Стоимость: ${$('totalCost').textContent} у.е.\n`;
-            text += '\n--- ПРОГНОЗ ---\n';
-            text += $('forecastText').textContent;
-
-            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `рацион_${new Date().toISOString().slice(0,10)}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('📤 Отчёт экспортирован');
-        }
-
-        // --- ОБРАБОТЧИКИ ---
-        function onAnimalChange() {
-            currentAnimal = animalType.value;
-            const base = ANIMAL_NORMS[currentAnimal];
-            weightInput.value = base.weight;
-            currentWeight = base.weight;
-            renderFeedList();
-            renderRation();
-            updateNorms();
-            updateAll();
-            saveState();
-        }
-
-        function onWeightChange() {
-            currentWeight = parseFloat(weightInput.value) || 600;
-            updateNorms();
-            updateAll();
-            saveState();
-        }
-
-        // --- TOAST ---
-        let toastTimer = null;
-
-        function showToast(msg) {
-            const el = $('toast');
-            el.textContent = msg;
-            el.classList.add('show');
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
-        }
-
-        // --- ЗАПУСК ---
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-
+// Инициализация
+renderFeedList();
+renderAll();
+</script>
 </body>
 </html>

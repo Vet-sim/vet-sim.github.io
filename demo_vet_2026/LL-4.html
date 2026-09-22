@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Латинский язык · Урок 4 · ВетСим</title>
+<style>
+/* ===== БАЗОВЫЕ СТИЛИ ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #1A2A3A;
+    padding: 16px;
+    min-height: 100vh;
+}
+
+.container { max-width: 1100px; margin: 0 auto; }
+
+.header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 14px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 16px;
+    border: 1px solid #E7EDE2;
+}
+.header .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #1A2A3A;
+}
+.header .logo .gradient {
+    background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.header .logo .sub {
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: #7B8D6E;
+}
+.header-stats {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+}
+.header-stats .score {
+    background: #2C7DA0;
+    color: white;
+    padding: 4px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+}
+.header-stats .progress-text { color: #5F7C62; }
+
+.btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+    font-size: 0.78rem;
+    color: #1A2A3A;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-success { background: #6B9E6B; color: white; }
+.btn-success:hover { background: #5A865A; }
+.btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+.btn-outline:hover { background: #F0EEE5; }
+.btn-sm { padding: 3px 12px; font-size: 0.7rem; }
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.tab-btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    color: #3E5C4A;
+}
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: #2C7DA0; color: white; }
+
+.tab-content { display: none; animation: fadeIn 0.25s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 18px 22px;
+    border: 1px solid #E7EDE2;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 14px;
+}
+.card-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #2C7DA0;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.card-title .badge {
+    font-size: 0.65rem;
+    background: #E7EDE2;
+    color: #5F7C62;
+    padding: 0 12px;
+    border-radius: 40px;
+    font-weight: 500;
+}
+
+/* ===== ТЕСТ ===== */
+.q { padding: 12px 0; border-bottom: 1px solid #f0ebe3; }
+.q:last-child { border-bottom: none; }
+.q-title {
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+.q-title .num {
+    color: #2C7DA0;
+    font-weight: 700;
+    margin-right: 4px;
+}
+.options { display: flex; flex-direction: column; gap: 5px; }
+.options label {
+    background: #FEFCF9;
+    border: 2px solid #E7EDE2;
+    border-radius: 40px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.options label:hover { background: #F3F7F2; border-color: #A3B18A; }
+.options input[type="radio"] { accent-color: #2C7DA0; cursor: pointer; }
+.options label.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.options label.wrong { border-color: #b13e3e; background: #FDF0E8; }
+.feedback {
+    font-size: 0.78rem;
+    margin-top: 6px;
+    padding: 6px 12px;
+    border-radius: 12px;
+    display: none;
+}
+.feedback.show { display: block; }
+.feedback.ok { background: #E8F5E8; color: #2E7D32; }
+.feedback.no { background: #FDF0E8; color: #b13e3e; }
+
+.test-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    color: #5F7C62;
+}
+.test-progress .bar {
+    flex: 1;
+    height: 6px;
+    background: #E7EDE2;
+    border-radius: 20px;
+    margin: 0 12px;
+    overflow: hidden;
+}
+.test-progress .bar-fill {
+    height: 100%;
+    background: #2C7DA0;
+    border-radius: 20px;
+    transition: width 0.3s;
+}
+
+/* ===== ТЕОРИЯ ===== */
+.lesson-intro { line-height: 1.55; color: #4b5d61; font-size: 0.85rem; }
+.lesson-intro p { margin: 6px 0; }
+.notice {
+    background: #F7F3E8;
+    border-left: 4px solid #2C7DA0;
+    padding: 10px 14px;
+    border-radius: 0 1rem 1rem 0;
+    margin: 10px 0;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+.theory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+.theory-box {
+    background: #F9FBF8;
+    border: 1px solid #E7EDE2;
+    border-radius: 1rem;
+    padding: 12px;
+}
+.theory-box h3 {
+    color: #2C7DA0;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+}
+.theory-box ul {
+    padding-left: 18px;
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+.theory-box p { font-size: 0.8rem; line-height: 1.55; }
+.latin {
+    font-family: Georgia, serif;
+    color: #1F4E6E;
+    font-weight: 700;
+}
+.table-wrap { overflow-x: auto; }
+.lesson-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8rem;
+}
+.lesson-table th, .lesson-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #E7EDE2;
+    text-align: left;
+    white-space: nowrap;
+}
+.lesson-table th {
+    background: #F3F7F2;
+    color: #2C7DA0;
+    font-weight: 700;
+}
+.lesson-table input {
+    border: 2px solid #D9D0BD;
+    border-radius: 40px;
+    padding: 5px 10px;
+    font-family: inherit;
+    font-size: 0.8rem;
+    max-width: 150px;
+    background: white;
+}
+.lesson-table input:focus { outline: none; border-color: #2C7DA0; }
+.lesson-table input.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.lesson-table input.wrong { border-color: #b13e3e; background: #FDF0E8; }
+
+.term-list {
+    columns: 2;
+    column-gap: 30px;
+    font-size: 0.82rem;
+    line-height: 1.65;
+    padding-left: 22px;
+}
+.term-list li { break-inside: avoid; }
+
+.mini-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 8px;
+    margin: 10px 0;
+}
+.mini-card {
+    background: #F9FBF8;
+    padding: 12px;
+    border-radius: 1rem;
+    border: 1px solid #E7EDE2;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+.mini-card .latin { display: block; font-size: 0.92rem; margin-bottom: 2px; }
+
+.controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+.result {
+    padding: 12px 16px;
+    border-radius: 1rem;
+    margin-top: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1F4E6E;
+    color: white;
+    padding: 10px 24px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+.toast.show { opacity: 1; }
+
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+    .header .logo { font-size: 0.95rem; }
+    .header-stats { justify-content: space-between; }
+    .card { padding: 14px 16px; }
+    .tabs .tab-btn { font-size: 0.65rem; padding: 4px 10px; }
+    .term-list { columns: 1; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="header">
+    <div class="logo">📚 <span class="gradient">Lingua Latina</span><span class="sub">· Урок 4. Имя существительное. II склонение</span></div>
+    <div class="header-stats">
+        <span class="progress-text" id="progressLabel">Результат: 0%</span>
+        <span class="score" id="scoreDisplay">⭐ 0</span>
+    </div>
+</header>
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="test">🧪 Входной тест</button>
+    <button class="tab-btn" data-tab="theory">📖 Теория</button>
+    <button class="tab-btn" data-tab="lexicon">📚 Лексика</button>
+    <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+    <button class="tab-btn" data-tab="vet">🐾 Ветпрактика</button>
+</div>
+
+<!-- ===== ВХОДНОЙ ТЕСТ ===== -->
+<section class="tab-content active" id="tab-test">
+    <div class="card">
+        <div class="card-title">
+            <span>🧪 Входной тест: лексика I склонения</span>
+            <span class="badge" id="testBadge">24 вопроса</span>
+        </div>
+        <div class="notice">
+            Слова и варианты ответов перемешиваются при каждом запуске. Вопросы идут по одному. Выберите правильный перевод. Результат — в процентах.
+        </div>
+        <div class="test-progress" id="testProgress" style="display:none;">
+            <span id="testProgressText">Вопрос 1 из 24</span>
+            <div class="bar"><div class="bar-fill" id="testBarFill"></div></div>
+            <span id="testProgressPercent">0%</span>
+        </div>
+        <div id="testArea"></div>
+        <div class="controls" id="testControls">
+            <button class="btn btn-primary" id="checkTest">✅ Проверить тест</button>
+            <button class="btn btn-outline" id="resetTest">🔄 Новый вариант</button>
+        </div>
+        <div id="testResult"></div>
+    </div>
+</section>
+
+<!-- ===== ТЕОРИЯ ===== -->
+<section class="tab-content" id="tab-theory">
+    <div class="card">
+        <div class="card-title">
+            <span>📖 Второе склонение: признаки и окончания</span>
+            <span class="badge">опорный конспект</span>
+        </div>
+        <div class="lesson-intro">
+            <p>Ко II склонению относятся существительные <b>мужского</b> и <b>среднего</b> рода, которые в Gen. sing. имеют окончание <span class="latin">-i</span>.</p>
+        </div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Мужской род (m)</h3>
+                <ul>
+                    <li>Nom. sing. — <span class="latin">-us, -er</span></li>
+                    <li>Gen. sing. — <span class="latin">-i</span></li>
+                </ul>
+                <p class="latin" style="margin-top:6px;">musculus, i, m — мышца</p>
+                <p class="latin">aper, apri, m — кабан</p>
+            </div>
+            <div class="theory-box">
+                <h3>Средний род (n)</h3>
+                <ul>
+                    <li>Nom. sing. — <span class="latin">-um</span></li>
+                    <li>Gen. sing. — <span class="latin">-i</span></li>
+                </ul>
+                <p class="latin" style="margin-top:6px;">cranium, i, n — череп</p>
+                <p class="latin">ligamentum, i, n — связка</p>
+            </div>
+            <div class="theory-box">
+                <h3>Греческие слова</h3>
+                <ul>
+                    <li>Мужской род: <span class="latin">-os</span></li>
+                    <li>Средний род: <span class="latin">-on</span></li>
+                </ul>
+                <p class="latin" style="margin-top:6px;">ophthalmos, i, m — глаз</p>
+                <p class="latin">encephalon, i, n — мозг</p>
+            </div>
+            <div class="theory-box">
+                <h3>NB! Запомни</h3>
+                <p><b>Gen. sing. = <span class="latin">-i</span></b> (для m и n)</p>
+                <p><b>Gen. plur. = <span class="latin">-ōrum</span></b></p>
+                <p>Nom. plur. среднего рода = <span class="latin">-a</span></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📊 Падежные окончания II склонения</span></div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Падеж</th><th>Мужской род (m)</th><th>Средний род (n)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nom. sing.</td><td class="latin">-us, -er</td><td class="latin">-um</td></tr>
+                    <tr><td>Gen. sing.</td><td class="latin">-i</td><td class="latin">-i</td></tr>
+                    <tr><td>Dat. sing.</td><td class="latin">-o</td><td class="latin">-o</td></tr>
+                    <tr><td>Acc. sing.</td><td class="latin">-um</td><td class="latin">-um</td></tr>
+                    <tr><td>Abl. sing.</td><td class="latin">-o</td><td class="latin">-o</td></tr>
+                    <tr><td>Voc. sing.</td><td class="latin">-e, -er</td><td class="latin">-um</td></tr>
+                    <tr><td>Nom. plur.</td><td class="latin">-i</td><td class="latin">-a</td></tr>
+                    <tr><td>Gen. plur.</td><td class="latin">-ōrum</td><td class="latin">-ōrum</td></tr>
+                    <tr><td>Dat. plur.</td><td class="latin">-īs</td><td class="latin">-īs</td></tr>
+                    <tr><td>Acc. plur.</td><td class="latin">-ōs</td><td class="latin">-a</td></tr>
+                    <tr><td>Abl. plur.</td><td class="latin">-īs</td><td class="latin">-īs</td></tr>
+                    <tr><td>Voc. plur.</td><td class="latin">-i</td><td class="latin">-a</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="notice"><b>Главное:</b> Gen. sing. = <span class="latin">-i</span>; Nom. plur. ср. рода = <span class="latin">-a</span>; Gen. plur. = <span class="latin">-ōrum</span>.</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Образцы склонения</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>musculus, i, m — мышца</h3>
+                <table class="lesson-table">
+                    <thead><tr><th>Падеж</th><th>Sing.</th><th>Plur.</th></tr></thead>
+                    <tbody>
+                        <tr><td>Nom.</td><td class="latin">muscul-us</td><td class="latin">muscul-i</td></tr>
+                        <tr><td>Gen.</td><td class="latin">muscul-i</td><td class="latin">muscul-ōrum</td></tr>
+                        <tr><td>Dat.</td><td class="latin">muscul-o</td><td class="latin">muscul-īs</td></tr>
+                        <tr><td>Acc.</td><td class="latin">muscul-um</td><td class="latin">muscul-ōs</td></tr>
+                        <tr><td>Abl.</td><td class="latin">muscul-o</td><td class="latin">muscul-īs</td></tr>
+                        <tr><td>Voc.</td><td class="latin">muscul-e</td><td class="latin">muscul-i</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="theory-box">
+                <h3>cranium, i, n — череп</h3>
+                <table class="lesson-table">
+                    <thead><tr><th>Падеж</th><th>Sing.</th><th>Plur.</th></tr></thead>
+                    <tbody>
+                        <tr><td>Nom.</td><td class="latin">crani-um</td><td class="latin">crani-a</td></tr>
+                        <tr><td>Gen.</td><td class="latin">crani-i</td><td class="latin">crani-ōrum</td></tr>
+                        <tr><td>Dat.</td><td class="latin">crani-o</td><td class="latin">crani-īs</td></tr>
+                        <tr><td>Acc.</td><td class="latin">crani-um</td><td class="latin">crani-a</td></tr>
+                        <tr><td>Abl.</td><td class="latin">crani-o</td><td class="latin">crani-īs</td></tr>
+                        <tr><td>Voc.</td><td class="latin">crani-um</td><td class="latin">crani-a</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="notice"><b>NB!</b> Существительные среднего рода в Nom. plur. имеют окончание <span class="latin">-a</span>. Это правило действует для всех существительных среднего рода.</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Особенности существительных на -er</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Беглая e</h3>
+                <p>Теряется в основе во всех падежах, кроме Nom. sing.</p>
+                <p class="latin" style="margin-top:6px;">aper, apri, m — кабан</p>
+                <p class="latin">Nom.: ap-er</p>
+                <p class="latin">Gen.: apr-i</p>
+                <p class="latin" style="margin-top:6px;">caper, capri, m — козёл</p>
+            </div>
+            <div class="theory-box">
+                <h3>Основная e</h3>
+                <p>Сохраняется во всех падежах.</p>
+                <p class="latin" style="margin-top:6px;">puer, pueri, m — мальчик</p>
+                <p class="latin">Nom.: pu-er</p>
+                <p class="latin">Gen.: puer-i</p>
+                <p class="notice" style="margin-top:6px;">Определить, выпадает E или сохраняется, можно по форме Gen. sing. в словаре.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ЛЕКСИКА ===== -->
+<section class="tab-content" id="tab-lexicon">
+    <div class="card">
+        <div class="card-title">
+            <span>📚 Лексический минимум II склонения</span>
+            <span class="badge">30 слов</span>
+        </div>
+        <p style="font-size:0.85rem; color:#2C7DA0; font-weight:600; margin-bottom:8px;">Мужской род (m)</p>
+        <ol class="term-list">
+            <li><span class="latin">angulus, i, m</span> — угол</li>
+            <li><span class="latin">cancer, cri, m</span> — рак</li>
+            <li><span class="latin">carpus, i, m</span> — запястье</li>
+            <li><span class="latin">digitus, i, m</span> — палец</li>
+            <li><span class="latin">equus, i, m</span> — лошадь</li>
+            <li><span class="latin">fundus, i, m</span> — дно</li>
+            <li><span class="latin">lobus, i, m</span> — доля</li>
+            <li><span class="latin">musculus, i, m</span> — мышца</li>
+            <li><span class="latin">nasus, i, m</span> — нос</li>
+            <li><span class="latin">nervus, i, m</span> — нерв</li>
+            <li><span class="latin">nodus, i, m</span> — узел</li>
+            <li><span class="latin">oculus, i, m</span> — глаз</li>
+            <li><span class="latin">ramus, i, m</span> — ветвь</li>
+            <li><span class="latin">sulcus, i, m</span> — борозда</li>
+            <li><span class="latin">ventriculus, i, m</span> — желудочек</li>
+        </ol>
+        <p style="font-size:0.85rem; color:#2C7DA0; font-weight:600; margin:12px 0 8px;">Средний род (n)</p>
+        <ol class="term-list">
+            <li><span class="latin">atrium, i, n</span> — предсердие</li>
+            <li><span class="latin">cavum, i, n</span> — полость</li>
+            <li><span class="latin">cerebrum, i, n</span> — головной мозг</li>
+            <li><span class="latin">collum, i, n</span> — шея, шейка</li>
+            <li><span class="latin">cranium, i, n</span> — череп</li>
+            <li><span class="latin">dorsum, i, n</span> — спина</li>
+            <li><span class="latin">intestinum, i, n</span> — кишка</li>
+            <li><span class="latin">labium, i, n</span> — губа</li>
+            <li><span class="latin">ligamentum, i, n</span> — связка</li>
+            <li><span class="latin">membrum, i, n</span> — конечность</li>
+            <li><span class="latin">nucleus, i, n</span> — ядро</li>
+            <li><span class="latin">palatum, i, n</span> — нёбо</li>
+            <li><span class="latin">sternum, i, n</span> — грудина</li>
+            <li><span class="latin">tuberculum, i, n</span> — бугорок</li>
+        </ol>
+    </div>
+</section>
+
+<!-- ===== ПРАКТИКА ===== -->
+<section class="tab-content" id="tab-practice">
+    <div class="card">
+        <div class="card-title">
+            <span>🧩 Практика: склонение, род, окончания</span>
+            <span class="badge">6 упражнений</span>
+        </div>
+
+        <!-- Упражнение 1 -->
+        <div style="margin-bottom:16px;">
+            <p style="font-weight:700; color:#2C7DA0; font-size:0.85rem; margin-bottom:8px;">Упражнение 1. Определите склонение и род</p>
+            <div class="table-wrap">
+                <table class="lesson-table">
+                    <thead>
+                        <tr><th>Слово</th><th>Склонение</th><th>Род</th></tr>
+                    </thead>
+                    <tbody id="ex1Body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Упражнение 2 -->
+        <div style="margin-bottom:16px;">
+            <p style="font-weight:700; color:#2C7DA0; font-size:0.85rem; margin-bottom:8px;">Упражнение 2. Выделите основу</p>
+            <div class="table-wrap">
+                <table class="lesson-table">
+                    <thead>
+                        <tr><th>Слово</th><th>Основа</th></tr>
+                    </thead>
+                    <tbody id="ex2Body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Упражнение 3 -->
+        <div style="margin-bottom:16px;">
+            <p style="font-weight:700; color:#2C7DA0; font-size:0.85rem; margin-bottom:8px;">Упражнение 3. Просклоняйте в Nom. и Gen.</p>
+            <div class="table-wrap">
+                <table class="lesson-table">
+                    <thead>
+                        <tr><th>Слово</th><th>Nom. sing.</th><th>Gen. sing.</th><th>Nom. plur.</th><th>Gen. plur.</th></tr>
+                    </thead>
+                    <tbody id="ex3Body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Упражнение 4 -->
+        <div style="margin-bottom:16px;">
+            <p style="font-weight:700; color:#2C7DA0; font-size:0.85rem; margin-bottom:8px;">Упражнение 4. Переведите анатомические термины</p>
+            <div class="table-wrap">
+                <table class="lesson-table">
+                    <thead>
+                        <tr><th>Латинский термин</th><th>Перевод</th></tr>
+                    </thead>
+                    <tbody id="ex4Body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Упражнение 5 -->
+        <div style="margin-bottom:16px;">
+            <p style="font-weight:700; color:#2C7DA0; font-size:0.85rem; margin-bottom:8px;">Упражнение 5. Переведите на латинский язык</p>
+            <div class="table-wrap">
+                <table class="lesson-table">
+                    <thead>
+                        <tr><th>Русский термин</th><th>Латинский термин</th></tr>
+                    </thead>
+                    <tbody id="ex5Body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Упражнение 6 -->
+        <div style="margin-bottom:8px;">
+            <p style="font-weight:700; color:#2C7DA0; font-size:0.85rem; margin-bottom:8px;">Упражнение 6. Вставьте нужное окончание</p>
+            <div class="table-wrap">
+                <table class="lesson-table">
+                    <thead>
+                        <tr><th>Фраза с пропуском</th><th>Окончание</th></tr>
+                    </thead>
+                    <tbody id="ex6Body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="checkPractice">✅ Проверить</button>
+            <button class="btn btn-outline" id="resetPractice">🔄 Сбросить</button>
+        </div>
+        <div id="practiceResult"></div>
+    </div>
+</section>
+
+<!-- ===== ВЕТПРАКТИКА ===== -->
+<section class="tab-content" id="tab-vet">
+    <div class="card">
+        <div class="card-title">
+            <span>🐾 Профессиональная вставка</span>
+            <span class="badge">анатомические термины</span>
+        </div>
+        <div class="mini-cards">
+            <div class="mini-card">
+                <span class="latin">musculus rectus</span>
+                прямая мышца
+                <span class="latin" style="margin-top:4px;">musculus longus</span>
+                длинная мышца
+            </div>
+            <div class="mini-card">
+                <span class="latin">cranium cerebrale</span>
+                мозговой череп
+                <span class="latin" style="margin-top:4px;">basis cranii</span>
+                основание черепа
+            </div>
+            <div class="mini-card">
+                <span class="latin">ligamentum longum</span>
+                длинная связка
+                <span class="latin" style="margin-top:4px;">ligamentum sterni</span>
+                связка грудины
+            </div>
+        </div>
+        <div class="notice">Задание: вы — ветеринарный фельдшер. Заполните карту пациента латинским диагнозом.</div>
+        <div id="vetArea"></div>
+        <div class="controls">
+            <button class="btn btn-primary" id="checkVet">✅ Проверить карту</button>
+            <button class="btn btn-outline" id="resetVet">🔄 Сбросить</button>
+        </div>
+        <div id="vetResult"></div>
+    </div>
+</section>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+// ================================================================
+//  ОБЩИЕ УТИЛИТЫ
+// ================================================================
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const norm = s => String(s).toLowerCase().replace(/[.,;:!?\s]/g,'');
+const shuffle = a => [...a].sort(() => Math.random() - 0.5);
+
+// ================================================================
+//  1. ВХОДНОЙ ТЕСТ — лексика I склонения (24 слова)
+// ================================================================
+const vocab = [
+    {q:'ala, ae, f', a:'крыло'},
+    {q:'apertura, ae, f', a:'отверстие'},
+    {q:'arteria, ae, f', a:'артерия'},
+    {q:'bursa, ae, f', a:'сумка'},
+    {q:'capra, ae, f', a:'коза'},
+    {q:'cauda, ae, f', a:'хвост'},
+    {q:'costa, ae, f', a:'ребро'},
+    {q:'fascia, ae, f', a:'фасция'},
+    {q:'fibula, ae, f', a:'малоберцовая кость'},
+    {q:'fractura, ae, f', a:'перелом'},
+    {q:'glandula, ae, f', a:'железа'},
+    {q:'incisura, ae, f', a:'вырезка'},
+    {q:'lamina, ae, f', a:'пластинка'},
+    {q:'lingua, ae, f', a:'язык'},
+    {q:'mandibula, ae, f', a:'нижняя челюсть'},
+    {q:'maxilla, ae, f', a:'верхняя челюсть'},
+    {q:'palpebra, ae, f', a:'веко'},
+    {q:'scapula, ae, f', a:'лопатка'},
+    {q:'tibia, ae, f', a:'большеберцовая кость'},
+    {q:'vacca, ae, f', a:'корова'},
+    {q:'vena, ae, f', a:'вена'},
+    {q:'vertebra, ae, f', a:'позвонок'},
+    {q:'vesica, ae, f', a:'пузырь'},
+    {q:'Aloë, ës, f / diabetes, ae, m', a:'греческие особенности'}
+];
+
+let testItems = [];
+let testCurrentIndex = 0;
+let testAnswers = [];
+
+function renderTest() {
+    testItems = shuffle(vocab);
+    testCurrentIndex = 0;
+    testAnswers = new Array(testItems.length).fill(null);
+    document.getElementById('testArea').innerHTML = '';
+    document.getElementById('testResult').innerHTML = '';
+    document.getElementById('testControls').style.display = 'flex';
+    document.getElementById('testProgress').style.display = 'flex';
+    document.getElementById('testBadge').textContent = testItems.length + ' вопросов';
+    renderTestQuestion();
+    updateHeader();
+}
+
+function renderTestQuestion() {
+    const i = testCurrentIndex;
+    const x = testItems[i];
+
+    const pool = vocab.filter(v => v.a !== x.a).map(v => v.a);
+    const wrongs = shuffle(pool).slice(0, 5);
+    const variants = shuffle([x.a, ...wrongs]);
+
+    document.getElementById('testArea').innerHTML = `
+        <div class="q" id="q${i}">
+            <div class="q-title"><span class="num">${i+1}.</span> Как переводится <span class="latin">${esc(x.q)}</span>?</div>
+            <div class="options" id="opt${i}">
+                ${variants.map(v => {
+                    const checked = testAnswers[i] === v ? 'checked' : '';
+                    return `<label>
+                        <input type="radio" name="t${i}" value="${esc(v)}" ${checked}> ${esc(v)}
+                    </label>`;
+                }).join('')}
+            </div>
+        </div>`;
+
+    document.querySelectorAll(`#opt${i} input`).forEach(inp => {
+        inp.addEventListener('change', () => { testAnswers[i] = inp.value; });
+    });
+
+    const percent = Math.round(i / testItems.length * 100);
+    document.getElementById('testProgressText').textContent = `Вопрос ${i+1} из ${testItems.length}`;
+    document.getElementById('testBarFill').style.width = percent + '%';
+    document.getElementById('testProgressPercent').textContent = percent + '%';
+
+    let navHtml = '';
+    if (i > 0) navHtml += `<button class="btn btn-outline" id="prevQuestion">◀ Назад</button> `;
+    if (i < testItems.length - 1) navHtml += `<button class="btn btn-primary" id="nextQuestion">Далее ▶</button> `;
+    else navHtml += `<button class="btn btn-success" id="finishTest">🏁 Завершить тест</button> `;
+    document.getElementById('testControls').innerHTML = navHtml;
+
+    const prevBtn = document.getElementById('prevQuestion');
+    if (prevBtn) prevBtn.addEventListener('click', () => { testCurrentIndex--; renderTestQuestion(); });
+    const nextBtn = document.getElementById('nextQuestion');
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        if (testAnswers[i] === null) { showToast('Выберите вариант ответа'); return; }
+        testCurrentIndex++;
+        renderTestQuestion();
+    });
+    const finishBtn = document.getElementById('finishTest');
+    if (finishBtn) finishBtn.addEventListener('click', () => {
+        if (testAnswers[i] === null) { showToast('Выберите вариант ответа'); return; }
+        finishTest();
+    });
+}
+
+function finishTest() {
+    let correct = 0;
+    testItems.forEach((x, i) => { if (testAnswers[i] === x.a) correct++; });
+    const total = testItems.length;
+    const percent = Math.round(correct / total * 100);
+    const color = percent >= 80 ? '#E8F5E8' : (percent >= 50 ? '#FFF8E5' : '#FDF0E8');
+    const message = percent === 100 ? '🎉 Отлично! Лексика усвоена.' :
+                    percent >= 80 ? '⭐ Хороший результат!' :
+                    percent >= 50 ? '📖 Стоит повторить слова.' :
+                    '📚 Рекомендуется вернуться к лексике.';
+
+    let summary = '<div class="notice"><b>Разбор ответов:</b></div>';
+    testItems.forEach((x, i) => {
+        const user = testAnswers[i];
+        const isCorrect = user === x.a;
+        summary += `<div class="q" style="padding:8px 0;">
+            <div class="q-title" style="font-size:0.8rem;">
+                <span class="num">${i+1}.</span> <span class="latin">${esc(x.q)}</span>
+            </div>
+            <div class="feedback show ${isCorrect ? 'ok' : 'no'}" style="margin-top:4px;">
+                ${isCorrect ? '✅ ' + esc(user) : '❌ Ваш ответ: ' + esc(user || '—') + '<br>✅ Правильно: ' + esc(x.a)}
+            </div>
+        </div>`;
+    });
+
+    document.getElementById('testArea').innerHTML = summary;
+    document.getElementById('testControls').innerHTML = `<button class="btn btn-outline" id="resetTest">🔄 Новый вариант</button>`;
+    document.getElementById('resetTest').addEventListener('click', renderTest);
+
+    document.getElementById('testResult').innerHTML = `
+        <div class="result" style="background:${color}">
+            <strong>Результат: ${percent}%</strong> (${correct} из ${total}).
+            <div style="margin-top:6px; font-size:0.82rem; color:#5F7C62;">${message}</div>
+        </div>`;
+
+    document.getElementById('testProgress').style.display = 'none';
+    updateHeader(percent);
+}
+
+// ================================================================
+//  2. ПРАКТИКА
+// ================================================================
+
+// Упражнение 1 — склонение и род
+const ex1Data = [
+    ['musculus, i, m', 'II', 'm'],
+    ['cranium, i, n', 'II', 'n'],
+    ['costa, ae, f', 'I', 'f'],
+    ['ligamentum, i, n', 'II', 'n'],
+    ['nervus, i, m', 'II', 'm'],
+    ['vertebra, ae, f', 'I', 'f']
+];
+
+// Упражнение 2 — основа
+const ex2Data = [
+    ['musculus, i, m', 'muscul'],
+    ['cranium, i, n', 'crani'],
+    ['ligamentum, i, n', 'ligament'],
+    ['nervus, i, m', 'nerv'],
+    ['fundus, i, m', 'fund'],
+    ['dorsum, i, n', 'dors']
+];
+
+// Упражнение 3 — падежи
+const ex3Data = [
+    ['musculus, i, m', 'musculus', 'musculi', 'musculi', 'musculorum'],
+    ['cranium, i, n', 'cranium', 'cranii', 'crania', 'craniorum'],
+    ['ligamentum, i, n', 'ligamentum', 'ligamenti', 'ligamenta', 'ligamentorum'],
+    ['nervus, i, m', 'nervus', 'nervi', 'nervi', 'nervorum'],
+    ['digitus, i, m', 'digitus', 'digiti', 'digiti', 'digitorum'],
+    ['collum, i, n', 'collum', 'colli', 'colla', 'collorum']
+];
+
+// Упражнение 4 — перевод латинский → русский
+const ex4Data = [
+    ['musculus longus', 'длинная мышца'],
+    ['basis cranii', 'основание черепа'],
+    ['ligamentum sterni', 'связка грудины'],
+    ['nervus vagus', 'блуждающий нерв'],
+    ['cavum cranii', 'полость черепа'],
+    ['digitus secundus', 'второй палец'],
+    ['ramus arteriae', 'ветвь артерии'],
+    ['fundus ventriculi', 'дно желудка'],
+    ['nucleus nervi', 'ядро нерва'],
+    ['labium inferius', 'нижняя губа']
+];
+
+// Упражнение 5 — перевод русский → латинский
+const ex5Data = [
+    ['длинная мышца', 'musculus longus'],
+    ['основание черепа', 'basis cranii'],
+    ['связка грудины', 'ligamentum sterni'],
+    ['блуждающий нерв', 'nervus vagus'],
+    ['полость черепа', 'cavum cranii'],
+    ['второй палец', 'digitus secundus'],
+    ['ветвь артерии', 'ramus arteriae'],
+    ['дно желудка', 'fundus ventriculi'],
+    ['ядро нерва', 'nucleus nervi'],
+    ['нижняя губа', 'labium inferius']
+];
+
+// Упражнение 6 — окончания
+const ex6Data = [
+    ['muscul_ longus', 'us'],
+    ['basis crani_', 'i'],
+    ['ligament_ sterni', 'um'],
+    ['nerv_ vagus', 'us'],
+    ['cav_ cranii', 'um'],
+    ['digit_ secundus', 'us'],
+    ['ram_ arteriae', 'us']
+];
+
+function renderPractice() {
+    // Упражнение 1
+    document.getElementById('ex1Body').innerHTML = ex1Data.map((x, i) =>
+        `<tr><td class="latin">${x[0]}</td>
+        <td><input id="e1a${i}" placeholder="I/II"></td>
+        <td><input id="e1b${i}" placeholder="m/f/n"></td></tr>`
+    ).join('');
+
+    // Упражнение 2
+    document.getElementById('ex2Body').innerHTML = ex2Data.map((x, i) =>
+        `<tr><td class="latin">${x[0]}</td>
+        <td><input id="e2${i}" placeholder="..."></td></tr>`
+    ).join('');
+
+    // Упражнение 3
+    document.getElementById('ex3Body').innerHTML = ex3Data.map((x, i) =>
+        `<tr><td class="latin">${x[0]}</td>
+        <td><input id="e3a${i}" placeholder="..."></td>
+        <td><input id="e3b${i}" placeholder="..."></td>
+        <td><input id="e3c${i}" placeholder="..."></td>
+        <td><input id="e3d${i}" placeholder="..."></td></tr>`
+    ).join('');
+
+    // Упражнение 4
+    document.getElementById('ex4Body').innerHTML = ex4Data.map((x, i) =>
+        `<tr><td class="latin">${x[0]}</td>
+        <td><input id="e4${i}" placeholder="..." style="max-width:200px;"></td></tr>`
+    ).join('');
+
+    // Упражнение 5
+    document.getElementById('ex5Body').innerHTML = ex5Data.map((x, i) =>
+        `<tr><td>${x[0]}</td>
+        <td><input id="e5${i}" placeholder="..." style="max-width:200px;"></td></tr>`
+    ).join('');
+
+    // Упражнение 6
+    document.getElementById('ex6Body').innerHTML = ex6Data.map((x, i) =>
+        `<tr><td class="latin">${x[0]}</td>
+        <td><input id="e6${i}" placeholder="..." style="max-width:80px;"></td></tr>`
+    ).join('');
+
+    document.getElementById('practiceResult').innerHTML = '';
+}
+
+function checkPractice() {
+    let correct = 0, total = 0;
+
+    // Упражнение 1
+    ex1Data.forEach((x, i) => {
+        const a = document.getElementById('e1a' + i);
+        const b = document.getElementById('e1b' + i);
+        const ok1 = norm(a.value) === norm(x[1]);
+        const ok2 = norm(b.value) === norm(x[2]);
+        a.classList.toggle('correct', ok1); a.classList.toggle('wrong', !ok1);
+        b.classList.toggle('correct', ok2); b.classList.toggle('wrong', !ok2);
+        if (ok1) correct++; if (ok2) correct++;
+        total += 2;
+    });
+
+    // Упражнение 2
+    ex2Data.forEach((x, i) => {
+        const e = document.getElementById('e2' + i);
+        const ok = norm(e.value) === norm(x[1]);
+        e.classList.toggle('correct', ok); e.classList.toggle('wrong', !ok);
+        if (ok) correct++; total++;
+    });
+
+    // Упражнение 3
+    ex3Data.forEach((x, i) => {
+        ['a','b','c','d'].forEach((k, j) => {
+            const e = document.getElementById('e3' + k + i);
+            const ok = norm(e.value) === norm(x[j + 1]);
+            e.classList.toggle('correct', ok); e.classList.toggle('wrong', !ok);
+            if (ok) correct++; total++;
+        });
+    });
+
+    // Упражнение 4
+    ex4Data.forEach((x, i) => {
+        const e = document.getElementById('e4' + i);
+        const ok = norm(e.value) === norm(x[1]);
+        e.classList.toggle('correct', ok); e.classList.toggle('wrong', !ok);
+        if (ok) correct++; total++;
+    });
+
+    // Упражнение 5
+    ex5Data.forEach((x, i) => {
+        const e = document.getElementById('e5' + i);
+        const ok = norm(e.value) === norm(x[1]);
+        e.classList.toggle('correct', ok); e.classList.toggle('wrong', !ok);
+        if (ok) correct++; total++;
+    });
+
+    // Упражнение 6
+    ex6Data.forEach((x, i) => {
+        const e = document.getElementById('e6' + i);
+        const ok = norm(e.value) === norm(x[1]);
+        e.classList.toggle('correct', ok); e.classList.toggle('wrong', !ok);
+        if (ok) correct++; total++;
+    });
+
+    const percent = Math.round(correct / total * 100);
+    document.getElementById('practiceResult').innerHTML = `
+        <div class="result" style="background:#F7F3E8">
+            Правильно: <b>${correct} из ${total}</b> (${percent}%).
+            <div style="margin-top:6px; font-size:0.82rem; color:#5F7C62;">Основу определяем по Gen. sing.</div>
+        </div>`;
+}
+
+// ================================================================
+//  3. ВЕТПРАКТИКА — заполнение карты пациента
+// ================================================================
+const vetData = [
+    ['Прямая мышца', 'musculus rectus'],
+    ['Длинная мышца', 'musculus longus'],
+    ['Мозговой череп', 'cranium cerebrale'],
+    ['Основание черепа', 'basis cranii'],
+    ['Длинная связка', 'ligamentum longum'],
+    ['Связка грудины', 'ligamentum sterni'],
+    ['Полость черепа', 'cavum cranii']
+];
+
+function renderVet() {
+    document.getElementById('vetArea').innerHTML = `
+        <div class="table-wrap">
+        <table class="lesson-table">
+            <thead>
+                <tr><th>Русский диагноз</th><th>Латинский диагноз</th></tr>
+            </thead>
+            <tbody>
+                ${vetData.map((x, i) =>
+                    `<tr><td>${esc(x[0])}</td>
+                    <td><input id="v${i}" placeholder="Введите термин" style="max-width:220px;"></td></tr>`
+                ).join('')}
+            </tbody>
+        </table>
+        </div>`;
+    document.getElementById('vetResult').innerHTML = '';
+}
+
+function checkVet() {
+    let correct = 0;
+    vetData.forEach((x, i) => {
+        const e = document.getElementById('v' + i);
+        const ok = norm(e.value) === norm(x[1]);
+        e.classList.toggle('correct', ok); e.classList.toggle('wrong', !ok);
+        if (ok) correct++;
+    });
+    const percent = Math.round(correct / vetData.length * 100);
+    document.getElementById('vetResult').innerHTML = `
+        <div class="result" style="background:#F7F3E8">
+            Заполнено верно: <b>${correct} из ${vetData.length}</b> (${percent}%).
+        </div>`;
+}
+
+// ================================================================
+//  4. ОБНОВЛЕНИЕ ШАПКИ
+// ================================================================
+function updateHeader(percent) {
+    if (percent !== undefined) {
+        document.getElementById('progressLabel').textContent = 'Результат: ' + percent + '%';
+        document.getElementById('scoreDisplay').textContent = '⭐ ' + percent;
+    } else {
+        document.getElementById('progressLabel').textContent = 'Результат: 0%';
+        document.getElementById('scoreDisplay').textContent = '⭐ 0';
+    }
+}
+
+// ================================================================
+//  5. ВКЛАДКИ
+// ================================================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+});
+
+// ================================================================
+//  6. ВСПОМОГАТЕЛЬНЫЕ
+// ================================================================
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ================================================================
+//  7. ИНИЦИАЛИЗАЦИЯ
+// ================================================================
+document.getElementById('resetTest').addEventListener('click', renderTest);
+document.getElementById('checkPractice').addEventListener('click', checkPractice);
+document.getElementById('resetPractice').addEventListener('click', renderPractice);
+document.getElementById('checkVet').addEventListener('click', checkVet);
+document.getElementById('resetVet').addEventListener('click', renderVet);
+
+renderTest();
+renderPractice();
+renderVet();
+</script>
+</body>
+</html>

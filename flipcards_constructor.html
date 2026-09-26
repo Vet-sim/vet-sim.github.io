@@ -5,103 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Конструктор Flip‑карточки | ВетСим</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #FDF8F0;
             font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
             color: #3E5C4A;
             padding: 1.5rem;
         }
-        .container {
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: #1F4E6E;
-            text-align: center;
-            margin-bottom: 0.3rem;
-        }
-        .sub {
-            text-align: center;
-            color: #7C8F7C;
-            margin-bottom: 1.5rem;
-        }
-        .tabs {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-        .tab-btn {
-            background: #EEF2E9;
-            border: none;
-            padding: 0.6rem 1.8rem;
-            border-radius: 40px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
-            background: #2C7DA0;
-            color: white;
-        }
-        .tab-pane {
-            display: none;
-            background: white;
-            border-radius: 28px;
-            padding: 1.5rem;
-            border: 1px solid #E7EDE2;
-        }
-        .tab-pane.active {
-            display: block;
-        }
-        .toolbar {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #E2EAD9;
-            align-items: center;
-        }
-        .btn {
-            background: #EEF2E9;
-            border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 500;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: 0.2s;
-        }
-        .btn-primary {
-            background: #2C7DA0;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #236B8A;
-        }
-        .btn-secondary {
-            background: #A3B18A;
-            color: white;
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #A3B18A;
-            color: #3E5C4A;
-        }
-        .btn-outline:hover {
-            background: #F0EEE5;
-        }
+        .container { max-width: 1300px; margin: 0 auto; }
+        h1 { font-size: 1.8rem; font-weight: 600; color: #1F4E6E; text-align: center; margin-bottom: 0.3rem; }
+        .sub { text-align: center; color: #7C8F7C; margin-bottom: 1.5rem; }
+        .tabs { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+        .tab-btn { background: #EEF2E9; border: none; padding: 0.6rem 1.8rem; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { background: #2C7DA0; color: white; }
+        .tab-pane { display: none; background: white; border-radius: 28px; padding: 1.5rem; border: 1px solid #E7EDE2; }
+        .tab-pane.active { display: block; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #E2EAD9; align-items: center; }
+        .btn { background: #EEF2E9; border: none; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 500; cursor: pointer; font-size: 0.85rem; transition: 0.2s; font-family: inherit; }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-secondary { background: #A3B18A; color: white; }
+        .btn-outline { background: transparent; border: 2px solid #A3B18A; color: #3E5C4A; }
+        .btn-outline:hover { background: #F0EEE5; }
+        .btn-small { padding: 0.35rem 0.8rem; font-size: 0.75rem; }
 
-        /* ===== НОВОЕ: поле автора ===== */
+        /* ===== Поле автора ===== */
         .author-block {
             background: #F3F6EF;
             border-radius: 24px;
@@ -113,12 +42,7 @@
             align-items: center;
             border: 2px solid #E2EAD9;
         }
-        .author-block label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #1F4E6E;
-            white-space: nowrap;
-        }
+        .author-block label { font-weight: 600; font-size: 0.9rem; color: #1F4E6E; white-space: nowrap; }
         .author-input {
             flex: 1;
             min-width: 220px;
@@ -131,56 +55,126 @@
             color: #3E5C4A;
             transition: 0.2s;
         }
-        .author-input:focus {
-            outline: none;
-            border-color: #2C7DA0;
-            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
-            background: white;
-        }
+        .author-input:focus { outline: none; border-color: #2C7DA0; box-shadow: 0 0 0 3px rgba(44,125,160,0.12); background: white; }
 
-        .cards-editor {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
+        /* ===== Редактор карточек ===== */
+        .cards-editor { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
         .card-row {
             background: #FEFCF9;
             border: 1px solid #E2EAD9;
-            border-radius: 28px;
+            border-radius: 24px;
             padding: 1rem;
             display: flex;
             flex-wrap: wrap;
             gap: 1rem;
-            align-items: center;
+            align-items: flex-start;
+            position: relative;
         }
-        .card-front, .card-back {
-            flex: 1;
-            min-width: 200px;
+        .card-col { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 0.5rem; }
+        .card-label {
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: #2C7DA0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .card-front textarea, .card-back textarea {
+        .card-col textarea {
             width: 100%;
             padding: 8px 12px;
-            border-radius: 24px;
+            border-radius: 20px;
             border: 1px solid #D1DEC2;
             font-family: inherit;
+            font-size: 0.85rem;
             resize: vertical;
+            background: white;
+            color: #3E5C4A;
         }
+        .card-col textarea:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+        }
+
+        /* Изображение */
+        .image-controls {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .file-label {
+            background: #EEF2E9;
+            padding: 6px 14px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 500;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .file-label:hover { background: #DCE6D4; }
+        .file-label input[type="file"] { display: none; }
+
+        .remove-image-btn {
+            background: #F4E2DE;
+            color: #B45F4B;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        .remove-image-btn:hover { background: #EBD0C8; }
+
+        .image-preview {
+            margin-top: 0.3rem;
+            width: 100%;
+            min-height: 70px;
+            background: #F9FBF8;
+            border: 2px dashed #D1DEC2;
+            border-radius: 16px;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            color: #8BA47B;
+            transition: 0.2s;
+        }
+        .image-preview.has-image {
+            border-style: solid;
+            border-color: #A3B18A;
+            background: white;
+        }
+        .image-preview img {
+            max-width: 100%;
+            max-height: 130px;
+            border-radius: 10px;
+            object-fit: contain;
+            display: block;
+        }
+
         .remove-card {
             background: #F4E2DE;
             border: none;
             border-radius: 30px;
-            padding: 6px 12px;
+            padding: 6px 14px;
             cursor: pointer;
             color: #B45F4B;
+            font-size: 0.78rem;
+            font-family: inherit;
+            transition: 0.2s;
+            align-self: center;
         }
-        .info-text {
-            font-size: 0.75rem;
-            color: #8BA47B;
-            margin-top: 1rem;
-        }
+        .remove-card:hover { background: #EBD0C8; }
 
-        /* ===== НОВОЕ: блок подписи внизу страницы ===== */
+        .info-text { font-size: 0.75rem; color: #8BA47B; margin-top: 1rem; }
+
+        /* ===== Подпись автора на странице ===== */
         .vetsim-credit {
             margin-top: 1.5rem;
             padding: 1rem 1.2rem;
@@ -191,37 +185,23 @@
             font-size: 0.85rem;
             color: #3E5C4A;
         }
-        .vetsim-credit-title {
-            font-weight: 700;
-            color: #6B8E5C;
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-        .vetsim-credit-row {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin: 0.2rem 0;
-        }
+        .vetsim-credit-title { font-weight: 700; color: #6B8E5C; font-size: 0.95rem; margin-bottom: 0.5rem; }
+        .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.2rem 0; }
         .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
         .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
 
-        footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #A7B89A;
-        }
+        footer { margin-top: 2rem; text-align: center; font-size: 0.7rem; color: #A7B89A; }
+
         @media (max-width: 700px) {
-            .card-row { flex-direction: column; align-items: stretch; }
+            .card-row { flex-direction: column; }
+            .card-col { min-width: 100%; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>🃏 Конструктор «Flip‑карточки»</h1>
-    <div class="sub">Создайте набор двусторонних карточек (текст)</div>
+    <div class="sub">Создайте набор двусторонних карточек (текст + изображение)</div>
 
     <div class="tabs">
         <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
@@ -230,7 +210,6 @@
 
     <!-- Редактор -->
     <div id="editorPane" class="tab-pane active">
-        <!-- ===== НОВОЕ: поле автора ===== -->
         <div class="author-block">
             <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
             <input type="text" id="authorInput" class="author-input"
@@ -243,7 +222,7 @@
         </div>
         <div id="cardsEditor" class="cards-editor"></div>
         <div class="info-text">
-            💡 Лицевая сторона – вопрос/термин. Оборотная сторона – ответ/определение.
+            💡 Каждая сторона карточки может содержать текст, изображение или и то, и другое.
         </div>
     </div>
 
@@ -255,12 +234,12 @@
             <button id="exportGameBtn" class="btn btn-primary">🚀 Экспорт в готовый тренажёр</button>
         </div>
         <div style="background:#F3F6EF; border-radius:20px; padding:1rem;">
-            <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
-            ✔ Нажмите «Экспорт» – получите HTML-файл для студентов.</p>
+            <p>✔ Сохраните проект, чтобы отредактировать позже (включая изображения).<br>
+            ✔ Нажмите «Экспорт» – получите единый HTML-файл для студентов.</p>
         </div>
     </div>
 
-    <!-- ===== НОВОЕ: превью подписи автора ===== -->
+    <!-- Подпись -->
     <div class="vetsim-credit">
         <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
         <div class="vetsim-credit-row">
@@ -280,54 +259,174 @@
     (function() {
         let cards = [];
 
-        // ===== НОВОЕ: элементы автора =====
         const authorInput = document.getElementById('authorInput');
         const authorPreview = document.getElementById('authorPreview');
 
-        // ===== НОВОЕ: обновление превью автора =====
         authorInput.addEventListener('input', () => {
             authorPreview.textContent = authorInput.value.trim() || 'не указан';
         });
 
         function escapeHtml(str) {
             if (!str) return '';
-            return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+            return String(str).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[m]);
         }
 
+        // ===== СЖАТИЕ ИЗОБРАЖЕНИЯ =====
+        function compressImage(file, maxSize = 900) {
+            return new Promise((resolve, reject) => {
+                if (!file.type.startsWith('image/')) {
+                    reject(new Error('Файл не является изображением'));
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        let { width, height } = img;
+                        if (width > maxSize || height > maxSize) {
+                            if (width > height) {
+                                height = Math.round(height * maxSize / width);
+                                width = maxSize;
+                            } else {
+                                width = Math.round(width * maxSize / height);
+                                height = maxSize;
+                            }
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        // Белый фон для прозрачных PNG
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.fillRect(0, 0, width, height);
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.85));
+                    };
+                    img.onerror = () => reject(new Error('Не удалось загрузить изображение'));
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject(new Error('Ошибка чтения файла'));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ===== РЕНДЕР РЕДАКТОРА =====
         function renderEditor() {
             const container = document.getElementById('cardsEditor');
             if (!container) return;
             container.innerHTML = '';
+
             if (cards.length === 0) {
-                container.innerHTML = '<div style="text-align:center; padding:2rem;">✨ Нажмите «Добавить карточку»</div>';
+                container.innerHTML = '<div style="text-align:center; padding:2rem; color:#8BA47B;">✨ Нажмите «Добавить карточку»</div>';
                 return;
             }
-            for (let i = 0; i < cards.length; i++) {
-                const card = cards[i];
+
+            cards.forEach((card, i) => {
                 const row = document.createElement('div');
                 row.className = 'card-row';
                 row.setAttribute('data-idx', i);
+
+                const frontImgHtml = card.frontImage
+                    ? `<img src="${card.frontImage}" alt="Лицевое изображение">`
+                    : `<span>Нет изображения</span>`;
+                const backImgHtml = card.backImage
+                    ? `<img src="${card.backImage}" alt="Оборотное изображение">`
+                    : `<span>Нет изображения</span>`;
+
                 row.innerHTML = `
-                    <div class="card-front">
-                        <textarea class="front-text" rows="2" placeholder="Лицевая сторона (вопрос)">${escapeHtml(card.front)}</textarea>
+                    <div class="card-col">
+                        <div class="card-label">📄 Лицевая сторона</div>
+                        <textarea class="front-text" rows="2" placeholder="Вопрос / термин">${escapeHtml(card.front)}</textarea>
+                        <div class="image-controls">
+                            <label class="file-label">
+                                📷 Загрузить
+                                <input type="file" accept="image/*" class="front-image-input">
+                            </label>
+                            <button class="remove-image-btn remove-front-image" style="display:${card.frontImage ? 'inline-block' : 'none'};">🗑️ Удалить фото</button>
+                        </div>
+                        <div class="image-preview front-preview ${card.frontImage ? 'has-image' : ''}">${frontImgHtml}</div>
                     </div>
-                    <div class="card-back">
-                        <textarea class="back-text" rows="2" placeholder="Оборотная сторона (ответ)">${escapeHtml(card.back)}</textarea>
+                    <div class="card-col">
+                        <div class="card-label">🔄 Оборотная сторона</div>
+                        <textarea class="back-text" rows="2" placeholder="Ответ / определение">${escapeHtml(card.back)}</textarea>
+                        <div class="image-controls">
+                            <label class="file-label">
+                                📷 Загрузить
+                                <input type="file" accept="image/*" class="back-image-input">
+                            </label>
+                            <button class="remove-image-btn remove-back-image" style="display:${card.backImage ? 'inline-block' : 'none'};">🗑️ Удалить фото</button>
+                        </div>
+                        <div class="image-preview back-preview ${card.backImage ? 'has-image' : ''}">${backImgHtml}</div>
                     </div>
-                    <button class="remove-card" data-idx="${i}">🗑️ Удалить</button>
+                    <button class="remove-card" data-idx="${i}">🗑️ Удалить карточку</button>
                 `;
                 container.appendChild(row);
-            }
-            document.querySelectorAll('.front-text').forEach(ta => {
+            });
+
+            // Тексты
+            container.querySelectorAll('.front-text').forEach(ta => {
                 const idx = parseInt(ta.closest('.card-row').getAttribute('data-idx'));
                 ta.oninput = () => { if (cards[idx]) cards[idx].front = ta.value; };
             });
-            document.querySelectorAll('.back-text').forEach(ta => {
+            container.querySelectorAll('.back-text').forEach(ta => {
                 const idx = parseInt(ta.closest('.card-row').getAttribute('data-idx'));
                 ta.oninput = () => { if (cards[idx]) cards[idx].back = ta.value; };
             });
-            document.querySelectorAll('.remove-card').forEach(btn => {
+
+            // Загрузка изображений
+            container.querySelectorAll('.front-image-input').forEach(inp => {
+                inp.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const idx = parseInt(inp.closest('.card-row').getAttribute('data-idx'));
+                    try {
+                        const dataUrl = await compressImage(file);
+                        cards[idx].frontImage = dataUrl;
+                        renderEditor();
+                    } catch (err) {
+                        alert('Ошибка загрузки изображения: ' + err.message);
+                    }
+                };
+            });
+            container.querySelectorAll('.back-image-input').forEach(inp => {
+                inp.onchange = async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const idx = parseInt(inp.closest('.card-row').getAttribute('data-idx'));
+                    try {
+                        const dataUrl = await compressImage(file);
+                        cards[idx].backImage = dataUrl;
+                        renderEditor();
+                    } catch (err) {
+                        alert('Ошибка загрузки изображения: ' + err.message);
+                    }
+                };
+            });
+
+            // Удаление изображений
+            container.querySelectorAll('.remove-front-image').forEach(btn => {
                 btn.onclick = () => {
+                    const idx = parseInt(btn.closest('.card-row').getAttribute('data-idx'));
+                    if (cards[idx]) {
+                        cards[idx].frontImage = '';
+                        renderEditor();
+                    }
+                };
+            });
+            container.querySelectorAll('.remove-back-image').forEach(btn => {
+                btn.onclick = () => {
+                    const idx = parseInt(btn.closest('.card-row').getAttribute('data-idx'));
+                    if (cards[idx]) {
+                        cards[idx].backImage = '';
+                        renderEditor();
+                    }
+                };
+            });
+
+            // Удаление карточки
+            container.querySelectorAll('.remove-card').forEach(btn => {
+                btn.onclick = () => {
+                    if (!confirm('Удалить эту карточку?')) return;
                     const idx = parseInt(btn.getAttribute('data-idx'));
                     cards.splice(idx, 1);
                     renderEditor();
@@ -336,28 +435,33 @@
         }
 
         function addCard() {
-            cards.push({ front: 'Новый термин', back: 'Новое определение' });
+            cards.push({ front: '', back: '', frontImage: '', backImage: '' });
             renderEditor();
+            // Прокрутка к новой карточке
+            setTimeout(() => {
+                const rows = document.querySelectorAll('.card-row');
+                if (rows.length) rows[rows.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 50);
         }
 
         function loadDemo() {
             cards = [
-                { front: 'Сколько пар черепно-мозговых нервов у собаки?', back: '12 пар' },
-                { front: 'Какой нерв отвечает за обоняние?', back: 'Обонятельный нерв (I пара)' },
-                { front: 'Назовите основные методы клинического обследования', back: 'Осмотр, пальпация, перкуссия, аускультация' },
-                { front: 'Что такое кетоз?', back: 'Нарушение обмена веществ с накоплением кетоновых тел' }
+                { front: 'Сколько пар черепно-мозговых нервов у собаки?', back: '12 пар', frontImage: '', backImage: '' },
+                { front: 'Какой нерв отвечает за обоняние?', back: 'Обонятельный нерв (I пара)', frontImage: '', backImage: '' },
+                { front: 'Назовите основные методы клинического обследования', back: 'Осмотр, пальпация, перкуссия, аускультация', frontImage: '', backImage: '' },
+                { front: 'Что такое кетоз?', back: 'Нарушение обмена веществ с накоплением кетоновых тел', frontImage: '', backImage: '' }
             ];
             renderEditor();
         }
 
-        // ===== НОВОЕ: сохранение с автором =====
+        // ===== СОХРАНЕНИЕ / ЗАГРУЗКА =====
         function saveProject() {
             if (!cards.length) { alert('Нет карточек для сохранения'); return; }
             const project = {
                 author: authorInput.value || '',
                 cards: cards
             };
-            const blob = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(project)], { type: 'application/json' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'flipcards_project.json';
@@ -365,7 +469,6 @@
             URL.revokeObjectURL(a.href);
         }
 
-        // ===== НОВОЕ: загрузка с автором =====
         function loadProject() {
             const inp = document.createElement('input');
             inp.type = 'file';
@@ -378,105 +481,101 @@
                     try {
                         const obj = JSON.parse(ev.target.result);
                         if (obj.cards && Array.isArray(obj.cards)) {
-                            cards = obj.cards;
+                            cards = obj.cards.map(c => ({
+                                front: c.front || '',
+                                back: c.back || '',
+                                frontImage: c.frontImage || '',
+                                backImage: c.backImage || ''
+                            }));
                             if (obj.author !== undefined) {
                                 authorInput.value = obj.author;
                                 authorPreview.textContent = obj.author || 'не указан';
                             }
                             renderEditor();
                             alert('✅ Проект загружен');
-                        } else alert('Неверный формат');
-                    } catch(err) { alert('Ошибка загрузки'); }
+                        } else alert('Неверный формат файла');
+                    } catch (err) { alert('Ошибка загрузки: ' + err.message); }
                 };
                 reader.readAsText(file);
             };
             inp.click();
         }
 
-        // ===== НОВОЕ: экспорт с подписью автора + исправлен баг с кликом =====
+        // ===== ЭКСПОРТ =====
         function exportGame() {
             if (!cards.length) { alert('Добавьте карточки'); return; }
 
             const authorName = authorInput.value.trim() || 'не указан';
-            const exportCards = JSON.parse(JSON.stringify(cards));
             const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const exportCards = JSON.parse(JSON.stringify(cards));
 
             const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"><title>Flip‑карточки | ВетСим</title>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flip‑карточки | ВетСим</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#FDF8F0;font-family:system-ui;padding:1.5rem;color:#3E5C4A;}
+body{background:#FDF8F0;font-family:system-ui,'Segoe UI',Roboto,sans-serif;padding:1.5rem;color:#3E5C4A;min-height:100vh;}
 .container{max-width:1000px;margin:0 auto;}
-h1{text-align:center;color:#1F4E6E;}
-.stats{display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.6rem;background:#F3F6EF;border-radius:40px;padding:0.5rem 1rem;margin:1rem 0;align-items:center;font-size:0.9rem;}
-.card-container{perspective:1000px;margin:1rem auto;max-width:500px;cursor:pointer;}
-.flip-card{position:relative;width:100%;aspect-ratio:4/3;transition:transform 0.6s;transform-style:preserve-3d;border-radius:28px;}
+h1{text-align:center;color:#1F4E6E;font-size:1.7rem;margin-bottom:0.3rem;}
+.sub{text-align:center;color:#7C8F7C;font-size:0.85rem;margin-bottom:1rem;}
+.stats{display:flex;justify-content:space-between;flex-wrap:wrap;gap:0.6rem;background:#F3F6EF;border-radius:40px;padding:0.7rem 1.2rem;margin:1rem 0;align-items:center;font-size:0.9rem;font-weight:600;}
+.stats .learned{color:#6B9E6B;}
+.card-container{perspective:1200px;margin:1.5rem auto;max-width:560px;cursor:pointer;width:100%;}
+.flip-card{position:relative;width:100%;aspect-ratio:4/3;transition:transform 0.7s;transform-style:preserve-3d;border-radius:28px;}
 .flip-card.flipped{transform:rotateY(180deg);}
-.front,.back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:28px;padding:1.5rem;display:flex;align-items:center;justify-content:center;text-align:center;font-size:1.05rem;line-height:1.5;}
-.front{background:white;border:2px solid #A3B18A;color:#2C7DA0;}
-.back{background:#2C7DA0;color:white;transform:rotateY(180deg);}
+.front,.back{position:absolute;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:28px;padding:1.2rem;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:1.05rem;line-height:1.5;overflow:hidden;}
+.front{background:white;border:2px solid #A3B18A;color:#2C7DA0;box-shadow:0 4px 16px rgba(0,0,0,0.06);}
+.back{background:#2C7DA0;color:white;transform:rotateY(180deg);box-shadow:0 4px 16px rgba(0,0,0,0.15);}
+.card-image{max-width:90%;max-height:60%;object-fit:contain;border-radius:14px;margin-bottom:0.8rem;background:#F9FBF8;padding:4px;pointer-events:none;-webkit-user-drag:none;user-select:none;}
+.back .card-image{background:rgba(255,255,255,0.1);}
+.card-text{font-size:1rem;line-height:1.45;font-weight:500;padding:0 0.3rem;}
 .controls{display:flex;flex-wrap:wrap;justify-content:center;gap:0.8rem;margin:1.5rem 0;}
-.btn{background:#EEF2E9;border:none;padding:0.6rem 1.2rem;border-radius:40px;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:500;transition:0.2s;}
+.btn{background:#EEF2E9;border:none;padding:0.6rem 1.2rem;border-radius:40px;cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:500;transition:0.2s;color:#3E5C4A;}
 .btn:hover{opacity:0.85;transform:translateY(-1px);}
 .btn-primary{background:#2C7DA0;color:white;}
 .btn-secondary{background:#A3B18A;color:white;}
-
-/* ===== Блок подписи автора ===== */
-.vetsim-credit {
-    margin-top: 1.5rem;
-    padding: 1rem 1.2rem;
-    background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
-    border-radius: 24px;
-    border: 1px solid #E2EAD9;
-    text-align: center;
-    font-size: 0.85rem;
-    color: #3E5C4A;
+.vetsim-credit{margin-top:1.5rem;padding:1rem 1.2rem;background:linear-gradient(135deg,#F3F6EF,#FDF8F0);border-radius:24px;border:1px solid #E2EAD9;text-align:center;font-size:0.85rem;color:#3E5C4A;}
+.vetsim-credit-title{font-weight:700;color:#6B8E5C;font-size:0.95rem;margin-bottom:0.5rem;}
+.vetsim-credit-row{display:flex;justify-content:center;gap:0.5rem;flex-wrap:wrap;margin:0.2rem 0;}
+.vetsim-credit-label{color:#7C8F7C;font-weight:600;}
+.vetsim-credit-value{color:#1F4E6E;font-weight:700;}
+footer{text-align:center;font-size:0.7rem;color:#A7B89A;margin-top:1.5rem;}
+@media (max-width:600px){
+  .front,.back{font-size:0.95rem;padding:1rem;}
+  .card-image{max-height:55%;}
 }
-.vetsim-credit-title {
-    font-weight: 700;
-    color: #6B8E5C;
-    font-size: 0.95rem;
-    margin-bottom: 0.5rem;
-}
-.vetsim-credit-row {
-    display: flex;
-    justify-content: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin: 0.2rem 0;
-}
-.vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
-.vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
-
-footer{text-align:center;font-size:0.7rem;color:#A7B89A;margin-top:1rem;}
-@media (max-width:600px){.front,.back{font-size:0.95rem;padding:1rem;}}
 </style>
 </head>
 <body>
 <div class="container">
 <h1>🃏 Flip‑карточки</h1>
+<div class="sub">Нажмите на карточку, чтобы перевернуть</div>
+
 <div class="stats">
     <span>📊 Карточка <span id="currentIdx">1</span> из <span id="totalCount">0</span></span>
-    <span>✅ Выучено: <span id="learnedCount">0</span></span>
+    <span class="learned">✅ Выучено: <span id="learnedCount">0</span></span>
     <button id="shuffleBtn" class="btn">🔀 Перемешать</button>
     <button id="resetLearnedBtn" class="btn">🔄 Сбросить</button>
 </div>
+
 <div class="card-container" id="cardContainer">
     <div class="flip-card" id="flipCard">
         <div class="front" id="frontSide"></div>
         <div class="back" id="backSide"></div>
     </div>
 </div>
+
 <div class="controls">
-<button id="prevBtn" class="btn">◀ Предыдущая</button>
-<button id="flipBtn" class="btn btn-primary">🔄 Перевернуть</button>
-<button id="nextBtn" class="btn">Следующая ▶</button>
-<button id="knowBtn" class="btn btn-secondary">✅ Знаю</button>
-<button id="dontKnowBtn" class="btn">❌ Не знаю</button>
+    <button id="prevBtn" class="btn">◀ Предыдущая</button>
+    <button id="flipBtn" class="btn btn-primary">🔄 Перевернуть</button>
+    <button id="nextBtn" class="btn">Следующая ▶</button>
+    <button id="knowBtn" class="btn btn-secondary">✅ Знаю</button>
+    <button id="dontKnowBtn" class="btn">❌ Не знаю</button>
 </div>
 
-<!-- ===== Блок подписи автора ===== -->
 <div class="vetsim-credit">
     <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
     <div class="vetsim-credit-row">
@@ -491,33 +590,58 @@ footer{text-align:center;font-size:0.7rem;color:#A7B89A;margin-top:1rem;}
 
 <footer>© ВетСим — интерактивные карточки · CC BY-NC</footer>
 </div>
+
 <script>
 const cardsData = ${JSON.stringify(exportCards)};
-let cards = cardsData.map(c => ({ front: c.front, back: c.back, learned: false }));
+let cards = cardsData.map(c => ({
+    front: c.front || '',
+    back: c.back || '',
+    frontImage: c.frontImage || '',
+    backImage: c.backImage || '',
+    learned: false
+}));
 let idx = 0, flipped = false;
 
-function escapeHtml(s){if(!s)return '';return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);}
+function escapeHtml(s){
+    if(!s) return '';
+    return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]);
+}
+
+function buildFace(text, image, side){
+    let html = '';
+    if (image) {
+        html += '<img class="card-image" src="' + image + '" alt="">';
+    }
+    if (text) {
+        html += '<div class="card-text">' + escapeHtml(text) + '</div>';
+    }
+    if (!image && !text) {
+        html = '<div class="card-text" style="opacity:0.5;">(' + side + ')</div>';
+    }
+    return html;
+}
 
 function update(){
-    document.getElementById('frontSide').innerHTML = escapeHtml(cards[idx].front);
-    document.getElementById('backSide').innerHTML = escapeHtml(cards[idx].back);
+    document.getElementById('frontSide').innerHTML = buildFace(cards[idx].front, cards[idx].frontImage, 'пусто');
+    document.getElementById('backSide').innerHTML = buildFace(cards[idx].back, cards[idx].backImage, 'пусто');
     const card = document.getElementById('flipCard');
-    if(flipped) card.classList.add('flipped'); else card.classList.remove('flipped');
+    if (flipped) card.classList.add('flipped'); else card.classList.remove('flipped');
     document.getElementById('currentIdx').innerHTML = idx + 1;
     document.getElementById('totalCount').innerHTML = cards.length;
     let l = cards.filter(c => c.learned).length;
     document.getElementById('learnedCount').innerHTML = l;
 }
+
 function flip(){ flipped = !flipped; update(); }
-function next(){ if(idx + 1 < cards.length){ idx++; flipped = false; update(); } }
-function prev(){ if(idx > 0){ idx--; flipped = false; update(); } }
+function next(){ if (idx + 1 < cards.length) { idx++; flipped = false; update(); } }
+function prev(){ if (idx > 0) { idx--; flipped = false; update(); } }
 function mark(l){
     cards[idx].learned = l;
-    if(idx + 1 < cards.length){ idx++; flipped = false; update(); }
+    if (idx + 1 < cards.length) { idx++; flipped = false; update(); }
     else { alert('Все карточки пройдены!'); update(); }
 }
 function shuffle(){
-    for(let i = cards.length - 1; i > 0; i--){
+    for (let i = cards.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [cards[i], cards[j]] = [cards[j], cards[i]];
     }
@@ -532,8 +656,6 @@ document.getElementById('knowBtn').onclick = () => mark(true);
 document.getElementById('dontKnowBtn').onclick = () => mark(false);
 document.getElementById('shuffleBtn').onclick = shuffle;
 document.getElementById('resetLearnedBtn').onclick = resetLearn;
-
-// ===== ИСПРАВЛЕНО: клик по карточке теперь работает =====
 document.getElementById('cardContainer').onclick = flip;
 
 update();
@@ -541,7 +663,7 @@ update();
 </body>
 </html>`;
 
-            const blob = new Blob([html], { type: 'text/html' });
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
             a.download = 'flipcards_game.html';

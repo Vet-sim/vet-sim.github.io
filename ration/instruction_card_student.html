@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Инструкционная карта · Рацион PRO · ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #3E5C4A;
+    padding: 1rem;
+    min-height: 100vh;
+}
+.container { max-width: 1000px; margin: 0 auto; }
+
+/* ===== ШАПКА ===== */
+.header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.2rem 1.8rem;
+    margin-bottom: 1rem;
+    border: 1px solid #E7EDE2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.header .logo { font-size: 1.3rem; font-weight: 700; color: #2C7DA0; }
+.header .logo span { color: #6B9E6B; }
+.header .sub { font-size: 0.72rem; color: #8A9B7A; margin-top: 2px; }
+
+.header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ===== КНОПКИ ===== */
+.btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 0.55rem 1.2rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+    color: #3E5C4A;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-success { background: #6B9E6B; color: white; }
+.btn-success:hover { background: #5A865A; }
+.btn-outline { background: transparent; border: 2px solid #A3B18A; }
+.btn-outline:hover { background: #F0EEE5; }
+.btn-danger { background: #D4A373; color: white; }
+.btn-danger:hover { background: #C99464; }
+.btn-sm { padding: 0.35rem 0.9rem; font-size: 0.72rem; }
+
+/* ===== ВКЛАДКИ ===== */
+.tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.tab-btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    color: #3E5C4A;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: #2C7DA0; color: white; box-shadow: 0 3px 8px rgba(44,125,160,0.25); }
+
+.tab-content { display: none; animation: fadeIn 0.25s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== КАРТОЧКИ ===== */
+.card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.4rem 1.8rem;
+    border: 1px solid #E7EDE2;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.card-title {
+    font-weight: 700;
+    color: #2C7DA0;
+    font-size: 1.05rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid #E7EDE2;
+}
+
+.card p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin-bottom: 0.7rem;
+}
+.card ul, .card ol {
+    padding-left: 1.4rem;
+    font-size: 0.85rem;
+    line-height: 1.75;
+    margin-bottom: 0.7rem;
+}
+
+/* ===== ИНФО-БЛОКИ ===== */
+.notice {
+    background: #F7F3E8;
+    border-left: 4px solid #2C7DA0;
+    padding: 0.8rem 1.1rem;
+    border-radius: 0 1rem 1rem 0;
+    margin: 0.8rem 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+.notice.warning { background: #FFF8E5; border-left-color: #D4A373; }
+.notice.success { background: #E8F5E8; border-left-color: #6B9E6B; }
+
+/* ===== ШАГИ ===== */
+.step {
+    display: flex;
+    gap: 0.9rem;
+    margin-bottom: 0.9rem;
+    padding: 0.8rem 1rem;
+    background: #F9FBF8;
+    border-radius: 1rem;
+    border: 1px solid #E7EDE2;
+}
+.step-num {
+    background: #6B9E6B;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+.step-content { flex: 1; font-size: 0.85rem; line-height: 1.6; }
+.step-content strong { color: #2C7DA0; }
+
+/* ===== ССЫЛКИ НА РЕСУРСЫ ===== */
+.resource-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 0.8rem;
+    margin: 1rem 0;
+}
+.resource-link {
+    background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+    color: white;
+    padding: 1rem 1.2rem;
+    border-radius: 1rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: 0.2s;
+    box-shadow: 0 4px 12px rgba(44,125,160,0.2);
+}
+.resource-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(44,125,160,0.3);
+    color: white;
+}
+.resource-link .icon { font-size: 1.8rem; }
+.resource-link .info { flex: 1; }
+.resource-link .info .name { font-weight: 700; font-size: 0.9rem; margin-bottom: 2px; }
+.resource-link .info .desc { font-size: 0.7rem; opacity: 0.9; }
+
+/* ===== ПОЛЯ ВВОДА ===== */
+.field-group {
+    margin-bottom: 1rem;
+}
+.field-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #3E5C4A;
+    margin-bottom: 0.35rem;
+}
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    border: 2px solid #D9D0BD;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: #FEFCF9;
+    color: #3E5C4A;
+    transition: 0.15s;
+}
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #2C7DA0;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+    background: white;
+}
+textarea {
+    resize: vertical;
+    min-height: 60px;
+    line-height: 1.5;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+
+/* ===== ТАБЛИЦЫ ДЛЯ ЗАПОЛНЕНИЯ ===== */
+.table-wrap { overflow-x: auto; margin: 0.8rem 0; }
+table.fill-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+table.fill-table th, table.fill-table td {
+    padding: 0.5rem 0.6rem;
+    border: 1px solid #E7EDE2;
+    text-align: left;
+}
+table.fill-table th {
+    background: #F9F6EF;
+    color: #2C7DA0;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+table.fill-table input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 4px 2px;
+    font-size: 0.82rem;
+    font-family: inherit;
+    color: #3E5C4A;
+}
+table.fill-table input:focus {
+    outline: none;
+    background: #F3F7F2;
+    border-radius: 6px;
+    box-shadow: none;
+}
+
+/* ===== ЧЕК-ЛИСТ ===== */
+.check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0.8rem 0;
+}
+.check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.6rem 0.9rem;
+    background: #F9FBF8;
+    border-radius: 10px;
+    border: 1px solid #E7EDE2;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.15s;
+}
+.check-item:hover { background: #F0F5EA; }
+.check-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    margin-top: 2px;
+    accent-color: #2C7DA0;
+    cursor: pointer;
+}
+.check-item.checked { background: #E8F5E8; border-color: #6B9E6B; }
+
+/* ===== ПРОГРЕСС РАБОТЫ ===== */
+.work-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    background: #F9FBF8;
+    border-radius: 12px;
+    border: 1px solid #E7EDE2;
+    margin-bottom: 1rem;
+}
+.work-progress .bar {
+    flex: 1;
+    height: 10px;
+    background: #E7EDE2;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.work-progress .bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #6B9E6B, #2C7DA0);
+    border-radius: 20px;
+    transition: width 0.4s;
+}
+.work-progress .percent {
+    font-weight: 700;
+    color: #2C7DA0;
+    font-size: 0.9rem;
+    min-width: 45px;
+    text-align: right;
+}
+
+/* ===== ФУТЕР ===== */
+footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #EDE8DC;
+    font-size: 0.72rem;
+    color: #B0BC9C;
+}
+
+/* ===== УВЕДОМЛЕНИЕ ===== */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1F4E6E;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2000;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+.toast.show { opacity: 1; }
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 700px) {
+    body { padding: 0.6rem; }
+    .header { flex-direction: column; align-items: stretch; text-align: center; padding: 1rem; }
+    .header-actions { justify-content: center; }
+    .card { padding: 1rem 1.2rem; }
+    .card-title { font-size: 0.95rem; }
+    .tab-btn { font-size: 0.72rem; padding: 0.5rem 1rem; }
+    .resource-links { grid-template-columns: 1fr; }
+}
+
+/* ===== ПЕЧАТЬ (PDF ЭКСПОРТ) ===== */
+@media print {
+    @page {
+        size: A4;
+        margin: 15mm;
+    }
+    body {
+        background: white;
+        padding: 0;
+        font-size: 11pt;
+    }
+    .container { max-width: 100%; }
+    .header-actions,
+    .tabs,
+    .no-print,
+    .work-progress,
+    footer,
+    .toast {
+        display: none !important;
+    }
+    .header {
+        box-shadow: none;
+        border: none;
+        border-bottom: 2px solid #2C7DA0;
+        border-radius: 0;
+        padding: 0 0 0.5rem 0;
+        margin-bottom: 1rem;
+    }
+    .card {
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        padding: 0;
+        margin-bottom: 1rem;
+        page-break-inside: avoid;
+    }
+    .card-title {
+        border-bottom: 1px solid #A3B18A;
+        padding-bottom: 0.3rem;
+        margin-bottom: 0.5rem;
+        font-size: 13pt;
+    }
+    .tab-content { display: block !important; }
+    .tab-content:not(.active) { display: none !important; }
+    input, textarea, select {
+        border: none !important;
+        background: transparent !important;
+        padding: 2px !important;
+        box-shadow: none !important;
+        font-size: 10.5pt !important;
+    }
+    input[type="text"], input[type="number"], textarea {
+        border-bottom: 1px solid #999 !important;
+        border-radius: 0 !important;
+    }
+    textarea {
+        min-height: auto;
+        height: auto;
+    }
+    table.fill-table { font-size: 9.5pt; }
+    table.fill-table th, table.fill-table td {
+        padding: 3px 5px;
+        border: 1px solid #ccc;
+    }
+    table.fill-table input {
+        border-bottom: 1px solid #999 !important;
+        background: transparent !important;
+    }
+    .notice {
+        background: #F7F3E8 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    .resource-link {
+        background: #2C7DA0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== ШАПКА ===== -->
+<header class="header">
+    <div>
+        <div class="logo">🐾 ВетСим · <span>Рацион PRO</span></div>
+        <div class="sub">Электронная инструкционная карта студента · МДК 02.02</div>
+    </div>
+    <div class="header-actions">
+        <button class="btn btn-success" id="printBtn" title="Экспорт в PDF через печать браузера">
+            📄 Экспорт в PDF
+        </button>
+        <button class="btn btn-primary" id="saveBtn" title="Сохранить прогресс в браузере">
+            💾 Сохранить
+        </button>
+        <button class="btn btn-outline" id="clearBtn" title="Очистить все поля">
+            🗑️ Очистить
+        </button>
+    </div>
+</header>
+
+<!-- ===== ВКЛАДКИ ===== -->
+<div class="tabs no-print">
+    <button class="tab-btn active" data-tab="card">📋 Инструкционная карта</button>
+    <button class="tab-btn" data-tab="workbook">📓 Рабочая тетрадь</button>
+    <button class="tab-btn" data-tab="resources">🔗 Ресурсы</button>
+</div>
+
+<!-- ================================================================
+     ВКЛАДКА 1. ИНСТРУКЦИОННАЯ КАРТА
+     ================================================================ -->
+<div class="tab-content active" id="tab-card">
+
+    <div class="card">
+        <div class="card-title">🎯 Цель работы</div>
+        <p>Освоить принципы балансирования рационов крупного рогатого скота с помощью цифрового тренажёра «Рацион PRO» и научиться выявлять ветеринарные риски, связанные с дисбалансом кормления.</p>
+
+        <p><strong>Планируемый результат:</strong></p>
+        <ul>
+            <li>составлять рацион для коровы с заданными параметрами;</li>
+            <li>анализировать индикаторы баланса в базовой и расширенной версиях;</li>
+            <li>выявлять риск кетоза, ацидоза, остеодистрофии;</li>
+            <li>обосновывать коррекцию рациона.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <div class="card-title">🔗 Ресурсы для работы</div>
+        <div class="resource-links">
+            <a href="https://vet-sim.github.io/ration-pro.html" target="_blank" class="resource-link">
+                <div class="icon">🎛️</div>
+                <div class="info">
+                    <div class="name">Тренажёр «Рацион PRO»</div>
+                    <div class="desc">Базовая и расширенная версии</div>
+                </div>
+            </a>
+            <a href="https://vet-sim.github.io/ration-pro-test.html" target="_blank" class="resource-link">
+                <div class="icon">📝</div>
+                <div class="info">
+                    <div class="name">Промежуточный тест</div>
+                    <div class="desc">20 вопросов · 15 минут</div>
+                </div>
+            </a>
+        </div>
+        <div class="notice">
+            <strong>💡 Совет:</strong> сначала пройдите инструкцию и выполните практические работы, а затем — тест для самопроверки.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📋 Как работать с тренажёром</div>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <strong>Откройте тренажёр.</strong> Перейдите по ссылке выше. Убедитесь, что страница загрузилась — тренажёр работает офлайн после первой загрузки.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <strong>Выберите версию.</strong> В верхней части экрана — переключатель:
+                <ul style="margin-top:0.4rem;">
+                    <li><strong>📊 Базовая</strong> — 5 показателей (ОЭ, СП, Ca, P, клетчатка);</li>
+                    <li><strong>🔬 Расширенная</strong> — 19 показателей + экономика.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <strong>Задайте параметры животного.</strong> Вид / статус, живую массу, сезон, цель рациона.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+                <strong>Добавьте корма.</strong> Нажмите <strong>➕</strong> рядом с нужным кормом. Изменяйте количество в поле «Кол-во (кг)».
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+                <strong>Следите за индикаторами.</strong> Цель — чтобы все индикаторы стали 🟢 зелёными (90–110% от нормы).
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">6</div>
+            <div class="step-content">
+                <strong>Анализируйте прогноз.</strong> Внизу — блок с ветеринарными рисками и рекомендациями.
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">7</div>
+            <div class="step-content">
+                <strong>Заполните рабочую тетрадь.</strong> Перейдите на вкладку «📓 Рабочая тетрадь» и внесите результаты.
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">✅ Чек-лист самопроверки</div>
+        <div class="check-list" id="checklistCard">
+            <label class="check-item"><input type="checkbox" data-check="c1"><span>Я открыл(а) тренажёр и переключил(а) версии</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c2"><span>Я задал(а) параметры животного и увидел(а), как пересчитались нормы</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c3"><span>Я добавил(а) минимум 3 корма из разных групп</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c4"><span>Я понял(а), что означает 🟢 / 🟡 / 🔴 цвет индикатора</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c5"><span>Я увидел(а), как меняется прогноз при изменении рациона</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c6"><span>Я заполнил(а) рабочую тетрадь по практическим работам</span></label>
+            <label class="check-item"><input type="checkbox" data-check="c7"><span>Я прошёл(ла) промежуточный тест</span></label>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================================================================
+     ВКЛАДКА 2. РАБОЧАЯ ТЕТРАДЬ
+     ================================================================ -->
+<div class="tab-content" id="tab-workbook">
+
+    <!-- Данные студента -->
+    <div class="card">
+        <div class="card-title">👤 Данные студента</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
+            <div class="field-group">
+                <label class="field-label">ФИО</label>
+                <input type="text" id="studentName" placeholder="Иванов Иван Иванович" data-field="studentName">
+            </div>
+            <div class="field-group">
+                <label class="field-label">Группа</label>
+                <input type="text" id="studentGroup" placeholder="В-31" data-field="studentGroup">
+            </div>
+            <div class="field-group">
+                <label class="field-label">Дата</label>
+                <input type="date" id="studentDate" data-field="studentDate">
+            </div>
+        </div>
+    </div>
+
+    <!-- Прогресс заполнения -->
+    <div class="work-progress no-print">
+        <span style="font-weight:600; font-size:0.85rem; color:#5F7C62;">Заполнено:</span>
+        <div class="bar"><div class="bar-fill" id="workProgressFill"></div></div>
+        <div class="percent" id="workProgressPercent">0%</div>
+    </div>
+
+    <!-- ===== ПРАКТИЧЕСКАЯ РАБОТА 1 ===== -->
+    <div class="card">
+        <div class="card-title">📓 Практическая работа 1. Знакомство с тренажёром</div>
+
+        <div class="field-group">
+            <label class="field-label">Цель работы</label>
+            <textarea id="pw1Goal" placeholder="Сформулируйте цель работы..." data-field="pw1Goal"></textarea>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 1.1. Сравнение версий тренажёра</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Параметр</th><th>Базовая версия</th><th>Расширенная версия</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Количество показателей</td>
+                        <td><input type="text" data-field="p1basicCount"></td>
+                        <td><input type="text" data-field="p1extCount"></td></tr>
+                    <tr><td>Наличие экономического блока</td>
+                        <td><input type="text" data-field="p1basicEcon"></td>
+                        <td><input type="text" data-field="p1extEcon"></td></tr>
+                    <tr><td>Назначение</td>
+                        <td><input type="text" data-field="p1basicPurpose"></td>
+                        <td><input type="text" data-field="p1extPurpose"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 1.2. Показатели базовой версии (корова 600 кг, 25 л)</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Показатель</th><th>Единица измерения</th><th>Норма</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>ОЭ</td><td><input type="text" data-field="p1oeUnit"></td><td><input type="text" data-field="p1oeNorm"></td></tr>
+                    <tr><td>СП</td><td><input type="text" data-field="p1spUnit"></td><td><input type="text" data-field="p1spNorm"></td></tr>
+                    <tr><td>Ca</td><td><input type="text" data-field="p1caUnit"></td><td><input type="text" data-field="p1caNorm"></td></tr>
+                    <tr><td>P</td><td><input type="text" data-field="p1pUnit"></td><td><input type="text" data-field="p1pNorm"></td></tr>
+                    <tr><td>Клетчатка</td><td><input type="text" data-field="p1fibUnit"></td><td><input type="text" data-field="p1fibNorm"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 1.3. Добавленные корма</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Корм</th><th>Группа</th><th>Кол-во, кг</th><th>ОЭ</th><th>СП</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><input type="text" data-field="p1feed1"></td><td><input type="text" data-field="p1grp1"></td><td><input type="text" data-field="p1q1"></td><td><input type="text" data-field="p1o1"></td><td><input type="text" data-field="p1s1"></td></tr>
+                    <tr><td><input type="text" data-field="p1feed2"></td><td><input type="text" data-field="p1grp2"></td><td><input type="text" data-field="p1q2"></td><td><input type="text" data-field="p1o2"></td><td><input type="text" data-field="p1s2"></td></tr>
+                    <tr><td><input type="text" data-field="p1feed3"></td><td><input type="text" data-field="p1grp3"></td><td><input type="text" data-field="p1q3"></td><td><input type="text" data-field="p1o3"></td><td><input type="text" data-field="p1s3"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Вывод по работе 1</label>
+            <textarea id="pw1Conclusion" placeholder="Сформулируйте вывод..." data-field="pw1Conclusion"></textarea>
+        </div>
+    </div>
+
+    <!-- ===== ПРАКТИЧЕСКАЯ РАБОТА 2 ===== -->
+    <div class="card">
+        <div class="card-title">📓 Практическая работа 2. Профилактика кетоза</div>
+
+        <div class="field-group">
+            <label class="field-label">Цель работы</label>
+            <textarea id="pw2Goal" placeholder="Сформулируйте цель работы..." data-field="pw2Goal"></textarea>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.1. Составленный рацион</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Корм</th><th>Количество, кг</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><input type="text" data-field="p2feed1"></td><td><input type="text" data-field="p2q1"></td></tr>
+                    <tr><td><input type="text" data-field="p2feed2"></td><td><input type="text" data-field="p2q2"></td></tr>
+                    <tr><td><input type="text" data-field="p2feed3"></td><td><input type="text" data-field="p2q3"></td></tr>
+                    <tr><td><input type="text" data-field="p2feed4"></td><td><input type="text" data-field="p2q4"></td></tr>
+                    <tr><td><input type="text" data-field="p2feed5"></td><td><input type="text" data-field="p2q5"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.2. Индикаторы баланса</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Показатель</th><th>Значение</th><th>% от нормы</th><th>Цвет</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>ОЭ</td><td><input type="text" data-field="p2oeVal"></td><td><input type="text" data-field="p2oePct"></td><td><input type="text" data-field="p2oeColor"></td></tr>
+                    <tr><td>СП</td><td><input type="text" data-field="p2spVal"></td><td><input type="text" data-field="p2spPct"></td><td><input type="text" data-field="p2spColor"></td></tr>
+                    <tr><td>Сахар</td><td><input type="text" data-field="p2sugVal"></td><td><input type="text" data-field="p2sugPct"></td><td><input type="text" data-field="p2sugColor"></td></tr>
+                    <tr><td>Крахмал</td><td><input type="text" data-field="p2staVal"></td><td><input type="text" data-field="p2staPct"></td><td><input type="text" data-field="p2staColor"></td></tr>
+                    <tr><td>Клетчатка</td><td><input type="text" data-field="p2fibVal"></td><td><input type="text" data-field="p2fibPct"></td><td><input type="text" data-field="p2fibColor"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.3. Сахаро-протеиновое отношение</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
+            <div class="field-group">
+                <label class="field-label">Ваш результат</label>
+                <input type="text" data-field="p2spRatio" placeholder="например, 0,95">
+            </div>
+            <div class="field-group">
+                <label class="field-label">Норма (0,8–1,0)</label>
+                <input type="text" data-field="p2spRatioNorm" placeholder="0,8–1,0" value="0,8–1,0">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Вывод по работе 2</label>
+            <textarea id="pw2Conclusion" placeholder="Сформулируйте вывод..." data-field="pw2Conclusion"></textarea>
+        </div>
+    </div>
+
+    <!-- ===== ПРАКТИЧЕСКАЯ РАБОТА 3 ===== -->
+    <div class="card">
+        <div class="card-title">📓 Практическая работа 3. Анализ минерального питания</div>
+
+        <div class="field-group">
+            <label class="field-label">Цель работы</label>
+            <textarea id="pw3Goal" placeholder="Сформулируйте цель работы..." data-field="pw3Goal"></textarea>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 3.1. Минеральные вещества</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Показатель</th><th>Норма</th><th>Факт</th><th>% от нормы</th><th>Цвет</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Ca</td><td><input type="text" data-field="p3caNorm"></td><td><input type="text" data-field="p3caVal"></td><td><input type="text" data-field="p3caPct"></td><td><input type="text" data-field="p3caColor"></td></tr>
+                    <tr><td>P</td><td><input type="text" data-field="p3pNorm"></td><td><input type="text" data-field="p3pVal"></td><td><input type="text" data-field="p3pPct"></td><td><input type="text" data-field="p3pColor"></td></tr>
+                    <tr><td>Ca:P</td><td><input type="text" data-field="p3cpNorm" value="1,5–2:1"></td><td><input type="text" data-field="p3cpVal"></td><td><input type="text" data-field="p3cpPct"></td><td><input type="text" data-field="p3cpColor"></td></tr>
+                    <tr><td>Витамин D</td><td><input type="text" data-field="p3vdNorm"></td><td><input type="text" data-field="p3vdVal"></td><td><input type="text" data-field="p3vdPct"></td><td><input type="text" data-field="p3vdColor"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 3.2. Микроэлементы</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Микроэлемент</th><th>Норма</th><th>Факт</th><th>Цвет</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Zn</td><td><input type="text" data-field="p3znNorm"></td><td><input type="text" data-field="p3znVal"></td><td><input type="text" data-field="p3znColor"></td></tr>
+                    <tr><td>Cu</td><td><input type="text" data-field="p3cuNorm"></td><td><input type="text" data-field="p3cuVal"></td><td><input type="text" data-field="p3cuColor"></td></tr>
+                    <tr><td>Mn</td><td><input type="text" data-field="p3mnNorm"></td><td><input type="text" data-field="p3mnVal"></td><td><input type="text" data-field="p3mnColor"></td></tr>
+                    <tr><td>I</td><td><input type="text" data-field="p3iNorm"></td><td><input type="text" data-field="p3iVal"></td><td><input type="text" data-field="p3iColor"></td></tr>
+                    <tr><td>Se</td><td><input type="text" data-field="p3seNorm"></td><td><input type="text" data-field="p3seVal"></td><td><input type="text" data-field="p3seColor"></td></tr>
+                    <tr><td>Co</td><td><input type="text" data-field="p3coNorm"></td><td><input type="text" data-field="p3coVal"></td><td><input type="text" data-field="p3coColor"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Задание 3.3. Алгоритм профилактики остеодистрофии</label>
+            <textarea id="pw3Algorithm" placeholder="1. ...&#10;2. ...&#10;3. ..." data-field="pw3Algorithm"></textarea>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Вывод по работе 3</label>
+            <textarea id="pw3Conclusion" placeholder="Сформулируйте вывод..." data-field="pw3Conclusion"></textarea>
+        </div>
+    </div>
+
+    <!-- ===== ПРАКТИЧЕСКАЯ РАБОТА 4 ===== -->
+    <div class="card">
+        <div class="card-title">📓 Практическая работа 4. Комплексный анализ</div>
+
+        <div class="field-group">
+            <label class="field-label">Цель работы</label>
+            <textarea id="pw4Goal" placeholder="Сформулируйте цель работы..." data-field="pw4Goal"></textarea>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 4.1. Экономические показатели</p>
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem;">
+            <div class="field-group">
+                <label class="field-label">Стоимость рациона, у.е.</label>
+                <input type="text" data-field="p4cost">
+            </div>
+            <div class="field-group">
+                <label class="field-label">Стоимость 1 кг СВ, у.е./кг</label>
+                <input type="text" data-field="p4costDm">
+            </div>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 4.2. Ветеринарные риски</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Риск</th><th>Выявлен (да/нет)</th><th>Обоснование</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Кетоз</td><td><input type="text" data-field="p4ketYes"></td><td><input type="text" data-field="p4ketWhy"></td></tr>
+                    <tr><td>Ацидоз</td><td><input type="text" data-field="p4aciYes"></td><td><input type="text" data-field="p4aciWhy"></td></tr>
+                    <tr><td>Остеодистрофия</td><td><input type="text" data-field="p4ostYes"></td><td><input type="text" data-field="p4ostWhy"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Задание 4.3. Комплексное заключение о рационе</label>
+            <textarea id="pw4Conclusion" placeholder="Оцените рацион по 5+ показателям..." data-field="pw4Conclusion"></textarea>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Задание 4.4. Пути улучшения рациона</label>
+            <textarea id="pw4Improve" placeholder="1. ...&#10;2. ..." data-field="pw4Improve"></textarea>
+        </div>
+    </div>
+
+    <!-- ===== ИТОГОВАЯ РЕФЛЕКСИЯ ===== -->
+    <div class="card">
+        <div class="card-title">🪞 Итоговая рефлексия</div>
+
+        <div class="field-group">
+            <label class="field-label">Что было самым сложным при составлении рациона?</label>
+            <textarea data-field="ref1" placeholder="Ваш ответ..."></textarea>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Какой показатель оказалось сложнее всего сбалансировать?</label>
+            <textarea data-field="ref2" placeholder="Ваш ответ..."></textarea>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Что вы поняли о связи кормления и здоровья животных?</label>
+            <textarea data-field="ref3" placeholder="Ваш ответ..."></textarea>
+        </div>
+        <div class="field-group">
+            <label class="field-label">В какой версии тренажёра было удобнее работать? Почему?</label>
+            <textarea data-field="ref4" placeholder="Ваш ответ..."></textarea>
+        </div>
+        <div class="field-group">
+            <label class="field-label">Главный вывод занятия (1 предложение)</label>
+            <textarea data-field="ref5" placeholder="Ваш главный вывод..."></textarea>
+        </div>
+    </div>
+
+    <!-- ===== КАРТА САМООЦЕНКИ ===== -->
+    <div class="card">
+        <div class="card-title">📊 Карта самооценки</div>
+        <p style="font-size:0.82rem; color:#8A9B7A;">Оцените себя: «5» — уверенно, «4» — с затруднениями, «3» — нужна помощь.</p>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Критерий</th><th>Оценка (3/4/5)</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Я освоил(а) интерфейс тренажёра</td><td><input type="text" data-field="self1"></td></tr>
+                    <tr><td>Я умею переключаться между версиями</td><td><input type="text" data-field="self2"></td></tr>
+                    <tr><td>Я научился(ась) добавлять корма</td><td><input type="text" data-field="self3"></td></tr>
+                    <tr><td>Я понимаю цветовую индикацию</td><td><input type="text" data-field="self4"></td></tr>
+                    <tr><td>Я могу выявить ветеринарный риск</td><td><input type="text" data-field="self5"></td></tr>
+                    <tr><td>Я могу предложить коррекцию рациона</td><td><input type="text" data-field="self6"></td></tr>
+                    <tr><td>Я умею анализировать экономические показатели</td><td><input type="text" data-field="self7"></td></tr>
+                    <tr><td>Я могу дать комплексное заключение</td><td><input type="text" data-field="self8"></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================================================================
+     ВКЛАДКА 3. РЕСУРСЫ
+     ================================================================ -->
+<div class="tab-content" id="tab-resources">
+    <div class="card">
+        <div class="card-title">🔗 Полезные ссылки</div>
+
+        <div class="resource-links">
+            <a href="https://vet-sim.github.io/ration-pro.html" target="_blank" class="resource-link">
+                <div class="icon">🎛️</div>
+                <div class="info">
+                    <div class="name">Тренажёр «Рацион PRO»</div>
+                    <div class="desc">Основной инструмент для работы</div>
+                </div>
+            </a>
+            <a href="https://vet-sim.github.io/ration-pro-test.html" target="_blank" class="resource-link">
+                <div class="icon">📝</div>
+                <div class="info">
+                    <div class="name">Промежуточный тест</div>
+                    <div class="desc">20 вопросов · 15 минут</div>
+                </div>
+            </a>
+            <a href="https://vet-sim.github.io/instruction_ration_pro.html" target="_blank" class="resource-link">
+                <div class="icon">📖</div>
+                <div class="info">
+                    <div class="name">Инструкция по тренажёру</div>
+                    <div class="desc">Подробное руководство пользователя</div>
+                </div>
+            </a>
+            <a href="https://vetsim.ru" target="_blank" class="resource-link">
+                <div class="icon">🌐</div>
+                <div class="info">
+                    <div class="name">Главный сайт ВетСим</div>
+                    <div class="desc">Другие тренажёры и материалы</div>
+                </div>
+            </a>
+        </div>
+
+        <div class="notice">
+            <strong>💡 Совет:</strong> сохраните ссылку на тренажёр в закладки — он работает офлайн, поэтому открывается без интернета.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📌 Как экспортировать работу в PDF</div>
+        <ol style="font-size:0.85rem; line-height:1.8;">
+            <li>Заполните рабочую тетрадь во вкладке «📓 Рабочая тетрадь».</li>
+            <li>Нажмите кнопку <strong>«📄 Экспорт в PDF»</strong> в правом верхнем углу.</li>
+            <li>В открывшемся диалоге печати выберите:
+                <ul style="margin-top:0.3rem;">
+                    <li><strong>Принтер:</strong> «Сохранить как PDF»;</li>
+                    <li><strong>Формат:</strong> A4;</li>
+                    <li><strong>Ориентация:</strong> книжная;</li>
+                    <li><strong>Поля:</strong> обычные;</li>
+                    <li>Опция «Фоновая графика» — включена.</li>
+                </ul>
+            </li>
+            <li>Нажмите «Сохранить».</li>
+        </ol>
+        <div class="notice warning">
+            <strong>⚠️ Важно:</strong> PDF-файл формируется через системный диалог печати браузера. Это работает во всех браузерах (Chrome, Firefox, Edge, Safari) без дополнительных программ.
+        </div>
+    </div>
+</div>
+
+<!-- ===== ФУТЕР ===== -->
+<footer>
+    © ВетСим — ветеринарное просвещение · Рацион PRO · Электронная инструкционная карта<br>
+    Работает офлайн · Автосохранение в браузере
+</footer>
+
+</div>
+
+<!-- ===== УВЕДОМЛЕНИЕ ===== -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+    'use strict';
+
+    const STORAGE_KEY = 'vetsim_ration_workbook_v1';
+    const $ = id => document.getElementById(id);
+
+    // ================================================================
+    //  ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+    // ================================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            $('tab-' + btn.dataset.tab).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // ================================================================
+    //  АВТОСОХРАНЕНИЕ
+    // ================================================================
+    function saveData() {
+        const data = {};
+        // Все поля с data-field
+        document.querySelectorAll('[data-field]').forEach(el => {
+            data[el.dataset.field] = el.value || '';
+        });
+        // Чек-листы
+        document.querySelectorAll('[data-check]').forEach(el => {
+            data['check_' + el.dataset.check] = el.checked;
+        });
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {}
+        updateProgress();
+    }
+
+    function loadData() {
+        let data = {};
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) data = JSON.parse(raw);
+        } catch (e) {}
+
+        document.querySelectorAll('[data-field]').forEach(el => {
+            if (data[el.dataset.field] !== undefined) {
+                el.value = data[el.dataset.field];
+            }
+        });
+        document.querySelectorAll('[data-check]').forEach(el => {
+            const key = 'check_' + el.dataset.check;
+            if (data[key] !== undefined) {
+                el.checked = data[key];
+                updateCheckItemStyle(el);
+            }
+        });
+        updateProgress();
+    }
+
+    // ================================================================
+    //  ПРОГРЕСС
+    // ================================================================
+    function updateProgress() {
+        const fields = document.querySelectorAll('[data-field]');
+        let filled = 0;
+        fields.forEach(el => {
+            if (el.value && el.value.trim() !== '') filled++;
+        });
+        const percent = fields.length > 0 ? Math.round((filled / fields.length) * 100) : 0;
+        const fillEl = $('workProgressFill');
+        const percentEl = $('workProgressPercent');
+        if (fillEl) fillEl.style.width = percent + '%';
+        if (percentEl) percentEl.textContent = percent + '%';
+    }
+
+    // ================================================================
+    //  ЧЕК-ЛИСТ
+    // ================================================================
+    function updateCheckItemStyle(checkbox) {
+        const item = checkbox.closest('.check-item');
+        if (item) item.classList.toggle('checked', checkbox.checked);
+    }
+
+    document.querySelectorAll('[data-check]').forEach(cb => {
+        cb.addEventListener('change', () => {
+            updateCheckItemStyle(cb);
+            saveData();
+        });
+    });
+
+    // ================================================================
+    //  ПОДПИСКА НА ИЗМЕНЕНИЯ ВСЕХ ПОЛЕЙ
+    // ================================================================
+    document.querySelectorAll('[data-field]').forEach(el => {
+        el.addEventListener('input', saveData);
+        el.addEventListener('change', saveData);
+    });
+
+    // ================================================================
+    //  КНОПКИ
+    // ================================================================
+    $('saveBtn').addEventListener('click', () => {
+        saveData();
+        showToast('💾 Прогресс сохранён в браузере');
+    });
+
+    $('clearBtn').addEventListener('click', () => {
+        if (!confirm('Очистить все поля рабочей тетради? Это действие нельзя отменить.')) return;
+        document.querySelectorAll('[data-field]').forEach(el => { el.value = ''; });
+        document.querySelectorAll('[data-check]').forEach(el => {
+            el.checked = false;
+            updateCheckItemStyle(el);
+        });
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        updateProgress();
+        showToast('🗑️ Все поля очищены');
+    });
+
+    $('printBtn').addEventListener('click', () => {
+        saveData();
+        showToast('📄 Открываю диалог печати...');
+        setTimeout(() => window.print(), 300);
+    });
+
+    // ================================================================
+    //  УВЕДОМЛЕНИЯ
+    // ================================================================
+    function showToast(msg) {
+        const t = $('toast');
+        t.textContent = msg;
+        t.classList.add('show');
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+    }
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+    function init() {
+        // Автоустановка даты
+        const dateEl = $('studentDate');
+        if (dateEl && !dateEl.value) {
+            const today = new Date().toISOString().split('T')[0];
+            dateEl.value = today;
+        }
+        loadData();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>

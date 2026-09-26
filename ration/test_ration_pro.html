@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Промежуточная аттестация · Рацион PRO · ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #3E5C4A;
+    padding: 1rem;
+    min-height: 100vh;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.container { max-width: 900px; margin: 0 auto; }
+
+/* ===== ШАПКА ===== */
+.header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #E7EDE2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.header .logo { font-size: 1.2rem; font-weight: 700; color: #2C7DA0; }
+.header .logo span { color: #6B9E6B; }
+.header .sub { font-size: 0.7rem; color: #8A9B7A; margin-top: 2px; }
+
+.timer {
+    background: #2C7DA0;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+    transition: 0.3s;
+    min-width: 100px;
+    text-align: center;
+}
+.timer.warning { background: #D4A373; }
+.timer.danger { background: #b13e3e; animation: pulse 1s infinite; }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ===== ПРОГРЕСС ===== */
+.progress-wrap {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #E7EDE2;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5F7C62;
+    margin-bottom: 0.6rem;
+}
+.progress-info .current { color: #2C7DA0; font-size: 1rem; }
+.progress-track {
+    height: 10px;
+    background: #E7EDE2;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #6B9E6B, #2C7DA0);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+}
+
+/* ===== КАРТОЧКА ВОПРОСА ===== */
+.question-card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.5rem 1.8rem;
+    border: 1px solid #E7EDE2;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    margin-bottom: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.q-type-badge {
+    display: inline-block;
+    background: #E2EAD9;
+    color: #3E5C4A;
+    padding: 4px 14px;
+    border-radius: 40px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.8rem;
+}
+.q-type-badge.single { background: #D6E8F0; color: #1F4E6E; }
+.q-type-badge.multi { background: #F5E6D3; color: #8B6B2A; }
+.q-type-badge.match { background: #D9EBD9; color: #2E7D32; }
+
+.q-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.55;
+    color: #1F4E6E;
+    margin-bottom: 1.2rem;
+}
+
+/* ===== ВАРИАНТЫ ОТВЕТОВ ===== */
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 18px;
+    background: #FEFCF9;
+    border: 2px solid #E7EDE2;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: 0.15s;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.option:hover {
+    background: #F3F7F2;
+    border-color: #A3B18A;
+    transform: translateY(-1px);
+}
+.option.selected {
+    background: #E9F0E3;
+    border-color: #2C7DA0;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+.option input {
+    display: none;
+}
+.option .marker {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    background: #E2EAD9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #5F7C62;
+    font-size: 0.8rem;
+    margin-top: 1px;
+}
+.option.selected .marker {
+    background: #2C7DA0;
+    color: white;
+}
+.option .text { flex: 1; }
+
+/* ===== СООТВЕТСТВИЕ ===== */
+.match-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+.match-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    background: #FEFCF9;
+    border: 1px solid #E7EDE2;
+    border-radius: 1rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+}
+.match-row .left {
+    font-weight: 600;
+    color: #1F4E6E;
+    line-height: 1.4;
+}
+.match-row select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 2px solid #D9D0BD;
+    border-radius: 30px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    background: white;
+    color: #3E5C4A;
+    cursor: pointer;
+}
+.match-row select:focus {
+    outline: none;
+    border-color: #2C7DA0;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+}
+.match-row select.filled {
+    background: #E9F0E3;
+    border-color: #6B9E6B;
+}
+
+/* ===== КНОПКИ ===== */
+.controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 1.2rem;
+}
+.btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+    color: #3E5C4A;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-outline { background: transparent; border: 2px solid #A3B18A; }
+.btn-outline:hover { background: #F0EEE5; }
+.btn-success { background: #6B9E6B; color: white; }
+.btn-success:hover { background: #5A865A; }
+
+/* ===== ФИНАЛЬНЫЙ ЭКРАН ===== */
+.final-screen {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    border: 1px solid #E7EDE2;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    animation: fadeIn 0.4s ease;
+}
+.final-screen .icon { font-size: 4rem; margin-bottom: 0.5rem; }
+.final-screen .score {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #1F4E6E;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+}
+.final-screen .score-label {
+    font-size: 0.9rem;
+    color: #8A9B7A;
+    margin-bottom: 1rem;
+}
+.final-screen .message {
+    font-size: 1.05rem;
+    color: #3E5C4A;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    padding: 0 1rem;
+}
+.final-screen .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+.stat-box {
+    background: #F9FBF8;
+    border-radius: 1rem;
+    padding: 0.8rem;
+    border: 1px solid #E7EDE2;
+}
+.stat-box .num {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2C7DA0;
+}
+.stat-box .lbl {
+    font-size: 0.7rem;
+    color: #8A9B7A;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ===== СТАРТОВЫЙ ЭКРАН ===== */
+.start-screen {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    border: 1px solid #E7EDE2;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    text-align: center;
+}
+.start-screen .icon { font-size: 4rem; margin-bottom: 1rem; }
+.start-screen h1 {
+    font-size: 1.5rem;
+    color: #1F4E6E;
+    margin-bottom: 0.5rem;
+}
+.start-screen .subtitle {
+    color: #7C8F7C;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+.start-screen .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+.start-screen .info-item {
+    background: #F9FBF8;
+    border-radius: 1rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid #E7EDE2;
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+.start-screen .info-item strong {
+    color: #2C7DA0;
+    display: block;
+    margin-bottom: 0.2rem;
+}
+.start-screen .notice {
+    background: #FFF8E5;
+    border-left: 4px solid #D4A373;
+    padding: 0.8rem 1rem;
+    border-radius: 0 1rem 1rem 0;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    text-align: left;
+    margin-bottom: 1.5rem;
+    color: #8B6B2A;
+}
+
+/* ===== ФУТЕР ===== */
+footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    font-size: 0.7rem;
+    color: #B0BC9C;
+}
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 700px) {
+    body { padding: 0.6rem; }
+    .header { padding: 0.8rem 1rem; }
+    .header .logo { font-size: 1rem; }
+    .timer { font-size: 0.9rem; padding: 6px 16px; min-width: 85px; }
+    .question-card { padding: 1.2rem 1.2rem; }
+    .q-text { font-size: 0.95rem; }
+    .option { padding: 10px 14px; font-size: 0.85rem; }
+    .match-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 0.7rem 0.9rem;
+    }
+    .controls { flex-direction: column; }
+    .controls .btn { width: 100%; justify-content: center; }
+    .final-screen .score { font-size: 2.8rem; }
+    .final-screen { padding: 1.8rem 1.2rem; }
+    .start-screen { padding: 1.8rem 1.2rem; }
+}
+
+@media (max-width: 400px) {
+    .option .marker { width: 22px; height: 22px; min-width: 22px; font-size: 0.7rem; }
+    .q-type-badge { font-size: 0.62rem; padding: 3px 10px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== СТАРТОВЫЙ ЭКРАН ===== -->
+<div id="startScreen" class="start-screen">
+    <div class="icon">📝</div>
+    <h1>Промежуточная аттестация</h1>
+    <div class="subtitle">Тренажёр «Рацион PRO» · ВетСим</div>
+
+    <div class="info-grid">
+        <div class="info-item">
+            <strong>📋 Вопросов</strong>
+            20 заданий трёх типов
+        </div>
+        <div class="info-item">
+            <strong>⏱ Время</strong>
+            15 минут
+        </div>
+        <div class="info-item">
+            <strong>🎯 Формат</strong>
+            Один вопрос на экране
+        </div>
+        <div class="info-item">
+            <strong>📊 Оценка</strong>
+            % правильных ответов
+        </div>
+    </div>
+
+    <div class="notice">
+        <strong>⚠️ Важно:</strong> после начала теста таймер запустится автоматически. Вопросы и варианты ответов перемешиваются. Копирование текста отключено. По истечении 15 минут тест завершится автоматически.
+    </div>
+
+    <button class="btn btn-primary" id="startBtn" style="padding: 14px 40px; font-size: 0.95rem;">
+        🚀 Начать тестирование
+    </button>
+</div>
+
+<!-- ===== ЭКРАН ТЕСТА ===== -->
+<div id="testScreen" style="display:none;">
+
+    <header class="header">
+        <div>
+            <div class="logo">🐾 ВетСим · <span>Рацион PRO</span></div>
+            <div class="sub">Промежуточная аттестация</div>
+        </div>
+        <div class="timer" id="timer">15:00</div>
+    </header>
+
+    <div class="progress-wrap">
+        <div class="progress-info">
+            <span>Вопрос <span class="current" id="qCurrent">1</span> из <span id="qTotal">20</span></span>
+            <span id="qPercent">0%</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <div class="question-card" id="questionCard">
+        <!-- содержимое вопроса рендерится скриптом -->
+    </div>
+
+    <div class="controls">
+        <button class="btn btn-outline" id="prevBtn" disabled>◀ Назад</button>
+        <button class="btn btn-primary" id="nextBtn">Далее ▶</button>
+    </div>
+
+</div>
+
+<!-- ===== ФИНАЛЬНЫЙ ЭКРАН ===== -->
+<div id="finalScreen" style="display:none;"></div>
+
+<footer>
+    © ВетСим — ветеринарное просвещение · Рацион PRO<br>
+    Промежуточная аттестация · 2026
+</footer>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    // ================================================================
+    //  ЗАЩИТА ОТ КОПИРОВАНИЯ
+    // ================================================================
+    document.addEventListener('copy', e => e.preventDefault());
+    document.addEventListener('cut', e => e.preventDefault());
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && ['c', 'C', 'x', 'X', 'a', 'A', 'p', 'P', 's', 'S'].includes(e.key)) {
+            e.preventDefault();
+        }
+        if (e.key === 'PrintScreen') {
+            e.preventDefault();
+        }
+    });
+
+    // ================================================================
+    //  БАНК ВОПРОСОВ (20 заданий трёх типов)
+    //  type: 'single' | 'multi' | 'match'
+    // ================================================================
+    const QUESTIONS = [
+        // ===== ТИП: ОДИНОЧНЫЙ ВЫБОР =====
+        {
+            type: 'single',
+            question: 'Сколько показателей отслеживает базовая версия тренажёра «Рацион PRO»?',
+            options: ['3', '5', '19', '16'],
+            correct: 1
+        },
+        {
+            type: 'single',
+            question: 'Какой показатель НЕ входит в базовую версию тренажёра?',
+            options: ['Обменная энергия (ОЭ)', 'Сырой протеин (СП)', 'Крахмал', 'Кальций (Ca)'],
+            correct: 2
+        },
+        {
+            type: 'single',
+            question: 'Какой цвет индикатора означает, что показатель находится в норме (90–110%)?',
+            options: ['🔴 Красный', '🟡 Жёлтый', '🟢 Зелёный', '⚪ Белый'],
+            correct: 2
+        },
+        {
+            type: 'single',
+            question: 'Какой корм является рекордсменом по содержанию сахара (600 г на 1 кг)?',
+            options: ['Свёкла кормовая', 'Патока кормовая', 'Свёкла сахарная', 'Морковь кормовая'],
+            correct: 2
+        },
+        {
+            type: 'single',
+            question: 'Какое заболевание развивается при дефиците сахара и крахмала в рационе?',
+            options: ['Ацидоз рубца', 'Кетоз', 'Остеодистрофия', 'Тимпания'],
+            correct: 1
+        },
+        {
+            type: 'single',
+            question: 'Какой корм является рекордсменом по содержанию крахмала (600 г на 1 кг)?',
+            options: ['Ячмень', 'Овёс', 'Картофель кормовой', 'Отруби пшеничные'],
+            correct: 2
+        },
+        {
+            type: 'single',
+            question: 'При каком отклонении индикатор становится красным?',
+            options: [
+                'При отклонении более 30% от нормы',
+                'При отклонении более 10% от нормы',
+                'При отклонении более 5% от нормы',
+                'При отклонении более 50% от нормы'
+            ],
+            correct: 0
+        },
+        {
+            type: 'single',
+            question: 'Какое отношение Ca:P считается оптимальным для КРС?',
+            options: ['0,5–1,0 : 1', '1,5–2,0 : 1', '3,0–4,0 : 1', '5,0–6,0 : 1'],
+            correct: 1
+        },
+
+        // ===== ТИП: МНОЖЕСТВЕННЫЙ ВЫБОР =====
+        {
+            type: 'multi',
+            question: 'Выберите все корма, которые относятся к группе «Корнеклубнеплоды»:',
+            options: [
+                'Картофель кормовой',
+                'Силос кукурузный',
+                'Морковь кормовая',
+                'Свёкла кормовая',
+                'Ячмень',
+                'Патока кормовая'
+            ],
+            correct: [0, 2, 3]
+        },
+        {
+            type: 'multi',
+            question: 'Какие показатели отслеживаются ТОЛЬКО в расширенной версии тренажёра?',
+            options: [
+                'Сахар',
+                'Обменная энергия (ОЭ)',
+                'Крахмал',
+                'Витамин D',
+                'Сырой протеин (СП)',
+                'Цинк (Zn)'
+            ],
+            correct: [0, 2, 3, 5]
+        },
+        {
+            type: 'multi',
+            question: 'Какие ветеринарные риски отслеживает тренажёр «Рацион PRO»?',
+            options: [
+                'Кетоз',
+                'Ацидоз рубца',
+                'Остеодистрофия',
+                'Мастит',
+                'Тимпания',
+                'Родильный парез'
+            ],
+            correct: [0, 1, 2]
+        },
+        {
+            type: 'multi',
+            question: 'Какие корма могут использоваться для профилактики кетоза?',
+            options: [
+                'Свёкла кормовая',
+                'Патока кормовая',
+                'Картофель кормовой',
+                'Сено люцерновое',
+                'Ячмень',
+                'Премикс'
+            ],
+            correct: [0, 1, 2]
+        },
+        {
+            type: 'multi',
+            question: 'Какие факторы влияют на расчёт норм в тренажёре?',
+            options: [
+                'Вид животного',
+                'Живая масса',
+                'Сезон года',
+                'Кличка животного',
+                'Цель рациона',
+                'Возраст владельца'
+            ],
+            correct: [0, 1, 2, 4]
+        },
+        {
+            type: 'multi',
+            question: 'Какие показатели относятся к группе микроэлементов в расширенной версии?',
+            options: [
+                'Цинк (Zn)',
+                'Кальций (Ca)',
+                'Медь (Cu)',
+                'Фосфор (P)',
+                'Йод (I)',
+                'Селен (Se)'
+            ],
+            correct: [0, 2, 4, 5]
+        },
+
+        // ===== ТИП: СООТВЕТСТВИЕ =====
+        {
+            type: 'match',
+            question: 'Установите соответствие между кормом и его основной питательной характеристикой:',
+            pairs: [
+                { left: 'Свёкла сахарная', right: '600 г сахара на 1 кг' },
+                { left: 'Картофель кормовой', right: '600 г крахмала на 1 кг' },
+                { left: 'Морковь кормовая', right: '250 мг каротина на 1 кг' },
+                { left: 'Сено люцерновое', right: 'Высокое содержание кальция' }
+            ]
+        },
+        {
+            type: 'match',
+            question: 'Соотнесите ветеринарный риск с его причиной:',
+            pairs: [
+                { left: 'Кетоз', right: 'Дефицит сахара и крахмала' },
+                { left: 'Ацидоз рубца', right: 'Избыток крахмала, дефицит клетчатки' },
+                { left: 'Остеодистрофия', right: 'Нарушение Ca:P и дефицит витамина D' },
+                { left: 'Снижение продуктивности', right: 'Общий дисбаланс рациона' }
+            ]
+        },
+        {
+            type: 'match',
+            question: 'Соотнесите цвет индикатора с его значением:',
+            pairs: [
+                { left: '🟢 Зелёный', right: '90–110% от нормы' },
+                { left: '🟡 Жёлтый', right: '70–90% или 110–130% от нормы' },
+                { left: '🔴 Красный', right: 'Менее 70% или более 130% от нормы' },
+                { left: 'Норма', right: 'Полное соответствие потребности' }
+            ]
+        },
+        {
+            type: 'match',
+            question: 'Соотнесите версию тренажёра с её характеристикой:',
+            pairs: [
+                { left: 'Базовая версия', right: '5 показателей, для начинающих' },
+                { left: 'Расширенная версия', right: '19 показателей, углублённый анализ' },
+                { left: 'Экономический блок', right: 'Только в расширенной версии' },
+                { left: 'Ветеринарные риски', right: 'Отображаются автоматически' }
+            ]
+        },
+        {
+            type: 'match',
+            question: 'Соотнесите цель рациона с её влиянием на нормы:',
+            pairs: [
+                { left: 'Профилактика кетоза', right: 'Сахар +20%, крахмал +15%' },
+                { left: 'Профилактика ацидоза', right: 'Клетчатка +15%' },
+                { left: 'Коррекция минерального обмена', right: 'Ca и P +10%' },
+                { left: 'Поддержание продуктивности', right: 'Базовые нормы' }
+            ]
+        }
+    ];
+
+    // ================================================================
+    //  СОСТОЯНИЕ
+    // ================================================================
+    let questions = [];
+    let currentIndex = 0;
+    let userAnswers = [];
+    let timerInterval = null;
+    let secondsLeft = 15 * 60;
+    let testStarted = false;
+
+    const $ = id => document.getElementById(id);
+
+    // ================================================================
+    //  ПЕРЕМЕШИВАНИЕ
+    // ================================================================
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function prepareQuestions() {
+        // Перемешиваем порядок вопросов
+        const shuffled = shuffle(QUESTIONS).slice(0, 20);
+
+        return shuffled.map(q => {
+            if (q.type === 'single') {
+                const correctAnswer = q.options[q.correct];
+                const shuffledOptions = shuffle(q.options);
+                return {
+                    type: 'single',
+                    question: q.question,
+                    options: shuffledOptions,
+                    correct: shuffledOptions.indexOf(correctAnswer)
+                };
+            }
+            if (q.type === 'multi') {
+                const correctOptions = q.correct.map(i => q.options[i]);
+                const shuffledOptions = shuffle(q.options);
+                return {
+                    type: 'multi',
+                    question: q.question,
+                    options: shuffledOptions,
+                    correct: correctOptions.map(c => shuffledOptions.indexOf(c))
+                };
+            }
+            if (q.type === 'match') {
+                const lefts = q.pairs.map(p => p.left);
+                const rights = q.pairs.map(p => p.right);
+                const shuffledRights = shuffle(rights);
+                const correctMapping = lefts.map(left => {
+                    const originalPair = q.pairs.find(p => p.left === left);
+                    return shuffledRights.indexOf(originalPair.right);
+                });
+                return {
+                    type: 'match',
+                    question: q.question,
+                    lefts: lefts,
+                    rightOptions: shuffledRights,
+                    correct: correctMapping
+                };
+            }
+            return q;
+        });
+    }
+
+    // ================================================================
+    //  СТАРТ ТЕСТА
+    // ================================================================
+    function startTest() {
+        testStarted = true;
+        questions = prepareQuestions();
+        userAnswers = questions.map(q => {
+            if (q.type === 'single') return null;
+            if (q.type === 'multi') return [];
+            if (q.type === 'match') return new Array(q.lefts.length).fill(null);
+            return null;
+        });
+
+        $('startScreen').style.display = 'none';
+        $('testScreen').style.display = 'block';
+        $('qTotal').textContent = questions.length;
+
+        startTimer();
+        renderQuestion();
+    }
+
+    // ================================================================
+    //  ТАЙМЕР
+    // ================================================================
+    function startTimer() {
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            secondsLeft--;
+            updateTimerDisplay();
+            if (secondsLeft <= 0) {
+                clearInterval(timerInterval);
+                finishTest(true);
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const m = Math.floor(secondsLeft / 60);
+        const s = secondsLeft % 60;
+        const el = $('timer');
+        el.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+
+        el.classList.remove('warning', 'danger');
+        if (secondsLeft <= 60) el.classList.add('danger');
+        else if (secondsLeft <= 300) el.classList.add('warning');
+    }
+
+    // ================================================================
+    //  РЕНДЕР ВОПРОСА
+    // ================================================================
+    function renderQuestion() {
+        const q = questions[currentIndex];
+        const card = $('questionCard');
+
+        let typeLabel = '';
+        let typeClass = '';
+        if (q.type === 'single') { typeLabel = 'Одиночный выбор'; typeClass = 'single'; }
+        else if (q.type === 'multi') { typeLabel = 'Множественный выбор'; typeClass = 'multi'; }
+        else if (q.type === 'match') { typeLabel = 'Установление соответствия'; typeClass = 'match'; }
+
+        let html = `<div class="q-type-badge ${typeClass}">${typeLabel}</div>`;
+        html += `<div class="q-text">${currentIndex + 1}. ${q.question}</div>`;
+
+        if (q.type === 'single') {
+            html += `<div class="options">`;
+            q.options.forEach((opt, i) => {
+                const selected = userAnswers[currentIndex] === i;
+                const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е'];
+                html += `<div class="option ${selected ? 'selected' : ''}" data-opt="${i}">
+                    <div class="marker">${letters[i]}</div>
+                    <div class="text">${opt}</div>
+                </div>`;
+            });
+            html += `</div>`;
+        }
+
+        if (q.type === 'multi') {
+            html += `<div style="font-size:0.78rem; color:#8A9B7A; margin-bottom:0.6rem;">
+                ⓘ Выберите все правильные варианты
+            </div>`;
+            html += `<div class="options">`;
+            q.options.forEach((opt, i) => {
+                const selected = userAnswers[currentIndex].includes(i);
+                const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е'];
+                html += `<div class="option ${selected ? 'selected' : ''}" data-opt="${i}">
+                    <div class="marker">${selected ? '✓' : letters[i]}</div>
+                    <div class="text">${opt}</div>
+                </div>`;
+            });
+            html += `</div>`;
+        }
+
+        if (q.type === 'match') {
+            html += `<div class="match-table">`;
+            q.lefts.forEach((left, i) => {
+                const selectedVal = userAnswers[currentIndex][i];
+                html += `<div class="match-row">
+                    <div class="left">${left}</div>
+                    <select data-match="${i}" class="${selectedVal !== null ? 'filled' : ''}">
+                        <option value="">— выберите —</option>`;
+                q.rightOptions.forEach((right, j) => {
+                    const sel = selectedVal === j ? 'selected' : '';
+                    html += `<option value="${j}" ${sel}>${right}</option>`;
+                });
+                html += `</select></div>`;
+            });
+            html += `</div>`;
+        }
+
+        card.innerHTML = html;
+
+        // Обработчики для single/multi
+        card.querySelectorAll('.option').forEach(optEl => {
+            optEl.addEventListener('click', () => {
+                const optIndex = parseInt(optEl.dataset.opt);
+                handleOptionClick(optIndex);
+            });
+        });
+
+        // Обработчики для match
+        card.querySelectorAll('select[data-match]').forEach(sel => {
+            sel.addEventListener('change', function() {
+                const idx = parseInt(this.dataset.match);
+                const val = this.value === '' ? null : parseInt(this.value);
+                userAnswers[currentIndex][idx] = val;
+                this.classList.toggle('filled', val !== null);
+            });
+        });
+
+        updateProgress();
+        updateNavButtons();
+    }
+
+    // ================================================================
+    //  ОБРАБОТКА КЛИКА ПО ВАРИАНТУ
+    // ================================================================
+    function handleOptionClick(optIndex) {
+        const q = questions[currentIndex];
+
+        if (q.type === 'single') {
+            userAnswers[currentIndex] = optIndex;
+            renderQuestion();
+        } else if (q.type === 'multi') {
+            const arr = userAnswers[currentIndex];
+            const pos = arr.indexOf(optIndex);
+            if (pos === -1) {
+                arr.push(optIndex);
+            } else {
+                arr.splice(pos, 1);
+            }
+            renderQuestion();
+        }
+    }
+
+    // ================================================================
+    //  НАВИГАЦИЯ
+    // ================================================================
+    function updateNavButtons() {
+        $('prevBtn').disabled = currentIndex === 0;
+        const isLast = currentIndex === questions.length - 1;
+        const nextBtn = $('nextBtn');
+        if (isLast) {
+            nextBtn.textContent = '🏁 Завершить';
+            nextBtn.className = 'btn btn-success';
+        } else {
+            nextBtn.textContent = 'Далее ▶';
+            nextBtn.className = 'btn btn-primary';
+        }
+    }
+
+    function updateProgress() {
+        const total = questions.length;
+        const current = currentIndex + 1;
+        const percent = Math.round((current / total) * 100);
+        $('qCurrent').textContent = current;
+        $('qPercent').textContent = percent + '%';
+        $('progressFill').style.width = percent + '%';
+    }
+
+    function goPrev() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            renderQuestion();
+        }
+    }
+
+    function goNext() {
+        if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            renderQuestion();
+        } else {
+            finishTest(false);
+        }
+    }
+
+    // ================================================================
+    //  ЗАВЕРШЕНИЕ ТЕСТА
+    // ================================================================
+    function finishTest(timeout = false) {
+        if (timerInterval) clearInterval(timerInterval);
+
+        let correctCount = 0;
+        const total = questions.length;
+
+        questions.forEach((q, i) => {
+            const userAns = userAnswers[i];
+
+            if (q.type === 'single') {
+                if (userAns === q.correct) correctCount++;
+            }
+
+            if (q.type === 'multi') {
+                const user = [...userAns].sort((a, b) => a - b).join(',');
+                const correct = [...q.correct].sort((a, b) => a - b).join(',');
+                if (user === correct && userAns.length > 0) correctCount++;
+            }
+
+            if (q.type === 'match') {
+                const allCorrect = q.correct.every((c, idx) => userAns[idx] === c);
+                if (allCorrect && userAns.every(a => a !== null)) correctCount++;
+            }
+        });
+
+        const percent = Math.round((correctCount / total) * 100);
+
+        $('testScreen').style.display = 'none';
+        $('finalScreen').style.display = 'block';
+
+        const icon = percent >= 90 ? '🏆' : percent >= 75 ? '🎉' : percent >= 60 ? '😊' : '📚';
+        const message = percent >= 90 ? 'Отличный результат! Вы отлично разбираетесь в балансировании рационов.' :
+                        percent >= 75 ? 'Хороший результат! Вы уверенно владеете материалом.' :
+                        percent >= 60 ? 'Неплохо! Стоит повторить некоторые темы.' :
+                        'Рекомендуем вернуться к тренажёру и повторить материал.';
+
+        const timeoutMsg = timeout ? '<div style="color:#b13e3e; font-weight:600; margin-bottom:1rem;">⏰ Время вышло! Тест завершён автоматически.</div>' : '';
+
+        const finalHtml = `
+            <div class="final-screen">
+                ${timeoutMsg}
+                <div class="icon">${icon}</div>
+                <div class="score">${percent}%</div>
+                <div class="score-label">правильных ответов</div>
+                <div class="message">${message}</div>
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="num">${correctCount}</div>
+                        <div class="lbl">Верно</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="num">${total - correctCount}</div>
+                        <div class="lbl">Ошибок</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="num">${total}</div>
+                        <div class="lbl">Всего</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="location.reload()" style="padding: 12px 36px; font-size: 0.9rem;">
+                    🔄 Пройти заново
+                </button>
+            </div>
+        `;
+
+        $('finalScreen').innerHTML = finalHtml;
+    }
+
+    // ================================================================
+    //  ПОДКЛЮЧЕНИЕ СОБЫТИЙ
+    // ================================================================
+    $('startBtn').addEventListener('click', startTest);
+    $('prevBtn').addEventListener('click', goPrev);
+    $('nextBtn').addEventListener('click', goNext);
+
+})();
+</script>
+</body>
+</html>

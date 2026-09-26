@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Инструкция · Рацион PRO · ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #3E5C4A;
+    padding: 1rem;
+    min-height: 100vh;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* ===== ШАПКА ===== */
+.header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.2rem 1.8rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #E7EDE2;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+}
+.header .logo { font-size: 1.4rem; font-weight: 700; color: #2C7DA0; }
+.header .logo span { color: #6B9E6B; }
+.header .sub { font-size: 0.75rem; color: #8A9B7A; margin-top: 2px; }
+.header .badge {
+    background: #2C7DA0;
+    color: white;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ===== СОДЕРЖАНИЕ ===== */
+.toc {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.2rem 1.8rem;
+    border: 1px solid #E7EDE2;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.toc-title {
+    font-weight: 700;
+    color: #2C7DA0;
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+}
+.toc ol {
+    padding-left: 1.4rem;
+    line-height: 1.9;
+    font-size: 0.85rem;
+}
+.toc a {
+    color: #3E5C4A;
+    text-decoration: none;
+    transition: 0.15s;
+}
+.toc a:hover { color: #2C7DA0; text-decoration: underline; }
+
+/* ===== КАРТОЧКИ РАЗДЕЛОВ ===== */
+.section {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 1.4rem 1.8rem;
+    border: 1px solid #E7EDE2;
+    margin-bottom: 1.2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    scroll-margin-top: 20px;
+}
+.section-title {
+    font-weight: 700;
+    color: #2C7DA0;
+    font-size: 1.15rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid #E7EDE2;
+}
+.section-title .num {
+    background: #2C7DA0;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.section p {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    margin-bottom: 0.7rem;
+}
+
+/* ===== СПИСКИ ===== */
+.section ul, .section ol {
+    padding-left: 1.4rem;
+    font-size: 0.85rem;
+    line-height: 1.75;
+    margin-bottom: 0.7rem;
+}
+.section li { margin-bottom: 0.3rem; }
+
+/* ===== ВЫДЕЛЕНИЯ ===== */
+.highlight {
+    background: #E9F0E3;
+    padding: 0.1rem 0.4rem;
+    border-radius: 6px;
+    font-weight: 600;
+}
+.latin {
+    font-family: Georgia, serif;
+    color: #1F4E6E;
+    font-weight: 700;
+}
+
+/* ===== ИНФО-БЛОКИ ===== */
+.notice {
+    background: #F7F3E8;
+    border-left: 4px solid #2C7DA0;
+    padding: 0.8rem 1.1rem;
+    border-radius: 0 1rem 1rem 0;
+    margin: 0.8rem 0;
+    font-size: 0.82rem;
+    line-height: 1.6;
+}
+.notice.warning {
+    background: #FFF8E5;
+    border-left-color: #D4A373;
+}
+.notice.success {
+    background: #E8F5E8;
+    border-left-color: #6B9E6B;
+}
+.notice strong { color: #1F4E6E; }
+
+/* ===== ШАГИ ===== */
+.step {
+    display: flex;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+    padding: 0.8rem 1rem;
+    background: #F9FBF8;
+    border-radius: 1rem;
+    border: 1px solid #E7EDE2;
+}
+.step-num {
+    background: #6B9E6B;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+.step-content {
+    flex: 1;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+.step-content strong { color: #2C7DA0; }
+
+/* ===== ТАБЛИЦЫ ===== */
+.table-wrap { overflow-x: auto; margin: 0.8rem 0; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+th, td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid #E7EDE2;
+    text-align: left;
+}
+th {
+    background: #F9F6EF;
+    color: #2C7DA0;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+tr:last-child td { border-bottom: none; }
+
+/* ===== КАРТОЧКИ КОРМОВ ===== */
+.feed-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.8rem;
+    margin: 0.8rem 0;
+}
+.feed-card {
+    background: #F9FBF8;
+    border: 1px solid #E7EDE2;
+    border-radius: 1rem;
+    padding: 0.8rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+.feed-card .name {
+    font-weight: 700;
+    color: #2C7DA0;
+    display: block;
+    margin-bottom: 0.3rem;
+}
+.feed-card .stat {
+    font-size: 0.7rem;
+    color: #8A9B7A;
+}
+
+/* ===== ПРИМЕР РАЦИОНА ===== */
+.example-box {
+    background: #F3F7F2;
+    border: 2px dashed #A3B18A;
+    border-radius: 1rem;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+    font-size: 0.85rem;
+    line-height: 1.65;
+}
+.example-box .title {
+    font-weight: 700;
+    color: #2C7DA0;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+/* ===== КНОПКИ-ТЕГИ ===== */
+.tag {
+    display: inline-block;
+    background: #E2EAD9;
+    color: #3E5C4A;
+    padding: 3px 12px;
+    border-radius: 40px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+.tag.blue { background: #D6E8F0; color: #1F4E6E; }
+.tag.green { background: #D9EBD9; color: #2E7D32; }
+.tag.orange { background: #F5E6D3; color: #8B6B2A; }
+
+/* ===== ВЕРСИИ ===== */
+.version-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 0.8rem 0;
+}
+@media (max-width: 600px) {
+    .version-compare { grid-template-columns: 1fr; }
+}
+.version-card {
+    border-radius: 1rem;
+    padding: 1rem 1.2rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+}
+.version-card.basic {
+    background: #F0F5EA;
+    border: 2px solid #A3B18A;
+}
+.version-card.extended {
+    background: #EAF2F8;
+    border: 2px solid #2C7DA0;
+}
+.version-card .v-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+}
+.version-card.basic .v-title { color: #6B9E6B; }
+.version-card.extended .v-title { color: #2C7DA0; }
+
+/* ===== ФУТЕР ===== */
+footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #EDE8DC;
+    font-size: 0.72rem;
+    color: #B0BC9C;
+}
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 700px) {
+    body { padding: 0.6rem; }
+    .header { flex-direction: column; align-items: stretch; text-align: center; padding: 1rem; }
+    .section { padding: 1rem 1.2rem; }
+    .section-title { font-size: 1rem; }
+    .feed-grid { grid-template-columns: 1fr; }
+    .step { flex-direction: column; gap: 0.5rem; }
+}
+
+@media print {
+    body { background: white; padding: 0.2in; }
+    .header, .section { box-shadow: none; break-inside: avoid; }
+    .toc { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== ШАПКА ===== -->
+<header class="header">
+    <div>
+        <div class="logo">🐾 ВетСим · <span>Рацион PRO</span></div>
+        <div class="sub">Инструкция по работе с интерактивным тренажёром</div>
+    </div>
+    <div class="badge">📖 Руководство пользователя</div>
+</header>
+
+<!-- ===== СОДЕРЖАНИЕ ===== -->
+<nav class="toc">
+    <div class="toc-title">📋 Содержание</div>
+    <ol>
+        <li><a href="#intro">Что такое «Рацион PRO» и зачем он нужен</a></li>
+        <li><a href="#versions">Две версии тренажёра: базовая и расширенная</a></li>
+        <li><a href="#interface">Интерфейс: обзор экрана</a></li>
+        <li><a href="#animal">Шаг 1. Настройка параметров животного</a></li>
+        <li><a href="#feeds">Шаг 2. Работа с базой кормов</a></li>
+        <li><a href="#ration">Шаг 3. Конструирование рациона</a></li>
+        <li><a href="#indicators">Шаг 4. Чтение индикаторов баланса</a></li>
+        <li><a href="#prognosis">Шаг 5. Прогноз и ветеринарные риски</a></li>
+        <li><a href="#economics">Шаг 6. Экономика рациона</a></li>
+        <li><a href="#examples">Примеры учебных заданий</a></li>
+        <li><a href="#save">Сохранение и сброс</a></li>
+        <li><a href="#tips">Полезные советы</a></li>
+    </ol>
+</nav>
+
+<!-- ===== 1. ВВЕДЕНИЕ ===== -->
+<section class="section" id="intro">
+    <div class="section-title"><span class="num">1</span> Что такое «Рацион PRO» и зачем он нужен</div>
+    <p><span class="highlight">«Рацион PRO»</span> — это бесплатный цифровой тренажёр для студентов ветеринарных и зоотехнических специальностей. Он помогает освоить принципы балансирования рационов крупного рогатого скота и понять связь между кормлением и здоровьем животных.</p>
+
+    <p>В отличие от промышленных программ («Кормовые рационы», «AGROBASE», «DairyComp 305»), тренажёр:</p>
+    <ul>
+        <li><strong>бесплатен</strong> — не требует лицензии;</li>
+        <li><strong>работает автономно</strong> — не нужен интернет;</li>
+        <li><strong>прост в освоении</strong> — интерфейс понятен с первого занятия;</li>
+        <li><strong>содержит 16 кормов</strong> — включая корнеклубнеплоды и сахарные добавки;</li>
+        <li><strong>интегрирует ветеринарные риски</strong> — кетоз, ацидоз, остеодистрофия;</li>
+        <li><strong>имеет два режима</strong> — базовый и расширенный.</li>
+    </ul>
+
+    <div class="notice">
+        <strong>🎯 Цель работы:</strong> составить рацион, который по ключевым показателям (ОЭ, СП, Ca, P, клетчатка, сахар, крахмал и др.) находится в пределах <strong>90–110% от нормы</strong>.
+    </div>
+</section>
+
+<!-- ===== 2. ВЕРСИИ ===== -->
+<section class="section" id="versions">
+    <div class="section-title"><span class="num">2</span> Две версии тренажёра: базовая и расширенная</div>
+    <p>В верхней части экрана находится переключатель версий. Вы можете работать в одном из двух режимов:</p>
+
+    <div class="version-compare">
+        <div class="version-card basic">
+            <div class="v-title">📊 Базовая версия</div>
+            <p><strong>Назначение:</strong> первичное освоение, формирование базовых навыков.</p>
+            <p><strong>Показатели:</strong> ОЭ, СП, Ca, P, клетчатка (5 показателей).</p>
+            <p><strong>Особенности:</strong> упрощённый интерфейс, отсутствует экономический блок, общие рекомендации.</p>
+        </div>
+        <div class="version-card extended">
+            <div class="v-title">🔬 Расширенная версия</div>
+            <p><strong>Назначение:</strong> углублённая работа, формирование профессиональных компетенций.</p>
+            <p><strong>Показатели:</strong> 19 показателей, включая сахар, крахмал, витамины, микроэлементы.</p>
+            <p><strong>Особенности:</strong> полный список кормов, экономический блок, детализированный прогноз рисков.</p>
+        </div>
+    </div>
+
+    <div class="notice">
+        <strong>💡 Как переключаться:</strong> нажмите на кнопку «📊 Базовая версия» или «🔬 Расширенная версия» в верхней части экрана. Все данные рациона сохраняются при переключении.
+    </div>
+
+    <div class="notice warning">
+        <strong>⚠️ Важно:</strong> при переключении версий рацион не сбрасывается. Вы можете начать в базовой версии, а затем продолжить в расширенной для более детального анализа.
+    </div>
+</section>
+
+<!-- ===== 3. ИНТЕРФЕЙС ===== -->
+<section class="section" id="interface">
+    <div class="section-title"><span class="num">3</span> Интерфейс: обзор экрана</div>
+    <p>В верхней части экрана расположены:</p>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Элемент</th><th>Назначение</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>📊 Базовая версия</td><td>5 ключевых показателей (ОЭ, СП, Ca, P, клетчатка) — для начинающих</td></tr>
+                <tr><td>🔬 Расширенная версия</td><td>19 показателей — включая витамины, микроэлементы, сахар, крахмал</td></tr>
+                <tr><td>💾 Сохранить</td><td>Сохраняет текущий рацион в браузере</td></tr>
+                <tr><td>🗑️ Очистить</td><td>Удаляет все корма из рациона</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Основная область разделена на две колонки:</p>
+    <ul>
+        <li><strong>Слева</strong> — параметры животного, список доступных кормов и экономика (в расширенной версии);</li>
+        <li><strong>Справа</strong> — конструктор рациона и индикаторы баланса.</li>
+    </ul>
+    <p>Внизу — блок <strong>«Прогноз и рекомендации»</strong> с ветеринарными рисками.</p>
+</section>
+
+<!-- ===== 4. ПАРАМЕТРЫ ЖИВОТНОГО ===== -->
+<section class="section" id="animal">
+    <div class="section-title"><span class="num">4</span> Шаг 1. Настройка параметров животного</div>
+    <p>Перед началом работы задайте параметры животного — от них зависят нормы питательных веществ. В обеих версиях параметры одинаковы.</p>
+
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Вид / Статус.</strong> Выберите группу из списка: сухостойная корова, лактирующая (15 л или 25 л), телёнок 6 мес., бычок на откорме.
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Живая масса (кг).</strong> Введите массу животного. При смене вида она подставляется автоматически, но её можно скорректировать.
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+            <strong>Сезон.</strong> Зима или лето. Летом нормы по витамину D и каротину снижаются — это учитывается автоматически.
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+            <strong>Цель рациона.</strong> Одна из пяти:
+            <ul style="margin-top:0.4rem;">
+                <li><span class="tag blue">Поддержание продуктивности</span> — базовые нормы.</li>
+                <li><span class="tag orange">Профилактика кетоза</span> — сахар +20%, крахмал +15%.</li>
+                <li><span class="tag orange">Профилактика ацидоза</span> — клетчатка +15%.</li>
+                <li><span class="tag orange">Коррекция минерального обмена</span> — Ca и P +10%.</li>
+                <li><span class="tag blue">Повышение усвояемости</span> — базовые нормы.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="notice warning">
+        <strong>⚠️ Важно:</strong> при смене цели рациона нормы пересчитываются автоматически. Следите за индикаторами — они обновляются мгновенно.
+    </div>
+</section>
+
+<!-- ===== 5. БАЗА КОРМОВ ===== -->
+<section class="section" id="feeds">
+    <div class="section-title"><span class="num">5</span> Шаг 2. Работа с базой кормов</div>
+    <p>База содержит <strong>16 кормов</strong>, сгруппированных по категориям. Рядом с каждым кормом — кнопка <strong>➕</strong> для добавления в рацион. База одинакова для обеих версий.</p>
+
+    <div class="feed-grid">
+        <div class="feed-card">
+            <span class="name">🌾 Грубые корма</span>
+            <div class="stat">Сено злаково-бобовое · Сено люцерновое</div>
+        </div>
+        <div class="feed-card">
+            <span class="name">🌿 Сочные корма</span>
+            <div class="stat">Силос кукурузный · Силос злаковый · Сенаж</div>
+        </div>
+        <div class="feed-card">
+            <span class="name">🥕 Корнеклубнеплоды</span>
+            <div class="stat">Картофель · Морковь · Свёкла кормовая · Турнепс · Брюква · Свёкла сахарная</div>
+        </div>
+        <div class="feed-card">
+            <span class="name">🍯 Сахарные добавки</span>
+            <div class="stat">Патока кормовая (меласса)</div>
+        </div>
+        <div class="feed-card">
+            <span class="name">🌾 Концентраты</span>
+            <div class="stat">Овёс · Ячмень · Отруби пшеничные</div>
+        </div>
+        <div class="feed-card">
+            <span class="name">💊 Балансирующие</span>
+            <div class="stat">Премикс П60-3 (витамины + минералы)</div>
+        </div>
+    </div>
+
+    <p><strong>Рекордные значения новых кормов:</strong></p>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Корм</th><th>Что даёт</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>🍬 Свёкла сахарная</td><td>600 г сахара на 1 кг</td></tr>
+                <tr><td>🍯 Патока</td><td>500 г сахара на 1 кг</td></tr>
+                <tr><td>🥔 Картофель</td><td>600 г крахмала на 1 кг</td></tr>
+                <tr><td>🥕 Морковь</td><td>250 мг каротина на 1 кг</td></tr>
+                <tr><td>🫒 Свёкла кормовая</td><td>400 г сахара на 1 кг</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ===== 6. КОНСТРУКТОР ===== -->
+<section class="section" id="ration">
+    <div class="section-title"><span class="num">6</span> Шаг 3. Конструирование рациона</div>
+    <p>Нажмите <strong>➕</strong> рядом с кормом — он появится в таблице «Конструктор рациона». Начальное количество:</p>
+    <ul>
+        <li><strong>1 кг</strong> — для всех кормов, кроме премикса;</li>
+        <li><strong>0,1 кг</strong> — для премикса.</li>
+    </ul>
+
+    <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+            <strong>Изменение количества.</strong> В колонке «Кол-во (кг)» введите нужное значение. Изменения пересчитываются мгновенно.
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+            <strong>Повторное нажатие ➕</strong> увеличивает количество корма на <strong>0,5 кг</strong> (для премикса — на <strong>0,05 кг</strong>).
+        </div>
+    </div>
+
+    <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+            <strong>Удаление корма.</strong> Нажмите <strong>✕</strong> в строке или введите 0 в поле количества.
+        </div>
+    </div>
+
+    <div class="notice">
+        <strong>💡 Подсказка:</strong> начинайте с грубых и сочных кормов (сено, силос, сенаж), затем добавляйте концентраты и корнеклубнеплоды, а в конце — премикс.
+    </div>
+</section>
+
+<!-- ===== 7. ИНДИКАТОРЫ ===== -->
+<section class="section" id="indicators">
+    <div class="section-title"><span class="num">7</span> Шаг 4. Чтение индикаторов баланса</div>
+    <p>Индикаторы показывают, насколько фактическое содержание питательного вещества соответствует норме. В <strong>базовой версии</strong> — 5 индикаторов, в <strong>расширенной</strong> — 19.</p>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Цвет</th><th>Процент от нормы</th><th>Что это значит</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>🟢 Зелёный</td><td>90–110%</td><td>Норма — рацион сбалансирован</td></tr>
+                <tr><td>🟡 Жёлтый</td><td>70–90% или 110–130%</td><td>Небольшое отклонение — стоит скорректировать</td></tr>
+                <tr><td>🔴 Красный</td><td>менее 70% или более 130%</td><td>Критическое отклонение — требуется коррекция</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Каждый индикатор показывает:</p>
+    <ul>
+        <li><strong>Фактическое значение</strong> / <strong>норма</strong> / <strong>единица измерения</strong>;</li>
+        <li><strong>Полосу заполнения</strong> — визуально видно отклонение;</li>
+        <li><strong>Процент</strong> от нормы — точная оценка.</li>
+    </ul>
+
+    <div class="notice success">
+        <strong>✅ Цель:</strong> добиться, чтобы все индикаторы были зелёными (90–110%).
+    </div>
+</section>
+
+<!-- ===== 8. ПРОГНОЗ ===== -->
+<section class="section" id="prognosis">
+    <div class="section-title"><span class="num">8</span> Шаг 5. Прогноз и ветеринарные риски</div>
+    <p>Под таблицей рациона автоматически формируется блок <strong>«Прогноз и рекомендации»</strong>. В расширенной версии добавляются <strong>ветеринарные риски</strong>.</p>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Цвет</th><th>Статус</th><th>Что означает</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>🟢 Зелёный</td><td>Рацион сбалансирован</td><td>Все показатели в норме</td></tr>
+                <tr><td>🟡 Жёлтый</td><td>Требует коррекции</td><td>Небольшие отклонения</td></tr>
+                <tr><td>🔴 Красный</td><td>Несбалансирован</td><td>Критические отклонения</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p><strong>Ветеринарные риски</strong> (в расширенной версии) формируются автоматически:</p>
+    <ul>
+        <li><strong>Кетоз</strong> — дефицит сахара и крахмала. <em>Профилактика:</em> свёкла кормовая + патока + картофель.</li>
+        <li><strong>Ацидоз рубца</strong> — избыток крахмала при недостатке клетчатки. <em>Профилактика:</em> сено + свёкла кормовая + морковь.</li>
+        <li><strong>Остеодистрофия</strong> — нарушение Ca:P и дефицит витамина D. <em>Коррекция:</em> морковь + премикс.</li>
+    </ul>
+
+    <div class="notice warning">
+        <strong>🩺 Обратите внимание:</strong> рекомендации в прогнозе указывают конкретные корма для исправления дисбаланса. Используйте их как подсказку.
+    </div>
+</section>
+
+<!-- ===== 9. ЭКОНОМИКА ===== -->
+<section class="section" id="economics">
+    <div class="section-title"><span class="num">9</span> Шаг 6. Экономика рациона</div>
+    <p>В блоке <strong>«Экономика»</strong> отображается:</p>
+    <ul>
+        <li><strong>Стоимость рациона</strong> — суммарная стоимость всех кормов в у.е.;</li>
+        <li><strong>Стоимость 1 кг сухого вещества</strong> — ключевой экономический показатель.</li>
+    </ul>
+
+    <div class="notice">
+        <strong>💡 Экономическая логика:</strong> если два рациона дают одинаковый баланс, но один дешевле — предпочтителен более экономичный. Стоимость 1 кг СВ ниже 8–10 у.е./кг считается приемлемой.
+    </div>
+
+    <div class="notice warning">
+        <strong>⚠️ Важно:</strong> экономический блок доступен <strong>только в расширенной версии</strong>. В базовой версии стоимость не отображается.
+    </div>
+</section>
+
+<!-- ===== 10. ПРИМЕРЫ ===== -->
+<section class="section" id="examples">
+    <div class="section-title"><span class="num">10</span> Примеры учебных заданий</div>
+
+    <div class="example-box">
+        <div class="title">📝 Задание 1. Профилактика кетоза (базовая версия)</div>
+        <p><strong>Условие:</strong> Корова лактирующая (25 л), зима, цель — профилактика кетоза.</p>
+        <p><strong>Что нужно сделать:</strong></p>
+        <ol style="padding-left:1.2rem; margin-top:0.4rem;">
+            <li>Установить цель <span class="tag orange">Профилактика кетоза</span>.</li>
+            <li>Добавить 5 кг сена злаково-бобового + 3 кг свёклы кормовой + 0,5 кг патоки + 2 кг картофеля.</li>
+            <li>Проверить индикаторы сахара и крахмала — они должны быть зелёными.</li>
+        </ol>
+    </div>
+
+    <div class="example-box">
+        <div class="title">📝 Задание 2. Профилактика ацидоза (базовая версия)</div>
+        <p><strong>Условие:</strong> Корова лактирующая (25 л), цель — профилактика ацидоза.</p>
+        <p><strong>Что нужно сделать:</strong></p>
+        <ol style="padding-left:1.2rem; margin-top:0.4rem;">
+            <li>Установить цель <span class="tag orange">Профилактика ацидоза</span>.</li>
+            <li>Добавить 4 кг сена люцернового + 2 кг свёклы кормовой + 2 кг моркови + 1,5 кг ячменя.</li>
+            <li>Избегать избытка концентратов (ячмень, овёс).</li>
+        </ol>
+    </div>
+
+    <div class="example-box">
+        <div class="title">📝 Задание 3. Коррекция минерального обмена (расширенная версия)</div>
+        <p><strong>Условие:</strong> Сухостойная корова, цель — коррекция минерального обмена.</p>
+        <p><strong>Что нужно сделать:</strong></p>
+        <ol style="padding-left:1.2rem; margin-top:0.4rem;">
+            <li>Переключиться на <span class="tag blue">Расширенную версию</span>.</li>
+            <li>Установить цель <span class="tag orange">Коррекция минерального обмена</span>.</li>
+            <li>Добавить 0,5 кг премикса + 1 кг моркови + 4 кг сена люцернового.</li>
+            <li>Проверить индикаторы Ca и P — должны быть зелёными.</li>
+            <li>Проверить Ca:P отношение — должно быть 1,5–2:1.</li>
+        </ol>
+    </div>
+
+    <div class="example-box">
+        <div class="title">📝 Задание 4. Комплексный анализ (расширенная версия)</div>
+        <p><strong>Условие:</strong> Корова лактирующая (25 л), цель — поддержание продуктивности.</p>
+        <p><strong>Что нужно сделать:</strong></p>
+        <ol style="padding-left:1.2rem; margin-top:0.4rem;">
+            <li>Составить сбалансированный рацион.</li>
+            <li>Посмотреть экономические показатели.</li>
+            <li>Попробовать заменить дорогой корм на дешёвый аналог.</li>
+            <li>Сравнить два варианта по стоимости и балансу.</li>
+            <li>Сформулировать вывод: что важнее — дешевизна или сбалансированность?</li>
+        </ol>
+    </div>
+</section>
+
+<!-- ===== 11. СОХРАНЕНИЕ ===== -->
+<section class="section" id="save">
+    <div class="section-title"><span class="num">11</span> Сохранение и сброс</div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Кнопка</th><th>Что делает</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>💾 Сохранить</td><td>Сохраняет текущий рацион и настройки в браузере (localStorage)</td></tr>
+                <tr><td>🗑️ Очистить</td><td>Удаляет все корма из рациона (с подтверждением)</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="notice">
+        <strong>💡 Совет:</strong> данные сохраняются автоматически при каждом изменении. После закрытия браузера рацион останется на месте.
+    </div>
+</section>
+
+<!-- ===== 12. СОВЕТЫ ===== -->
+<section class="section" id="tips">
+    <div class="section-title"><span class="num">12</span> Полезные советы</div>
+
+    <div class="notice success">
+        <strong>🎓 Для студентов:</strong>
+        <ul style="margin-top:0.4rem; padding-left:1.2rem;">
+            <li>Начинайте с базовой версии — она проще.</li>
+            <li>Сначала добавьте грубые и сочные корма, затем концентраты.</li>
+            <li>Не бойтесь экспериментировать — все изменения видны сразу.</li>
+            <li>Обращайте внимание на рекомендации в прогнозе.</li>
+            <li>При переходе в расширенную версию проверяйте дополнительные показатели: сахар, крахмал, микроэлементы.</li>
+        </ul>
+    </div>
+
+    <div class="notice">
+        <strong>👩‍🏫 Для преподавателей:</strong>
+        <ul style="margin-top:0.4rem; padding-left:1.2rem;">
+            <li>Используйте задания из раздела 10 как готовые кейсы.</li>
+            <li>Предлагайте студентам сравнить два рациона по стоимости 1 кг СВ.</li>
+            <li>В расширенной версии разбирайте ветеринарные риски.</li>
+            <li>Сохраняйте эталонные рационы через JSON-экспорт.</li>
+            <li>Начинайте с базовой версии, затем переходите к расширенной.</li>
+        </ul>
+    </div>
+
+    <div class="notice warning">
+        <strong>⚠️ Частые ошибки:</strong>
+        <ul style="margin-top:0.4rem; padding-left:1.2rem;">
+            <li><strong>Слишком много концентратов</strong> — риск ацидоза.</li>
+            <li><strong>Забыли премикс</strong> — дефицит витаминов и микроэлементов.</li>
+            <li><strong>Игнорирование Ca:P</strong> — нарушение минерального обмена.</li>
+            <li><strong>Нет корнеклубнеплодов</strong> — дефицит сахара и крахмала.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- ===== ФУТЕР ===== -->
+<footer>
+    © ВетСим — ветеринарное просвещение · Рацион PRO · Инструкция пользователя<br>
+    Версия документа: 2026 · Работает офлайн
+</footer>
+
+</div>
+</body>
+</html>

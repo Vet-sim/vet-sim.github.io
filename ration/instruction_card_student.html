@@ -383,6 +383,14 @@ footer {
 }
 .toast.show { opacity: 1; }
 
+/* ===== ПРИМЕЧАНИЕ ===== */
+.hint {
+    font-size: 0.75rem;
+    color: #8A9B7A;
+    font-style: italic;
+    margin-top: 0.3rem;
+}
+
 /* ===== АДАПТИВ ===== */
 @media (max-width: 700px) {
     body { padding: 0.6rem; }
@@ -396,22 +404,10 @@ footer {
 
 /* ===== ПЕЧАТЬ (PDF ЭКСПОРТ) ===== */
 @media print {
-    @page {
-        size: A4;
-        margin: 15mm;
-    }
-    body {
-        background: white;
-        padding: 0;
-        font-size: 11pt;
-    }
+    @page { size: A4; margin: 15mm; }
+    body { background: white; padding: 0; font-size: 11pt; }
     .container { max-width: 100%; }
-    .header-actions,
-    .tabs,
-    .no-print,
-    .work-progress,
-    footer,
-    .toast {
+    .header-actions, .tabs, .no-print, .work-progress, footer, .toast {
         display: none !important;
     }
     .header {
@@ -449,19 +445,10 @@ footer {
         border-bottom: 1px solid #999 !important;
         border-radius: 0 !important;
     }
-    textarea {
-        min-height: auto;
-        height: auto;
-    }
+    textarea { min-height: auto; height: auto; }
     table.fill-table { font-size: 9.5pt; }
-    table.fill-table th, table.fill-table td {
-        padding: 3px 5px;
-        border: 1px solid #ccc;
-    }
-    table.fill-table input {
-        border-bottom: 1px solid #999 !important;
-        background: transparent !important;
-    }
+    table.fill-table th, table.fill-table td { padding: 3px 5px; border: 1px solid #ccc; }
+    table.fill-table input { border-bottom: 1px solid #999 !important; background: transparent !important; }
     .notice {
         background: #F7F3E8 !important;
         -webkit-print-color-adjust: exact;
@@ -482,7 +469,7 @@ footer {
 <header class="header">
     <div>
         <div class="logo">🐾 ВетСим · <span>Рацион PRO</span></div>
-        <div class="sub">Электронная инструкционная карта студента · МДК 02.02</div>
+        <div class="sub">Электронная инструкционная карта студента · МДК 02.03 Кормление животных</div>
     </div>
     <div class="header-actions">
         <button class="btn btn-success" id="printBtn" title="Экспорт в PDF через печать браузера">
@@ -532,7 +519,7 @@ footer {
                     <div class="desc">Базовая и расширенная версии</div>
                 </div>
             </a>
-            <a href="https://vet-sim.github.io/ration/test_ration_pro.html" target="_blank" class="resource-link">
+            <a href="https://vet-sim.github.io/ration-pro-test.html" target="_blank" class="resource-link">
                 <div class="icon">📝</div>
                 <div class="info">
                     <div class="name">Промежуточный тест</div>
@@ -722,7 +709,27 @@ footer {
             <textarea id="pw2Goal" placeholder="Сформулируйте цель работы..." data-field="pw2Goal"></textarea>
         </div>
 
-        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.1. Составленный рацион</p>
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.1. Корма-источники сахара и крахмала</p>
+        <div class="hint">Заполните таблицу по данным тренажёра (раздел «Доступные корма»).</div>
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Корм</th><th>Сахар, г/кг</th><th>Крахмал, г/кг</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>🍯 Патока (меласса)</td><td><input type="text" data-field="p2sugMolasses"></td><td><input type="text" data-field="p2staMolasses"></td></tr>
+                    <tr><td>🍬 Свёкла сахарная</td><td><input type="text" data-field="p2sugBeetSugar"></td><td><input type="text" data-field="p2staBeetSugar"></td></tr>
+                    <tr><td>🫒 Свёкла кормовая</td><td><input type="text" data-field="p2sugBeetFodder"></td><td><input type="text" data-field="p2staBeetFodder"></td></tr>
+                    <tr><td>🥕 Морковь кормовая</td><td><input type="text" data-field="p2sugCarrot"></td><td><input type="text" data-field="p2staCarrot"></td></tr>
+                    <tr><td>🥔 Картофель кормовой</td><td><input type="text" data-field="p2sugPotato"></td><td><input type="text" data-field="p2staPotato"></td></tr>
+                    <tr><td>Ячмень</td><td><input type="text" data-field="p2sugBarley"></td><td><input type="text" data-field="p2staBarley"></td></tr>
+                    <tr><td>Овёс</td><td><input type="text" data-field="p2sugOats"></td><td><input type="text" data-field="p2staOats"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.2. Составленный рацион</p>
+        <div class="hint">Цель — профилактика кетоза. Заполните таблицу по своему рациону.</div>
         <div class="table-wrap">
             <table class="fill-table">
                 <thead>
@@ -734,35 +741,38 @@ footer {
                     <tr><td><input type="text" data-field="p2feed3"></td><td><input type="text" data-field="p2q3"></td></tr>
                     <tr><td><input type="text" data-field="p2feed4"></td><td><input type="text" data-field="p2q4"></td></tr>
                     <tr><td><input type="text" data-field="p2feed5"></td><td><input type="text" data-field="p2q5"></td></tr>
+                    <tr><td><input type="text" data-field="p2feed6"></td><td><input type="text" data-field="p2q6"></td></tr>
+                    <tr><td><input type="text" data-field="p2feed7"></td><td><input type="text" data-field="p2q7"></td></tr>
                 </tbody>
             </table>
         </div>
 
-        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.2. Индикаторы баланса</p>
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.3. Индикаторы баланса</p>
         <div class="table-wrap">
             <table class="fill-table">
                 <thead>
-                    <tr><th>Показатель</th><th>Значение</th><th>% от нормы</th><th>Цвет</th></tr>
+                    <tr><th>Показатель</th><th>Значение</th><th>Норма</th><th>% от нормы</th><th>Цвет</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>ОЭ</td><td><input type="text" data-field="p2oeVal"></td><td><input type="text" data-field="p2oePct"></td><td><input type="text" data-field="p2oeColor"></td></tr>
-                    <tr><td>СП</td><td><input type="text" data-field="p2spVal"></td><td><input type="text" data-field="p2spPct"></td><td><input type="text" data-field="p2spColor"></td></tr>
-                    <tr><td>Сахар</td><td><input type="text" data-field="p2sugVal"></td><td><input type="text" data-field="p2sugPct"></td><td><input type="text" data-field="p2sugColor"></td></tr>
-                    <tr><td>Крахмал</td><td><input type="text" data-field="p2staVal"></td><td><input type="text" data-field="p2staPct"></td><td><input type="text" data-field="p2staColor"></td></tr>
-                    <tr><td>Клетчатка</td><td><input type="text" data-field="p2fibVal"></td><td><input type="text" data-field="p2fibPct"></td><td><input type="text" data-field="p2fibColor"></td></tr>
+                    <tr><td>ОЭ</td><td><input type="text" data-field="p2oeVal"></td><td>200 МДж</td><td><input type="text" data-field="p2oePct"></td><td><input type="text" data-field="p2oeColor"></td></tr>
+                    <tr><td>СП</td><td><input type="text" data-field="p2spVal"></td><td>2800 г</td><td><input type="text" data-field="p2spPct"></td><td><input type="text" data-field="p2spColor"></td></tr>
+                    <tr><td>Сахар</td><td><input type="text" data-field="p2sugVal"></td><td>1200 г*</td><td><input type="text" data-field="p2sugPct"></td><td><input type="text" data-field="p2sugColor"></td></tr>
+                    <tr><td>Крахмал</td><td><input type="text" data-field="p2staVal"></td><td>2300 г*</td><td><input type="text" data-field="p2staPct"></td><td><input type="text" data-field="p2staColor"></td></tr>
+                    <tr><td>Клетчатка</td><td><input type="text" data-field="p2fibVal"></td><td>2200 г</td><td><input type="text" data-field="p2fibPct"></td><td><input type="text" data-field="p2fibColor"></td></tr>
                 </tbody>
             </table>
         </div>
+        <div class="hint">* При цели «Профилактика кетоза» норма сахара +20%, крахмала +15%.</div>
 
-        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 2.3. Сахаро-протеиновое отношение</p>
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem; margin-top:1rem;">Задание 2.4. Сахаро-протеиновое отношение</p>
         <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:1rem;">
             <div class="field-group">
                 <label class="field-label">Ваш результат</label>
-                <input type="text" data-field="p2spRatio" placeholder="например, 0,95">
+                <input type="text" data-field="p2spRatio" placeholder="например, 0,85">
             </div>
             <div class="field-group">
                 <label class="field-label">Норма (0,8–1,0)</label>
-                <input type="text" data-field="p2spRatioNorm" placeholder="0,8–1,0" value="0,8–1,0">
+                <input type="text" data-field="p2spRatioNorm" value="0,8–1,0">
             </div>
         </div>
 
@@ -781,7 +791,8 @@ footer {
             <textarea id="pw3Goal" placeholder="Сформулируйте цель работы..." data-field="pw3Goal"></textarea>
         </div>
 
-        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 3.1. Минеральные вещества</p>
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 3.1. Минеральные вещества (сухостойная корова)</p>
+        <div class="hint">Установите цель «Коррекция минерального обмена». Нормы для сухостойной коровы ниже, чем для лактирующей.</div>
         <div class="table-wrap">
             <table class="fill-table">
                 <thead>
@@ -790,13 +801,13 @@ footer {
                 <tbody>
                     <tr><td>Ca</td><td><input type="text" data-field="p3caNorm"></td><td><input type="text" data-field="p3caVal"></td><td><input type="text" data-field="p3caPct"></td><td><input type="text" data-field="p3caColor"></td></tr>
                     <tr><td>P</td><td><input type="text" data-field="p3pNorm"></td><td><input type="text" data-field="p3pVal"></td><td><input type="text" data-field="p3pPct"></td><td><input type="text" data-field="p3pColor"></td></tr>
-                    <tr><td>Ca:P</td><td><input type="text" data-field="p3cpNorm" value="1,5–2:1"></td><td><input type="text" data-field="p3cpVal"></td><td><input type="text" data-field="p3cpPct"></td><td><input type="text" data-field="p3cpColor"></td></tr>
+                    <tr><td>Ca:P</td><td>1,5–2,0:1</td><td><input type="text" data-field="p3cpVal"></td><td><input type="text" data-field="p3cpPct"></td><td><input type="text" data-field="p3cpColor"></td></tr>
                     <tr><td>Витамин D</td><td><input type="text" data-field="p3vdNorm"></td><td><input type="text" data-field="p3vdVal"></td><td><input type="text" data-field="p3vdPct"></td><td><input type="text" data-field="p3vdColor"></td></tr>
                 </tbody>
             </table>
         </div>
 
-        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 3.2. Микроэлементы</p>
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:0.4rem;">Задание 3.2. Микроэлементы (сухостойная корова)</p>
         <div class="table-wrap">
             <table class="fill-table">
                 <thead>
@@ -867,6 +878,45 @@ footer {
         <div class="field-group">
             <label class="field-label">Задание 4.4. Пути улучшения рациона</label>
             <textarea id="pw4Improve" placeholder="1. ...&#10;2. ..." data-field="pw4Improve"></textarea>
+        </div>
+    </div>
+
+    <!-- ===== ПРАКТИЧЕСКАЯ РАБОТА 5. НАЙДИ ОШИБКУ ===== -->
+    <div class="card">
+        <div class="card-title">📓 Практическая работа 5. Найди ошибку</div>
+
+        <div class="notice warning">
+            <strong>🔍 Задание:</strong> ниже приведены данные, якобы из тренажёра. <strong>Некоторые из них содержат ошибки.</strong> Сверьте их со справочником «Нормы и рационы кормления сельскохозяйственных животных» под редакцией А.П. Калашникова и найдите несоответствия.
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Цель работы</label>
+            <textarea id="pw5Goal" placeholder="Сформулируйте цель работы..." data-field="pw5Goal"></textarea>
+        </div>
+
+        <div class="table-wrap">
+            <table class="fill-table">
+                <thead>
+                    <tr><th>Корм</th><th>Показатель</th><th>Значение в задании</th><th>Правильное значение</th><th>Ошибка?</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>🍬 Свёкла сахарная</td><td>Сахар, г/кг</td><td>600</td><td><input type="text" data-field="p5beetSugarCorrect"></td><td><input type="text" data-field="p5beetSugarErr"></td></tr>
+                    <tr><td>🍯 Патока</td><td>Сахар, г/кг</td><td>500</td><td><input type="text" data-field="p5molassesCorrect"></td><td><input type="text" data-field="p5molassesErr"></td></tr>
+                    <tr><td>🥔 Картофель</td><td>Крахмал, г/кг</td><td>600</td><td><input type="text" data-field="p5potatoCorrect"></td><td><input type="text" data-field="p5potatoErr"></td></tr>
+                    <tr><td>🥕 Морковь</td><td>Каротин, мг/кг</td><td>250</td><td><input type="text" data-field="p5carrotCorrect"></td><td><input type="text" data-field="p5carrotErr"></td></tr>
+                    <tr><td>🫒 Свёкла кормовая</td><td>Сахар, г/кг</td><td>400</td><td><input type="text" data-field="p5beetFodderCorrect"></td><td><input type="text" data-field="p5beetFodderErr"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Объясните причину ошибок</label>
+            <textarea id="pw5Explain" placeholder="Почему возникли ошибки? Что могло быть причиной?" data-field="pw5Explain"></textarea>
+        </div>
+
+        <div class="field-group">
+            <label class="field-label">Вывод: какой навык нужен, чтобы не допускать ошибок при работе с данными?</label>
+            <textarea id="pw5Conclusion" placeholder="Сформулируйте вывод..." data-field="pw5Conclusion"></textarea>
         </div>
     </div>
 
@@ -943,11 +993,11 @@ footer {
                     <div class="desc">20 вопросов · 15 минут</div>
                 </div>
             </a>
-            <a href="https://vet-sim.github.io/ration/instruction_ration_pro.html" target="_blank" class="resource-link">
+            <a href="https://vet-sim.github.io/ration/instruction_card_student.html" target="_blank" class="resource-link">
                 <div class="icon">📖</div>
                 <div class="info">
-                    <div class="name">Инструкция по тренажёру</div>
-                    <div class="desc">Подробное руководство пользователя</div>
+                    <div class="name">Электронная инструкционная карта</div>
+                    <div class="desc">Эта страница</div>
                 </div>
             </a>
             <a href="https://vetsim.ru" target="_blank" class="resource-link">
@@ -988,8 +1038,8 @@ footer {
 
 <!-- ===== ФУТЕР ===== -->
 <footer>
-    © ВетСим — ветеринарное просвещение · Рацион PRO · Электронная инструкционная карта<br>
-    Работает офлайн · Автосохранение в браузере
+    © ВетСим — Автор проекта и работы - Тераевич Алла Сергеевна · Рацион PRO · Электронная инструкционная карта<br>
+    МДК 02.03 Кормление животных · Работает офлайн · Автосохранение в браузере
 </footer>
 
 </div>
@@ -1001,7 +1051,7 @@ footer {
 (function() {
     'use strict';
 
-    const STORAGE_KEY = 'vetsim_ration_workbook_v1';
+    const STORAGE_KEY = 'vetsim_ration_workbook_v2';
     const $ = id => document.getElementById(id);
 
     // ================================================================
@@ -1022,11 +1072,9 @@ footer {
     // ================================================================
     function saveData() {
         const data = {};
-        // Все поля с data-field
         document.querySelectorAll('[data-field]').forEach(el => {
             data[el.dataset.field] = el.value || '';
         });
-        // Чек-листы
         document.querySelectorAll('[data-check]').forEach(el => {
             data['check_' + el.dataset.check] = el.checked;
         });
@@ -1138,7 +1186,6 @@ footer {
     //  ИНИЦИАЛИЗАЦИЯ
     // ================================================================
     function init() {
-        // Автоустановка даты
         const dateEl = $('studentDate');
         if (dateEl && !dateEl.value) {
             const today = new Date().toISOString().split('T')[0];

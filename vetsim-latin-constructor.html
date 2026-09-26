@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Veterinaria Latina · Конструктор · ВетСим</title>
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
@@ -40,30 +35,56 @@
             border-bottom: 2px solid #E7EDE2;
             margin-bottom: 18px;
         }
-        .header .logo {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #2C7DA0;
-        }
+        .header .logo { font-size: 1.3rem; font-weight: 700; color: #2C7DA0; }
         .header .logo .gradient {
             background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-        .header .meta {
-            text-align: right;
-            font-size: 0.8rem;
-            color: #5F7C62;
+        .header .meta { text-align: right; font-size: 0.8rem; color: #5F7C62; }
+
+        /* ===== НОВОЕ: блок автора ===== */
+        .author-block {
+            background: #F0F7FA;
+            border-radius: 1rem;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border: 2px solid #D4E8F0;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: #2C7DA0;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D4E8F0;
+            border-radius: 1rem;
+            font-family: inherit;
+            font-size: 0.88rem;
+            background: #FFFEF7;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
         }
 
         /* ===== ВКЛАДКИ ===== */
-        .tabs {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
+        .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
         .tab-btn {
             background: #EBE3D2;
             border: none;
@@ -77,15 +98,9 @@
             color: #3E5C4A;
         }
         .tab-btn:hover { opacity: 0.85; }
-        .tab-btn.active {
-            background: #2C7DA0;
-            color: white;
-        }
+        .tab-btn.active { background: #2C7DA0; color: white; }
 
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.25s ease;
-        }
+        .tab-content { display: none; animation: fadeIn 0.25s ease; }
         .tab-content.active { display: block; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(6px); }
@@ -99,14 +114,8 @@
             gap: 10px 16px;
             margin-bottom: 12px;
         }
-        .form-grid .full-width {
-            grid-column: 1 / -1;
-        }
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+        .form-grid .full-width { grid-column: 1 / -1; }
+        .field { display: flex; flex-direction: column; gap: 2px; }
         .field label {
             font-weight: 600;
             font-size: 0.7rem;
@@ -114,9 +123,7 @@
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
-        .field input,
-        .field select,
-        .field textarea {
+        .field input, .field select, .field textarea {
             padding: 6px 12px;
             border: 1px solid #D9D0BD;
             border-radius: 1rem;
@@ -128,16 +135,11 @@
             transition: 0.15s;
             width: 100%;
         }
-        .field input:focus,
-        .field select:focus,
-        .field textarea:focus {
+        .field input:focus, .field select:focus, .field textarea:focus {
             border-color: #2C7DA0;
             box-shadow: 0 0 0 3px rgba(44,125,160,0.08);
         }
-        .field textarea {
-            resize: vertical;
-            min-height: 36px;
-        }
+        .field textarea { resize: vertical; min-height: 36px; }
 
         /* ===== КАРТОЧКА СЛОВА ===== */
         .word-card {
@@ -151,23 +153,9 @@
             align-items: center;
             gap: 6px 12px;
         }
-        .word-card .nom {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #2C7DA0;
-            min-width: 70px;
-        }
-        .word-card .gen {
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #1A2A3A;
-            min-width: 70px;
-        }
-        .word-card .trans {
-            font-size: 0.85rem;
-            color: #5F7C62;
-            flex: 1;
-        }
+        .word-card .nom { font-weight: 700; font-size: 0.9rem; color: #2C7DA0; min-width: 70px; }
+        .word-card .gen { font-weight: 600; font-size: 0.85rem; color: #1A2A3A; min-width: 70px; }
+        .word-card .trans { font-size: 0.85rem; color: #5F7C62; flex: 1; }
         .word-card .decl {
             font-size: 0.7rem;
             background: #E7EDE2;
@@ -176,10 +164,7 @@
             font-weight: 600;
             color: #3E5C4A;
         }
-        .word-card .actions {
-            display: flex;
-            gap: 4px;
-        }
+        .word-card .actions { display: flex; gap: 4px; }
         .word-card .actions button {
             background: none;
             border: none;
@@ -222,28 +207,12 @@
         .btn-sm { padding: 3px 12px; font-size: 0.7rem; }
 
         /* ===== СПИСОК СЛОВ ===== */
-        .word-list {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .word-list::-webkit-scrollbar {
-            width: 5px;
-        }
-        .word-list::-webkit-scrollbar-track {
-            background: #ede7dd;
-            border-radius: 10px;
-        }
-        .word-list::-webkit-scrollbar-thumb {
-            background: #A3B18A;
-            border-radius: 10px;
-        }
+        .word-list { max-height: 400px; overflow-y: auto; padding-right: 4px; }
+        .word-list::-webkit-scrollbar { width: 5px; }
+        .word-list::-webkit-scrollbar-track { background: #ede7dd; border-radius: 10px; }
+        .word-list::-webkit-scrollbar-thumb { background: #A3B18A; border-radius: 10px; }
 
-        .word-count {
-            font-size: 0.8rem;
-            color: #5F7C62;
-            margin-bottom: 10px;
-        }
+        .word-count { font-size: 0.8rem; color: #5F7C62; margin-bottom: 10px; }
 
         /* ===== ЭКСПОРТ ===== */
         .export-area {
@@ -265,9 +234,34 @@
             resize: vertical;
             min-height: 120px;
         }
-        .export-area textarea:focus {
-            border-color: #2C7DA0;
+        .export-area textarea:focus { border-color: #2C7DA0; }
+
+        /* ===== НОВОЕ: подпись внизу страницы ===== */
+        .vetsim-credit {
+            margin-top: 20px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, #F0F7FA, #F4F7F9);
+            border-radius: 1rem;
+            border: 1px solid #D4E8F0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #1A2A3A;
         }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #2C7DA0;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #5F7C62; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
 
         /* ===== ПЕЧАТЬ ===== */
         @media print {
@@ -286,9 +280,9 @@
             .header { flex-direction: column; align-items: stretch; }
             .header .meta { text-align: left; }
             .word-card { flex-direction: column; align-items: stretch; }
-            .word-card .nom { min-width: unset; }
-            .word-card .gen { min-width: unset; }
+            .word-card .nom, .word-card .gen { min-width: unset; }
             .tabs .tab-btn { flex: 1; text-align: center; font-size: 0.7rem; padding: 4px 8px; }
+            .author-block { flex-direction: column; align-items: stretch; }
         }
         @media (max-width: 420px) {
             .container { padding: 10px; }
@@ -300,16 +294,21 @@
 <body>
 
 <div class="container" id="app">
-    <!-- ===== ШАПКА ===== -->
     <header class="header">
         <div class="logo">📚 <span class="gradient">Veterinaria Latina</span> · Конструктор</div>
         <div class="meta">
             <div id="wordCountDisplay">Слов: <span id="wordCount">0</span></div>
-            <div style="font-size:0.7rem; color:#8A9B7A;">v.1.0 · ВетСим</div>
+            <div style="font-size:0.7rem; color:#8A9B7A;">v.1.1 · ВетСим</div>
         </div>
     </header>
 
-    <!-- ===== ВКЛАДКИ ===== -->
+    <!-- ===== НОВОЕ: поле автора ===== -->
+    <div class="author-block">
+        <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+        <input type="text" id="authorInput" class="author-input"
+               placeholder="Например: Тераевич Алла Сергеевна">
+    </div>
+
     <div class="tabs no-print">
         <button class="tab-btn active" data-tab="editor">✏️ Редактор слов</button>
         <button class="tab-btn" data-tab="trainer">🎮 Тренажёр</button>
@@ -351,16 +350,12 @@
         </div>
 
         <div class="word-count">📚 Всего слов: <span id="wordCountList">0</span></div>
-        <div class="word-list" id="wordList">
-            <!-- рендерится JS -->
-        </div>
+        <div class="word-list" id="wordList"></div>
     </div>
 
     <!-- ===== ВКЛАДКА 2: ТРЕНАЖЁР ===== -->
     <div class="tab-content" id="tab-trainer">
-        <div id="trainerArea">
-            <!-- рендерится JS -->
-        </div>
+        <div id="trainerArea"></div>
     </div>
 
     <!-- ===== ВКЛАДКА 3: ЭКСПОРТ ===== -->
@@ -382,18 +377,25 @@
         </div>
     </div>
 
-    <!-- ===== ПОДВАЛ ===== -->
-    <div style="margin-top:20px; text-align:center; font-size:0.7rem; color:#8A9B7A; border-top:1px solid #f0ebe3; padding-top:12px;">
-        © ВетСим — ветеринарное просвещение · Veterinaria Latina
+    <!-- ===== НОВОЕ: подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
     </div>
 </div>
 
 <script>
     // ================================================================
-    //  VETERINARIA LATINA — ПОЛНАЯ ЛОГИКА
+    //  VETERINARIA LATINA — ЛОГИКА КОНСТРУКТОРА
     // ================================================================
 
-    // ===== НАЧАЛЬНЫЙ СЛОВАРЬ (ВЕТЕРИНАРНАЯ ТЕРМИНОЛОГИЯ) =====
     const DEFAULT_WORDS = [
         { nom: 'costa', gen: 'costae', trans: 'ребро', decl: 'I' },
         { nom: 'vena', gen: 'venae', trans: 'вена', decl: 'I' },
@@ -433,7 +435,6 @@
         { nom: 'rabies', gen: 'rabiei', trans: 'бешенство', decl: 'V' }
     ];
 
-    // ===== СОСТОЯНИЕ =====
     let words = [];
     let editingIndex = -1;
     let currentWordIndex = 0;
@@ -441,17 +442,14 @@
     let answered = false;
     let selectedDecl = null;
     let selectedGenEnding = null;
+    let feedbackMessage = '';
+    let feedbackColor = '#F9FBF8';
+    let feedbackTextColor = '#1A2A3A';
 
-    const genEndings = {
-        I: '-ae',
-        II: '-i',
-        III: '-is',
-        IV: '-us',
-        V: '-ei'
-    };
+    const genEndings = { I: '-ae', II: '-i', III: '-is', IV: '-us', V: '-ei' };
     const declOptions = ['I', 'II', 'III', 'IV', 'V'];
 
-    // ===== DOM-СВЯЗИ =====
+    // DOM
     const wordList = document.getElementById('wordList');
     const wordCountDisplay = document.getElementById('wordCount');
     const wordCountList = document.getElementById('wordCountList');
@@ -471,34 +469,43 @@
     const importJsonBtn = document.getElementById('importJsonBtn');
     const jsonData = document.getElementById('jsonData');
 
+    // ===== НОВОЕ: элементы автора =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthor();
+    });
+
+    function saveAuthor() {
+        try { localStorage.setItem('vetsim_latin_author', authorInput.value); } catch (e) {}
+    }
+    function loadAuthor() {
+        try {
+            const a = localStorage.getItem('vetsim_latin_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch (e) {}
+    }
+
     // ================================================================
-    //  ВСПОМОГАТЕЛЬНЫЕ
+    //  УТИЛИТЫ
     // ================================================================
     function showToast(msg) {
         const existing = document.querySelector('.toast-message');
         if (existing) existing.remove();
-
         const toast = document.createElement('div');
         toast.className = 'toast-message';
         toast.textContent = msg;
         Object.assign(toast.style, {
-            position: 'fixed',
-            bottom: '30px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: '#1F4E6E',
-            color: 'white',
-            padding: '10px 24px',
-            borderRadius: '40px',
-            fontWeight: '600',
-            fontSize: '0.85rem',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
-            zIndex: '2000',
-            maxWidth: '90%',
-            textAlign: 'center',
-            opacity: '0',
-            transition: 'opacity 0.3s ease',
-            pointerEvents: 'none'
+            position: 'fixed', bottom: '30px', left: '50%', transform: 'translateX(-50%)',
+            background: '#1F4E6E', color: 'white', padding: '10px 24px', borderRadius: '40px',
+            fontWeight: '600', fontSize: '0.85rem', boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+            zIndex: '2000', maxWidth: '90%', textAlign: 'center', opacity: '0',
+            transition: 'opacity 0.3s ease', pointerEvents: 'none'
         });
         document.body.appendChild(toast);
         requestAnimationFrame(() => toast.style.opacity = '1');
@@ -510,26 +517,13 @@
 
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    function getDeclLabel(decl) {
-        const map = { I: 'I', II: 'II', III: 'III', IV: 'IV', V: 'V' };
-        return map[decl] || decl;
-    }
+    function getDeclLabel(decl) { return decl; }
 
-    function getRandomWord() {
-        if (words.length === 0) return null;
-        return words[currentWordIndex] || words[0];
-    }
-
-    // ================================================================
-    //  СОХРАНЕНИЕ
-    // ================================================================
     function saveState() {
-        try {
-            localStorage.setItem('vetsim_latin_words', JSON.stringify(words));
-        } catch (e) {}
+        try { localStorage.setItem('vetsim_latin_words', JSON.stringify(words)); } catch (e) {}
     }
 
     function loadState() {
@@ -537,10 +531,7 @@
             const raw = localStorage.getItem('vetsim_latin_words');
             if (raw) {
                 const data = JSON.parse(raw);
-                if (data && data.length > 0) {
-                    words = data;
-                    return true;
-                }
+                if (data && data.length > 0) { words = data; return true; }
             }
         } catch (e) {}
         return false;
@@ -555,8 +546,7 @@
                 <div style="text-align:center;padding:30px 10px;color:#8A9B7A;">
                     <span style="font-size:2rem;display:block;margin-bottom:8px;">📚</span>
                     Словарь пуст. Добавьте слова вручную или загрузите пример.
-                </div>
-            `;
+                </div>`;
         } else {
             let html = '';
             words.forEach((w, idx) => {
@@ -570,18 +560,15 @@
                             <button class="edit-btn" data-index="${idx}" title="Редактировать">✏️</button>
                             <button class="delete-btn" data-index="${idx}" title="Удалить">🗑️</button>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
             wordList.innerHTML = html;
 
             wordList.querySelectorAll('.edit-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    const idx = parseInt(this.dataset.index, 10);
-                    editWord(idx);
+                    editWord(parseInt(this.dataset.index, 10));
                 });
             });
-
             wordList.querySelectorAll('.delete-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const idx = parseInt(this.dataset.index, 10);
@@ -594,38 +581,24 @@
                 });
             });
         }
-
         wordCountDisplay.textContent = words.length;
         wordCountList.textContent = words.length;
     }
 
-    // ================================================================
-    //  ТРЕНАЖЁР (ИСПРАВЛЕННЫЙ)
-    // ================================================================
     function renderTrainer() {
         if (words.length === 0) {
             trainerArea.innerHTML = `
                 <div style="text-align:center;padding:40px 20px;color:#8A9B7A;">
                     <span style="font-size:3rem;display:block;margin-bottom:12px;">📚</span>
                     <p>Словарь пуст. Добавьте слова или загрузите пример.</p>
-                    <button class="btn btn-primary" style="margin-top:12px;" onclick="document.querySelector('[data-tab=\\'editor\\']').click()">✏️ Перейти к редактору</button>
-                </div>
-            `;
+                </div>`;
             return;
         }
 
-        // Если currentWordIndex вышел за пределы — сбрасываем
         if (currentWordIndex >= words.length) currentWordIndex = 0;
-
         const word = words[currentWordIndex];
-        if (!word) {
-            currentWordIndex = 0;
-            renderTrainer();
-            return;
-        }
+        if (!word) { currentWordIndex = 0; renderTrainer(); return; }
 
-        // Автоматически устанавливаем склонение и окончание при загрузке слова
-        // если они ещё не выбраны или если сменилось слово (проверяем по индексу)
         if (selectedDecl === null || selectedDecl !== word.decl) {
             selectedDecl = word.decl;
         }
@@ -640,57 +613,48 @@
                     <span style="font-size:0.8rem;color:#5F7C62;">${currentWordIndex + 1} из ${words.length}</span>
                     <span style="font-size:0.8rem;color:#2C7DA0;font-weight:600;">✅ ${score.correct} / ${score.total}</span>
                 </div>
-
                 <div style="text-align:center;margin:12px 0 16px;">
                     <div style="font-size:2rem;font-weight:700;color:#2C7DA0;">${escapeHtml(word.nom)}</div>
                     <div style="font-size:0.9rem;color:#5F7C62;">${escapeHtml(word.trans)}</div>
                 </div>
-
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
                     <div>
                         <label style="font-weight:600;font-size:0.7rem;color:#5F7C62;text-transform:uppercase;">1. Склонение</label>
                         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
                             ${declOptions.map(d => `
-                                <button class="btn ${selectedDecl === d ? 'btn-primary' : 'btn-outline'}" 
+                                <button class="btn ${selectedDecl === d ? 'btn-primary' : 'btn-outline'}"
                                         style="flex:1;min-width:40px;text-align:center;padding:6px 8px;font-size:0.8rem;"
                                         onclick="selectDecl('${d}')" ${answered ? 'disabled' : ''}>
                                     ${d}
-                                </button>
-                            `).join('')}
+                                </button>`).join('')}
                         </div>
                     </div>
                     <div>
                         <label style="font-weight:600;font-size:0.7rem;color:#5F7C62;text-transform:uppercase;">2. Окончание Gen. sg.</label>
                         <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;">
                             ${Object.values(genEndings).map(e => `
-                                <button class="btn ${selectedGenEnding === e ? 'btn-primary' : 'btn-outline'}" 
+                                <button class="btn ${selectedGenEnding === e ? 'btn-primary' : 'btn-outline'}"
                                         style="flex:1;min-width:50px;text-align:center;padding:6px 8px;font-size:0.8rem;"
                                         onclick="selectGenEnding('${e}')" ${answered ? 'disabled' : ''}>
                                     ${e}
-                                </button>
-                            `).join('')}
+                                </button>`).join('')}
                         </div>
                     </div>
                 </div>
-
                 <div class="field" style="margin-bottom:12px;">
                     <label style="font-weight:600;font-size:0.7rem;color:#5F7C62;text-transform:uppercase;">3. Введите родительный падеж (Gen. sg.)</label>
                     <input type="text" id="trainerAnswer" placeholder="Введите форму..." style="font-size:1rem;padding:8px 14px;" ${answered ? 'disabled' : ''} />
                 </div>
-
                 <div style="display:flex;gap:10px;flex-wrap:wrap;">
                     <button class="btn btn-success" id="trainerCheckBtn" ${answered ? 'disabled' : ''}>✅ Проверить</button>
                     <button class="btn btn-primary" id="trainerNextBtn" style="${answered ? '' : 'display:none;'}">➡️ Следующее слово</button>
                     <button class="btn btn-outline" id="trainerResetBtn">🔄 Сбросить счёт</button>
                 </div>
-
                 ${feedbackMessage ? `<div style="margin-top:12px;padding:10px 14px;border-radius:1rem;background:${feedbackColor};color:${feedbackTextColor};font-weight:500;">${feedbackMessage}</div>` : ''}
-            </div>
-        `;
+            </div>`;
 
         trainerArea.innerHTML = html;
 
-        // Обработчики для кнопок в тренажёре
         const checkBtn = document.getElementById('trainerCheckBtn');
         const nextBtn = document.getElementById('trainerNextBtn');
         const resetBtn = document.getElementById('trainerResetBtn');
@@ -699,24 +663,15 @@
         if (checkBtn) checkBtn.addEventListener('click', checkAnswer);
         if (nextBtn) nextBtn.addEventListener('click', nextWord);
         if (resetBtn) resetBtn.addEventListener('click', resetScore);
-
         if (answerInput) {
-            answerInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') checkAnswer();
-            });
-            // Автофокус
+            answerInput.addEventListener('keydown', e => { if (e.key === 'Enter') checkAnswer(); });
             if (!answered) setTimeout(() => answerInput.focus(), 100);
         }
     }
 
-    let feedbackMessage = '';
-    let feedbackColor = '#F9FBF8';
-    let feedbackTextColor = '#1A2A3A';
-
     function renderAll() {
         renderWordList();
         renderTrainer();
-        // Обновляем JSON-данные
         jsonData.value = JSON.stringify(words, null, 2);
     }
 
@@ -729,33 +684,19 @@
         const trans = wordTrans.value.trim();
         const decl = wordDecl.value;
 
-        if (!nom || !gen || !trans) {
-            showToast('⚠️ Заполните все поля');
-            return;
-        }
-
-        // Проверка на дубликат
+        if (!nom || !gen || !trans) { showToast('⚠️ Заполните все поля'); return; }
         if (words.some(w => w.nom.toLowerCase() === nom.toLowerCase())) {
-            showToast('⚠️ Слово уже есть в словаре');
-            return;
+            showToast('⚠️ Слово уже есть в словаре'); return;
         }
-
         words.push({ nom, gen, trans, decl });
-        wordNom.value = '';
-        wordGen.value = '';
-        wordTrans.value = '';
-        wordDecl.value = 'I';
-        renderAll();
-        saveState();
+        wordNom.value = ''; wordGen.value = ''; wordTrans.value = ''; wordDecl.value = 'I';
+        renderAll(); saveState();
         showToast('✅ Слово добавлено');
     }
 
     function editWord(index) {
         const w = words[index];
-        wordNom.value = w.nom;
-        wordGen.value = w.gen;
-        wordTrans.value = w.trans;
-        wordDecl.value = w.decl;
+        wordNom.value = w.nom; wordGen.value = w.gen; wordTrans.value = w.trans; wordDecl.value = w.decl;
         editingIndex = index;
         addWordBtn.style.display = 'none';
         editWordBtn.style.display = 'inline-flex';
@@ -768,24 +709,14 @@
         const gen = wordGen.value.trim();
         const trans = wordTrans.value.trim();
         const decl = wordDecl.value;
-
-        if (!nom || !gen || !trans) {
-            showToast('⚠️ Заполните все поля');
-            return;
-        }
-
+        if (!nom || !gen || !trans) { showToast('⚠️ Заполните все поля'); return; }
         words[editingIndex] = { nom, gen, trans, decl };
-        cancelEdit();
-        renderAll();
-        saveState();
+        cancelEdit(); renderAll(); saveState();
         showToast('✅ Слово обновлено');
     }
 
     function cancelEdit() {
-        wordNom.value = '';
-        wordGen.value = '';
-        wordTrans.value = '';
-        wordDecl.value = 'I';
+        wordNom.value = ''; wordGen.value = ''; wordTrans.value = ''; wordDecl.value = 'I';
         editingIndex = -1;
         addWordBtn.style.display = 'inline-flex';
         editWordBtn.style.display = 'none';
@@ -793,52 +724,35 @@
     }
 
     function loadExample() {
-        if (words.length > 0) {
-            if (!confirm('Загрузить пример? Текущие слова будут заменены.')) return;
-        }
+        if (words.length > 0 && !confirm('Загрузить пример? Текущие слова будут заменены.')) return;
         words = DEFAULT_WORDS.map(w => ({ ...w }));
-        cancelEdit();
-        renderAll();
-        resetScore();
-        saveState();
+        cancelEdit(); renderAll(); resetScore(); saveState();
         showToast('📂 Пример загружен');
     }
 
     function clearAll() {
         if (words.length === 0) return;
         if (!confirm('Удалить все слова?')) return;
-        words = [];
-        cancelEdit();
-        renderAll();
-        resetScore();
-        saveState();
+        words = []; cancelEdit(); renderAll(); resetScore(); saveState();
         showToast('🗑️ Все слова удалены');
     }
 
     // ================================================================
-    //  ТРЕНАЖЁР — ПРОВЕРКА ОТВЕТА
+    //  ВНУТРЕННИЙ ТРЕНАЖЁР
     // ================================================================
     function checkAnswer() {
         if (answered || words.length === 0) return;
-
         const word = words[currentWordIndex];
         if (!word) return;
 
         const answerInput = document.getElementById('trainerAnswer');
         const userAnswer = answerInput ? answerInput.value.trim().toLowerCase() : '';
-
         score.total++;
 
-        // Проверяем склонение
         const declCorrect = selectedDecl === word.decl;
-
-        // Проверяем окончание
         const correctEnding = genEndings[word.decl];
         const endingCorrect = selectedGenEnding === correctEnding;
-
-        // Проверяем форму родительного падежа
         const genCorrect = userAnswer === word.gen.toLowerCase();
-
         const allCorrect = declCorrect && endingCorrect && genCorrect;
 
         if (allCorrect) {
@@ -855,7 +769,6 @@
             feedbackColor = '#FDF0E8';
             feedbackTextColor = '#b13e3e';
         }
-
         answered = true;
         renderTrainer();
     }
@@ -863,46 +776,33 @@
     function nextWord() {
         if (words.length === 0) return;
         currentWordIndex = (currentWordIndex + 1) % words.length;
-
-        // Автоматически устанавливаем склонение и окончание для нового слова
         const word = words[currentWordIndex];
         if (word) {
             selectedDecl = word.decl;
             selectedGenEnding = genEndings[word.decl];
         }
-
         feedbackMessage = '';
         answered = false;
         renderTrainer();
     }
 
     function resetScore() {
-        score.correct = 0;
-        score.total = 0;
-        currentWordIndex = 0;
-
-        // Устанавливаем склонение и окончание для первого слова
+        score.correct = 0; score.total = 0; currentWordIndex = 0;
         if (words.length > 0) {
             const word = words[0];
             selectedDecl = word.decl;
             selectedGenEnding = genEndings[word.decl];
         }
-
         feedbackMessage = '';
         answered = false;
         renderTrainer();
-        showToast('🔄 Счёт сброшен');
     }
 
-    // ================================================================
-    //  ГЛОБАЛЬНЫЕ ФУНКЦИИ ДЛЯ ONCLICK (используются в HTML)
-    // ================================================================
     window.selectDecl = function(decl) {
         if (answered) return;
         selectedDecl = decl;
         renderTrainer();
     };
-
     window.selectGenEnding = function(ending) {
         if (answered) return;
         selectedGenEnding = ending;
@@ -910,7 +810,7 @@
     };
 
     // ================================================================
-    //  ЭКСПОРТ
+    //  ЭКСПОРТ HTML (исправлен баг перехода слов + добавлен автор)
     // ================================================================
     function exportTrainer() {
         if (words.length === 0) {
@@ -918,246 +818,270 @@
             return;
         }
 
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const data = JSON.stringify(words);
-        const wordListJS = words.map((w, idx) =>
-            `{ id: ${idx + 1}, nom: "${escapeHtml(w.nom)}", gen: "${escapeHtml(w.gen)}", trans: "${escapeHtml(w.trans)}", decl: "${w.decl}" }`
-        ).join(',\n            ');
 
         const htmlContent = `<!DOCTYPE html>
-        <html lang="ru">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-            <title>Veterinaria Latina · Тренажёр</title>
-            <style>
-                * { margin:0; padding:0; box-sizing:border-box; }
-                body { font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif; background: #F4F7F9; color: #1A2A3A; padding: 16px; min-height: 100vh; display:flex; justify-content:center; align-items:center; }
-                .container { max-width: 700px; width:100%; background: white; border-radius: 2rem; padding: 28px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
-                .header { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; padding-bottom:12px; border-bottom:2px solid #E7EDE2; margin-bottom:16px; }
-                .header .logo { font-size:1.2rem; font-weight:700; color:#2C7DA0; }
-                .header .logo .gradient { background:linear-gradient(135deg, #2C7DA0, #6B9E6B); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-                .header .meta { font-size:0.8rem; color:#5F7C62; text-align:right; }
-                .score { font-size:0.8rem; color:#2C7DA0; font-weight:600; }
-                .word-display { text-align:center; margin:16px 0 20px; }
-                .word-display .nom { font-size:2.2rem; font-weight:700; color:#2C7DA0; }
-                .word-display .trans { font-size:0.9rem; color:#5F7C62; }
-                .decl-buttons { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 10px; }
-                .decl-buttons .btn { flex:1; min-width:40px; padding:6px 8px; border-radius:40px; font-weight:600; font-size:0.8rem; border:2px solid #D9D0BD; background:transparent; cursor:pointer; font-family:inherit; transition:0.15s; }
-                .decl-buttons .btn.active { border-color:#2C7DA0; background:#2C7DA0; color:white; }
-                .decl-buttons .btn:disabled { opacity:0.5; cursor:default; }
-                .ending-buttons { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 10px; }
-                .ending-buttons .btn { flex:1; min-width:50px; padding:6px 8px; border-radius:40px; font-weight:600; font-size:0.8rem; border:2px solid #D9D0BD; background:transparent; cursor:pointer; font-family:inherit; transition:0.15s; }
-                .ending-buttons .btn.active { border-color:#2C7DA0; background:#2C7DA0; color:white; }
-                .ending-buttons .btn:disabled { opacity:0.5; cursor:default; }
-                .field { margin-bottom:10px; }
-                .field label { font-weight:600; font-size:0.7rem; color:#5F7C62; text-transform:uppercase; }
-                .field input { width:100%; padding:8px 14px; border:1px solid #D9D0BD; border-radius:1rem; font-family:inherit; font-size:1rem; outline:none; }
-                .field input:focus { border-color:#2C7DA0; }
-                .field input:disabled { background:#F4F7F9; }
-                .actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-                .btn { padding:6px 18px; border-radius:40px; font-weight:600; font-size:0.8rem; border:none; cursor:pointer; font-family:inherit; transition:0.15s; }
-                .btn:hover { opacity:0.85; }
-                .btn-success { background:#6B9E6B; color:white; }
-                .btn-success:hover { background:#5A865A; }
-                .btn-primary { background:#2C7DA0; color:white; }
-                .btn-primary:hover { background:#236B8A; }
-                .btn-outline { background:transparent; border:2px solid #D9D0BD; color:#1A2A3A; }
-                .btn-outline:hover { background:#F0EEE5; }
-                .btn:disabled { opacity:0.4; cursor:default; }
-                .feedback { margin-top:10px; padding:10px 14px; border-radius:1rem; font-weight:500; }
-                .feedback.correct { background:#E8F5E8; color:#2E7D32; }
-                .feedback.wrong { background:#FDF0E8; color:#b13e3e; }
-                .footer { margin-top:16px; text-align:center; font-size:0.7rem; color:#8A9B7A; border-top:1px solid #f0ebe3; padding-top:10px; }
-                @media (max-width:600px) { .container { padding:16px; } .word-display .nom { font-size:1.6rem; } .decl-buttons .btn, .ending-buttons .btn { font-size:0.7rem; padding:4px 6px; } }
-            </style>
-        </head>
-        <body>
-        <div class="container">
-            <div class="header">
-                <div class="logo">📚 <span class="gradient">Veterinaria Latina</span></div>
-                <div class="meta">Тренажёр · склонения и Gen. sg.</div>
-            </div>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>Veterinaria Latina · Тренажёр</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Montserrat','Segoe UI',system-ui,sans-serif; background:#F4F7F9; color:#1A2A3A; padding:16px; min-height:100vh; display:flex; justify-content:center; align-items:center; }
+.container { max-width:700px; width:100%; background:white; border-radius:2rem; padding:28px 32px; box-shadow:0 4px 24px rgba(0,0,0,0.06); }
+.header { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; padding-bottom:12px; border-bottom:2px solid #E7EDE2; margin-bottom:16px; }
+.header .logo { font-size:1.2rem; font-weight:700; color:#2C7DA0; }
+.header .logo .gradient { background:linear-gradient(135deg,#2C7DA0,#6B9E6B); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.header .meta { font-size:0.8rem; color:#5F7C62; text-align:right; }
+.score { font-size:0.8rem; color:#2C7DA0; font-weight:600; }
+.word-display { text-align:center; margin:16px 0 20px; }
+.word-display .nom { font-size:2.2rem; font-weight:700; color:#2C7DA0; }
+.word-display .trans { font-size:0.9rem; color:#5F7C62; }
+.row-label { font-weight:600; font-size:0.7rem; color:#5F7C62; text-transform:uppercase; letter-spacing:0.3px; }
+.decl-buttons, .ending-buttons { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 10px; }
+.decl-buttons .btn, .ending-buttons .btn { flex:1; min-width:44px; padding:7px 8px; border-radius:40px; font-weight:600; font-size:0.8rem; border:2px solid #D9D0BD; background:transparent; cursor:pointer; font-family:inherit; transition:0.15s; color:#1A2A3A; }
+.decl-buttons .btn:hover:not(:disabled), .ending-buttons .btn:hover:not(:disabled) { background:#F0EEE5; }
+.decl-buttons .btn.active, .ending-buttons .btn.active { border-color:#2C7DA0; background:#2C7DA0; color:white; }
+.decl-buttons .btn:disabled, .ending-buttons .btn:disabled { cursor:default; }
+.decl-buttons .btn.active:disabled, .ending-buttons .btn.active:disabled { opacity:0.9; }
+.field { margin-bottom:10px; }
+.field label { font-weight:600; font-size:0.7rem; color:#5F7C62; text-transform:uppercase; display:block; margin-bottom:4px; }
+.field input { width:100%; padding:10px 16px; border:2px solid #D9D0BD; border-radius:1rem; font-family:inherit; font-size:1rem; outline:none; transition:0.15s; background:#FEFAF2; }
+.field input:focus { border-color:#2C7DA0; background:white; box-shadow:0 0 0 3px rgba(44,125,160,0.1); }
+.field input:disabled { background:#F4F7F9; cursor:not-allowed; }
+.actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.btn { padding:8px 20px; border-radius:40px; font-weight:600; font-size:0.82rem; border:none; cursor:pointer; font-family:inherit; transition:0.15s; display:inline-flex; align-items:center; gap:5px; }
+.btn:hover { opacity:0.9; transform:translateY(-1px); }
+.btn:disabled { opacity:0.4; cursor:default; transform:none; }
+.btn-success { background:#6B9E6B; color:white; }
+.btn-primary { background:#2C7DA0; color:white; }
+.btn-outline { background:transparent; border:2px solid #D9D0BD; color:#1A2A3A; }
+.feedback { margin-top:12px; padding:12px 16px; border-radius:1rem; font-weight:500; font-size:0.88rem; line-height:1.45; display:none; }
+.feedback.correct { background:#E8F5E8; color:#2E7D32; }
+.feedback.wrong { background:#FDF0E8; color:#b13e3e; }
+.feedback.show { display:block; }
 
-            <div id="app">
-                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-                    <span id="progress">1 из ${words.length}</span>
-                    <span class="score" id="score">✅ 0 / 0</span>
-                </div>
+/* ===== Блок подписи автора ===== */
+.vetsim-credit { margin-top:20px; padding:12px 18px; background:linear-gradient(135deg,#F0F7FA,#F4F7F9); border-radius:1rem; border:1px solid #D4E8F0; text-align:center; font-size:0.8rem; color:#1A2A3A; }
+.vetsim-credit-title { font-weight:700; color:#2C7DA0; font-size:0.9rem; margin-bottom:0.4rem; }
+.vetsim-credit-row { display:flex; justify-content:center; gap:0.5rem; flex-wrap:wrap; margin:0.15rem 0; }
+.vetsim-credit-label { color:#5F7C62; font-weight:600; }
+.vetsim-credit-value { color:#1F4E6E; font-weight:700; }
 
-                <div class="word-display">
-                    <div class="nom" id="wordNom">canis</div>
-                    <div class="trans" id="wordTrans">собака</div>
-                </div>
+.footer { margin-top:14px; text-align:center; font-size:0.7rem; color:#8A9B7A; }
+@media (max-width:600px) { .container { padding:16px; } .word-display .nom { font-size:1.6rem; } .decl-buttons .btn, .ending-buttons .btn { font-size:0.7rem; padding:5px 6px; min-width:36px; } }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">📚 <span class="gradient">Veterinaria Latina</span></div>
+        <div class="meta">Тренажёр · склонения и Gen. sg.</div>
+    </div>
 
-                <div>
-                    <label style="font-weight:600;font-size:0.7rem;color:#5F7C62;text-transform:uppercase;">1. Склонение</label>
-                    <div class="decl-buttons" id="declButtons">
-                        ${['I','II','III','IV','V'].map(d => `<button class="btn" data-decl="${d}">${d}</button>`).join('')}
-                    </div>
-                </div>
-
-                <div>
-                    <label style="font-weight:600;font-size:0.7rem;color:#5F7C62;text-transform:uppercase;">2. Окончание Gen. sg.</label>
-                    <div class="ending-buttons" id="endingButtons">
-                        ${['-ae','-i','-is','-us','-ei'].map(e => `<button class="btn" data-ending="${e}">${e}</button>`).join('')}
-                    </div>
-                </div>
-
-                <div class="field">
-                    <label>3. Введите родительный падеж (Gen. sg.)</label>
-                    <input type="text" id="answerInput" placeholder="Введите форму..." />
-                </div>
-
-                <div class="actions">
-                    <button class="btn btn-success" id="checkBtn">✅ Проверить</button>
-                    <button class="btn btn-primary" id="nextBtn" style="display:none;">➡️ Следующее</button>
-                    <button class="btn btn-outline" id="resetBtn">🔄 Сбросить</button>
-                </div>
-
-                <div id="feedback" style="display:none;" class="feedback"></div>
-            </div>
-
-            <div class="footer">🐾 ВетСим — ветеринарное просвещение</div>
+    <div id="app">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+            <span id="progress" style="font-size:0.8rem;color:#5F7C62;">1 из ${words.length}</span>
+            <span class="score" id="score">✅ 0 / 0</span>
         </div>
 
-        <script>
-            const WORDS = ${data};
-            let currentIndex = 0;
-            let score = { correct: 0, total: 0 };
-            let answered = false;
-            let selectedDecl = null;
-            let selectedEnding = null;
+        <div class="word-display">
+            <div class="nom" id="wordNom">—</div>
+            <div class="trans" id="wordTrans">—</div>
+        </div>
 
-            const genEndings = { I: '-ae', II: '-i', III: '-is', IV: '-us', V: '-ei' };
+        <div>
+            <label class="row-label">1. Склонение</label>
+            <div class="decl-buttons" id="declButtons">
+                ${['I','II','III','IV','V'].map(d => `<button class="btn" data-decl="${d}">${d}</button>`).join('')}
+            </div>
+        </div>
 
-            function setDefaultsForWord(index) {
-                const word = WORDS[index];
-                if (word) {
-                    selectedDecl = word.decl;
-                    selectedEnding = genEndings[word.decl];
-                }
-            }
+        <div>
+            <label class="row-label">2. Окончание Gen. sg.</label>
+            <div class="ending-buttons" id="endingButtons">
+                ${['-ae','-i','-is','-us','-ei'].map(e => `<button class="btn" data-ending="${e}">${e}</button>`).join('')}
+            </div>
+        </div>
 
-            function render() {
-                if (WORDS.length === 0) {
-                    document.getElementById('app').innerHTML = '<p style="text-align:center;color:#8A9B7A;padding:30px 0;">Словарь пуст.</p>';
-                    return;
-                }
+        <div class="field">
+            <label>3. Введите родительный падеж (Gen. sg.)</label>
+            <input type="text" id="answerInput" placeholder="Введите форму..." autocomplete="off" />
+        </div>
 
-                // Если выбранные значения не установлены — устанавливаем по умолчанию
-                if (selectedDecl === null || selectedEnding === null) {
-                    setDefaultsForWord(currentIndex);
-                }
+        <div class="actions">
+            <button class="btn btn-success" id="checkBtn">✅ Проверить</button>
+            <button class="btn btn-primary" id="nextBtn" style="display:none;">➡️ Следующее</button>
+            <button class="btn btn-outline" id="resetBtn">🔄 Сбросить</button>
+        </div>
 
-                const word = WORDS[currentIndex];
-                document.getElementById('progress').textContent = \`\${currentIndex + 1} из \${WORDS.length}\`;
-                document.getElementById('score').textContent = \`✅ \${score.correct} / \${score.total}\`;
-                document.getElementById('wordNom').textContent = word.nom;
-                document.getElementById('wordTrans').textContent = word.trans;
-                document.getElementById('answerInput').value = '';
-                document.getElementById('answerInput').disabled = false;
-                document.getElementById('checkBtn').disabled = false;
-                document.getElementById('nextBtn').style.display = 'none';
-                document.getElementById('feedback').style.display = 'none';
+        <div id="feedback" class="feedback"></div>
+    </div>
 
-                // Обновляем кнопки склонений
-                document.querySelectorAll('#declButtons .btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.decl === selectedDecl);
-                    btn.disabled = answered;
-                });
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
 
-                // Обновляем кнопки окончаний
-                document.querySelectorAll('#endingButtons .btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.ending === selectedEnding);
-                    btn.disabled = answered;
-                });
+    <div class="footer">🐾 ВетСим — ветеринарное просвещение · CC BY-NC</div>
+</div>
 
-                if (answered) {
-                    document.getElementById('answerInput').disabled = true;
-                    document.getElementById('checkBtn').disabled = true;
-                }
-            }
+<script>
+    const WORDS = ${data};
+    let currentIndex = 0;
+    let score = { correct: 0, total: 0 };
+    let answered = false;
+    let selectedDecl = null;
+    let selectedEnding = null;
 
-            function checkAnswer() {
-                if (answered) return;
-                const word = WORDS[currentIndex];
-                const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
+    const genEndings = { I: '-ae', II: '-i', III: '-is', IV: '-us', V: '-ei' };
 
-                const declCorrect = selectedDecl === word.decl;
-                const endingCorrect = selectedEnding === genEndings[word.decl];
-                const genCorrect = userAnswer === word.gen.toLowerCase();
+    function setDefaultsForWord(index) {
+        const word = WORDS[index];
+        if (word) {
+            selectedDecl = word.decl;
+            selectedEnding = genEndings[word.decl];
+        }
+    }
 
-                const allCorrect = declCorrect && endingCorrect && genCorrect;
-                score.total++;
+    // ===== ИСПРАВЛЕНИЕ: render уважает состояние answered =====
+    function render() {
+        if (WORDS.length === 0) {
+            document.getElementById('app').innerHTML = '<p style="text-align:center;color:#8A9B7A;padding:30px 0;">Словарь пуст.</p>';
+            return;
+        }
 
-                const feedback = document.getElementById('feedback');
-                if (allCorrect) {
-                    score.correct++;
-                    feedback.className = 'feedback correct';
-                    feedback.textContent = '🎉 Отлично! Всё верно!';
-                } else {
-                    let errors = [];
-                    if (!declCorrect) errors.push('склонение');
-                    if (!endingCorrect) errors.push('окончание');
-                    if (!genCorrect) errors.push('форма Gen. sg.');
-                    feedback.className = 'feedback wrong';
-                    feedback.textContent = \`❌ Ошибка: \${errors.join(', ')}. Правильно: \${word.nom} → \${word.gen} (\${word.decl} склонение, окончание \${genEndings[word.decl]})\`;
-                }
-                feedback.style.display = 'block';
+        if (selectedDecl === null || selectedEnding === null) {
+            setDefaultsForWord(currentIndex);
+        }
 
-                answered = true;
-                document.getElementById('answerInput').disabled = true;
-                document.getElementById('checkBtn').disabled = true;
-                document.getElementById('nextBtn').style.display = 'inline-flex';
-                render();
-            }
+        const word = WORDS[currentIndex];
+        document.getElementById('progress').textContent = currentIndex + 1 + ' из ' + WORDS.length;
+        document.getElementById('score').textContent = '✅ ' + score.correct + ' / ' + score.total;
+        document.getElementById('wordNom').textContent = word.nom;
+        document.getElementById('wordTrans').textContent = word.trans;
 
-            function nextWord() {
-                currentIndex = (currentIndex + 1) % WORDS.length;
-                setDefaultsForWord(currentIndex);
-                answered = false;
-                render();
-            }
+        const input = document.getElementById('answerInput');
+        const checkBtn = document.getElementById('checkBtn');
+        const nextBtn = document.getElementById('nextBtn');
 
-            function resetScore() {
-                score.correct = 0;
-                score.total = 0;
-                currentIndex = 0;
-                setDefaultsForWord(currentIndex);
-                answered = false;
-                render();
-            }
+        // ===== КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: не сбрасываем UI безусловно =====
+        if (!answered) {
+            // Активный режим — можно отвечать
+            input.disabled = false;
+            checkBtn.disabled = false;
+            checkBtn.style.display = 'inline-flex';
+            nextBtn.style.display = 'none';
+        } else {
+            // Режим проверки — показываем результат
+            input.disabled = true;
+            checkBtn.disabled = true;
+            checkBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-flex';
+        }
 
-            // Обработчики событий
-            document.querySelectorAll('#declButtons .btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    if (answered) return;
-                    selectedDecl = this.dataset.decl;
-                    render();
-                });
-            });
+        // Обновляем кнопки выбора
+        document.querySelectorAll('#declButtons .btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.decl === selectedDecl);
+            btn.disabled = answered;
+        });
+        document.querySelectorAll('#endingButtons .btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.ending === selectedEnding);
+            btn.disabled = answered;
+        });
+    }
 
-            document.querySelectorAll('#endingButtons .btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    if (answered) return;
-                    selectedEnding = this.dataset.ending;
-                    render();
-                });
-            });
+    function checkAnswer() {
+        if (answered) return;
+        const word = WORDS[currentIndex];
+        const userAnswer = document.getElementById('answerInput').value.trim().toLowerCase();
 
-            document.getElementById('checkBtn').addEventListener('click', checkAnswer);
-            document.getElementById('nextBtn').addEventListener('click', nextWord);
-            document.getElementById('resetBtn').addEventListener('click', resetScore);
-            document.getElementById('answerInput').addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') checkAnswer();
-            });
+        const declCorrect = selectedDecl === word.decl;
+        const endingCorrect = selectedEnding === genEndings[word.decl];
+        const genCorrect = userAnswer === word.gen.toLowerCase();
+        const allCorrect = declCorrect && endingCorrect && genCorrect;
+        score.total++;
 
-            // Старт
-            setDefaultsForWord(0);
+        const feedback = document.getElementById('feedback');
+        if (allCorrect) {
+            score.correct++;
+            feedback.className = 'feedback correct show';
+            feedback.textContent = '🎉 Отлично! Всё верно!';
+        } else {
+            let errors = [];
+            if (!declCorrect) errors.push('склонение');
+            if (!endingCorrect) errors.push('окончание');
+            if (!genCorrect) errors.push('форма Gen. sg.');
+            feedback.className = 'feedback wrong show';
+            feedback.textContent = '❌ Ошибка: ' + errors.join(', ') + '. Правильно: ' + word.nom + ' → ' + word.gen + ' (' + word.decl + ' склонение, окончание ' + genEndings[word.decl] + ')';
+        }
+
+        answered = true;
+        render();
+    }
+
+    function nextWord() {
+        currentIndex = (currentIndex + 1) % WORDS.length;
+        setDefaultsForWord(currentIndex);
+        answered = false;
+        document.getElementById('answerInput').value = '';
+        document.getElementById('feedback').className = 'feedback';
+        document.getElementById('feedback').textContent = '';
+        render();
+    }
+
+    function resetScore() {
+        score.correct = 0;
+        score.total = 0;
+        currentIndex = 0;
+        setDefaultsForWord(currentIndex);
+        answered = false;
+        document.getElementById('answerInput').value = '';
+        document.getElementById('feedback').className = 'feedback';
+        document.getElementById('feedback').textContent = '';
+        render();
+    }
+
+    document.querySelectorAll('#declButtons .btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (answered) return;
+            selectedDecl = this.dataset.decl;
             render();
-        <\/script>
-        </body>
-        </html>`;
+        });
+    });
+    document.querySelectorAll('#endingButtons .btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (answered) return;
+            selectedEnding = this.dataset.ending;
+            render();
+        });
+    });
+
+    document.getElementById('checkBtn').addEventListener('click', checkAnswer);
+    document.getElementById('nextBtn').addEventListener('click', nextWord);
+    document.getElementById('resetBtn').addEventListener('click', resetScore);
+    document.getElementById('answerInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            if (answered) nextWord();
+            else checkAnswer();
+        }
+    });
+
+    setDefaultsForWord(0);
+    render();
+<\/script>
+</body>
+</html>`;
 
         const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
         const link = document.createElement('a');
@@ -1187,14 +1111,9 @@
         try {
             const data = JSON.parse(jsonData.value);
             if (Array.isArray(data) && data.length > 0 && data[0].nom && data[0].gen) {
-                if (words.length > 0) {
-                    if (!confirm('Импортировать слова? Текущие слова будут заменены.')) return;
-                }
+                if (words.length > 0 && !confirm('Импортировать слова? Текущие слова будут заменены.')) return;
                 words = data;
-                cancelEdit();
-                renderAll();
-                resetScore();
-                saveState();
+                cancelEdit(); renderAll(); resetScore(); saveState();
                 showToast('📂 Слова импортированы');
             } else {
                 showToast('❌ Неверный формат JSON');
@@ -1231,8 +1150,8 @@
             words = DEFAULT_WORDS.map(w => ({ ...w }));
             saveState();
         }
+        loadAuthor();
 
-        // Инициализируем тренажёр первым словом
         if (words.length > 0) {
             const word = words[0];
             selectedDecl = word.decl;
@@ -1242,7 +1161,6 @@
         initTabs();
         renderAll();
 
-        // Обработчики
         addWordBtn.addEventListener('click', addWord);
         editWordBtn.addEventListener('click', saveEdit);
         cancelEditBtn.addEventListener('click', cancelEdit);
@@ -1252,10 +1170,9 @@
         exportJsonBtn.addEventListener('click', exportJSON);
         importJsonBtn.addEventListener('click', importJSON);
 
-        // Enter в полях формы
-        wordNom.addEventListener('keydown', function(e) { if (e.key === 'Enter') addWord(); });
-        wordGen.addEventListener('keydown', function(e) { if (e.key === 'Enter') addWord(); });
-        wordTrans.addEventListener('keydown', function(e) { if (e.key === 'Enter') addWord(); });
+        wordNom.addEventListener('keydown', e => { if (e.key === 'Enter') addWord(); });
+        wordGen.addEventListener('keydown', e => { if (e.key === 'Enter') addWord(); });
+        wordTrans.addEventListener('keydown', e => { if (e.key === 'Enter') addWord(); });
     }
 
     document.addEventListener('DOMContentLoaded', init);

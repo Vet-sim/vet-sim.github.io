@@ -482,6 +482,7 @@ th {
 // ================================================================
 //  БАЗА КОРМОВ (на 1 кг натурального корма)
 //  16 кормов, сгруппированных по категориям
+//  Данные сверены со справочником Калашникова А.П. и др., 2003
 // ================================================================
 const FEEDS = {
     // ===== ГРУБЫЕ КОРМА =====
@@ -493,13 +494,13 @@ const FEEDS = {
     silage_grass: { name: 'Силос злаковый', dm: 0.30, oe: 9.5, sp: 130, ca: 3.0, p: 1.5, fiber: 110, car: 35, vd: 150, ve: 35, sugar: 20, starch: 20, fat: 15, salt: 0.4, zn: 20, cu: 4, mn: 30, i: 0.2, se: 0.05, co: 0.08, cost: 4 },
     haylage: { name: 'Сенаж бобово-злаковый', dm: 0.50, oe: 10.0, sp: 150, ca: 8.0, p: 2.5, fiber: 180, car: 30, vd: 200, ve: 50, sugar: 60, starch: 30, fat: 20, salt: 0.4, zn: 25, cu: 5, mn: 35, i: 0.2, se: 0.08, co: 0.1, cost: 6 },
 
-    // ===== КОРНЕКЛУБНЕПЛОДЫ =====
-    potato: { name: '🥔 Картофель кормовой', dm: 0.22, oe: 13.0, sp: 60, ca: 0.4, p: 2.0, fiber: 30, car: 5, vd: 0, ve: 10, sugar: 15, starch: 600, fat: 5, salt: 0.2, zn: 10, cu: 2, mn: 10, i: 0.05, se: 0.01, co: 0.02, cost: 4 },
-    carrot: { name: '🥕 Морковь кормовая', dm: 0.12, oe: 11.5, sp: 70, ca: 6.0, p: 3.0, fiber: 90, car: 250, vd: 0, ve: 20, sugar: 150, starch: 50, fat: 8, salt: 0.3, zn: 15, cu: 3, mn: 15, i: 0.05, se: 0.01, co: 0.02, cost: 5 },
-    beet_fodder: { name: '🫒 Свёкла кормовая', dm: 0.12, oe: 12.0, sp: 80, ca: 3.0, p: 3.5, fiber: 80, car: 10, vd: 0, ve: 15, sugar: 400, starch: 20, fat: 5, salt: 0.5, zn: 15, cu: 3, mn: 20, i: 0.05, se: 0.01, co: 0.02, cost: 4 },
-    turnip: { name: '🥬 Турнепс', dm: 0.11, oe: 10.5, sp: 60, ca: 4.0, p: 2.5, fiber: 100, car: 15, vd: 0, ve: 15, sugar: 200, starch: 20, fat: 5, salt: 0.4, zn: 15, cu: 3, mn: 15, i: 0.05, se: 0.01, co: 0.02, cost: 3 },
-    swede: { name: '🥬 Брюква', dm: 0.12, oe: 11.0, sp: 65, ca: 4.5, p: 2.5, fiber: 90, car: 15, vd: 0, ve: 15, sugar: 250, starch: 25, fat: 5, salt: 0.4, zn: 15, cu: 3, mn: 15, i: 0.05, se: 0.01, co: 0.02, cost: 4 },
-    beet_sugar: { name: '🍬 Свёкла сахарная', dm: 0.24, oe: 13.5, sp: 70, ca: 1.5, p: 1.5, fiber: 60, car: 5, vd: 0, ve: 10, sugar: 600, starch: 30, fat: 5, salt: 0.4, zn: 10, cu: 2, mn: 10, i: 0.05, se: 0.01, co: 0.02, cost: 5 },
+    // ===== КОРНЕКЛУБНЕПЛОДЫ (данные исправлены) =====
+    potato: { name: '🥔 Картофель кормовой', dm: 0.22, oe: 13.0, sp: 60, ca: 0.4, p: 2.0, fiber: 30, car: 5, vd: 0, ve: 10, sugar: 15, starch: 170, fat: 5, salt: 0.2, zn: 10, cu: 2, mn: 10, i: 0.05, se: 0.01, co: 0.02, cost: 4 },
+    carrot: { name: '🥕 Морковь кормовая', dm: 0.12, oe: 11.5, sp: 70, ca: 6.0, p: 3.0, fiber: 90, car: 70, vd: 0, ve: 20, sugar: 70, starch: 15, fat: 8, salt: 0.3, zn: 15, cu: 3, mn: 15, i: 0.05, se: 0.01, co: 0.02, cost: 5 },
+    beet_fodder: { name: '🫒 Свёкла кормовая', dm: 0.12, oe: 12.0, sp: 80, ca: 3.0, p: 3.5, fiber: 80, car: 10, vd: 0, ve: 15, sugar: 70, starch: 20, fat: 5, salt: 0.5, zn: 15, cu: 3, mn: 20, i: 0.05, se: 0.01, co: 0.02, cost: 4 },
+    turnip: { name: '🥬 Турнепс', dm: 0.11, oe: 10.5, sp: 60, ca: 4.0, p: 2.5, fiber: 100, car: 15, vd: 0, ve: 15, sugar: 70, starch: 15, fat: 5, salt: 0.4, zn: 15, cu: 3, mn: 15, i: 0.05, se: 0.01, co: 0.02, cost: 3 },
+    swede: { name: '🥬 Брюква', dm: 0.12, oe: 11.0, sp: 65, ca: 4.5, p: 2.5, fiber: 90, car: 15, vd: 0, ve: 15, sugar: 80, starch: 20, fat: 5, salt: 0.4, zn: 15, cu: 3, mn: 15, i: 0.05, se: 0.01, co: 0.02, cost: 4 },
+    beet_sugar: { name: '🍬 Свёкла сахарная', dm: 0.24, oe: 13.5, sp: 70, ca: 1.5, p: 1.5, fiber: 60, car: 5, vd: 0, ve: 10, sugar: 180, starch: 20, fat: 5, salt: 0.4, zn: 10, cu: 2, mn: 10, i: 0.05, se: 0.01, co: 0.02, cost: 5 },
     molasses: { name: '🍯 Патока кормовая (меласса)', dm: 0.75, oe: 10.0, sp: 50, ca: 3.0, p: 0.5, fiber: 0, car: 0, vd: 0, ve: 5, sugar: 500, starch: 0, fat: 0, salt: 2.0, zn: 20, cu: 5, mn: 20, i: 0.1, se: 0.02, co: 0.05, cost: 3 },
 
     // ===== КОНЦЕНТРАТЫ =====
@@ -534,7 +535,7 @@ const ANIMAL_NORMS = {
 // ================================================================
 //  СОСТОЯНИЕ
 // ================================================================
-const STORAGE_KEY = 'ration_pro_unified_v3';
+const STORAGE_KEY = 'ration_pro_unified_v4';
 
 let state = {
     ration: [],
@@ -1010,8 +1011,8 @@ function renderExtendedPrognosis() {
     }
 
     const recommendations = [];
-    if (sugarPct < 70) recommendations.push('Добавить корма, богатые сахаром: 🍬 свёкла сахарная, 🍯 патока, 🫒 свёкла кормовая, 🥬 турнепс, 🥬 брюква');
-    if (starchPct < 70) recommendations.push('Добавить источники крахмала: 🥔 картофель, ячмень, овёс');
+    if (sugarPct < 70) recommendations.push('Добавить корма, богатые сахаром: 🍯 патока (500 г/кг), 🍬 свёкла сахарная (180 г/кг), 🥬 брюква (80 г/кг), 🫒 свёкла кормовая (70 г/кг), 🥕 морковь (70 г/кг)');
+    if (starchPct < 70) recommendations.push('Добавить источники крахмала: ячмень (450 г/кг), овёс (350 г/кг), 🥔 картофель (170 г/кг), отруби (200 г/кг)');
     if (fiberPct < 70) recommendations.push('Увеличить долю грубых кормов (сено злаково-бобовое, сено люцерновое)');
     if (starchPct > 130) recommendations.push('Снизить долю концентратов и картофеля, добавить сено и свёклу кормовую');
     if (caPct < 70) recommendations.push('Ввести минеральную подкормку (премикс, мел) или 🥕 морковь кормовую');

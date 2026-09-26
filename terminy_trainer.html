@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-        ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Образовательный тренажёр: Термины и Определения (редактор)</title>
@@ -47,7 +35,7 @@
 
         .header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         .header h1 {
             font-size: 1.9rem;
@@ -62,6 +50,45 @@
         .sub {
             font-size: 0.9rem;
             color: #6e6a5e;
+        }
+
+        /* ===== НОВОЕ: поле автора ===== */
+        .author-block {
+            background: #f2ede3;
+            border-radius: 1.2rem;
+            padding: 12px 18px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border: 2px solid #e2d8ca;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #4e6b4a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 9px 18px;
+            border: 2px solid #e2d8ca;
+            border-radius: 3rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fffdf8;
+            color: #2e2e2a;
+            outline: none;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            border-color: #7f9970;
+            box-shadow: 0 0 0 3px rgba(127,153,112,0.15);
+            background: white;
         }
 
         .toolbar {
@@ -216,15 +243,43 @@
             .card { width: 100%; max-width: 280px; }
             .toolbar { gap: 0.6rem; }
             .btn, .file-label { padding: 0.4rem 1rem; font-size: 0.8rem; }
+            .author-block { flex-direction: column; align-items: stretch; }
         }
 
+        /* ===== НОВОЕ: подпись внизу ===== */
+        .vetsim-credit {
+            margin-top: 1.5rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #f2ede3, #fffdf8);
+            border-radius: 1.5rem;
+            border: 1px solid #e2d8ca;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #2e2e2a;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #4e6b4a;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #6e6a5e; font-weight: 600; }
+        .vetsim-credit-value { color: #2f492c; font-weight: 700; }
+
         .license-footer {
-            margin-top: 2rem;
+            margin-top: 1.2rem;
             text-align: center;
             font-size: 0.75rem;
             color: #9aa98b;
             border-top: 1px solid #e3dfd3;
-            padding-top: 1.2rem;
+            padding-top: 1rem;
         }
         .license-footer a {
             color: #7f8e70;
@@ -240,6 +295,13 @@
     <div class="header">
         <h1>📚 СОЕДИНИ ТЕРМИН С ОПРЕДЕЛЕНИЕМ</h1>
         <div class="sub">Перетаскивайте карточки для создания пар</div>
+    </div>
+
+    <!-- ===== НОВОЕ: поле автора ===== -->
+    <div class="author-block">
+        <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+        <input type="text" id="authorInput" class="author-input"
+               placeholder="Например: Тераевич Алла Сергеевна">
     </div>
 
     <div class="toolbar">
@@ -260,19 +322,32 @@
         </div>
     </div>
 
+    <!-- ===== НОВОЕ: подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <div class="license-footer">
-        © Преподаватель - Тераевич Алла Сергеевна, 2026. 
-        <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY-NC</a> — 
+        © Преподаватель - Тераевич Алла Сергеевна, 2026.
+        <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY-NC</a> —
         для свободного некоммерческого использования.
     </div>
 </div>
 
 <script>
     // ---------- Глобальное состояние ----------
-    let cards = [];            // массив объектов карточек
+    let cards = [];
     let nextCardId = 1;
     let nextPairId = 1;
-    let currentPairs = [];     // исходные пары { term, definition } (для экспорта и сброса)
+    let currentPairs = [];
 
     const container = document.getElementById('cardsContainer');
     const fileInput = document.getElementById('fileInput');
@@ -283,10 +358,31 @@
     const exportStandaloneBtn = document.getElementById('exportStandaloneBtn');
     const statusDiv = document.getElementById('statusMsg');
 
+    // ===== НОВОЕ: элементы автора =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_terminy_author', authorInput.value); } catch (e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_terminy_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch (e) {}
+    }
+
     let draggedCard = null;
     let draggedCardData = null;
 
-    // Демо-пары по умолчанию
     const demoPairs = [
         { term: "Анамнез", definition: "Совокупность сведений о развитии болезни" },
         { term: "Пальпация", definition: "Метод обследования с помощью ощупывания" },
@@ -304,7 +400,6 @@
         }, 2000);
     }
 
-    // Декодирование файла с автоопределением кодировки (UTF-8 или CP1251)
     function decodeFileContent(arrayBuffer) {
         let decoder = new TextDecoder('utf-8');
         let decoded = decoder.decode(arrayBuffer);
@@ -319,7 +414,6 @@
         return decoded;
     }
 
-    // Парсинг текста с разделителями ; или |
     function parseFileContent(content) {
         const lines = content.split(/\r?\n/);
         const pairs = [];
@@ -341,7 +435,6 @@
         return pairs;
     }
 
-    // Построение игры из массива пар (очищает текущее состояние)
     function buildGameFromPairs(pairsArray) {
         if (!pairsArray.length) {
             updateStatus('Нет пар для построения игры', false);
@@ -374,14 +467,12 @@
         return true;
     }
 
-    // Инициализация игры из пар (сохраняет исходные пары)
     function initGameFromPairs(pairsArray) {
         if (!pairsArray.length) return false;
-        currentPairs = JSON.parse(JSON.stringify(pairsArray)); // копия
+        currentPairs = JSON.parse(JSON.stringify(pairsArray));
         return buildGameFromPairs(pairsArray);
     }
 
-    // Перемешивание только несобранных карточек
     function shuffleCardsArray() {
         const unmatchedCards = cards.filter(c => !c.matched);
         const matchedCards = cards.filter(c => c.matched);
@@ -392,7 +483,6 @@
         cards = [...unmatchedCards, ...matchedCards];
     }
 
-    // Объединение пары (термин + определение)
     function mergePair(termCard, defCard) {
         if (termCard.matched || defCard.matched) return false;
         if (termCard.pairId !== defCard.pairId) return false;
@@ -441,8 +531,6 @@
             if (m === '<') return '&lt;';
             if (m === '>') return '&gt;';
             return m;
-        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-            return c;
         });
     }
 
@@ -466,7 +554,7 @@
             if (card.type === 'term') cardDiv.classList.add('term');
             else if (card.type === 'def') cardDiv.classList.add('def');
             else if (card.type === 'merged') cardDiv.classList.add('matched-pair');
-            
+
             if (card.type === 'merged') {
                 cardDiv.innerHTML = card.text;
             } else {
@@ -476,7 +564,7 @@
             cardDiv.setAttribute('data-type', card.type);
             cardDiv.setAttribute('data-pairid', card.pairId);
             cardDiv.setAttribute('data-matched', card.matched);
-            
+
             if (!card.matched && (card.type === 'term' || card.type === 'def')) {
                 cardDiv.draggable = true;
                 cardDiv.addEventListener('dragstart', handleDragStart);
@@ -491,7 +579,7 @@
         }
     }
 
-    // ---------- Drag & Drop для мыши ----------
+    // ---------- Drag & Drop ----------
     function handleDragStart(e) {
         const el = e.target.closest('.card');
         if (!el) return;
@@ -511,10 +599,8 @@
         draggedCard = null;
         draggedCardData = null;
     }
-    document.querySelector('.game-board').addEventListener('dragover', (e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-    });
+
+    // ===== ИСПРАВЛЕНО: обработчики на контейнере, а не на .game-board =====
     container.addEventListener('dragover', (e) => {
         e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
@@ -617,7 +703,6 @@
         updateStatus('Карточки перемешаны', true);
     }
 
-    // Полный сброс игры (к начальному состоянию с текущими парами)
     function resetGame() {
         if (currentPairs.length === 0) {
             initGameFromPairs(demoPairs);
@@ -627,13 +712,11 @@
         updateStatus('Игра сброшена', true);
     }
 
-    // Сохранение прогресса (какие пары уже собраны)
     function saveProgress() {
         if (currentPairs.length === 0) {
             updateStatus('Нет данных для сохранения прогресса', false);
             return;
         }
-        // Собираем ID пар, которые уже соединены (merged)
         const mergedPairs = cards.filter(c => c.type === 'merged').map(c => c.pairId);
         const progress = {
             pairs: currentPairs,
@@ -651,7 +734,6 @@
         updateStatus('Прогресс сохранён', true);
     }
 
-    // Загрузка прогресса из JSON-файла
     function loadProgressFromFile(file) {
         const reader = new FileReader();
         reader.onload = (evt) => {
@@ -660,13 +742,10 @@
                 if (!data.pairs || !Array.isArray(data.pairs) || !data.collectedPairIds) {
                     throw new Error('Неверный формат файла прогресса');
                 }
-                // Проверяем, совпадают ли пары с текущими
                 if (JSON.stringify(currentPairs) !== JSON.stringify(data.pairs)) {
                     throw new Error('Набор пар не совпадает с текущим. Невозможно загрузить прогресс.');
                 }
-                // Восстанавливаем состояние: перестраиваем игру из currentPairs, затем отмечаем собранные пары
                 buildGameFromPairs(currentPairs);
-                // Отмечаем собранные пары (симулируем их соединение)
                 for (let pairId of data.collectedPairIds) {
                     const termCard = cards.find(c => c.type === 'term' && c.pairId === pairId && !c.matched);
                     const defCard = cards.find(c => c.type === 'def' && c.pairId === pairId && !c.matched);
@@ -693,13 +772,17 @@
         input.click();
     }
 
-    // Экспорт в готовый тренажёр (для студентов)
+    // ===== ИСПРАВЛЕНО: экспорт с автором =====
     function exportStandaloneTrainer() {
         if (currentPairs.length === 0) {
             updateStatus('Нет пар для экспорта. Сначала загрузите или используйте демо.', false);
             return;
         }
+
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const pairsData = JSON.stringify(currentPairs);
+
         const trainerHTML = `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -729,7 +812,15 @@
         .card.matched-pair .pair-term { font-weight: bold; display: block; border-bottom: 1px dashed #97ab86; padding-bottom: 6px; margin-bottom: 6px; }
         .empty-message { text-align: center; padding: 3rem; color: #aaac9a; }
         @media (max-width: 700px) { .game-container { padding: 1rem; } .card { width: 100%; max-width: 280px; } .btn { padding: 0.4rem 1rem; font-size: 0.8rem; } }
-        .license-footer { margin-top: 2rem; text-align: center; font-size: 0.75rem; color: #9aa98b; border-top: 1px solid #e3dfd3; padding-top: 1.2rem; }
+
+        /* ===== Блок подписи автора ===== */
+        .vetsim-credit { margin-top: 1.5rem; padding: 1rem 1.2rem; background: linear-gradient(135deg, #f2ede3, #fffdf8); border-radius: 1.5rem; border: 1px solid #e2d8ca; text-align: center; font-size: 0.82rem; color: #2e2e2a; }
+        .vetsim-credit-title { font-weight: 700; color: #4e6b4a; font-size: 0.92rem; margin-bottom: 0.5rem; }
+        .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.15rem 0; }
+        .vetsim-credit-label { color: #6e6a5e; font-weight: 600; }
+        .vetsim-credit-value { color: #2f492c; font-weight: 700; }
+
+        .license-footer { margin-top: 1.2rem; text-align: center; font-size: 0.75rem; color: #9aa98b; border-top: 1px solid #e3dfd3; padding-top: 1rem; }
         .license-footer a { color: #7f8e70; text-decoration: none; }
     </style>
 </head>
@@ -742,7 +833,21 @@
         <button id="loadProgressBtn" class="btn btn-primary">📂 Загрузить прогресс</button>
     </div>
     <div class="game-board"><div id="cardsContainer" class="cards-grid"></div></div>
-    <div class="license-footer">© Преподаватель - Тераевич Алла Сергеевна, 2026. <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">Creative Commons BY-NC</a> — для свободного некоммерческого использования.</div>
+
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
+
+    <div class="license-footer">© ВетСим · <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">Creative Commons BY-NC</a> — для свободного некоммерческого использования.</div>
 </div>
 <script>
     const embeddedPairs = ${pairsData};
@@ -857,7 +962,8 @@
 <\/script>
 </body>
 </html>`;
-        const blob = new Blob([trainerHTML], { type: 'text/html' });
+
+        const blob = new Blob([trainerHTML], { type: 'text/html;charset=utf-8' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = 'terminy_trainer.html';
@@ -866,7 +972,6 @@
         updateStatus('Готовый тренажёр сохранён как terminy_trainer.html', true);
     }
 
-    // Загрузка файла с парами
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -891,7 +996,7 @@
     loadProgressBtn.addEventListener('click', triggerLoadProgress);
     exportStandaloneBtn.addEventListener('click', exportStandaloneTrainer);
 
-    // Инициализация демо-парами
+    loadAuthorLocal();
     initGameFromPairs(demoPairs);
 </script>
 </body>

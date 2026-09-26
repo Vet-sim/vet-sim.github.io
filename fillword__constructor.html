@@ -205,6 +205,24 @@
             color: var(--text-dark);
         }
 
+        /* ===== НОВОЕ: поле автора ===== */
+        .author-input {
+            width: 100%;
+            padding: 8px 14px;
+            background: #FEFAF2;
+            border: 2px solid var(--border-light);
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-family: var(--font);
+            color: var(--text-dark);
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: white;
+        }
+
         .word-list {
             max-height: 200px;
             overflow-y: auto;
@@ -253,6 +271,40 @@
             background: #F4EFE4;
             padding: 8px;
             border-radius: 1rem;
+        }
+
+        /* ===== Блок подписи автора на странице конструктора ===== */
+        .vetsim-credit {
+            margin-top: 1.2rem;
+            padding: 0.9rem 1.2rem;
+            background: linear-gradient(135deg, #F4EFE4, #FDF8F0);
+            border-radius: 1rem;
+            border: 1px solid #E5DDCF;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8C5C;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+            font-size: 0.78rem;
+        }
+        .vetsim-credit-label {
+            color: #7B8D6E;
+            font-weight: 600;
+        }
+        .vetsim-credit-value {
+            color: #1F4E6E;
+            font-weight: 700;
         }
 
         footer {
@@ -304,6 +356,13 @@
                 <div id="grid-container"></div>
             </div>
             <div class="side-panel">
+                <!-- ===== НОВОЕ: поле автора тренажёра ===== -->
+                <div class="settings-group">
+                    <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+                    <input type="text" id="authorInput" class="author-input"
+                           placeholder="Например: Тераевич Алла Сергеевна">
+                </div>
+
                 <div class="settings-group">
                     <label for="instructionInput">📝 Задание для ученика:</label>
                     <textarea id="instructionInput" rows="2" placeholder="Например: Найдите все спрятанные слова по теме 'Анатомия'."></textarea>
@@ -336,15 +395,29 @@
                 </div>
             </div>
         </div>
-        <footer>© ВетСим, 2026. Конструктор филвордов для образовательных целей.</footer>
+
+        <!-- ===== НОВОЕ: превью подписи автора на странице конструктора ===== -->
+        <div class="vetsim-credit">
+            <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+            <div class="vetsim-credit-row">
+                <span class="vetsim-credit-label">Автор проекта:</span>
+                <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+            </div>
+            <div class="vetsim-credit-row">
+                <span class="vetsim-credit-label">Автор тренажёра:</span>
+                <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+            </div>
+        </div>
+
+        <footer>© ВетСим, 2026. CC BY-NC. Конструктор филвордов для образовательных целей.</footer>
     </div>
 
     <script>
         // ============================================================
-        //  ЛОГИКА ГЕНЕРАТОРА (ИСПРАВЛЕННАЯ)
+        //  ЛОГИКА ГЕНЕРАТОРА
         // ============================================================
         let currentGrid = [];
-        let currentWords = []; // { word, color, cells: [{r, c}], found: false }
+        let currentWords = [];
         let termList = [];
         let cellSize = 40;
         let gridSize = 12;
@@ -353,12 +426,19 @@
         const wordsInput = document.getElementById('wordsInput');
         const instructionInput = document.getElementById('instructionInput');
         const sizeInput = document.getElementById('sizeInput');
+        const authorInput = document.getElementById('authorInput');
+        const authorPreview = document.getElementById('authorPreview');
         const wordListContainer = document.getElementById('wordListContainer');
         const statsWords = document.getElementById('statsWords');
         const progressCounter = document.getElementById('progressCounter');
 
-        // Цвета для слов
         const COLORS = ['#9BF6FF', '#FFC6FF', '#FFD6A5', '#A0C4FF', '#BDB2FF', '#FDFFB6', '#CAFFBF', '#FFADAD', '#A2E1DB', '#F4A261'];
+
+        // ---------- Обновление превью автора ----------
+        authorInput.addEventListener('input', () => {
+            const val = authorInput.value.trim();
+            authorPreview.textContent = val || 'не указан';
+        });
 
         // ---------- Парсинг слов ----------
         function parseWords(text) {
@@ -367,7 +447,7 @@
                 .filter(s => s.length > 0);
         }
 
-        // ---------- Вспомогательные функции размещения (возвращают массив координат) ----------
+        // ---------- Функции размещения ----------
         function canPlaceWord(word, grid, row, col, dr, dc) {
             const len = word.length;
             for (let k = 0; k < len; k++) {
@@ -439,7 +519,6 @@
                 return;
             }
 
-            // Определяем размер
             let size = parseInt(sizeInput.value);
             if (isNaN(size) || size < 3) {
                 const maxLen = Math.max(...words.map(w => w.length));
@@ -449,29 +528,17 @@
             gridSize = size;
             cellSize = Math.min(500 / gridSize, 60);
 
-            // Создаём пустую сетку
             const grid = Array(gridSize).fill().map(() => Array(gridSize).fill(''));
-
-            // Сортируем слова по длине (убывание)
             const sortedWords = [...words].sort((a, b) => b.length - a.length);
-
             const wordObjects = [];
 
             for (const word of sortedWords) {
                 let placed = false;
-                // Перебираем все позиции и направления
                 for (let i = 0; i < gridSize && !placed; i++) {
                     for (let j = 0; j < gridSize && !placed; j++) {
-                        // Пробуем прямые направления
                         const dirs = [
-                            { dr: 0, dc: 1 },
-                            { dr: 1, dc: 0 },
-                            { dr: 0, dc: -1 },
-                            { dr: -1, dc: 0 },
-                            { dr: 1, dc: 1 },
-                            { dr: -1, dc: -1 },
-                            { dr: 1, dc: -1 },
-                            { dr: -1, dc: 1 }
+                            { dr: 0, dc: 1 }, { dr: 1, dc: 0 }, { dr: 0, dc: -1 }, { dr: -1, dc: 0 },
+                            { dr: 1, dc: 1 }, { dr: -1, dc: -1 }, { dr: 1, dc: -1 }, { dr: -1, dc: 1 }
                         ];
                         for (const d of dirs) {
                             if (canPlaceWord(word, grid, i, j, d.dr, d.dc)) {
@@ -488,7 +555,6 @@
                         }
                         if (placed) break;
 
-                        // Пробуем L-образные
                         const lDirs = [
                             [{ dr: 0, dc: 1 }, { dr: 1, dc: 0 }],
                             [{ dr: 0, dc: -1 }, { dr: 1, dc: 0 }],
@@ -518,7 +584,6 @@
                 }
             }
 
-            // Заполняем пустые клетки случайными буквами
             const letters = 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ';
             for (let r = 0; r < gridSize; r++) {
                 for (let c = 0; c < gridSize; c++) {
@@ -528,12 +593,10 @@
                 }
             }
 
-            // Сохраняем результат
             currentGrid = grid;
             currentWords = wordObjects;
             termList = wordObjects.map(w => w.word);
 
-            // Отображаем
             renderGrid(grid);
             updateWordList();
             updateProgress();
@@ -550,7 +613,7 @@
             }
         }
 
-        // ---------- Отрисовка сетки ----------
+        // ---------- Отрисовка ----------
         function renderGrid(grid) {
             gridContainer.innerHTML = '';
             if (!grid || grid.length === 0) return;
@@ -572,7 +635,6 @@
             }
         }
 
-        // ---------- Обновление списка слов ----------
         function updateWordList() {
             wordListContainer.innerHTML = '';
             const sorted = [...currentWords].sort((a, b) => a.word.localeCompare(b.word));
@@ -604,6 +666,8 @@
                 return;
             }
 
+            const authorName = authorInput.value.trim() || 'не указан';
+
             const data = {
                 instruction: instructionInput.value || '',
                 grid: currentGrid,
@@ -612,245 +676,291 @@
                     color: w.color,
                     cells: w.cells
                 })),
-                gridSize: gridSize
+                gridSize: gridSize,
+                author: authorName
             };
 
             const jsonData = JSON.stringify(data);
             const escapedJsonData = jsonData.replace(/<\/script>/gi, '<\\/script>');
 
             const htmlContent = `<!DOCTYPE html>
-        <html lang="ru">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-            <title>Филворд | ВетСим</title>
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
-            <style>
-                * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
-                body { background: #FDF8F0; font-family: 'Montserrat', system-ui, sans-serif; color: #3E5C4A; padding: 1.5rem; }
-                .container { max-width: 1100px; margin: auto; background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-                h1 { font-size: 2rem; background: linear-gradient(135deg, #6B8C5C, #A38B60); background-clip: text; -webkit-background-clip: text; color: transparent; text-align: center; margin-bottom: 0.3rem; }
-                .sub { text-align: center; color: #7B8D6E; margin-bottom: 1rem; }
-                .instruction-box { background: #F4EFE4; border-radius: 1rem; padding: 10px 14px; margin-bottom: 1rem; border-left: 4px solid #2C7DA0; font-size: 0.95rem; }
-                .instruction-box strong { color: #1F4E6E; }
-                .game-area { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; align-items: flex-start; }
-                #grid-container { display: grid; gap: 3px; background: #E5DDCF; padding: 5px; border-radius: 1rem; max-width: 550px; width: 100%; }
-                .grid-cell { background: white; display: flex; align-items: center; justify-content: center; font-weight: 700; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: background 0.2s; aspect-ratio: 1/1; }
-                .grid-cell.selected { background: #a7d8ff; }
-                .side-panel { flex: 1; min-width: 220px; }
-                .progress-section { display: flex; align-items: center; gap: 0.8rem; font-weight: 600; font-size: 0.9rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
-                .progress-bar { width: 150px; height: 12px; background: #EDE8DC; border-radius: 2rem; overflow: hidden; }
-                .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #6B9E6B, #A3B18A); border-radius: 2rem; transition: width 0.3s ease; }
-                .btn { background: #EBE3D2; border: none; padding: 6px 14px; border-radius: 2rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.8rem; font-family: 'Montserrat', sans-serif; }
-                .btn-success { background: #6B9E6B; color: white; }
-                .btn-success:hover { background: #5A865A; }
-                .btn-warning { background: #E2CFB0; color: #4D3E2A; }
-                .btn-warning:hover { background: #D6C09B; }
-                .word-list { max-height: 350px; overflow-y: auto; background: #FEFAF2; border-radius: 1.2rem; padding: 0.4rem 0.2rem; margin: 0.6rem 0; }
-                .word-item { padding: 6px 12px; margin: 3px 4px; background: #F4EFE4; border-radius: 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
-                .word-item.found { background: #CBE0C0; text-decoration: line-through; opacity: 0.7; }
-                footer { text-align: center; margin-top: 2rem; font-size: 0.7rem; color: #B0BC9C; border-top: 1px solid #E5DDCF; padding-top: 0.8rem; }
-                #message-box { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1000; transition: opacity 0.5s, transform 0.5s; font-weight: 600; }
-                #message-box.hidden { opacity: 0; transform: translate(-50%, -100px); pointer-events: none; }
-                @media (max-width: 700px) { .game-area { flex-direction: column; align-items: center; } .side-panel { width: 100%; } }
-            </style>
-        </head>
-        <body>
-        <div class="container">
-            <h1>🧩 Филворд</h1>
-            <div class="sub">Найдите все спрятанные слова</div>
-            ${data.instruction ? `<div class="instruction-box"><strong>📝 Задание:</strong> ${data.instruction}</div>` : ''}
-            <div class="game-area">
-                <div id="grid-container"></div>
-                <div class="side-panel">
-                    <div class="progress-section">
-                        <span>📊 Прогресс:</span>
-                        <span id="progressCounter">0 / 0</span>
-                        <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-                    </div>
-                    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:0.6rem;">
-                        <button class="btn btn-success" id="checkAllBtn">✅ Проверить всё</button>
-                        <button class="btn btn-warning" id="resetBtn">🔄 Сбросить</button>
-                    </div>
-                    <div><strong>📖 Слова для поиска:</strong> <span id="statsWords"></span></div>
-                    <div id="wordListContainer" class="word-list"></div>
-                    <div style="font-size:0.7rem; margin-top:0.8rem; background:#F4EFE4; padding:8px; border-radius:1rem;">
-                        💡 Проведите пальцем или мышкой по буквам, чтобы выделить слово.
-                    </div>
-                </div>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Филворд | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+        body { background: #FDF8F0; font-family: 'Montserrat', system-ui, sans-serif; color: #3E5C4A; padding: 1.5rem; }
+        .container { max-width: 1100px; margin: auto; background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h1 { font-size: 2rem; background: linear-gradient(135deg, #6B8C5C, #A38B60); background-clip: text; -webkit-background-clip: text; color: transparent; text-align: center; margin-bottom: 0.3rem; }
+        .sub { text-align: center; color: #7B8D6E; margin-bottom: 1rem; }
+        .instruction-box { background: #F4EFE4; border-radius: 1rem; padding: 10px 14px; margin-bottom: 1rem; border-left: 4px solid #2C7DA0; font-size: 0.95rem; }
+        .instruction-box strong { color: #1F4E6E; }
+        .game-area { display: flex; flex-wrap: wrap; gap: 1.5rem; justify-content: center; align-items: flex-start; }
+        #grid-container { display: grid; gap: 3px; background: #E5DDCF; padding: 5px; border-radius: 1rem; max-width: 550px; width: 100%; }
+        .grid-cell { background: white; display: flex; align-items: center; justify-content: center; font-weight: 700; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: background 0.2s; aspect-ratio: 1/1; }
+        .grid-cell.selected { background: #a7d8ff; }
+        .side-panel { flex: 1; min-width: 220px; }
+        .progress-section { display: flex; align-items: center; gap: 0.8rem; font-weight: 600; font-size: 0.9rem; flex-wrap: wrap; margin-bottom: 0.8rem; }
+        .progress-bar { width: 150px; height: 12px; background: #EDE8DC; border-radius: 2rem; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #6B9E6B, #A3B18A); border-radius: 2rem; transition: width 0.3s ease; }
+        .btn { background: #EBE3D2; border: none; padding: 6px 14px; border-radius: 2rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.8rem; font-family: 'Montserrat', sans-serif; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        .btn-warning { background: #E2CFB0; color: #4D3E2A; }
+        .btn-warning:hover { background: #D6C09B; }
+        .word-list { max-height: 350px; overflow-y: auto; background: #FEFAF2; border-radius: 1.2rem; padding: 0.4rem 0.2rem; margin: 0.6rem 0; }
+        .word-item { padding: 6px 12px; margin: 3px 4px; background: #F4EFE4; border-radius: 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; }
+        .word-item.found { background: #CBE0C0; text-decoration: line-through; opacity: 0.7; }
+
+        /* ===== Блок подписи автора в экспортированном HTML ===== */
+        .vetsim-credit {
+            margin-top: 1.5rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F4EFE4, #FDF8F0);
+            border-radius: 1rem;
+            border: 1px solid #E5DDCF;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8C5C;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.2rem 0;
+        }
+        .vetsim-credit-label {
+            color: #7B8D6E;
+            font-weight: 600;
+        }
+        .vetsim-credit-value {
+            color: #1F4E6E;
+            font-weight: 700;
+        }
+
+        footer { text-align: center; margin-top: 1rem; font-size: 0.7rem; color: #B0BC9C; border-top: 1px solid #E5DDCF; padding-top: 0.8rem; }
+        #message-box { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); z-index: 1000; transition: opacity 0.5s, transform 0.5s; font-weight: 600; }
+        #message-box.hidden { opacity: 0; transform: translate(-50%, -100px); pointer-events: none; }
+        @media (max-width: 700px) { .game-area { flex-direction: column; align-items: center; } .side-panel { width: 100%; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧩 Филворд</h1>
+    <div class="sub">Найдите все спрятанные слова</div>
+    ${data.instruction ? `<div class="instruction-box"><strong>📝 Задание:</strong> ${data.instruction}</div>` : ''}
+    <div class="game-area">
+        <div id="grid-container"></div>
+        <div class="side-panel">
+            <div class="progress-section">
+                <span>📊 Прогресс:</span>
+                <span id="progressCounter">0 / 0</span>
+                <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
             </div>
-            <footer>© ВетСим — образовательный филворд.</footer>
+            <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:0.6rem;">
+                <button class="btn btn-success" id="checkAllBtn">✅ Проверить всё</button>
+                <button class="btn btn-warning" id="resetBtn">🔄 Сбросить</button>
+            </div>
+            <div><strong>📖 Слова для поиска:</strong> <span id="statsWords"></span></div>
+            <div id="wordListContainer" class="word-list"></div>
+            <div style="font-size:0.7rem; margin-top:0.8rem; background:#F4EFE4; padding:8px; border-radius:1rem;">
+                💡 Проведите пальцем или мышкой по буквам, чтобы выделить слово.
+            </div>
         </div>
-        <div id="message-box" class="hidden"><p id="message-text"></p></div>
-        <script>
-            const gameData = ${escapedJsonData};
-            const gridContainer = document.getElementById('grid-container');
-            const wordListContainer = document.getElementById('wordListContainer');
-            const statsWords = document.getElementById('statsWords');
-            const progressCounter = document.getElementById('progressCounter');
-            const progressFill = document.getElementById('progressFill');
-            const messageBox = document.getElementById('message-box');
-            const messageText = document.getElementById('message-text');
+    </div>
 
-            let isSelecting = false;
-            let currentSelection = [];
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value">${data.author}</span>
+        </div>
+    </div>
 
-            // Инициализация
-            gameData.words.forEach(w => w.found = false);
+    <footer>© ВетСим — образовательный филворд · CC BY-NC</footer>
+</div>
+<div id="message-box" class="hidden"><p id="message-text"></p></div>
+<script>
+    const gameData = ${escapedJsonData};
+    const gridContainer = document.getElementById('grid-container');
+    const wordListContainer = document.getElementById('wordListContainer');
+    const statsWords = document.getElementById('statsWords');
+    const progressCounter = document.getElementById('progressCounter');
+    const progressFill = document.getElementById('progressFill');
+    const messageBox = document.getElementById('message-box');
+    const messageText = document.getElementById('message-text');
 
-            function renderGrid() {
-                gridContainer.innerHTML = '';
-                const size = gameData.grid.length;
-                gridContainer.style.gridTemplateColumns = \`repeat(\${size}, 1fr)\`;
-                const cellSize = Math.min(550 / size, 60);
-                gameData.grid.forEach((row, r) => {
-                    row.forEach((letter, c) => {
-                        const cell = document.createElement('div');
-                        cell.className = 'grid-cell';
-                        cell.textContent = letter;
-                        cell.dataset.row = r;
-                        cell.dataset.col = c;
-                        cell.style.fontSize = \`\${Math.max(12, cellSize * 0.5)}px\`;
-                        gridContainer.appendChild(cell);
+    let isSelecting = false;
+    let currentSelection = [];
+
+    gameData.words.forEach(w => w.found = false);
+
+    function renderGrid() {
+        gridContainer.innerHTML = '';
+        const size = gameData.grid.length;
+        gridContainer.style.gridTemplateColumns = \`repeat(\${size}, 1fr)\`;
+        const cellSize = Math.min(550 / size, 60);
+        gameData.grid.forEach((row, r) => {
+            row.forEach((letter, c) => {
+                const cell = document.createElement('div');
+                cell.className = 'grid-cell';
+                cell.textContent = letter;
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+                cell.style.fontSize = \`\${Math.max(12, cellSize * 0.5)}px\`;
+                gridContainer.appendChild(cell);
+            });
+        });
+    }
+
+    function updateUI() {
+        const found = gameData.words.filter(w => w.found).length;
+        const total = gameData.words.length;
+        progressCounter.textContent = \`\${found} / \${total}\`;
+        progressFill.style.width = total > 0 ? \`\${(found / total) * 100}%\` : '0%';
+
+        wordListContainer.innerHTML = '';
+        const sorted = [...gameData.words].sort((a,b) => a.word.localeCompare(b.word));
+        sorted.forEach(w => {
+            const div = document.createElement('div');
+            div.className = 'word-item';
+            if (w.found) div.classList.add('found');
+            div.innerHTML = \`<span>\${w.word}</span> \${w.found ? '✅' : '⬜'}\`;
+            wordListContainer.appendChild(div);
+        });
+        statsWords.textContent = \`(\${found}/\${total})\`;
+    }
+
+    function checkSelection() {
+        if (currentSelection.length === 0) return;
+        const selectedWord = currentSelection.map(item => item.cell.textContent).join('');
+        const reversed = [...selectedWord].reverse().join('');
+        let foundMatch = false;
+
+        for (const w of gameData.words) {
+            if (w.found) continue;
+            if (w.word === selectedWord || w.word === reversed) {
+                const selCoords = new Set(currentSelection.map(item => \`\${item.row},\${item.col}\`));
+                const wordCoords = new Set(w.cells.map(c => \`\${c.r},\${c.c}\`));
+                if (selCoords.size === wordCoords.size && [...selCoords].every(c => wordCoords.has(c))) {
+                    w.found = true;
+                    foundMatch = true;
+                    currentSelection.forEach(item => {
+                        item.cell.style.backgroundColor = w.color;
+                        item.cell.classList.remove('selected');
                     });
-                });
-            }
-
-            function updateUI() {
-                const found = gameData.words.filter(w => w.found).length;
-                const total = gameData.words.length;
-                progressCounter.textContent = \`\${found} / \${total}\`;
-                progressFill.style.width = total > 0 ? \`\${(found / total) * 100}%\` : '0%';
-
-                wordListContainer.innerHTML = '';
-                const sorted = [...gameData.words].sort((a,b) => a.word.localeCompare(b.word));
-                sorted.forEach(w => {
-                    const div = document.createElement('div');
-                    div.className = 'word-item';
-                    if (w.found) div.classList.add('found');
-                    div.innerHTML = \`<span>\${w.word}</span> \${w.found ? '✅' : '⬜'}\`;
-                    wordListContainer.appendChild(div);
-                });
-                statsWords.textContent = \`(\${found}/\${total})\`;
-            }
-
-            function checkSelection() {
-                if (currentSelection.length === 0) return;
-                const selectedWord = currentSelection.map(item => item.cell.textContent).join('');
-                const reversed = [...selectedWord].reverse().join('');
-                let foundMatch = false;
-
-                for (const w of gameData.words) {
-                    if (w.found) continue;
-                    if (w.word === selectedWord || w.word === reversed) {
-                        const selCoords = new Set(currentSelection.map(item => \`\${item.row},\${item.col}\`));
-                        const wordCoords = new Set(w.cells.map(c => \`\${c.r},\${c.c}\`));
-                        if (selCoords.size === wordCoords.size && [...selCoords].every(c => wordCoords.has(c))) {
-                            w.found = true;
-                            foundMatch = true;
-                            currentSelection.forEach(item => {
-                                item.cell.style.backgroundColor = w.color;
-                                item.cell.classList.remove('selected');
-                            });
-                            updateUI();
-                            if (gameData.words.every(ww => ww.found)) {
-                                showMessage("🎉 Поздравляем! Вы нашли все слова!", "success");
-                            }
-                            break;
-                        }
+                    updateUI();
+                    if (gameData.words.every(ww => ww.found)) {
+                        showMessage("🎉 Поздравляем! Вы нашли все слова!", "success");
                     }
-                }
-                if (!foundMatch) {
-                    currentSelection.forEach(item => item.cell.classList.remove('selected'));
-                }
-                currentSelection = [];
-            }
-
-            function getTargetCell(e) {
-                const touch = e.touches ? e.touches[0] : e;
-                const target = document.elementFromPoint(touch.clientX, touch.clientY);
-                return target && target.classList.contains('grid-cell') ? target : null;
-            }
-
-            function handleStart(e) {
-                e.preventDefault();
-                const target = getTargetCell(e);
-                if (target) {
-                    isSelecting = true;
-                    currentSelection = [];
-                    target.classList.add('selected');
-                    currentSelection.push({ cell: target, row: parseInt(target.dataset.row), col: parseInt(target.dataset.col) });
+                    break;
                 }
             }
+        }
+        if (!foundMatch) {
+            currentSelection.forEach(item => item.cell.classList.remove('selected'));
+        }
+        currentSelection = [];
+    }
 
-            function handleMove(e) {
-                if (!isSelecting) return;
-                e.preventDefault();
-                const target = getTargetCell(e);
-                if (target && !currentSelection.some(item => item.cell === target)) {
-                    target.classList.add('selected');
-                    currentSelection.push({ cell: target, row: parseInt(target.dataset.row), col: parseInt(target.dataset.col) });
-                }
-            }
+    function getTargetCell(e) {
+        const touch = e.touches ? e.touches[0] : e;
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        return target && target.classList.contains('grid-cell') ? target : null;
+    }
 
-            function handleEnd() {
-                if (isSelecting) {
-                    isSelecting = false;
-                    checkSelection();
-                }
-            }
+    function handleStart(e) {
+        e.preventDefault();
+        const target = getTargetCell(e);
+        if (target) {
+            isSelecting = true;
+            currentSelection = [];
+            target.classList.add('selected');
+            currentSelection.push({ cell: target, row: parseInt(target.dataset.row), col: parseInt(target.dataset.col) });
+        }
+    }
 
-            function showMessage(text, type) {
-                messageText.textContent = text;
-                messageBox.className = '';
-                messageBox.style.backgroundColor = type === 'success' ? '#6B9E6B' : '#D4A373';
-                setTimeout(() => messageBox.classList.add('hidden'), 3000);
-            }
+    function handleMove(e) {
+        if (!isSelecting) return;
+        e.preventDefault();
+        const target = getTargetCell(e);
+        if (target && !currentSelection.some(item => item.cell === target)) {
+            target.classList.add('selected');
+            currentSelection.push({ cell: target, row: parseInt(target.dataset.row), col: parseInt(target.dataset.col) });
+        }
+    }
 
-            function checkAll() {
-                gameData.words.forEach(w => { w.found = true; });
-                updateUI();
-                // Закрашиваем ячейки
-                const cells = gridContainer.querySelectorAll('.grid-cell');
-                gameData.words.forEach(w => {
-                    w.cells.forEach(c => {
-                        const idx = c.r * gameData.grid.length + c.c;
-                        if (cells[idx]) cells[idx].style.backgroundColor = w.color;
-                    });
-                });
-                showMessage("Все слова отмечены найденными.", "success");
-            }
+    function handleEnd() {
+        if (isSelecting) {
+            isSelecting = false;
+            checkSelection();
+        }
+    }
 
-            function resetAll() {
-                gameData.words.forEach(w => { w.found = false; });
-                const cells = gridContainer.querySelectorAll('.grid-cell');
-                cells.forEach(cell => {
-                    cell.style.backgroundColor = '';
-                    cell.classList.remove('selected');
-                });
-                updateUI();
-                showMessage("Прогресс сброшен.", "info");
-            }
+    function showMessage(text, type) {
+        messageText.textContent = text;
+        messageBox.className = '';
+        messageBox.style.backgroundColor = type === 'success' ? '#6B9E6B' : '#D4A373';
+        setTimeout(() => messageBox.classList.add('hidden'), 3000);
+    }
 
-            // События
-            gridContainer.addEventListener('mousedown', handleStart);
-            document.addEventListener('mouseup', handleEnd);
-            gridContainer.addEventListener('mousemove', handleMove);
+    function checkAll() {
+        gameData.words.forEach(w => { w.found = true; });
+        updateUI();
+        const cells = gridContainer.querySelectorAll('.grid-cell');
+        gameData.words.forEach(w => {
+            w.cells.forEach(c => {
+                const idx = c.r * gameData.grid.length + c.c;
+                if (cells[idx]) cells[idx].style.backgroundColor = w.color;
+            });
+        });
+        showMessage("Все слова отмечены найденными.", "success");
+    }
 
-            gridContainer.addEventListener('touchstart', handleStart, { passive: false });
-            document.addEventListener('touchend', handleEnd);
-            gridContainer.addEventListener('touchmove', handleMove, { passive: false });
+    function resetAll() {
+        gameData.words.forEach(w => { w.found = false; });
+        const cells = gridContainer.querySelectorAll('.grid-cell');
+        cells.forEach(cell => {
+            cell.style.backgroundColor = '';
+            cell.classList.remove('selected');
+        });
+        updateUI();
+        showMessage("Прогресс сброшен.", "info");
+    }
 
-            document.getElementById('checkAllBtn').addEventListener('click', checkAll);
-            document.getElementById('resetBtn').addEventListener('click', resetAll);
+    gridContainer.addEventListener('mousedown', handleStart);
+    document.addEventListener('mouseup', handleEnd);
+    gridContainer.addEventListener('mousemove', handleMove);
 
-            renderGrid();
-            updateUI();
-        <\/script>
-        </body>
-        </html>`;
+    gridContainer.addEventListener('touchstart', handleStart, { passive: false });
+    document.addEventListener('touchend', handleEnd);
+    gridContainer.addEventListener('touchmove', handleMove, { passive: false });
+
+    document.getElementById('checkAllBtn').addEventListener('click', checkAll);
+    document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+    renderGrid();
+    updateUI();
+<\/script>
+</body>
+</html>`;
 
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
             const link = document.createElement('a');
@@ -858,12 +968,13 @@
             link.download = 'fillword_interactive.html';
             link.click();
             URL.revokeObjectURL(link.href);
-            alert("Интерактивный филворд экспортирован как fillword_interactive.html");
+            alert("✅ Интерактивный филворд экспортирован!\n\nФайл: fillword_interactive.html");
         }
 
         // ---------- Сохранение/загрузка JSON ----------
         function exportProject() {
             const data = {
+                author: authorInput.value || '',
                 instruction: instructionInput.value || '',
                 words: wordsInput.value || '',
                 size: sizeInput.value || ''
@@ -881,9 +992,14 @@
             reader.onload = (e) => {
                 try {
                     const data = JSON.parse(e.target.result);
+                    if (data.author !== undefined) {
+                        authorInput.value = data.author;
+                        authorPreview.textContent = data.author || 'не указан';
+                    }
                     if (data.instruction !== undefined) instructionInput.value = data.instruction;
                     if (data.words !== undefined) wordsInput.value = data.words;
                     if (data.size !== undefined) sizeInput.value = data.size;
+                    alert('✅ Проект загружен');
                 } catch (err) {
                     alert('Ошибка при загрузке JSON: ' + err.message);
                 }
@@ -892,18 +1008,24 @@
         }
 
         // ---------- Очистка ----------
-        function resetAll() {
+        function clearAll() {
+            if (!confirm('Очистить всё содержимое конструктора?')) return;
             currentGrid = [];
             currentWords = [];
+            termList = [];
             gridContainer.innerHTML = '';
             wordListContainer.innerHTML = '';
             statsWords.textContent = '';
             progressCounter.textContent = 'Найдено: 0 из 0';
+            authorInput.value = '';
+            authorPreview.textContent = 'не указан';
+            instructionInput.value = '';
+            wordsInput.value = '';
+            sizeInput.value = '';
         }
 
         // ---------- События ----------
         document.getElementById('generateBtn').addEventListener('click', generateFillword);
-
         document.getElementById('exportJsonBtn').addEventListener('click', exportProject);
 
         document.getElementById('importInput').addEventListener('change', (e) => {
@@ -912,16 +1034,13 @@
         });
 
         document.getElementById('exportHtmlBtn').addEventListener('click', exportInteractiveFillword);
+        document.getElementById('resetBtn').addEventListener('click', clearAll);
 
-        document.getElementById('resetBtn').addEventListener('click', resetAll);
-
-        // ---------- Инициализация с демо-словами ----------
+        // ---------- Инициализация с демо-данными ----------
         wordsInput.value = 'Лопатка, Плечевая, Лучевая, Локтевая, Запястье, Пясть, Фаланга';
         instructionInput.value = 'Найдите все слова по теме "Остеология"';
         sizeInput.value = '10';
-        // Автоматически генерируем при загрузке
         setTimeout(generateFillword, 100);
     </script>
-    <script src="https://vet-sim.github.io/footer.js" defer></script>
 </body>
 </html>

@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Конструктор кроссвордов | ВетСим</title>
@@ -38,6 +25,44 @@
         .btn-primary { background: #2C7DA0; color: white; }
         .btn-primary:hover { background: #236B8A; }
         .btn-secondary { background: #A3B18A; color: white; }
+
+        /* ===== НОВОЕ: поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         .grid-container { overflow-x: auto; margin: 1rem 0; display: flex; justify-content: center; }
         .crossword-grid { border-collapse: collapse; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         .cell { width: 42px; height: 42px; border: 1px solid #D1DEC2; text-align: center; vertical-align: middle; font-size: 1.2rem; font-weight: 500; background: #FFFEF7; transition: 0.1s; }
@@ -48,6 +73,34 @@
         .word-text { font-weight: 600; min-width: 100px; }
         .word-def-input { flex: 2; min-width: 150px; border: 1px solid #D1DEC2; border-radius: 30px; padding: 6px 12px; font-family: inherit; }
         .info-bar { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; font-size: 0.85rem; color: #6B8A6B; }
+
+        /* ===== НОВОЕ: блок подписи внизу страницы ===== */
+        .vetsim-credit {
+            margin-top: 1.5rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.2rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
         footer { margin-top: 2rem; text-align: center; font-size: 0.7rem; color: #A7B89A; border-top: 1px solid #E2EAD9; padding-top: 1rem; }
         @media (max-width: 700px) { .cell { width: 32px; height: 32px; font-size: 0.9rem; } .word-item { flex-direction: column; align-items: stretch; } }
     </style>
@@ -62,6 +115,13 @@
     </div>
 
     <div id="editorPane" class="tab-pane active">
+        <!-- ===== НОВОЕ: поле автора ===== -->
+        <div class="author-block">
+            <label for="authorInput">✍️ Автор кроссворда (ФИО):</label>
+            <input type="text" id="authorInput" class="author-input"
+                   placeholder="Например: Тераевич Алла Сергеевна">
+        </div>
+
         <div class="toolbar">
             <input type="file" id="loadWordsFile" accept=".txt" style="display:none;">
             <button id="uploadWordsBtn" class="btn">📂 Загрузить слова (TXT)</button>
@@ -91,6 +151,20 @@
             <p>После редактирования сетки и определений нажмите «Экспортировать кроссворд». Будет создан готовый файл для студентов.</p>
         </div>
     </div>
+
+    <!-- ===== НОВОЕ: превью подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор кроссворда:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <footer>© ВетСим — конструктор кроссвордов.</footer>
 </div>
 
@@ -117,6 +191,15 @@
     const clearAllDefsBtn = document.getElementById('clearAllDefsBtn');
     const totalWordsSpan = document.getElementById('totalWordsCount');
     const placedWordsSpan = document.getElementById('placedWordsCount');
+
+    // ===== НОВОЕ: элементы автора =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+
+    // ===== НОВОЕ: обновление превью автора =====
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+    });
 
     // ----- Вспомогательные функции обновления счётчиков -----
     function updateCounters() {
@@ -147,7 +230,6 @@
                     if (/[А-ЯA-Z]/.test(newVal) || newVal === '') grid[i][j] = newVal;
                     else grid[i][j] = '';
                     e.target.value = grid[i][j];
-                    // после ручного изменения сетки пересчитываем список слов
                     updatePlacedWordsFromGrid();
                     renderWordListForPlacedWords();
                     renderGrid();
@@ -170,7 +252,6 @@
         if (cells[idx]) cells[idx].classList.add('selected');
     }
 
-    // Загрузка слов из TXT (одно слово в строке)
     function loadWordsFromTxt(file) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -184,7 +265,6 @@
         reader.readAsText(file, 'UTF-8');
     }
 
-    // Отображение всех загруженных слов (до расстановки)
     function renderWordListForAllWords() {
         if (!allWords.length) {
             wordListPanel.innerHTML = '<div style="text-align:center; padding:1rem;">Нет слов. Загрузите TXT файл.</div>';
@@ -199,12 +279,10 @@
         });
     }
 
-    // Обновление списка placedWords на основе текущей сетки (используется после ручного редактирования)
     function updatePlacedWordsFromGrid() {
         const sz = grid.length;
         const newPlaced = [];
         const used = new Set();
-        // Горизонтальные слова
         for (let i = 0; i < sz; i++) {
             let j = 0;
             while (j < sz) {
@@ -225,7 +303,6 @@
                 } else j++;
             }
         }
-        // Вертикальные слова
         for (let j = 0; j < sz; j++) {
             let i = 0;
             while (i < sz) {
@@ -249,7 +326,6 @@
         placedWords = newPlaced;
     }
 
-    // Отображение только тех слов, которые реально находятся в сетке, с полями для определений
     function renderWordListForPlacedWords() {
         if (!placedWords.length) {
             wordListPanel.innerHTML = '<div style="text-align:center; padding:1rem;">Нет размещённых слов. Выполните авторасстановку или добавьте слова вручную.</div>';
@@ -268,7 +344,6 @@
             `;
             wordListPanel.appendChild(div);
         });
-        // Обработчики для полей определений
         document.querySelectorAll('.word-def-input').forEach(inp => {
             inp.addEventListener('change', (e) => {
                 const word = inp.getAttribute('data-word');
@@ -277,7 +352,6 @@
                 else wordDefMap.delete(word);
             });
         });
-        // Кнопки удаления слова из сетки
         document.querySelectorAll('.remove-word').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const wordToRemove = btn.getAttribute('data-word');
@@ -301,7 +375,6 @@
         });
     }
 
-    // ----- АЛГОРИТМ АВТОРАССТАНОВКИ (из вашего кода, не менялся) -----
     function autoPlace() {
         if (!allWords.length) { alert("Нет слов для расстановки. Загрузите файл."); return; }
         const sorted = [...allWords].sort((a,b) => b.length - a.length);
@@ -311,7 +384,6 @@
         for (let word of sorted) {
             let bestPos = null;
             let bestOverlap = -1;
-            // Горизонтальные позиции
             for (let row = 0; row < size; row++) {
                 for (let col = 0; col <= size - word.length; col++) {
                     let ok = true;
@@ -327,7 +399,6 @@
                     }
                 }
             }
-            // Вертикальные позиции
             for (let row = 0; row <= size - word.length; row++) {
                 for (let col = 0; col < size; col++) {
                     let ok = true;
@@ -356,9 +427,9 @@
 
         if (placed.length > 0) {
             grid = newGrid;
-            placedWords = placed;               // напрямую сохраняем список размещённых
+            placedWords = placed;
             renderGrid();
-            renderWordListForPlacedWords();      // теперь отобразятся все размещенные слова
+            renderWordListForPlacedWords();
             updateCounters();
             alert(`Размещено ${placed.length} из ${sorted.length} слов. Остальные можно добавить вручную.`);
         } else {
@@ -389,25 +460,30 @@
         }
         grid = newGrid;
         renderGrid();
-        updatePlacedWordsFromGrid();   // пересчитываем слова (может потерять, но лучше так)
+        updatePlacedWordsFromGrid();
         renderWordListForPlacedWords();
         gridSizeInput.value = size;
         updateCounters();
     }
 
-    // Очистка всех определений (новая функция)
     function clearAllDefinitions() {
         wordDefMap.clear();
-        // также очищаем поля ввода в DOM, если они уже есть
         const inputs = document.querySelectorAll('.word-def-input');
         inputs.forEach(inp => inp.value = '');
-        renderWordListForPlacedWords(); // обновляем список (поля станут пустыми)
+        renderWordListForPlacedWords();
         alert("Все определения удалены");
     }
 
-    // Сохранение / загрузка проекта
+    // ===== НОВОЕ: сохранение с автором =====
     function saveProject() {
-        const project = { size, grid, allWords, placedWords, definitions: Array.from(wordDefMap.entries()) };
+        const project = {
+            author: authorInput.value || '',
+            size,
+            grid,
+            allWords,
+            placedWords,
+            definitions: Array.from(wordDefMap.entries())
+        };
         const blob = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
@@ -416,6 +492,7 @@
         URL.revokeObjectURL(a.href);
     }
 
+    // ===== НОВОЕ: загрузка с автором =====
     function loadProject(file) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -426,24 +503,30 @@
                 allWords = proj.allWords || [];
                 placedWords = proj.placedWords || [];
                 if (proj.definitions) wordDefMap = new Map(proj.definitions);
+                if (proj.author !== undefined) {
+                    authorInput.value = proj.author;
+                    authorPreview.textContent = proj.author || 'не указан';
+                }
                 document.getElementById('gridSize').value = size;
                 renderGrid();
                 renderWordListForPlacedWords();
                 updateCounters();
+                alert('✅ Проект загружен');
             } catch(err) { alert("Ошибка загрузки файла проекта"); }
         };
         reader.readAsText(file);
     }
 
-    // ----- Экспорт готового кроссворда (только размещённые слова) -----
+    // ===== НОВОЕ: экспорт с подписью автора =====
     function exportCrossword() {
         if (placedWords.length === 0) {
             alert("Нет размещённых слов. Сначала выполните авторасстановку или добавьте слова вручную.");
             return;
         }
 
+        const authorName = authorInput.value.trim() || 'не указан';
+
         const sz = grid.length;
-        // Нумерация ячеек (только для первых букв размещённых слов)
         const numbersGrid = Array(sz).fill().map(() => Array(sz).fill(0));
         let nextNum = 1;
         for (let pw of placedWords) {
@@ -453,7 +536,6 @@
             }
         }
 
-        // Формируем вопросы
         const questions = [];
         for (let pw of placedWords) {
             const num = numbersGrid[pw.row][pw.col];
@@ -487,7 +569,35 @@
         button{background:#2C7DA0;color:white;border:none;padding:8px 20px;border-radius:40px;cursor:pointer;}
         .reset-btn{background:#E2CFB0;color:#3E5C4A;}
         .result{text-align:center;margin-top:1rem;font-weight:bold;}
-        footer{text-align:center;font-size:0.7rem;margin-top:1rem;}
+
+        /* ===== НОВОЕ: блок подписи автора ===== */
+        .vetsim-credit {
+            margin-top: 1.5rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.2rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer{text-align:center;font-size:0.7rem;margin-top:1rem;color:#A7B89A;}
         @media (max-width:600px){.cell{width:32px;height:32px;font-size:0.9rem;}}
     </style>
 </head>
@@ -501,7 +611,21 @@
         <button id="resetBtn" class="reset-btn">🔄 Сбросить</button>
     </div>
     <div id="result" class="result"></div>
-    <footer>© ВетСим — интерактивный кроссворд.</footer>
+
+    <!-- ===== НОВОЕ: блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор кроссворда:</span>
+            <span class="vetsim-credit-value">${authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</span>
+        </div>
+    </div>
+
+    <footer>© ВетСим — интерактивный кроссворд · CC BY-NC</footer>
 </div>
 <script>
     const size = ${sz};
@@ -588,13 +712,14 @@
 <\/script>
 </body>
 </html>`;
+
         const blob = new Blob([crosswordHTML], {type: 'text/html'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'crossword_game.html';
         a.click();
         URL.revokeObjectURL(a.href);
-        alert("Кроссворд экспортирован как crossword_game.html");
+        alert("✅ Кроссворд экспортирован!\n\nФайл: crossword_game.html");
     }
 
     function escapeHtml(str) {
@@ -639,6 +764,5 @@
         });
     });
 </script>
-    <script src="https://vet-sim.github.io/footer.js" defer></script>
 </body>
 </html>

@@ -60,6 +60,84 @@
             font-weight: 600;
         }
 
+        /* ===== Поле автора ===== */
+        .author-block {
+            background: #F0F7FA;
+            border-radius: 1.5rem;
+            padding: 14px 20px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border: 2px solid #D4E8F0;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: #1F4E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D4E8F0;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.88rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            outline: none;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
+        /* ===== Поле названия ===== */
+        .title-block {
+            background: #F9F6EF;
+            border-radius: 1.5rem;
+            padding: 14px 20px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .title-block label {
+            font-weight: 600;
+            font-size: 0.78rem;
+            color: #1F4E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .title-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #E2EAD9;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.88rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            outline: none;
+            transition: 0.2s;
+        }
+        .title-input:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         /* --- Режимы --- */
         .mode-tabs {
             display: flex;
@@ -217,7 +295,7 @@
             margin-top: 0.5rem;
         }
 
-        /* --- Превью тренажёра (в режиме редактора) --- */
+        /* --- Превью тренажёра --- */
         .preview-area {
             background: #F9F6EF;
             border-radius: 1.5rem;
@@ -274,6 +352,33 @@
             padding: 1rem 0;
         }
 
+        /* ===== Подпись внизу ===== */
+        .vetsim-credit {
+            margin-top: 1.5rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F0F7FA, #F9F6EF);
+            border-radius: 1.5rem;
+            border: 1px solid #D4E8F0;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8C5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7B8D6E; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
         /* --- Адаптив --- */
         @media (max-width: 768px) {
             body { padding: 0.8rem; }
@@ -281,6 +386,7 @@
             .step-editor { flex-wrap: wrap; }
             .step-editor input { min-width: 120px; }
             .saved-item { flex-direction: column; align-items: stretch; }
+            .author-block, .title-block { flex-direction: column; align-items: stretch; }
         }
         @media (max-width: 480px) {
             .mode-tabs .mode-tab { flex: 1; text-align: center; padding: 6px 12px; font-size: 0.75rem; }
@@ -318,6 +424,20 @@
         <div class="logo">🐾 <span>ВетСим</span> — Конструктор алгоритмов</div>
         <span class="badge">🧩 Создай свой тренажёр</span>
     </header>
+
+    <!-- ===== Поле автора ===== -->
+    <div class="author-block">
+        <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+        <input type="text" id="authorInput" class="author-input"
+               placeholder="Например: Тераевич Алла Сергеевна">
+    </div>
+
+    <!-- ===== Поле названия ===== -->
+    <div class="title-block">
+        <label for="trainerTitleInput">🏷️ Название тренажёра:</label>
+        <input type="text" id="trainerTitleInput" class="title-input"
+               value="Сортировка этапов: клинический алгоритм">
+    </div>
 
     <!-- Режимы -->
     <div class="mode-tabs">
@@ -369,6 +489,19 @@
         </div>
     </div>
 
+    <!-- ===== Подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 </div>
@@ -378,7 +511,6 @@
     //  КОНСТРУКТОР «АЛГОРИТМ ДЕЙСТВИЙ»
     // ================================================================
 
-    // --- ВСТРОЕННЫЙ ПРИМЕР (этапы в правильном порядке) ---
     const DEFAULT_SCENARIO = {
         id: 'default',
         title: 'Дистоция у собаки',
@@ -395,6 +527,46 @@
             'Профилактика в будущем'
         ]
     };
+
+    const DEFAULT_TRAINER_TITLE = 'Сортировка этапов: клинический алгоритм';
+
+    // ===== Элементы автора и названия =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+    const trainerTitleInput = document.getElementById('trainerTitleInput');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    trainerTitleInput.addEventListener('input', () => {
+        saveTitleLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_algorithm_author', authorInput.value); } catch (e) {}
+    }
+    function saveTitleLocal() {
+        try { localStorage.setItem('vetsim_algorithm_title', trainerTitleInput.value); } catch (e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_algorithm_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch (e) {}
+    }
+    function loadTitleLocal() {
+        try {
+            const t = localStorage.getItem('vetsim_algorithm_title');
+            if (t) {
+                trainerTitleInput.value = t;
+            }
+        } catch (e) {}
+    }
 
     // --- СОСТОЯНИЕ ---
     let currentSteps = [...DEFAULT_SCENARIO.steps];
@@ -610,7 +782,7 @@
     }
 
     // ================================================================
-    //  ЭКСПОРТ В HTML (самостоятельный тренажёр для студентов)
+    //  ЭКСПОРТ В HTML с автором и названием
     // ================================================================
 
     function exportScenario(id) {
@@ -634,18 +806,21 @@
     }
 
     function exportToHTML(title, description, steps) {
-        // Перемешиваем этапы для студентов
         const shuffledSteps = shuffleArray([...steps]);
-
         const stepsData = JSON.stringify(shuffledSteps);
         const correctSteps = JSON.stringify(steps);
+
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const trainerTitle = trainerTitleInput.value.trim() || DEFAULT_TRAINER_TITLE;
+        const safeTrainerTitle = trainerTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         const html = `<!DOCTYPE html>
     <html lang="ru">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-        <title>${escapeHtml(title)} | ВетСим</title>
+        <title>${safeTrainerTitle} | ВетСим</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -670,7 +845,6 @@
             .step-item.dragging { opacity: 0.4; transform: scale(0.95); }
             .step-item.correct { border-color: #6B9E6B; background: #E2F0DA; }
             .step-item.wrong { border-color: #D4A373; background: #FDE8E0; }
-            .step-item.locked { opacity: 0.7; cursor: default; pointer-events: none; }
             .result-zone { background: white; border-radius: 1.5rem; padding: 1.2rem 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); min-height: 80px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; border: 2px solid #E7EDE2; }
             .result-zone .placeholder { width: 100%; text-align: center; color: #8A9B7A; font-size: 0.85rem; padding: 8px 0; }
             .result-zone .step-item { cursor: default; }
@@ -689,7 +863,15 @@
             .status .message.error { color: #D4A373; }
             .progress-bar { width: 200px; height: 6px; background: #EDE8DC; border-radius: 2rem; overflow: hidden; }
             .progress-bar .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #6B9E6B, #A3B18A); border-radius: 2rem; transition: width 0.4s ease; }
-            .footer { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.04); text-align: center; font-size: 0.8rem; color: #7B8D6E; }
+
+            /* ===== Блок подписи автора ===== */
+            .vetsim-credit { margin-top: 1.5rem; padding: 1rem 1.2rem; background: linear-gradient(135deg, #F0F7FA, #F9F6EF); border-radius: 1.5rem; border: 1px solid #D4E8F0; text-align: center; font-size: 0.82rem; color: #3E5C4A; }
+            .vetsim-credit-title { font-weight: 700; color: #6B8C5C; font-size: 0.92rem; margin-bottom: 0.5rem; }
+            .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.15rem 0; }
+            .vetsim-credit-label { color: #7B8D6E; font-weight: 600; }
+            .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+            .footer { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.04); text-align: center; font-size: 0.75rem; color: #7B8D6E; }
             @media (max-width: 600px) { body { padding: 0.8rem; } .header { flex-direction: column; align-items: stretch; gap: 8px; } .step-item { padding: 8px 14px; font-size: 0.8rem; } .result-zone, .item-pool { min-height: 60px; padding: 0.8rem 1rem; } .status { flex-direction: column; align-items: stretch; } .progress-bar { width: 100%; } }
         </style>
     </head>
@@ -723,8 +905,21 @@
             </div>
         </div>
 
+        <!-- ===== Блок подписи автора ===== -->
+        <div class="vetsim-credit">
+            <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+            <div class="vetsim-credit-row">
+                <span class="vetsim-credit-label">Автор проекта:</span>
+                <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+            </div>
+            <div class="vetsim-credit-row">
+                <span class="vetsim-credit-label">Автор тренажёра:</span>
+                <span class="vetsim-credit-value">${safeAuthorName}</span>
+            </div>
+        </div>
+
         <div class="footer">
-            <p>🐾 <strong>ВетСим</strong> — ветеринарное образование нового поколения</p>
+            <p>🐾 <strong>ВетСим</strong> — ветеринарное образование нового поколения · CC BY-NC</p>
         </div>
     </div>
 
@@ -1014,7 +1209,6 @@
                     uniqueItems.push(item);
                 }
             }
-            // Перемешиваем
             currentItems = shuffleArray(uniqueItems);
             resultItems = [];
             render();
@@ -1034,7 +1228,6 @@
     </body>
     </html>`;
 
-        // Скачиваем файл
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
@@ -1099,15 +1292,17 @@
     //  ИНИЦИАЛИЗАЦИЯ
     // ================================================================
 
+    loadAuthorLocal();
+    loadTitleLocal();
     renderSteps();
     renderSavedList();
     showToast('🐾 Добро пожаловать в конструктор алгоритмов!');
 
-    // Делаем функции глобальными для вызова из HTML
+    // Глобальные функции для onclick в HTML
     window.loadScenario = loadScenario;
     window.deleteScenario = deleteScenario;
     window.exportScenario = exportScenario;
 </script>
-<script src="https://vet-sim.github.io/footer.js" defer></script>
+
 </body>
 </html>

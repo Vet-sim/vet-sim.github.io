@@ -3,51 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Конструктор «Игра-бродилка» | ВетСим</title>
+    <title>Конструктор игры-бродилки | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             background: #FDF8F0;
-            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            font-family: 'Montserrat', system-ui, sans-serif;
             color: #3E5C4A;
-            padding: 1.5rem;
+            padding: 1.2rem;
+            overflow: hidden;
+            height: 100vh;
         }
-        .container { max-width: 1400px; margin: 0 auto; }
-        h1 { font-size: 1.8rem; font-weight: 600; color: #1F4E6E; text-align: center; margin-bottom: 0.3rem; }
-        .sub { text-align: center; color: #7C8F7C; margin-bottom: 1.5rem; }
+        .main-container {
+            max-width: 1500px;
+            margin: 0 auto;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
         /* ===== Поле автора ===== */
         .author-block {
             background: #F3F6EF;
-            border-radius: 24px;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1rem;
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
+            gap: 8px;
             align-items: center;
             border: 2px solid #E2EAD9;
+            flex-shrink: 0;
+            margin-bottom: 6px;
         }
         .author-block label {
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #1F4E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
             white-space: nowrap;
         }
         .author-input {
             flex: 1;
-            min-width: 220px;
-            padding: 8px 16px;
+            min-width: 180px;
+            padding: 5px 14px;
             border: 2px solid #D1DEC2;
-            border-radius: 30px;
+            border-radius: 2rem;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             background: #FFFEF7;
             color: #3E5C4A;
+            outline: none;
             transition: 0.2s;
         }
         .author-input:focus {
-            outline: none;
             border-color: #2C7DA0;
             box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
             background: white;
@@ -56,183 +68,524 @@
         /* ===== Поле названия ===== */
         .title-block {
             background: #FEFCF9;
-            border-radius: 24px;
-            padding: 1rem 1.2rem;
-            margin-bottom: 1.5rem;
+            border-radius: 2rem;
+            padding: 0.6rem 1.2rem;
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
+            gap: 8px;
             align-items: center;
             border: 2px solid #E2EAD9;
+            flex-shrink: 0;
+            margin-bottom: 8px;
         }
         .title-block label {
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             color: #1F4E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
             white-space: nowrap;
         }
         .title-input {
             flex: 1;
-            min-width: 220px;
-            padding: 8px 16px;
+            min-width: 180px;
+            padding: 5px 14px;
             border: 2px solid #D1DEC2;
-            border-radius: 30px;
+            border-radius: 2rem;
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             background: #FFFDF8;
             color: #3E5C4A;
+            outline: none;
             transition: 0.2s;
         }
         .title-input:focus {
-            outline: none;
             border-color: #2C7DA0;
             box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
             background: white;
         }
 
-        .tabs { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
-        .tab-btn {
-            background: #EEF2E9;
+        .header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3E5C4A;
+            white-space: nowrap;
+        }
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+        }
+        .btn {
+            background: #EBE3D2;
             border: none;
-            padding: 0.6rem 1.8rem;
-            border-radius: 40px;
+            padding: 5px 14px;
+            border-radius: 2rem;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
+            font-size: 0.8rem;
+            font-family: inherit;
+            color: #3E5C4A;
+            white-space: nowrap;
         }
-        .tab-btn.active { background: #2C7DA0; color: white; }
-        .tab-pane {
-            display: none;
+        .btn:hover { opacity: 0.85; }
+        .btn-primary { background: #A3B18A; color: #2C4027; }
+        .btn-accent { background: #2C7DA0; color: white; }
+        .btn-danger { background: #D4A373; color: white; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-warning { background: #E2CFB0; color: #4D3E2A; }
+        .mode-toggle {
+            display: flex;
+            background: #F0EEE5;
+            border-radius: 2rem;
+            padding: 3px;
+            gap: 3px;
+        }
+        .mode-toggle .btn {
+            border-radius: 2rem;
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            background: transparent;
+        }
+        .mode-toggle .btn.active {
             background: white;
-            border-radius: 28px;
-            padding: 1.5rem;
-            border: 1px solid #E7EDE2;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
-        .tab-pane.active { display: block; }
-        .toolbar {
+        .workspace {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #E2EAD9;
+            flex: 1;
+            gap: 1rem;
+            margin-top: 0.8rem;
+            min-height: 0;
         }
-        .btn {
-            background: #EEF2E9;
-            border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            font-weight: 500;
+        .canvas-wrapper {
+            flex: 1;
+            background: white;
+            border-radius: 1.8rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+            position: relative;
+            min-height: 400px;
+        }
+        #canvasContainer {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: auto;
+            background: #f5f0e8;
+            cursor: default;
+        }
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: #f5f0e8;
+            border-radius: 1.8rem;
+        }
+        .label-marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
             cursor: pointer;
-            font-size: 0.85rem;
-            transition: 0.2s;
+            transition: transform 0.2s;
+            z-index: 10;
+            pointer-events: auto;
+            user-select: none;
         }
-        .btn:hover { opacity: 0.9; }
-        .btn-primary { background: #2C7DA0; color: white; }
-        .btn-primary:hover { background: #236B8A; }
-        .btn-secondary { background: #A3B18A; color: white; }
-        .btn-secondary:hover { background: #8FA376; }
-        .field-selector {
+        .label-marker:hover { transform: translate(-50%, -50%) scale(1.1); }
+        .label-marker .label-type {
+            position: absolute;
+            bottom: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(0,0,0,0.6);
+            padding: 1px 6px;
+            border-radius: 8px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .label-marker.selected {
+            outline: 3px solid #FFD700;
+            outline-offset: 2px;
+        }
+        .label-marker .delete-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #D4A373;
+            color: white;
+            border: 2px solid white;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .label-marker:hover .delete-btn { display: flex; }
+        .label-marker .delete-btn:hover { background: #C99464; }
+        .piece-marker {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-size: 28px;
+            z-index: 20;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+            pointer-events: none;
+            transition: left 0.3s ease, top 0.3s ease;
+            cursor: default;
+        }
+        .piece-marker .piece-name {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 8px;
+            font-weight: 600;
+            color: #3E5C4A;
+            background: rgba(255,255,255,0.9);
+            padding: 1px 6px;
+            border-radius: 8px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        .side-panel {
+            width: 340px;
+            min-width: 280px;
+            background: white;
+            border-radius: 1.8rem;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            flex-shrink: 0;
+            max-height: 100%;
+            gap: 8px;
+        }
+        .side-panel h3 {
+            font-size: 0.9rem;
+            color: #3E5C4A;
+            margin-bottom: 2px;
+        }
+        .panel-section {
+            border-bottom: 1px solid #EDE8DC;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .panel-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .form-row {
+            display: flex;
+            gap: 4px;
             flex-wrap: wrap;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
             align-items: center;
         }
-        .field-option {
-            background: #F3F6EF;
-            border-radius: 20px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            text-align: center;
-        }
-        .field-option.selected {
-            background: #A3B18A;
-            color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .preview-area {
-            background: #F9F7F2;
-            border-radius: 28px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .field-canvas {
-            max-width: 100%;
-            height: auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        .questions-list {
-            margin-top: 1rem;
-            max-height: 300px;
-            overflow-y: auto;
-            border-top: 1px solid #E2EAD9;
-            padding-top: 1rem;
-        }
-        .question-item {
-            background: #FEFCF9;
-            border: 1px solid #E2EAD9;
-            border-radius: 60px;
-            padding: 0.5rem 1rem;
-            margin-bottom: 0.5rem;
-            font-size: 0.85rem;
-        }
-        .info-text {
+        .form-row input,
+        .form-row select {
+            flex: 1;
+            min-width: 60px;
+            background: #FEFAF2;
+            border: 1px solid #D9D0BD;
+            padding: 3px 8px;
+            border-radius: 2rem;
             font-size: 0.75rem;
-            color: #8BA47B;
-            margin-top: 10px;
-        }
-
-        /* ===== Подпись внизу ===== */
-        .vetsim-credit {
-            margin-top: 2rem;
-            padding: 1rem 1.2rem;
-            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
-            border-radius: 24px;
-            border: 1px solid #E2EAD9;
-            text-align: center;
-            font-size: 0.82rem;
+            font-family: inherit;
             color: #3E5C4A;
         }
-        .vetsim-credit-title {
-            font-weight: 700;
-            color: #6B8E5C;
-            font-size: 0.92rem;
-            margin-bottom: 0.5rem;
-        }
-        .vetsim-credit-row {
+        .form-row .btn { padding: 3px 10px; font-size: 0.7rem; }
+        .label-list {
+            max-height: 150px;
+            overflow-y: auto;
             display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .label-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #F4EFE4;
+            padding: 3px 8px;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            gap: 4px;
+        }
+        .label-item .info {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            flex: 1;
+            overflow: hidden;
+        }
+        .label-item .info .num {
+            font-weight: 700;
+            color: #2C7DA0;
+            min-width: 20px;
+        }
+        .label-item .info .type-badge {
+            font-size: 0.6rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 10px;
+            background: #D1DEC2;
+            color: #3E5C4A;
+        }
+        .label-item .del-btn {
+            background: none;
+            border: none;
+            color: #D4A373;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .empty-msg {
+            color: #7B8D6E;
+            font-size: 0.8rem;
+            padding: 4px 0;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
             justify-content: center;
-            gap: 0.5rem;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            max-width: 480px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .modal h2 { margin-bottom: 0.5rem; color: #3E5C4A; font-size: 1.2rem; }
+        .modal .close-btn {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #7B8D6E;
+        }
+        .modal .close-btn:hover { color: #3E5C4A; }
+        .modal .modal-body { margin-top: 0.5rem; }
+        .modal .form-group { margin-bottom: 10px; }
+        .modal .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #1F4E6E;
+            margin-bottom: 2px;
+        }
+        .modal .form-group input,
+        .modal .form-group select,
+        .modal .form-group textarea {
+            width: 100%;
+            padding: 6px 10px;
+            border-radius: 1rem;
+            border: 1px solid #D1DEC2;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FEFCF9;
+        }
+        .modal .form-group textarea { resize: vertical; min-height: 50px; }
+        .modal .form-group .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+        }
+        .modal .form-group .options-grid input { width: 100%; }
+        .modal .form-group .correct-select {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .modal .form-group .correct-select select { width: auto; flex: 1; }
+        .game-controls {
+            display: flex;
             flex-wrap: wrap;
-            margin: 0.15rem 0;
+            gap: 10px;
+            align-items: center;
+            padding: 10px;
+            background: #F9F6EF;
+            border-radius: 1rem;
+            margin-top: 8px;
         }
-        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
-        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
-
-        footer {
-            margin-top: 1.5rem;
-            text-align: center;
-            font-size: 0.7rem;
-            color: #A7B89A;
+        .game-controls .players {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            flex: 1;
         }
-        @media (max-width: 700px) {
-            .author-block, .title-block { flex-direction: column; align-items: stretch; }
+        .game-controls .player-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 1rem;
+            background: #F4EFE4;
+            transition: 0.3s;
+        }
+        .game-controls .player-info.active {
+            background: #CBE0C0;
+            box-shadow: 0 0 0 2px #A3B18A;
+        }
+        .game-controls .player-info .icon { font-size: 1.5rem; }
+        .game-controls .dice-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .game-controls .dice {
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            user-select: none;
+        }
+        .game-controls .dice:hover { transform: scale(1.05); }
+        .game-controls .dice.rolling { animation: diceRoll 0.3s ease 3; }
+        @keyframes diceRoll {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.1); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        .game-controls .progress-info {
+            font-size: 0.8rem;
+            color: #5F7C62;
+            min-width: 100px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #EDE8DC;
+            border-radius: 2rem;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .progress-bar .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #6B9E6B, #A3B18A);
+            border-radius: 2rem;
+            transition: width 0.3s ease;
+        }
+        .question-option {
+            display: block;
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 6px;
+            border: 2px solid #D1DEC2;
+            border-radius: 1rem;
+            background: white;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: left;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+        }
+        .question-option:hover { border-color: #2C7DA0; background: #F9F6EF; }
+        .question-option.correct { border-color: #6B9E6B; background: #E2F0DA; }
+        .question-option.wrong { border-color: #D4A373; background: #FDE8E0; }
+        .question-option.disabled { cursor: default; opacity: 0.7; }
+        .question-option.disabled:hover { border-color: #D1DEC2; background: white; }
+        .question-feedback {
+            padding: 10px;
+            border-radius: 1rem;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+        .question-feedback.correct { background: #E2F0DA; color: #2C7DA0; }
+        .question-feedback.wrong { background: #FDE8E0; color: #D4A373; }
+        @media (max-width: 900px) {
+            .workspace { flex-direction: column; }
+            .side-panel {
+                width: 100%;
+                min-width: unset;
+                max-height: 300px;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            .side-panel .panel-section {
+                flex: 1;
+                min-width: 180px;
+                border-bottom: none;
+                padding-bottom: 0;
+                margin-bottom: 0;
+            }
+            .header { flex-direction: column; align-items: stretch; }
+            .header-actions { justify-content: center; }
+        }
+        @media (max-width: 600px) {
+            body { padding: 0.6rem; }
+            .logo { font-size: 1rem; }
+            .side-panel { max-height: 250px; }
+            .side-panel .panel-section { min-width: 140px; }
+            .game-controls { flex-direction: column; align-items: stretch; }
+            .game-controls .players { justify-content: center; }
+            .modal { padding: 1rem; }
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <h1>🎲 Конструктор «Игра-бродилка»</h1>
-    <div class="sub">Создайте викторину-ходилку для двух команд</div>
-
+<div class="main-container">
     <!-- ===== Поле автора ===== -->
     <div class="author-block">
-        <label for="authorInput">✍️ Автор игры (ФИО):</label>
+        <label for="authorInput">✍️ Автор игры:</label>
         <input type="text" id="authorInput" class="author-input"
                placeholder="Например: Тераевич Алла Сергеевна">
     </div>
@@ -241,81 +594,166 @@
     <div class="title-block">
         <label for="gameTitleInput">🏷️ Название игры:</label>
         <input type="text" id="gameTitleInput" class="title-input"
-               value="Игра-бродилка: ветеринарная викторина">
+               value="Ветеринарная игра-бродилка">
     </div>
 
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
-        <button class="tab-btn" data-tab="export">🚀 Экспорт / Сохранение</button>
-    </div>
+    <header class="header">
+        <div class="logo">🎲 <span>ВетСим</span> — Игра-бродилка</div>
+        <div class="header-actions">
+            <button class="btn btn-primary" id="saveBtn">💾 Сохранить</button>
+            <button class="btn btn-accent" id="exportBtn">📤 Экспорт в HTML</button>
+            <button class="btn btn-warning" id="loadExampleBtn">📂 Пример</button>
+            <button class="btn btn-danger" id="resetBtn">🔄 Сбросить</button>
+            <div class="mode-toggle">
+                <button class="btn active" data-mode="editor" id="modeEditor">✏️ Редактор</button>
+                <button class="btn" data-mode="game" id="modeGame">🎮 Игра</button>
+            </div>
+        </div>
+    </header>
 
-    <!-- Редактор -->
-    <div id="editorPane" class="tab-pane active">
-        <div class="toolbar">
-            <button id="loadQuestionsBtn" class="btn">📂 Загрузить вопросы (TXT)</button>
-            <button id="saveProjectBtn" class="btn btn-secondary">💾 Сохранить проект</button>
-            <button id="loadProjectBtn" class="btn btn-secondary">📂 Загрузить проект</button>
+    <div class="workspace">
+        <div class="canvas-wrapper">
+            <div id="canvasContainer">
+                <canvas id="gameCanvas"></canvas>
+            </div>
         </div>
-        <div class="field-selector" id="fieldSelector"></div>
-        <div class="preview-area">
-            <canvas id="fieldCanvas" class="field-canvas" width="800" height="400" style="width:100%; height:auto; background:#FFF2E0;"></canvas>
-        </div>
-        <div class="questions-list" id="questionsList"></div>
-        <div class="info-text">
-            💡 Формат файла вопросов: каждая строка — <strong>номер_клетки; вопрос; правильный ответ</strong><br>
-            Пример: <code>5; Какой орган отвечает за фильтрацию крови?; Почки</code>
+
+        <div class="side-panel" id="sidePanel">
+            <div class="panel-section">
+                <h3>📤 Загрузить карту</h3>
+                <div class="form-row">
+                    <input type="file" id="imageInput" accept="image/*" style="display:none;">
+                    <button class="btn btn-primary" id="uploadBtn">📤 Выбрать файл</button>
+                    <button class="btn btn-accent" id="addLabelBtn">📍 Добавить метку</button>
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3>📍 Метки</h3>
+                <div class="label-list" id="labelList">
+                    <span class="empty-msg">Нет меток. Загрузите карту и добавьте метки.</span>
+                </div>
+            </div>
+
+            <div class="panel-section" id="questionsSection">
+                <h3>📋 Вопросы</h3>
+                <div class="form-row">
+                    <select id="topicSelect">
+                        <option value="">-- Выбрать тему --</option>
+                        <option value="livestock">Животноводство</option>
+                        <option value="anatomy">Анатомия и физиология</option>
+                        <option value="feed">Корма и болезни</option>
+                        <option value="professions">Профессии в ветеринарии</option>
+                    </select>
+                    <button class="btn btn-primary" id="loadQuestionsBtn">📂 Загрузить</button>
+                </div>
+                <div style="font-size:0.7rem; color:#7B8D6E; margin-top:4px;">
+                    Вопросы привязываются к меткам типа "Вопрос" (по порядку)
+                </div>
+            </div>
+
+            <div class="panel-section" id="gameSettings">
+                <h3>⚙️ Настройки</h3>
+                <div class="form-row">
+                    <label style="font-size:0.75rem; font-weight:600;">Команд:</label>
+                    <select id="playerCount" style="flex:0 0 60px;">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <button class="btn btn-primary" id="applyPlayersBtn">👥 Применить</button>
+                </div>
+                <div id="playersSettings"></div>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Экспорт -->
-    <div id="exportPane" class="tab-pane">
-        <div class="toolbar">
-            <button id="exportGameBtn" class="btn-primary btn">🚀 Экспорт в готовую игру</button>
-        </div>
-        <div style="background:#F3F6EF; border-radius:20px; padding:1rem;">
-            <p>✔ Выберите поле, загрузите вопросы, нажмите «Экспорт» – получите HTML-файл для студентов.</p>
-            <p style="margin-top:0.5rem;">🎨 Экспортированная игра оформлена в ярком игровом стиле: разноцветные фишки команд, стилизованный кубик, плавные переходы.</p>
+<div class="modal-overlay" id="labelModal">
+    <div class="modal">
+        <button class="close-btn" id="modalCloseBtn">&times;</button>
+        <h2 id="modalTitle">📍 Редактировать метку</h2>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Номер клетки</label>
+                <input type="number" id="editNumber" min="1" max="99">
+            </div>
+            <div class="form-group">
+                <label>Тип клетки</label>
+                <select id="editType">
+                    <option value="start">🏁 Старт</option>
+                    <option value="normal">⬜ Обычная</option>
+                    <option value="question">❓ Вопрос</option>
+                    <option value="trap">⚠️ Ловушка</option>
+                    <option value="finish">🏆 Финиш</option>
+                </select>
+            </div>
+            <div class="form-group" id="questionFields" style="display:none;">
+                <label>Вопрос</label>
+                <textarea id="editQuestion" rows="2"></textarea>
+                <label style="margin-top:6px;">Варианты ответов</label>
+                <div class="options-grid">
+                    <input type="text" id="editOpt1" placeholder="А">
+                    <input type="text" id="editOpt2" placeholder="Б">
+                    <input type="text" id="editOpt3" placeholder="В">
+                    <input type="text" id="editOpt4" placeholder="Г">
+                </div>
+                <div class="correct-select" style="margin-top:4px;">
+                    <label style="margin:0;">Правильный:</label>
+                    <select id="editCorrect">
+                        <option value="0">А</option>
+                        <option value="1">Б</option>
+                        <option value="2">В</option>
+                        <option value="3">Г</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Цвет метки</label>
+                <input type="color" id="editColor" value="#2C7DA0">
+            </div>
+            <div style="display:flex; gap:8px; margin-top:10px;">
+                <button class="btn btn-success" id="saveLabelBtn">💾 Сохранить</button>
+                <button class="btn btn-danger" id="deleteLabelBtn">🗑️ Удалить</button>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- ===== Подпись ===== -->
-    <div class="vetsim-credit">
-        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
-        <div class="vetsim-credit-row">
-            <span class="vetsim-credit-label">Автор проекта:</span>
-            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
-        </div>
-        <div class="vetsim-credit-row">
-            <span class="vetsim-credit-label">Автор игры:</span>
-            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+<div class="modal-overlay" id="questionModal">
+    <div class="modal">
+        <button class="close-btn" id="qModalCloseBtn">&times;</button>
+        <h2 id="qModalTitle">❓ Вопрос</h2>
+        <div class="modal-body">
+            <p id="qText" style="font-size:1rem; margin-bottom:12px; line-height:1.5;"></p>
+            <div id="qOptions"></div>
+            <div id="qFeedback" style="display:none;"></div>
+            <button class="btn btn-primary" id="qContinueBtn" style="display:none; margin-top:10px;">Продолжить</button>
         </div>
     </div>
-
-    <footer>© ВетСим — обучающая бродилка</footer>
 </div>
 
 <script>
-    // ===== Поля для игры (генерация змейки) =====
-    const fields = {
-        field1: { name: "Поле 1 (30 клеток)", cells: generateRectPath(5,6) },
-        field2: { name: "Поле 2 (36 клеток)", cells: generateRectPath(6,6) },
-        field3: { name: "Поле 3 (42 клетки)", cells: generateRectPath(6,7) },
-        field4: { name: "Поле 4 (48 клеток)", cells: generateRectPath(6,8) },
-        field5: { name: "Поле 5 (54 клетки)", cells: generateRectPath(6,9) }
-    };
-    function generateRectPath(rows, cols) {
-        const cells = [];
-        for (let i = 0; i < rows; i++) {
-            if (i % 2 === 0) {
-                for (let j = 0; j < cols; j++) cells.push({ x: j, y: i });
-            } else {
-                for (let j = cols-1; j >= 0; j--) cells.push({ x: j, y: i });
-            }
-        }
-        return cells;
-    }
+    // ================================================================
+    //  ОСНОВНАЯ ЛОГИКА КОНСТРУКТОРА ИГРЫ-БРОДИЛКИ
+    //  Поле по умолчанию пустое, без меток и надписей
+    // ================================================================
 
-    const DEFAULT_TITLE = 'Игра-бродилка: ветеринарная викторина';
+    let labels = [];
+    let imageData = null;
+    let currentMode = 'editor';
+    let selectedLabelId = null;
+    let nextLabelId = 1;
+    let isAddingLabel = false;
+    let players = [];
+    let currentPlayer = 0;
+    let gameStarted = false;
+    let questionLocked = false;
+    let bgImage = null;
+    let bgWidth = 800;
+    let bgHeight = 600;
+
+    const DEFAULT_TITLE = 'Ветеринарная игра-бродилка';
 
     // ===== Элементы автора и названия =====
     const authorInput = document.getElementById('authorInput');
@@ -323,7 +761,7 @@
     const gameTitleInput = document.getElementById('gameTitleInput');
 
     authorInput.addEventListener('input', () => {
-        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        if (authorPreview) authorPreview.textContent = authorInput.value.trim() || 'не указан';
         saveAuthorLocal();
     });
 
@@ -342,529 +780,1568 @@
             const a = localStorage.getItem('vetsim_gameboard_author');
             if (a) {
                 authorInput.value = a;
-                authorPreview.textContent = a.trim() || 'не указан';
+                if (authorPreview) authorPreview.textContent = a.trim() || 'не указан';
             }
         } catch(e) {}
     }
     function loadTitleLocal() {
         try {
             const t = localStorage.getItem('vetsim_gameboard_title');
-            if (t) {
-                gameTitleInput.value = t;
-            }
+            if (t) gameTitleInput.value = t;
         } catch(e) {}
     }
 
-    let currentFieldId = "field1";
-    let questions = {};
-
-    const canvas = document.getElementById('fieldCanvas');
+    const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+    const container = document.getElementById('canvasContainer');
+    const labelListEl = document.getElementById('labelList');
+    const imageInput = document.getElementById('imageInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const addLabelBtn = document.getElementById('addLabelBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const loadExampleBtn = document.getElementById('loadExampleBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const modeEditor = document.getElementById('modeEditor');
+    const modeGame = document.getElementById('modeGame');
+    const topicSelect = document.getElementById('topicSelect');
+    const loadQuestionsBtn = document.getElementById('loadQuestionsBtn');
 
-    function drawField() {
-        const cells = fields[currentFieldId].cells;
-        const stepX = canvas.width / (Math.max(...cells.map(c=>c.x)) + 1);
-        const stepY = canvas.height / (Math.max(...cells.map(c=>c.y)) + 1);
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "#FFF2E0";
-        ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle = "#A3B18A";
-        ctx.lineWidth = 1;
-        for (let i=0; i<cells.length; i++) {
-            const cx = cells[i].x * stepX + stepX/2;
-            const cy = cells[i].y * stepY + stepY/2;
-            ctx.beginPath();
-            ctx.arc(cx, cy, stepX/3, 0, 2*Math.PI);
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fill();
-            ctx.stroke();
-            ctx.fillStyle = "#3E5C4A";
-            ctx.font = `${Math.floor(stepX/3)}px system-ui`;
-            ctx.fillText(i+1, cx-5, cy+5);
-            if (questions[i+1]) {
-                ctx.fillStyle = "#2C7DA0";
-                ctx.beginPath();
-                ctx.arc(cx+stepX/4, cy-stepY/4, 6, 0, 2*Math.PI);
-                ctx.fill();
-            }
-        }
-    }
+    const labelModal = document.getElementById('labelModal');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const editNumber = document.getElementById('editNumber');
+    const editType = document.getElementById('editType');
+    const editColor = document.getElementById('editColor');
+    const editQuestion = document.getElementById('editQuestion');
+    const editOpt1 = document.getElementById('editOpt1');
+    const editOpt2 = document.getElementById('editOpt2');
+    const editOpt3 = document.getElementById('editOpt3');
+    const editOpt4 = document.getElementById('editOpt4');
+    const editCorrect = document.getElementById('editCorrect');
+    const questionFields = document.getElementById('questionFields');
+    const saveLabelBtn = document.getElementById('saveLabelBtn');
+    const deleteLabelBtn = document.getElementById('deleteLabelBtn');
 
-    function renderFieldSelector() {
-        const container = document.getElementById('fieldSelector');
+    const questionModal = document.getElementById('questionModal');
+    const qModalCloseBtn = document.getElementById('qModalCloseBtn');
+    const qText = document.getElementById('qText');
+    const qOptions = document.getElementById('qOptions');
+    const qFeedback = document.getElementById('qFeedback');
+    const qContinueBtn = document.getElementById('qContinueBtn');
+
+    const questionBank = {
+        livestock: [
+            { question: 'У коровы четыре отдела желудка. Как называется самый большой из них, где происходит брожение корма?', options: ['Сычуг', 'Книжка', 'Рубец', 'Сетка'], correct: 2 },
+            { question: 'Как называется процесс повторного пережёвывания корма у коровы?', options: ['Руминация', 'Регенерация', 'Дефекация', 'Рефлексия'], correct: 0 },
+            { question: 'Какое животное даёт человеку пух, шерсть и мясо?', options: ['Овца', 'Коза', 'Лошадь', 'Свинья'], correct: 0 },
+            { question: 'Что делают с коровой, когда хотят получить от неё молоко?', options: ['Доят', 'Стригут', 'Пасут', 'Кормят'], correct: 0 },
+            { question: 'Какой орган у коровы отвечает за фильтрацию крови и образование мочи?', options: ['Печень', 'Почки', 'Сердце', 'Рубец'], correct: 1 }
+        ],
+        anatomy: [
+            { question: 'Сколько камер в сердце у взрослой коровы?', options: ['2', '3', '4', '5'], correct: 2 },
+            { question: 'Как называются кости, из которых состоит позвоночник животного?', options: ['Рёбра', 'Позвонки', 'Череп', 'Конечности'], correct: 1 },
+            { question: 'Что делает собака, когда ей жарко и она не может потеть?', options: ['Высовывает язык и часто дышит', 'Пьёт много воды', 'Прячется в тень', 'Ложится на живот'], correct: 0 },
+            { question: 'Какой орган у кошки отвечает за равновесие?', options: ['Уши', 'Хвост', 'Глаза', 'Лапы'], correct: 0 },
+            { question: 'Какой орган у жвачных животных состоит из четырёх камер и помогает переваривать траву?', options: ['Рубец', 'Желудок', 'Кишечник', 'Печень'], correct: 0 }
+        ],
+        feed: [
+            { question: 'Какой корм является основным для крупного рогатого скота в летний период?', options: ['Сено', 'Трава', 'Комбикорм', 'Силос'], correct: 1 },
+            { question: 'Что может произойти с коровой, если она съест испорченный силос?', options: ['Повысится удой', 'Может отравиться', 'Станет спокойнее', 'Улучшится аппетит'], correct: 1 },
+            { question: 'Как называются препараты, которые дают животным для борьбы с глистами?', options: ['Антибиотики', 'Противогельминтные средства', 'Витамины', 'Пробиотики'], correct: 1 },
+            { question: 'Какая болезнь у собак передаётся через укусы клещей?', options: ['Бешенство', 'Пироплазмоз', 'Чума', 'Лептоспироз'], correct: 1 },
+            { question: 'Что такое силос?', options: ['Скошенная и высушенная трава', 'Зелёный корм, законсервированный в герметичных ёмкостях', 'Смесь зерна и отрубей', 'Корм для птицы'], correct: 1 }
+        ],
+        professions: [
+            { question: 'Как называется специалист, который ставит диагноз и назначает лечение животным?', options: ['Фельдшер', 'Ветеринарный врач', 'Зоотехник', 'Кинолог'], correct: 1 },
+            { question: 'Кто из этих специалистов занимается стрижкой и уходом за шерстью собак?', options: ['Ветврач', 'Грумер', 'Дрессировщик', 'Фельдшер'], correct: 1 },
+            { question: 'Какой инструмент использует ветеринар для прослушивания сердца и лёгких животного?', options: ['Стетоскоп', 'Термометр', 'Шприц', 'Скальпель'], correct: 0 },
+            { question: 'Кто из этих специалистов занимается разведением и тренировкой служебных собак?', options: ['Кинолог', 'Грумер', 'Ветеринар', 'Зоопсихолог'], correct: 0 },
+            { question: 'Где чаще всего работает ветеринарный врач в сельской местности?', options: ['В зоомагазине', 'На ферме или в ветеринарной станции', 'В зоопарке', 'В лаборатории'], correct: 1 }
+        ]
+    };
+
+    function updatePlayersUI() {
+        const container = document.getElementById('playersSettings');
+        if (!container) return;
+        const count = parseInt(document.getElementById('playerCount').value) || 2;
+        const icons = ['🐄', '🐴', '🐕', '🐈'];
+        const defaultNames = ['Команда 1', 'Команда 2', 'Команда 3', 'Команда 4'];
         container.innerHTML = '';
-        for (const [id, field] of Object.entries(fields)) {
-            const btn = document.createElement('div');
-            btn.className = 'field-option' + (currentFieldId === id ? ' selected' : '');
-            btn.textContent = field.name;
-            btn.onclick = () => {
-                currentFieldId = id;
-                renderFieldSelector();
-                drawField();
-                renderQuestionsList();
-            };
-            container.appendChild(btn);
+        for (let i = 0; i < count; i++) {
+            const div = document.createElement('div');
+            div.className = 'form-row';
+            div.style.marginBottom = '4px';
+            div.innerHTML = `
+                <input type="text" id="playerName${i}" placeholder="Игрок ${i+1}" value="${defaultNames[i] || 'Команда '+(i+1)}" style="flex:2;">
+                <select id="playerIcon${i}" style="flex:0 0 50px;">
+                    ${icons.map(ic => `<option value="${ic}" ${i === 0 && ic === '🐕' ? 'selected' : ''} ${i === 1 && ic === '🐴' ? 'selected' : ''}>${ic}</option>`).join('')}
+                </select>
+            `;
+            container.appendChild(div);
         }
     }
 
-    function renderQuestionsList() {
-        const container = document.getElementById('questionsList');
-        container.innerHTML = '<div style="margin-bottom:0.5rem;"><strong>📋 Вопросы на клетках:</strong></div>';
-        if (Object.keys(questions).length === 0) {
-            container.innerHTML += '<div style="color:#8A9B7A; padding:1rem;">Нет загруженных вопросов</div>';
+    function getPlayersData() {
+        const count = parseInt(document.getElementById('playerCount').value) || 2;
+        const result = [];
+        for (let i = 0; i < count; i++) {
+            const nameEl = document.getElementById(`playerName${i}`);
+            const iconEl = document.getElementById(`playerIcon${i}`);
+            result.push({
+                name: nameEl ? nameEl.value || `Команда ${i+1}` : `Команда ${i+1}`,
+                icon: iconEl ? iconEl.value : ['🐕', '🐴', '🐈', '🐑'][i] || '🐕'
+            });
+        }
+        return result;
+    }
+
+    function resizeCanvas() {
+        const rect = container.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) {
+            setTimeout(resizeCanvas, 100);
             return;
         }
-        const sortedKeys = Object.keys(questions).map(Number).sort((a,b) => a-b);
-        sortedKeys.forEach(num => {
-            const q = questions[num];
-            const qDiv = document.createElement('div');
-            qDiv.className = 'question-item';
-            qDiv.innerHTML = `<strong>Клетка ${num}:</strong> ${escapeHtml(q.question)} → <em>${escapeHtml(q.answer)}</em>`;
-            container.appendChild(qDiv);
-        });
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        render();
     }
 
-    function loadQuestionsFromTxt(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const lines = e.target.result.split(/\r?\n/);
-            const newQuestions = {};
-            for (let line of lines) {
-                line = line.trim();
-                if (line === '') continue;
-                const parts = line.split(';');
-                if (parts.length >= 3) {
-                    const cellNum = parseInt(parts[0]);
-                    const question = parts[1].trim();
-                    const answer = parts[2].trim();
-                    if (!isNaN(cellNum) && question && answer) {
-                        newQuestions[cellNum] = { question, answer };
+    function render() {
+        const rect = container.getBoundingClientRect();
+        const w = rect.width || 600;
+        const h = rect.height || 400;
+        ctx.clearRect(0, 0, w, h);
+
+        if (bgImage && bgImage.complete && bgImage.width > 0) {
+            const imgRatio = bgImage.width / bgImage.height;
+            const canvasRatio = w / h;
+            let drawW, drawH, dx, dy;
+            if (imgRatio > canvasRatio) {
+                drawW = w;
+                drawH = w / imgRatio;
+                dx = 0;
+                dy = (h - drawH) / 2;
+            } else {
+                drawH = h;
+                drawW = h * imgRatio;
+                dx = (w - drawW) / 2;
+                dy = 0;
+            }
+            ctx.drawImage(bgImage, dx, dy, drawW, drawH);
+        } else {
+            // Пустое поле с сеткой-подсказкой
+            ctx.fillStyle = '#f5f0e8';
+            ctx.fillRect(0, 0, w, h);
+            ctx.strokeStyle = '#D1DEC2';
+            ctx.lineWidth = 1;
+            for (let x = 0; x < w; x += 40) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, h);
+                ctx.stroke();
+            }
+            for (let y = 0; y < h; y += 40) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(w, y);
+                ctx.stroke();
+            }
+            ctx.fillStyle = '#7B8D6E';
+            ctx.font = '16px Montserrat, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Загрузите карту-маршрут', w/2, h/2 - 20);
+            ctx.font = '12px Montserrat, sans-serif';
+            ctx.fillStyle = '#8A9B7A';
+            ctx.fillText('Нажмите "Выбрать файл" или загрузите "Пример"', w/2, h/2 + 20);
+        }
+
+        renderLabels(w, h);
+        renderPieces(w, h);
+    }
+
+    function renderLabels(cw, ch) {
+        container.querySelectorAll('.label-marker').forEach(el => el.remove());
+
+        for (const label of labels) {
+            const x = (label.x / bgWidth) * cw;
+            const y = (label.y / bgHeight) * ch;
+
+            const marker = document.createElement('div');
+            marker.className = 'label-marker';
+            if (selectedLabelId === label.id) marker.classList.add('selected');
+            marker.style.left = x + 'px';
+            marker.style.top = y + 'px';
+            marker.style.background = label.color || '#2C7DA0';
+            marker.textContent = label.number || '?';
+
+            const typeLabel = document.createElement('span');
+            typeLabel.className = 'label-type';
+            const typeMap = { start: '🏁', normal: '⬜', question: '❓', trap: '⚠️', finish: '🏆' };
+            typeLabel.textContent = typeMap[label.type] || '⬜';
+            marker.appendChild(typeLabel);
+
+            if (currentMode === 'editor') {
+                const delBtn = document.createElement('div');
+                delBtn.className = 'delete-btn';
+                delBtn.textContent = '×';
+                delBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteLabel(label.id);
+                });
+                marker.appendChild(delBtn);
+                marker.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openLabelEditor(label.id);
+                });
+            } else if (currentMode === 'game') {
+                marker.style.cursor = 'pointer';
+                marker.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (gameStarted && currentMode === 'game' && !questionLocked) {
+                        movePieceTo(label.number);
                     }
+                });
+            }
+
+            container.appendChild(marker);
+        }
+    }
+
+    function renderPieces(cw, ch) {
+        container.querySelectorAll('.piece-marker').forEach(el => el.remove());
+
+        for (let i = 0; i < players.length; i++) {
+            const p = players[i];
+            if (p.position === undefined || p.position === null) continue;
+            const label = labels.find(l => l.number === p.position);
+            if (!label) continue;
+
+            const offsetX = (i === 0 ? -14 : (i === 1 ? 14 : (i === 2 ? -14 : 14)));
+            const offsetY = (i === 0 ? -14 : (i === 1 ? -14 : (i === 2 ? 14 : 14)));
+            const x = (label.x / bgWidth) * cw + offsetX;
+            const y = (label.y / bgHeight) * ch + offsetY;
+
+            const piece = document.createElement('div');
+            piece.className = 'piece-marker';
+            piece.style.left = x + 'px';
+            piece.style.top = y + 'px';
+            piece.textContent = p.icon || '🐕';
+
+            const nameEl = document.createElement('div');
+            nameEl.className = 'piece-name';
+            const isActive = (i === currentPlayer && !p.finished && currentMode === 'game');
+            nameEl.textContent = (isActive ? '🎯 ' : '') + p.name + (p.finished ? ' 🏆' : '');
+            piece.appendChild(nameEl);
+
+            container.appendChild(piece);
+        }
+    }
+
+    function addLabel(x, y) {
+        if (!bgImage) {
+            alert('Сначала загрузите карту-маршрут.');
+            return null;
+        }
+        const number = labels.length + 1;
+        const label = {
+            id: nextLabelId++,
+            x: x,
+            y: y,
+            number: number,
+            type: 'normal',
+            color: '#2C7DA0',
+            question: '',
+            options: ['', '', '', ''],
+            correct: 0
+        };
+        labels.push(label);
+        render();
+        updateLabelList();
+        saveToLocalStorage();
+        return label;
+    }
+
+    function deleteLabel(id) {
+        if (!confirm('Удалить метку?')) return;
+        labels = labels.filter(l => l.id !== id);
+        if (selectedLabelId === id) selectedLabelId = null;
+        render();
+        updateLabelList();
+        saveToLocalStorage();
+    }
+
+    function updateLabelList() {
+        labelListEl.innerHTML = '';
+        if (labels.length === 0) {
+            labelListEl.innerHTML = '<span class="empty-msg">Нет меток. Загрузите карту и добавьте метки.</span>';
+            return;
+        }
+        const sorted = [...labels].sort((a, b) => a.number - b.number);
+        for (const label of sorted) {
+            const div = document.createElement('div');
+            div.className = 'label-item';
+            const typeMap = { start: '🏁 Старт', normal: '⬜ Обычная', question: '❓ Вопрос', trap: '⚠️ Ловушка', finish: '🏆 Финиш' };
+            div.innerHTML = `
+                <span class="info">
+                    <span class="num">#${label.number}</span>
+                    <span class="type-badge">${typeMap[label.type] || 'Обычная'}</span>
+                </span>
+                <button class="del-btn" data-id="${label.id}">🗑️</button>
+            `;
+            div.querySelector('.del-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteLabel(parseInt(e.target.dataset.id));
+            });
+            div.addEventListener('click', () => {
+                if (currentMode === 'editor') openLabelEditor(label.id);
+            });
+            labelListEl.appendChild(div);
+        }
+    }
+
+    function openLabelEditor(id) {
+        const label = labels.find(l => l.id === id);
+        if (!label) return;
+        selectedLabelId = id;
+        editNumber.value = label.number;
+        editType.value = label.type;
+        editColor.value = label.color || '#2C7DA0';
+        editQuestion.value = label.question || '';
+        editOpt1.value = label.options[0] || '';
+        editOpt2.value = label.options[1] || '';
+        editOpt3.value = label.options[2] || '';
+        editOpt4.value = label.options[3] || '';
+        editCorrect.value = label.correct || 0;
+
+        questionFields.style.display = (label.type === 'question') ? 'block' : 'none';
+
+        document.getElementById('modalTitle').textContent = `📍 Метка #${label.number}`;
+        labelModal.classList.add('active');
+        render();
+    }
+
+    function saveLabel() {
+        if (selectedLabelId === null) return;
+        const label = labels.find(l => l.id === selectedLabelId);
+        if (!label) return;
+
+        label.number = parseInt(editNumber.value) || label.number;
+        label.type = editType.value;
+        label.color = editColor.value;
+
+        if (label.type === 'question') {
+            label.question = editQuestion.value.trim();
+            label.options = [
+                editOpt1.value.trim(),
+                editOpt2.value.trim(),
+                editOpt3.value.trim(),
+                editOpt4.value.trim()
+            ];
+            label.correct = parseInt(editCorrect.value) || 0;
+        } else {
+            label.question = '';
+            label.options = ['', '', '', ''];
+            label.correct = 0;
+        }
+
+        const sorted = [...labels].sort((a, b) => a.number - b.number);
+        let num = 1;
+        for (const l of sorted) {
+            l.number = num++;
+        }
+
+        labelModal.classList.remove('active');
+        render();
+        updateLabelList();
+        saveToLocalStorage();
+    }
+
+    function loadQuestions(topic) {
+        const questions = questionBank[topic];
+        if (!questions) {
+            alert('Тема не найдена.');
+            return;
+        }
+
+        const questionLabels = labels.filter(l => l.type === 'question');
+        if (questionLabels.length === 0) {
+            alert('Нет меток типа "Вопрос". Сначала добавьте их на карту.');
+            return;
+        }
+
+        const count = Math.min(questions.length, questionLabels.length);
+        for (let i = 0; i < count; i++) {
+            const q = questions[i];
+            const label = questionLabels[i];
+            label.question = q.question;
+            label.options = q.options;
+            label.correct = q.correct;
+        }
+
+        render();
+        updateLabelList();
+        saveToLocalStorage();
+        alert(`Загружено ${count} вопросов по теме "${topicSelect.options[topicSelect.selectedIndex].text}"`);
+    }
+
+    function startGame() {
+        if (labels.length === 0) {
+            alert('Добавьте метки на карту.');
+            return;
+        }
+
+        const startLabel = labels.find(l => l.type === 'start');
+        const finishLabel = labels.find(l => l.type === 'finish');
+        if (!startLabel || !finishLabel) {
+            alert('Добавьте клетки "Старт" и "Финиш".');
+            return;
+        }
+
+        const playersData = getPlayersData();
+        const startPos = startLabel ? startLabel.number : 1;
+        players = [];
+
+        for (const pd of playersData) {
+            players.push({
+                name: pd.name || 'Команда',
+                icon: pd.icon || '🐕',
+                position: startPos,
+                correct: 0,
+                wrong: 0,
+                finished: false
+            });
+        }
+
+        currentPlayer = 0;
+        gameStarted = true;
+        currentMode = 'game';
+        updateModeUI();
+        render();
+        showToast('🎮 Игра началась! Кликните на клетку, чтобы переместить активную фишку.');
+        saveGameState();
+    }
+
+    function movePieceTo(labelNumber) {
+        if (!gameStarted || questionLocked) return;
+        if (players.length === 0) return;
+
+        const player = players[currentPlayer];
+        if (player.finished) {
+            showToast('Этот игрок уже финишировал!');
+            return;
+        }
+
+        const targetLabel = labels.find(l => l.number === labelNumber);
+        if (!targetLabel) {
+            showToast('❌ Клетка не найдена.');
+            return;
+        }
+
+        const isOccupied = players.some(p => p !== player && p.position === labelNumber);
+        if (isOccupied) {
+            showToast('⚠️ Эта клетка занята другим игроком!');
+            return;
+        }
+
+        const diff = Math.abs(labelNumber - player.position);
+        if (diff > 6) {
+            showToast('🚫 Можно ходить не более чем на 6 клеток!');
+            return;
+        }
+
+        player.position = labelNumber;
+        render();
+
+        if (targetLabel.type === 'question') {
+            showQuestion(player, targetLabel);
+            return;
+        } else if (targetLabel.type === 'trap') {
+            const trapBack = Math.max(1, labelNumber - 2);
+            player.position = trapBack;
+            showToast(`⚠️ Ловушка! ${player.name} возвращается на 2 клетки назад.`);
+            render();
+            nextPlayer();
+        } else if (targetLabel.type === 'finish') {
+            player.finished = true;
+            showToast(`🎉 ${player.name} достиг финиша!`);
+            render();
+            checkGameEnd();
+        } else {
+            nextPlayer();
+        }
+        saveGameState();
+        updateProgress();
+    }
+
+    function showQuestion(player, label) {
+        questionLocked = true;
+        qText.textContent = label.question || 'Вопрос не задан';
+
+        const options = label.options || ['', '', '', ''];
+        qOptions.innerHTML = '';
+        const optionLabels = ['А', 'Б', 'В', 'Г'];
+
+        for (let i = 0; i < 4; i++) {
+            const btn = document.createElement('button');
+            btn.className = 'question-option';
+            btn.textContent = `${optionLabels[i]}: ${options[i] || '—'}`;
+            btn.dataset.index = i;
+            btn.addEventListener('click', () => handleAnswer(player, label, i, btn));
+            qOptions.appendChild(btn);
+        }
+
+        qFeedback.style.display = 'none';
+        qContinueBtn.style.display = 'none';
+        document.getElementById('qModalTitle').textContent = `❓ Вопрос для ${player.name}`;
+        questionModal.classList.add('active');
+    }
+
+    function handleAnswer(player, label, selectedIndex, btnEl) {
+        if (questionLocked === false) return;
+        const correct = label.correct || 0;
+
+        const allBtns = qOptions.querySelectorAll('.question-option');
+        allBtns.forEach(b => b.classList.add('disabled'));
+
+        if (selectedIndex === correct) {
+            btnEl.classList.add('correct');
+            player.correct++;
+            qFeedback.textContent = '✅ Правильно! Отлично!';
+            qFeedback.className = 'question-feedback correct';
+        } else {
+            btnEl.classList.add('wrong');
+            allBtns[correct].classList.add('correct');
+            player.wrong++;
+            qFeedback.textContent = `❌ Неправильно. Правильный ответ: ${['А', 'Б', 'В', 'Г'][correct]}`;
+            qFeedback.className = 'question-feedback wrong';
+        }
+
+        qFeedback.style.display = 'block';
+        qContinueBtn.style.display = 'inline-block';
+        questionLocked = false;
+        saveGameState();
+        updateProgress();
+    }
+
+    function continueAfterQuestion() {
+        questionModal.classList.remove('active');
+        questionLocked = false;
+
+        if (!players[currentPlayer].finished) {
+            nextPlayer();
+        } else {
+            updatePlayerInfo();
+            checkGameEnd();
+        }
+        render();
+        saveGameState();
+    }
+
+    function nextPlayer() {
+        let attempts = 0;
+        let next = (currentPlayer + 1) % players.length;
+        while (players[next].finished && attempts < players.length) {
+            next = (next + 1) % players.length;
+            attempts++;
+        }
+        if (attempts < players.length) {
+            currentPlayer = next;
+        }
+        updatePlayerInfo();
+        updateProgress();
+        render();
+    }
+
+    function checkGameEnd() {
+        const allFinished = players.every(p => p.finished);
+        if (allFinished) {
+            setTimeout(() => {
+                let msg = '🏆 Игра завершена!\n\n';
+                for (const p of players) {
+                    msg += `${p.icon} ${p.name}: ✅ ${p.correct} правильных, ❌ ${p.wrong} неправильных\n`;
+                }
+                alert(msg);
+            }, 500);
+        }
+        updatePlayerInfo();
+    }
+
+    function updatePlayerInfo() {
+        const info = document.getElementById('playerInfo');
+        if (!info) return;
+        info.innerHTML = '';
+        for (let i = 0; i < players.length; i++) {
+            const p = players[i];
+            const active = (i === currentPlayer && !p.finished && currentMode === 'game');
+            const div = document.createElement('div');
+            div.className = 'player-info' + (active ? ' active' : '');
+            div.style.opacity = p.finished ? '0.5' : '1';
+            div.innerHTML = `
+                <span class="icon">${p.icon}</span>
+                <span>${p.name}</span>
+                <span style="font-size:0.7rem; color:#7B8D6E;">${p.correct}✅ ${p.wrong}❌</span>
+                ${active ? '🎯' : ''}
+                ${p.finished ? '🏆' : ''}
+            `;
+            info.appendChild(div);
+        }
+    }
+
+    function updateProgress() {
+        const total = labels.filter(l => l.type === 'question').length;
+        const answered = players.reduce((sum, p) => sum + p.correct, 0);
+        const fill = document.getElementById('progressFill');
+        const text = document.getElementById('progressText');
+        if (fill) fill.style.width = (total > 0) ? `${(answered / total) * 100}%` : '0%';
+        if (text) text.textContent = `${answered} / ${total}`;
+    }
+
+    function saveGameState() {
+        const data = { players, currentPlayer, gameStarted };
+        try {
+            localStorage.setItem('game_state', JSON.stringify(data));
+        } catch (e) {}
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        updateModeUI();
+        render();
+        if (mode === 'game') {
+            if (!gameStarted) {
+                startGame();
+            } else {
+                render();
+                updatePlayerInfo();
+                showToast('🎯 Кликните на клетку, чтобы переместить активную фишку');
+            }
+        }
+    }
+
+    function updateModeUI() {
+        modeEditor.classList.toggle('active', currentMode === 'editor');
+        modeGame.classList.toggle('active', currentMode === 'game');
+
+        document.getElementById('questionsSection').style.display = (currentMode === 'editor') ? 'block' : 'none';
+        document.getElementById('gameSettings').style.display = (currentMode === 'editor') ? 'block' : 'none';
+
+        if (currentMode === 'game') {
+            createGameControls();
+        } else {
+            const controls = document.getElementById('gameControls');
+            if (controls) controls.remove();
+        }
+
+        const editBtns = [addLabelBtn, uploadBtn, loadQuestionsBtn];
+        for (const btn of editBtns) {
+            btn.style.opacity = (currentMode === 'editor') ? '1' : '0.4';
+            btn.style.pointerEvents = (currentMode === 'editor') ? 'auto' : 'none';
+        }
+    }
+
+    function createGameControls() {
+        let controls = document.getElementById('gameControls');
+        if (!controls) {
+            controls = document.createElement('div');
+            controls.id = 'gameControls';
+            controls.className = 'game-controls';
+            const sidePanel = document.getElementById('sidePanel');
+            sidePanel.appendChild(controls);
+        }
+
+        controls.innerHTML = `
+            <div class="players" id="playerInfo"></div>
+            <div class="dice-area">
+                <div class="dice" id="diceDisplay" style="font-size:2.5rem;">🎲</div>
+                <button class="btn btn-accent" id="rollBtn">🎲 Бросить</button>
+            </div>
+            <div class="progress-info">
+                <span id="progressText">0 / ${labels.filter(l => l.type === 'question').length}</span>
+                <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+            </div>
+            <div style="font-size:0.7rem; color:#7B8D6E; width:100%; text-align:center;">
+                💡 Кликните на клетку, чтобы переместить фишку
+            </div>
+        `;
+
+        document.getElementById('rollBtn').addEventListener('click', rollDice);
+        document.getElementById('diceDisplay').addEventListener('click', rollDice);
+
+        updatePlayerInfo();
+        updateProgress();
+    }
+
+    function rollDice() {
+        if (!gameStarted) {
+            startGame();
+            return;
+        }
+
+        const allFinished = players.every(p => p.finished);
+        if (allFinished) {
+            showToast('🏆 Игра завершена! Поздравляем!');
+            return;
+        }
+
+        let attempts = 0;
+        while (players[currentPlayer].finished && attempts < players.length) {
+            currentPlayer = (currentPlayer + 1) % players.length;
+            attempts++;
+        }
+        if (attempts >= players.length) {
+            showToast('🏆 Все игроки финишировали!');
+            return;
+        }
+
+        const player = players[currentPlayer];
+        const dice = Math.floor(Math.random() * 6) + 1;
+
+        const diceEl = document.getElementById('diceDisplay');
+        if (diceEl) {
+            diceEl.textContent = '🎲';
+            diceEl.classList.add('rolling');
+            setTimeout(() => {
+                diceEl.textContent = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'][dice - 1];
+                diceEl.classList.remove('rolling');
+            }, 900);
+        }
+
+        const newPos = player.position + dice;
+        const maxNumber = labels.length;
+
+        if (newPos >= maxNumber) {
+            player.position = maxNumber;
+            player.finished = true;
+            showToast(`🎉 ${player.name} финишировал!`);
+            render();
+            checkGameEnd();
+            return;
+        }
+
+        movePieceTo(newPos);
+    }
+
+    function saveToLocalStorage() {
+        const data = {
+            labels: labels,
+            imageData: imageData,
+            nextLabelId: nextLabelId,
+            players: players,
+            currentPlayer: currentPlayer,
+            gameStarted: gameStarted,
+            bgWidth: bgWidth,
+            bgHeight: bgHeight
+        };
+        try {
+            localStorage.setItem('gameboard_data', JSON.stringify(data));
+        } catch (e) { console.warn('Не удалось сохранить', e); }
+    }
+
+    function loadFromLocalStorage() {
+        try {
+            const raw = localStorage.getItem('gameboard_data');
+            if (!raw) return false;
+            const data = JSON.parse(raw);
+            labels = data.labels || [];
+            imageData = data.imageData || null;
+            nextLabelId = data.nextLabelId || 1;
+            players = data.players || [];
+            currentPlayer = data.currentPlayer || 0;
+            gameStarted = data.gameStarted || false;
+            bgWidth = data.bgWidth || 800;
+            bgHeight = data.bgHeight || 600;
+
+            if (imageData) {
+                bgImage = new Image();
+                bgImage.src = imageData;
+                bgImage.onload = () => {
+                    bgWidth = bgImage.width || 800;
+                    bgHeight = bgImage.height || 600;
+                    render();
+                };
+            }
+            render();
+            updateLabelList();
+            if (players.length > 0) {
+                document.getElementById('playerCount').value = players.length;
+                updatePlayersUI();
+                for (let i = 0; i < players.length && i < 4; i++) {
+                    const nameEl = document.getElementById(`playerName${i}`);
+                    const iconEl = document.getElementById(`playerIcon${i}`);
+                    if (nameEl) nameEl.value = players[i].name || `Команда ${i+1}`;
+                    if (iconEl) iconEl.value = players[i].icon || '🐕';
                 }
             }
-            questions = newQuestions;
-            drawField();
-            renderQuestionsList();
-            alert(`Загружено вопросов: ${Object.keys(questions).length}`);
-        };
-        reader.readAsText(file, 'UTF-8');
+            return true;
+        } catch (e) { return false; }
     }
 
-    function saveProject() {
-        const project = {
-            author: authorInput.value || '',
-            title: gameTitleInput.value || '',
-            fieldId: currentFieldId,
-            questions: questions
+    function loadExample() {
+        labels = [];
+        nextLabelId = 1;
+        players = [];
+        gameStarted = false;
+
+        const canvasTemp = document.createElement('canvas');
+        canvasTemp.width = 800;
+        canvasTemp.height = 600;
+        const ctxTemp = canvasTemp.getContext('2d');
+
+        const grad = ctxTemp.createLinearGradient(0, 0, 800, 600);
+        grad.addColorStop(0, '#D4E8CA');
+        grad.addColorStop(1, '#C9D6BA');
+        ctxTemp.fillStyle = grad;
+        ctxTemp.fillRect(0, 0, 800, 600);
+
+        const positions = [
+            { x: 80, y: 80, type: 'start' },
+            { x: 200, y: 80, type: 'normal' },
+            { x: 320, y: 80, type: 'question' },
+            { x: 440, y: 80, type: 'normal' },
+            { x: 560, y: 80, type: 'question' },
+            { x: 680, y: 80, type: 'normal' },
+            { x: 680, y: 200, type: 'question' },
+            { x: 560, y: 200, type: 'normal' },
+            { x: 440, y: 200, type: 'trap' },
+            { x: 320, y: 200, type: 'normal' },
+            { x: 200, y: 200, type: 'question' },
+            { x: 80, y: 200, type: 'normal' },
+            { x: 80, y: 320, type: 'question' },
+            { x: 200, y: 320, type: 'normal' },
+            { x: 320, y: 320, type: 'question' },
+            { x: 440, y: 320, type: 'normal' },
+            { x: 560, y: 320, type: 'trap' },
+            { x: 680, y: 320, type: 'normal' },
+            { x: 680, y: 440, type: 'question' },
+            { x: 560, y: 440, type: 'normal' },
+            { x: 440, y: 440, type: 'question' },
+            { x: 320, y: 440, type: 'normal' },
+            { x: 200, y: 440, type: 'question' },
+            { x: 80, y: 440, type: 'finish' }
+        ];
+
+        const colors = {
+            start: '#6B9E6B',
+            normal: '#A3B18A',
+            question: '#2C7DA0',
+            trap: '#D4A373',
+            finish: '#FFD700'
         };
-        const dataStr = JSON.stringify(project, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'gameboard_project.json';
-        a.click();
-        URL.revokeObjectURL(a.href);
-        alert('✅ Проект сохранён');
+
+        for (const pos of positions) {
+            ctxTemp.beginPath();
+            ctxTemp.arc(pos.x, pos.y, 25, 0, Math.PI * 2);
+            ctxTemp.fillStyle = colors[pos.type] || '#A3B18A';
+            ctxTemp.fill();
+            ctxTemp.strokeStyle = 'white';
+            ctxTemp.lineWidth = 3;
+            ctxTemp.stroke();
+            ctxTemp.fillStyle = 'white';
+            ctxTemp.font = 'bold 14px Montserrat, sans-serif';
+            ctxTemp.textAlign = 'center';
+            ctxTemp.textBaseline = 'middle';
+            const labelsType = { start: 'S', normal: '', question: '?', trap: '!', finish: 'F' };
+            ctxTemp.fillText(labelsType[pos.type] || '', pos.x, pos.y);
+        }
+
+        // БЕЗ надписи "Ветеринарное путешествие" — только чистое поле
+
+        bgWidth = 800;
+        bgHeight = 600;
+        imageData = canvasTemp.toDataURL('image/png');
+        bgImage = new Image();
+        bgImage.src = imageData;
+        bgImage.onload = () => { render(); };
+
+        for (const pos of positions) {
+            const label = {
+                id: nextLabelId++,
+                x: pos.x,
+                y: pos.y,
+                number: labels.length + 1,
+                type: pos.type,
+                color: colors[pos.type] || '#A3B18A',
+                question: '',
+                options: ['', '', '', ''],
+                correct: 0
+            };
+            labels.push(label);
+        }
+
+        const qLabels = labels.filter(l => l.type === 'question');
+        const questions = questionBank.livestock;
+        for (let i = 0; i < Math.min(qLabels.length, questions.length); i++) {
+            const q = questions[i];
+            qLabels[i].question = q.question;
+            qLabels[i].options = q.options;
+            qLabels[i].correct = q.correct;
+        }
+
+        render();
+        updateLabelList();
+        saveToLocalStorage();
+        showToast('📂 Пример загружен!');
     }
 
-    function loadProject(file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            try {
-                const obj = JSON.parse(e.target.result);
-                currentFieldId = obj.fieldId || 'field1';
-                questions = obj.questions || {};
-                if (obj.author !== undefined) {
-                    authorInput.value = obj.author;
-                    authorPreview.textContent = obj.author || 'не указан';
-                }
-                if (obj.title !== undefined) {
-                    gameTitleInput.value = obj.title || DEFAULT_TITLE;
-                }
-                renderFieldSelector();
-                drawField();
-                renderQuestionsList();
-                alert('✅ Проект загружен');
-            } catch(err) { alert('Ошибка загрузки'); }
-        };
-        reader.readAsText(file);
-    }
-
-    function exportGame() {
-        const exportField = fields[currentFieldId];
-        const exportQuestions = JSON.parse(JSON.stringify(questions));
-        const cellsData = exportField.cells;
+    function exportHTML() {
+        if (labels.length === 0) {
+            alert('Добавьте метки на карту.');
+            return;
+        }
+        if (!imageData) {
+            alert('Загрузите карту-маршрут.');
+            return;
+        }
 
         const authorName = authorInput.value.trim() || 'не указан';
         const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const gameTitle = gameTitleInput.value.trim() || DEFAULT_TITLE;
         const safeGameTitle = gameTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-        const html = `<!DOCTYPE html>
+        const exportData = {
+            labels: labels,
+            imageData: imageData,
+            playersData: getPlayersData(),
+            bgWidth: bgWidth,
+            bgHeight: bgHeight,
+            title: gameTitle,
+            author: authorName
+        };
+
+        const jsonStr = JSON.stringify(exportData);
+        const safeJson = jsonStr.replace(/<\/script>/g, '<\\/script>');
+
+        const htmlContent = `<!DOCTYPE html>
 <html lang="ru">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>${safeGameTitle} | ВетСим</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:linear-gradient(135deg, #F4F9F0 0%, #FDF8F0 100%);font-family:'Trebuchet MS', system-ui, sans-serif;padding:1.5rem;color:#3E5C4A;min-height:100vh;}
-.container{max-width:1300px;margin:0 auto;}
-h1{text-align:center;color:#1F4E6E;font-size:2rem;margin-bottom:0.3rem;font-weight:900;letter-spacing:0.5px;}
-.sub{text-align:center;color:#7C8F7C;margin-bottom:1.5rem;font-size:0.95rem;}
-.game-panel{display:flex;flex-wrap:wrap;gap:1.5rem;}
-.board{flex:2;min-width:300px;background:white;border-radius:28px;padding:1rem;box-shadow:0 8px 24px rgba(0,0,0,0.06);border:1px solid #E7EDE2;}
-.info{flex:1;min-width:260px;display:flex;flex-direction:column;gap:1rem;}
-.cells-canvas{width:100%;height:auto;background:#FFF2E0;border-radius:20px;}
-.teams{display:flex;gap:0.8rem;}
-.team-card{background:white;border-radius:24px;padding:0.9rem 1rem;flex:1;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.06);border:2px solid transparent;transition:0.3s;}
-.team-card.active{border-color:#2C7DA0;box-shadow:0 6px 18px rgba(44,125,160,0.25);transform:translateY(-2px);}
-.team-red{background:linear-gradient(135deg, #FFE4DE 0%, #FFCDC2 100%);}
-.team-blue{background:linear-gradient(135deg, #DEEBFF 0%, #C8DDFF 100%);}
-.team-card .team-name{font-weight:900;font-size:1rem;margin-bottom:0.4rem;}
-.team-card .pos-label{font-size:0.75rem;color:#5F7C62;text-transform:uppercase;letter-spacing:0.5px;}
-.team-card .pos-value{font-size:1.6rem;font-weight:900;color:#1F4E6E;display:block;}
-.dice-card{background:white;border-radius:24px;padding:1.2rem;box-shadow:0 4px 12px rgba(0,0,0,0.06);text-align:center;border:1px solid #E7EDE2;}
-.dice-btn{background:linear-gradient(135deg, #2C7DA0 0%, #1F4E6E 100%);color:white;border:none;padding:0.9rem 2rem;border-radius:40px;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 5px 0 #16334a, 0 8px 20px rgba(0,0,0,0.2);transition:0.15s;font-family:inherit;letter-spacing:0.5px;}
-.dice-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 7px 0 #16334a, 0 10px 24px rgba(0,0,0,0.25);}
-.dice-btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #16334a;}
-.dice-btn:disabled{opacity:0.4;cursor:not-allowed;box-shadow:0 5px 0 #16334a;}
-.dice-result{font-size:4rem;line-height:1;margin:0.6rem 0;color:#2C7DA0;}
-.turn-indicator{font-weight:700;font-size:1rem;padding:0.5rem 1rem;border-radius:40px;background:#E2EAD9;color:#3E5C4A;display:inline-block;}
-.status{background:linear-gradient(135deg, #FFF8E5 0%, #FDF0D5 100%);border-radius:20px;padding:1rem;min-height:60px;font-size:0.95rem;text-align:center;border:1px solid #F0DFB0;}
-.status.success{background:linear-gradient(135deg, #D9F0DC 0%, #B8E5C0 100%);color:#2A6B2F;font-weight:700;border-color:#8BC894;}
-.status.error{background:linear-gradient(135deg, #FFE0D6 0%, #FFCCBD 100%);color:#B5533A;font-weight:700;border-color:#E8A594;}
-.reset-btn{background:linear-gradient(135deg, #E2CFB0 0%, #D4BC94 100%);border:none;padding:0.7rem 1.4rem;border-radius:40px;cursor:pointer;font-weight:700;font-family:inherit;color:#4D3E2A;box-shadow:0 4px 0 #B8A06E;transition:0.15s;font-size:0.9rem;}
-.reset-btn:hover{transform:translateY(-2px);box-shadow:0 6px 0 #B8A06E;}
-.reset-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #B8A06E;}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>${safeGameTitle} | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #FDF8F0; font-family: 'Montserrat', system-ui, sans-serif; color: #3E5C4A; padding: 1.2rem; overflow: hidden; height: 100vh; }
+        .container { max-width: 1500px; margin: 0 auto; height: 100vh; display: flex; flex-direction: column; }
+        .header { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; background: white; padding: 0.6rem 1.2rem; border-radius: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); flex-shrink: 0; }
+        .logo { font-size: 1.2rem; font-weight: 700; color: #3E5C4A; }
+        .logo span { background: linear-gradient(135deg, #6B8C5C, #A38B60); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .workspace { display: flex; flex: 1; gap: 1rem; margin-top: 0.8rem; min-height: 0; }
+        .canvas-wrapper { flex: 1; background: white; border-radius: 1.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); overflow: hidden; position: relative; min-height: 400px; }
+        #canvasContainer { width: 100%; height: 100%; position: relative; overflow: auto; background: #f5f0e8; cursor: default; }
+        #gameCanvas { display: block; width: 100%; height: 100%; background: #f5f0e8; border-radius: 1.8rem; }
+        .side-panel { width: 340px; min-width: 280px; background: white; border-radius: 1.8rem; padding: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; max-height: 100%; gap: 8px; }
+        .side-panel h3 { font-size: 0.9rem; color: #3E5C4A; margin-bottom: 2px; }
+        .panel-section { border-bottom: 1px solid #EDE8DC; padding-bottom: 10px; margin-bottom: 10px; }
+        .panel-section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .label-marker { position: absolute; transform: translate(-50%, -50%); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 700; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.25); z-index: 10; pointer-events: auto; cursor: pointer; user-select: none; }
+        .label-marker .label-type { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 8px; font-weight: 600; color: #fff; background: rgba(0,0,0,0.6); padding: 1px 6px; border-radius: 8px; white-space: nowrap; pointer-events: none; }
+        .piece-marker { position: absolute; transform: translate(-50%, -50%); font-size: 28px; z-index: 20; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3)); pointer-events: none; transition: left 0.3s ease, top 0.3s ease; }
+        .piece-marker .piece-name { position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 8px; font-weight: 600; color: #3E5C4A; background: rgba(255,255,255,0.9); padding: 1px 6px; border-radius: 8px; white-space: nowrap; pointer-events: none; }
+        .game-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 10px; background: #F9F6EF; border-radius: 1rem; margin-top: 8px; flex-shrink: 0; }
+        .game-controls .players { display: flex; gap: 15px; flex-wrap: wrap; flex: 1; }
+        .game-controls .player-info { display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 0.85rem; padding: 4px 10px; border-radius: 1rem; background: #F4EFE4; transition: 0.3s; }
+        .game-controls .player-info.active { background: #CBE0C0; box-shadow: 0 0 0 2px #A3B18A; }
+        .game-controls .player-info .icon { font-size: 1.5rem; }
+        .game-controls .dice-area { display: flex; align-items: center; gap: 10px; }
+        .game-controls .dice { font-size: 2.5rem; cursor: pointer; transition: transform 0.2s; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; background: white; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); user-select: none; }
+        .game-controls .dice:hover { transform: scale(1.05); }
+        .game-controls .dice.rolling { animation: diceRoll 0.3s ease 3; }
+        @keyframes diceRoll { 0% { transform: rotate(0deg) scale(1); } 50% { transform: rotate(180deg) scale(1.1); } 100% { transform: rotate(360deg) scale(1); } }
+        .game-controls .progress-info { font-size: 0.8rem; color: #5F7C62; min-width: 100px; }
+        .progress-bar { width: 100%; height: 8px; background: #EDE8DC; border-radius: 2rem; overflow: hidden; margin-top: 4px; }
+        .progress-bar .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #6B9E6B, #A3B18A); border-radius: 2rem; transition: width 0.3s ease; }
+        .btn { background: #EBE3D2; border: none; padding: 5px 14px; border-radius: 2rem; font-weight: 600; cursor: pointer; transition: 0.2s; font-size: 0.8rem; font-family: inherit; color: #3E5C4A; white-space: nowrap; }
+        .btn:hover { opacity: 0.85; }
+        .btn-accent { background: #2C7DA0; color: white; }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-overlay.active { display: flex; }
+        .modal { background: white; border-radius: 2rem; padding: 1.5rem 2rem; max-width: 480px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+        .modal h2 { margin-bottom: 0.5rem; color: #3E5C4A; font-size: 1.2rem; }
+        .modal .close-btn { float: right; background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #7B8D6E; }
+        .modal .close-btn:hover { color: #3E5C4A; }
+        .question-option { display: block; width: 100%; padding: 10px 14px; margin-bottom: 6px; border: 2px solid #D1DEC2; border-radius: 1rem; background: white; cursor: pointer; transition: 0.2s; text-align: left; font-family: inherit; font-size: 0.9rem; color: #3E5C4A; }
+        .question-option:hover { border-color: #2C7DA0; background: #F9F6EF; }
+        .question-option.correct { border-color: #6B9E6B; background: #E2F0DA; }
+        .question-option.wrong { border-color: #D4A373; background: #FDE8E0; }
+        .question-option.disabled { cursor: default; opacity: 0.7; }
+        .question-feedback { padding: 10px; border-radius: 1rem; margin-top: 8px; font-weight: 600; }
+        .question-feedback.correct { background: #E2F0DA; color: #2C7DA0; }
+        .question-feedback.wrong { background: #FDE8E0; color: #D4A373; }
 
-/* Модальное окно вопроса */
-.q-modal{position:fixed;inset:0;background:rgba(31,78,110,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem;}
-.q-modal-card{background:linear-gradient(135deg, #FFFDF8 0%, #FDF8F0 100%);border-radius:28px;padding:2rem;max-width:600px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.4);text-align:center;border:4px solid #2C7DA0;}
-.q-modal-header{font-size:0.85rem;color:#7C8F7C;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.5rem;font-weight:700;}
-.q-modal-question{font-size:1.3rem;color:#1F4E6E;font-weight:700;margin-bottom:1.2rem;line-height:1.5;}
-.q-modal-answer{background:linear-gradient(135deg, #D9F0DC 0%, #B8E5C0 100%);color:#2A6B2F;border-radius:20px;padding:1rem;margin-bottom:1.2rem;font-weight:700;font-size:1.1rem;}
-.q-modal-input{width:100%;padding:0.9rem 1.2rem;border:2px solid #D1DEC2;border-radius:40px;font-family:inherit;font-size:1rem;margin-bottom:1rem;outline:none;transition:0.15s;background:#FFFEF7;}
-.q-modal-input:focus{border-color:#2C7DA0;box-shadow:0 0 0 3px rgba(44,125,160,0.15);}
-.q-modal-buttons{display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;}
-.q-modal-buttons button{border:none;padding:0.7rem 1.4rem;border-radius:40px;font-weight:700;font-size:0.9rem;cursor:pointer;font-family:inherit;transition:0.15s;box-shadow:0 4px 0 rgba(0,0,0,0.2);}
-.q-btn-check{background:linear-gradient(135deg, #6B9E6B 0%, #4D8449 100%);color:white;}
-.q-btn-check:hover{transform:translateY(-2px);box-shadow:0 6px 0 rgba(0,0,0,0.2);}
-.q-btn-show{background:linear-gradient(135deg, #E2CFB0 0%, #D4BC94 100%);color:#4D3E2A;}
-.q-btn-skip{background:linear-gradient(135deg, #A3B18A 0%, #8A9B70 100%);color:white;}
-
-.vetsim-credit{margin-top:2rem;padding:1.2rem 1.5rem;background:linear-gradient(135deg, #F3F6EF 0%, #FDF8F0 100%);border-radius:24px;border:1px solid #E2EAD9;text-align:center;font-size:0.85rem;color:#3E5C4A;}
-.vetsim-credit-title{font-weight:900;color:#6B8E5C;font-size:0.95rem;margin-bottom:0.5rem;letter-spacing:0.5px;}
-.vetsim-credit-row{display:flex;justify-content:center;gap:0.5rem;flex-wrap:wrap;margin:0.2rem 0;}
-.vetsim-credit-label{color:#7C8F7C;font-weight:600;}
-.vetsim-credit-value{color:#1F4E6E;font-weight:700;}
-footer{text-align:center;margin-top:1.5rem;font-size:0.75rem;color:#A7B89A;}
-
-@media (max-width:700px){
-  h1{font-size:1.4rem;}
-  .game-panel{flex-direction:column;}
-  .teams{flex-direction:column;}
-}
-</style>
+        /* ===== Блок подписи автора ===== */
+        .vetsim-credit { margin-top: 1rem; padding: 0.8rem 1.2rem; background: linear-gradient(135deg, #F3F6EF, #FDF8F0); border-radius: 1.5rem; border: 1px solid #E2EAD9; text-align: center; font-size: 0.8rem; color: #3E5C4A; flex-shrink: 0; }
+        .vetsim-credit-title { font-weight: 700; color: #6B8E5C; font-size: 0.88rem; margin-bottom: 0.3rem; }
+        .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.15rem 0; }
+        .vetsim-credit-label { color: #7B8D6E; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+        footer { text-align: center; margin-top: 0.5rem; font-size: 0.7rem; color: #B0BC9C; }
+        @media (max-width: 900px) {
+            .workspace { flex-direction: column; }
+            .side-panel { width: 100%; min-width: unset; max-height: 300px; flex-direction: row; flex-wrap: wrap; gap: 6px; }
+            .side-panel .panel-section { flex: 1; min-width: 180px; border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+            .header { flex-direction: column; align-items: stretch; }
+        }
+        @media (max-width: 600px) {
+            body { padding: 0.6rem; }
+            .logo { font-size: 1rem; }
+            .side-panel { max-height: 250px; }
+            .side-panel .panel-section { min-width: 140px; }
+            .game-controls { flex-direction: column; align-items: stretch; }
+            .game-controls .players { justify-content: center; }
+            .modal { padding: 1rem; }
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-<h1>🎲 ${safeGameTitle}</h1>
-<div class="sub">Бродилка для двух команд: бросайте кубик и отвечайте на вопросы</div>
-<br>
-<div class="game-panel">
-<div class="board">
-<canvas id="boardCanvas" width="800" height="400" style="width:100%; height:auto; background:#FFF2E0; border-radius:20px;"></canvas>
-</div>
-<div class="info">
-<div class="teams">
-<div class="team-card team-red" id="team1Card">
-    <div class="team-name">🔴 Команда 1</div>
-    <div class="pos-label">Позиция</div>
-    <span class="pos-value" id="pos1">1</span>
-</div>
-<div class="team-card team-blue" id="team2Card">
-    <div class="team-name">🔵 Команда 2</div>
-    <div class="pos-label">Позиция</div>
-    <span class="pos-value" id="pos2">1</span>
-</div>
-</div>
-<div class="dice-card">
-<button id="rollBtn" class="dice-btn">🎲 Бросить кубик</button>
-<div id="diceResult" class="dice-result">⚀</div>
-<div id="turnIndicator" class="turn-indicator">Ход команды 1</div>
-</div>
-<div class="status" id="statusMsg">Нажмите «Бросить кубик», чтобы начать игру</div>
-<button id="resetGameBtn" class="reset-btn">🔄 Начать заново</button>
-</div>
-</div>
-
-<div class="vetsim-credit">
-    <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
-    <div class="vetsim-credit-row">
-        <span class="vetsim-credit-label">Автор проекта:</span>
-        <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
-    </div>
-    <div class="vetsim-credit-row">
-        <span class="vetsim-credit-label">Автор игры:</span>
-        <span class="vetsim-credit-value">${safeAuthorName}</span>
-    </div>
-</div>
-<footer>© ВетСим — образовательная бродилка · CC BY-NC</footer>
-</div>
-<script>
-const cellsData = ${JSON.stringify(cellsData)};
-const questionsData = ${JSON.stringify(exportQuestions)};
-let positions = [1, 1];
-let currentTeam = 0;
-let gameActive = true;
-let waitingForAnswer = false;
-
-const canvas = document.getElementById('boardCanvas');
-const ctx = canvas.getContext('2d');
-const statusEl = document.getElementById('statusMsg');
-let stepX, stepY;
-
-function drawBoard() {
-    const w = canvas.width, h = canvas.height;
-    const maxX = Math.max(...cellsData.map(c=>c.x));
-    const maxY = Math.max(...cellsData.map(c=>c.y));
-    stepX = w / (maxX + 1);
-    stepY = h / (maxY + 1);
-    ctx.clearRect(0,0,w,h);
-    ctx.fillStyle = "#FFF2E0";
-    ctx.fillRect(0,0,w,h);
-    ctx.strokeStyle = "#A3B18A";
-    ctx.lineWidth = 1;
-    for (let i=0; i<cellsData.length; i++) {
-        const cx = cellsData[i].x * stepX + stepX/2;
-        const cy = cellsData[i].y * stepY + stepY/2;
-        ctx.beginPath();
-        ctx.arc(cx, cy, stepX/3, 0, 2*Math.PI);
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fill();
-        ctx.stroke();
-        ctx.fillStyle = "#3E5C4A";
-        ctx.font = \`bold \${Math.floor(stepX/3.5)}px system-ui\`;
-        ctx.textAlign = 'center';
-        ctx.fillText(i+1, cx, cy+5);
-        if (questionsData[i+1]) {
-            ctx.fillStyle = "#2C7DA0";
-            ctx.beginPath();
-            ctx.arc(cx+stepX/3.5, cy-stepY/3.5, 7, 0, 2*Math.PI);
-            ctx.fill();
-            ctx.fillStyle = "white";
-            ctx.font = \`bold \${Math.floor(stepX/6)}px system-ui\`;
-            ctx.fillText("?", cx+stepX/3.5, cy-stepY/3.5+3);
-        }
-    }
-    for (let t=0; t<2; t++) {
-        const pos = positions[t];
-        if (pos <= cellsData.length) {
-            const cell = cellsData[pos-1];
-            const cx = cell.x * stepX + stepX/2;
-            const cy = cell.y * stepY + stepY/2;
-            const offset = t === 0 ? -stepX/6 : stepX/6;
-            ctx.beginPath();
-            ctx.arc(cx + offset, cy, stepX/5, 0, 2*Math.PI);
-            ctx.fillStyle = t===0 ? "#E07A5F" : "#3D5A80";
-            ctx.fill();
-            ctx.strokeStyle = "white";
-            ctx.lineWidth = 3;
-            ctx.stroke();
-            ctx.fillStyle = "white";
-            ctx.font = \`bold \${Math.floor(stepX/7)}px system-ui\`;
-            ctx.fillText(t===0 ? "1" : "2", cx + offset, cy + 4);
-        }
-    }
-}
-
-function updateUI() {
-    document.getElementById('pos1').innerText = positions[0];
-    document.getElementById('pos2').innerText = positions[1];
-    document.getElementById('turnIndicator').innerHTML = \`Ход команды \${currentTeam+1}\`;
-    document.getElementById('team1Card').classList.toggle('active', currentTeam === 0);
-    document.getElementById('team2Card').classList.toggle('active', currentTeam === 1);
-
-    if (positions[0] >= cellsData.length) {
-        statusEl.className = 'status success';
-        statusEl.innerHTML = "🏆 Победила команда 1! 🏆";
-        gameActive = false;
-        document.getElementById('rollBtn').disabled = true;
-    } else if (positions[1] >= cellsData.length) {
-        statusEl.className = 'status success';
-        statusEl.innerHTML = "🏆 Победила команда 2! 🏆";
-        gameActive = false;
-        document.getElementById('rollBtn').disabled = true;
-    }
-    drawBoard();
-}
-
-function showQuestion(cellNum, callback) {
-    const q = questionsData[cellNum];
-    if (!q) { callback(true); return; }
-    waitingForAnswer = true;
-
-    const modal = document.createElement('div');
-    modal.className = 'q-modal';
-    modal.innerHTML = \`
-        <div class="q-modal-card">
-            <div class="q-modal-header">Клетка \${cellNum} · Команда \${currentTeam+1}</div>
-            <div class="q-modal-question">❓ \${escapeHtml(q.question)}</div>
-            <input type="text" class="q-modal-input" id="qAnswerInput" placeholder="Введите ответ и нажмите «Проверить»" autocomplete="off" />
-            <div class="q-modal-answer" id="qAnswerBox" style="display:none;">✅ Правильный ответ: \${escapeHtml(q.answer)}</div>
-            <div class="q-modal-buttons">
-                <button class="q-btn-check" id="qCheckBtn">✅ Проверить</button>
-                <button class="q-btn-show" id="qShowBtn">💡 Показать ответ</button>
-                <button class="q-btn-skip" id="qSkipBtn">⏭ Пропустить</button>
+    <header class="header">
+        <div class="logo">🎲 <span>ВетСим</span> — ${safeGameTitle}</div>
+        <div style="font-size:0.85rem; color:#7B8D6E;">🎮 Кликните на клетку, чтобы переместить фишку</div>
+    </header>
+    <div class="workspace">
+        <div class="canvas-wrapper">
+            <div id="canvasContainer">
+                <canvas id="gameCanvas"></canvas>
             </div>
         </div>
-    \`;
-    document.body.appendChild(modal);
+        <div class="side-panel">
+            <div class="panel-section">
+                <h3>🎮 Управление</h3>
+                <div class="game-controls" style="margin-top:0;">
+                    <div class="players" id="playerInfo"></div>
+                    <div class="dice-area">
+                        <div class="dice" id="diceDisplay" style="font-size:2.5rem;">🎲</div>
+                        <button class="btn btn-accent" id="rollBtn">🎲 Бросить</button>
+                    </div>
+                    <div class="progress-info">
+                        <span id="progressText">0 / 0</span>
+                        <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+                    </div>
+                    <div style="font-size:0.7rem; color:#7B8D6E; width:100%; text-align:center;">
+                        💡 Кликните на клетку, чтобы переместить фишку
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    const input = modal.querySelector('#qAnswerInput');
-    setTimeout(() => input.focus(), 100);
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор игры:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
 
-    function finish(correct) {
-        waitingForAnswer = false;
-        modal.remove();
-        callback(correct);
+    <footer>© ВетСим — образовательная игра · CC BY-NC</footer>
+</div>
+
+<div class="modal-overlay" id="questionModal">
+    <div class="modal">
+        <button class="close-btn" id="qModalCloseBtn">&times;</button>
+        <h2 id="qModalTitle">❓ Вопрос</h2>
+        <div class="modal-body">
+            <p id="qText" style="font-size:1rem; margin-bottom:12px; line-height:1.5;"></p>
+            <div id="qOptions"></div>
+            <div id="qFeedback" style="display:none;"></div>
+            <button class="btn btn-accent" id="qContinueBtn" style="display:none; margin-top:10px;">Продолжить</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const data = ${safeJson};
+    const labels = data.labels || [];
+    const playersData = data.playersData || [{ name: 'Команда 1', icon: '🐕' }, { name: 'Команда 2', icon: '🐴' }];
+    const bgWidth = data.bgWidth || 800;
+    const bgHeight = data.bgHeight || 600;
+    let bgImage = null;
+    let players = [];
+    let currentPlayer = 0;
+    let gameStarted = false;
+    let questionLocked = false;
+
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const container = document.getElementById('canvasContainer');
+    const modalOverlay = document.getElementById('questionModal');
+    const qModalCloseBtn = document.getElementById('qModalCloseBtn');
+    const qText = document.getElementById('qText');
+    const qOptions = document.getElementById('qOptions');
+    const qFeedback = document.getElementById('qFeedback');
+    const qContinueBtn = document.getElementById('qContinueBtn');
+
+    function initPlayers() {
+        const startLabel = labels.find(function(l) { return l.type === 'start'; });
+        const startPos = startLabel ? startLabel.number : 1;
+        players = [];
+        for (var i = 0; i < playersData.length; i++) {
+            var pd = playersData[i];
+            players.push({
+                name: pd.name || 'Команда ' + (i+1),
+                icon: pd.icon || '🐕',
+                position: startPos,
+                correct: 0,
+                wrong: 0,
+                finished: false
+            });
+        }
+        currentPlayer = 0;
+        gameStarted = true;
+        updatePlayerInfo();
+        updateProgress();
+        render();
     }
 
-    function check() {
-        const userAns = input.value.trim().toLowerCase();
-        const correctAns = q.answer.trim().toLowerCase();
-        if (userAns === correctAns) {
-            alert("🎉 Правильно! Остаётесь на клетке.");
-            finish(true);
+    function resizeCanvas() {
+        var rect = container.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) { setTimeout(resizeCanvas, 100); return; }
+        var dpr = window.devicePixelRatio || 1;
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        render();
+    }
+
+    function render() {
+        var rect = container.getBoundingClientRect();
+        var w = rect.width || 600;
+        var h = rect.height || 400;
+        ctx.clearRect(0, 0, w, h);
+
+        if (bgImage && bgImage.complete && bgImage.width > 0) {
+            var imgRatio = bgImage.width / bgImage.height;
+            var canvasRatio = w / h;
+            var drawW, drawH, dx, dy;
+            if (imgRatio > canvasRatio) { drawW = w; drawH = w / imgRatio; dx = 0; dy = (h - drawH) / 2; }
+            else { drawH = h; drawW = h * imgRatio; dx = (w - drawW) / 2; dy = 0; }
+            ctx.drawImage(bgImage, dx, dy, drawW, drawH);
+        }
+
+        renderLabels(w, h);
+        renderPieces(w, h);
+    }
+
+    function renderLabels(cw, ch) {
+        container.querySelectorAll('.label-marker').forEach(function(el) { el.remove(); });
+        for (var i = 0; i < labels.length; i++) {
+            var label = labels[i];
+            var x = (label.x / bgWidth) * cw;
+            var y = (label.y / bgHeight) * ch;
+            var marker = document.createElement('div');
+            marker.className = 'label-marker';
+            marker.style.left = x + 'px';
+            marker.style.top = y + 'px';
+            marker.style.background = label.color || '#2C7DA0';
+            marker.textContent = label.number || '?';
+            var typeLabel = document.createElement('span');
+            typeLabel.className = 'label-type';
+            var typeMap = { start: '🏁', normal: '⬜', question: '❓', trap: '⚠️', finish: '🏆' };
+            typeLabel.textContent = typeMap[label.type] || '⬜';
+            marker.appendChild(typeLabel);
+            marker.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (gameStarted && !questionLocked) {
+                    movePieceTo(parseInt(this.textContent));
+                }
+            });
+            container.appendChild(marker);
+        }
+    }
+
+    function renderPieces(cw, ch) {
+        container.querySelectorAll('.piece-marker').forEach(function(el) { el.remove(); });
+        for (var i = 0; i < players.length; i++) {
+            var p = players[i];
+            if (p.position === undefined) continue;
+            var label = labels.find(function(l) { return l.number === p.position; });
+            if (!label) continue;
+            var offsetX = (i === 0 ? -14 : (i === 1 ? 14 : (i === 2 ? -14 : 14)));
+            var offsetY = (i === 0 ? -14 : (i === 1 ? -14 : (i === 2 ? 14 : 14)));
+            var x = (label.x / bgWidth) * cw + offsetX;
+            var y = (label.y / bgHeight) * ch + offsetY;
+            var piece = document.createElement('div');
+            piece.className = 'piece-marker';
+            piece.style.left = x + 'px';
+            piece.style.top = y + 'px';
+            piece.textContent = p.icon || '🐕';
+            var nameEl = document.createElement('div');
+            nameEl.className = 'piece-name';
+            var isActive = (i === currentPlayer && !p.finished);
+            nameEl.textContent = (isActive ? '🎯 ' : '') + p.name + (p.finished ? ' 🏆' : '');
+            piece.appendChild(nameEl);
+            container.appendChild(piece);
+        }
+    }
+
+    function movePieceTo(labelNumber) {
+        if (!gameStarted || questionLocked) return;
+        if (players.length === 0) return;
+        var player = players[currentPlayer];
+        if (player.finished) { showToast('Этот игрок уже финишировал!'); return; }
+        var targetLabel = labels.find(function(l) { return l.number === labelNumber; });
+        if (!targetLabel) { showToast('❌ Клетка не найдена.'); return; }
+        var isOccupied = players.some(function(p) { return p !== player && p.position === labelNumber; });
+        if (isOccupied) { showToast('⚠️ Эта клетка занята другим игроком!'); return; }
+        var diff = Math.abs(labelNumber - player.position);
+        if (diff > 6) { showToast('🚫 Можно ходить не более чем на 6 клеток!'); return; }
+        player.position = labelNumber;
+        render();
+        if (targetLabel.type === 'question') {
+            showQuestion(player, targetLabel);
+            return;
+        } else if (targetLabel.type === 'trap') {
+            var trapBack = Math.max(1, labelNumber - 2);
+            player.position = trapBack;
+            showToast('⚠️ Ловушка! ' + player.name + ' возвращается на 2 клетки назад.');
+            render();
+            nextPlayer();
+        } else if (targetLabel.type === 'finish') {
+            player.finished = true;
+            showToast('🎉 ' + player.name + ' достиг финиша!');
+            render();
+            checkGameEnd();
         } else {
-            finish(false);
+            nextPlayer();
+        }
+        updateProgress();
+    }
+
+    function showQuestion(player, label) {
+        questionLocked = true;
+        qText.textContent = label.question || 'Вопрос не задан';
+        var options = label.options || ['', '', '', ''];
+        qOptions.innerHTML = '';
+        var optionLabels = ['А', 'Б', 'В', 'Г'];
+        for (var i = 0; i < 4; i++) {
+            var btn = document.createElement('button');
+            btn.className = 'question-option';
+            btn.textContent = optionLabels[i] + ': ' + (options[i] || '—');
+            btn.dataset.index = i;
+            btn.addEventListener('click', function() { handleAnswer(player, label, parseInt(this.dataset.index), this); });
+            qOptions.appendChild(btn);
+        }
+        qFeedback.style.display = 'none';
+        qContinueBtn.style.display = 'none';
+        document.getElementById('qModalTitle').textContent = '❓ Вопрос для ' + player.name;
+        modalOverlay.classList.add('active');
+    }
+
+    function handleAnswer(player, label, selectedIndex, btnEl) {
+        if (questionLocked === false) return;
+        var correct = label.correct || 0;
+        var allBtns = qOptions.querySelectorAll('.question-option');
+        allBtns.forEach(function(b) { b.classList.add('disabled'); });
+        if (selectedIndex === correct) {
+            btnEl.classList.add('correct');
+            player.correct++;
+            qFeedback.textContent = '✅ Правильно! Отлично!';
+            qFeedback.className = 'question-feedback correct';
+        } else {
+            btnEl.classList.add('wrong');
+            allBtns[correct].classList.add('correct');
+            player.wrong++;
+            qFeedback.textContent = '❌ Неправильно. Правильный ответ: ' + ['А', 'Б', 'В', 'Г'][correct];
+            qFeedback.className = 'question-feedback wrong';
+        }
+        qFeedback.style.display = 'block';
+        qContinueBtn.style.display = 'inline-block';
+        questionLocked = false;
+        updateProgress();
+    }
+
+    function continueAfterQuestion() {
+        modalOverlay.classList.remove('active');
+        questionLocked = false;
+        if (!players[currentPlayer].finished) { nextPlayer(); }
+        else { updatePlayerInfo(); checkGameEnd(); }
+        render();
+    }
+
+    function nextPlayer() {
+        var attempts = 0, next = (currentPlayer + 1) % players.length;
+        while (players[next].finished && attempts < players.length) {
+            next = (next + 1) % players.length;
+            attempts++;
+        }
+        if (attempts < players.length) currentPlayer = next;
+        updatePlayerInfo();
+    }
+
+    function checkGameEnd() {
+        var allFinished = players.every(function(p) { return p.finished; });
+        if (allFinished) {
+            setTimeout(function() {
+                var msg = '🏆 Игра завершена!\\n\\n';
+                for (var i = 0; i < players.length; i++) {
+                    var p = players[i];
+                    msg += p.icon + ' ' + p.name + ': ✅ ' + p.correct + ' правильных, ❌ ' + p.wrong + ' неправильных\\n';
+                }
+                alert(msg);
+            }, 500);
+        }
+        updatePlayerInfo();
+    }
+
+    function updatePlayerInfo() {
+        var info = document.getElementById('playerInfo');
+        if (!info) return;
+        info.innerHTML = '';
+        for (var i = 0; i < players.length; i++) {
+            var p = players[i];
+            var active = (i === currentPlayer && !p.finished);
+            var div = document.createElement('div');
+            div.className = 'player-info' + (active ? ' active' : '');
+            div.style.opacity = p.finished ? '0.5' : '1';
+            div.innerHTML = '<span class="icon">' + p.icon + '</span><span>' + p.name + '</span><span style="font-size:0.7rem; color:#7B8D6E;">' + p.correct + '✅ ' + p.wrong + '❌</span>' + (active ? ' 🎯' : '') + (p.finished ? ' 🏆' : '');
+            info.appendChild(div);
         }
     }
 
-    modal.querySelector('#qCheckBtn').onclick = check;
-    modal.querySelector('#qShowBtn').onclick = () => {
-        modal.querySelector('#qAnswerBox').style.display = 'block';
-    };
-    modal.querySelector('#qSkipBtn').onclick = () => {
-        if (confirm('Пропустить вопрос? Команда вернётся на прошлую клетку.')) {
-            finish(false);
+    function updateProgress() {
+        var total = 0;
+        for (var i = 0; i < labels.length; i++) { if (labels[i].type === 'question') total++; }
+        var answered = 0;
+        for (var j = 0; j < players.length; j++) { answered += players[j].correct; }
+        var fill = document.getElementById('progressFill');
+        var text = document.getElementById('progressText');
+        if (fill) fill.style.width = (total > 0) ? ((answered / total) * 100) + '%' : '0%';
+        if (text) text.textContent = answered + ' / ' + total;
+    }
+
+    function showToast(msg) {
+        var toast = document.getElementById('toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'toast';
+            toast.style.cssText = 'position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#1F4E6E; color:#fff; padding:10px 24px; border-radius:40px; font-weight:600; font-size:0.9rem; box-shadow:0 4px 16px rgba(0,0,0,0.15); opacity:0; transition:opacity 0.3s ease; z-index:1000; pointer-events:none; max-width:90%; text-align:center;';
+            document.body.appendChild(toast);
+            setTimeout(function() { showToast(msg); }, 100);
+            return;
         }
-    };
-    input.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') check();
+        toast.textContent = msg;
+        toast.style.opacity = '1';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(function() { toast.style.opacity = '0'; }, 3000);
+    }
+
+    bgImage = new Image();
+    bgImage.src = data.imageData;
+    bgImage.onload = function() { resizeCanvas(); render(); };
+    bgImage.onerror = function() { resizeCanvas(); };
+
+    document.getElementById('rollBtn').addEventListener('click', function() {
+        if (!gameStarted) { initPlayers(); return; }
+        var allFinished = players.every(function(p) { return p.finished; });
+        if (allFinished) { showToast('🏆 Игра завершена!'); return; }
+        var attempts = 0;
+        while (players[currentPlayer].finished && attempts < players.length) {
+            currentPlayer = (currentPlayer + 1) % players.length;
+            attempts++;
+        }
+        if (attempts >= players.length) { showToast('🏆 Все игроки финишировали!'); return; }
+        var player = players[currentPlayer];
+        var dice = Math.floor(Math.random() * 6) + 1;
+        var diceEl = document.getElementById('diceDisplay');
+        if (diceEl) {
+            diceEl.textContent = '🎲';
+            diceEl.classList.add('rolling');
+            setTimeout(function() {
+                diceEl.textContent = ['⚀', '⚁', '⚂', '⚃', '⚄', '⚅'][dice - 1];
+                diceEl.classList.remove('rolling');
+            }, 900);
+        }
+        var newPos = player.position + dice;
+        var maxNumber = labels.length;
+        if (newPos >= maxNumber) {
+            player.position = maxNumber;
+            player.finished = true;
+            showToast('🎉 ' + player.name + ' финишировал!');
+            render();
+            checkGameEnd();
+            return;
+        }
+        movePieceTo(newPos);
     });
-}
 
-function escapeHtml(s) {
-    if (!s) return '';
-    return String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[m]);
-}
+    document.getElementById('diceDisplay').addEventListener('click', function() {
+        document.getElementById('rollBtn').click();
+    });
 
-function moveAndAsk(roll) {
-    if (!gameActive || waitingForAnswer) return;
-    const oldPos = positions[currentTeam];
-    let newPos = oldPos + roll;
-    if (newPos > cellsData.length) newPos = cellsData.length;
-    positions[currentTeam] = newPos;
-    drawBoard();
-    if (newPos === cellsData.length) {
-        updateUI();
-        return;
-    }
-    if (questionsData[newPos]) {
-        showQuestion(newPos, (correct) => {
-            if (!correct) {
-                positions[currentTeam] = oldPos;
-                drawBoard();
-                statusEl.className = 'status error';
-                statusEl.innerHTML = \`❌ Команда \${currentTeam+1} вернулась на клетку \${oldPos}\`;
-            } else {
-                statusEl.className = 'status';
-                statusEl.innerHTML = \`✅ Команда \${currentTeam+1} на клетке \${newPos}\`;
-            }
-            currentTeam = (currentTeam + 1) % 2;
-            updateUI();
-        });
-    } else {
-        statusEl.className = 'status';
-        statusEl.innerHTML = \`Команда \${currentTeam+1} переместилась на клетку \${newPos}\`;
-        currentTeam = (currentTeam + 1) % 2;
-        updateUI();
-    }
-}
+    qModalCloseBtn.addEventListener('click', function() { modalOverlay.classList.remove('active'); });
+    qContinueBtn.addEventListener('click', continueAfterQuestion);
+    modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); });
 
-document.getElementById('rollBtn').onclick = () => {
-    if (!gameActive) return;
-    if (waitingForAnswer) { alert("Сначала ответьте на вопрос"); return; }
-    const roll = Math.floor(Math.random() * 6) + 1;
-    document.getElementById('diceResult').innerHTML = ['⚀','⚁','⚂','⚃','⚄','⚅'][roll-1];
-    moveAndAsk(roll);
-};
-
-document.getElementById('resetGameBtn').onclick = () => {
-    if (!confirm('Начать игру заново?')) return;
-    positions = [1,1];
-    currentTeam = 0;
-    gameActive = true;
-    waitingForAnswer = false;
-    document.getElementById('rollBtn').disabled = false;
-    document.getElementById('diceResult').innerHTML = '⚀';
-    statusEl.className = 'status';
-    statusEl.innerHTML = 'Нажмите «Бросить кубик», чтобы начать игру';
-    updateUI();
-};
-
-drawBoard();
-updateUI();
+    initPlayers();
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 <\/script>
 </body>
 </html>`;
 
-        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'gameboard.html';
-        a.click();
-        URL.revokeObjectURL(a.href);
-        alert("✅ Игра экспортирована!\n\nФайл: gameboard.html");
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'gameboard.html';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        showToast('📤 Игра экспортирована как gameboard.html');
     }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return String(str).replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
+    function showToast(message, duration = 2500) {
+        const toast = document.getElementById('toast');
+        if (!toast) {
+            const t = document.createElement('div');
+            t.id = 'toast';
+            t.style.cssText = 'position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#1F4E6E; color:#fff; padding:10px 24px; border-radius:40px; font-weight:600; font-size:0.9rem; box-shadow:0 4px 16px rgba(0,0,0,0.15); opacity:0; transition:opacity 0.3s ease; z-index:1000; pointer-events:none; max-width:90%; text-align:center;';
+            document.body.appendChild(t);
+            setTimeout(() => showToast(message, duration), 100);
+            return;
+        }
+        toast.textContent = message;
+        toast.style.opacity = '1';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, duration);
     }
 
-    // Инициализация
-    window.onload = () => {
+    function init() {
         loadAuthorLocal();
         loadTitleLocal();
-        renderFieldSelector();
-        drawField();
-        renderQuestionsList();
-        document.getElementById('loadQuestionsBtn').onclick = () => {
-            const inp = document.createElement('input');
-            inp.type = 'file';
-            inp.accept = '.txt';
-            inp.onchange = e => loadQuestionsFromTxt(inp.files[0]);
-            inp.click();
-        };
-        document.getElementById('saveProjectBtn').onclick = saveProject;
-        document.getElementById('loadProjectBtn').onclick = () => {
-            const inp = document.createElement('input');
-            inp.type = 'file';
-            inp.accept = '.json';
-            inp.onchange = e => loadProject(inp.files[0]);
-            inp.click();
-        };
-        document.getElementById('exportGameBtn').onclick = exportGame;
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.onclick = () => {
-                const tab = btn.getAttribute('data-tab');
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-                document.getElementById(tab + 'Pane').classList.add('active');
-            };
+        updatePlayersUI();
+
+        // Пустое поле при первом запуске — никаких меток, никаких надписей.
+        // Загружаем из localStorage только если там что-то было сохранено.
+        loadFromLocalStorage();
+
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        container.addEventListener('scroll', render);
+
+        document.getElementById('applyPlayersBtn').addEventListener('click', updatePlayersUI);
+        document.getElementById('playerCount').addEventListener('change', updatePlayersUI);
+
+        uploadBtn.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', function() {
+            if (this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imageData = e.target.result;
+                    bgImage = new Image();
+                    bgImage.src = imageData;
+                    bgImage.onload = () => {
+                        bgWidth = bgImage.width || 800;
+                        bgHeight = bgImage.height || 600;
+                        render();
+                        saveToLocalStorage();
+                        showToast('🖼️ Изображение загружено!');
+                    };
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+            this.value = '';
         });
-    };
+
+        addLabelBtn.addEventListener('click', () => {
+            if (!bgImage) { alert('Сначала загрузите карту.'); return; }
+            isAddingLabel = true;
+            container.style.cursor = 'crosshair';
+            showToast('📍 Кликните на карту, чтобы добавить метку.');
+        });
+
+        container.addEventListener('click', function(e) {
+            if (!isAddingLabel || currentMode !== 'editor') return;
+            const rect = container.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * bgWidth;
+            const y = ((e.clientY - rect.top) / rect.height) * bgHeight;
+            if (x >= 0 && x <= bgWidth && y >= 0 && y <= bgHeight) {
+                const label = addLabel(x, y);
+                isAddingLabel = false;
+                container.style.cursor = 'default';
+                if (label) openLabelEditor(label.id);
+            }
+        });
+
+        modeEditor.addEventListener('click', () => setMode('editor'));
+        modeGame.addEventListener('click', () => setMode('game'));
+
+        loadQuestionsBtn.addEventListener('click', () => {
+            const topic = topicSelect.value;
+            if (!topic) { alert('Выберите тему.'); return; }
+            loadQuestions(topic);
+        });
+
+        saveBtn.addEventListener('click', () => {
+            saveToLocalStorage();
+            showToast('💾 Проект сохранён!');
+        });
+
+        exportBtn.addEventListener('click', exportHTML);
+
+        loadExampleBtn.addEventListener('click', () => {
+            if (labels.length > 0) {
+                if (!confirm('Загрузить пример? Текущий проект будет заменён.')) return;
+            }
+            loadExample();
+        });
+
+        resetBtn.addEventListener('click', () => {
+            if (!confirm('Удалить все данные?')) return;
+            labels = [];
+            imageData = null;
+            bgImage = null;
+            nextLabelId = 1;
+            players = [];
+            gameStarted = false;
+            localStorage.removeItem('gameboard_data');
+            render();
+            updateLabelList();
+            showToast('🔄 Данные сброшены.');
+        });
+
+        modalCloseBtn.addEventListener('click', () => labelModal.classList.remove('active'));
+        labelModal.addEventListener('click', (e) => {
+            if (e.target === labelModal) labelModal.classList.remove('active');
+        });
+        saveLabelBtn.addEventListener('click', saveLabel);
+        deleteLabelBtn.addEventListener('click', () => {
+            if (selectedLabelId !== null) {
+                deleteLabel(selectedLabelId);
+                labelModal.classList.remove('active');
+            }
+        });
+
+        editType.addEventListener('change', () => {
+            questionFields.style.display = (editType.value === 'question') ? 'block' : 'none';
+        });
+
+        qModalCloseBtn.addEventListener('click', () => questionModal.classList.remove('active'));
+
+        window.addEventListener('beforeunload', saveToLocalStorage);
+
+        if (currentMode === 'game') {
+            showToast('🎯 Кликните на клетку, чтобы переместить активную фишку');
+        } else {
+            showToast('🐾 Конструктор игры-бродилки готов!', 2000);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>

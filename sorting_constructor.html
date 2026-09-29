@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Конструктор «Сортировка по категориям» | ВетСим</title>
@@ -85,6 +72,80 @@
             display: block;
         }
 
+        /* ===== Поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
+        /* ===== Поле названия ===== */
+        .title-block {
+            background: #FEFCF9;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .title-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+        }
+        .title-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFDF8;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .title-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         /* Панель управления */
         .toolbar {
             display: flex;
@@ -104,21 +165,25 @@
             cursor: pointer;
             font-size: 0.85rem;
         }
+        .btn:hover { opacity: 0.9; }
 
         .btn-primary {
             background: #2C7DA0;
             color: white;
         }
+        .btn-primary:hover { background: #236B8A; }
 
         .btn-secondary {
             background: #A3B18A;
             color: white;
         }
+        .btn-secondary:hover { background: #8FA376; }
 
         .btn-outline {
             background: transparent;
             border: 1px solid #C0CFAF;
         }
+        .btn-outline:hover { background: #F0EEE5; }
 
         input, textarea {
             width: 100%;
@@ -254,8 +319,35 @@
             font-size: 0.85rem;
         }
 
-        footer {
+        /* ===== Подпись внизу ===== */
+        .vetsim-credit {
             margin-top: 2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer {
+            margin-top: 1.5rem;
             text-align: center;
             font-size: 0.7rem;
             color: #A7B89A;
@@ -263,6 +355,7 @@
 
         @media (max-width: 700px) {
             .categories-grid { grid-template-columns: 1fr; }
+            .author-block, .title-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -278,6 +371,20 @@
 
     <!-- Редактор -->
     <div id="editorPane" class="tab-pane active">
+        <!-- ===== Поле автора ===== -->
+        <div class="author-block">
+            <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+            <input type="text" id="authorInput" class="author-input"
+                   placeholder="Например: Тераевич Алла Сергеевна">
+        </div>
+
+        <!-- ===== Поле названия ===== -->
+        <div class="title-block">
+            <label for="taskTitleInput">🏷️ Название задания:</label>
+            <input type="text" id="taskTitleInput" class="title-input"
+                   value="Сортировка: распределите болезни по категориям">
+        </div>
+
         <div class="toolbar">
             <button id="addCategoryBtn" class="btn btn-primary">+ Добавить категорию</button>
             <button id="resetDemoBtn" class="btn btn-outline">📋 Сбросить к демо (болезни)</button>
@@ -292,25 +399,80 @@
     <!-- Экспорт -->
     <div id="exportPane" class="tab-pane">
         <div class="toolbar">
-            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
-            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
-            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовое задание</button>
+            <button id="saveProjectBtn" class="btn btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadProjectBtn" class="btn btn-secondary">📂 Загрузить проект</button>
+            <button id="exportGameBtn" class="btn btn-primary">🚀 Экспорт в готовое задание</button>
         </div>
         <div style="background:#F3F6EF; border-radius:20px; padding:1rem; margin-top:1rem;">
             <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
             ✔ Нажмите «Экспорт» – получите HTML-файл для студентов. Они будут перетаскивать карточки в категории и получать обратную связь.</p>
         </div>
     </div>
+
+    <!-- ===== Подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <footer>© ВетСим — интерактивная сортировка. Drag & drop, категории, элементы.</footer>
 </div>
 
 <script>
     // ---------- СТРУКТУРА ДАННЫХ ----------
-    let categories = []; // { id, name, items: [{ id, text }] }
-    let poolItems = []; // { id, text }
+    let categories = [];
+    let poolItems = [];
     let nextId = 100;
 
-    // ---------- ДЕМО-ДАННЫЕ (болезни по категориям) ----------
+    // Название задания по умолчанию
+    const DEFAULT_TITLE = 'Сортировка: распределите болезни по категориям';
+
+    // ===== Элементы автора и названия =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+    const taskTitleInput = document.getElementById('taskTitleInput');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    taskTitleInput.addEventListener('input', () => {
+        saveTitleLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_sorting_author', authorInput.value); } catch(e) {}
+    }
+    function saveTitleLocal() {
+        try { localStorage.setItem('vetsim_sorting_title', taskTitleInput.value); } catch(e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_sorting_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch(e) {}
+    }
+    function loadTitleLocal() {
+        try {
+            const t = localStorage.getItem('vetsim_sorting_title');
+            if (t) {
+                taskTitleInput.value = t;
+            }
+        } catch(e) {}
+    }
+
+    // ---------- ДЕМО-ДАННЫЕ ----------
     function loadDemoData() {
         categories = [
             { id: nextId++, name: "Бактериальные", items: [
@@ -338,8 +500,6 @@
                 { id: nextId++, text: "Пироплазмоз" }
             ] }
         ];
-        // пул элементов – обычно те, что не распределены, но для демо все уже в категориях.
-        // Для демонстрации добавим пару элементов в пул, чтобы показать возможность.
         poolItems = [
             { id: nextId++, text: "Лептоспироз (бактериальное)" },
             { id: nextId++, text: "Парвовирусный энтерит (вирусное)" },
@@ -376,7 +536,6 @@
             `;
             container.appendChild(card);
 
-            // заполнение списка элементов
             const itemsContainer = card.querySelector('.items-list');
             cat.items.forEach(item => {
                 const itemDiv = createDraggableItem(item, cat.id);
@@ -384,7 +543,6 @@
             });
         });
 
-        // отрисовка пула
         const poolDiv = document.getElementById('poolContainer');
         poolDiv.innerHTML = '';
         poolItems.forEach(item => {
@@ -392,7 +550,6 @@
             poolDiv.appendChild(poolItem);
         });
 
-        // обработчики для категорий
         document.querySelectorAll('.cat-name').forEach(inp => {
             inp.removeEventListener('change', handleCatNameChange);
             inp.addEventListener('change', handleCatNameChange);
@@ -452,7 +609,6 @@
     }
     function handleDragEnd() { dragSourceItem = null; }
 
-    // Обработка drop на категорию
     function setupDropTargets() {
         document.querySelectorAll('.items-list').forEach(list => {
             list.addEventListener('dragover', (e) => e.preventDefault());
@@ -471,7 +627,6 @@
                 setupDropTargets();
             });
         });
-        // Пул тоже может принимать элементы обратно
         const poolDiv = document.getElementById('poolContainer');
         if (poolDiv) {
             poolDiv.addEventListener('dragover', (e) => e.preventDefault());
@@ -536,7 +691,6 @@
         const id = parseInt(e.target.getAttribute('data-id'));
         const catIndex = categories.findIndex(c => c.id === id);
         if (catIndex !== -1) {
-            // перемещаем все элементы в пул
             const deletedCat = categories[catIndex];
             poolItems.push(...deletedCat.items);
             categories.splice(catIndex, 1);
@@ -572,9 +726,15 @@
         setupDropTargets();
     }
 
-    // Сохранение проекта
+    // ===== Сохранение с автором и названием =====
     function saveProject() {
-        const project = { categories, poolItems, nextId };
+        const project = {
+            author: authorInput.value || '',
+            title: taskTitleInput.value || '',
+            categories,
+            poolItems,
+            nextId
+        };
         const dataStr = JSON.stringify(project, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const a = document.createElement('a');
@@ -582,8 +742,10 @@
         a.download = 'sorting_project.json';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert('✅ Проект сохранён');
     }
 
+    // ===== Загрузка с автором и названием =====
     function loadProject(file) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -592,21 +754,35 @@
                 categories = proj.categories || [];
                 poolItems = proj.poolItems || [];
                 nextId = proj.nextId || 1000;
+                if (proj.author !== undefined) {
+                    authorInput.value = proj.author;
+                    authorPreview.textContent = proj.author || 'не указан';
+                }
+                if (proj.title !== undefined) {
+                    taskTitleInput.value = proj.title || DEFAULT_TITLE;
+                }
                 renderEditor();
                 setupDropTargets();
+                alert('✅ Проект загружен');
             } catch(err) { alert('Ошибка загрузки'); }
         };
         reader.readAsText(file);
     }
 
-    // Экспорт в готовый тренажёр для студентов
+    // ===== Экспорт с автором и названием + улучшенная проверка =====
     function exportGame() {
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const taskTitle = taskTitleInput.value.trim() || DEFAULT_TITLE;
+        const safeTaskTitle = taskTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
         const exportData = { categories, poolItems };
         const htmlContent = `<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Сортировка по категориям | ВетСим</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${safeTaskTitle} | ВетСим</title>
     <style>
         *{margin:0;padding:0;box-sizing:border-box;}
         body{background:#FDF8F0;font-family:system-ui,Roboto;padding:1.5rem;color:#3E5C4A;}
@@ -618,18 +794,30 @@
         .category-header{background:#F0F5EA;padding:0.8rem;font-weight:700;color:#2C7DA0;border-bottom:1px solid #D8E4CC;}
         .items-list{min-height:200px;padding:1rem;}
         .draggable-item{background:#FDF8F0;border:1px solid #D1DEC2;border-radius:40px;padding:6px 12px;margin-bottom:8px;cursor:grab;}
+        .draggable-item.correct{border-color:#6B9E6B;background:#E8F5E8;}
+        .draggable-item.wrong{border-color:#D9534F;background:#FDF0E8;}
         .pool-section{margin-top:2rem;border-top:2px dashed #CFDEC0;padding-top:1rem;}
         .pool-items{display:flex;flex-wrap:wrap;gap:8px;background:#F9F7F2;border-radius:28px;padding:1rem;min-height:100px;}
         .pool-item{background:#E2EAD9;border-radius:40px;padding:5px 14px;cursor:grab;}
-        .btn-check{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:1rem;}
-        .btn-reset{background:#E2CFB0;margin-left:1rem;}
-        .feedback{text-align:center;margin-top:1rem;font-weight:bold;}
-        footer{text-align:center;margin-top:2rem;font-size:0.7rem;}
+        .btn-check{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:1rem;font-family:inherit;font-size:0.9rem;}
+        .btn-reset{background:#E2CFB0;margin-left:1rem;color:#3E5C4A;}
+        .feedback{text-align:center;margin-top:1rem;font-weight:bold;padding:12px;border-radius:20px;}
+        .feedback.ok{background:#E8F5E8;color:#2E7D32;}
+        .feedback.no{background:#FDF0E8;color:#b13e3e;}
+
+        /* ===== Блок подписи автора ===== */
+        .vetsim-credit { margin-top: 2rem; padding: 1rem 1.2rem; background: linear-gradient(135deg, #F3F6EF, #FDF8F0); border-radius: 24px; border: 1px solid #E2EAD9; text-align: center; font-size: 0.82rem; color: #3E5C4A; }
+        .vetsim-credit-title { font-weight: 700; color: #6B8E5C; font-size: 0.92rem; margin-bottom: 0.5rem; }
+        .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.15rem 0; }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer{text-align:center;margin-top:1.5rem;font-size:0.7rem;color:#A7B89A;}
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>📌 Сортировка: распределите болезни по категориям</h1>
+    <h1>📌 ${safeTaskTitle}</h1>
     <div class="sub">Перетащите элементы в нужные категории</div>
     <div id="gameArea"></div>
     <div style="text-align:center;">
@@ -637,15 +825,28 @@
         <button id="resetBtn" class="btn-check btn-reset">Сбросить</button>
     </div>
     <div id="feedback" class="feedback"></div>
-    <footer>© ВетСим – обучающая сортировка</footer>
+
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
+
+    <footer>© ВетСим — обучающая сортировка · CC BY-NC</footer>
 </div>
 <script>
     const gameData = ${JSON.stringify(exportData)};
-    let categories = gameData.categories;
-    let poolItems = gameData.poolItems;
-    let currentPool = [...poolItems];
-    let currentCategories = categories.map(cat => ({ ...cat, items: [...cat.items] }));
-    let nextId = 1000;
+    // Сохраняем эталонную структуру: каждая категория и её элементы
+    const originalCategories = JSON.parse(JSON.stringify(gameData.categories));
+    let currentCategories = gameData.categories.map(cat => ({ ...cat, items: [...cat.items] }));
+    let currentPool = [...gameData.poolItems];
     let dragSource = null;
 
     function escapeHtml(s) { if(!s) return ''; return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
@@ -664,7 +865,6 @@
         html += '</div><div class="pool-section"><div class="pool-title">📦 Несортированные элементы</div><div id="poolArea" class="pool-items" ondragover="event.preventDefault()"></div></div>';
         container.innerHTML = html;
 
-        // заполнение категорий
         currentCategories.forEach(cat => {
             const listDiv = document.querySelector(\`.items-list[data-cat-id="\${cat.id}"]\`);
             if(listDiv) {
@@ -765,15 +965,40 @@
         const [item] = cat.items.splice(itemIndex,1);
         currentPool.push(item);
     }
+
+    // ===== УЛУЧШЕННАЯ ПРОВЕРКА: реальное сравнение с эталоном =====
     function checkAnswers() {
-        let allCorrect = true;
-        // ожидаем, что каждый элемент должен быть в категории, совпадающей с исходной (original categories)
-        // просто покажем сообщение
-        alert("Проверка: оцените визуально корректность распределения. Преподаватель может сверить с эталоном.");
+        // Собираем карту: id элемента -> id категории, где он должен быть
+        const correctMap = {};
+        originalCategories.forEach(cat => {
+            cat.items.forEach(item => {
+                correctMap[item.id] = cat.id;
+            });
+        });
+
+        let correct = 0, total = Object.keys(correctMap).length;
+        // Проверяем, где сейчас каждый элемент
+        currentCategories.forEach(cat => {
+            cat.items.forEach(item => {
+                if (correctMap[item.id] === cat.id) correct++;
+            });
+        });
+
+        const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+        const feedbackDiv = document.getElementById('feedback');
+        feedbackDiv.style.display = 'block';
+        if (correct === total) {
+            feedbackDiv.className = 'feedback ok';
+            feedbackDiv.innerHTML = '🎉 Отлично! Все элементы распределены верно!';
+        } else {
+            feedbackDiv.className = 'feedback no';
+            feedbackDiv.innerHTML = \`Правильно распределено: <b>\${correct} из \${total}</b> (\${percent}%). Попробуйте ещё раз.\`;
+        }
     }
     function resetGame() {
-        currentCategories = categories.map(cat => ({ ...cat, items: [...cat.items] }));
-        currentPool = [...poolItems];
+        currentCategories = originalCategories.map(cat => ({ ...cat, items: [...cat.items] }));
+        currentPool = gameData.poolItems ? [...gameData.poolItems] : [];
+        document.getElementById('feedback').style.display = 'none';
         render();
     }
     document.getElementById('checkBtn').addEventListener('click', checkAnswers);
@@ -782,16 +1007,19 @@
 <\/script>
 </body>
 </html>`;
-        const blob = new Blob([htmlContent], { type: 'text/html' });
+        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'sorting_game.html';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert("✅ Тренажёр экспортирован!\n\nФайл: sorting_game.html");
     }
 
     // Инициализация
     function init() {
+        loadAuthorLocal();
+        loadTitleLocal();
         loadDemoData();
         renderEditor();
         setupDropTargets();
@@ -819,23 +1047,5 @@
     }
     init();
 </script>
-    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
-    <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
-    <p style="margin-top: 0.5rem;">
-        <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
-        <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
-        <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
-        <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
-    </p>
-    <p style="margin-top: 0.5rem;">
-        Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
-    </p>
-    <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
-        💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
-    </p>
-    <p style="font-size: 0.7rem; color: #89A07B;">
-        © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
-    </p>
-</footer>
 </body>
 </html>

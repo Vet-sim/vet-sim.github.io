@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Конструктор «Своя игра» | ВетСим</title>
@@ -46,6 +33,81 @@
             margin-bottom: 1.8rem;
             font-size: 0.9rem;
         }
+
+        /* ===== Поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
+        /* ===== Поле названия ===== */
+        .title-block {
+            background: #FEFCF9;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .title-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+        }
+        .title-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFDF8;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .title-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         /* вкладки */
         .tabs {
             display: flex;
@@ -139,6 +201,7 @@
             font-weight: 600;
             cursor: pointer;
         }
+        .btn-primary:hover { background: #236B8A; }
         .btn-secondary {
             background: #A3B18A;
             color: white;
@@ -147,6 +210,7 @@
             border-radius: 40px;
             cursor: pointer;
         }
+        .btn-secondary:hover { background: #8FA376; }
         .flex-row {
             display: flex;
             gap: 1rem;
@@ -158,17 +222,44 @@
             border-radius: 28px;
             padding: 1rem;
         }
-        footer {
+
+        /* ===== Подпись внизу ===== */
+        .vetsim-credit {
             margin-top: 2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer {
+            margin-top: 1.5rem;
             text-align: center;
             font-size: 0.7rem;
             color: #A7B89A;
-            border-top: 1px solid #E2EAD9;
-            padding-top: 1rem;
         }
         @media (max-width: 700px) {
             .q-row { flex-direction: column; align-items: stretch; }
             .q-points { width: 100%; }
+            .author-block, .title-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -176,6 +267,20 @@
 <div class="container">
     <h1>🎮 Конструктор «Своя игра»</h1>
     <div class="sub">Создайте викторину по типу Jeopardy! — темы, вопросы разной стоимости, ответы</div>
+
+    <!-- ===== Поле автора ===== -->
+    <div class="author-block">
+        <label for="authorInput">✍️ Автор игры (ФИО):</label>
+        <input type="text" id="authorInput" class="author-input"
+               placeholder="Например: Тераевич Алла Сергеевна">
+    </div>
+
+    <!-- ===== Поле названия ===== -->
+    <div class="title-block">
+        <label for="gameTitleInput">🏷️ Название игры:</label>
+        <input type="text" id="gameTitleInput" class="title-input"
+               value="Своя игра: ветеринарный практикум">
+    </div>
 
     <div class="tabs">
         <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
@@ -193,12 +298,26 @@
         <p style="margin-top: 1rem; font-size: 0.8rem; color: #8BA47B;">Подсказка: для каждой темы можно добавить вопросы разной стоимости (например, 100, 200, 300...). Стоимость может быть любой.</p>
     </div>
 
-    <!-- Вкладка экспорта (инструкция + кнопка) -->
+    <!-- Вкладка экспорта -->
     <div id="exportPane" class="tab-pane">
         <div class="export-preview">
             <h3>📌 Как экспортировать готовую игру</h3>
             <p>После того как вы создали темы и вопросы, нажмите кнопку ниже. Браузер скачает файл <strong>ready_game.html</strong>. Этот файл можно открыть на любом компьютере без интернета и использовать для игры со студентами.</p>
+            <p style="margin-top:0.6rem;"><strong>Оформление экспортированной игры — яркое, в стиле телевизионного шоу:</strong> насыщенный тёмно-бирюзовый фон, золотые и коралловые акценты, крупные ячейки со стоимостью.</p>
             <button id="exportGameBtn" class="btn-primary" style="margin-top: 1rem;">⬇️ Экспортировать готовую игру</button>
+        </div>
+    </div>
+
+    <!-- ===== Подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор игры:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
         </div>
     </div>
 
@@ -206,22 +325,67 @@
 </div>
 
 <script>
-    // Структура: массив тем, каждая тема: { name: "Название", questions: [{ points: 100, question: "...", answer: "..." }] }
     let gameData = {
         themes: []
     };
+
+    const DEFAULT_TITLE = 'Своя игра: ветеринарный практикум';
+
+    // ===== Элементы автора и названия =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+    const gameTitleInput = document.getElementById('gameTitleInput');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    gameTitleInput.addEventListener('input', () => {
+        saveTitleLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_jeopardy_author', authorInput.value); } catch (e) {}
+    }
+    function saveTitleLocal() {
+        try { localStorage.setItem('vetsim_jeopardy_title', gameTitleInput.value); } catch (e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_jeopardy_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch (e) {}
+    }
+    function loadTitleLocal() {
+        try {
+            const t = localStorage.getItem('vetsim_jeopardy_title');
+            if (t) {
+                gameTitleInput.value = t;
+            }
+        } catch (e) {}
+    }
 
     const themesContainer = document.getElementById('themesContainer');
 
     // Сохранение в JSON
     function saveGameToJSON() {
-        const dataStr = JSON.stringify(gameData, null, 2);
+        const project = {
+            author: authorInput.value || '',
+            title: gameTitleInput.value || '',
+            themes: gameData.themes
+        };
+        const dataStr = JSON.stringify(project, null, 2);
         const blob = new Blob([dataStr], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'jeopardy_project.json';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert('✅ Проект сохранён');
     }
 
     // Загрузка из JSON
@@ -230,18 +394,29 @@
         reader.onload = e => {
             try {
                 const loaded = JSON.parse(e.target.result);
+                // Поддержка двух форматов
                 if (loaded.themes && Array.isArray(loaded.themes)) {
-                    gameData = loaded;
-                    renderEditor();
+                    gameData.themes = loaded.themes;
+                    if (loaded.author !== undefined) {
+                        authorInput.value = loaded.author;
+                        authorPreview.textContent = loaded.author || 'не указан';
+                    }
+                    if (loaded.title !== undefined) {
+                        gameTitleInput.value = loaded.title || DEFAULT_TITLE;
+                    }
+                } else if (Array.isArray(loaded)) {
+                    gameData.themes = loaded;
                 } else {
                     alert("Неверный формат файла");
+                    return;
                 }
+                renderEditor();
+                alert('✅ Проект загружен');
             } catch(err) { alert("Ошибка чтения файла"); }
         };
         reader.readAsText(file);
     }
 
-    // Рендер редактора
     function renderEditor() {
         themesContainer.innerHTML = '';
         if (gameData.themes.length === 0) {
@@ -276,8 +451,8 @@
                 });
             }
 
-            // обработчики для этой темы
             themeDiv.querySelector('.remove-theme').addEventListener('click', () => {
+                if (!confirm('Удалить тему «' + theme.name + '»?')) return;
                 gameData.themes.splice(tIdx, 1);
                 renderEditor();
             });
@@ -293,7 +468,6 @@
     }
 
     function attachQuestionEvents() {
-        // изменение стоимости
         document.querySelectorAll('.q-points').forEach(inp => {
             inp.removeEventListener('change', changePoints);
             inp.addEventListener('change', changePoints);
@@ -303,7 +477,6 @@
                 gameData.themes[tIdx].questions[qIdx].points = parseInt(inp.value);
             }
         });
-        // изменение вопроса
         document.querySelectorAll('.q-question').forEach(inp => {
             inp.removeEventListener('change', changeQuestion);
             inp.addEventListener('change', changeQuestion);
@@ -313,7 +486,6 @@
                 gameData.themes[tIdx].questions[qIdx].question = inp.value;
             }
         });
-        // изменение ответа
         document.querySelectorAll('.q-answer').forEach(inp => {
             inp.removeEventListener('change', changeAnswer);
             inp.addEventListener('change', changeAnswer);
@@ -323,7 +495,6 @@
                 gameData.themes[tIdx].questions[qIdx].answer = inp.value;
             }
         });
-        // удаление вопроса
         document.querySelectorAll('.remove-question').forEach(btn => {
             btn.removeEventListener('click', removeQ);
             btn.addEventListener('click', removeQ);
@@ -338,178 +509,361 @@
 
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+        return String(str).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
     }
 
-    // Экспорт готовой игры (отдельный HTML)
+    // ===== Экспорт с ярким оформлением =====
     function exportGame() {
         if (gameData.themes.length === 0) {
             alert("Добавьте хотя бы одну тему с вопросами!");
             return;
         }
+
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const gameTitle = gameTitleInput.value.trim() || DEFAULT_TITLE;
+        const safeGameTitle = gameTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
         const gameDataStr = JSON.stringify(gameData);
+
         const standaloneHTML = `<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Своя игра | ВетСим</title>
+    <title>${safeGameTitle} | ВетСим</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        /* ===== ЯРКОЕ оформление в стиле телевизионной игры ===== */
         body {
-            background: #1F3B3A;
-            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
-            color: #F4E9D8;
+            background: radial-gradient(circle at 50% 0%, #1a3e5c 0%, #0a1f33 60%, #04101d 100%);
+            font-family: 'Trebuchet MS', system-ui, 'Segoe UI', sans-serif;
+            color: #fff;
             padding: 1rem;
+            min-height: 100vh;
         }
+
         .game-container {
             max-width: 1400px;
             margin: 0 auto;
         }
+
+        /* Заголовок с золотым свечением */
         h1 {
             text-align: center;
-            margin-bottom: 1rem;
-            font-size: 2rem;
-            letter-spacing: 2px;
-            text-shadow: 2px 2px 0 #0F2A28;
+            margin-bottom: 1.5rem;
+            font-size: 2.4rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(180deg, #ffd966 0%, #ffb347 50%, #e88b2b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 200, 80, 0.5);
+            font-family: 'Trebuchet MS', sans-serif;
+            text-transform: uppercase;
         }
+
+        /* Шапка со счётом */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-board {
+            background: linear-gradient(135deg, #ffd966 0%, #ffb347 100%);
+            color: #0a1f33;
+            padding: 0.8rem 1.8rem;
+            border-radius: 2rem;
+            font-size: 1.4rem;
+            font-weight: 900;
+            box-shadow: 0 6px 0 #b06c1a, 0 8px 20px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .score-board .score-value {
+            font-size: 1.8rem;
+            color: #b13e3e;
+        }
+
+        .reset-game {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            border-radius: 2rem;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #7f1d1d, 0 8px 20px rgba(0,0,0,0.4);
+            transition: 0.15s;
+            font-family: inherit;
+            letter-spacing: 1px;
+        }
+        .reset-game:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #7f1d1d, 0 10px 24px rgba(0,0,0,0.5);
+        }
+        .reset-game:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #7f1d1d;
+        }
+
+        /* Игровое поле */
         .game-board {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
             margin-bottom: 2rem;
         }
+
         .theme-col {
-            background: #2C5F5A;
+            background: linear-gradient(180deg, #2c5fa0 0%, #1a3e6c 100%);
             border-radius: 1.5rem;
             overflow: hidden;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.1);
+            border: 2px solid rgba(255, 200, 80, 0.3);
         }
+
         .theme-title {
-            background: #1F4E4A;
-            padding: 1rem;
+            background: linear-gradient(180deg, #1a3e5c 0%, #0a1f33 100%);
+            padding: 1.2rem 1rem;
             text-align: center;
-            font-weight: bold;
-            font-size: 1.2rem;
-            border-bottom: 2px solid #3D807A;
+            font-weight: 900;
+            font-size: 1.15rem;
+            color: #ffd966;
+            border-bottom: 3px solid #ffb347;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
+
         .question-cell {
-            background: #3A7C76;
-            margin: 0.5rem;
+            background: linear-gradient(180deg, #1a4d8f 0%, #0f3565 100%);
+            margin: 0.6rem;
             border-radius: 1rem;
             text-align: center;
-            padding: 1rem;
+            padding: 1.4rem 0.6rem;
             cursor: pointer;
-            transition: 0.2s;
-            font-weight: bold;
-            font-size: 1.3rem;
+            transition: 0.15s;
+            font-weight: 900;
+            font-size: 1.6rem;
+            color: #ffd966;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+            box-shadow: 0 5px 0 #0a2444, 0 8px 16px rgba(0,0,0,0.4);
+            border: 2px solid #4a7fd1;
+            letter-spacing: 1px;
         }
+
+        .question-cell:hover:not(.used) {
+            background: linear-gradient(180deg, #2c6ec7 0%, #1a4d8f 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 0 #0a2444, 0 12px 22px rgba(0,0,0,0.5);
+            color: #ffeeb0;
+        }
+
+        .question-cell:active:not(.used) {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #0a2444;
+        }
+
         .question-cell.used {
-            background: #5C9E97;
+            background: linear-gradient(180deg, #2a3542 0%, #1a2029 100%);
             cursor: default;
-            opacity: 0.6;
+            color: #4a5568;
+            box-shadow: inset 0 3px 8px rgba(0,0,0,0.5);
+            border-color: #2a3542;
             text-decoration: line-through;
         }
-        .question-cell:hover:not(.used) {
-            background: #4F958D;
-            transform: scale(1.02);
-        }
+
+        /* Модальное окно */
         .question-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(4, 16, 29, 0.9);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            padding: 1rem;
         }
+
         .modal-card {
-            background: #FDF8F0;
-            color: #2C3E2F;
-            max-width: 600px;
-            width: 90%;
+            background: linear-gradient(180deg, #fff9e6 0%, #ffe9a8 100%);
+            color: #0a1f33;
+            max-width: 700px;
+            width: 100%;
             border-radius: 2rem;
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             text-align: center;
             position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7), inset 0 -4px 0 rgba(255,180,80,0.4);
+            border: 4px solid #ffb347;
         }
+
         .modal-question {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
+            font-weight: 700;
             margin-bottom: 1.5rem;
+            line-height: 1.5;
+            color: #0a1f33;
         }
+
         .modal-answer {
-            background: #E2EAD9;
-            border-radius: 2rem;
-            padding: 1rem;
-            margin-top: 1rem;
+            background: linear-gradient(180deg, #b8dba5 0%, #8dc272 100%);
+            color: #0a3a1a;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin-top: 1.5rem;
             display: none;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
+            font-weight: 600;
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
+            text-align: left;
+            border: 2px solid #6ba548;
         }
+
+        .modal-answer strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            color: #0a5f2a;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         .modal-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 0.8rem;
             justify-content: center;
+            flex-wrap: wrap;
             margin-top: 1.5rem;
         }
-        button {
-            background: #2C7DA0;
+
+        .modal-buttons button {
             border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 2rem;
+            padding: 0.8rem 1.4rem;
+            border-radius: 1.2rem;
             color: white;
-            font-weight: bold;
+            font-weight: 900;
+            font-size: 0.95rem;
             cursor: pointer;
+            transition: 0.15s;
+            font-family: inherit;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 0 rgba(0,0,0,0.25), 0 8px 16px rgba(0,0,0,0.2);
         }
-        .close-btn {
-            background: #A3B18A;
+        .modal-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 rgba(0,0,0,0.25), 0 10px 20px rgba(0,0,0,0.3);
         }
-        .score-board {
+        .modal-buttons button:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 rgba(0,0,0,0.25);
+        }
+
+        .show-answer-btn { background: linear-gradient(135deg, #6c9bd1 0%, #4a7fd1 100%); }
+        .correct-btn { background: linear-gradient(135deg, #6bcf7f 0%, #3ea155 100%); }
+        .wrong-btn { background: linear-gradient(135deg, #e88b8b 0%, #c0392b 100%); }
+        .close-btn { background: linear-gradient(135deg, #9ba3af 0%, #5c6873 100%); }
+
+        /* Блок подписи автора */
+        .vetsim-credit {
+            margin-top: 2rem;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255, 200, 80, 0.08);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 200, 80, 0.3);
             text-align: center;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-            background: #1F4E4A;
-            padding: 0.5rem;
-            border-radius: 2rem;
-            display: inline-block;
-            width: auto;
+            font-size: 0.85rem;
+            color: #d5ddc9;
         }
-        .reset-game {
-            background: #D4A373;
-            margin-left: 1rem;
+        .vetsim-credit-title {
+            font-weight: 900;
+            color: #ffd966;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.2rem 0;
+        }
+        .vetsim-credit-label { color: #8fa5b8; font-weight: 600; }
+        .vetsim-credit-value { color: #fff; font-weight: 700; }
+
         footer {
             text-align: center;
-            margin-top: 2rem;
-            font-size: 0.7rem;
-            color: #A7B89A;
+            margin-top: 1.5rem;
+            font-size: 0.75rem;
+            color: #6b7f93;
         }
+
         @media (max-width: 700px) {
+            h1 { font-size: 1.6rem; letter-spacing: 2px; }
             .game-board { grid-template-columns: 1fr; }
             .theme-title { font-size: 1rem; }
+            .question-cell { font-size: 1.3rem; padding: 1rem 0.6rem; }
+            .modal-card { padding: 1.8rem 1.2rem; }
+            .modal-question { font-size: 1.15rem; }
+            .modal-buttons button { font-size: 0.85rem; padding: 0.6rem 1rem; }
+            .score-board { font-size: 1.1rem; padding: 0.6rem 1.2rem; }
+            .score-board .score-value { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-        <h1>🎲 СВОЯ ИГРА</h1>
-        <div><span class="score-board">💰 Счёт: <span id="score">0</span></span>
-        <button id="resetAllBtn" class="reset-game">🔄 Начать заново</button></div>
+    <h1>🎲 ${safeGameTitle}</h1>
+
+    <div class="top-bar">
+        <div class="score-board">
+            💰 Счёт: <span class="score-value" id="score">0</span>
+        </div>
+        <button id="resetAllBtn" class="reset-game">🔄 Начать заново</button>
     </div>
+
     <div id="gameBoard" class="game-board"></div>
-    <footer>© ВетСим — образовательная игра. Вопросы созданы преподавателем.</footer>
+
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор игры:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
+
+    <footer>© ВетСим — образовательная игра · CC BY-NC</footer>
 </div>
 <script>
     const gameData = ${gameDataStr};
     let scores = 0;
-    let usedQuestions = []; // массив {themeIdx, qIdx}
+    let usedQuestions = [];
 
     function renderBoard() {
         const board = document.getElementById('gameBoard');
@@ -539,13 +893,13 @@
         modal.innerHTML = \`
             <div class="modal-card">
                 <div class="modal-question">❓ \${escapeHtml(q.question)}</div>
+                <div class="modal-answer"><strong>📖 Правильный ответ:</strong>\${escapeHtml(q.answer)}</div>
                 <div class="modal-buttons">
-                    <button class="show-answer-btn">Показать ответ</button>
-                    <button class="correct-btn">✅ Верно (+ \${q.points})</button>
+                    <button class="show-answer-btn">💡 Показать ответ</button>
+                    <button class="correct-btn">✅ Верно (+\${q.points})</button>
                     <button class="wrong-btn">❌ Неверно (0)</button>
                     <button class="close-btn">✖ Закрыть</button>
                 </div>
-                <div class="modal-answer">📖 Ответ: \${escapeHtml(q.answer)}</div>
             </div>
         \`;
         document.body.appendChild(modal);
@@ -554,6 +908,7 @@
         const answerDiv = modal.querySelector('.modal-answer');
         showAnswerBtn.addEventListener('click', () => {
             answerDiv.style.display = 'block';
+            showAnswerBtn.style.display = 'none';
         });
         const correctBtn = modal.querySelector('.correct-btn');
         const wrongBtn = modal.querySelector('.wrong-btn');
@@ -563,7 +918,6 @@
             if (addScore !== undefined) {
                 scores += addScore;
                 document.getElementById('score').textContent = scores;
-                // отметить вопрос использованным
                 if (!usedQuestions.some(u => u.themeIdx === themeIdx && u.qIdx === qIdx)) {
                     usedQuestions.push({ themeIdx, qIdx });
                 }
@@ -578,6 +932,7 @@
     }
 
     function resetGame() {
+        if (!confirm('Начать игру заново? Счёт и все ответы сбросятся.')) return;
         scores = 0;
         usedQuestions = [];
         document.getElementById('score').textContent = scores;
@@ -586,7 +941,7 @@
 
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
+        return String(str).replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]);
     }
 
     document.getElementById('resetAllBtn').addEventListener('click', resetGame);
@@ -594,15 +949,17 @@
 <\/script>
 </body>
 </html>`;
-        const blob = new Blob([standaloneHTML], {type: 'text/html'});
+
+        const blob = new Blob([standaloneHTML], {type: 'text/html;charset=utf-8'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'ready_game.html';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert("✅ Игра экспортирована!\n\nФайл: ready_game.html");
     }
 
-    // Инициализация демо-примера
+    // Инициализация демо
     function initDemo() {
         if (gameData.themes.length === 0) {
             gameData.themes = [
@@ -633,7 +990,6 @@
     });
     document.getElementById('exportGameBtn').addEventListener('click', exportGame);
 
-    // Переключение вкладок
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -643,25 +999,9 @@
         });
     });
 
+    loadAuthorLocal();
+    loadTitleLocal();
     initDemo();
 </script>
-    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
-    <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
-    <p style="margin-top: 0.5rem;">
-        <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
-        <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
-        <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
-        <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
-    </p>
-    <p style="margin-top: 0.5rem;">
-        Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
-    </p>
-    <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
-        💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
-    </p>
-    <p style="font-size: 0.7rem; color: #89A07B;">
-        © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
-    </p>
-</footer>
 </body>
 </html>

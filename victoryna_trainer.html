@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Конструктор викторин | ВетСим</title>
     <style>
-        /* ===== БАЗОВЫЙ СТИЛЬ ВЕТСИМ ===== */
         * {
             margin: 0;
             padding: 0;
@@ -13,11 +12,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', 'Inter', system-ui, sans-serif;
-            background: #F4F7F9;
-            color: #2C3E2F;
-            padding: 1.5rem;
-            line-height: 1.5;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: #f4f7f9;
+            color: #2c3e2f;
+            padding: 20px;
+            line-height: 1.4;
         }
 
         .main-container {
@@ -25,440 +24,353 @@
             margin: 0 auto;
         }
 
-        /* ===== ВКЛАДКИ ===== */
+        /* Вкладки */
         .tabs {
             display: flex;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
+            gap: 12px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
         }
         .tab-btn {
-            background: #E8EDE3;
+            background: #e2e9da;
             border: none;
-            padding: 0.6rem 1.8rem;
-            border-radius: 3rem;
-            font-size: 0.95rem;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
-            color: #4A6B4E;
-            font-family: inherit;
+            color: #3a6741;
         }
         .tab-btn.active {
-            background: #7E9F6E;
+            background: #7e9f6e;
             color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
-        .tab-btn:hover:not(.active) {
-            background: #D9E2CE;
-        }
-
         .tab-pane {
             display: none;
             background: white;
-            border-radius: 2rem;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+            overflow: hidden;
             padding: 1.8rem;
-            border: 1px solid #E7EDE2;
         }
         .tab-pane.active {
             display: block;
         }
 
-        /* ===== РЕДАКТОР ===== */
+        /* ===== НОВОЕ: поле автора ===== */
+        .author-block {
+            background: #eef3e8;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #d9e3ce;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #4b6e43;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #d1dec2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fefaf2;
+            color: #2c3e2f;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: #7e9f6e;
+            box-shadow: 0 0 0 3px rgba(126,159,110,0.15);
+            background: white;
+        }
+
+        /* стили редактора */
         .editor-header {
             display: flex;
             justify-content: space-between;
-            gap: 1rem;
+            gap: 15px;
             flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #E2EAD9;
-            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e9da;
         }
-
-        .editor-header .left-group {
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-        }
-        .editor-header .right-group {
-            display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
-        }
-
         .btn {
-            background: #EEF2E9;
+            background: #eef2e9;
             border: none;
-            padding: 0.5rem 1.2rem;
-            border-radius: 2.5rem;
+            padding: 8px 20px;
+            border-radius: 40px;
             font-weight: 500;
             cursor: pointer;
             transition: 0.2s;
             font-family: inherit;
-            font-size: 0.85rem;
-            color: #2C3E2F;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
         }
         .btn-primary {
-            background: #7E9F6E;
+            background: #7e9f6e;
             color: white;
         }
         .btn-primary:hover {
-            background: #6B8C5D;
+            background: #6c8b5d;
         }
         .btn-outline {
             background: white;
-            border: 1px solid #C0CFAF;
+            border: 1px solid #c0cfaf;
         }
-        .btn-outline:hover {
-            background: #F4F7F0;
-        }
-        .btn-danger {
-            background: #F5D6D0;
-            color: #A1442E;
-        }
-        .btn-danger:hover {
-            background: #EEC4BC;
-        }
-        .btn-warning {
-            background: #E2CFB0;
-            color: #4D3E2A;
-        }
-        .btn-warning:hover {
-            background: #D6C09B;
-        }
-
-        /* ===== КАРТОЧКА РЕДАКТОРА ===== */
         .question-editor-card {
-            background: #FEFAF2;
-            border-radius: 1.5rem;
-            padding: 1.2rem 1.5rem;
-            margin-bottom: 1.2rem;
-            border: 1px solid #EDE3D4;
-            transition: 0.2s;
+            background: #fefaf2;
+            border-radius: 24px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #ede3d4;
         }
-        .question-editor-card:hover {
-            border-color: #C0CFAF;
-        }
-
         .question-editor-header {
             display: flex;
             justify-content: space-between;
+            margin-bottom: 1rem;
             align-items: center;
-            margin-bottom: 0.8rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
         }
         .question-editor-header h3 {
-            font-size: 1rem;
-            color: #4B6E43;
-            font-weight: 600;
+            font-size: 1.2rem;
+            color: #4b6e43;
         }
-
+        .delete-q {
+            background: #f5d6d0;
+            color: #a1442e;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
         .field-group {
-            margin-bottom: 0.7rem;
+            margin-bottom: 12px;
         }
         .field-group label {
             font-weight: 600;
             display: block;
-            margin-bottom: 0.2rem;
-            font-size: 0.8rem;
-            color: #4A6B4E;
+            margin-bottom: 5px;
+            font-size: 0.85rem;
         }
-        .field-group input,
-        .field-group textarea,
-        .field-group select {
+        input, textarea {
             width: 100%;
-            padding: 0.4rem 0.8rem;
-            border-radius: 2rem;
-            border: 1px solid #D1DEC2;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid #d1dec2;
             font-family: inherit;
-            font-size: 0.9rem;
-            background: #FEFCF9;
-            transition: 0.2s;
         }
-        .field-group textarea {
-            border-radius: 1rem;
-            resize: vertical;
-            min-height: 60px;
-        }
-        .field-group input:focus,
-        .field-group textarea:focus {
-            outline: none;
-            border-color: #7E9F6E;
-            box-shadow: 0 0 0 2px rgba(126, 159, 110, 0.1);
-        }
-
         .options-list {
-            margin-top: 0.5rem;
-            margin-left: 0.5rem;
+            margin-left: 15px;
+            margin-top: 8px;
         }
         .option-item {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 0.4rem;
+            gap: 8px;
+            margin-bottom: 8px;
             align-items: center;
         }
         .option-item input {
             flex: 1;
         }
         .add-option {
-            font-size: 0.75rem;
-            margin-top: 0.3rem;
+            font-size: 0.8rem;
+            margin-top: 6px;
         }
         .inline-badge {
-            background: #E2E9DA;
-            padding: 0.1rem 0.8rem;
-            border-radius: 2rem;
-            font-size: 0.7rem;
+            background: #e2e9da;
+            padding: 2px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
         }
 
-        /* ===== ТЕСТИРОВАНИЕ (стиль ВетСим) ===== */
+        /* стили для тестирования */
         .quiz-container {
             background: white;
-            border-radius: 1.8rem;
+            border-radius: 28px;
             overflow: hidden;
-            border: 1px solid #E7EDE2;
         }
         .quiz-header {
-            background: #EFF3E8;
-            padding: 1.2rem 1.8rem;
-            border-bottom: 1px solid #D9DECF;
+            background: #eef3e8;
+            padding: 1rem 1.5rem;
         }
-        .quiz-header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #1F4E6E;
-            margin-bottom: 0.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .quiz-header h1 span {
-            background: linear-gradient(135deg, #6B8C5C, #A38B60);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
         .progress-section {
             display: flex;
             align-items: center;
             gap: 1rem;
             flex-wrap: wrap;
-            margin-top: 0.3rem;
+            margin-top: 8px;
         }
         .progress-text {
-            font-size: 0.8rem;
-            background: #E2E9DA;
-            padding: 0.15rem 0.8rem;
-            border-radius: 2rem;
-            font-weight: 500;
-            color: #3E5C4A;
+            font-size: 0.9rem;
+            background: #e2e9da;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
         }
         .progress-bar-bg {
             flex: 1;
-            height: 6px;
-            background: #DADFCF;
-            border-radius: 1rem;
-            min-width: 80px;
+            height: 8px;
+            background: #dadfcf;
+            border-radius: 20px;
         }
         .progress-fill {
             width: 0%;
             height: 100%;
-            background: #7E9F6E;
-            border-radius: 1rem;
-            transition: width 0.3s;
+            background: #7ca86a;
+            border-radius: 20px;
+            transition: width 0.25s;
         }
-
         .case-card {
-            padding: 1.5rem 1.8rem;
+            padding: 1.5rem;
         }
         .case-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 0.8rem;
-            color: #4B6E43;
-            border-left: 4px solid #9BBB8A;
-            padding-left: 1rem;
+            margin-bottom: 1rem;
+            color: #4b6e43;
+            border-left: 5px solid #9bbb8a;
+            padding-left: 15px;
         }
         .symptom-text {
-            background: #FEFAF2;
-            padding: 1rem 1.2rem;
-            border-radius: 1.2rem;
+            background: #fefaf2;
+            padding: 1rem;
+            border-radius: 20px;
             margin-bottom: 1rem;
-            border: 1px solid #EDE3D4;
-            font-size: 0.95rem;
+            border: 1px solid #ede3d4;
         }
-        .image-placeholder {
-            color: #8F9B82;
-            padding: 0.5rem 0;
-            font-style: italic;
-        }
-
         .options-grid {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
-            margin: 1rem 0;
+            gap: 10px;
+            margin: 1.2rem 0;
         }
         .option-btn {
-            background: #EEF2E9;
-            border: 1px solid #DBDFCF;
+            background: #eef2e9;
+            border: 1px solid #dbdfcf;
             text-align: left;
-            padding: 0.6rem 1.2rem;
-            border-radius: 2.5rem;
+            padding: 10px 16px;
+            border-radius: 40px;
             font-weight: 500;
             cursor: pointer;
             transition: 0.2s;
-            font-size: 0.9rem;
-            color: #2C3E2F;
-            font-family: inherit;
-        }
-        .option-btn:hover:not(:disabled) {
-            background: #E2EAD9;
-            border-color: #BCCFAA;
         }
         .option-btn.correct {
-            background: #4CAF50 !important;
+            background: #4caf50 !important;
             color: white;
-            border-color: #4CAF50;
         }
         .option-btn.wrong {
-            background: #F44336 !important;
+            background: #f44336 !important;
             color: white;
-            border-color: #F44336;
         }
-        .option-btn:disabled {
-            cursor: default;
-            opacity: 0.8;
-        }
-
         .feedback-area {
-            background: #F4F1EA;
-            border-left: 5px solid #9BBB8A;
-            padding: 1rem 1.2rem;
-            border-radius: 1.2rem;
+            background: #f4f1ea;
+            border-left: 6px solid #9bbb8a;
+            padding: 1rem;
+            border-radius: 20px;
             margin: 1rem 0;
             display: none;
         }
-        .feedback-area .verdict {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 0.2rem;
-        }
-        .feedback-area .system-badge {
-            background: #D9E3CE;
+        .system-badge {
+            background: #d9e3ce;
             display: inline-block;
-            padding: 0.15rem 0.8rem;
-            border-radius: 2rem;
-            font-size: 0.7rem;
-            margin-top: 0.5rem;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            margin-top: 10px;
         }
-
         .nav-buttons {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-top: 1.2rem;
-            gap: 1rem;
-            flex-wrap: wrap;
+            margin-top: 1.5rem;
         }
         .next-btn {
-            background: #CFDEC2;
-            padding: 0.5rem 1.8rem;
-            border-radius: 2.5rem;
-            font-weight: 600;
+            background: #cfdec2;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-weight: bold;
             border: none;
             cursor: pointer;
-            font-size: 0.9rem;
-            font-family: inherit;
-            transition: 0.2s;
-            color: #4A6B4E;
         }
         .next-btn.active {
-            background: #7E9F6E;
+            background: #7e9f6e;
             color: white;
         }
-        .next-btn.active:hover {
-            background: #6B8C5D;
-        }
-        .next-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         .restart-btn {
-            background: #E2CFB0;
-            padding: 0.5rem 1.8rem;
-            border-radius: 2.5rem;
+            background: #e2cfb0;
+            padding: 8px 20px;
+            border-radius: 40px;
             border: none;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            font-family: inherit;
-            transition: 0.2s;
-            color: #4D3E2A;
             display: none;
         }
-        .restart-btn:hover {
-            background: #D6C09B;
-        }
 
-        /* ===== ПОДВАЛ ===== */
-        .footer {
-            background: #F9F6EF;
+        /* ===== НОВОЕ: подпись внизу ===== */
+        .vetsim-credit {
+            margin-top: 2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #eef3e8, #f9f6ef);
+            border-radius: 24px;
+            border: 1px solid #d9e3ce;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #2c3e2f;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #4b6e43;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #6d8466; font-weight: 600; }
+        .vetsim-credit-value { color: #2c5a2c; font-weight: 700; }
+
+        footer {
+            background: #f9f6ef;
             text-align: center;
             font-size: 0.7rem;
-            padding: 0.6rem;
-            color: #9AA98B;
-            border-top: 1px solid #E2EAD9;
-            margin-top: 0.5rem;
+            padding: 0.8rem;
+            color: #9aa98b;
         }
-        .footer a {
-            color: #568A6B;
-            text-decoration: none;
-        }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* ===== АДАПТИВ ===== */
         @media (max-width: 640px) {
             .tab-pane { padding: 1rem; }
-            .editor-header { flex-direction: column; align-items: stretch; }
-            .editor-header .left-group,
-            .editor-header .right-group { justify-content: center; }
-            .case-card { padding: 1rem; }
-            .quiz-header { padding: 0.8rem 1rem; }
-            .quiz-header h1 { font-size: 1.1rem; }
+            .author-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
 <div class="main-container">
-
-    <!-- ===== ВКЛАДКИ ===== -->
     <div class="tabs">
         <button class="tab-btn active" data-tab="editor">✏️ Редактор</button>
         <button class="tab-btn" data-tab="test">🎓 Тестирование</button>
     </div>
 
-    <!-- ===== РЕДАКТОР ===== -->
+    <!-- Редактор -->
     <div id="editorPane" class="tab-pane active">
+        <!-- ===== НОВОЕ: поле автора ===== -->
+        <div class="author-block">
+            <label for="authorInput">✍️ Автор викторины (ФИО):</label>
+            <input type="text" id="authorInput" class="author-input"
+                   placeholder="Например: Тераевич Алла Сергеевна">
+        </div>
+
         <div class="editor-header">
-            <div class="left-group">
-                <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
-                    <label style="font-weight:600; font-size:0.85rem; color:#4A6B4E;">📌 Название тренажёра:</label>
-                    <input type="text" id="quizTitleInput" value="Ветеринарная диагностика: «Что не так?»" style="flex:1; min-width:200px; padding:0.4rem 0.8rem; border-radius:2rem; border:1px solid #D1DEC2; font-family:inherit; font-size:0.9rem; background:#FEFCF9;">
-                </div>
-            </div>
-            <div class="right-group">
-                <button id="addQuestionBtn" class="btn btn-primary">➕ Добавить вопрос</button>
+            <button id="addQuestionBtn" class="btn btn-primary">+ Добавить вопрос</button>
+            <div>
                 <button id="saveJsonBtn" class="btn btn-outline">💾 Сохранить JSON</button>
                 <button id="loadJsonBtn" class="btn btn-outline">📂 Загрузить JSON</button>
                 <button id="exportHtmlBtn" class="btn btn-primary">📤 Экспорт в тренажёр</button>
@@ -467,11 +379,11 @@
         <div id="questionsEditorList"></div>
     </div>
 
-    <!-- ===== ТЕСТИРОВАНИЕ ===== -->
+    <!-- Тестирование -->
     <div id="testPane" class="tab-pane">
         <div class="quiz-container">
             <div class="quiz-header">
-                <h1>🐄 <span id="testTitleDisplay">Ветеринарная диагностика: «Что не так?»</span></h1>
+                <h1>🐄 Ветеринарная диагностика: «Что не так?»</h1>
                 <div class="progress-section">
                     <span class="progress-text" id="progressCounterTest">Случай 1 из 10</span>
                     <div class="progress-bar-bg"><div class="progress-fill" id="progressFillTest"></div></div>
@@ -480,7 +392,7 @@
             <div class="case-card">
                 <div class="case-title" id="caseTitleTest">Случай 1</div>
                 <div class="symptom-text" id="questionTextTest"></div>
-                <div id="imageContainerTest" style="margin-bottom:0.5rem;"></div>
+                <div id="imageContainerTest" class="image-block" style="margin-bottom:10px;"></div>
                 <div class="options-grid" id="optionsContainerTest"></div>
                 <div id="feedbackAreaTest" class="feedback-area"></div>
                 <div class="nav-buttons">
@@ -488,17 +400,26 @@
                     <button id="restartBtnTest" class="restart-btn">🔄 Начать сначала</button>
                 </div>
             </div>
-            <div class="footer">
-                © Преподаватель - Тераевич Алла Сергеевна, 2026. Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>
-            </div>
+            <footer>© ВетСим — интерактивная викторина · CC BY-NC</footer>
+        </div>
+    </div>
+
+    <!-- ===== НОВОЕ: подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор викторины:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
         </div>
     </div>
 </div>
 
 <script>
-    // ================================================================
-    //  ДАННЫЕ: 10 КЛИНИЧЕСКИХ СЛУЧАЕВ ПО КРС (по умолчанию)
-    // ================================================================
+    // ------------------- ИСХОДНЫЕ ДАННЫЕ (10 случаев КРС) -------------------
     let questions = [
         { id: 1, text: "У коровы отсутствие жвачки, отрыжка с гнилостным запахом, метеоризм рубца, температура в норме, аппетит отсутствует.", options: ["Тимпания рубца", "Травматический ретикулит", "Кетоз", "Ацидоз"], correct: 0, explanation: "Тимпания рубца – острое вздутие рубца из-за скопления газов.", system: "Пищеварительная система", image: "" },
         { id: 2, text: "Кашель, носовые истечения гнойного характера, температура 41°C, при аускультации — влажные хрипы в краниальных долях лёгких.", options: ["Бронхопневмония", "Туберкулёз", "Диктиокаулёз", "Эмфизема лёгких"], correct: 0, explanation: "Бронхопневмония – воспаление бронхов и лёгких с гнойным экссудатом.", system: "Дыхательная система", image: "" },
@@ -512,15 +433,36 @@
         { id: 10, text: "Помутнение роговицы, слезотечение, светобоязнь, корова трёт глаз о предметы.", options: ["Кератит", "Конъюнктивит", "Катаракта", "Увеит"], correct: 0, explanation: "Кератит – воспаление роговицы.", system: "Зрительная система", image: "" }
     ];
 
+    // ===== НОВОЕ: элементы автора =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_victoryna_author', authorInput.value); } catch(e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_victoryna_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch(e) {}
+    }
+
+    // глобальные переменные
     let currentTestIndex = 0;
     let testAnswered = false;
     let currentTestQuestions = [];
 
-    // DOM элементы
+    // DOM элементы редактора
     const editorContainer = document.getElementById('questionsEditorList');
-    const quizTitleInput = document.getElementById('quizTitleInput');
-    const testTitleDisplay = document.getElementById('testTitleDisplay');
-
+    // DOM тестирования
     const caseTitleTest = document.getElementById('caseTitleTest');
     const questionTextTest = document.getElementById('questionTextTest');
     const optionsContainerTest = document.getElementById('optionsContainerTest');
@@ -531,9 +473,7 @@
     const progressFillTest = document.getElementById('progressFillTest');
     const imageContainerTest = document.getElementById('imageContainerTest');
 
-    // ================================================================
-    //  РЕДАКТОР
-    // ================================================================
+    // ---- РЕДАКТОР ----
     function renderEditor() {
         editorContainer.innerHTML = '';
         questions.forEach((q, idx) => {
@@ -542,53 +482,42 @@
             card.innerHTML = `
                 <div class="question-editor-header">
                     <h3>Вопрос ${idx+1}</h3>
-                    <button class="btn btn-danger delete-q" data-idx="${idx}" style="font-size:0.7rem; padding:0.2rem 0.8rem;">🗑️ Удалить</button>
+                    <button class="delete-q" data-idx="${idx}">🗑️ Удалить</button>
                 </div>
                 <div class="field-group"><label>Текст вопроса</label><textarea class="q-text" data-idx="${idx}" rows="2">${escapeHtml(q.text)}</textarea></div>
-                <div class="field-group"><label>Изображение (URL, опционально)</label><input class="q-image" data-idx="${idx}" value="${escapeHtml(q.image || '')}" placeholder="https://..."></div>
-                <div class="field-group"><label>Варианты ответов</label><div id="options-editor-${idx}"></div><button class="btn add-option" data-idx="${idx}" style="font-size:0.7rem; margin-top:0.3rem;">➕ Добавить вариант</button></div>
-                <div class="field-group"><label>Правильный ответ (индекс, начиная с 0)</label><input class="q-correct" data-idx="${idx}" type="number" value="${q.correct}" min="0"></div>
+                <div class="field-group"><label>Изображение (URL, опционально)</label><input class="q-image" data-idx="${idx}" value="${escapeHtml(q.image || '')}"></div>
+                <div class="field-group"><label>Варианты ответов</label><div id="options-editor-${idx}"></div><button class="btn add-option" data-idx="${idx}">+ Добавить вариант</button></div>
+                <div class="field-group"><label>Правильный ответ (индекс, начиная с 0)</label><input class="q-correct" data-idx="${idx}" type="number" value="${q.correct}"></div>
                 <div class="field-group"><label>Пояснение</label><textarea class="q-explanation" data-idx="${idx}" rows="2">${escapeHtml(q.explanation)}</textarea></div>
                 <div class="field-group"><label>Система органов</label><input class="q-system" data-idx="${idx}" value="${escapeHtml(q.system)}"></div>
             `;
             editorContainer.appendChild(card);
-
-            // варианты
             const optionsDiv = document.getElementById(`options-editor-${idx}`);
             if (optionsDiv) {
                 q.options.forEach((opt, optIdx) => {
                     const optRow = document.createElement('div');
                     optRow.className = 'option-item';
-                    optRow.innerHTML = `<input type="text" class="q-option" data-idx="${idx}" data-optidx="${optIdx}" value="${escapeHtml(opt)}"><button class="btn remove-option" data-idx="${idx}" data-optidx="${optIdx}" style="font-size:0.7rem; padding:0.1rem 0.5rem; background:#F5D6D0; border:none; border-radius:2rem; cursor:pointer;">✖</button>`;
+                    optRow.innerHTML = `<input type="text" class="q-option" data-idx="${idx}" data-optidx="${optIdx}" value="${escapeHtml(opt)}"><button class="btn remove-option" data-idx="${idx}" data-optidx="${optIdx}">✖</button>`;
                     optionsDiv.appendChild(optRow);
                 });
             }
         });
         attachEditorEvents();
-        updateTestTitle();
     }
 
     function attachEditorEvents() {
-        document.querySelectorAll('.q-text').forEach(el => el.addEventListener('change', e => { let idx = el.dataset.idx; questions[idx].text = el.value; }));
-        document.querySelectorAll('.q-image').forEach(el => el.addEventListener('change', e => { let idx = el.dataset.idx; questions[idx].image = el.value; }));
-        document.querySelectorAll('.q-correct').forEach(el => el.addEventListener('change', e => { let idx = el.dataset.idx; questions[idx].correct = parseInt(el.value); }));
-        document.querySelectorAll('.q-explanation').forEach(el => el.addEventListener('change', e => { let idx = el.dataset.idx; questions[idx].explanation = el.value; }));
-        document.querySelectorAll('.q-system').forEach(el => el.addEventListener('change', e => { let idx = el.dataset.idx; questions[idx].system = el.value; }));
-
-        document.querySelectorAll('.q-option').forEach(el => el.addEventListener('change', e => { let idx = el.dataset.idx; let optidx = el.dataset.optidx; questions[idx].options[optidx] = el.value; }));
-        document.querySelectorAll('.remove-option').forEach(btn => btn.addEventListener('click', e => { let idx = btn.dataset.idx; let optidx = btn.dataset.optidx; questions[idx].options.splice(optidx, 1); renderEditor(); }));
-        document.querySelectorAll('.add-option').forEach(btn => btn.addEventListener('click', e => { let idx = btn.dataset.idx; questions[idx].options.push('новый вариант'); renderEditor(); }));
-        document.querySelectorAll('.delete-q').forEach(btn => btn.addEventListener('click', e => { let idx = parseInt(btn.dataset.idx); questions.splice(idx, 1); renderEditor(); refreshTestDisplay(); }));
+        document.querySelectorAll('.q-text').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].text = el.value; }));
+        document.querySelectorAll('.q-image').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].image = el.value; }));
+        document.querySelectorAll('.q-correct').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].correct = parseInt(el.value); }));
+        document.querySelectorAll('.q-explanation').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].explanation = el.value; }));
+        document.querySelectorAll('.q-system').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; questions[idx].system = el.value; }));
+        document.querySelectorAll('.q-option').forEach(el => el.addEventListener('change', e => { let idx=el.dataset.idx; let optidx=el.dataset.optidx; questions[idx].options[optidx] = el.value; }));
+        document.querySelectorAll('.remove-option').forEach(btn => btn.addEventListener('click', e => { let idx=btn.dataset.idx; let optidx=btn.dataset.optidx; questions[idx].options.splice(optidx,1); renderEditor(); }));
+        document.querySelectorAll('.add-option').forEach(btn => btn.addEventListener('click', e => { let idx=btn.dataset.idx; questions[idx].options.push('новый вариант'); renderEditor(); }));
+        document.querySelectorAll('.delete-q').forEach(btn => btn.addEventListener('click', e => { let idx=parseInt(btn.dataset.idx); questions.splice(idx,1); renderEditor(); refreshTestDisplay(); }));
     }
 
-    function updateTestTitle() {
-        const title = quizTitleInput.value.trim() || 'Ветеринарная диагностика';
-        testTitleDisplay.textContent = title;
-    }
-
-    // ================================================================
-    //  ТЕСТИРОВАНИЕ
-    // ================================================================
+    // ---- ТЕСТИРОВАНИЕ ----
     function refreshTestDisplay() {
         if (questions.length === 0) {
             caseTitleTest.innerText = 'Нет вопросов';
@@ -606,7 +535,6 @@
         nextBtnTest.classList.remove('active');
         restartBtnTest.style.display = 'none';
         feedbackAreaTest.style.display = 'none';
-        updateTestTitle();
     }
 
     function renderTestQuestion(index) {
@@ -614,21 +542,17 @@
         const q = currentTestQuestions[index];
         caseTitleTest.innerText = `Случай ${index+1} из ${currentTestQuestions.length}`;
         questionTextTest.innerText = q.text;
-
-        // изображение
         imageContainerTest.innerHTML = '';
         if (q.image && q.image.trim()) {
             const img = document.createElement('img');
             img.src = q.image;
             img.style.maxWidth = '100%';
-            img.style.borderRadius = '1rem';
+            img.style.borderRadius = '16px';
             img.style.maxHeight = '180px';
-            img.style.border = '1px solid #E2EAD9';
             imageContainerTest.appendChild(img);
         } else {
-            imageContainerTest.innerHTML = '<div class="image-placeholder">📷 Изображение не загружено</div>';
+            imageContainerTest.innerHTML = '<div class="image-placeholder" style="color:#8f9b82;">📷 Изображение не загружено</div>';
         }
-
         optionsContainerTest.innerHTML = '';
         q.options.forEach((opt, optIdx) => {
             const btn = document.createElement('button');
@@ -638,14 +562,11 @@
             btn.addEventListener('click', () => handleTestAnswer(optIdx, btn));
             optionsContainerTest.appendChild(btn);
         });
-
         document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('correct', 'wrong'));
-        document.querySelectorAll('.option-btn').forEach(b => b.disabled = false);
         testAnswered = false;
         nextBtnTest.disabled = true;
         nextBtnTest.classList.remove('active');
         feedbackAreaTest.style.display = 'none';
-        updateTestTitle();
     }
 
     function handleTestAnswer(selectedIdx, clickedBtn) {
@@ -653,23 +574,22 @@
         const q = currentTestQuestions[currentTestIndex];
         const isCorrect = (selectedIdx === q.correct);
         testAnswered = true;
-
         const allBtns = document.querySelectorAll('.option-btn');
-        allBtns.forEach(b => b.disabled = true);
+        allBtns.forEach(btn => btn.disabled = true);
         const correctBtn = allBtns[q.correct];
         if (correctBtn) correctBtn.classList.add('correct');
         if (!isCorrect) clickedBtn.classList.add('wrong');
         else clickedBtn.classList.add('correct');
 
         const verdict = isCorrect ? '✅ Верно!' : '❌ Неверно!';
+        const correctAnswerText = q.options[q.correct];
         feedbackAreaTest.innerHTML = `
-            <div class="verdict">${verdict}</div>
-            <div><strong>Правильный диагноз:</strong> ${q.options[q.correct]}</div>
+            <div class="feedback-verdict" style="font-weight:800;">${verdict}</div>
+            <div><strong>Правильный диагноз:</strong> ${correctAnswerText}</div>
             <div>📖 ${q.explanation}</div>
             <div class="system-badge">🧬 Система: ${q.system}</div>
         `;
         feedbackAreaTest.style.display = 'block';
-
         nextBtnTest.disabled = false;
         nextBtnTest.classList.add('active');
         if (currentTestIndex === currentTestQuestions.length - 1) {
@@ -709,17 +629,20 @@
         progressCounterTest.innerText = `Случай ${currentTestIndex+1} из ${total}`;
     }
 
-    // ================================================================
-    //  JSON / ЭКСПОРТ HTML С НАЗВАНИЕМ
-    // ================================================================
+    // ---- JSON / Экспорт HTML ----
     function saveToJson() {
-        const dataStr = JSON.stringify(questions, null, 2);
+        const project = {
+            author: authorInput.value || '',
+            questions: questions
+        };
+        const dataStr = JSON.stringify(project, null, 2);
         const blob = new Blob([dataStr], {type: 'application/json'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'vetsim_quiz.json';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert('✅ Проект сохранён');
     }
 
     function loadFromJson(file) {
@@ -727,31 +650,113 @@
         reader.onload = e => {
             try {
                 const newData = JSON.parse(e.target.result);
+                // Поддерживаем два формата: старый (массив) и новый (объект с author + questions)
                 if (Array.isArray(newData)) {
                     questions = newData;
-                    renderEditor();
-                    refreshTestDisplay();
-                } else alert('Неверный формат JSON');
+                } else if (newData.questions && Array.isArray(newData.questions)) {
+                    questions = newData.questions;
+                    if (newData.author !== undefined) {
+                        authorInput.value = newData.author;
+                        authorPreview.textContent = newData.author || 'не указан';
+                    }
+                } else {
+                    alert('Неверный формат JSON');
+                    return;
+                }
+                renderEditor();
+                refreshTestDisplay();
+                alert('✅ Проект загружен');
             } catch(err) { alert('Ошибка чтения файла'); }
         };
         reader.readAsText(file);
     }
 
+    // ===== НОВОЕ: экспорт с автором =====
     function exportStandaloneHtml() {
-        const title = quizTitleInput.value.trim() || 'Ветеринарная диагностика';
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const qData = JSON.stringify(questions);
 
         const standaloneHtml = `<!DOCTYPE html>
         <html lang="ru">
         <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${escapeHtml(title)} | ВетСим</title>
-        <style>${document.querySelector('style').innerHTML}</style>
+        <title>Ветеринарная диагностика | ВетСим</title>
+        <style>
+            * { box-sizing: border-box; margin: 0; padding: 0; }
+            body { font-family: 'Segoe UI', 'Arial', sans-serif; background: #f4f7f9; color: #2c3e2f; padding: 20px; line-height: 1.4; }
+            .main-container { max-width: 1100px; margin: 0 auto; }
+            .quiz-container { background: white; border-radius: 28px; overflow: hidden; box-shadow: 0 12px 28px rgba(0,0,0,0.08); }
+            .quiz-header { background: #eef3e8; padding: 1rem 1.5rem; }
+            .quiz-header h1 { font-size: 1.4rem; color: #4b6e43; }
+            .progress-section { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 8px; }
+            .progress-text { font-size: 0.9rem; background: #e2e9da; padding: 0.2rem 0.8rem; border-radius: 30px; }
+            .progress-bar-bg { flex: 1; height: 8px; background: #dadfcf; border-radius: 20px; }
+            .progress-fill { width: 0%; height: 100%; background: #7ca86a; border-radius: 20px; transition: width 0.25s; }
+            .case-card { padding: 1.5rem; }
+            .case-title { font-size: 1.3rem; font-weight: 600; margin-bottom: 1rem; color: #4b6e43; border-left: 5px solid #9bbb8a; padding-left: 15px; }
+            .symptom-text { background: #fefaf2; padding: 1rem; border-radius: 20px; margin-bottom: 1rem; border: 1px solid #ede3d4; }
+            .options-grid { display: flex; flex-direction: column; gap: 10px; margin: 1.2rem 0; }
+            .option-btn { background: #eef2e9; border: 1px solid #dbdfcf; text-align: left; padding: 10px 16px; border-radius: 40px; font-weight: 500; cursor: pointer; transition: 0.2s; font-family: inherit; font-size: 0.95rem; }
+            .option-btn:hover:not(:disabled) { background: #dfe7d4; }
+            .option-btn.correct { background: #4caf50 !important; color: white; }
+            .option-btn.wrong { background: #f44336 !important; color: white; }
+            .option-btn:disabled { cursor: default; }
+            .feedback-area { background: #f4f1ea; border-left: 6px solid #9bbb8a; padding: 1rem; border-radius: 20px; margin: 1rem 0; display: none; }
+            .system-badge { background: #d9e3ce; display: inline-block; padding: 4px 14px; border-radius: 40px; font-size: 0.75rem; margin-top: 10px; }
+            .nav-buttons { display: flex; justify-content: space-between; margin-top: 1.5rem; }
+            .next-btn { background: #cfdec2; padding: 8px 24px; border-radius: 40px; font-weight: bold; border: none; cursor: pointer; font-family: inherit; font-size: 0.9rem; }
+            .next-btn.active { background: #7e9f6e; color: white; }
+            .next-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+            .restart-btn { background: #e2cfb0; padding: 8px 20px; border-radius: 40px; border: none; cursor: pointer; font-family: inherit; }
+            .vetsim-credit { margin-top: 1.5rem; padding: 1rem 1.2rem; background: linear-gradient(135deg, #eef3e8, #f9f6ef); border-radius: 24px; border: 1px solid #d9e3ce; text-align: center; font-size: 0.82rem; color: #2c3e2f; }
+            .vetsim-credit-title { font-weight: 700; color: #4b6e43; font-size: 0.92rem; margin-bottom: 0.5rem; }
+            .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.15rem 0; }
+            .vetsim-credit-label { color: #6d8466; font-weight: 600; }
+            .vetsim-credit-value { color: #2c5a2c; font-weight: 700; }
+            footer { background: #f9f6ef; text-align: center; font-size: 0.7rem; padding: 0.8rem; color: #9aa98b; }
+        </style>
         </head>
-        <body><div class="main-container"><div class="quiz-container"><div class="quiz-header"><h1>🐄 <span>${escapeHtml(title)}</span></h1><div class="progress-section"><span class="progress-text" id="progressCounter">Случай 1 из ...</span><div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div></div></div><div class="case-card"><div class="case-title" id="caseTitle">Случай 1</div><div class="symptom-text" id="questionText"></div><div id="imageContainer"></div><div class="options-grid" id="optionsContainer"></div><div id="feedbackArea" class="feedback-area"></div><div class="nav-buttons"><button id="nextBtn" class="next-btn" disabled>➡ Следующий случай</button><button id="restartBtn" class="restart-btn">🔄 Начать сначала</button></div></div><div class="footer">© Тераевич Алла Сергеевна, 2026. Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a></div></div></div>
+        <body>
+        <div class="main-container">
+            <div class="quiz-container">
+                <div class="quiz-header">
+                    <h1>🐄 Ветеринарная диагностика: «Что не так?»</h1>
+                    <div class="progress-section">
+                        <span class="progress-text" id="progressCounter">Случай 1 из ...</span>
+                        <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+                    </div>
+                </div>
+                <div class="case-card">
+                    <div class="case-title" id="caseTitle">Случай 1</div>
+                    <div class="symptom-text" id="questionText"></div>
+                    <div id="imageContainer"></div>
+                    <div class="options-grid" id="optionsContainer"></div>
+                    <div id="feedbackArea" class="feedback-area"></div>
+                    <div class="nav-buttons">
+                        <button id="nextBtn" class="next-btn" disabled>➡ Следующий случай</button>
+                        <button id="restartBtn" class="restart-btn">🔄 Начать сначала</button>
+                    </div>
+
+                    <!-- ===== Блок подписи автора ===== -->
+                    <div class="vetsim-credit">
+                        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+                        <div class="vetsim-credit-row">
+                            <span class="vetsim-credit-label">Автор проекта:</span>
+                            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+                        </div>
+                        <div class="vetsim-credit-row">
+                            <span class="vetsim-credit-label">Автор викторины:</span>
+                            <span class="vetsim-credit-value">${safeAuthorName}</span>
+                        </div>
+                    </div>
+                </div>
+                <footer>© ВетСим — интерактивная викторина · CC BY-NC</footer>
+            </div>
+        </div>
         <script>
             const quizData = ${qData};
-            const total = quizData.length;
             let currentIndex = 0, answered = false;
+            const total = quizData.length;
             const caseTitle = document.getElementById('caseTitle');
             const questionText = document.getElementById('questionText');
             const optionsContainer = document.getElementById('optionsContainer');
@@ -761,17 +766,12 @@
             const progressCounter = document.getElementById('progressCounter');
             const progressFill = document.getElementById('progressFill');
             const imageContainer = document.getElementById('imageContainer');
-
-            function updateProgress() {
-                const percent = ((currentIndex+1)/total)*100;
-                progressFill.style.width = percent+'%';
-                progressCounter.innerText = 'Случай '+(currentIndex+1)+' из '+total;
-            }
+            function updateProgress() { const percent = ((currentIndex+1)/total)*100; progressFill.style.width = percent+'%'; progressCounter.innerText = 'Случай '+(currentIndex+1)+' из '+total; }
             function renderCase() {
                 const q = quizData[currentIndex];
                 caseTitle.innerText = 'Случай '+(currentIndex+1);
                 questionText.innerText = q.text;
-                imageContainer.innerHTML = q.image ? '<img src="'+q.image+'" style="max-width:100%; border-radius:1rem; max-height:180px; border:1px solid #E2EAD9;">' : '<div class="image-placeholder">📷 Изображение не загружено</div>';
+                imageContainer.innerHTML = q.image ? '<img src="'+q.image+'" style="max-width:100%; border-radius:16px; max-height:180px;">' : '<div style="color:#8f9b82; margin-bottom:10px;">📷 Изображение не загружено</div>';
                 optionsContainer.innerHTML = '';
                 q.options.forEach((opt, idx) => {
                     const btn = document.createElement('button');
@@ -780,7 +780,7 @@
                     btn.onclick = () => handleAnswer(idx, btn);
                     optionsContainer.appendChild(btn);
                 });
-                document.querySelectorAll('.option-btn').forEach(b=>{b.classList.remove('correct','wrong'); b.disabled=false;});
+                document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('correct','wrong'));
                 answered = false;
                 nextBtn.disabled = true;
                 nextBtn.classList.remove('active');
@@ -796,7 +796,7 @@
                 allBtns.forEach(b=>b.disabled=true);
                 allBtns[q.correct].classList.add('correct');
                 if(!isCorrect) btn.classList.add('wrong'); else btn.classList.add('correct');
-                feedbackArea.innerHTML = '<div class="verdict">'+(isCorrect?'✅ Верно!':'❌ Неверно!')+'</div><div><strong>Правильный диагноз:</strong> '+q.options[q.correct]+'</div><div>📖 '+q.explanation+'</div><div class="system-badge">🧬 Система: '+q.system+'</div>';
+                feedbackArea.innerHTML = '<div style="font-weight:800;">'+(isCorrect?'✅ Верно!':'❌ Неверно!')+'</div><div><strong>Правильный диагноз:</strong> '+q.options[q.correct]+'</div><div>📖 '+q.explanation+'</div><div class="system-badge">🧬 Система: '+q.system+'</div>';
                 feedbackArea.style.display = 'block';
                 nextBtn.disabled = false;
                 nextBtn.classList.add('active');
@@ -806,47 +806,41 @@
             function nextCase() {
                 if(!answered) return;
                 if(currentIndex+1 < total) { currentIndex++; renderCase(); }
-                else { alert('🎉 Викторина завершена! 🎉\\nНажмите "Начать сначала"'); }
+                else { alert('🎉 Викторина завершена! 🎉'); restartQuiz(); }
             }
-            function restartQuiz() { currentIndex=0; renderCase(); nextBtn.disabled=true; nextBtn.classList.remove('active'); restartBtn.style.display='none'; }
+            function restartQuiz() { currentIndex=0; answered=false; renderCase(); nextBtn.disabled=true; nextBtn.classList.remove('active'); restartBtn.style.display='none'; }
             nextBtn.onclick = nextCase;
-            restartBtn.onclick = () => { currentIndex=0; renderCase(); restartBtn.style.display='none'; };
+            restartBtn.onclick = restartQuiz;
             renderCase();
         <\/script>
         </body>
         </html>`;
-
-        const blob = new Blob([standaloneHtml], {type: 'text/html'});
+        const blob = new Blob([standaloneHtml], {type: 'text/html;charset=utf-8'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'vetsim_quiz_standalone.html';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert("✅ Викторина экспортирована!\n\nФайл: vetsim_quiz_standalone.html");
     }
 
     function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
 
-    // ================================================================
-    //  СОБЫТИЯ
-    // ================================================================
+    // ---- Инициализация и переключение вкладок ----
     document.getElementById('addQuestionBtn').onclick = () => {
-        questions.push({ id: Date.now(), text: 'Новый вопрос', options: ['Вариант A', 'Вариант B'], correct: 0, explanation: 'Пояснение', system: 'Система', image: '' });
+        const newId = Date.now();
+        questions.push({ id: newId, text: 'Новый вопрос', options: ['Вариант A', 'Вариант B'], correct: 0, explanation: 'Пояснение', system: 'Система', image: '' });
         renderEditor();
         refreshTestDisplay();
     };
-    document.getElementById('saveJsonBtn').onclick = saveToJson;
+    document.getElementById('saveJsonBtn').onclick = () => saveToJson();
     document.getElementById('loadJsonBtn').onclick = () => {
         const inp = document.createElement('input'); inp.type='file'; inp.accept='.json';
         inp.onchange = e => loadFromJson(inp.files[0]);
         inp.click();
     };
-    document.getElementById('exportHtmlBtn').onclick = exportStandaloneHtml;
-
-    quizTitleInput.addEventListener('input', () => {
-        updateTestTitle();
-    });
-
-    nextBtnTest.onclick = nextTestQuestion;
+    document.getElementById('exportHtmlBtn').onclick = () => exportStandaloneHtml();
+    nextBtnTest.onclick = () => nextTestQuestion();
     restartBtnTest.onclick = () => { currentTestIndex=0; testAnswered=false; renderTestQuestion(0); updateTestProgress(); nextBtnTest.disabled=true; restartBtnTest.style.display='none'; };
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -859,9 +853,7 @@
         });
     });
 
-    // ================================================================
-    //  СТАРТ
-    // ================================================================
+    loadAuthorLocal();
     renderEditor();
     refreshTestDisplay();
 </script>

@@ -86,6 +86,84 @@
             padding: 6px 14px;
         }
 
+        /* ===== Поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 1.5rem;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #1F4E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 6px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FFFEF7;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
+        /* ===== Поле названия сценария ===== */
+        .title-block {
+            background: #FEFCF9;
+            border-radius: 1.5rem;
+            padding: 10px 20px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .title-block label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #1F4E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .title-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 6px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FFFDF8;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.2s;
+        }
+        .title-input:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         /* --- Кнопки --- */
         .btn {
             background: #EBE3D2;
@@ -488,6 +566,33 @@
             color: #7B8D6E;
         }
 
+        /* ===== Подпись внизу ===== */
+        .vetsim-credit {
+            margin-top: 16px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 1.5rem;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #1A2A3A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7B8D6E; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
         /* --- Общие --- */
         .toast {
             position: fixed;
@@ -521,6 +626,7 @@
             .choice-item .choice-meta textarea { width: 100%; }
             .preview-container .stage-card { padding: 1.2rem; }
             .mode-tabs .mode-tab { flex: 1; text-align: center; padding: 6px 12px; font-size: 0.75rem; }
+            .author-block, .title-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -545,6 +651,20 @@
         </div>
     </header>
 
+    <!-- ===== Поле автора ===== -->
+    <div class="author-block">
+        <label for="authorInput">✍️ Автор сценария:</label>
+        <input type="text" id="authorInput" class="author-input"
+               placeholder="Например: Тераевич Алла Сергеевна">
+    </div>
+
+    <!-- ===== Поле названия сценария ===== -->
+    <div class="title-block">
+        <label for="titleInput">🏷️ Название сценария:</label>
+        <input type="text" id="titleInput" class="title-input"
+               placeholder="Например: Спасение стада">
+    </div>
+
     <!-- ===== РЕЖИМЫ ===== -->
     <div class="mode-tabs">
         <button class="mode-tab active" data-mode="editor">✏️ Конструктор</button>
@@ -563,10 +683,6 @@
                 </div>
                 <div class="stage-list" id="stageList"></div>
                 <div style="margin-top:10px; padding-top:10px; border-top:1px solid #E7EDE2;">
-                    <div class="form-group" style="margin-bottom:6px;">
-                        <label>Название сценария</label>
-                        <input type="text" id="projectTitle" value="Новый сценарий" />
-                    </div>
                     <div class="form-group" style="margin-bottom:6px;">
                         <label>Описание</label>
                         <input type="text" id="projectDesc" placeholder="Краткое описание" />
@@ -646,6 +762,19 @@
         </div>
     </div>
 
+    <!-- ===== Подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор сценария:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 </div>
@@ -655,18 +784,16 @@
     //  ГРУППОВОЕ ПРИНЯТИЕ РЕШЕНИЙ — ПОЛНАЯ ЛОГИКА
     // ================================================================
 
-    // ================================================================
-    //  ВСТРОЕННЫЙ ПРИМЕР «СПАСЕНИЕ СТАДА»
-    // ================================================================
     const EXAMPLE_DATA = {
         title: 'Спасение стада',
         description: 'Клинический случай вспышки пастереллёза на ферме КРС',
         timer: 10,
+        author: '',
         stages: [
             {
                 id: 1,
                 title: 'Первичный сбор информации',
-                context: 'Вы — ветеринарный врач, работающий в райСББЖ. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
+                context: 'Вы — ветеринарный врач, работающий в клинике для сельскохозяйственных животных. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
                 text: 'Вы звоните фермеру. Какие вопросы вы зададите в первую очередь, чтобы оценить ситуацию? (выберите 3 вопроса из 6 представленных)',
                 image: '',
                 video: '',
@@ -683,7 +810,7 @@
             {
                 id: 2,
                 title: 'Осмотр и дифференциальная диагностика',
-                context: 'Вы — ветеринарный врач, работающий в райСББЖ. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
+                context: 'Вы — ветеринарный врач, работающий в клинике для сельскохозяйственных животных. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
                 text: 'Вы прибыли на ферму. После осмотра больных животных и вскрытия павшего, вы исключаете сибирскую язву. Но симптомы (лихорадка, отказ от корма, одышка, тахикардия, признаки общей интоксикации) остаются. Каков ваш следующий шаг?',
                 image: '',
                 video: '',
@@ -697,7 +824,7 @@
             {
                 id: 3,
                 title: 'Интерпретация результатов и тактика',
-                context: 'Вы — ветеринарный врач, работающий в райСББЖ. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
+                context: 'Вы — ветеринарный врач, работающий в клинике для сельскохозяйственных животных. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
                 text: 'Анализ ПЦР подтверждает наличие пастереллёза (геморрагическая септицемия). Штамм чувствителен к тетрациклинам. Каков ваш план действий?',
                 image: '',
                 video: '',
@@ -711,7 +838,7 @@
             {
                 id: 4,
                 title: 'Профилактика и меры биобезопасности',
-                context: 'Вы — ветеринарный врач, работающий в райСББЖ. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
+                context: 'Вы — ветеринарный врач, работающий в клинике для сельскохозяйственных животных. Вам поступает срочный вызов от фермера: в стаде из 100 голов крупного рогатого скота за последние 48 часов заболело 15 животных. Симптомы: лихорадка, отказ от корма, одышка, обильное слюнотечение. Трое животных пали. Фермер в панике, он подозревает сибирскую язву.',
                 text: 'Вы успешно купировали вспышку. Какие долгосрочные меры вы предложите фермеру, чтобы предотвратить повторение подобных ситуаций?',
                 image: '',
                 video: '',
@@ -733,6 +860,46 @@
     let currentMode = 'editor';
     let nextId = 100;
 
+    const DEFAULT_TITLE = 'Спасение стада';
+
+    // ===== Элементы автора и названия =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+    const titleInput = document.getElementById('titleInput');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    titleInput.addEventListener('input', () => {
+        saveTitleLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_group_decision_author', authorInput.value); } catch (e) {}
+    }
+    function saveTitleLocal() {
+        try { localStorage.setItem('vetsim_group_decision_title', titleInput.value); } catch (e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_group_decision_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch (e) {}
+    }
+    function loadTitleLocal() {
+        try {
+            const t = localStorage.getItem('vetsim_group_decision_title');
+            if (t) {
+                titleInput.value = t;
+            }
+        } catch (e) {}
+    }
+
     // ================================================================
     //  DOM-СВЯЗИ
     // ================================================================
@@ -741,7 +908,6 @@
     const stageEditor = document.getElementById('stageEditor');
     const stageEditorTitle = document.getElementById('stageEditorTitle');
 
-    const projectTitle = document.getElementById('projectTitle');
     const projectDesc = document.getElementById('projectDesc');
     const projectTimer = document.getElementById('projectTimer');
 
@@ -785,7 +951,7 @@
 
     function escapeHtml(str) {
         if (!str) return '';
-        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
     function generateId() {
@@ -800,11 +966,6 @@
         return project.stages.findIndex(s => s.id === id);
     }
 
-    function getStageChoices(id) {
-        const stage = getStage(id);
-        return stage ? stage.choices : [];
-    }
-
     // ================================================================
     //  РЕНДЕР СПИСКА ЭТАПОВ
     // ================================================================
@@ -813,6 +974,7 @@
         project.stages.forEach((stage, index) => {
             const div = document.createElement('div');
             div.className = 'stage-item' + (stage.id === selectedStageId ? ' active' : '');
+            div.setAttribute('draggable', 'true');
             div.innerHTML = `
                 <span>
                     <span class="drag-handle">⠿</span>
@@ -828,17 +990,16 @@
             stageListEl.appendChild(div);
         });
 
-        // Drag-and-drop
         let dragItem = null;
         document.querySelectorAll('.stage-item').forEach(item => {
             item.addEventListener('dragstart', function(e) {
                 dragItem = this;
                 this.style.opacity = '0.4';
                 e.dataTransfer.effectAllowed = 'move';
-                e.dataTransfer.setData('text/plain', this.querySelector('.stage-index')?.textContent || '');
             });
             item.addEventListener('dragend', function() {
                 this.style.opacity = '1';
+                document.querySelectorAll('.stage-item').forEach(i => i.style.borderTop = 'none');
             });
             item.addEventListener('dragover', function(e) {
                 e.preventDefault();
@@ -854,13 +1015,8 @@
                 if (!dragItem || dragItem === this) return;
                 const fromIndex = Array.from(stageListEl.children).indexOf(dragItem);
                 const toIndex = Array.from(stageListEl.children).indexOf(this);
-                if (fromIndex < toIndex) {
-                    const [moved] = project.stages.splice(fromIndex, 1);
-                    project.stages.splice(toIndex, 0, moved);
-                } else {
-                    const [moved] = project.stages.splice(fromIndex, 1);
-                    project.stages.splice(toIndex, 0, moved);
-                }
+                const [moved] = project.stages.splice(fromIndex, 1);
+                project.stages.splice(toIndex, 0, moved);
                 renderStageList();
                 saveToStorage();
                 showToast('🔄 Порядок этапов изменён');
@@ -919,7 +1075,6 @@
             choiceList.appendChild(div);
         });
 
-        // Обработчики
         document.querySelectorAll('.choice-text').forEach(inp => {
             inp.addEventListener('input', function() {
                 const idx = parseInt(this.dataset.index);
@@ -935,7 +1090,6 @@
                 const idx = parseInt(this.dataset.index);
                 const stage = getStage(stageId);
                 if (stage && stage.choices[idx]) {
-                    // Если отмечаем как правильный, снимаем отметки с других
                     if (this.checked) {
                         stage.choices.forEach((_, i) => {
                             if (i !== idx) stage.choices[i].isCorrect = false;
@@ -992,7 +1146,6 @@
         stage.video = stageVideo.value.trim() || '';
         stage.audio = stageAudio.value.trim() || '';
 
-        // Удаляем пустые варианты
         stage.choices = stage.choices.filter(c => c.text.trim().length > 0);
 
         renderStageList();
@@ -1065,15 +1218,20 @@
     //  ПРОЕКТ
     // ================================================================
     function updateProjectMeta() {
-        project.title = projectTitle.value.trim() || 'Новый сценарий';
+        project.title = titleInput.value.trim() || DEFAULT_TITLE;
         project.description = projectDesc.value.trim() || '';
         project.timer = parseInt(projectTimer.value) || 10;
+        project.author = authorInput.value.trim() || '';
     }
 
     function loadProjectMeta() {
-        projectTitle.value = project.title || 'Новый сценарий';
+        titleInput.value = project.title || DEFAULT_TITLE;
         projectDesc.value = project.description || '';
         projectTimer.value = project.timer || 10;
+        authorInput.value = project.author || '';
+        if (project.author) {
+            authorPreview.textContent = project.author;
+        }
     }
 
     function saveToStorage() {
@@ -1114,6 +1272,9 @@
         project.stages.forEach(s => { if (s.id > maxId) maxId = s.id; });
         nextId = maxId + 1;
         selectedStageId = project.stages[0].id;
+        // Подставляем сохранённые автора и название
+        if (authorInput.value) project.author = authorInput.value;
+        if (titleInput.value) project.title = titleInput.value;
         loadProjectMeta();
         renderStageList();
         loadStageToEditor(selectedStageId);
@@ -1164,223 +1325,247 @@
     }
 
     // ================================================================
-    //  ЭКСПОРТ В HTML (ИСПРАВЛЕНАЯ ВЕРСИЯ)
+    //  ЭКСПОРТ В HTML
+    //  ИСПРАВЛЕНО: единый stage-card, который обновляется при переключении
     // ================================================================
     function exportHTML() {
         updateProjectMeta();
 
-        // Проверяем, что есть этапы и варианты
         if (project.stages.length === 0) {
             showToast('⚠️ Добавьте хотя бы один этап!');
             return;
         }
 
-        // Экранируем данные для безопасной вставки в JS
-        const safeProject = JSON.stringify(project)
+        const authorName = project.author || 'не указан';
+        const safeAuthorName = escapeHtml(authorName);
+        const safeTitle = escapeHtml(project.title);
+
+        // Безопасная вставка JSON в HTML
+        const jsonStr = JSON.stringify(project)
             .replace(/\\/g, '\\\\')
-            .replace(/\$/g, '\\$')
-            .replace(/`/g, '\\`')
-            .replace(/<\/script>/gi, '<\\/script>');
+            .replace(/\//g, '\\/')
+            .replace(/<\//g, '<\\/');
 
         const html = `<!DOCTYPE html>
-    <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-        <title>${escapeHtml(project.title)} | Групповое принятие решений</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-        <style>
-            * { margin:0; padding:0; box-sizing:border-box; }
-            body { font-family: 'Montserrat', system-ui, sans-serif; background:#F4F7F9; color:#1A2A3A; min-height:100vh; padding:20px; }
-            .container { max-width:900px; margin:0 auto; }
-            .header { background:white; border-radius:1.5rem; padding:16px 24px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.04); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; }
-            .header .logo { font-weight:800; font-size:1.1rem; color:#1A2A3A; }
-            .header .logo span { color:#2C7DA0; }
-            .header .timer { background:#F0F7FA; padding:4px 16px; border-radius:40px; font-size:0.8rem; font-weight:600; color:#2C7DA0; }
-            .stage-card { background:white; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:1px solid #E7EDE2; margin-bottom:20px; }
-            .stage-context { font-size:0.95rem; line-height:1.6; color:#2C7DA0; background:#F0F7FA; padding:12px 18px; border-radius:1rem; margin-bottom:12px; border-left:4px solid #2C7DA0; }
-            .stage-title { font-size:1.5rem; font-weight:700; color:#1A2A3A; margin-bottom:8px; }
-            .stage-text { font-size:1rem; line-height:1.7; color:#3E5C4A; margin-bottom:12px; }
-            .stage-media img, .stage-media video { max-width:100%; border-radius:1rem; margin-bottom:10px; }
-            .choices { display:flex; flex-direction:column; gap:10px; margin:16px 0; }
-            .choice-btn { padding:12px 20px; border-radius:2.5rem; font-weight:600; font-size:0.9rem; cursor:pointer; transition:0.2s; font-family:inherit; text-align:left; background:#F4EFE4; border:2px solid #D9D0BD; color:#1A2A3A; width:100%; }
-            .choice-btn:hover { border-color:#2C7DA0; background:#D4E3ED; transform:translateX(4px); }
-            .choice-btn.selected { border-color:#2C7DA0; background:#D4E3ED; }
-            .choice-btn.reveal-correct { border-color:#6B9E6B; background:#E8F5E8; }
-            .choice-btn.reveal-wrong { border-color:#D4A373; background:#FDF0E8; }
-            .choice-btn .feedback { font-weight:400; font-size:0.8rem; color:#5F7C62; margin-top:4px; padding:6px 12px; background:#F9F6EF; border-radius:1rem; display:none; }
-            .choice-btn .feedback.show { display:block; }
-            .choice-btn .votes { font-weight:400; font-size:0.75rem; color:#7B8D6E; margin-left:8px; }
-            .progress-info { font-size:0.8rem; color:#7B8D6E; margin-bottom:8px; display:flex; justify-content:space-between; flex-wrap:wrap; }
-            .progress-bar { height:6px; background:#E7EDE2; border-radius:40px; overflow:hidden; margin-top:12px; }
-            .progress-bar .fill { height:100%; background:linear-gradient(90deg,#2C7DA0,#6B9E6B); border-radius:40px; transition:width 0.4s ease; }
-            .controls { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
-            .btn { background:#EBE3D2; border:none; padding:8px 20px; border-radius:2.5rem; font-weight:600; cursor:pointer; font-family:inherit; font-size:0.85rem; color:#1A2A3A; }
-            .btn-primary { background:#2C7DA0; color:#fff; }
-            .btn-primary:hover { background:#236B8A; }
-            .btn-success { background:#6B9E6B; color:#fff; }
-            .btn-success:hover { background:#5A865A; }
-            .btn-outline { background:transparent; border:2px solid #D9D0BD; }
-            .btn-outline:hover { background:#F0EEE5; }
-            .footer { text-align:center; font-size:0.75rem; color:#7B8D6E; margin-top:24px; padding-top:16px; border-top:1px solid #E7EDE2; }
-            .footer a { color:#2C7DA0; text-decoration:none; }
-            @media (max-width:600px) { .stage-card { padding:1.2rem; } .header { flex-direction:column; align-items:stretch; } }
-        </style>
-    </head>
-    <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo">🧩 <span>${escapeHtml(project.title)}</span></div>
-            <div class="timer">⏱️ ${project.timer || 10} мин на обсуждение</div>
-        </div>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>${safeTitle} | Групповое принятие решений</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Montserrat', system-ui, sans-serif; background:#F4F7F9; color:#1A2A3A; min-height:100vh; padding:20px; }
+        .container { max-width:900px; margin:0 auto; }
+        .header { background:white; border-radius:1.5rem; padding:16px 24px; margin-bottom:20px; box-shadow:0 2px 10px rgba(0,0,0,0.04); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px; }
+        .header .logo { font-weight:800; font-size:1.1rem; color:#1A2A3A; }
+        .header .logo span { color:#2C7DA0; }
+        .header .timer { background:#F0F7FA; padding:4px 16px; border-radius:40px; font-size:0.8rem; font-weight:600; color:#2C7DA0; }
+        .stage-card { background:white; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:1px solid #E7EDE2; margin-bottom:20px; }
+        .stage-context { font-size:0.95rem; line-height:1.6; color:#2C7DA0; background:#F0F7FA; padding:12px 18px; border-radius:1rem; margin-bottom:12px; border-left:4px solid #2C7DA0; }
+        .stage-title { font-size:1.5rem; font-weight:700; color:#1A2A3A; margin-bottom:8px; }
+        .stage-text { font-size:1rem; line-height:1.7; color:#3E5C4A; margin-bottom:12px; }
+        .stage-media img, .stage-media video { max-width:100%; border-radius:1rem; margin-bottom:10px; }
+        .choices { display:flex; flex-direction:column; gap:10px; margin:16px 0; }
+        .choice-btn { padding:12px 20px; border-radius:2.5rem; font-weight:600; font-size:0.9rem; cursor:pointer; transition:0.2s; font-family:inherit; text-align:left; background:#F4EFE4; border:2px solid #D9D0BD; color:#1A2A3A; width:100%; }
+        .choice-btn:hover { border-color:#2C7DA0; background:#D4E3ED; transform:translateX(4px); }
+        .choice-btn.reveal-correct { border-color:#6B9E6B; background:#E8F5E8; }
+        .choice-btn.reveal-wrong { border-color:#D4A373; background:#FDF0E8; }
+        .choice-btn .feedback { font-weight:400; font-size:0.8rem; color:#5F7C62; margin-top:4px; padding:6px 12px; background:#F9F6EF; border-radius:1rem; display:none; }
+        .choice-btn .feedback.show { display:block; }
+        .choice-btn .votes { font-weight:400; font-size:0.75rem; color:#7B8D6E; margin-left:8px; }
+        .progress-info { font-size:0.8rem; color:#7B8D6E; margin-bottom:8px; display:flex; justify-content:space-between; flex-wrap:wrap; }
+        .progress-bar { height:6px; background:#E7EDE2; border-radius:40px; overflow:hidden; margin-top:12px; }
+        .progress-bar .fill { height:100%; background:linear-gradient(90deg,#2C7DA0,#6B9E6B); border-radius:40px; transition:width 0.4s ease; }
+        .controls { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+        .btn { background:#EBE3D2; border:none; padding:8px 20px; border-radius:2.5rem; font-weight:600; cursor:pointer; font-family:inherit; font-size:0.85rem; color:#1A2A3A; }
+        .btn-primary { background:#2C7DA0; color:#fff; }
+        .btn-primary:hover { background:#236B8A; }
+        .btn-success { background:#6B9E6B; color:#fff; }
+        .btn-success:hover { background:#5A865A; }
+        .btn-outline { background:transparent; border:2px solid #D9D0BD; }
+        .btn-outline:hover { background:#F0EEE5; }
+        .btn:disabled { opacity:0.5; cursor:not-allowed; }
 
-        <div id="app">
-            <div class="progress-info">
-                <span id="stageCounter">Шаг 1 из ${project.stages.length}</span>
-                <span id="stageTitleHeader">${escapeHtml(project.stages[0]?.title || '')}</span>
-            </div>
-            <div class="progress-bar"><div class="fill" id="progressFill" style="width:${project.stages.length > 0 ? (1 / project.stages.length * 100) : 0}%;"></div></div>
+        /* ===== Блок подписи автора ===== */
+        .vetsim-credit { margin-top: 24px; padding: 14px 20px; background: linear-gradient(135deg, #F3F6EF, #FDF8F0); border-radius: 1.5rem; border: 1px solid #E2EAD9; text-align: center; font-size: 0.82rem; color: #3E5C4A; }
+        .vetsim-credit-title { font-weight: 700; color: #6B8E5C; font-size: 0.92rem; margin-bottom: 0.5rem; }
+        .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.15rem 0; }
+        .vetsim-credit-label { color: #7B8D6E; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
 
-            <div class="stage-card" id="stageCard">
-                ${project.stages[0]?.context ? `<div class="stage-context">📋 ${escapeHtml(project.stages[0].context)}</div>` : ''}
-                <div class="stage-title" id="stageTitle">${escapeHtml(project.stages[0]?.title || '')}</div>
-                <div class="stage-text" id="stageText">${(project.stages[0]?.text || '').replace(/`/g, '\\`')}</div>
-                <div class="stage-media" id="stageMedia"></div>
-                <div class="choices" id="choicesContainer"></div>
-                <div class="controls">
-                    <button class="btn btn-primary" id="revealBtn">📊 Показать результаты</button>
-                    <button class="btn btn-outline" id="resetVotesBtn">🔄 Сбросить голоса</button>
-                    ${project.stages.length > 1 ? `<button class="btn btn-outline" id="nextBtn">➡️ Следующий этап</button>` : ''}
-                </div>
-            </div>
-        </div>
-        <div class="footer">🐾 ВетСим — ветеринарное образование · <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a></div>
+        .footer { text-align:center; font-size:0.75rem; color:#7B8D6E; margin-top:16px; }
+        .footer a { color:#2C7DA0; text-decoration:none; }
+        @media (max-width:600px) { .stage-card { padding:1.2rem; } .header { flex-direction:column; align-items:stretch; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">🧩 <span>${safeTitle}</span></div>
+        <div class="timer">⏱️ ${project.timer || 10} мин на обсуждение</div>
     </div>
 
-    <script>
-        const PROJECT = ${safeProject};
-        let currentStageIndex = 0;
-        let votes = {};
-        let revealed = false;
+    <div id="app">
+        <div class="progress-info">
+            <span id="stageCounter">Шаг 1 из ${project.stages.length}</span>
+            <span id="stageTitleHeader"></span>
+        </div>
+        <div class="progress-bar"><div class="fill" id="progressFill" style="width:0%;"></div></div>
 
-        function getStage(index) { return PROJECT.stages[index] || null; }
+        <div class="stage-card">
+            <div class="stage-context" id="stageContextEl" style="display:none;"></div>
+            <div class="stage-title" id="stageTitle"></div>
+            <div class="stage-text" id="stageText"></div>
+            <div class="stage-media" id="stageMedia"></div>
+            <div class="choices" id="choicesContainer"></div>
+            <div class="controls">
+                <button class="btn btn-primary" id="revealBtn">📊 Показать результаты</button>
+                <button class="btn btn-outline" id="resetVotesBtn">🔄 Сбросить голоса</button>
+                <button class="btn btn-outline" id="nextStageBtn" style="display:none;">➡️ Следующий этап</button>
+            </div>
+        </div>
+    </div>
 
-        function renderStage(index) {
-            const stage = getStage(index);
-            if (!stage) return;
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор сценария:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
 
-            // Контекст
-            const contextEl = document.querySelector('.stage-context');
-            if (stage.context) {
-                if (contextEl) {
-                    contextEl.textContent = '📋 ' + stage.context;
-                    contextEl.style.display = 'block';
-                } else {
-                    const newContext = document.createElement('div');
-                    newContext.className = 'stage-context';
-                    newContext.textContent = '📋 ' + stage.context;
-                    document.getElementById('stageCard').prepend(newContext);
-                }
-            } else if (contextEl) {
-                contextEl.style.display = 'none';
-            }
+    <div class="footer">🐾 ВетСим — ветеринарное образование · <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a></div>
+</div>
 
-            document.getElementById('stageTitle').textContent = stage.title || 'Без названия';
-            document.getElementById('stageText').innerHTML = stage.text || '';
-            document.getElementById('stageCounter').textContent = 'Шаг ' + (index + 1) + ' из ' + PROJECT.stages.length;
-            document.getElementById('stageTitleHeader').textContent = stage.title || '';
-            document.getElementById('progressFill').style.width = ((index + 1) / PROJECT.stages.length * 100) + '%';
+<script>
+    const PROJECT = ${jsonStr};
+    let currentStageIndex = 0;
+    let votes = {};
+    let revealed = false;
 
-            const mediaEl = document.getElementById('stageMedia');
-            mediaEl.innerHTML = '';
-            if (stage.image) mediaEl.innerHTML += '<img src="' + stage.image + '" alt="Изображение" loading="lazy">';
-            if (stage.video) mediaEl.innerHTML += '<video src="' + stage.video + '" controls></video>';
-            if (stage.audio) mediaEl.innerHTML += '<audio src="' + stage.audio + '" controls style="width:100%;margin-top:8px;"></audio>';
+    function getStage(index) { return PROJECT.stages[index] || null; }
 
-            const container = document.getElementById('choicesContainer');
-            container.innerHTML = '';
+    function renderStage(index) {
+        const stage = getStage(index);
+        if (!stage) return;
 
-            if (!votes[index]) {
-                votes[index] = {};
-                stage.choices.forEach(function(_, i) { votes[index][i] = 0; });
-            }
+        // Контекст
+        const contextEl = document.getElementById('stageContextEl');
+        if (stage.context) {
+            contextEl.textContent = '📋 ' + stage.context;
+            contextEl.style.display = 'block';
+        } else {
+            contextEl.style.display = 'none';
+        }
 
-            stage.choices.forEach(function(choice, i) {
-                const btn = document.createElement('button');
-                btn.className = 'choice-btn';
-                btn.dataset.index = i;
-                const voteCount = votes[index][i] || 0;
-                btn.innerHTML = choice.text + ' <span class="votes">(' + voteCount + ' голос' + (voteCount !== 1 ? 'а' : '') + ')</span><div class="feedback" id="feedback-' + index + '-' + i + '">' + (choice.feedback || '') + '</div>';
-                btn.addEventListener('click', function() {
-                    if (revealed) return;
-                    votes[index][i] = (votes[index][i] || 0) + 1;
-                    renderStage(index);
-                });
-                container.appendChild(btn);
+        document.getElementById('stageTitle').textContent = stage.title || 'Без названия';
+        document.getElementById('stageText').innerHTML = stage.text || '';
+        document.getElementById('stageCounter').textContent = 'Шаг ' + (index + 1) + ' из ' + PROJECT.stages.length;
+        document.getElementById('stageTitleHeader').textContent = stage.title || '';
+        document.getElementById('progressFill').style.width = ((index + 1) / PROJECT.stages.length * 100) + '%';
+
+        // Медиа
+        const mediaEl = document.getElementById('stageMedia');
+        mediaEl.innerHTML = '';
+        if (stage.image) mediaEl.innerHTML += '<img src="' + stage.image + '" alt="Изображение" loading="lazy">';
+        if (stage.video) mediaEl.innerHTML += '<video src="' + stage.video + '" controls></video>';
+        if (stage.audio) mediaEl.innerHTML += '<audio src="' + stage.audio + '" controls style="width:100%;margin-top:8px;"></audio>';
+
+        // Варианты
+        const container = document.getElementById('choicesContainer');
+        container.innerHTML = '';
+
+        if (!votes[index]) {
+            votes[index] = {};
+            stage.choices.forEach(function(_, i) { votes[index][i] = 0; });
+        }
+
+        stage.choices.forEach(function(choice, i) {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.dataset.index = i;
+            const voteCount = votes[index][i] || 0;
+            btn.innerHTML = choice.text + ' <span class="votes">(' + voteCount + ' голос' + (voteCount !== 1 ? 'а' : '') + ')</span><div class="feedback" id="feedback-' + index + '-' + i + '">' + (choice.feedback || '') + '</div>';
+            btn.addEventListener('click', function() {
+                if (revealed) return;
+                votes[index][i] = (votes[index][i] || 0) + 1;
+                renderStage(index);
             });
+            container.appendChild(btn);
+        });
 
-            revealed = false;
-            document.getElementById('revealBtn').textContent = '📊 Показать результаты';
-            document.getElementById('revealBtn').disabled = false;
+        revealed = false;
+        document.getElementById('revealBtn').textContent = '📊 Показать результаты';
+        document.getElementById('revealBtn').disabled = false;
+
+        // Управление кнопкой "Следующий этап"
+        const nextBtn = document.getElementById('nextStageBtn');
+        if (currentStageIndex < PROJECT.stages.length - 1) {
+            nextBtn.style.display = 'inline-flex';
+            nextBtn.textContent = '➡️ Следующий этап';
+        } else {
+            nextBtn.style.display = 'none';
         }
+    }
 
-        function revealResults() {
-            const stage = getStage(currentStageIndex);
-            if (!stage) return;
-            revealed = true;
+    function revealResults() {
+        const stage = getStage(currentStageIndex);
+        if (!stage) return;
+        revealed = true;
 
-            const btns = document.querySelectorAll('.choice-btn');
-            btns.forEach(function(btn, i) {
-                const choice = stage.choices[i];
-                if (choice.isCorrect) {
-                    btn.classList.add('reveal-correct');
-                } else {
-                    btn.classList.add('reveal-wrong');
-                }
-                const feedback = btn.querySelector('.feedback');
-                if (feedback) feedback.classList.add('show');
-            });
-
-            document.getElementById('revealBtn').textContent = '✅ Результаты показаны';
-            document.getElementById('revealBtn').disabled = true;
-        }
-
-        function resetVotes() {
-            if (votes[currentStageIndex]) {
-                const stage = getStage(currentStageIndex);
-                if (stage) {
-                    stage.choices.forEach(function(_, i) { votes[currentStageIndex][i] = 0; });
-                }
-            }
-            revealed = false;
-            renderStage(currentStageIndex);
-            document.getElementById('revealBtn').textContent = '📊 Показать результаты';
-            document.getElementById('revealBtn').disabled = false;
-        }
-
-        function nextStage() {
-            if (currentStageIndex < PROJECT.stages.length - 1) {
-                currentStageIndex++;
-                renderStage(currentStageIndex);
-                document.getElementById('revealBtn').textContent = '📊 Показать результаты';
-                document.getElementById('revealBtn').disabled = false;
+        const btns = document.querySelectorAll('.choice-btn');
+        btns.forEach(function(btn, i) {
+            const choice = stage.choices[i];
+            if (choice.isCorrect) {
+                btn.classList.add('reveal-correct');
             } else {
-                alert('🎉 Вы прошли все этапы сценария!');
+                btn.classList.add('reveal-wrong');
+            }
+            const feedback = btn.querySelector('.feedback');
+            if (feedback) feedback.classList.add('show');
+        });
+
+        document.getElementById('revealBtn').textContent = '✅ Результаты показаны';
+        document.getElementById('revealBtn').disabled = true;
+    }
+
+    function resetVotes() {
+        if (votes[currentStageIndex]) {
+            const stage = getStage(currentStageIndex);
+            if (stage) {
+                stage.choices.forEach(function(_, i) { votes[currentStageIndex][i] = 0; });
             }
         }
+        revealed = false;
+        renderStage(currentStageIndex);
+        document.getElementById('revealBtn').textContent = '📊 Показать результаты';
+        document.getElementById('revealBtn').disabled = false;
+    }
 
-        // Старт
-        renderStage(0);
+    function nextStage() {
+        if (currentStageIndex < PROJECT.stages.length - 1) {
+            currentStageIndex++;
+            renderStage(currentStageIndex);
+        } else {
+            alert('🎉 Вы прошли все этапы сценария!');
+        }
+    }
 
-        document.getElementById('revealBtn').addEventListener('click', revealResults);
-        document.getElementById('resetVotesBtn').addEventListener('click', resetVotes);
-        var nextBtn = document.getElementById('nextBtn');
-        if (nextBtn) nextBtn.addEventListener('click', nextStage);
-    <\/script>
-    </body>
-    </html>`;
+    renderStage(0);
+
+    document.getElementById('revealBtn').addEventListener('click', revealResults);
+    document.getElementById('resetVotesBtn').addEventListener('click', resetVotes);
+    document.getElementById('nextStageBtn').addEventListener('click', nextStage);
+<\/script>
+</body>
+</html>`;
 
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         const link = document.createElement('a');
@@ -1455,15 +1640,12 @@
     // ================================================================
     //  ОБРАБОТЧИКИ СОБЫТИЙ
     // ================================================================
-
-    // Режимы
     modeTabs.forEach(tab => {
         tab.addEventListener('click', function() {
             switchMode(this.dataset.mode);
         });
     });
 
-    // Этапы
     addStageBtn.addEventListener('click', addStage);
     emptyAddBtn.addEventListener('click', addStage);
 
@@ -1488,15 +1670,12 @@
     moveUpBtn.addEventListener('click', function() { moveStage('up'); });
     moveDownBtn.addEventListener('click', function() { moveStage('down'); });
 
-    // Проект
-    projectTitle.addEventListener('input', saveToStorage);
+    titleInput.addEventListener('input', saveToStorage);
     projectDesc.addEventListener('input', saveToStorage);
     projectTimer.addEventListener('input', saveToStorage);
 
-    // Пример
     loadExampleBtn.addEventListener('click', loadExample);
 
-    // JSON
     saveJsonBtn.addEventListener('click', exportJSON);
 
     loadJsonBtn.addEventListener('click', function() {
@@ -1509,10 +1688,8 @@
         input.click();
     });
 
-    // Экспорт HTML
     exportHtmlBtn.addEventListener('click', exportHTML);
 
-    // Сброс
     resetBtn.addEventListener('click', function() {
         if (!confirm('Сбросить проект? Все данные будут потеряны.')) return;
         localStorage.removeItem('vetsim_group_decision_data');
@@ -1521,6 +1698,9 @@
         project.stages.forEach(s => { if (s.id > maxId) maxId = s.id; });
         nextId = maxId + 1;
         selectedStageId = project.stages[0].id;
+        // Подставляем сохранённые автора и название
+        if (authorInput.value) project.author = authorInput.value;
+        if (titleInput.value) project.title = titleInput.value;
         loadProjectMeta();
         renderStageList();
         loadStageToEditor(selectedStageId);
@@ -1532,6 +1712,9 @@
     //  ИНИЦИАЛИЗАЦИЯ
     // ================================================================
     function init() {
+        loadAuthorLocal();
+        loadTitleLocal();
+
         const loaded = loadFromStorage();
         if (!loaded) {
             project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
@@ -1539,11 +1722,23 @@
             project.stages.forEach(s => { if (s.id > maxId) maxId = s.id; });
             nextId = maxId + 1;
             selectedStageId = project.stages[0].id;
+            if (authorInput.value) project.author = authorInput.value;
+            if (titleInput.value) project.title = titleInput.value;
             loadProjectMeta();
             renderStageList();
             loadStageToEditor(selectedStageId);
             saveToStorage();
+        } else {
+            if (!project.author && authorInput.value) {
+                project.author = authorInput.value;
+                saveToStorage();
+            }
+            if (!project.title && titleInput.value) {
+                project.title = titleInput.value;
+                saveToStorage();
+            }
         }
+
         if (project.stages.length === 0) {
             emptyState.style.display = 'block';
             stageEditor.style.display = 'none';
@@ -1553,10 +1748,9 @@
 
     init();
 
-    // Для отладки
     window.project = project;
     window.getStage = getStage;
 </script>
-       <script src="https://vet-sim.github.io/footer.js" defer></script>
+
 </body>
 </html>

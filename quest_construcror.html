@@ -67,6 +67,84 @@
             padding: 6px 14px;
         }
 
+        /* ===== Поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 1.5rem;
+            padding: 10px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #1F4E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 6px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FFFEF7;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
+        /* ===== Поле названия квеста (в шапке конструктора) ===== */
+        .title-block {
+            background: #FEFCF9;
+            border-radius: 1.5rem;
+            padding: 10px 20px;
+            margin-bottom: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .title-block label {
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #1F4E6E;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+        .title-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 6px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FFFDF8;
+            color: #1A2A3A;
+            outline: none;
+            transition: 0.2s;
+        }
+        .title-input:focus {
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         /* --- Кнопки --- */
         .btn {
             background: #EBE3D2;
@@ -384,17 +462,32 @@
             border-bottom: 1px dashed #E2EAD9;
         }
 
-        /* --- Шаблоны (демо-стили) --- */
-        .template-preview {
-            padding: 4px 12px;
-            border-radius: 1rem;
-            font-size: 0.7rem;
-            font-weight: 600;
+        /* ===== Подпись внизу ===== */
+        .vetsim-credit {
+            margin-top: 16px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 1.5rem;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #1A2A3A;
         }
-        .template-1 { background: #D4E3ED; color: #1F4E6E; }
-        .template-2 { background: #F0E6D8; color: #7A5A3A; }
-        .template-3 { background: #1A1A2E; color: #00E5FF; }
-        .template-4 { background: #C8E6C9; color: #2E7D32; }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7B8D6E; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
 
         /* --- Toast --- */
         .toast {
@@ -427,6 +520,7 @@
             .choice-item { flex-wrap: wrap; }
             .preview-container .scene-card { padding: 1.2rem; }
             .mode-tabs .mode-tab { flex: 1; text-align: center; padding: 6px 12px; font-size: 0.75rem; }
+            .author-block, .title-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -444,6 +538,20 @@
             <button class="btn btn-sm btn-outline" id="resetBtn">🔄 Сброс</button>
         </div>
     </header>
+
+    <!-- ===== Поле автора ===== -->
+    <div class="author-block">
+        <label for="authorInput">✍️ Автор квеста:</label>
+        <input type="text" id="authorInput" class="author-input"
+               placeholder="Например: Тераевич Алла Сергеевна">
+    </div>
+
+    <!-- ===== Поле названия квеста ===== -->
+    <div class="title-block">
+        <label for="titleInput">🏷️ Название квеста:</label>
+        <input type="text" id="titleInput" class="title-input"
+               placeholder="Например: Спасение Барсика">
+    </div>
 
     <!-- ===== РЕЖИМЫ ===== -->
     <div class="mode-tabs">
@@ -463,10 +571,6 @@
                 </div>
                 <div class="scene-list" id="sceneList"></div>
                 <div style="margin-top:10px; padding-top:10px; border-top:1px solid #E7EDE2;">
-                    <div class="form-group" style="margin-bottom:6px;">
-                        <label>Название квеста</label>
-                        <input type="text" id="projectTitle" value="Новый квест" />
-                    </div>
                     <div class="form-group" style="margin-bottom:6px;">
                         <label>Шаблон оформления</label>
                         <select id="templateSelect">
@@ -543,6 +647,19 @@
         </div>
     </div>
 
+    <!-- ===== Подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор квеста:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
 </div>
@@ -552,11 +669,11 @@
     //  КВЕСТ-КОМНАТА — ПОЛНАЯ ЛОГИКА
     // ================================================================
 
-    // --- ВСТРОЕННЫЙ ПРИМЕР ---
     const EXAMPLE_DATA = {
         title: 'Спасение Барсика',
         description: 'Квест по диагностике и лечению кота с отравлением',
         template: 1,
+        author: '',
         startSceneId: 1,
         scenes: [
             {
@@ -635,6 +752,46 @@
     let currentMode = 'editor';
     let nextId = 100;
 
+    const DEFAULT_TITLE = 'Спасение Барсика';
+
+    // ===== Элементы автора и названия =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+    const titleInput = document.getElementById('titleInput');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    titleInput.addEventListener('input', () => {
+        saveTitleLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_quest_author', authorInput.value); } catch (e) {}
+    }
+    function saveTitleLocal() {
+        try { localStorage.setItem('vetsim_quest_title', titleInput.value); } catch (e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_quest_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch (e) {}
+    }
+    function loadTitleLocal() {
+        try {
+            const t = localStorage.getItem('vetsim_quest_title');
+            if (t) {
+                titleInput.value = t;
+            }
+        } catch (e) {}
+    }
+
     // --- DOM ---
     const sceneListEl = document.getElementById('sceneList');
     const editorPanel = document.getElementById('editorPanel');
@@ -642,7 +799,6 @@
     const sceneEditor = document.getElementById('sceneEditor');
     const sceneEditorTitle = document.getElementById('sceneEditorTitle');
 
-    const projectTitle = document.getElementById('projectTitle');
     const projectDesc = document.getElementById('projectDesc');
     const templateSelect = document.getElementById('templateSelect');
 
@@ -699,16 +855,6 @@
 
     function getSceneIndex(id) {
         return project.scenes.findIndex(s => s.id === id);
-    }
-
-    function getSceneChoices(id) {
-        const scene = getScene(id);
-        return scene ? scene.choices : [];
-    }
-
-    function getSceneTitle(id) {
-        const scene = getScene(id);
-        return scene ? scene.title : 'Без названия';
     }
 
     // ================================================================
@@ -779,7 +925,6 @@
             choiceList.appendChild(div);
         });
 
-        // События для полей выбора
         document.querySelectorAll('.choice-text').forEach(inp => {
             inp.addEventListener('input', function() {
                 const idx = parseInt(this.dataset.index);
@@ -831,7 +976,6 @@
         scene.video = sceneVideo.value.trim() || '';
         scene.audio = sceneAudio.value.trim() || '';
 
-        // Сохраняем выборы (уже через события)
         renderSceneList();
         loadSceneToEditor(selectedSceneId);
         showToast('✅ Сцена сохранена');
@@ -871,12 +1015,10 @@
         if (idx === -1) return;
         project.scenes.splice(idx, 1);
 
-        // Если удалили стартовую — переназначаем
         if (project.startSceneId === id) {
             project.startSceneId = project.scenes[0].id;
         }
 
-        // Переназначаем ссылки на удалённую сцену
         project.scenes.forEach(s => {
             s.choices = s.choices.filter(c => c.nextSceneId !== id);
         });
@@ -912,15 +1054,20 @@
     // ================================================================
 
     function updateProjectMeta() {
-        project.title = projectTitle.value.trim() || 'Новый квест';
+        project.title = titleInput.value.trim() || DEFAULT_TITLE;
         project.description = projectDesc.value.trim() || '';
         project.template = parseInt(templateSelect.value) || 1;
+        project.author = authorInput.value.trim() || '';
     }
 
     function loadProjectMeta() {
-        projectTitle.value = project.title || 'Новый квест';
+        titleInput.value = project.title || DEFAULT_TITLE;
         projectDesc.value = project.description || '';
         templateSelect.value = project.template || 1;
+        authorInput.value = project.author || '';
+        if (project.author) {
+            authorPreview.textContent = project.author;
+        }
     }
 
     function saveToStorage() {
@@ -937,7 +1084,6 @@
                 const data = JSON.parse(raw);
                 if (data.scenes && data.scenes.length > 0) {
                     project = data;
-                    // Обновляем nextId
                     let maxId = 0;
                     project.scenes.forEach(s => { if (s.id > maxId) maxId = s.id; });
                     nextId = maxId + 1;
@@ -1015,209 +1161,200 @@
     }
 
     // ================================================================
-    //  ЭКСПОРТ В HTML (С ОБНОВЛЁННЫМ ШАБЛОНОМ 1)
+    //  ЭКСПОРТ В HTML
     // ================================================================
 
     function exportHTML() {
         updateProjectMeta();
+
+        const authorName = project.author || 'не указан';
+        const safeAuthorName = escapeHtml(authorName);
+        const safeTitle = escapeHtml(project.title);
+
         const data = JSON.stringify(project);
 
         const html = `<!DOCTYPE html>
-    <html lang="ru">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-        <title>${escapeHtml(project.title)} | ВетСим</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-        <style>
-            /* ===== ОБЩИЕ СТИЛИ ===== */
-            * { margin:0; padding:0; box-sizing:border-box; }
-            body { font-family: 'Montserrat', system-ui, sans-serif; min-height:100vh; padding:20px; display:flex; justify-content:center; align-items:center; background:#E8F4F8; }
-            .container { max-width:800px; width:100%; }
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>${safeTitle} | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== ОБЩИЕ СТИЛИ ===== */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Montserrat', system-ui, sans-serif; min-height:100vh; padding:20px; display:flex; justify-content:center; align-items:center; background:#E8F4F8; }
+        .container { max-width:800px; width:100%; }
 
-            /* ===== ШАБЛОН 1: ВЕТЕРИНАРНАЯ КЛИНИКА (МЕДИЦИНСКИЙ ГОЛУБОЙ) ===== */
-            .template-1 { 
-                background: #E8F4F8; 
-                color: #1A2A3A; 
-            }
-            .template-1 .scene-card { 
-                background: #F8FBFF; 
-                border-radius: 2rem; 
-                padding: 2rem 2.5rem; 
-                box-shadow: 0 4px 20px rgba(0, 128, 128, 0.08); 
-                border: 1px solid rgba(0, 128, 128, 0.12); 
-            }
-            .template-1 .scene-title { 
-                color: #008080; 
-                font-size: 1.5rem; 
-                font-weight: 700; 
-                margin-bottom: 8px; 
-            }
-            .template-1 .choice-btn { 
-                background: #F0F7FA; 
-                border: 2px solid #B8D8E8; 
-                border-radius: 2.5rem; 
-                padding: 10px 20px; 
-                font-weight: 600; 
-                font-size: 0.9rem; 
-                cursor: pointer; 
-                transition: 0.2s; 
-                font-family: inherit; 
-                color: #1A2A3A; 
-                text-align: left; 
-            }
-            .template-1 .choice-btn:hover { 
-                border-color: #008080; 
-                background: #E0F0F8; 
-                transform: translateX(4px); 
-            }
-            .template-1 .progress-info { 
-                color: #008080; 
-                margin-bottom: 12px; 
-                font-size: 0.8rem; 
-            }
-            .template-1 .scene-text { 
-                font-size: 1rem; 
-                line-height: 1.7; 
-                margin-bottom: 12px; 
-            }
-            .template-1 .scene-media img, 
-            .template-1 .scene-media video { 
-                max-width: 100%; 
-                border-radius: 1rem; 
-                margin-bottom: 10px; 
-            }
-            .template-1 .history-log { 
-                margin-top: 16px; 
-                padding: 12px 16px; 
-                background: #F0F7FA; 
-                border-radius: 1.2rem; 
-                font-size: 0.8rem; 
-                color: #5F7C62; 
-            }
-            .template-1 .history-log .entry { 
-                padding: 2px 0; 
-                border-bottom: 1px dashed #D4E8F0; 
-            }
+        /* ===== ШАБЛОН 1: ВЕТЕРИНАРНАЯ КЛИНИКА (медицинский голубой) ===== */
+        .template-1 { background: #E8F4F8; color: #1A2A3A; }
+        .template-1 .scene-card { background: #F8FBFF; border-radius: 2rem; padding: 2rem 2.5rem; box-shadow: 0 4px 20px rgba(0, 128, 128, 0.08); border: 1px solid rgba(0, 128, 128, 0.12); }
+        .template-1 .scene-title { color: #008080; font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+        .template-1 .choice-btn { background: #F0F7FA; border: 2px solid #B8D8E8; color: #1A2A3A; }
+        .template-1 .choice-btn:hover { border-color: #008080; background: #E0F0F8; }
+        .template-1 .progress-info { color: #008080; }
+        .template-1 .history-log { background: #F0F7FA; color: #5F7C62; }
+        .template-1 .history-log .entry { border-bottom-color: #D4E8F0; }
 
-            /* ===== ШАБЛОН 2: ПРИКЛЮЧЕНИЕ ===== */
-            .template-2 { background:#F5EDE0; color:#4A3520; }
-            .template-2 .scene-card { background:#FDF8F0; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:2px solid #D4C4A0; }
-            .template-2 .choice-btn { background:#EDE4D0; border:2px solid #C4B090; font-family:Georgia, serif; }
-            .template-2 .choice-btn:hover { border-color:#8A7A5A; background:#E0D4C0; }
+        /* ===== ШАБЛОН 2: ПРИКЛЮЧЕНИЕ (пергамент) ===== */
+        .template-2 { background:#F5EDE0; color:#4A3520; }
+        .template-2 .scene-card { background:#FDF8F0; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:3px solid #C4A870; }
+        .template-2 .scene-title { font-family: Georgia, serif; color:#7A5A3A; font-size:1.6rem; }
+        .template-2 .scene-text { font-family: Georgia, serif; }
+        .template-2 .choice-btn { background:#EDE4D0; border:2px solid #C4B090; font-family: Georgia, serif; color:#4A3520; border-radius:1rem; }
+        .template-2 .choice-btn:hover { border-color:#8A7A5A; background:#E0D4C0; }
+        .template-2 .progress-info { color:#8A6A4A; font-family: Georgia, serif; }
+        .template-2 .history-log { background:#F0E6D0; color:#7A5A3A; font-family: Georgia, serif; }
+        .template-2 .history-log .entry { border-bottom-color: #D4C4A0; }
 
-            /* ===== ШАБЛОН 3: ТЕХНО-ЛАБ ===== */
-            .template-3 { background:#0D0D1A; color:#E0E0F0; }
-            .template-3 .scene-card { background:#1A1A2E; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 30px rgba(0,229,255,0.05); border:1px solid #2A2A4A; }
-            .template-3 .choice-btn { background:#2A2A4A; border:2px solid #3A3A6A; color:#E0E0F0; font-family:'Courier New',monospace; }
-            .template-3 .choice-btn:hover { border-color:#00E5FF; background:#1A2A4A; }
-            .template-3 .scene-title { color:#00E5FF; }
+        /* ===== ШАБЛОН 3: ТЕХНО-ЛАБ (тёмная тема) ===== */
+        .template-3 { background:#0D0D1A; color:#E0E0F0; }
+        .template-3 .scene-card { background:#1A1A2E; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 30px rgba(0,229,255,0.08); border:1px solid #2A2A4A; }
+        .template-3 .scene-title { font-family:'Courier New',monospace; color:#00E5FF; font-size:1.5rem; text-shadow:0 0 20px rgba(0,229,255,0.3); }
+        .template-3 .scene-text { font-family:'Courier New',monospace; color:#C0C0D0; }
+        .template-3 .choice-btn { background:#2A2A4A; border:2px solid #3A3A6A; color:#00E5FF; font-family:'Courier New',monospace; border-radius:1rem; }
+        .template-3 .choice-btn:hover { border-color:#00E5FF; background:#1A2A4A; box-shadow:0 0 15px rgba(0,229,255,0.3); }
+        .template-3 .progress-info { color:#00E5FF; font-family:'Courier New',monospace; }
+        .template-3 .history-log { background:#1A1A2E; color:#8080A0; font-family:'Courier New',monospace; border:1px solid #2A2A4A; }
+        .template-3 .history-log .entry { border-bottom-color: #2A2A4A; }
 
-            /* ===== ШАБЛОН 4: СКАЗОЧНЫЙ ЛЕС ===== */
-            .template-4 { background:#E8F5E9; color:#2E4A2E; }
-            .template-4 .scene-card { background:#F5FFF5; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:2px solid #A8C8A8; }
-            .template-4 .choice-btn { background:#E0F0E0; border:2px solid #A8C8A8; font-family:'Comic Sans MS',cursive; }
-            .template-4 .choice-btn:hover { border-color:#6B9E6B; background:#C8E8C8; }
+        /* ===== ШАБЛОН 4: СКАЗОЧНЫЙ ЛЕС (природа) ===== */
+        .template-4 { background:#E8F5E9; color:#2E4A2E; }
+        .template-4 .scene-card { background:#F5FFF5; border-radius:2rem; padding:2rem 2.5rem; box-shadow:0 4px 20px rgba(0,0,0,0.06); border:3px solid #A8C8A8; }
+        .template-4 .scene-title { color:#2E7D32; font-size:1.5rem; }
+        .template-4 .scene-text { color:#3E5C4A; }
+        .template-4 .choice-btn { background:#E0F0E0; border:2px solid #A8C8A8; color:#2E4A2E; border-radius:2rem; }
+        .template-4 .choice-btn:hover { border-color:#6B9E6B; background:#C8E8C8; }
+        .template-4 .progress-info { color:#2E7D32; }
+        .template-4 .history-log { background:#E0F0E0; color:#3E5C4A; }
+        .template-4 .history-log .entry { border-bottom-color: #A8C8A8; }
 
-            /* ===== ОБЩИЕ ЭЛЕМЕНТЫ ===== */
-            .scene-card { margin-bottom:16px; }
-            .scene-title { font-size:1.5rem; font-weight:700; margin-bottom:8px; }
-            .scene-text { font-size:1rem; line-height:1.7; margin-bottom:12px; }
-            .scene-media img, .scene-media video { max-width:100%; border-radius:1rem; margin-bottom:10px; }
-            .choices { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
-            .choice-btn { padding:10px 20px; border-radius:2.5rem; font-weight:600; font-size:0.9rem; cursor:pointer; transition:0.2s; font-family:inherit; text-align:left; }
-            .choice-btn:hover { transform:translateX(4px); }
-            .progress-info { margin-bottom:12px; font-size:0.8rem; }
-            .history-log { margin-top:16px; padding:12px 16px; border-radius:1.2rem; font-size:0.8rem; }
-            .history-log .entry { padding:2px 0; border-bottom:1px dashed; }
-            .footer { margin-top:24px; text-align:center; font-size:0.75rem; color:#7B8D6E; }
-            @media (max-width:600px) { .scene-card { padding:1.2rem; } }
-        </style>
-    </head>
-    <body class="template-${project.template}">
-    <div class="container">
-        <div id="app">
-            <div class="scene-card" id="sceneCard">
-                <div class="progress-info" id="progressInfo">Шаг 1</div>
-                <div class="scene-title" id="sceneTitle">Загрузка...</div>
-                <div class="scene-text" id="sceneText"></div>
-                <div class="scene-media" id="sceneMedia"></div>
-                <div class="choices" id="choicesContainer"></div>
-                <div class="history-log" id="historyLog"><div class="entry">📜 История выбора:</div></div>
-            </div>
+        /* ===== ОБЩИЕ ЭЛЕМЕНТЫ ===== */
+        .scene-card { margin-bottom:16px; }
+        .scene-title { font-size:1.5rem; font-weight:700; margin-bottom:8px; }
+        .scene-text { font-size:1rem; line-height:1.7; margin-bottom:12px; }
+        .scene-media img, .scene-media video { max-width:100%; border-radius:1rem; margin-bottom:10px; }
+        .choices { display:flex; flex-direction:column; gap:8px; margin-top:12px; }
+        .choice-btn { padding:12px 22px; border-radius:2.5rem; font-weight:600; font-size:0.92rem; cursor:pointer; transition:0.2s; font-family:inherit; text-align:left; }
+        .choice-btn:hover { transform:translateX(4px); }
+        .progress-info { margin-bottom:12px; font-size:0.82rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+        .history-log { margin-top:16px; padding:12px 16px; border-radius:1.2rem; font-size:0.8rem; }
+        .history-log .entry { padding:3px 0; border-bottom:1px dashed; }
+
+        /* ===== Подпись автора ===== */
+        .vetsim-credit { margin-top: 24px; padding: 14px 20px; background: rgba(255,255,255,0.6); border-radius: 1.5rem; border: 1px solid rgba(0,0,0,0.06); text-align: center; font-size: 0.8rem; color: #3E5C4A; }
+        .template-3 .vetsim-credit { background: rgba(255,255,255,0.05); border-color: rgba(0,229,255,0.15); color: #C0C0D0; }
+        .vetsim-credit-title { font-weight: 700; color: #6B8E5C; font-size: 0.88rem; margin-bottom: 0.4rem; }
+        .template-3 .vetsim-credit-title { color: #00E5FF; }
+        .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.15rem 0; }
+        .vetsim-credit-label { color: #7B8D6E; font-weight: 600; }
+        .template-3 .vetsim-credit-label { color: #8080A0; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+        .template-3 .vetsim-credit-value { color: #00E5FF; }
+
+        .footer { margin-top:16px; text-align:center; font-size:0.72rem; color:#7B8D6E; }
+        @media (max-width:600px) { .scene-card { padding:1.2rem; } .choice-btn { font-size:0.85rem; padding:10px 18px; } }
+    </style>
+</head>
+<body class="template-${project.template}">
+<div class="container">
+    <div id="app">
+        <div class="scene-card" id="sceneCard">
+            <div class="progress-info" id="progressInfo">Шаг 1</div>
+            <div class="scene-title" id="sceneTitle">Загрузка...</div>
+            <div class="scene-text" id="sceneText"></div>
+            <div class="scene-media" id="sceneMedia"></div>
+            <div class="choices" id="choicesContainer"></div>
+            <div class="history-log" id="historyLog"><div class="entry">📜 История выбора:</div></div>
         </div>
-        <div class="footer">🐾 ВетСим — ветеринарное образование</div>
     </div>
 
-    <script>
-        const PROJECT = ${data};
-        let currentSceneId = PROJECT.startSceneId || (PROJECT.scenes.length > 0 ? PROJECT.scenes[0].id : null);
-        let history = [];
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор квеста:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
 
-        function getScene(id) { return PROJECT.scenes.find(s => s.id === id); }
+    <div class="footer">🐾 ВетСим — ветеринарное образование · CC BY-NC</div>
+</div>
 
-        function renderScene(id) {
-            const scene = getScene(id);
-            if (!scene) return;
+<script>
+    const PROJECT = ${data};
+    let currentSceneId = PROJECT.startSceneId || (PROJECT.scenes.length > 0 ? PROJECT.scenes[0].id : null);
+    let history = [];
 
-            document.getElementById('sceneTitle').textContent = scene.title || 'Без названия';
-            document.getElementById('sceneText').innerHTML = scene.text || '';
+    function getScene(id) { return PROJECT.scenes.find(s => s.id === id); }
 
-            const mediaEl = document.getElementById('sceneMedia');
-            mediaEl.innerHTML = '';
-            if (scene.image) mediaEl.innerHTML += \`<img src="\${scene.image}" alt="Изображение" loading="lazy">\`;
-            if (scene.video) mediaEl.innerHTML += \`<video src="\${scene.video}" controls></video>\`;
-            if (scene.audio) mediaEl.innerHTML += \`<audio src="\${scene.audio}" controls style="width:100%;margin-top:8px;"></audio>\`;
+    function renderScene(id) {
+        const scene = getScene(id);
+        if (!scene) return;
 
-            const choicesEl = document.getElementById('choicesContainer');
-            choicesEl.innerHTML = '';
-            if (scene.choices && scene.choices.length > 0) {
-                scene.choices.forEach(choice => {
-                    const btn = document.createElement('button');
-                    btn.className = 'choice-btn';
-                    btn.textContent = choice.text || 'Далее';
-                    btn.addEventListener('click', () => {
-                        history.push(scene.title);
-                        renderScene(choice.nextSceneId);
-                        updateHistory();
-                        updateProgress();
-                    });
-                    choicesEl.appendChild(btn);
+        currentSceneId = id;
+
+        document.getElementById('sceneTitle').textContent = scene.title || 'Без названия';
+        document.getElementById('sceneText').innerHTML = scene.text || '';
+
+        const mediaEl = document.getElementById('sceneMedia');
+        mediaEl.innerHTML = '';
+        if (scene.image) mediaEl.innerHTML += \`<img src="\${scene.image}" alt="Изображение" loading="lazy">\`;
+        if (scene.video) mediaEl.innerHTML += \`<video src="\${scene.video}" controls></video>\`;
+        if (scene.audio) mediaEl.innerHTML += \`<audio src="\${scene.audio}" controls style="width:100%;margin-top:8px;"></audio>\`;
+
+        const choicesEl = document.getElementById('choicesContainer');
+        choicesEl.innerHTML = '';
+        if (scene.choices && scene.choices.length > 0) {
+            scene.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = choice.text || 'Далее';
+                btn.addEventListener('click', () => {
+                    history.push(scene.title);
+                    renderScene(choice.nextSceneId);
+                    updateHistory();
                 });
-            } else {
-                const msg = document.createElement('p');
-                msg.style.color = '#7B8D6E';
-                msg.textContent = '🏁 Конец квеста';
-                choicesEl.appendChild(msg);
-            }
-
-            updateProgress();
-        }
-
-        function updateProgress() {
-            const total = PROJECT.scenes.length;
-            const idx = PROJECT.scenes.findIndex(s => s.id === currentSceneId);
-            document.getElementById('progressInfo').textContent = \`Шаг \${idx + 1} из \${total}\`;
-        }
-
-        function updateHistory() {
-            const log = document.getElementById('historyLog');
-            log.innerHTML = '<div class="entry">📜 История выбора:</div>';
-            history.slice(-5).forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'entry';
-                div.textContent = \`→ \${item}\`;
-                log.appendChild(div);
+                choicesEl.appendChild(btn);
             });
+        } else {
+            const msg = document.createElement('p');
+            msg.style.color = '#7B8D6E';
+            msg.style.fontStyle = 'italic';
+            msg.textContent = '🏁 Конец квеста';
+            choicesEl.appendChild(msg);
         }
 
-        // Старт
-        if (currentSceneId) renderScene(currentSceneId);
-    <\/script>
-    </body>
-    </html>`;
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const total = PROJECT.scenes.length;
+        const idx = PROJECT.scenes.findIndex(s => s.id === currentSceneId);
+        document.getElementById('progressInfo').textContent = \`Шаг \${idx + 1} из \${total}\`;
+    }
+
+    function updateHistory() {
+        const log = document.getElementById('historyLog');
+        log.innerHTML = '<div class="entry">📜 История выбора:</div>';
+        history.slice(-5).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'entry';
+            div.textContent = \`→ \${item}\`;
+            log.appendChild(div);
+        });
+    }
+
+    if (currentSceneId) renderScene(currentSceneId);
+<\/script>
+</body>
+</html>`;
 
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         const link = document.createElement('a');
@@ -1285,14 +1422,12 @@
     //  ОБРАБОТЧИКИ СОБЫТИЙ
     // ================================================================
 
-    // Режимы
     modeTabs.forEach(tab => {
         tab.addEventListener('click', function() {
             switchMode(this.dataset.mode);
         });
     });
 
-    // Сцены
     addSceneBtn.addEventListener('click', addScene);
     emptyAddBtn.addEventListener('click', addScene);
 
@@ -1320,18 +1455,15 @@
         if (selectedSceneId) toggleFinalScene(selectedSceneId);
     });
 
-    // Проект
-    projectTitle.addEventListener('input', saveToStorage);
+    titleInput.addEventListener('input', saveToStorage);
     projectDesc.addEventListener('input', saveToStorage);
     templateSelect.addEventListener('change', function() {
         project.template = parseInt(this.value);
         saveToStorage();
     });
 
-    // Пример
     loadExampleBtn.addEventListener('click', loadExample);
 
-    // JSON
     saveJsonBtn.addEventListener('click', exportJSON);
 
     loadJsonBtn.addEventListener('click', function() {
@@ -1344,10 +1476,8 @@
         input.click();
     });
 
-    // Экспорт HTML
     exportHtmlBtn.addEventListener('click', exportHTML);
 
-    // Сброс
     resetBtn.addEventListener('click', function() {
         if (!confirm('Сбросить проект? Все данные будут потеряны.')) return;
         localStorage.removeItem('vetsim_quest_data');
@@ -1368,6 +1498,9 @@
     // ================================================================
 
     function init() {
+        loadAuthorLocal();
+        loadTitleLocal();
+
         const loaded = loadFromStorage();
         if (!loaded) {
             project = JSON.parse(JSON.stringify(EXAMPLE_DATA));
@@ -1375,12 +1508,25 @@
             project.scenes.forEach(s => { if (s.id > maxId) maxId = s.id; });
             nextId = maxId + 1;
             selectedSceneId = project.startSceneId || project.scenes[0].id;
+            // Подставляем сохранённые автора и название
+            if (authorInput.value) project.author = authorInput.value;
+            if (titleInput.value) project.title = titleInput.value;
             loadProjectMeta();
             renderSceneList();
             loadSceneToEditor(selectedSceneId);
             saveToStorage();
+        } else {
+            // После загрузки из storage — если автора нет в проекте, но есть в localStorage — подставляем
+            if (!project.author && authorInput.value) {
+                project.author = authorInput.value;
+                saveToStorage();
+            }
+            if (!project.title && titleInput.value) {
+                project.title = titleInput.value;
+                saveToStorage();
+            }
         }
-        // Проверяем наличие сцен
+
         if (project.scenes.length === 0) {
             emptyState.style.display = 'block';
             sceneEditor.style.display = 'none';
@@ -1390,10 +1536,9 @@
 
     init();
 
-    // Делаем функции глобальными для консоли (отладка)
     window.project = project;
     window.getScene = getScene;
 </script>
-<script src="https://vet-sim.github.io/footer.js" defer></script>
+
 </body>
 </html>

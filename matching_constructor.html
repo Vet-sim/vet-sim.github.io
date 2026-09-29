@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Конструктор «Сопоставление групп» | ВетСим</title>
@@ -97,14 +84,55 @@
             background: #2C7DA0;
             color: white;
         }
+        .btn-primary:hover { background: #236B8A; }
         .btn-secondary {
             background: #A3B18A;
             color: white;
         }
+        .btn-secondary:hover { background: #8FA376; }
         .btn-outline {
             background: transparent;
             border: 1px solid #C0CFAF;
         }
+        .btn-outline:hover { background: #F0EEE5; }
+
+        /* ===== НОВОЕ: поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         .pairs-container {
             display: flex;
             flex-direction: column;
@@ -145,8 +173,36 @@
             color: #8BA47B;
             margin-top: 1rem;
         }
-        footer {
+
+        /* ===== НОВОЕ: подпись внизу ===== */
+        .vetsim-credit {
             margin-top: 2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer {
+            margin-top: 1.5rem;
             text-align: center;
             font-size: 0.7rem;
             color: #A7B89A;
@@ -154,6 +210,7 @@
         @media (max-width: 700px) {
             .pair-row { flex-direction: column; align-items: stretch; border-radius: 28px; }
             .remove-pair { align-self: flex-end; }
+            .author-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -169,6 +226,13 @@
 
     <!-- Редактор -->
     <div id="editorPane" class="tab-pane active">
+        <!-- ===== НОВОЕ: поле автора ===== -->
+        <div class="author-block">
+            <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+            <input type="text" id="authorInput" class="author-input"
+                   placeholder="Например: Тераевич Алла Сергеевна">
+        </div>
+
         <div class="toolbar">
             <button id="addPairBtn" class="btn btn-primary">➕ Добавить пару</button>
             <button id="loadDemoBtn" class="btn btn-outline">📋 Загрузить пример (лекарства → механизм)</button>
@@ -182,15 +246,29 @@
     <!-- Экспорт -->
     <div id="exportPane" class="tab-pane">
         <div class="toolbar">
-            <button id="saveProjectBtn" class="btn-secondary">💾 Сохранить проект (JSON)</button>
-            <button id="loadProjectBtn" class="btn-secondary">📂 Загрузить проект</button>
-            <button id="exportGameBtn" class="btn-primary">🚀 Экспорт в готовое задание</button>
+            <button id="saveProjectBtn" class="btn btn-secondary">💾 Сохранить проект (JSON)</button>
+            <button id="loadProjectBtn" class="btn btn-secondary">📂 Загрузить проект</button>
+            <button id="exportGameBtn" class="btn btn-primary">🚀 Экспорт в готовое задание</button>
         </div>
         <div style="background:#F3F6EF; border-radius:20px; padding:1rem; margin-top:1rem;">
             <p>✔ Сохраните проект, чтобы отредактировать позже.<br>
             ✔ Нажмите «Экспорт» – получите HTML-файл для студентов. Задание: перетащите определения к соответствующим терминам.</p>
         </div>
     </div>
+
+    <!-- ===== НОВОЕ: подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <footer>© ВетСим — интерактивное сопоставление. Drag & drop, проверка.</footer>
 </div>
 
@@ -207,11 +285,27 @@
         const loadBtn = document.getElementById('loadProjectBtn');
         const exportBtn = document.getElementById('exportGameBtn');
 
-        if (!addBtn) console.error('addPairBtn not found');
-        if (!demoBtn) console.error('loadDemoBtn not found');
-        if (!saveBtn) console.error('saveProjectBtn not found');
-        if (!loadBtn) console.error('loadProjectBtn not found');
-        if (!exportBtn) console.error('exportGameBtn not found');
+        // ===== НОВОЕ: элементы автора =====
+        const authorInput = document.getElementById('authorInput');
+        const authorPreview = document.getElementById('authorPreview');
+
+        authorInput.addEventListener('input', () => {
+            authorPreview.textContent = authorInput.value.trim() || 'не указан';
+            saveAuthorLocal();
+        });
+
+        function saveAuthorLocal() {
+            try { localStorage.setItem('vetsim_matching_author', authorInput.value); } catch(e) {}
+        }
+        function loadAuthorLocal() {
+            try {
+                const a = localStorage.getItem('vetsim_matching_author');
+                if (a) {
+                    authorInput.value = a;
+                    authorPreview.textContent = a.trim() || 'не указан';
+                }
+            } catch(e) {}
+        }
 
         // Функция отрисовки списка пар
         function renderPairs() {
@@ -236,7 +330,6 @@
                 `;
                 pairsContainer.appendChild(row);
             }
-            // привязываем события к новым элементам
             document.querySelectorAll('.left-input').forEach(inp => {
                 inp.addEventListener('change', (e) => {
                     const idx = parseInt(e.target.getAttribute('data-idx'));
@@ -260,13 +353,11 @@
             });
         }
 
-        // Добавить пару
         function addPair() {
             pairs.push({ left: `Термин ${pairs.length+1}`, right: `Определение ${pairs.length+1}` });
             renderPairs();
         }
 
-        // Загрузить демо
         function loadDemo() {
             pairs = [
                 { left: "Амоксициллин", right: "Полусинтетический пенициллин, активен против грамположительных бактерий" },
@@ -278,13 +369,17 @@
             renderPairs();
         }
 
-        // Сохранить проект
+        // ===== НОВОЕ: сохранение с автором =====
         function saveProject() {
             if (!pairs.length) {
                 alert('Нет данных для сохранения');
                 return;
             }
-            const dataStr = JSON.stringify({ pairs }, null, 2);
+            const project = {
+                author: authorInput.value || '',
+                pairs: pairs
+            };
+            const dataStr = JSON.stringify(project, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
@@ -293,7 +388,7 @@
             URL.revokeObjectURL(link.href);
         }
 
-        // Загрузить проект
+        // ===== НОВОЕ: загрузка с автором =====
         function loadProject() {
             const input = document.createElement('input');
             input.type = 'file';
@@ -307,7 +402,12 @@
                         const obj = JSON.parse(ev.target.result);
                         if (obj.pairs && Array.isArray(obj.pairs)) {
                             pairs = obj.pairs;
+                            if (obj.author !== undefined) {
+                                authorInput.value = obj.author;
+                                authorPreview.textContent = obj.author || 'не указан';
+                            }
                             renderPairs();
+                            alert('✅ Проект загружен');
                         } else {
                             alert('Неверный формат файла');
                         }
@@ -320,13 +420,17 @@
             input.click();
         }
 
-        // Экспорт в тренажёр
+        // ===== НОВОЕ: экспорт с автором =====
         function exportTrainer() {
             if (pairs.length === 0) {
                 alert('Добавьте хотя бы одну пару перед экспортом');
                 return;
             }
+
+            const authorName = authorInput.value.trim() || 'не указан';
+            const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
             const exportPairs = JSON.parse(JSON.stringify(pairs));
+
             const html = `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -345,13 +449,42 @@
         .cards-list{display:flex;flex-direction:column;gap:0.8rem;}
         .term-card{background:white;border:1px solid #D1DEC2;border-radius:60px;padding:0.8rem 1rem;cursor:pointer;}
         .term-card.matched{background:#DAF1D8;border-color:#7CA86A;text-decoration:line-through;cursor:default;opacity:0.8;}
+        .term-card.over{background:#EAF3E5;border-color:#7CA86A;}
         .def-card{background:#FEFCF9;border:1px solid #D1DEC2;border-radius:60px;padding:0.8rem 1rem;cursor:grab;user-select:none;}
         .def-card.dragging{opacity:0.5;}
         .def-card.matched{background:#DAF1D8;border-color:#7CA86A;text-decoration:line-through;cursor:default;opacity:0.6;}
-        .btn-check{background:#2C7DA0;color:white;border:none;padding:0.6rem 1.5rem;border-radius:40px;cursor:pointer;margin-top:1.5rem;}
-        .reset-btn{background:#E2CFB0;margin-left:1rem;}
+        .btn-check{background:#2C7DA0;color:white;border:none;padding:0.6rem 1.5rem;border-radius:40px;cursor:pointer;margin-top:1.5rem;font-family:inherit;font-size:0.9rem;}
+        .reset-btn{background:#E2CFB0;margin-left:1rem;color:#3E5C4A;}
         .score{background:#F3F6EF;border-radius:40px;padding:0.5rem 1rem;text-align:center;margin:1rem 0;}
-        footer{text-align:center;margin-top:2rem;font-size:0.7rem;}
+
+        /* ===== Блок подписи автора ===== */
+        .vetsim-credit {
+            margin-top: 2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer{text-align:center;margin-top:1rem;font-size:0.7rem;color:#A7B89A;}
         @media (max-width:700px){.game-layout{flex-direction:column;}}
     </style>
 </head>
@@ -368,28 +501,47 @@
         <button id="checkBtn" class="btn-check">Проверить</button>
         <button id="resetBtn" class="btn-check reset-btn">Сбросить всё</button>
     </div>
-    <footer>© ВетСим</footer>
+
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
+
+    <footer>© ВетСим — интерактивное сопоставление · CC BY-NC</footer>
 </div>
 <script>
     const originalPairs = ${JSON.stringify(exportPairs)};
     let terms = [], defs = [], dragDefId = null;
+
     function init() {
         terms = originalPairs.map((p,idx)=>({id:idx, text:p.left, matched:false, defId:null}));
         defs = originalPairs.map((p,idx)=>({id:idx, text:p.right, matched:false, termId:null}));
         for(let i=defs.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[defs[i],defs[j]]=[defs[j],defs[i]];}
         render();
     }
+
     function render(){
         const leftDiv=document.getElementById('leftTerms'), rightDiv=document.getElementById('rightDefs');
         leftDiv.innerHTML=''; rightDiv.innerHTML='';
+
         terms.forEach(term=>{
             const card=document.createElement('div');
             card.className='term-card'+(term.matched?' matched':'');
             card.textContent=term.text;
             if(!term.matched){
-                card.addEventListener('dragover',e=>e.preventDefault());
+                card.addEventListener('dragover',e=>{e.preventDefault();card.classList.add('over');});
+                card.addEventListener('dragleave',e=>{card.classList.remove('over');});
                 card.addEventListener('drop',e=>{
                     e.preventDefault();
+                    card.classList.remove('over');
                     if(dragDefId===null)return;
                     const def=defs.find(d=>d.id===dragDefId);
                     if(!def||def.matched)return;
@@ -403,6 +555,7 @@
             }
             leftDiv.appendChild(card);
         });
+
         defs.forEach(def=>{
             const card=document.createElement('div');
             card.className='def-card'+(def.matched?' matched':'');
@@ -414,35 +567,42 @@
             } else card.setAttribute('draggable','false');
             rightDiv.appendChild(card);
         });
+
         document.getElementById('matchedCount').innerText=terms.filter(t=>t.matched).length;
         document.getElementById('totalCount').innerText=terms.length;
     }
-    function check(){const all=terms.every(t=>t.matched);alert(all?'🎉 Все верно!':\`✅ Сопоставлено \${terms.filter(t=>t.matched).length} из \${terms.length}\`);}
+
+    function check(){
+        const all=terms.every(t=>t.matched);
+        alert(all?'🎉 Все верно!':\`✅ Сопоставлено \${terms.filter(t=>t.matched).length} из \${terms.length}\`);
+    }
+
     function reset(){init();}
+
     document.getElementById('checkBtn').addEventListener('click',check);
     document.getElementById('resetBtn').addEventListener('click',reset);
     init();
 <\/script>
 </body>
 </html>`;
-            const blob = new Blob([html], { type: 'text/html' });
+            const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = 'matching_exercise.html';
             link.click();
             URL.revokeObjectURL(link.href);
+            alert("✅ Тренажёр экспортирован!\n\nФайл: matching_exercise.html");
         }
 
-        // Escape HTML
         function escapeHtml(str) {
             if (!str) return '';
             return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
         }
 
-        // Инициализация: загружаем демо и вешаем обработчики
+        // Инициализация
+        loadAuthorLocal();
         loadDemo();
 
-        // Назначаем обработчики кнопкам
         if (addBtn) addBtn.addEventListener('click', addPair);
         if (demoBtn) demoBtn.addEventListener('click', loadDemo);
         if (saveBtn) saveBtn.addEventListener('click', saveProject);
@@ -457,11 +617,10 @@
                 btn.classList.add('active');
                 document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
                 document.getElementById(tab + 'Pane').classList.add('active');
-                if (tab === 'editor') renderPairs(); // обновить отображение при возврате
+                if (tab === 'editor') renderPairs();
             });
         });
     });
 </script>
-    <script src="https://vet-sim.github.io/footer.js" defer></script>
 </body>
 </html>

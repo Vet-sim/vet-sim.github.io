@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Конструктор таблиц | ВетСим</title>
@@ -72,6 +59,46 @@
         .tab-pane.active {
             display: block;
         }
+
+        /* ===== НОВОЕ: поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+            margin-bottom: 0;
+            display: inline;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -100,10 +127,12 @@
             background: #2C7DA0;
             color: white;
         }
+        .btn-primary:hover { background: #236B8A; }
         .btn-secondary {
             background: #A3B18A;
             color: white;
         }
+        .btn-secondary:hover { background: #8FA376; }
         .flex {
             display: flex;
             flex-wrap: wrap;
@@ -157,14 +186,43 @@
             border-radius: 20px;
             font-size: 0.85rem;
         }
+
+        /* ===== НОВОЕ: подпись внизу ===== */
+        .vetsim-credit {
+            margin-top: 2rem;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.2rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
         footer {
-            margin-top: 30px;
+            margin-top: 1.5rem;
             text-align: center;
             font-size: 0.7rem;
             color: #A7B89A;
         }
         @media (max-width: 700px) {
             .grid-table th, .grid-table td { padding: 6px; }
+            .author-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -180,6 +238,13 @@
 
     <!-- Редактор -->
     <div id="editorPane" class="tab-pane active">
+        <!-- ===== НОВОЕ: поле автора ===== -->
+        <div class="author-block">
+            <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+            <input type="text" id="authorInput" class="author-input"
+                   placeholder="Например: Тераевич Алла Сергеевна">
+        </div>
+
         <div class="form-group">
             <label>Название задания</label>
             <input type="text" id="taskTitle" value="Таблица: Заполните пропуски / выберите ответ">
@@ -226,13 +291,26 @@
         </div>
     </div>
 
+    <!-- ===== НОВОЕ: подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <footer>© ВетСим — создавайте интерактивные таблицы</footer>
 </div>
 
 <script>
     // ----- Глобальные данные -----
     let currentRows = 3, currentCols = 4;
-    let tableData = [];          // [row][col] = { type: 'text', value: '' } или { type: 'dropdown', options: [] }
+    let tableData = [];
     let selectedRow = -1, selectedCol = -1;
 
     // DOM элементы
@@ -241,6 +319,28 @@
     const colHeadersTextarea = document.getElementById('colHeaders');
     const tableViewDiv = document.getElementById('tableView');
     const taskTitleInput = document.getElementById('taskTitle');
+
+    // ===== НОВОЕ: элементы автора =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_table_author', authorInput.value); } catch(e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_table_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch(e) {}
+    }
 
     function initEmptyTable(rows, cols) {
         const data = [];
@@ -265,7 +365,6 @@
         return str.replace(/[&<>]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[m]);
     }
 
-    // Перерисовка таблицы
     function renderTable() {
         if (!tableViewDiv) return;
         const headers = getHeaders();
@@ -294,7 +393,6 @@
         html += '</tbody></table>';
         tableViewDiv.innerHTML = html;
 
-        // Обработчик клика для выбора ячейки
         const cells = tableViewDiv.querySelectorAll('td[data-row]');
         cells.forEach(td => {
             const row = parseInt(td.getAttribute('data-row'));
@@ -312,7 +410,6 @@
         });
     }
 
-    // Функция редактирования текста в ячейке (через prompt, но надёжно)
     function editCellText(row, col) {
         const cell = tableData[row][col];
         if (cell.type !== 'text') {
@@ -326,7 +423,6 @@
         }
     }
 
-    // Редактирование выделенной ячейки через кнопку
     function editSelectedCell() {
         if (selectedRow === -1 || selectedCol === -1) {
             alert('Сначала выберите ячейку (кликните по ней)');
@@ -387,8 +483,10 @@
         renderTable();
     }
 
+    // ===== НОВОЕ: сохранение с автором =====
     function saveProject() {
         const project = {
+            author: authorInput.value || '',
             taskTitle: taskTitleInput.value,
             colHeaders: colHeadersTextarea.value,
             rows: currentRows,
@@ -401,8 +499,10 @@
         a.download = 'table_project.json';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert('✅ Проект сохранён');
     }
 
+    // ===== НОВОЕ: загрузка с автором =====
     function loadProject(file) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -415,8 +515,13 @@
                 rowsInput.value = currentRows;
                 colsInput.value = currentCols;
                 tableData = proj.data || initEmptyTable(currentRows, currentCols);
+                if (proj.author !== undefined) {
+                    authorInput.value = proj.author;
+                    authorPreview.textContent = proj.author || 'не указан';
+                }
                 renderTable();
                 selectedRow = -1; selectedCol = -1;
+                alert('✅ Проект загружен');
             } catch (err) {
                 alert('Ошибка загрузки файла');
             }
@@ -424,6 +529,7 @@
         reader.readAsText(file);
     }
 
+    // ===== НОВОЕ: экспорт с автором =====
     function exportTrainer() {
         const title = taskTitleInput.value;
         const headers = getHeaders();
@@ -431,24 +537,56 @@
         const colsCount = currentCols;
         const dataCopy = JSON.parse(JSON.stringify(tableData));
 
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
         const trainerHtml = `<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${escapeHtml(title)} | ВетСим</title>
     <style>
-        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:20px;}
+        body{background:#FDF8F0;font-family:system-ui,Roboto;padding:20px;color:#3E5C4A;}
         .container{max-width:1200px;margin:0 auto;}
         h1{color:#1F4E6E;text-align:center;}
         .score{background:#F3F6EF;padding:8px 16px;border-radius:40px;text-align:center;margin:15px 0;}
         table{width:100%;border-collapse:collapse;background:white;margin:20px 0;}
         th,td{border:1px solid #D1DEC2;padding:12px;vertical-align:top;}
         th{background:#F0F5EA;font-weight:bold;}
-        select,input{width:100%;padding:6px;border-radius:20px;border:1px solid #A3B18A;}
-        .btn{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:10px;}
-        .reset-btn{background:#E2CFB0;margin-left:12px;}
-        footer{text-align:center;margin-top:30px;font-size:0.7rem;}
-        .flex{display:flex;gap:10px;justify-content:center;}
+        select,input{width:100%;padding:6px;border-radius:20px;border:1px solid #A3B18A;font-family:inherit;}
+        .btn{background:#2C7DA0;color:white;border:none;padding:8px 24px;border-radius:40px;cursor:pointer;margin-top:10px;font-family:inherit;font-size:0.9rem;}
+        .reset-btn{background:#E2CFB0;margin-left:12px;color:#3E5C4A;}
+        .flex{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+        /* ===== Блок подписи автора ===== */
+        .vetsim-credit {
+            margin-top: 2rem;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.2rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer{text-align:center;margin-top:1.5rem;font-size:0.7rem;color:#A7B89A;}
     </style>
 </head>
 <body>
@@ -460,7 +598,21 @@
         <button id="checkBtn" class="btn">Проверить</button>
         <button id="resetBtn" class="btn reset-btn">Сбросить всё</button>
     </div>
-    <footer>© ВетСим — интерактивное задание</footer>
+
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
+
+    <footer>© ВетСим — интерактивное задание · CC BY-NC</footer>
 </div>
 <script>
     const tableData = ${JSON.stringify(dataCopy)};
@@ -550,17 +702,17 @@
 <\/script>
 </body>
 </html>`;
-        const blob = new Blob([trainerHtml], { type: 'text/html' });
+        const blob = new Blob([trainerHtml], { type: 'text/html;charset=utf-8' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'table_trainer.html';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert("✅ Тренажёр экспортирован!\n\nФайл: table_trainer.html");
     }
 
     function initDemo() {
         tableData = initEmptyTable(3, 4);
-        // оставляем полностью пустым, но для демо добавим пример в первую ячейку
         if (tableData[0] && tableData[0][0]) tableData[0][0].value = 'Пример: введите свой текст';
         renderTable();
         rowsInput.value = 3;
@@ -568,7 +720,6 @@
         selectedRow = -1; selectedCol = -1;
     }
 
-    // Обработчики
     document.getElementById('applySizeBtn').addEventListener('click', resizeTable);
     document.getElementById('applyHeadersBtn').addEventListener('click', applyHeaders);
     document.getElementById('editTextBtn').addEventListener('click', editSelectedCell);
@@ -593,25 +744,8 @@
         });
     });
 
+    loadAuthorLocal();
     initDemo();
 </script>
-    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
-    <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
-    <p style="margin-top: 0.5rem;">
-        <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
-        <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
-        <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
-        <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
-    </p>
-    <p style="margin-top: 0.5rem;">
-        Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
-    </p>
-    <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
-        💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
-    </p>
-    <p style="font-size: 0.7rem; color: #89A07B;">
-        © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
-    </p>
-</footer>
 </body>
 </html>

@@ -59,12 +59,12 @@
             display: block;
         }
 
-        /* ===== НОВОЕ: поле автора ===== */
+        /* ===== Поле автора ===== */
         .author-block {
             background: #eef3e8;
             border-radius: 24px;
             padding: 1rem 1.2rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             display: flex;
             flex-wrap: wrap;
             gap: 0.8rem;
@@ -90,6 +90,43 @@
             transition: 0.2s;
         }
         .author-input:focus {
+            outline: none;
+            border-color: #7e9f6e;
+            box-shadow: 0 0 0 3px rgba(126,159,110,0.15);
+            background: white;
+        }
+
+        /* ===== НОВОЕ: поле названия викторины ===== */
+        .title-block {
+            background: #fefaf2;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #ede3d4;
+        }
+        .title-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #4b6e43;
+            white-space: nowrap;
+        }
+        .title-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #d1dec2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #fffdf8;
+            color: #2c3e2f;
+            transition: 0.2s;
+        }
+        .title-input:focus {
             outline: none;
             border-color: #7e9f6e;
             box-shadow: 0 0 0 3px rgba(126,159,110,0.15);
@@ -202,6 +239,10 @@
             background: #eef3e8;
             padding: 1rem 1.5rem;
         }
+        .quiz-header h1 {
+            font-size: 1.4rem;
+            color: #4b6e43;
+        }
         .progress-section {
             display: flex;
             align-items: center;
@@ -312,7 +353,7 @@
             display: none;
         }
 
-        /* ===== НОВОЕ: подпись внизу ===== */
+        /* ===== Подпись внизу ===== */
         .vetsim-credit {
             margin-top: 2rem;
             padding: 1rem 1.2rem;
@@ -348,7 +389,7 @@
         }
         @media (max-width: 640px) {
             .tab-pane { padding: 1rem; }
-            .author-block { flex-direction: column; align-items: stretch; }
+            .author-block, .title-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -361,11 +402,18 @@
 
     <!-- Редактор -->
     <div id="editorPane" class="tab-pane active">
-        <!-- ===== НОВОЕ: поле автора ===== -->
+        <!-- ===== Поле автора ===== -->
         <div class="author-block">
             <label for="authorInput">✍️ Автор викторины (ФИО):</label>
             <input type="text" id="authorInput" class="author-input"
                    placeholder="Например: Тераевич Алла Сергеевна">
+        </div>
+
+        <!-- ===== НОВОЕ: поле названия викторины ===== -->
+        <div class="title-block">
+            <label for="quizTitleInput">🏷️ Название викторины:</label>
+            <input type="text" id="quizTitleInput" class="title-input"
+                   placeholder="Например: Ветеринарная диагностика: «Что не так?»">
         </div>
 
         <div class="editor-header">
@@ -383,7 +431,7 @@
     <div id="testPane" class="tab-pane">
         <div class="quiz-container">
             <div class="quiz-header">
-                <h1>🐄 Ветеринарная диагностика: «Что не так?»</h1>
+                <h1 id="quizTitleTest">🐄 Ветеринарная диагностика: «Что не так?»</h1>
                 <div class="progress-section">
                     <span class="progress-text" id="progressCounterTest">Случай 1 из 10</span>
                     <div class="progress-bar-bg"><div class="progress-fill" id="progressFillTest"></div></div>
@@ -404,7 +452,7 @@
         </div>
     </div>
 
-    <!-- ===== НОВОЕ: подпись ===== -->
+    <!-- ===== Подпись ===== -->
     <div class="vetsim-credit">
         <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
         <div class="vetsim-credit-row">
@@ -419,7 +467,7 @@
 </div>
 
 <script>
-    // ------------------- ИСХОДНЫЕ ДАННЫЕ (10 случаев КРС) -------------------
+    // ------------------- ИСХОДНЫЕ ДАННЫЕ -------------------
     let questions = [
         { id: 1, text: "У коровы отсутствие жвачки, отрыжка с гнилостным запахом, метеоризм рубца, температура в норме, аппетит отсутствует.", options: ["Тимпания рубца", "Травматический ретикулит", "Кетоз", "Ацидоз"], correct: 0, explanation: "Тимпания рубца – острое вздутие рубца из-за скопления газов.", system: "Пищеварительная система", image: "" },
         { id: 2, text: "Кашель, носовые истечения гнойного характера, температура 41°C, при аускультации — влажные хрипы в краниальных долях лёгких.", options: ["Бронхопневмония", "Туберкулёз", "Диктиокаулёз", "Эмфизема лёгких"], correct: 0, explanation: "Бронхопневмония – воспаление бронхов и лёгких с гнойным экссудатом.", system: "Дыхательная система", image: "" },
@@ -433,17 +481,34 @@
         { id: 10, text: "Помутнение роговицы, слезотечение, светобоязнь, корова трёт глаз о предметы.", options: ["Кератит", "Конъюнктивит", "Катаракта", "Увеит"], correct: 0, explanation: "Кератит – воспаление роговицы.", system: "Зрительная система", image: "" }
     ];
 
-    // ===== НОВОЕ: элементы автора =====
+    // Название викторины по умолчанию
+    const DEFAULT_QUIZ_TITLE = '🐄 Ветеринарная диагностика: «Что не так?»';
+
+    // ===== Элементы автора =====
     const authorInput = document.getElementById('authorInput');
     const authorPreview = document.getElementById('authorPreview');
+
+    // ===== НОВОЕ: элементы названия =====
+    const quizTitleInput = document.getElementById('quizTitleInput');
+    const quizTitleTest = document.getElementById('quizTitleTest');
 
     authorInput.addEventListener('input', () => {
         authorPreview.textContent = authorInput.value.trim() || 'не указан';
         saveAuthorLocal();
     });
 
+    // Обновление названия в реальном времени
+    quizTitleInput.addEventListener('input', () => {
+        const val = quizTitleInput.value.trim() || DEFAULT_QUIZ_TITLE;
+        quizTitleTest.textContent = val;
+        saveTitleLocal();
+    });
+
     function saveAuthorLocal() {
         try { localStorage.setItem('vetsim_victoryna_author', authorInput.value); } catch(e) {}
+    }
+    function saveTitleLocal() {
+        try { localStorage.setItem('vetsim_victoryna_title', quizTitleInput.value); } catch(e) {}
     }
     function loadAuthorLocal() {
         try {
@@ -453,6 +518,21 @@
                 authorPreview.textContent = a.trim() || 'не указан';
             }
         } catch(e) {}
+    }
+    function loadTitleLocal() {
+        try {
+            const t = localStorage.getItem('vetsim_victoryna_title');
+            if (t) {
+                quizTitleInput.value = t;
+                quizTitleTest.textContent = t.trim() || DEFAULT_QUIZ_TITLE;
+            } else {
+                quizTitleInput.value = DEFAULT_QUIZ_TITLE;
+                quizTitleTest.textContent = DEFAULT_QUIZ_TITLE;
+            }
+        } catch(e) {
+            quizTitleInput.value = DEFAULT_QUIZ_TITLE;
+            quizTitleTest.textContent = DEFAULT_QUIZ_TITLE;
+        }
     }
 
     // глобальные переменные
@@ -633,6 +713,7 @@
     function saveToJson() {
         const project = {
             author: authorInput.value || '',
+            title: quizTitleInput.value || '',
             questions: questions
         };
         const dataStr = JSON.stringify(project, null, 2);
@@ -650,7 +731,6 @@
         reader.onload = e => {
             try {
                 const newData = JSON.parse(e.target.result);
-                // Поддерживаем два формата: старый (массив) и новый (объект с author + questions)
                 if (Array.isArray(newData)) {
                     questions = newData;
                 } else if (newData.questions && Array.isArray(newData.questions)) {
@@ -658,6 +738,10 @@
                     if (newData.author !== undefined) {
                         authorInput.value = newData.author;
                         authorPreview.textContent = newData.author || 'не указан';
+                    }
+                    if (newData.title !== undefined) {
+                        quizTitleInput.value = newData.title;
+                        quizTitleTest.textContent = newData.title || DEFAULT_QUIZ_TITLE;
                     }
                 } else {
                     alert('Неверный формат JSON');
@@ -671,16 +755,18 @@
         reader.readAsText(file);
     }
 
-    // ===== НОВОЕ: экспорт с автором =====
+    // ===== Экспорт с автором и названием =====
     function exportStandaloneHtml() {
         const authorName = authorInput.value.trim() || 'не указан';
         const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const quizTitle = quizTitleInput.value.trim() || DEFAULT_QUIZ_TITLE;
+        const safeQuizTitle = quizTitle.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const qData = JSON.stringify(questions);
 
         const standaloneHtml = `<!DOCTYPE html>
         <html lang="ru">
         <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Ветеринарная диагностика | ВетСим</title>
+        <title>${safeQuizTitle} | ВетСим</title>
         <style>
             * { box-sizing: border-box; margin: 0; padding: 0; }
             body { font-family: 'Segoe UI', 'Arial', sans-serif; background: #f4f7f9; color: #2c3e2f; padding: 20px; line-height: 1.4; }
@@ -720,7 +806,7 @@
         <div class="main-container">
             <div class="quiz-container">
                 <div class="quiz-header">
-                    <h1>🐄 Ветеринарная диагностика: «Что не так?»</h1>
+                    <h1>${safeQuizTitle}</h1>
                     <div class="progress-section">
                         <span class="progress-text" id="progressCounter">Случай 1 из ...</span>
                         <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
@@ -826,7 +912,7 @@
 
     function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'})[m]); }
 
-    // ---- Инициализация и переключение вкладок ----
+    // ---- Инициализация ----
     document.getElementById('addQuestionBtn').onclick = () => {
         const newId = Date.now();
         questions.push({ id: newId, text: 'Новый вопрос', options: ['Вариант A', 'Вариант B'], correct: 0, explanation: 'Пояснение', system: 'Система', image: '' });
@@ -854,6 +940,7 @@
     });
 
     loadAuthorLocal();
+    loadTitleLocal();
     renderEditor();
     refreshTestDisplay();
 </script>

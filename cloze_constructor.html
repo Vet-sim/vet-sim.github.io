@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109912710', 'ym');
-
-    ym(109912710, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109912710" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Конструктор «Текст с пропусками» | ВетСим</title>
@@ -42,7 +29,73 @@
         .gap-item{display:flex;gap:0.8rem;align-items:center;margin-bottom:0.8rem;background:white;border-radius:40px;padding:6px 12px;flex-wrap:wrap;}
         .gap-order{font-weight:bold;background:#2C7DA0;color:white;border-radius:30px;width:30px;text-align:center;padding:4px;}
         .gap-question{flex:2;min-width:150px;}
-        footer{margin-top:2rem;text-align:center;font-size:0.7rem;color:#A7B89A;border-top:1px solid #E2EAD9;padding-top:1rem;}
+
+        /* ===== НОВОЕ: поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+            margin-bottom: 0;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
+        /* ===== НОВОЕ: подпись внизу страницы ===== */
+        .vetsim-credit {
+            margin-top: 2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer{margin-top:1.5rem;text-align:center;font-size:0.7rem;color:#A7B89A;border-top:1px solid #E2EAD9;padding-top:1rem;}
         @media (max-width:700px){.gap-item{flex-direction:column;align-items:stretch;}}
     </style>
 </head>
@@ -57,6 +110,13 @@
     </div>
 
     <div id="editorPane" class="tab-pane active">
+        <!-- ===== НОВОЕ: поле автора ===== -->
+        <div class="author-block">
+            <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+            <input type="text" id="authorInput" class="author-input"
+                   placeholder="Например: Тераевич Алла Сергеевна">
+        </div>
+
         <div class="editor-section">
             <label>📌 Название задания</label>
             <input type="text" id="taskTitle" value="Текст с пропусками (вставьте правильные слова)">
@@ -89,6 +149,20 @@
             <p>Нажмите «Экспорт», скачается файл <strong>cloze_trainer.html</strong>. Откройте его в любом браузере – студенты увидят текст с полями ввода, смогут проверить ответы и увидеть результат.</p>
         </div>
     </div>
+
+    <!-- ===== НОВОЕ: подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
     <footer>© ВетСим — задание «Текст с пропусками» (Cloze). Работает во всех браузерах.</footer>
 </div>
 
@@ -100,6 +174,28 @@
     const textEditor = document.getElementById('textEditor');
     const gapsPanel = document.getElementById('gapsPanel');
     const taskTitleInput = document.getElementById('taskTitle');
+
+    // ===== НОВОЕ: элементы автора =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_cloze_author', authorInput.value); } catch(e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_cloze_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch(e) {}
+    }
 
     // Преобразование всех текстовых [___] в спаны-маркеры
     function convertBracketsToMarkers() {
@@ -222,8 +318,10 @@
         }
     }
 
+    // ===== НОВОЕ: сохранение с автором =====
     function saveProject() {
         const project = {
+            author: authorInput.value || '',
             taskTitle: taskTitleInput.value,
             editorHTML: textEditor.innerHTML,
             gaps: gaps.map(g => ({ id: g.id, correctAnswer: g.correctAnswer }))
@@ -236,6 +334,7 @@
         URL.revokeObjectURL(a.href);
     }
 
+    // ===== НОВОЕ: загрузка с автором =====
     function loadProject(file) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -244,20 +343,28 @@
                 taskTitleInput.value = proj.taskTitle || "Текст с пропусками";
                 textEditor.innerHTML = proj.editorHTML || "Текст";
                 gaps = proj.gaps || [];
+                if (proj.author !== undefined) {
+                    authorInput.value = proj.author;
+                    authorPreview.textContent = proj.author || 'не указан';
+                }
                 if (gaps.length) nextId = Math.max(...gaps.map(g => g.id), 0) + 1;
                 else nextId = 1;
                 convertBracketsToMarkers();
                 refreshGapsList();
+                alert('✅ Проект загружен');
             } catch(err) { alert("Ошибка загрузки проекта"); }
         };
         reader.readAsText(file);
     }
 
-    // ---------- ЭКСПОРТ (исправленный) ----------
+    // ---------- ЭКСПОРТ с автором ----------
     function exportTrainer() {
         const title = taskTitleInput.value;
         const rawHTML = textEditor.innerHTML;
         const gapsData = gaps.map(g => ({ correctAnswer: g.correctAnswer }));
+
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
         const standalone = `<!DOCTYPE html>
 <html lang="ru">
@@ -276,10 +383,38 @@
         .check-btn{background:#2C7DA0;color:white;border:none;padding:10px 24px;border-radius:40px;cursor:pointer;font-weight:bold;}
         .reset-btn{background:#E2CFB0;border:none;padding:8px 20px;border-radius:40px;cursor:pointer;}
         .feedback{background:#F3F6EF;border-radius:28px;padding:1rem;margin-top:1rem;text-align:center;}
-        .correct{background:#DAF1D8;color:#2A6B2F;}
-        .wrong{background:#FFE4DE;color:#BC5A3C;}
+        .correct{background:#DAF1D8;color:#2A6B2F;padding:0.8rem;border-radius:1rem;}
+        .wrong{background:#FFE4DE;color:#BC5A3C;padding:0.8rem;border-radius:1rem;text-align:left;}
         .score{text-align:center;margin-bottom:1rem;background:#F3F6EF;padding:0.5rem;border-radius:40px;}
-        footer{text-align:center;font-size:0.7rem;margin-top:2rem;}
+
+        /* ===== Блок подписи автора ===== */
+        .vetsim-credit {
+            margin-top: 2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer{text-align:center;font-size:0.7rem;margin-top:1rem;color:#A7B89A;}
     </style>
 </head>
 <body>
@@ -292,7 +427,21 @@
         <button id="resetBtn" class="reset-btn">🔄 Сбросить</button>
     </div>
     <div id="feedback" class="feedback"></div>
-    <footer>© ВетСим — интерактивное задание. Введите ответы в поля.</footer>
+
+    <!-- ===== Блок подписи автора ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value">${safeAuthorName}</span>
+        </div>
+    </div>
+
+    <footer>© ВетСим — интерактивное задание «Текст с пропусками» · CC BY-NC</footer>
 </div>
 <script>
     const gapsData = ${JSON.stringify(gapsData)};
@@ -316,7 +465,6 @@
             });
             ph.parentNode.replaceChild(input, ph);
         });
-        // ВАЖНО: перемещаем готовые узлы, а не перезаписываем innerHTML
         container.innerHTML = '';
         while (wrapper.firstChild) {
             container.appendChild(wrapper.firstChild);
@@ -364,6 +512,7 @@
         a.download = 'cloze_trainer.html';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert("✅ Тренажёр экспортирован!\n\nФайл: cloze_trainer.html");
     }
 
     function escapeHtml(str) {
@@ -372,6 +521,7 @@
     }
 
     function init() {
+        loadAuthorLocal();
         convertBracketsToMarkers();
         refreshGapsList();
     }
@@ -397,6 +547,5 @@
 
     init();
 </script>
-  <script src="https://vet-sim.github.io/footer.js" defer></script>
 </body>
 </html>

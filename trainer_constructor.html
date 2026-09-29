@@ -83,6 +83,44 @@
             border-left: 4px solid #A3B18A;
             padding-left: 12px;
         }
+
+        /* ===== НОВОЕ: поле автора ===== */
+        .author-block {
+            background: #F3F6EF;
+            border-radius: 24px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            align-items: center;
+            border: 2px solid #E2EAD9;
+        }
+        .author-block label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1F4E6E;
+            white-space: nowrap;
+        }
+        .author-input {
+            flex: 1;
+            min-width: 220px;
+            padding: 8px 16px;
+            border: 2px solid #D1DEC2;
+            border-radius: 30px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FFFEF7;
+            color: #3E5C4A;
+            transition: 0.2s;
+        }
+        .author-input:focus {
+            outline: none;
+            border-color: #2C7DA0;
+            box-shadow: 0 0 0 3px rgba(44,125,160,0.12);
+            background: white;
+        }
+
         .stage-block {
             background: #FEFCF9;
             border: 1px solid #E2EAD9;
@@ -159,6 +197,7 @@
             font-weight: 600;
             cursor: pointer;
         }
+        .btn-primary:hover { background: #236B8A; }
         .btn-secondary {
             background: #A3B18A;
             color: white;
@@ -167,6 +206,7 @@
             border-radius: 40px;
             cursor: pointer;
         }
+        .btn-secondary:hover { background: #8FA376; }
         .flex-row {
             display: flex;
             gap: 1rem;
@@ -174,16 +214,51 @@
             margin: 1rem 0;
             justify-content: center;
         }
-        footer {
+
+        /* ===== НОВОЕ: подпись ===== */
+        .vetsim-credit {
+            margin-top: 2rem;
+            padding: 1rem 1.2rem;
+            background: linear-gradient(135deg, #F3F6EF, #FDF8F0);
+            border-radius: 24px;
+            border: 1px solid #E2EAD9;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #3E5C4A;
+        }
+        .vetsim-credit-title {
+            font-weight: 700;
+            color: #6B8E5C;
+            font-size: 0.92rem;
+            margin-bottom: 0.5rem;
+        }
+        .vetsim-credit-row {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin: 0.15rem 0;
+        }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer.vetsim-footer {
             margin-top: 2rem;
             text-align: center;
-            font-size: 0.7rem;
-            color: #A7B89A;
-            border-top: 1px solid #E2EAD9;
-            padding-top: 1rem;
+            font-size: 0.75rem;
+            color: #89A07B;
+            border-top: 1px solid #E2E9DC;
+            padding-top: 1.5rem;
         }
+        footer.vetsim-footer a {
+            color: #568A6B;
+            text-decoration: none;
+        }
+        footer.vetsim-footer a:hover { text-decoration: underline; }
+
         @media (max-width: 700px) {
             .main-layout { flex-direction: column; }
+            .author-block { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
@@ -191,6 +266,13 @@
 <div class="container">
     <h1>🧩 Конструктор теста по изображению</h1>
     <div class="sub">Создайте свой тренажёр: загрузите картинку, добавьте этапы, вопросы, варианты — экспортируйте в HTML</div>
+
+    <!-- ===== НОВОЕ: поле автора ===== -->
+    <div class="author-block">
+        <label for="authorInput">✍️ Автор тренажёра (ФИО):</label>
+        <input type="text" id="authorInput" class="author-input"
+               placeholder="Например: Тераевич Алла Сергеевна">
+    </div>
 
     <div class="main-layout">
         <div class="editor-panel">
@@ -209,7 +291,34 @@
             <p style="margin-top: 0.5rem; font-size:0.8rem;">Нажмите на картинку, чтобы загрузить своё (JPG/PNG)</p>
         </div>
     </div>
-    <footer>© ВетСим — создавайте тренажёры без программирования. Перемешивание вариантов, экспорт в HTML, работа без интернета.</footer>
+
+    <!-- ===== НОВОЕ: подпись ===== -->
+    <div class="vetsim-credit">
+        <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор проекта:</span>
+            <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+        </div>
+        <div class="vetsim-credit-row">
+            <span class="vetsim-credit-label">Автор тренажёра:</span>
+            <span class="vetsim-credit-value" id="authorPreview">не указан</span>
+        </div>
+    </div>
+
+    <!-- ===== ЕДИНЫЙ ФУТЕР (убран дубликат) ===== -->
+    <footer class="vetsim-footer">
+        <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="index.html">Главная</a> ·
+            <a href="universal.html">Универсальное</a> ·
+            <a href="general.html">Общепрофессиональный</a> ·
+            <a href="professional.html">Профессиональный</a>
+        </p>
+        <p style="margin-top: 0.5rem;">
+            Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">CC BY‑NC 4.0</a>
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.7rem;">© 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+    </footer>
 </div>
 
 <script>
@@ -219,6 +328,28 @@
 
     const stagesContainer = document.getElementById('stagesContainer');
     const trainerImage = document.getElementById('trainerImage');
+
+    // ===== НОВОЕ: элементы автора =====
+    const authorInput = document.getElementById('authorInput');
+    const authorPreview = document.getElementById('authorPreview');
+
+    authorInput.addEventListener('input', () => {
+        authorPreview.textContent = authorInput.value.trim() || 'не указан';
+        saveAuthorLocal();
+    });
+
+    function saveAuthorLocal() {
+        try { localStorage.setItem('vetsim_trainer_author', authorInput.value); } catch(e) {}
+    }
+    function loadAuthorLocal() {
+        try {
+            const a = localStorage.getItem('vetsim_trainer_author');
+            if (a) {
+                authorInput.value = a;
+                authorPreview.textContent = a.trim() || 'не указан';
+            }
+        } catch(e) {}
+    }
 
     // Загрузка изображения
     trainerImage.addEventListener('click', () => {
@@ -297,7 +428,6 @@
                 });
             }
 
-            // обработчики для этого этапа
             stageDiv.querySelector('.remove-stage').addEventListener('click', () => { stages.splice(stageIdx,1); renderEditor(); });
             stageDiv.querySelector('.stage-name-input').addEventListener('change', (e) => { stages[stageIdx].name = e.target.value; renderEditor(); });
             stageDiv.querySelector('.add-question-btn').addEventListener('click', () => {
@@ -309,7 +439,6 @@
     }
 
     function attachQuestionEvents(stageIdx) {
-        // удаление вопроса
         document.querySelectorAll(`.remove-question[data-stage="${stageIdx}"]`).forEach(btn => {
             btn.removeEventListener('click', remHandler);
             btn.addEventListener('click', remHandler);
@@ -319,7 +448,6 @@
                 renderEditor();
             }
         });
-        // изменение текста вопроса
         document.querySelectorAll(`.question-text-input[data-stage="${stageIdx}"]`).forEach(inp => {
             inp.removeEventListener('change', changeText);
             inp.addEventListener('change', changeText);
@@ -328,7 +456,6 @@
                 stages[stageIdx].questions[qIdx].text = inp.value;
             }
         });
-        // изменение правильного индекса
         document.querySelectorAll(`.correct-idx[data-stage="${stageIdx}"]`).forEach(inp => {
             inp.removeEventListener('change', changeCorrect);
             inp.addEventListener('change', changeCorrect);
@@ -337,7 +464,6 @@
                 stages[stageIdx].questions[qIdx].correct = parseInt(inp.value);
             }
         });
-        // добавление варианта
         document.querySelectorAll(`.add-opt-btn[data-stage="${stageIdx}"]`).forEach(btn => {
             btn.removeEventListener('click', addOpt);
             btn.addEventListener('click', addOpt);
@@ -347,7 +473,6 @@
                 renderEditor();
             }
         });
-        // изменение текста варианта и удаление варианта
         document.querySelectorAll(`.option-text[data-stage="${stageIdx}"]`).forEach(inp => {
             inp.removeEventListener('change', changeOptText);
             inp.addEventListener('change', changeOptText);
@@ -369,8 +494,10 @@
         });
     }
 
+    // ===== НОВОЕ: сохранение с автором =====
     function saveProject() {
         const project = {
+            author: authorInput.value || '',
             image: currentImageData || trainerImage.src,
             stages: stages
         };
@@ -381,8 +508,10 @@
         a.download = 'trainer_project.json';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert('✅ Проект сохранён');
     }
 
+    // ===== НОВОЕ: загрузка с автором =====
     function loadProject(file) {
         const reader = new FileReader();
         reader.onload = e => {
@@ -392,18 +521,27 @@
                     trainerImage.src = proj.image;
                     currentImageData = proj.image;
                 }
+                if (proj.author !== undefined) {
+                    authorInput.value = proj.author;
+                    authorPreview.textContent = proj.author || 'не указан';
+                }
                 stages = proj.stages || [];
                 renderEditor();
+                alert('✅ Проект загружен');
             } catch(err) { alert("Ошибка загрузки проекта"); }
         };
         reader.readAsText(file);
     }
 
+    // ===== НОВОЕ: экспорт с автором =====
     function exportTrainer() {
         if (!stages.length) { alert("Добавьте хотя бы один этап и вопросы!"); return; }
+
+        const authorName = authorInput.value.trim() || 'не указан';
+        const safeAuthorName = authorName.replace(/</g, '&lt;').replace(/>/g, '&gt;');
         const imageSrc = currentImageData || trainerImage.src;
         const stagesData = stages;
-        // генерация перемешанных индексов для экспорта будет внутри скрипта
+
         const standaloneHTML = `<!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -421,17 +559,25 @@
         .left-img img{max-width:100%; border-radius:20px;}
         .right-panel{flex:2; background:white; border-radius:28px; padding:1.5rem; border:1px solid #E7EDE2;}
         .stage-buttons{display:flex; gap:0.8rem; flex-wrap:wrap; margin-bottom:1.5rem;}
-        .stage-btn{background:#EEF2E9; border:none; padding:0.5rem 1rem; border-radius:40px; cursor:pointer;}
+        .stage-btn{background:#EEF2E9; border:none; padding:0.5rem 1rem; border-radius:40px; cursor:pointer; font-family:inherit; font-size:0.9rem;}
         .stage-btn.active{background:#2C7DA0; color:white;}
         .pairs-container{display:flex; flex-direction:column; gap:1rem; max-height:500px; overflow-y:auto;}
-        .pair-row{background:#FEFCF9; border:1px solid #E2EAD9; border-radius:60px; padding:10px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;}
-        .pair-left{font-weight:600; background:#F0EEE5; padding:6px 14px; border-radius:40px;}
-        select{padding:8px 12px; border-radius:40px; border:1px solid #D1DEC2; background:white;}
-        .correct-badge{background:#DAF1D8; color:#2A6B2F; padding:4px 12px; border-radius:30px;}
-        .progress-info{background:#F3F6EF; border-radius:40px; padding:8px 16px; margin-bottom:1rem; display:flex; justify-content:space-between;}
-        footer{margin-top:2rem; text-align:center; font-size:0.7rem;}
-        .reset-btn{background:#E2CFB0; border:none; padding:8px 20px; border-radius:40px; margin-top:1rem; cursor:pointer;}
-        @media (max-width:700px){.pair-row{flex-direction:column; align-items:stretch; gap:0.5rem;}}
+        .pair-row{background:#FEFCF9; border:1px solid #E2EAD9; border-radius:60px; padding:10px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; transition:0.2s;}
+        .pair-left{font-weight:600; background:#F0EEE5; padding:6px 14px; border-radius:40px; max-width:60%;}
+        select{padding:8px 12px; border-radius:40px; border:1px solid #D1DEC2; background:white; font-family:inherit; cursor:pointer;}
+        .correct-badge{background:#DAF1D8; color:#2A6B2F; padding:4px 12px; border-radius:30px; font-size:0.8rem; font-weight:600;}
+        .progress-info{background:#F3F6EF; border-radius:40px; padding:8px 16px; margin-bottom:1rem; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+
+        /* ===== Блок подписи автора ===== */
+        .vetsim-credit { margin-top: 1.5rem; padding: 1rem 1.2rem; background: linear-gradient(135deg, #F3F6EF, #FDF8F0); border-radius: 24px; border: 1px solid #E2EAD9; text-align: center; font-size: 0.82rem; color: #3E5C4A; }
+        .vetsim-credit-title { font-weight: 700; color: #6B8E5C; font-size: 0.92rem; margin-bottom: 0.5rem; }
+        .vetsim-credit-row { display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap; margin: 0.15rem 0; }
+        .vetsim-credit-label { color: #7C8F7C; font-weight: 600; }
+        .vetsim-credit-value { color: #1F4E6E; font-weight: 700; }
+
+        footer{margin-top:1.5rem; text-align:center; font-size:0.7rem; color:#A7B89A;}
+        .reset-btn{background:#E2CFB0; border:none; padding:8px 20px; border-radius:40px; margin-top:1rem; cursor:pointer; font-family:inherit;}
+        @media (max-width:700px){.pair-row{flex-direction:column; align-items:stretch; gap:0.5rem;} .pair-left{max-width:100%;}}
     </style>
 </head>
 <body>
@@ -439,15 +585,28 @@
     <h1>🧠 Интерактивный тренажёр</h1>
     <div class="sub">Перемешанные варианты • Много этапов</div>
     <div class="trainer-layout">
-        <div class="left-img"><img src="${imageSrc}" alt="Изображение" style="max-width:100%; border-radius:20px;"></div>
+        <div class="left-img"><img src="${imageSrc}" alt="Изображение"></div>
         <div class="right-panel">
             <div class="stage-buttons" id="stageButtons"></div>
             <div class="progress-info"><span id="progressText">Правильных ответов: 0 / ...</span><span>🎲 варианты перемешаны</span></div>
             <div id="gameContainer" class="pairs-container"></div>
             <button id="resetBtn" class="reset-btn">🔄 Сбросить все ответы</button>
+
+            <!-- ===== Блок подписи автора ===== -->
+            <div class="vetsim-credit">
+                <div class="vetsim-credit-title">🎓 Создано с помощью конструкторов проекта «ВетСим»</div>
+                <div class="vetsim-credit-row">
+                    <span class="vetsim-credit-label">Автор проекта:</span>
+                    <span class="vetsim-credit-value">Тераевич Алла Сергеевна</span>
+                </div>
+                <div class="vetsim-credit-row">
+                    <span class="vetsim-credit-label">Автор тренажёра:</span>
+                    <span class="vetsim-credit-value">${safeAuthorName}</span>
+                </div>
+            </div>
         </div>
     </div>
-    <footer>© ВетСим — тренажёр создан в конструкторе</footer>
+    <footer>© ВетСим — тренажёр создан в конструкторе · CC BY-NC</footer>
 </div>
 <script>
     const stagesData = ${JSON.stringify(stagesData)};
@@ -495,7 +654,7 @@
     function updateProgress() {
         let correct = countCorrect();
         let total = stagesData[currentStageIdx].questions.length;
-        document.getElementById('progressText').innerHTML = \`✅ Правильных ответов: \${correct} / \${total}\`;
+        document.getElementById('progressText').innerHTML = '✅ Правильных ответов: ' + correct + ' / ' + total;
     }
 
     function renderStage() {
@@ -556,7 +715,7 @@
         btnsDiv.innerHTML = '';
         stagesData.forEach((stage, idx) => {
             const btn = document.createElement('button');
-            btn.textContent = stage.name || \`Этап \${idx+1}\`;
+            btn.textContent = stage.name || ('Этап ' + (idx+1));
             btn.classList.add('stage-btn');
             if (idx === currentStageIdx) btn.classList.add('active');
             btn.onclick = () => {
@@ -583,15 +742,16 @@
 <\/script>
 </body>
 </html>`;
-        const blob = new Blob([standaloneHTML], {type: 'text/html'});
+        const blob = new Blob([standaloneHTML], {type: 'text/html;charset=utf-8'});
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'custom_trainer.html';
         a.click();
         URL.revokeObjectURL(a.href);
+        alert("✅ Тренажёр экспортирован!\n\nФайл: custom_trainer.html");
     }
 
-    // Инициализация демо-данных (один этап с примером)
+    // Инициализация демо-данных
     function initDemo() {
         if (stages.length === 0) {
             stages = [
@@ -619,25 +779,8 @@
     });
     document.getElementById('exportTrainerBtn').addEventListener('click', exportTrainer);
 
+    loadAuthorLocal();
     initDemo();
 </script>
-    <footer style="padding: 1.5rem 0; text-align: center; border-top: 1px solid #E2E9DC; font-size: 0.75rem; color: #89A07B; margin-top: 2rem;">
-    <p>🐾 <strong>ВетСим</strong> — интерактивные тренажёры для ветеринарного образования</p>
-    <p style="margin-top: 0.5rem;">
-        <a href="index.html" style="color: #568A6B; text-decoration: none;">Главная</a> · 
-        <a href="universal.html" style="color: #568A6B; text-decoration: none;">Универсальное</a> · 
-        <a href="general.html" style="color: #568A6B; text-decoration: none;">Общепрофессиональный</a> · 
-        <a href="professional.html" style="color: #568A6B; text-decoration: none;">Профессиональный</a>
-    </p>
-    <p style="margin-top: 0.5rem;">
-        Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer" style="color: #568A6B;">CC BY‑NC 4.0</a>
-    </p>
-    <p style="margin-top: 0.5rem; font-size: 0.7rem; color: #89A07B;">
-        💬 Для преподавателей: закрытое сообщество ВК (доступ по запросу)
-    </p>
-    <p style="font-size: 0.7rem; color: #89A07B;">
-        © 2026 ВетСим · Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин
-    </p>
-</footer>
 </body>
 </html>

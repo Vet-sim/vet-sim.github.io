@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Инструкция: Конструктор тестов | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            border: 1px solid #E7EDE2;
+        }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .version {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: #7B8D6E;
+        }
+
+        .subtitle {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-top: 0.2rem;
+        }
+
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBE3D2;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn:hover {
+            opacity: 0.8;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #2C7DA0;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #236B8A;
+        }
+
+        .btn-success {
+            background: #6B9E6B;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #5A865A;
+        }
+
+        /* ===== ОГЛАВЛЕНИЕ ===== */
+        .toc {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #A3B18A;
+        }
+
+        .toc h2 {
+            font-size: 1rem;
+            color: #1F4E6E;
+            margin-bottom: 0.5rem;
+            border: none;
+            padding: 0;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            column-gap: 2rem;
+            margin: 0;
+        }
+
+        .toc ul li {
+            padding: 2px 0;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .toc ul li a {
+            color: #2C7DA0;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .toc ul li a:hover {
+            text-decoration: underline;
+            color: #1F4E6E;
+        }
+
+        /* ===== ЗАГОЛОВКИ ===== */
+        h1 {
+            font-size: 1.8rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h2 .badge {
+            font-size: 0.6rem;
+            background: #2C7DA0;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: #2C7DA0;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+        }
+
+        h4 {
+            font-size: 0.95rem;
+            color: #3E5C4A;
+            font-weight: 600;
+            margin: 1rem 0 0.3rem 0;
+        }
+
+        p {
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        /* ===== СПИСКИ ===== */
+        ul,
+        ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        ul li,
+        ol li {
+            margin-bottom: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* ===== ВЫДЕЛЕНИЯ ===== */
+        .highlight {
+            background: #F0EEE5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .tag {
+            background: #E2EAD9;
+            color: #3E5C4A;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .badge-type {
+            display: inline-block;
+            background: #2C7DA0;
+            color: #fff;
+            font-size: 0.6rem;
+            font-weight: 600;
+            padding: 1px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-right: 4px;
+        }
+
+        /* ===== БЛОКИ ПРИМЕРОВ ===== */
+        .example-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #A3B18A;
+            font-size: 0.9rem;
+        }
+
+        .example-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .example-box code {
+            background: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #E2EAD9;
+        }
+
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+        }
+
+        table th {
+            background: #1F4E6E;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #E2EAD9;
+            vertical-align: top;
+        }
+
+        table tr:nth-child(even) td {
+            background: #F9F6EF;
+        }
+
+        table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ===== СХЕМА ===== */
+        .schema {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .schema .step {
+            background: #FDFCF9;
+            border: 2px solid #E2EAD9;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+            max-width: 160px;
+        }
+
+        .schema .step .step-icon {
+            font-size: 1.8rem;
+        }
+
+        .schema .step .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #1F4E6E;
+            margin-top: 0.2rem;
+        }
+
+        .schema .arrow {
+            font-size: 1.5rem;
+            color: #A3B18A;
+            display: flex;
+            align-items: center;
+        }
+
+        /* ===== БЛОКИ ВНИМАНИЯ ===== */
+        .note {
+            background: #F0F6FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .note strong {
+            color: #1F4E6E;
+        }
+
+        .warning {
+            background: #FDE8E0;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D47A6A;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .warning strong {
+            color: #D47A6A;
+        }
+
+        .tip {
+            background: #E8F5E8;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #6B9E6B;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+
+        .tip strong {
+            color: #6B9E6B;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+
+        .footer a {
+            color: #2C7DA0;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .container {
+                padding: 1.5rem 1.2rem;
+            }
+
+            .toc ul {
+                columns: 1;
+            }
+
+            .schema {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .schema .step {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .schema .arrow {
+                transform: rotate(90deg);
+            }
+
+            h1 {
+                font-size: 1.4rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 0.8rem;
+            }
+
+            .container {
+                padding: 1rem 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+
+            .header-actions {
+                justify-content: center;
+            }
+
+            h1 {
+                font-size: 1.2rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            table th,
+            table td {
+                padding: 0.4rem 0.6rem;
+            }
+        }
+
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body {
+                padding: 0.5rem;
+                background: #fff;
+            }
+
+            .container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                padding: 1.5rem;
+            }
+
+            .toc {
+                break-inside: avoid;
+            }
+
+            .schema .step {
+                break-inside: avoid;
+            }
+
+            .example-box {
+                break-inside: avoid;
+            }
+
+            table {
+                break-inside: avoid;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo">📝 <span>ВетСим</span> — Конструктор тестов</div>
+            <span class="version">v1.0</span>
+            <div class="subtitle">Инструкция по работе для преподавателей ветеринарных дисциплин</div>
+            <div class="header-actions no-print">
+                <a href="test-constructor.html" target="_blank" class="btn btn-primary">
+                    🚀 Перейти к конструктору
+                </a>
+                <button class="btn btn-success" onclick="window.print()">
+                    🖨️ Распечатать инструкцию
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ВСТУПЛЕНИЕ ===== -->
+        <p>
+            <strong>Добро пожаловать!</strong> Конструктор тестов — это универсальный инструмент для создания интерактивных тестов по любым ветеринарным дисциплинам. Он поддерживает четыре типа вопросов, работу с изображениями и метками на них, гибкие настройки и экспорт готового теста в автономный HTML-файл или JSON для повторного редактирования.
+        </p>
+
+        <div class="note">
+            <strong>💡 Главная идея:</strong> Вы создаёте тест из вопросов разного типа, настраиваете параметры (время, проходной балл, перемешивание), добавляете изображения с метками — и получаете готовый интерактивный файл, который студент открывает в браузере без интернета.
+        </div>
+
+        <!-- ===== ОГЛАВЛЕНИЕ ===== -->
+        <div class="toc">
+            <h2>📋 Оглавление</h2>
+            <ul>
+                <li><a href="#s1">1. Что такое конструктор тестов</a></li>
+                <li><a href="#s2">2. Интерфейс и вкладки</a></li>
+                <li><a href="#s3">3. Основные настройки теста</a></li>
+                <li><a href="#s4">4. Типы вопросов</a></li>
+                <li><a href="#s5">5. Изображения и метки</a></li>
+                <li><a href="#s6">6. Предпросмотр глазами студента</a></li>
+                <li><a href="#s7">7. Экспорт HTML и JSON</a></li>
+                <li><a href="#s8">8. Практические примеры</a></li>
+                <li><a href="#s9">9. Частые вопросы (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 1 ===== -->
+        <h2 id="s1">1. Что такое конструктор тестов</h2>
+
+        <p>
+            Конструктор тестов — это инструмент для создания <strong>интерактивных проверочных заданий</strong>. Он решает несколько задач преподавателя:
+        </p>
+        <ul>
+            <li><strong>Проверка знаний</strong> — автоматическая оценка ответов студента.</li>
+            <li><strong>Разные форматы</strong> — одиночный и множественный выбор, текстовый ответ, сопоставление.</li>
+            <li><strong>Работа с изображениями</strong> — вопросы по схемам, снимкам, препаратам с метками.</li>
+            <li><strong>Гибкость</strong> — настройка времени, проходного балла, перемешивания.</li>
+            <li><strong>Автономность</strong> — готовый HTML-файл работает без интернета.</li>
+        </ul>
+
+        <div class="schema">
+            <div class="step">
+                <div class="step-icon">⚙️</div>
+                <div class="step-label">Настройки</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Название, время, балл</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📋</div>
+                <div class="step-label">Вопросы</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">4 типа, изображения</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">👁️</div>
+                <div class="step-label">Просмотр</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Проверка глазами студента</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📦</div>
+                <div class="step-label">Экспорт</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">HTML или JSON</div>
+            </div>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 2 ===== -->
+        <h2 id="s2">2. Интерфейс и вкладки</h2>
+
+        <p>Конструктор состоит из трёх вкладок и шапки с кнопками управления:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Элемент</th>
+                        <th>Что находится</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Шапка</strong></td>
+                        <td>Кнопки «Новый», «JSON», «Загрузить», «Экспорт HTML», «Просмотр»</td>
+                        <td>Сохранение, загрузка, экспорт, предпросмотр</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Вкладка «⚙️ Настройки»</strong></td>
+                        <td>Название, описание, дисциплина, автор, время, балл, чекбоксы</td>
+                        <td>Заполнение параметров теста</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Вкладка «📋 Вопросы»</strong></td>
+                        <td>Список вопросов и редактор</td>
+                        <td>Добавление, редактирование, удаление, перемещение вопросов</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Вкладка «👁️ Предпросмотр»</strong></td>
+                        <td>Тест глазами студента</td>
+                        <td>Проверка перед экспортом</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Все изменения автоматически сохраняются в браузере (localStorage). Если закрыть страницу и вернуться — тест восстановится.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 3 ===== -->
+        <h2 id="s3">3. Основные настройки теста</h2>
+
+        <p>На вкладке <span class="highlight">«⚙️ Настройки»</span> задаются базовые параметры:</p>
+
+        <h3>3.1 Обязательные поля</h3>
+        <ul>
+            <li><strong>Название теста</strong> — отображается студенту в шапке.</li>
+            <li><strong>Описание / инструкция</strong> — что студент увидит на стартовом экране.</li>
+            <li><strong>Дисциплина</strong> — выбирается из списка (Анатомия, Фармакология, Хирургия и др.).</li>
+            <li><strong>Автор</strong> — ваше ФИО (по желанию).</li>
+        </ul>
+
+        <h3>3.2 Параметры оценивания</h3>
+        <ul>
+            <li><strong>Время, мин</strong> — ограничение по времени. <code>0</code> = без ограничения.</li>
+            <li><strong>Проходной балл, %</strong> — минимальный процент для зачёта (по умолчанию 70%).</li>
+        </ul>
+
+        <h3>3.3 Дополнительные опции</h3>
+        <ul>
+            <li><strong>Перемешивать вопросы</strong> — каждому студенту вопросы идут в случайном порядке.</li>
+            <li><strong>Перемешивать варианты ответов</strong> — варианты внутри вопроса тоже перемешиваются.</li>
+            <li><strong>Показывать правильный ответ после каждого вопроса</strong> — если включено, студент сразу после ответа на вопрос видит, правильно ли он ответил, и какой ответ был верным. Если выключено — проверка происходит только в конце теста.</li>
+        </ul>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Для контрольных работ включайте оба перемешивания — это снижает списывание. Для тренировочных тестов лучше выключить, чтобы студент запоминал порядок. Опцию «Показывать правильный ответ» включайте для обучающих тестов и выключайте для экзаменационных.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 4 ===== -->
+        <h2 id="s4">4. Типы вопросов</h2>
+
+        <p>Конструктор поддерживает четыре типа вопросов. Перед добавлением выберите тип в выпадающем списке рядом с кнопкой <span class="highlight">«➕ Добавить вопрос»</span>.</p>
+
+        <h3>4.1 <span class="badge-type">Одиночный</span> Одиночный выбор</h3>
+        <p>Студент выбирает <strong>один</strong> правильный вариант из нескольких. Классический формат теста.</p>
+        <ul>
+            <li>Минимум 2 варианта ответа.</li>
+            <li>Отмечается один правильный (радиокнопка).</li>
+        </ul>
+
+        <h3>4.2 <span class="badge-type">Множественный</span> Множественный выбор</h3>
+        <p>Студент выбирает <strong>несколько</strong> правильных вариантов. Подходит для вопросов вида «Выберите все симптомы…».</p>
+        <ul>
+            <li>Минимум 2 варианта ответа.</li>
+            <li>Отмечается один или несколько правильных (чекбоксы).</li>
+            <li>Ответ засчитывается, только если выбраны <strong>все</strong> правильные и <strong>ни одного</strong> лишнего.</li>
+        </ul>
+
+        <h3>4.3 <span class="badge-type">Текстовый</span> Текстовый ответ</h3>
+        <p>Студент вводит ответ вручную. Подходит для терминов, названий, чисел.</p>
+        <ul>
+            <li>Правильный ответ задаётся в поле, несколько вариантов — через <code>|</code>.</li>
+            <li>Пример: <code>hepar|heparis|печень</code> — засчитается любой из трёх вариантов.</li>
+            <li>Регистр и знаки препинания не учитываются.</li>
+            <li>Буква «ё» приравнивается к «е».</li>
+        </ul>
+
+        <h3>4.4 <span class="badge-type">Сопоставление</span> Сопоставление</h3>
+        <p>Студент сопоставляет элементы левой колонки с правой. Подходит для «термин → определение», «препарат → механизм действия».</p>
+        <ul>
+            <li>Минимум 2 пары.</li>
+            <li>Левая часть — фиксированная, правая выбирается из выпадающего списка.</li>
+            <li>Ответ засчитывается, если все пары сопоставлены верно.</li>
+        </ul>
+
+        <div class="example-box">
+            <div class="label">📘 Примеры по типам</div>
+            <p>
+                <strong>Одиночный:</strong> «Сколько камер в сердце КРС?» → 4<br>
+                <strong>Множественный:</strong> «Выберите жвачных животных» → КРС, овца, коза<br>
+                <strong>Текстовый:</strong> «Название самой крупной кости собаки» → бедренная<br>
+                <strong>Сопоставление:</strong> Амоксициллин → β-лактам, Гентамицин → аминогликозид
+            </p>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 5 ===== -->
+        <h2 id="s5">5. Изображения и метки</h2>
+
+        <p>К любому вопросу можно прикрепить изображение и расставить на нём <strong>нумерованные метки</strong>. Это идеально для вопросов по анатомии, рентгенологии, гистологии.</p>
+
+        <h3>5.1 Как добавить изображение</h3>
+        <ol>
+            <li>В редакторе вопроса найдите поле <span class="highlight">«Изображение»</span>.</li>
+            <li>Нажмите на кнопку выбора файла, выберите картинку (JPG, PNG).</li>
+            <li>Изображение отобразится в блоке ниже.</li>
+        </ol>
+
+        <h3>5.2 Как расставить метки</h3>
+        <ol>
+            <li>Кликните по изображению в нужном месте — появится круглая метка с номером <strong>1</strong>.</li>
+            <li>Повторные клики добавляют метки с номерами <strong>2, 3, 4…</strong> по порядку.</li>
+            <li>Подписи не нужны — метки просто нумеруются, а студент отвечает на вопросы по номерам.</li>
+        </ol>
+
+        <h3>5.3 Как удалить метку</h3>
+        <ul>
+            <li>Просто <strong>кликните по метке</strong> — она удалится. Оставшиеся метки перенумеруются автоматически.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Метки привязываются к самому изображению, а не к контейнеру. Поэтому они <strong>не смещаются</strong> при изменении размера окна, на разных экранах и в экспортированном HTML.
+        </div>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Ставьте метки точно на структуры. Если промахнулись — удалите и поставьте заново. Точность важна, потому что студент будет отвечать по номерам.
+        </div>
+
+        <h3>5.4 Как использовать метки в вопросах</h3>
+        <p>Типичный сценарий: загружаете схему сердца с пронумерованными структурами (или ставите метки сами), а затем создаёте вопросы вида:</p>
+        <ul>
+            <li>«Что обозначено меткой 1?» → варианты ответов.</li>
+            <li>«Какая структура отмечена меткой 3?» → варианты ответов.</li>
+        </ul>
+
+        <!-- ===== РАЗДЕЛ 6 ===== -->
+        <h2 id="s6">6. Предпросмотр глазами студента</h2>
+
+        <p>Перед экспортом обязательно проверьте тест в режиме просмотра. Это покажет, как его увидит студент.</p>
+
+        <h3>6.1 Как открыть просмотр</h3>
+        <ol>
+            <li>Убедитесь, что добавлен хотя бы один вопрос.</li>
+            <li>Нажмите кнопку <span class="highlight">«👁️ Просмотр»</span> в шапке.</li>
+            <li>Откроется вкладка «Предпросмотр» с тестом.</li>
+        </ol>
+
+        <h3>6.2 Что проверять</h3>
+        <ul>
+            <li><strong>Текст вопросов</strong> — нет ли опечаток, понятны ли формулировки.</li>
+            <li><strong>Варианты ответов</strong> — нет ли дублей, корректен ли правильный.</li>
+            <li><strong>Изображения и метки</strong> — видны ли, не смещаются ли при сужении окна.</li>
+            <li><strong>Типы вопросов</strong> — работают ли текстовый ввод, сопоставление, множественный выбор.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> В предпросмотре <strong>таймер не работает</strong> — это сделано, чтобы вы могли спокойно проверить тест. Таймер включится только в экспортированном HTML.
+        </div>
+
+        <h3>6.3 Режим «Показывать правильный ответ сразу»</h3>
+        <p>Если в настройках включена опция <span class="highlight">«Показывать правильный ответ после каждого вопроса»</span>, то поведение теста меняется:</p>
+        <ul>
+            <li><strong>Включено</strong> — студент отвечает на вопрос, сразу видит результат: правильно/неправильно, и какой ответ был верным. Удобно для <strong>обучающих</strong> тестов и самопроверки.</li>
+            <li><strong>Выключено</strong> — студент отвечает на все вопросы подряд, а разбор видит только после завершения теста. Подходит для <strong>контрольных</strong> и <strong>экзаменационных</strong> тестов.</li>
+        </ul>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> В экспортированном HTML-файле эта опция сохраняется и работает так же, как в предпросмотре.
+        </div>
+
+        <h3>6.4 Что видит студент после завершения</h3>
+        <ul>
+            <li><strong>Процент выполнения</strong> и количество набранных баллов.</li>
+            <li><strong>Пометку «✅ Тест пройден»</strong> или <strong>«❌ Тест не пройден»</strong> по порогу.</li>
+            <li><strong>Разбор ответов</strong> — где ошибся, какой ответ правильный, пояснение.</li>
+        </ul>
+
+        <!-- ===== РАЗДЕЛ 7 ===== -->
+        <h2 id="s7">7. Экспорт HTML и JSON</h2>
+
+        <p>В конструкторе предусмотрено два формата сохранения: <strong>HTML</strong> — для студентов, <strong>JSON</strong> — для преподавателя (для дальнейшего редактирования).</p>
+
+        <h3>7.1 Экспорт HTML (для студентов)</h3>
+        <ol>
+            <li>Убедитесь, что тест готов и проверен в просмотре.</li>
+            <li>Нажмите кнопку <span class="highlight">«📤 Экспорт HTML»</span> в шапке.</li>
+            <li>Скачается файл с названием теста, например <code>Анатомия_сердца_КРС.html</code>.</li>
+        </ol>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Готовый HTML-файл <strong>автономен</strong> — изображения встроены внутрь, ничего дополнительно скачивать не нужно. Он работает офлайн в любом современном браузере.
+        </div>
+
+        <h3>7.2 Что умеет экспортированный тест</h3>
+        <ul>
+            <li><strong>Стартовый экран</strong> с описанием и кнопкой «Начать тест».</li>
+            <li><strong>Таймер</strong> — если задано ограничение по времени.</li>
+            <li><strong>Автоматическая проверка</strong> — после завершения студент видит результат.</li>
+            <li><strong>Режим мгновенной проверки</strong> — если в настройках включена опция «Показывать правильный ответ после каждого вопроса», студент видит результат сразу после ответа.</li>
+            <li><strong>Разбор ответов</strong> — какие верные, какие нет, с пояснениями.</li>
+            <li><strong>Кнопка «Пройти заново»</strong> — для повторного прохождения.</li>
+        </ul>
+
+        <h3>7.3 Сохранение JSON (для преподавателя)</h3>
+        <ol>
+            <li>Нажмите кнопку <span class="highlight">«💾 JSON»</span> в шапке.</li>
+            <li>Скачается файл с расширением <code>.json</code> — в нём весь тест: вопросы, ответы, изображения, настройки.</li>
+            <li>Для загрузки — нажмите <span class="highlight">«📂 Загрузить»</span> и выберите сохранённый файл.</li>
+        </ol>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Храните JSON-файлы как резервные копии. Если браузер очистит localStorage, вы восстановите тест из JSON. Также удобно переносить тест между компьютерами.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 8 ===== -->
+        <h2 id="s8">8. Практические примеры</h2>
+
+        <h3>Пример 1: Тест по анатомии «Строение сердца собаки»</h3>
+        <div class="example-box">
+            <div class="label">📘 Настройка теста</div>
+            <p>
+                <strong>Название:</strong> Строение сердца собаки<br>
+                <strong>Дисциплина:</strong> Анатомия<br>
+                <strong>Время:</strong> 10 мин<br>
+                <strong>Проходной балл:</strong> 70%<br>
+                <strong>Перемешивать:</strong> вопросы — да, ответы — да
+            </p>
+            <p><strong>Вопросы:</strong></p>
+            <ul>
+                <li><strong>Одиночный + изображение.</strong> «Что обозначено меткой 1?» → Левое предсердие / Правый желудочек / Аорта / Лёгочная артерия. Правильный: Левое предсердие.</li>
+                <li><strong>Множественный.</strong> «Выберите структуры, относящиеся к правому отделу сердца» → Правый желудочек, Правое предсердие, Трёхстворчатый клапан, Аорта.</li>
+                <li><strong>Текстовый.</strong> «Сколько камер в сердце собаки?» → 4.</li>
+                <li><strong>Сопоставление.</strong> Левое предсердие → В лёгочные вены, Правый желудочек → В лёгочную артерию.</li>
+            </ul>
+        </div>
+
+        <h3>Пример 2: Тест по фармакологии «Антибиотики»</h3>
+        <div class="example-box">
+            <div class="label">📘 Настройка теста</div>
+            <p>
+                <strong>Название:</strong> Антибиотики: механизмы и показания<br>
+                <strong>Дисциплина:</strong> Фармакология<br>
+                <strong>Время:</strong> 15 мин<br>
+                <strong>Перемешивать:</strong> вопросы — да, ответы — да
+            </p>
+            <p><strong>Вопросы:</strong></p>
+            <ul>
+                <li><strong>Одиночный.</strong> «К какой группе относится амоксициллин?» → Пенициллины / Аминогликозиды / Тетрациклины / Макролиды.</li>
+                <li><strong>Множественный.</strong> «Выберите препараты, активные против анаэробов» → Метронидазол, Клиндамицин, Гентамицин.</li>
+                <li><strong>Текстовый.</strong> «Антидот при отравлении аминогликозидами?» → нет / симптоматическая терапия.</li>
+                <li><strong>Сопоставление.</strong> Гентамицин → нефротоксичность, Тетрациклин → нарушение зубной эмали, Хлорамфеникол → апластическая анемия.</li>
+            </ul>
+        </div>
+
+        <h3>Пример 3: Тест по патологии с рентгеном «Грудная клетка»</h3>
+        <div class="example-box">
+            <div class="label">📘 Настройка теста</div>
+            <p>
+                <strong>Название:</strong> Рентгенография грудной клетки: патологии<br>
+                <strong>Дисциплина:</strong> Патология<br>
+                <strong>Изображение:</strong> рентгеновский снимок с метками на патологиях<br>
+                <strong>Время:</strong> 12 мин
+            </p>
+            <p><strong>Вопросы:</strong></p>
+            <ul>
+                <li><strong>Одиночный + изображение.</strong> «Что обозначено меткой 2?» → Затемнение в лёгком / Очаг пневмонии / Нормальная ткань.</li>
+                <li><strong>Множественный.</strong> «Выберите признаки сердечной недостаточности на снимке» → Увеличение тени сердца, Расширение лёгочных вен, Застойные явления.</li>
+                <li><strong>Текстовый.</strong> «Как называется затемнение в лёгком?» → инфильтрат / пневмония / очаг.</li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 9 ===== -->
+        <h2 id="s9">9. Частые вопросы (FAQ)</h2>
+
+        <h4>❓ Что делать, если браузер очистил данные?</h4>
+        <p>Загрузите ранее сохранённый JSON-файл кнопкой <span class="highlight">«📂 Загрузить»</span>. Поэтому важно периодически сохранять JSON как резервную копию.</p>
+
+        <h4>❓ Можно ли редактировать уже сохранённый тест?</h4>
+        <p>Да. Сохраните тест в JSON, откройте его кнопкой «📂 Загрузить», внесите изменения, снова сохраните. Так можно вести версии теста.</p>
+
+        <h4>❓ Как сделать несколько правильных ответов в одиночном вопросе?</h4>
+        <p>Никак — одиночный тип предполагает строго один правильный. Если нужно несколько, выбирайте тип <strong>«Множественный выбор»</strong>.</p>
+
+        <h4>❓ Что делать, если метка стоит не на месте?</h4>
+        <p>Кликните по ней — она удалится. Поставьте новую метку в нужное место. Номера остальных меток перенумеруются автоматически.</p>
+
+        <h4>❓ Изображение слишком большое и не влезает в поле?</h4>
+        <p>Оно автоматически масштабируется под ширину контейнера с сохранением пропорций. Метки при этом не смещаются — они привязаны к самому изображению.</p>
+
+        <h4>❓ Работает ли тест без интернета?</h4>
+        <p>Да, экспортированный HTML-файл полностью автономен. Открывается двойным кликом в любом браузере, интернет не нужен.</p>
+
+        <h4>❓ Чем отличается «Показывать правильный ответ после каждого вопроса»?</h4>
+        <p>Если опция включена, студент сразу после ответа на вопрос видит, правильно он ответил или нет, и какой ответ был верным. Если выключена — проверка происходит только после завершения всего теста. Для обучающих тестов лучше включать, для контрольных — выключать.</p>
+
+        <h4>❓ Что делать, если студент не успел за отведённое время?</h4>
+        <p>По истечении таймера тест автоматически завершается, и студент видит результат по тем вопросам, на которые успел ответить.</p>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> Не удаляйте вкладку браузера во время создания теста без предварительного сохранения JSON. Хотя данные сохраняются в localStorage, при очистке браузера они могут исчезнуть.
+        </div>
+
+        <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+        <h2>🎯 Заключение</h2>
+
+        <p>
+            Конструктор тестов — это универсальный инструмент, который превращает проверку знаний в <strong>интерактивный и автоматизированный процесс</strong>.
+        </p>
+
+        <p><strong>Ключевые преимущества:</strong></p>
+        <ul>
+            <li><strong>4 типа вопросов</strong> — одиночный, множественный, текстовый, сопоставление.</li>
+            <li><strong>Работа с изображениями</strong> — метки с автонумерацией, без смещения на разных экранах.</li>
+            <li><strong>Гибкая настройка</strong> — время, проходной балл, перемешивание, автор, дисциплина.</li>
+            <li><strong>Два формата экспорта</strong> — HTML для студентов, JSON для преподавателя.</li>
+            <li><strong>Автономность</strong> — работает офлайн в любом браузере.</li>
+            <li><strong>Автоматическая проверка</strong> — студент сразу видит результат и разбор.</li>
+        </ul>
+
+        <div class="tip" style="text-align:center; margin: 1.5rem 0;">
+            <p style="font-size:1rem;"><strong>💡 Совет:</strong> Начните с простого теста из 5–7 вопросов одиночного выбора. Проверьте в предпросмотре, экспортируйте HTML и дайте студентам. Затем постепенно добавляйте более сложные типы — множественный выбор, сопоставление, текстовый ответ.</p>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+            <p>Автор: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+            <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+            <p>💬 Сообщество: <a href="https://vk.ru/vetsimpros" target="_blank">ВКонтакте</a> | По вопросам: <a href="https://vk.ru/vet_sim" target="_blank">https://vk.ru/vet_sim</a></p>
+        </div>
+
+    </div>
+</body>
+</html>

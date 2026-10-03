@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Конструктор тестов · ВетСим</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --cream:     #FDF8F0;
+    --bg-soft:   #F4EFE4;
+    --white:     #FFFFFF;
+    --green:     #6B9E6B;
+    --green-d:   #5A865A;
+    --green-l:   #A3B18A;
+    --blue:      #2C7DA0;
+    --blue-d:    #236B8A;
+    --blue-l:    #D4E3ED;
+    --beige:     #E8D9BE;
+    --beige-l:   #F5EBD8;
+    --ink:       #1A2A3A;
+    --ink-soft:  #5F7C62;
+    --gray:      #B0BC9C;
+    --danger:    #D4A373;
+    --danger-d:  #C99464;
+    --warn:      #E8B84C;
+    --shadow:    0 2px 12px rgba(80, 60, 30, 0.06);
+    --radius:    20px;
+}
+
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    min-height: 100vh;
+    padding: 16px;
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* Шапка */
+.header {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 14px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+    margin-bottom: 16px;
+}
+.header .logo {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.header .logo .gradient {
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.header .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Кнопки */
+.btn {
+    background: var(--beige);
+    border: none;
+    padding: 8px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); opacity: 0.9; }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: var(--blue-d); }
+.btn-success { background: var(--green); color: white; }
+.btn-success:hover { background: var(--green-d); }
+.btn-danger { background: var(--danger); color: white; }
+.btn-danger:hover { background: var(--danger-d); }
+.btn-outline { background: transparent; border: 2px solid var(--beige); }
+.btn-outline:hover { background: var(--beige-l); }
+.btn-sm { padding: 4px 12px; font-size: 0.7rem; }
+.btn-lg { padding: 14px 32px; font-size: 1rem; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* Вкладки */
+.tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.tab-btn {
+    background: var(--beige);
+    border: none;
+    padding: 8px 22px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    color: var(--ink);
+}
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: var(--blue); color: white; }
+.tab-content { display: none; animation: fadeIn 0.25s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Карточки */
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    border: 1px solid #E7EDE2;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+}
+.card-title {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--blue);
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    border-bottom: 1px solid #E7EDE2;
+    padding-bottom: 8px;
+}
+.card-title .badge {
+    font-size: 0.7rem;
+    background: var(--beige-l);
+    color: var(--ink-soft);
+    padding: 2px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+/* Формы */
+.field { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
+.field label {
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.field .hint {
+    font-size: 0.7rem;
+    color: var(--gray);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+}
+.field input,
+.field select,
+.field textarea {
+    padding: 8px 14px;
+    border: 1px solid #D9D0BD;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: var(--cream);
+    color: var(--ink);
+    outline: none;
+    transition: 0.15s;
+    width: 100%;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1);
+    background: white;
+}
+.field textarea { resize: vertical; min-height: 60px; }
+.field-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.field-row .field { flex: 1; min-width: 140px; }
+.field-row .field-sm { flex: 0.5; min-width: 100px; }
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    padding: 6px 0;
+    cursor: pointer;
+}
+.checkbox-row input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--green);
+    cursor: pointer;
+}
+
+/* Список вопросов */
+.question-list { display: flex; flex-direction: column; gap: 8px; }
+
+.question-item {
+    background: var(--bg-soft);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-left: 4px solid var(--green-l);
+    cursor: pointer;
+    transition: 0.15s;
+}
+.question-item:hover { background: var(--beige-l); }
+.question-item.active { border-left-color: var(--blue); background: var(--blue-l); }
+.question-item .q-num {
+    width: 32px; height: 32px;
+    background: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--blue);
+    flex-shrink: 0;
+    font-size: 0.85rem;
+}
+.question-item .q-info { flex: 1; min-width: 0; }
+.question-item .q-text {
+    font-weight: 600;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.question-item .q-meta {
+    font-size: 0.7rem;
+    color: var(--ink-soft);
+    margin-top: 2px;
+}
+.question-item .q-actions { display: flex; gap: 4px; flex-shrink: 0; }
+
+/* Редактор вопроса */
+.answer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    margin-bottom: 6px;
+}
+.answer-row input[type="radio"],
+.answer-row input[type="checkbox"] {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    accent-color: var(--green);
+    cursor: pointer;
+}
+.answer-row input[type="text"] {
+    flex: 1;
+    padding: 6px 12px;
+    border: 1px solid #D9D0BD;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: white;
+    outline: none;
+}
+.answer-row input[type="text"]:focus { border-color: var(--blue); }
+.answer-row .remove-btn {
+    background: none;
+    border: none;
+    color: var(--danger-d);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0 6px;
+}
+
+/* Изображение с метками */
+.image-wrap {
+    position: relative;
+    display: block;
+    max-width: 100%;
+    width: fit-content;
+    margin: 8px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--beige);
+    cursor: crosshair;
+    line-height: 0; /* убирает лишний зазор под img */
+}
+.image-wrap img {
+    display: block;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    /* Никаких max-height — они ломают пропорции и смещают метки */
+}
+.image-marker {
+    position: absolute;
+    width: 26px; height: 26px;
+    background: rgba(212, 163, 115, 0.9);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    transition: 0.15s;
+    line-height: 1;
+}
+.image-marker:hover {
+    background: var(--danger-d);
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+/* Просмотр */
+.student-view {
+    background: white;
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timer-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--blue);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    transition: 0.3s;
+}
+.timer-badge.warning { background: var(--warn); color: var(--ink); }
+.timer-badge.danger { background: #C74444; animation: pulse 1s infinite; }
+@keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.progress-line {
+    height: 8px;
+    background: var(--bg-soft);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 12px 0;
+}
+.progress-line .fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    transition: width 0.3s;
+}
+
+.option-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--cream);
+    border: 2px solid #E7EDE2;
+    border-radius: 14px;
+    padding: 12px 18px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--ink);
+    text-align: left;
+    width: 100%;
+}
+.option-btn:hover { border-color: var(--green-l); background: var(--bg-soft); }
+.option-btn.selected {
+    border-color: var(--blue);
+    background: var(--blue-l);
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+.option-btn .marker {
+    width: 28px; height: 28px;
+    background: var(--bg-soft);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+.option-btn.selected .marker { background: var(--blue); color: white; }
+
+/* Результаты */
+.result-card { text-align: center; padding: 30px 20px; }
+.result-score {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--blue);
+    line-height: 1;
+}
+.result-percent {
+    font-size: 1.4rem;
+    color: var(--ink-soft);
+    margin-top: 4px;
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 9999;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+.toast.show { opacity: 1; }
+
+/* Адаптив */
+@media (max-width: 768px) {
+    body { padding: 10px; }
+    .card { padding: 16px; }
+    .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+    .header .actions { justify-content: center; }
+    .field-row { flex-direction: column; }
+    .field-row .field,
+    .field-row .field-sm { min-width: unset; }
+    .tab-btn { flex: 1; text-align: center; font-size: 0.72rem; padding: 8px 10px; }
+    .question-item { padding: 10px 12px; }
+    .answer-row { flex-wrap: wrap; }
+    .image-marker { width: 22px; height: 22px; font-size: 0.65rem; }
+}
+@media (max-width: 480px) {
+    .result-score { font-size: 2.5rem; }
+    .btn { font-size: 0.72rem; padding: 6px 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container" id="app">
+
+    <header class="header">
+        <div class="logo">📝 <span class="gradient">ВетСим</span> · Конструктор тестов</div>
+        <div class="actions">
+            <button class="btn btn-outline btn-sm" id="newTestBtn">✨ Новый</button>
+            <button class="btn btn-primary btn-sm" id="saveJsonBtn">💾 JSON</button>
+            <button class="btn btn-outline btn-sm" id="loadJsonBtn">📂 Загрузить</button>
+            <button class="btn btn-success btn-sm" id="exportHtmlBtn">📤 Экспорт HTML</button>
+            <button class="btn btn-outline btn-sm" id="studentViewBtn">👁️ Просмотр</button>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="settings">⚙️ Настройки</button>
+        <button class="tab-btn" data-tab="questions">📋 Вопросы (<span id="questionsCount">0</span>)</button>
+        <button class="tab-btn" data-tab="preview">👁️ Предпросмотр</button>
+    </div>
+
+    <!-- Настройки -->
+    <div class="tab-content active" id="tab-settings">
+        <div class="card">
+            <div class="card-title">📋 Основные настройки теста</div>
+
+            <div class="field">
+                <label>Название теста</label>
+                <input type="text" id="testTitle" placeholder="Например: Анатомия сердца КРС">
+            </div>
+
+            <div class="field">
+                <label>Описание / инструкция для студента</label>
+                <textarea id="testDescription" rows="3" placeholder="Например: Тест содержит 10 вопросов. Время — 15 минут."></textarea>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label>Дисциплина</label>
+                    <select id="testDiscipline">
+                        <option value="Анатомия">Анатомия</option>
+                        <option value="Физиология">Физиология</option>
+                        <option value="Патология">Патология</option>
+                        <option value="Фармакология">Фармакология</option>
+                        <option value="Хирургия">Хирургия</option>
+                        <option value="Терапия">Терапия</option>
+                        <option value="ВСЭ">ВСЭ</option>
+                        <option value="Паразитология">Паразитология</option>
+                        <option value="Другое">Другое</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Автор <span class="hint">(ваше ФИО)</span></label>
+                    <input type="text" id="testAuthor" placeholder="Иванова А.С.">
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field field-sm">
+                    <label>Время, мин <span class="hint">(0 = без ограничения)</span></label>
+                    <input type="number" id="testTime" min="0" max="240" value="15" step="1">
+                </div>
+                <div class="field field-sm">
+                    <label>Проходной балл, %</label>
+                    <input type="number" id="testPassScore" min="0" max="100" value="70" step="1">
+                </div>
+            </div>
+
+            <label class="checkbox-row">
+                <input type="checkbox" id="testShuffleQuestions" checked>
+                Перемешивать вопросы
+            </label>
+            <label class="checkbox-row">
+                <input type="checkbox" id="testShuffleAnswers" checked>
+                Перемешивать варианты ответов
+            </label>
+            <label class="checkbox-row">
+                <input type="checkbox" id="testShowCorrect">
+                Показывать правильный ответ после каждого вопроса
+            </label>
+        </div>
+    </div>
+
+    <!-- Вопросы -->
+    <div class="tab-content" id="tab-questions">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center;">
+            <button class="btn btn-success" id="addQuestionBtn">➕ Добавить вопрос</button>
+            <select id="quickAddType" style="padding: 8px 14px; cursor: pointer; border-radius: 40px; border: 2px solid var(--beige); background: var(--beige); font-family: inherit; font-weight: 600; font-size: 0.8rem;">
+                <option value="single">Одиночный выбор</option>
+                <option value="multiple">Множественный выбор</option>
+                <option value="text">Текстовый ответ</option>
+                <option value="matching">Сопоставление</option>
+            </select>
+        </div>
+
+        <div class="question-list" id="questionList"></div>
+
+        <!-- Редактор вопроса -->
+        <div class="card" id="questionEditor" style="display:none;">
+            <div class="card-title">
+                <span id="editorTitle">✏️ Редактор вопроса</span>
+                <button class="btn btn-danger btn-sm" id="deleteQuestionBtn">🗑️ Удалить</button>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label>Тип вопроса</label>
+                    <select id="qType">
+                        <option value="single">Одиночный выбор</option>
+                        <option value="multiple">Множественный выбор</option>
+                        <option value="text">Текстовый ответ</option>
+                        <option value="matching">Сопоставление</option>
+                    </select>
+                </div>
+                <div class="field field-sm">
+                    <label>Баллы</label>
+                    <input type="number" id="qPoints" min="1" max="100" value="1" step="1">
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Текст вопроса</label>
+                <textarea id="qText" rows="3" placeholder="Введите текст вопроса..."></textarea>
+            </div>
+
+            <div class="field">
+                <label>Изображение <span class="hint">(опционально)</span></label>
+                <input type="file" id="qImageFile" accept="image/*">
+                <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
+                    <button class="btn btn-outline btn-sm" id="qClearImageBtn" style="display:none;">✖ Убрать изображение</button>
+                    <span style="font-size: 0.75rem; color: var(--ink-soft); align-self: center;" id="qImageInfo"></span>
+                </div>
+                <div style="font-size: 0.72rem; color: var(--gray); margin-top: 4px;">
+                    💡 После загрузки кликайте по изображению, чтобы поставить метку. Номера ставятся автоматически. Удаление — клик по метке.
+                </div>
+            </div>
+
+            <div id="qImageWrap"></div>
+
+            <div id="answersBlock">
+                <div class="field">
+                    <label>Варианты ответа <span class="hint">(отметьте правильные)</span></label>
+                </div>
+                <div id="answersList"></div>
+                <button class="btn btn-outline btn-sm" id="addAnswerBtn" style="margin-top: 6px;">➕ Добавить вариант</button>
+            </div>
+
+            <div id="textAnswerBlock" style="display:none;">
+                <div class="field">
+                    <label>Правильный ответ <span class="hint">(несколько — через |)</span></label>
+                    <input type="text" id="qTextAnswer" placeholder="hepar|heparis|печень">
+                </div>
+            </div>
+
+            <div id="matchingBlock" style="display:none;">
+                <div class="field">
+                    <label>Пары для сопоставления</label>
+                </div>
+                <div id="matchingList"></div>
+                <button class="btn btn-outline btn-sm" id="addMatchPairBtn" style="margin-top: 6px;">➕ Добавить пару</button>
+            </div>
+
+            <div class="field">
+                <label>Пояснение <span class="hint">(показывается после ответа)</span></label>
+                <textarea id="qExplanation" rows="2" placeholder="Например: У КРС сердце четырёхкамерное."></textarea>
+            </div>
+
+            <div class="field">
+                <label>Подсказка <span class="hint">(опционально)</span></label>
+                <input type="text" id="qHint" placeholder="Например: Обратите внимание на количество предсердий.">
+            </div>
+
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;">
+                <button class="btn btn-success" id="saveQuestionBtn">💾 Сохранить вопрос</button>
+                <button class="btn btn-outline" id="cancelQuestionBtn">✖ Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Предпросмотр -->
+    <div class="tab-content" id="tab-preview">
+        <div id="previewArea">
+            <div class="card" style="text-align: center; padding: 40px 20px; color: var(--ink-soft);">
+                <div style="font-size: 3rem; margin-bottom: 12px;">👁️</div>
+                <p>Нажмите <b>«Просмотр»</b> в шапке, чтобы увидеть тест глазами студента.</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ============ СОСТОЯНИЕ ============
+let test = {
+    title: 'Новый тест',
+    description: '',
+    discipline: 'Анатомия',
+    author: '',
+    timeLimit: 15,
+    passScore: 70,
+    shuffleQuestions: true,
+    shuffleAnswers: true,
+    showCorrect: false,
+    questions: []
+};
+
+let editingQuestionId = null;
+let tempImageData = null;
+let tempMarkers = [];
+
+// ============ УТИЛИТЫ ============
+const $  = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const uid = () => 'q_' + Math.random().toString(36).substr(2, 9);
+
+function escapeHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg) {
+    const t = $('#toast');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+// ============ ИНИЦИАЛИЗАЦИЯ ============
+document.addEventListener('DOMContentLoaded', () => {
+    loadFromStorage();
+    renderAll();
+    bindEvents();
+});
+
+// ============ СОХРАНЕНИЕ ============
+function saveToStorage() {
+    try {
+        localStorage.setItem('vetsim_test_builder_v2', JSON.stringify(test));
+    } catch (e) { console.warn('Не удалось сохранить:', e); }
+}
+
+function loadFromStorage() {
+    try {
+        const raw = localStorage.getItem('vetsim_test_builder_v2');
+        if (raw) {
+            const data = JSON.parse(raw);
+            if (data && typeof data === 'object') {
+                test = Object.assign(test, data);
+                if (!Array.isArray(test.questions)) test.questions = [];
+                test.questions.forEach(q => {
+                    if (Array.isArray(q.markers)) {
+                        q.markers = q.markers.map(m => ({ x: m.x, y: m.y }));
+                    }
+                });
+            }
+        }
+    } catch (e) { console.warn('Не удалось загрузить:', e); }
+}
+
+// ============ ОТРИСОВКА ============
+function renderAll() {
+    renderSettings();
+    renderQuestions();
+    const cnt = $('#questionsCount');
+    if (cnt) cnt.textContent = test.questions.length;
+}
+
+function renderSettings() {
+    const map = {
+        testTitle: 'title',
+        testDescription: 'description',
+        testDiscipline: 'discipline',
+        testAuthor: 'author',
+        testTime: 'timeLimit',
+        testPassScore: 'passScore'
+    };
+    Object.keys(map).forEach(id => {
+        const el = document.getElementById(id);
+        if (el && test[map[id]] !== undefined) el.value = test[map[id]];
+    });
+    const cbs = {
+        testShuffleQuestions: 'shuffleQuestions',
+        testShuffleAnswers: 'shuffleAnswers',
+        testShowCorrect: 'showCorrect'
+    };
+    Object.keys(cbs).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.checked = !!test[cbs[id]];
+    });
+}
+
+function renderQuestions() {
+    const list = $('#questionList');
+    if (!list) return;
+    if (test.questions.length === 0) {
+        list.innerHTML = '<div style="text-align:center; padding: 30px; color: var(--gray);">' +
+            '<div style="font-size: 2.5rem; margin-bottom: 8px;">📋</div>' +
+            '<p>Вопросов пока нет. Добавьте первый!</p>' +
+            '</div>';
+        return;
+    }
+
+    const typeLabels = {
+        single: 'Одиночный',
+        multiple: 'Множественный',
+        text: 'Текстовый',
+        matching: 'Сопоставление'
+    };
+
+    let html = '';
+    test.questions.forEach((q, idx) => {
+        const isActive = q.id === editingQuestionId;
+        const img = q.image ? '<span title="Есть изображение">🖼️</span>' : '';
+        const markers = (q.markers && q.markers.length) ? '<span title="Есть метки">📍</span>' : '';
+        html += `
+            <div class="question-item ${isActive ? 'active' : ''}" data-id="${q.id}">
+                <div class="q-num">${idx + 1}</div>
+                <div class="q-info">
+                    <div class="q-text">${escapeHtml(q.text || '(без текста)')}</div>
+                    <div class="q-meta">${typeLabels[q.type] || q.type} · ${q.points} ${img} ${markers}</div>
+                </div>
+                <div class="q-actions">
+                    <button class="btn btn-outline btn-sm" data-edit="${q.id}">✏️</button>
+                    <button class="btn btn-outline btn-sm" data-up="${q.id}" ${idx === 0 ? 'disabled' : ''}>▲</button>
+                    <button class="btn btn-outline btn-sm" data-down="${q.id}" ${idx === test.questions.length - 1 ? 'disabled' : ''}>▼</button>
+                    <button class="btn btn-danger btn-sm" data-del="${q.id}">🗑️</button>
+                </div>
+            </div>
+        `;
+    });
+    list.innerHTML = html;
+}
+
+// ============ РЕДАКТОР ============
+function openEditor(questionId) {
+    editingQuestionId = questionId || null;
+    const q = questionId ? test.questions.find(x => x.id === questionId) : null;
+
+    tempImageData = q && q.image ? q.image : null;
+    tempMarkers = q && q.markers ? q.markers.map(m => ({ x: m.x, y: m.y })) : [];
+
+    $('#qType').value = q ? q.type : 'single';
+    $('#qText').value = q ? q.text : '';
+    $('#qPoints').value = q ? q.points : 1;
+    $('#qExplanation').value = q ? (q.explanation || '') : '';
+    $('#qHint').value = q ? (q.hint || '') : '';
+    $('#qTextAnswer').value = q && q.textAnswer ? q.textAnswer : '';
+    $('#qImageInfo').textContent = q && q.image ? '(изображение загружено)' : '';
+    $('#qClearImageBtn').style.display = q && q.image ? 'inline-flex' : 'none';
+
+    renderAnswerRows(q ? q.answers : []);
+    renderMatchingRows(q && q.matching ? q.matching : []);
+    renderImagePreview();
+    toggleAnswerBlocks();
+
+    $('#editorTitle').textContent = q ? '✏️ Редактор вопроса' : '➕ Новый вопрос';
+    $('#deleteQuestionBtn').style.display = q ? 'inline-flex' : 'none';
+    $('#questionEditor').style.display = 'block';
+    $('#questionEditor').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeEditor() {
+    editingQuestionId = null;
+    tempImageData = null;
+    tempMarkers = [];
+    const ed = $('#questionEditor');
+    if (ed) ed.style.display = 'none';
+    renderQuestions();
+}
+
+function toggleAnswerBlocks() {
+    const type = $('#qType').value;
+    $('#answersBlock').style.display = (type === 'single' || type === 'multiple') ? 'block' : 'none';
+    $('#textAnswerBlock').style.display = (type === 'text') ? 'block' : 'none';
+    $('#matchingBlock').style.display = (type === 'matching') ? 'block' : 'none';
+}
+
+function renderAnswerRows(answers) {
+    const container = $('#answersList');
+    if (!container) return;
+    if (!answers || answers.length === 0) {
+        answers = [
+            { text: '', correct: false },
+            { text: '', correct: false }
+        ];
+    }
+    const type = $('#qType').value;
+    const inputType = type === 'multiple' ? 'checkbox' : 'radio';
+    let html = '';
+    answers.forEach((a, i) => {
+        html += `
+            <div class="answer-row">
+                <input type="${inputType}" name="correct_answer" data-idx="${i}" ${a.correct ? 'checked' : ''}>
+                <input type="text" value="${escapeHtml(a.text)}" data-idx="${i}" placeholder="Вариант ответа ${i + 1}">
+                <button class="remove-btn" data-remove="${i}">✕</button>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+function renderMatchingRows(pairs) {
+    const container = $('#matchingList');
+    if (!container) return;
+    if (!pairs || pairs.length === 0) {
+        pairs = [
+            { left: '', right: '' },
+            { left: '', right: '' }
+        ];
+    }
+    let html = '';
+    pairs.forEach((p, i) => {
+        html += `
+            <div class="answer-row">
+                <input type="text" value="${escapeHtml(p.left)}" data-match="left" data-idx="${i}" placeholder="Левый элемент ${i + 1}">
+                <span style="color: var(--ink-soft);">→</span>
+                <input type="text" value="${escapeHtml(p.right)}" data-match="right" data-idx="${i}" placeholder="Правый элемент ${i + 1}">
+                <button class="remove-btn" data-remove-match="${i}">✕</button>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+function renderImagePreview() {
+    const wrap = $('#qImageWrap');
+    if (!wrap) return;
+    if (!tempImageData) {
+        wrap.innerHTML = '';
+        return;
+    }
+    let markersHtml = '';
+    tempMarkers.forEach((m, i) => {
+        markersHtml += `
+            <div class="image-marker" style="left: ${m.x}%; top: ${m.y}%;" data-marker-idx="${i}">
+                ${i + 1}
+            </div>
+        `;
+    });
+    wrap.innerHTML = `
+        <div class="field">
+            <label>Метки на изображении <span class="hint">(${tempMarkers.length}) — клик по фото для добавления, клик по метке — удалить</span></label>
+            <div class="image-wrap">
+                <img src="${tempImageData}" id="previewImg" alt="Изображение вопроса">
+                ${markersHtml}
+            </div>
+        </div>
+    `;
+
+    const img = document.getElementById('previewImg');
+    const imgWrap = img ? img.parentElement : null;
+    if (!img || !imgWrap) return;
+
+    // Клик по картинке — добавить метку. Координаты считаем от самого <img>.
+    imgWrap.addEventListener('click', function (e) {
+        if (e.target.classList.contains('image-marker') || e.target.closest('.image-marker')) return;
+        const rect = img.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        if (x < 0 || x > 100 || y < 0 || y > 100) return;
+        tempMarkers.push({ x: +x.toFixed(2), y: +y.toFixed(2) });
+        renderImagePreview();
+    });
+
+    // Удаление метки по клику
+    imgWrap.querySelectorAll('.image-marker').forEach(m => {
+        m.addEventListener('click', function (e) {
+            e.stopPropagation();
+            const idx = +this.dataset.markerIdx;
+            tempMarkers.splice(idx, 1);
+            renderImagePreview();
+        });
+    });
+}
+
+// ============ СОХРАНЕНИЕ ВОПРОСА ============
+function saveQuestion() {
+    const text = $('#qText').value.trim();
+    if (!text) { showToast('⚠️ Введите текст вопроса'); return; }
+
+    const type = $('#qType').value;
+    const points = parseInt($('#qPoints').value, 10) || 1;
+
+    let question = {
+        id: editingQuestionId || uid(),
+        type: type,
+        text: text,
+        points: points,
+        image: tempImageData || null,
+        markers: tempMarkers.length ? tempMarkers.map(m => ({ x: m.x, y: m.y })) : [],
+        explanation: $('#qExplanation').value.trim(),
+        hint: $('#qHint').value.trim(),
+        answers: [],
+        textAnswer: '',
+        matching: []
+    };
+
+    if (type === 'single' || type === 'multiple') {
+        const answers = [];
+        $$('#answersList .answer-row').forEach(row => {
+            const inp = row.querySelector('input[type="text"]');
+            const chk = row.querySelector('input[type="radio"], input[type="checkbox"]');
+            const txt = inp.value.trim();
+            if (txt) answers.push({ text: txt, correct: chk.checked });
+        });
+        if (answers.length < 2) { showToast('⚠️ Минимум 2 варианта ответа'); return; }
+        if (!answers.some(a => a.correct)) { showToast('⚠️ Отметьте правильный ответ'); return; }
+        question.answers = answers;
+    } else if (type === 'text') {
+        const ta = $('#qTextAnswer').value.trim();
+        if (!ta) { showToast('⚠️ Введите правильный ответ'); return; }
+        question.textAnswer = ta;
+    } else if (type === 'matching') {
+        const pairs = [];
+        $$('#matchingList .answer-row').forEach(row => {
+            const left = row.querySelector('[data-match="left"]').value.trim();
+            const right = row.querySelector('[data-match="right"]').value.trim();
+            if (left && right) pairs.push({ left, right });
+        });
+        if (pairs.length < 2) { showToast('⚠️ Минимум 2 пары'); return; }
+        question.matching = pairs;
+    }
+
+    if (editingQuestionId) {
+        const idx = test.questions.findIndex(q => q.id === editingQuestionId);
+        if (idx !== -1) test.questions[idx] = question;
+        showToast('✅ Вопрос обновлён');
+    } else {
+        test.questions.push(question);
+        showToast('✅ Вопрос добавлен');
+    }
+
+    saveToStorage();
+    closeEditor();
+    renderAll();
+}
+
+function deleteQuestion(id) {
+    if (!confirm('Удалить этот вопрос?')) return;
+    test.questions = test.questions.filter(q => q.id !== id);
+    if (editingQuestionId === id) closeEditor();
+    saveToStorage();
+    renderAll();
+    showToast('🗑️ Вопрос удалён');
+}
+
+function moveQuestion(id, dir) {
+    const idx = test.questions.findIndex(q => q.id === id);
+    if (idx === -1) return;
+    const newIdx = idx + dir;
+    if (newIdx < 0 || newIdx >= test.questions.length) return;
+    [test.questions[idx], test.questions[newIdx]] = [test.questions[newIdx], test.questions[idx]];
+    saveToStorage();
+    renderAll();
+}
+
+// ============ ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ============
+function switchTab(tabName) {
+    $$('.tab-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === tabName);
+    });
+    $$('.tab-content').forEach(c => {
+        c.classList.toggle('active', c.id === 'tab-' + tabName);
+    });
+}
+
+// ============ СОБЫТИЯ ============
+function bindEvents() {
+    // Вкладки
+    $$('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // Настройки
+    const settingsMap = {
+        'testTitle': 'title',
+        'testDescription': 'description',
+        'testDiscipline': 'discipline',
+        'testAuthor': 'author',
+        'testTime': 'timeLimit',
+        'testPassScore': 'passScore',
+        'testShuffleQuestions': 'shuffleQuestions',
+        'testShuffleAnswers': 'shuffleAnswers',
+        'testShowCorrect': 'showCorrect'
+    };
+    Object.keys(settingsMap).forEach(id => {
+        const el = document.getElementById(id);
+        const key = settingsMap[id];
+        if (!el) return;
+        const handler = () => {
+            if (el.type === 'checkbox') test[key] = el.checked;
+            else if (el.type === 'number') test[key] = parseInt(el.value, 10) || 0;
+            else test[key] = el.value;
+            saveToStorage();
+        };
+        el.addEventListener('input', handler);
+        el.addEventListener('change', handler);
+    });
+
+    // Добавить вопрос
+    $('#addQuestionBtn').addEventListener('click', () => {
+        const type = $('#quickAddType').value;
+        openEditor(null);
+        $('#qType').value = type;
+        toggleAnswerBlocks();
+    });
+
+    // Клик по списку вопросов
+    $('#questionList').addEventListener('click', e => {
+        const editBtn = e.target.closest('[data-edit]');
+        const delBtn  = e.target.closest('[data-del]');
+        const upBtn   = e.target.closest('[data-up]');
+        const downBtn = e.target.closest('[data-down]');
+        const item    = e.target.closest('.question-item');
+
+        if (editBtn) { openEditor(editBtn.dataset.edit); return; }
+        if (delBtn)  { deleteQuestion(delBtn.dataset.del); return; }
+        if (upBtn)   { moveQuestion(upBtn.dataset.up, -1); return; }
+        if (downBtn) { moveQuestion(downBtn.dataset.down, 1); return; }
+        if (item)    { openEditor(item.dataset.id); }
+    });
+
+    // Тип вопроса
+    $('#qType').addEventListener('change', toggleAnswerBlocks);
+
+    // Добавить вариант
+    $('#addAnswerBtn').addEventListener('click', () => {
+        const rows = $$('#answersList .answer-row');
+        const answers = rows.map(row => ({
+            text: row.querySelector('input[type="text"]').value,
+            correct: row.querySelector('input[type="radio"], input[type="checkbox"]').checked
+        }));
+        answers.push({ text: '', correct: false });
+        renderAnswerRows(answers);
+    });
+
+    // Удалить вариант
+    $('#answersList').addEventListener('click', e => {
+        const btn = e.target.closest('[data-remove]');
+        if (!btn) return;
+        const rows = $$('#answersList .answer-row');
+        if (rows.length <= 2) { showToast('⚠️ Минимум 2 варианта'); return; }
+        const answers = rows.map(row => ({
+            text: row.querySelector('input[type="text"]').value,
+            correct: row.querySelector('input[type="radio"], input[type="checkbox"]').checked
+        }));
+        answers.splice(+btn.dataset.remove, 1);
+        renderAnswerRows(answers);
+    });
+
+    // Добавить пару
+    $('#addMatchPairBtn').addEventListener('click', () => {
+        const rows = $$('#matchingList .answer-row');
+        const pairs = rows.map(row => ({
+            left: row.querySelector('[data-match="left"]').value,
+            right: row.querySelector('[data-match="right"]').value
+        }));
+        pairs.push({ left: '', right: '' });
+        renderMatchingRows(pairs);
+    });
+
+    // Удалить пару
+    $('#matchingList').addEventListener('click', e => {
+        const btn = e.target.closest('[data-remove-match]');
+        if (!btn) return;
+        const rows = $$('#matchingList .answer-row');
+        if (rows.length <= 2) { showToast('⚠️ Минимум 2 пары'); return; }
+        const pairs = rows.map(row => ({
+            left: row.querySelector('[data-match="left"]').value,
+            right: row.querySelector('[data-match="right"]').value
+        }));
+        pairs.splice(+btn.dataset.removeMatch, 1);
+        renderMatchingRows(pairs);
+    });
+
+    // Загрузка изображения
+    $('#qImageFile').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            tempImageData = e.target.result;
+            $('#qImageInfo').textContent = '(изображение загружено)';
+            $('#qClearImageBtn').style.display = 'inline-flex';
+            renderImagePreview();
+        };
+        reader.readAsDataURL(file);
+    });
+
+    // Убрать изображение
+    $('#qClearImageBtn').addEventListener('click', () => {
+        if (!confirm('Убрать изображение и все метки?')) return;
+        tempImageData = null;
+        tempMarkers = [];
+        $('#qImageFile').value = '';
+        $('#qImageInfo').textContent = '';
+        $('#qClearImageBtn').style.display = 'none';
+        renderImagePreview();
+    });
+
+    $('#saveQuestionBtn').addEventListener('click', saveQuestion);
+    $('#cancelQuestionBtn').addEventListener('click', closeEditor);
+    $('#deleteQuestionBtn').addEventListener('click', () => {
+        if (editingQuestionId) deleteQuestion(editingQuestionId);
+    });
+
+    // Новый тест
+    $('#newTestBtn').addEventListener('click', () => {
+        if (!confirm('Создать новый тест? Текущий будет потерян.')) return;
+        test = {
+            title: 'Новый тест',
+            description: '',
+            discipline: 'Анатомия',
+            author: '',
+            timeLimit: 15,
+            passScore: 70,
+            shuffleQuestions: true,
+            shuffleAnswers: true,
+            showCorrect: false,
+            questions: []
+        };
+        saveToStorage();
+        renderAll();
+        closeEditor();
+        showToast('✨ Новый тест создан');
+    });
+
+    // Сохранить JSON
+    $('#saveJsonBtn').addEventListener('click', () => {
+        const blob = new Blob([JSON.stringify(test, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = (test.title || 'test').replace(/\s+/g, '_') + '.json';
+        link.click();
+        URL.revokeObjectURL(link.href);
+        showToast('💾 JSON сохранён');
+    });
+
+    // Загрузить JSON
+    $('#loadJsonBtn').addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = e => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    test = Object.assign(test, data);
+                    if (!Array.isArray(test.questions)) test.questions = [];
+                    test.questions.forEach(q => {
+                        if (Array.isArray(q.markers)) {
+                            q.markers = q.markers.map(m => ({ x: m.x, y: m.y }));
+                        }
+                    });
+                    saveToStorage();
+                    renderAll();
+                    closeEditor();
+                    showToast('📂 Тест загружен');
+                } catch (err) {
+                    showToast('❌ Ошибка чтения JSON');
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    });
+
+    // Экспорт HTML
+    $('#exportHtmlBtn').addEventListener('click', exportHtml);
+
+    // Просмотр
+    $('#studentViewBtn').addEventListener('click', openStudentView);
+}
+
+// ============ ПРОСМОТР (глазами студента, без таймера) ============
+let studentState = null;
+
+function openStudentView() {
+    if (test.questions.length === 0) {
+        showToast('⚠️ Добавьте хотя бы один вопрос');
+        return;
+    }
+
+    let questions = test.questions.map(q => JSON.parse(JSON.stringify(q)));
+    if (test.shuffleQuestions) questions = shuffle(questions);
+    questions.forEach(q => {
+        if (test.shuffleAnswers && (q.type === 'single' || q.type === 'multiple')) {
+            q.answers = shuffle(q.answers);
+        }
+    });
+
+    studentState = {
+        questions: questions,
+        current: 0,
+        answers: {},
+        finished: false
+    };
+
+    switchTab('preview');
+    renderStudentQuestion();
+}
+
+function renderStudentQuestion() {
+    const area = $('#previewArea');
+    if (!area || !studentState) return;
+
+    if (studentState.finished) {
+        renderStudentResult();
+        return;
+    }
+
+    const q = studentState.questions[studentState.current];
+    const total = studentState.questions.length;
+    const progress = Math.round((studentState.current / total) * 100);
+
+    let imageHtml = '';
+    if (q.image) {
+        let markersHtml = '';
+        (q.markers || []).forEach((m, i) => {
+            markersHtml += '<div class="image-marker" style="left:' + m.x + '%; top:' + m.y + '%;">' + (i+1) + '</div>';
+        });
+        imageHtml = '<div class="image-wrap">' +
+            '<img src="' + q.image + '" alt="Изображение вопроса">' +
+            markersHtml +
+        '</div>';
+    }
+
+    const ans = studentState.answers[q.id] || { selected: [], text: '', matches: {} };
+    let bodyHtml = '';
+
+    if (q.type === 'single' || q.type === 'multiple') {
+        const letters = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ';
+        bodyHtml += '<div style="margin-top:16px;">';
+        q.answers.forEach((a, i) => {
+            const selected = (ans.selected || []).includes(i);
+            bodyHtml += '<button class="option-btn ' + (selected ? 'selected' : '') + '" data-q-id="' + q.id + '" data-answer-idx="' + i + '"><span class="marker">' + (letters[i] || (i+1)) + '</span><span>' + escapeHtml(a.text) + '</span></button>';
+        });
+        bodyHtml += '</div>';
+    } else if (q.type === 'text') {
+        bodyHtml += '<div class="field" style="margin-top:16px;"><label>Введите ваш ответ:</label><input type="text" id="studentTextAnswer" data-q-id="' + q.id + '" value="' + escapeHtml(ans.text || '') + '" placeholder="Введите ответ..." style="font-size:1.1rem; padding:14px;"></div>';
+    } else if (q.type === 'matching') {
+        bodyHtml += '<div style="margin-top:16px;">';
+        q.matching.forEach((p, i) => {
+            const selected = (ans.matches && ans.matches[i] !== undefined) ? ans.matches[i] : '';
+            bodyHtml += '<div style="background:var(--cream); padding:10px 14px; border-radius:12px; margin-bottom:6px; display:flex; align-items:center; gap:10px;"><b>' + escapeHtml(p.left) + '</b><span style="color:var(--ink-soft);">→</span><select data-q-id="' + q.id + '" data-match-idx="' + i + '" style="flex:1; padding:8px 12px; border-radius:10px; border:1px solid #D9D0BD; font-family:inherit;"><option value="">— выберите —</option>' + q.matching.map((opt, j) => '<option value="' + j + '"' + (selected === j ? ' selected' : '') + '>' + escapeHtml(opt.right) + '</option>').join('') + '</select></div>';
+        });
+        bodyHtml += '</div>';
+    }
+
+    let hintHtml = '';
+    if (q.hint) {
+        hintHtml = '<div style="margin-top:12px;"><button class="btn btn-outline" id="hintToggleBtn">💡 Подсказка</button><div id="hintBox" style="display:none; background:var(--beige-l); padding:10px 14px; border-radius:12px; margin-top:6px; font-size:0.85rem;">' + escapeHtml(q.hint) + '</div></div>';
+    }
+
+    area.innerHTML = `
+        <div class="student-view">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                <span style="font-size:0.85rem; color:var(--ink-soft);">Вопрос ${studentState.current + 1} из ${total}</span>
+            </div>
+            <div class="progress-line"><div class="fill" style="width:${progress}%"></div></div>
+
+            <h2 style="font-size:1.15rem; margin-bottom:8px;">${escapeHtml(test.title || 'Тест')}</h2>
+
+            <div style="background:var(--cream); border-radius:14px; padding:16px 20px; margin:12px 0; font-size:1rem;">
+                ${escapeHtml(q.text).replace(/\n/g, '<br>')}
+                ${imageHtml}
+            </div>
+
+            ${bodyHtml}
+            ${hintHtml}
+
+            <div style="margin-top:20px; display:flex; gap:8px; flex-wrap:wrap; justify-content:space-between;">
+                <button class="btn btn-outline" id="prevQuestionBtn" ${studentState.current === 0 ? 'disabled' : ''}>◀ Назад</button>
+                ${studentState.current < total - 1
+                    ? '<button class="btn btn-primary" id="nextQuestionBtn">Далее ▶</button>'
+                    : '<button class="btn btn-success" id="finishTestBtn">🏁 Завершить тест</button>'
+                }
+            </div>
+
+            <div style="margin-top:12px; text-align:center;">
+                <button class="btn btn-outline btn-sm" id="exitStudentViewBtn">✖ Выйти из просмотра</button>
+            </div>
+        </div>
+    `;
+
+    bindStudentViewEvents();
+}
+
+function bindStudentViewEvents() {
+    const q = studentState.questions[studentState.current];
+    if (!q) return;
+
+    // Клик по варианту
+    $$('.option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const idx = +btn.dataset.answerIdx;
+            if (!studentState.answers[q.id]) studentState.answers[q.id] = { selected: [], text: '', matches: {} };
+            if (q.type === 'single') {
+                studentState.answers[q.id].selected = [idx];
+            } else {
+                const arr = studentState.answers[q.id].selected;
+                const pos = arr.indexOf(idx);
+                if (pos === -1) arr.push(idx);
+                else arr.splice(pos, 1);
+            }
+            renderStudentQuestion();
+        });
+    });
+
+    // Текстовый ответ
+    const textInput = $('#studentTextAnswer');
+    if (textInput) {
+        textInput.addEventListener('input', () => {
+            if (!studentState.answers[q.id]) studentState.answers[q.id] = { selected: [], text: '', matches: {} };
+            studentState.answers[q.id].text = textInput.value;
+        });
+    }
+
+    // Сопоставление
+    $$('[data-match-idx]').forEach(sel => {
+        sel.addEventListener('change', () => {
+            if (!studentState.answers[q.id]) studentState.answers[q.id] = { selected: [], text: '', matches: {} };
+            if (!studentState.answers[q.id].matches) studentState.answers[q.id].matches = {};
+            if (sel.value === '') delete studentState.answers[q.id].matches[sel.dataset.matchIdx];
+            else studentState.answers[q.id].matches[sel.dataset.matchIdx] = +sel.value;
+        });
+    });
+
+    // Подсказка
+    const hintToggle = $('#hintToggleBtn');
+    if (hintToggle) {
+        hintToggle.addEventListener('click', () => {
+            const box = $('#hintBox');
+            if (box) box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        });
+    }
+
+    // Навигация
+    const prevBtn = $('#prevQuestionBtn');
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        if (studentState.current > 0) { studentState.current--; renderStudentQuestion(); }
+    });
+
+    const nextBtn = $('#nextQuestionBtn');
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        if (studentState.current < studentState.questions.length - 1) { studentState.current++; renderStudentQuestion(); }
+    });
+
+    const finishBtn = $('#finishTestBtn');
+    if (finishBtn) finishBtn.addEventListener('click', finishStudentTest);
+
+    const exitBtn = $('#exitStudentViewBtn');
+    if (exitBtn) exitBtn.addEventListener('click', () => {
+        if (confirm('Выйти из просмотра? Прогресс не сохранится.')) {
+            studentState = null;
+            $('#previewArea').innerHTML = '<div class="card" style="text-align:center; padding:40px 20px; color:var(--ink-soft);"><div style="font-size:3rem; margin-bottom:12px;">👁️</div><p>Просмотр завершён.</p></div>';
+        }
+    });
+}
+
+function finishStudentTest() {
+    if (studentState) studentState.finished = true;
+    renderStudentResult();
+}
+
+function normalize(str) {
+    return String(str).toLowerCase()
+        .replace(/ё/g, 'е')
+        .replace(/[.,;:!?'"()\[\]{}]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function renderStudentResult() {
+    const area = $('#previewArea');
+    let totalPoints = 0, earnedPoints = 0, correctCount = 0;
+
+    studentState.questions.forEach(q => {
+        totalPoints += q.points;
+        const ans = studentState.answers[q.id] || { selected: [], text: '', matches: {} };
+        let correct = false;
+        if (q.type === 'single') {
+            const ci = q.answers.findIndex(a => a.correct);
+            correct = ans.selected && ans.selected.length === 1 && ans.selected[0] === ci;
+        } else if (q.type === 'multiple') {
+            const cis = q.answers.map((a, i) => a.correct ? i : -1).filter(i => i !== -1);
+            const sel = ans.selected || [];
+            correct = sel.length === cis.length && sel.every(i => cis.includes(i));
+        } else if (q.type === 'text') {
+            const un = normalize(ans.text || '');
+            const vs = (q.textAnswer || '').split('|').map(v => normalize(v)).filter(v => v);
+            correct = vs.includes(un) && un !== '';
+        } else if (q.type === 'matching') {
+            let hits = 0;
+            q.matching.forEach((p, i) => {
+                const ris = q.matching.map((pp, j) => pp.right === p.right ? j : -1).filter(j => j !== -1);
+                if (ans.matches && ris.includes(ans.matches[i])) hits++;
+            });
+            correct = hits === q.matching.length;
+        }
+        if (correct) { earnedPoints += q.points; correctCount++; }
+    });
+
+    const percent = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
+    const passed = percent >= test.passScore;
+    const icon = percent >= 90 ? '🏆' : percent >= 75 ? '🎉' : percent >= 60 ? '😊' : '📚';
+    const message = percent >= 90 ? 'Отличный результат!' :
+                    percent >= 75 ? 'Хороший результат!' :
+                    percent >= 60 ? 'Неплохо, но стоит повторить.' :
+                    'Рекомендуем вернуться к материалу.';
+
+    let reviewHtml = '';
+    studentState.questions.forEach((q, i) => {
+        const ans = studentState.answers[q.id] || { selected: [], text: '' };
+        let qCorrect = false, correctText = '';
+        if (q.type === 'single') {
+            const ci = q.answers.findIndex(a => a.correct);
+            qCorrect = ans.selected && ans.selected[0] === ci;
+            correctText = q.answers[ci]?.text || '';
+        } else if (q.type === 'multiple') {
+            const cis = q.answers.map((a, i) => a.correct ? i : -1).filter(j => j !== -1);
+            const sel = ans.selected || [];
+            qCorrect = sel.length === cis.length && sel.every(j => cis.includes(j));
+            correctText = cis.map(j => q.answers[j].text).join('; ');
+        } else if (q.type === 'text') {
+            const un = normalize(ans.text || '');
+            const vs = (q.textAnswer || '').split('|').map(v => normalize(v));
+            qCorrect = vs.includes(un) && un !== '';
+            correctText = q.textAnswer || '';
+        } else if (q.type === 'matching') {
+            correctText = q.matching.map(p => p.left + ' → ' + p.right).join('; ');
+        }
+        reviewHtml += '<div style="background:' + (qCorrect ? '#E8F5E8' : '#FDF0E8') + '; border-radius:12px; padding:10px 14px; margin-bottom:8px; font-size:0.85rem;">' +
+            '<div style="font-weight:600; color:' + (qCorrect ? '#2E7D32' : '#B13E3E') + '; margin-bottom:4px;">' + (i+1) + '. ' + escapeHtml(q.text) + '</div>' +
+            (!qCorrect ? '<div style="font-size:0.78rem; color:#5F7C62;">Правильный ответ: <b>' + escapeHtml(correctText) + '</b></div>' : '') +
+            (q.explanation ? '<div style="font-size:0.78rem; color:#5F7C62; margin-top:4px; font-style:italic;">' + escapeHtml(q.explanation) + '</div>' : '') +
+            '</div>';
+    });
+
+    area.innerHTML = `
+        <div class="student-view">
+            <div class="result-card">
+                <div style="font-size:3.5rem; margin-bottom:8px;">${icon}</div>
+                <div class="result-score">${percent}%</div>
+                <div class="result-percent">${earnedPoints} из ${totalPoints} баллов · ${correctCount}/${studentState.questions.length} верно</div>
+                <div style="font-size:1.05rem; margin:16px 0; line-height:1.6;">${message}</div>
+
+                <div style="margin:20px auto; max-width:400px; padding:14px 20px; border-radius:14px; background:${passed ? '#E8F5E8' : '#FDF0E8'}; color:${passed ? '#2E7D32' : '#B13E3E'}; font-weight:600;">
+                    ${passed ? '✅ Тест пройден!' : '❌ Тест не пройден'} (порог: ${test.passScore}%)
+                </div>
+
+                <div style="text-align:left; max-width:600px; margin:24px auto 0;">
+                    <h3 style="font-size:1rem; margin-bottom:12px; color:var(--blue);">Разбор ответов:</h3>
+                    ${reviewHtml}
+                </div>
+
+                <div style="margin-top:24px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                    <button class="btn btn-primary" id="restartStudentTestBtn">🔄 Пройти заново</button>
+                    <button class="btn btn-outline" id="exitStudentViewBtn2">✖ Выйти из просмотра</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    $('#restartStudentTestBtn')?.addEventListener('click', openStudentView);
+    $('#exitStudentViewBtn2')?.addEventListener('click', () => {
+        studentState = null;
+        $('#previewArea').innerHTML = '<div class="card" style="text-align:center; padding:40px 20px; color:var(--ink-soft);"><div style="font-size:3rem; margin-bottom:12px;">👁️</div><p>Просмотр завершён.</p></div>';
+    });
+}
+
+// ============ ЭКСПОРТ HTML ============
+function exportHtml() {
+    if (test.questions.length === 0) {
+        showToast('⚠️ Добавьте хотя бы один вопрос');
+        return;
+    }
+
+    const testJson = JSON.stringify(test);
+    const title = test.title || 'Тест ВетСим';
+    const safeTitle = escapeHtml(title);
+
+    const htmlParts = [];
+
+    htmlParts.push('<!DOCTYPE html>');
+    htmlParts.push('<html lang="ru">');
+    htmlParts.push('<head>');
+    htmlParts.push('<meta charset="UTF-8">');
+    htmlParts.push('<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">');
+    htmlParts.push('<title>' + safeTitle + ' · ВетСим</title>');
+    htmlParts.push('<style>');
+    htmlParts.push('*{margin:0;padding:0;box-sizing:border-box}');
+    htmlParts.push(':root{--cream:#FDF8F0;--bg-soft:#F4EFE4;--white:#FFFFFF;--green:#6B9E6B;--green-d:#5A865A;--green-l:#A3B18A;--blue:#2C7DA0;--blue-d:#236B8A;--blue-l:#D4E3ED;--beige:#E8D9BE;--beige-l:#F5EBD8;--ink:#1A2A3A;--ink-soft:#5F7C62;--gray:#B0BC9C;--danger:#D4A373;--warn:#E8B84C;--radius:20px}');
+    htmlParts.push('body{font-family:"Montserrat","Segoe UI",system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;min-height:100vh;padding:16px}');
+    htmlParts.push('.container{max-width:800px;margin:0 auto}');
+    htmlParts.push('.card{background:var(--white);border-radius:var(--radius);padding:24px 28px;border:1px solid #E7EDE2;box-shadow:0 4px 20px rgba(80,60,30,0.06);margin-bottom:16px}');
+    htmlParts.push('h1{font-size:1.6rem;margin-bottom:8px}h2{font-size:1.15rem;margin-bottom:8px}');
+    htmlParts.push('.subtitle{color:var(--ink-soft);font-size:0.9rem;margin-bottom:16px}');
+    htmlParts.push('.btn{background:var(--beige);border:none;padding:10px 22px;border-radius:40px;font-weight:600;cursor:pointer;font-family:inherit;font-size:0.85rem;color:var(--ink);transition:0.15s;display:inline-flex;align-items:center;gap:6px}');
+    htmlParts.push('.btn:hover{transform:translateY(-1px);opacity:0.9}');
+    htmlParts.push('.btn-primary{background:var(--blue);color:white}');
+    htmlParts.push('.btn-primary:hover{background:var(--blue-d)}');
+    htmlParts.push('.btn-success{background:var(--green);color:white}');
+    htmlParts.push('.btn-success:hover{background:var(--green-d)}');
+    htmlParts.push('.btn-outline{background:transparent;border:2px solid var(--beige)}');
+    htmlParts.push('.btn-lg{padding:14px 32px;font-size:1rem}');
+    htmlParts.push('.btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}');
+    htmlParts.push('.option-btn{display:flex;align-items:center;gap:12px;background:var(--cream);border:2px solid #E7EDE2;border-radius:14px;padding:12px 18px;margin-bottom:8px;cursor:pointer;transition:0.15s;font-family:inherit;font-size:0.9rem;color:var(--ink);text-align:left;width:100%}');
+    htmlParts.push('.option-btn:hover{border-color:var(--green-l);background:var(--bg-soft)}');
+    htmlParts.push('.option-btn.selected{border-color:var(--blue);background:var(--blue-l);box-shadow:0 0 0 3px rgba(44,125,160,0.1)}');
+    htmlParts.push('.option-btn .marker{width:28px;height:28px;background:var(--bg-soft);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--ink-soft);font-size:0.85rem;flex-shrink:0}');
+    htmlParts.push('.option-btn.selected .marker{background:var(--blue);color:white}');
+    htmlParts.push('.timer-badge{display:inline-flex;align-items:center;gap:6px;background:var(--blue);color:white;padding:6px 16px;border-radius:30px;font-weight:700;font-size:0.9rem;font-variant-numeric:tabular-nums}');
+    htmlParts.push('.timer-badge.warning{background:var(--warn);color:var(--ink)}');
+    htmlParts.push('.timer-badge.danger{background:#C74444;animation:pulse 1s infinite}');
+    htmlParts.push('@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}');
+    htmlParts.push('.progress-line{height:8px;background:var(--bg-soft);border-radius:4px;overflow:hidden;margin:12px 0}');
+    htmlParts.push('.progress-line .fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));transition:width 0.3s}');
+    htmlParts.push('.field{margin-bottom:12px}');
+    htmlParts.push('.field label{font-weight:600;font-size:0.75rem;color:var(--ink-soft);text-transform:uppercase;display:block;margin-bottom:4px}');
+    htmlParts.push('.field input,.field select,.field textarea{padding:10px 14px;border:1px solid #D9D0BD;border-radius:12px;font-family:inherit;font-size:0.9rem;background:var(--cream);color:var(--ink);outline:none;width:100%}');
+    htmlParts.push('.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(44,125,160,0.1);background:white}');
+    htmlParts.push('.result-score{font-size:3.5rem;font-weight:800;color:var(--blue);line-height:1}');
+    htmlParts.push('.result-card{text-align:center;padding:30px 20px}');
+    htmlParts.push('.image-wrap{position:relative;display:block;max-width:100%;width:fit-content;margin:12px auto;border-radius:12px;overflow:hidden;border:2px solid #E8D9BE;line-height:0}');
+    htmlParts.push('.image-wrap img{display:block;max-width:100%;width:auto;height:auto}');
+    htmlParts.push('.image-marker{position:absolute;width:26px;height:26px;background:rgba(44,125,160,0.9);color:white;border:2px solid white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;transform:translate(-50%,-50%);box-shadow:0 2px 6px rgba(0,0,0,0.3);line-height:1}');
+    htmlParts.push('@media (max-width:600px){.card{padding:16px 18px}h1{font-size:1.3rem}.result-score{font-size:2.5rem}.image-marker{width:22px;height:22px;font-size:0.65rem}}');
+    htmlParts.push('</style>');
+    htmlParts.push('</head>');
+    htmlParts.push('<body>');
+    htmlParts.push('<div class="container" id="app"></div>');
+    htmlParts.push('<script>');
+    htmlParts.push('const TEST = ' + testJson + ';');
+    htmlParts.push(`
+let state = {
+    current: 0,
+    answers: {},
+    secondsLeft: TEST.timeLimit > 0 ? TEST.timeLimit * 60 : 0,
+    timerInterval: null,
+    finished: false,
+    shuffled: null
+};
+
+function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function escapeHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function normalize(str) {
+    return String(str).toLowerCase().replace(/ё/g,'е').replace(/[.,;:!?'"()\\[\\]{}]/g,'').replace(/\\s+/g,' ').trim();
+}
+
+function startTest() {
+    let questions = TEST.questions.map(q => JSON.parse(JSON.stringify(q)));
+    if (TEST.shuffleQuestions) questions = shuffle(questions);
+    questions.forEach(q => {
+        if (TEST.shuffleAnswers && (q.type === 'single' || q.type === 'multiple')) {
+            q.answers = shuffle(q.answers);
+        }
+    });
+    state.shuffled = questions;
+    state.current = 0;
+    state.answers = {};
+    state.finished = false;
+    state.secondsLeft = TEST.timeLimit > 0 ? TEST.timeLimit * 60 : 0;
+    render();
+    startTimer();
+}
+
+function startTimer() {
+    if (TEST.timeLimit <= 0) return;
+    if (state.timerInterval) clearInterval(state.timerInterval);
+    state.timerInterval = setInterval(() => {
+        state.secondsLeft--;
+        if (state.secondsLeft <= 0) {
+            clearInterval(state.timerInterval);
+            state.finished = true;
+            render();
+            return;
+        }
+        const b = document.getElementById('timerBadge');
+        if (b) {
+            const m = Math.floor(state.secondsLeft / 60);
+            const s = state.secondsLeft % 60;
+            b.textContent = '⏱ ' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+            b.classList.remove('warning','danger');
+            if (state.secondsLeft <= 60) b.classList.add('danger');
+            else if (state.secondsLeft <= 300) b.classList.add('warning');
+        }
+    }, 1000);
+}
+
+function render() {
+    const app = document.getElementById('app');
+
+    if (state.shuffled === null) {
+        app.innerHTML = '<div class="card" style="text-align:center;">' +
+            '<h1>' + escapeHtml(TEST.title) + '</h1>' +
+            '<p class="subtitle">' + escapeHtml(TEST.description || '') + '</p>' +
+            '<div style="background:var(--beige-l);border-radius:14px;padding:14px 20px;margin:16px auto;max-width:400px;text-align:left;font-size:0.85rem;">' +
+                '<div style="padding:3px 0;"><b>Дисциплина:</b> ' + escapeHtml(TEST.discipline) + '</div>' +
+                (TEST.author ? '<div style="padding:3px 0;"><b>Автор:</b> ' + escapeHtml(TEST.author) + '</div>' : '') +
+                '<div style="padding:3px 0;"><b>Вопросов:</b> ' + TEST.questions.length + '</div>' +
+                (TEST.timeLimit > 0 ? '<div style="padding:3px 0;"><b>Время:</b> ' + TEST.timeLimit + ' мин</div>' : '') +
+                '<div style="padding:3px 0;"><b>Проходной балл:</b> ' + TEST.passScore + '%</div>' +
+            '</div>' +
+            '<button class="btn btn-primary btn-lg" onclick="startTest()">🚀 Начать тест</button>' +
+        '</div>';
+        return;
+    }
+
+    if (state.finished) { renderResult(); return; }
+
+    const q = state.shuffled[state.current];
+    const total = state.shuffled.length;
+    const progress = Math.round((state.current / total) * 100);
+
+    let timerHtml = '';
+    if (TEST.timeLimit > 0) {
+        const m = Math.floor(state.secondsLeft / 60);
+        const s = state.secondsLeft % 60;
+        let cls = 'timer-badge';
+        if (state.secondsLeft <= 60) cls += ' danger';
+        else if (state.secondsLeft <= 300) cls += ' warning';
+        timerHtml = '<span class="' + cls + '" id="timerBadge">⏱ ' + String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0') + '</span>';
+    }
+
+    let imageHtml = '';
+    if (q.image) {
+        let markersHtml = '';
+        (q.markers || []).forEach((m, i) => {
+            markersHtml += '<div class="image-marker" style="left:' + m.x + '%; top:' + m.y + '%;">' + (i+1) + '</div>';
+        });
+        imageHtml = '<div class="image-wrap"><img src="' + q.image + '" alt="Изображение вопроса">' + markersHtml + '</div>';
+    }
+
+    const ans = state.answers[q.id] || { selected: [], text: '', matches: {} };
+    let bodyHtml = '';
+
+    if (q.type === 'single' || q.type === 'multiple') {
+        const letters = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ';
+        bodyHtml += '<div style="margin-top:16px;">';
+        q.answers.forEach((a, i) => {
+            const selected = (ans.selected || []).includes(i);
+            bodyHtml += '<button class="option-btn ' + (selected ? 'selected' : '') + '" onclick="selectAnswer(\\'' + q.id + '\\',' + i + ',\\'' + q.type + '\\')"><span class="marker">' + (letters[i] || (i+1)) + '</span><span>' + escapeHtml(a.text) + '</span></button>';
+        });
+        bodyHtml += '</div>';
+    } else if (q.type === 'text') {
+        bodyHtml += '<div class="field" style="margin-top:16px;"><label>Введите ваш ответ:</label><input type="text" id="textAnswer" value="' + escapeHtml(ans.text || '') + '" placeholder="Введите ответ..." style="font-size:1.1rem;padding:14px;" oninput="updateTextAnswer(\\'' + q.id + '\\')"></div>';
+    } else if (q.type === 'matching') {
+        bodyHtml += '<div style="margin-top:16px;">';
+        q.matching.forEach((p, i) => {
+            const selected = (ans.matches && ans.matches[i] !== undefined) ? ans.matches[i] : '';
+            bodyHtml += '<div style="background:var(--cream);padding:10px 14px;border-radius:12px;margin-bottom:6px;display:flex;align-items:center;gap:10px;"><b>' + escapeHtml(p.left) + '</b><span>→</span><select onchange="updateMatch(\\'' + q.id + '\\',' + i + ',this.value)" style="flex:1;padding:8px 12px;border-radius:10px;border:1px solid #D9D0BD;font-family:inherit;"><option value="">— выберите —</option>' + q.matching.map((opt, j) => '<option value="' + j + '"' + (selected === j ? ' selected' : '') + '>' + escapeHtml(opt.right) + '</option>').join('') + '</select></div>';
+        });
+        bodyHtml += '</div>';
+    }
+
+    let hintHtml = '';
+    if (q.hint) {
+        hintHtml = '<div style="margin-top:12px;"><button class="btn btn-outline" onclick="this.nextElementSibling.style.display=\\'block\\';this.style.display=\\'none\\';">💡 Подсказка</button><div style="display:none;background:var(--beige-l);padding:10px 14px;border-radius:12px;margin-top:6px;font-size:0.85rem;">' + escapeHtml(q.hint) + '</div></div>';
+    }
+
+    app.innerHTML = '<div class="card">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:12px;">' +
+            '<span style="font-size:0.85rem;color:var(--ink-soft);">Вопрос ' + (state.current + 1) + ' из ' + total + '</span>' +
+            timerHtml +
+        '</div>' +
+        '<div class="progress-line"><div class="fill" style="width:' + progress + '%"></div></div>' +
+        '<h2 style="margin-bottom:12px;">' + escapeHtml(TEST.title) + '</h2>' +
+        '<div style="background:var(--cream);border-radius:14px;padding:16px 20px;margin:12px 0;font-size:1rem;">' +
+            escapeHtml(q.text).replace(/\\n/g, '<br>') +
+            imageHtml +
+        '</div>' +
+        bodyHtml +
+        hintHtml +
+        '<div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;">' +
+            '<button class="btn btn-outline" onclick="prevQuestion()"' + (state.current === 0 ? ' disabled' : '') + '>◀ Назад</button>' +
+            (state.current < total - 1
+                ? '<button class="btn btn-primary" onclick="nextQuestion()">Далее ▶</button>'
+                : '<button class="btn btn-success" onclick="finishTest()">🏁 Завершить тест</button>'
+            ) +
+        '</div>' +
+    '</div>';
+}
+
+function selectAnswer(qid, idx, type) {
+    if (!state.answers[qid]) state.answers[qid] = { selected: [], text: '' };
+    if (type === 'single') {
+        state.answers[qid].selected = [idx];
+    } else {
+        const arr = state.answers[qid].selected;
+        const pos = arr.indexOf(idx);
+        if (pos === -1) arr.push(idx); else arr.splice(pos, 1);
+    }
+    render();
+}
+
+function updateTextAnswer(qid) {
+    if (!state.answers[qid]) state.answers[qid] = { selected: [], text: '' };
+    state.answers[qid].text = document.getElementById('textAnswer').value;
+}
+
+function updateMatch(qid, i, val) {
+    if (!state.answers[qid]) state.answers[qid] = { selected: [], text: '', matches: {} };
+    if (!state.answers[qid].matches) state.answers[qid].matches = {};
+    if (val === '') delete state.answers[qid].matches[i];
+    else state.answers[qid].matches[i] = +val;
+}
+
+function prevQuestion() { if (state.current > 0) { state.current--; render(); } }
+function nextQuestion() { if (state.current < state.shuffled.length - 1) { state.current++; render(); } }
+function finishTest() {
+    if (state.timerInterval) clearInterval(state.timerInterval);
+    state.finished = true;
+    render();
+}
+
+function renderResult() {
+    const app = document.getElementById('app');
+    let totalPoints = 0, earnedPoints = 0, correctCount = 0;
+
+    state.shuffled.forEach(q => {
+        totalPoints += q.points;
+        const ans = state.answers[q.id] || { selected: [], text: '', matches: {} };
+        let correct = false;
+        if (q.type === 'single') {
+            const ci = q.answers.findIndex(a => a.correct);
+            correct = ans.selected && ans.selected[0] === ci;
+        } else if (q.type === 'multiple') {
+            const cis = q.answers.map((a,i) => a.correct ? i : -1).filter(i => i !== -1);
+            const sel = ans.selected || [];
+            correct = sel.length === cis.length && sel.every(i => cis.includes(i));
+        } else if (q.type === 'text') {
+            const un = normalize(ans.text || '');
+            const vs = (q.textAnswer || '').split('|').map(v => normalize(v));
+            correct = vs.includes(un) && un !== '';
+        } else if (q.type === 'matching') {
+            let hits = 0;
+            q.matching.forEach((p, i) => {
+                const ris = q.matching.map((pp, j) => pp.right === p.right ? j : -1).filter(j => j !== -1);
+                if (ans.matches && ris.includes(ans.matches[i])) hits++;
+            });
+            correct = hits === q.matching.length;
+        }
+        if (correct) { earnedPoints += q.points; correctCount++; }
+    });
+
+    const percent = totalPoints > 0 ? Math.round((earnedPoints / totalPoints) * 100) : 0;
+    const passed = percent >= TEST.passScore;
+    const icon = percent >= 90 ? '🏆' : percent >= 75 ? '🎉' : percent >= 60 ? '😊' : '📚';
+    const message = percent >= 90 ? 'Отличный результат!' :
+                    percent >= 75 ? 'Хороший результат!' :
+                    percent >= 60 ? 'Неплохо, но стоит повторить.' :
+                    'Рекомендуем вернуться к материалу.';
+
+    app.innerHTML = '<div class="card result-card">' +
+        '<div style="font-size:3.5rem;margin-bottom:8px;">' + icon + '</div>' +
+        '<div class="result-score">' + percent + '%</div>' +
+        '<div style="font-size:1.1rem;color:var(--ink-soft);margin-top:4px;">' + earnedPoints + ' из ' + totalPoints + ' баллов · ' + correctCount + '/' + state.shuffled.length + ' верно</div>' +
+        '<div style="font-size:1.05rem;margin:16px 0;line-height:1.6;">' + message + '</div>' +
+        '<div style="margin:20px auto;max-width:400px;padding:14px 20px;border-radius:14px;background:' + (passed ? '#E8F5E8' : '#FDF0E8') + ';color:' + (passed ? '#2E7D32' : '#B13E3E') + ';font-weight:600;">' +
+            (passed ? '✅ Тест пройден!' : '❌ Тест не пройден') + ' (порог: ' + TEST.passScore + '%)' +
+        '</div>' +
+        '<div style="margin-top:16px;"><button class="btn btn-primary btn-lg" onclick="location.reload()">🔄 Пройти заново</button></div>' +
+    '</div>';
+}
+
+render();
+    `);
+    htmlParts.push('<\/script>');
+    htmlParts.push('</body>');
+    htmlParts.push('</html>');
+
+    const html = htmlParts.join('\n');
+
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = (title || 'test').replace(/\s+/g, '_') + '.html';
+    link.click();
+    URL.revokeObjectURL(link.href);
+    showToast('📤 HTML экспортирован');
+}
+
+</script>
+
+</body>
+</html>

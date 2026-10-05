@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Регистрация в DeepSeek · ВетСим</title>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --cream: #FDF8F0;
+    --white: #FFFFFF;
+    --bg-soft: #F4EFE4;
+    --blue: #2C7DA0;
+    --blue-d: #236B8A;
+    --blue-l: #D4E3ED;
+    --green: #6B9E6B;
+    --green-d: #5A865A;
+    --green-l: #D6E8D0;
+    --beige: #E8D9BE;
+    --beige-l: #F5EBD8;
+    --ink: #1A2A3A;
+    --ink-soft: #5F7C62;
+    --gray: #B0BC9C;
+    --danger: #D47A6A;
+    --danger-l: #FDE8E0;
+    --warn: #E8B84C;
+    --radius: 18px;
+    --shadow: 0 2px 12px rgba(80,60,30,0.06);
+}
+
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 32px 40px;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+}
+
+@media (max-width: 600px) {
+    .container { padding: 20px 18px; }
+}
+
+/* Шапка */
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E7EDE2;
+}
+.header h1 {
+    font-size: 1.8rem;
+    color: var(--blue-d);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.header .subtitle {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+}
+
+/* Шаги */
+.step {
+    background: var(--bg-soft);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    border-left: 4px solid var(--blue);
+    position: relative;
+}
+.step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    background: var(--blue);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+.step-title {
+    display: flex;
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--blue-d);
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+.step-body {
+    font-size: 0.93rem;
+    line-height: 1.65;
+}
+.step-body p { margin-bottom: 8px; }
+.step-body ul { margin: 8px 0 8px 22px; }
+.step-body li { margin-bottom: 4px; }
+.step-body code {
+    background: var(--beige-l);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: var(--blue-d);
+    font-weight: 600;
+}
+.step-body strong { color: var(--blue-d); }
+.step-body a {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--blue);
+    font-weight: 600;
+}
+.step-body a:hover { color: var(--blue-d); }
+
+/* Инфо-блоки */
+.info {
+    background: var(--blue-l);
+    border-left: 4px solid var(--blue);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+}
+.warn {
+    background: var(--danger-l);
+    border-left: 4px solid var(--danger);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+}
+.tip {
+    background: var(--green-l);
+    border-left: 4px solid var(--green);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.9rem;
+}
+.info strong, .warn strong, .tip strong {
+    display: block;
+    margin-bottom: 4px;
+}
+.info strong { color: var(--blue-d); }
+.warn strong { color: var(--danger); }
+.tip strong { color: var(--green-d); }
+
+/* Вопрос-ответ */
+.faq-item {
+    background: var(--bg-soft);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    border-left: 4px solid var(--green);
+}
+.faq-q {
+    font-weight: 700;
+    color: var(--green-d);
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+.faq-a {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+.faq-a code {
+    background: var(--beige-l);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+}
+
+/* Финальный блок */
+.final {
+    text-align: center;
+    background: linear-gradient(135deg, var(--green-l), var(--beige-l));
+    border-radius: 16px;
+    padding: 24px 28px;
+    margin-top: 28px;
+}
+.final h2 {
+    color: var(--green-d);
+    font-size: 1.15rem;
+    margin-bottom: 10px;
+}
+.final p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Печать */
+@media print {
+    body { background: white; padding: 0; }
+    .container { box-shadow: none; border: none; padding: 20px; }
+    .step { break-inside: avoid; }
+    .faq-item { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Шапка -->
+    <div class="header">
+        <h1>🤖 Регистрация в DeepSeek</h1>
+        <div class="subtitle">Пошаговая инструкция для преподавателей СПО</div>
+    </div>
+
+    <!-- Что такое DeepSeek -->
+    <div class="info">
+        <strong>💡 Что такое DeepSeek?</strong>
+        DeepSeek — это бесплатная нейросеть, которая умеет писать тексты, создавать планы занятий, придумывать задания, объяснять сложные темы. Она хорошо понимает русский язык. Регистрация бесплатная, нужна только электронная почта.
+    </div>
+
+    <!-- Шаг 1 -->
+    <div class="step">
+        <div class="step-title">
+            <span class="step-num">1</span>
+            Откройте сайт DeepSeek
+        </div>
+        <div class="step-body">
+            <p>В адресной строке браузера введите:</p>
+            <p><code>chat.deepseek.com</code></p>
+            <p>Или нажмите на ссылку: <a href="https://chat.deepseek.com" target="_blank" rel="noopener">chat.deepseek.com</a></p>
+            <p style="margin-top: 8px;">Откроется главная страница нейросети.</p>
+        </div>
+    </div>
+
+    <!-- Шаг 2 -->
+    <div class="step">
+        <div class="step-title">
+            <span class="step-num">2</span>
+            Нажмите «Sign Up with Email»
+        </div>
+        <div class="step-body">
+            <p>На главной странице найдите кнопку регистрации. Нажмите на неё.</p>
+            <p>Откроется форма регистрации через электронную почту.</p>
+        </div>
+    </div>
+
+    <!-- Шаг 3 -->
+    <div class="step">
+        <div class="step-title">
+            <span class="step-num">3</span>
+            Введите почту и придумайте пароль
+        </div>
+        <div class="step-body">
+            <p>Введите <strong>свою электронную почту</strong> (любую личную: mail.ru, yandex.ru, gmail.com) и <strong>придумайте пароль</strong>.</p>
+            <ul>
+                <li>Пароль — не менее 6 символов, лучше 8+.</li>
+                <li>Используйте буквы и цифры, чтобы пароль был надёжнее.</li>
+                <li><strong>Запомните пароль!</strong> Он понадобится для входа в следующий раз.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Блок про пароль -->
+    <div class="warn">
+        <strong>⚠️ Где хранить пароль</strong>
+        Не записывайте пароль в рабочую тетрадь, в документы курса или в общий чат — это небезопасно. Сохраните его в <strong>личное защищённое место</strong>: например, в заметки на телефоне, в защищённый менеджер паролей (Bitwarden, KeePass) или запишите в личный блокнот, который хранится дома. Никому не передавайте пароль, даже коллегам.
+    </div>
+
+    <!-- Шаг 4 -->
+    <div class="step">
+        <div class="step-title">
+            <span class="step-num">4</span>
+            Подтвердите почту
+        </div>
+        <div class="step-body">
+            <p>На вашу почту придёт письмо от DeepSeek с <strong>кодом подтверждения</strong>.</p>
+            <p>Откройте почту, найдите письмо и скопируйте код. Вставьте его в поле на сайте DeepSeek.</p>
+            <p style="margin-top: 8px;"><em>Если письмо не пришло:</em></p>
+            <ul>
+                <li>Проверьте папку «Спам» — иногда письма попадают туда.</li>
+                <li>Подождите 2–3 минуты и проверьте почту снова.</li>
+                <li>Если письма нет дольше 10 минут — попробуйте зарегистрироваться с другой почтой.</li>
+                <li>Можно зарегистрироваться через Google-аккаунт — кнопка рядом с «Sign Up with Email».</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Шаг 5 -->
+    <div class="step">
+        <div class="step-title">
+            <span class="step-num">5</span>
+            Войдите в чат и начните работу
+        </div>
+        <div class="step-body">
+            <p>После подтверждения вы попадёте в <strong>чат с нейросетью</strong>. Это окно, где вы будете общаться с ИИ.</p>
+            <p>Внизу — поле для ввода текста. Это ваше «окно общения».</p>
+            <p>Скопируйте ваш промпт из конструктора (кнопка «📋 Скопировать промпт») и вставьте его в это поле.</p>
+            <p>Нажмите Enter или кнопку отправки — ИИ начнёт отвечать.</p>
+        </div>
+    </div>
+
+    <!-- Совет -->
+    <div class="tip">
+        <strong>💡 Полезный совет</strong>
+        После того как ИИ «познакомится» с вами и ответит на первый промпт — сохраните этот диалог как отдельный чат. В следующий раз не нужно будет вставлять промпт заново: просто возвращайтесь в этот чат и продолжайте разговор.
+    </div>
+
+    <!-- FAQ -->
+    <h2 style="font-size: 1.15rem; color: var(--blue-d); margin: 32px 0 16px; border-bottom: 2px solid var(--blue-l); padding-bottom: 8px;">
+        ❓ Частые вопросы
+    </h2>
+
+    <div class="faq-item">
+        <div class="faq-q">Почему DeepSeek? Есть же другие нейросети.</div>
+        <div class="faq-a">
+            DeepSeek — бесплатный, работает в России, хорошо понимает русский язык. Для нашего курса этого достаточно. Если у вас уже есть любимая нейросеть (YandexGPT, GigaChat, ChatGPT) — можно работать в ней.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">Регистрация точно бесплатная?</div>
+        <div class="faq-a">
+            Да. Основной чат — бесплатный. Платные функции в DeepSeek есть, но для наших задач они не нужны.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">Что делать, если забыл(а) пароль?</div>
+        <div class="faq-a">
+            На странице входа нажмите «Забыли пароль» / «Forgot password». На почту придёт ссылка для сброса пароля. Задайте новый пароль и сохраните его.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">Можно ли использовать корпоративную почту колледжа?</div>
+        <div class="faq-a">
+            Лучше использовать <strong>личную</strong> почту. Корпоративная почта может блокировать письма от внешних сервисов. Если хотите использовать рабочую — сначала проверьте, приходят ли на неё письма от DeepSeek.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">Безопасно ли писать в DeepSeek?</div>
+        <div class="faq-a">
+            Не отправляйте в ИИ <strong>персональные данные</strong> (ФИО студентов, телефоны, адреса, оценки). Пишите обобщённо: «студент группы 3-Б», «студент 3 курса». Всё остальное — можно.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">А если я не хочу регистрироваться?</div>
+        <div class="faq-a">
+            Это ваше право. Но без регистрации вы не сможете пользоваться ИИ в полной мере. Для курса регистрация в одном сервисе (DeepSeek, YandexGPT или GigaChat — на ваш выбор) — минимально необходимая. Это буквально 5 минут.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-q">Что делать, если сайт не открывается?</div>
+        <div class="faq-a">
+            Попробуйте: обновить страницу (F5), открыть в другом браузере (Chrome, Edge, Яндекс), проверить интернет. Если сайт заблокирован — используйте YandexGPT (ya.ru) или GigaChat (giga.chat), они тоже бесплатны.
+        </div>
+    </div>
+
+    <!-- Финал -->
+    <div class="final">
+        <h2>🎉 Готово! Вы зарегистрированы</h2>
+        <p>
+            Теперь можно переходить к практике — открыть конструктор промпта, заполнить его и вставить готовый текст в DeepSeek. Пусть ИИ станет вашим помощником!
+        </p>
+        <p style="margin-top: 12px; font-size: 0.85rem;">
+            Если что-то пошло не так — задайте вопрос на занятии или в чате курса. Мы поможем. 💚
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

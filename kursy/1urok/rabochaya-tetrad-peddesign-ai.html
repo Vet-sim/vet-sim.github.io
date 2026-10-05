@@ -1,0 +1,1659 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Рабочая тетрадь · Педагогический дизайн с ИИ | ВетСим</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --cream: #FDF8F0;
+    --white: #FFFFFF;
+    --bg-soft: #F4EFE4;
+    --blue: #2C7DA0;
+    --blue-d: #236B8A;
+    --blue-l: #D4E3ED;
+    --green: #6B9E6B;
+    --green-d: #5A865A;
+    --green-l: #D6E8D0;
+    --beige: #E8D9BE;
+    --beige-l: #F5EBD8;
+    --ink: #1A2A3A;
+    --ink-soft: #5F7C62;
+    --gray: #B0BC9C;
+    --danger: #D47A6A;
+    --danger-l: #FDE8E0;
+    --warn: #E8B84C;
+    --radius: 18px;
+    --shadow: 0 2px 12px rgba(80,60,30,0.06);
+}
+
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    padding: 16px;
+    min-height: 100vh;
+}
+
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* ===== Шапка ===== */
+.header {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+    margin-bottom: 14px;
+}
+.logo { font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+.logo .gradient {
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.header-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.btn {
+    background: var(--beige);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.15s;
+    white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); opacity: 0.9; }
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: var(--blue-d); }
+.btn-success { background: var(--green); color: white; }
+.btn-success:hover { background: var(--green-d); }
+.btn-outline { background: transparent; border: 2px solid var(--beige); }
+.btn-sm { padding: 5px 12px; font-size: 0.72rem; }
+.btn-danger { background: var(--danger); color: white; }
+
+/* ===== Прогресс ===== */
+.progress-wrap {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 12px 20px;
+    margin-bottom: 14px;
+    border: 1px solid #E7EDE2;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.progress-label { font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); }
+.progress-bar {
+    flex: 1; min-width: 150px;
+    height: 10px;
+    background: var(--bg-soft);
+    border-radius: 5px;
+    overflow: hidden;
+}
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--green));
+    transition: width 0.3s;
+    border-radius: 5px;
+}
+.progress-value { font-size: 0.85rem; font-weight: 700; color: var(--blue); }
+
+/* ===== Вкладки ===== */
+.tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+}
+.tab-btn {
+    background: var(--beige);
+    border: none;
+    padding: 9px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.76rem;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--ink);
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: var(--blue); color: white; }
+.tab-btn .tab-check {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--gray);
+}
+.tab-btn.active .tab-check { background: var(--white); }
+.tab-btn.completed .tab-check { background: var(--green); }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Карточки ===== */
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 22px 26px;
+    border: 1px solid #E7EDE2;
+    box-shadow: var(--shadow);
+    margin-bottom: 14px;
+}
+.card-title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--blue);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #E7EDE2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.card-subtitle {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+
+/* ===== Поля ===== */
+.field { margin-bottom: 14px; display: flex; flex-direction: column; gap: 5px; }
+.field label {
+    font-weight: 600;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.field .hint {
+    font-size: 0.72rem;
+    color: var(--gray);
+    font-weight: 400;
+    text-transform: none;
+    margin-left: 6px;
+}
+.field input[type="text"],
+.field input[type="number"],
+.field input[type="date"],
+.field textarea,
+.field select {
+    padding: 10px 14px;
+    border: 1px solid #D9D0BD;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: var(--cream);
+    color: var(--ink);
+    outline: none;
+    transition: 0.15s;
+    width: 100%;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--blue);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+.field textarea { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+.field-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.field-row .field { flex: 1; min-width: 140px; }
+
+/* ===== Изображения ===== */
+.img-upload {
+    border: 2px dashed var(--beige);
+    border-radius: 12px;
+    padding: 14px;
+    text-align: center;
+    background: var(--beige-l);
+    cursor: pointer;
+    transition: 0.15s;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+}
+.img-upload:hover { background: #EFE3CB; border-color: var(--blue); }
+.img-upload input { display: none; }
+
+.img-preview {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    margin-top: 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--beige);
+}
+.img-preview img {
+    display: block;
+    max-width: 100%;
+    max-height: 320px;
+    height: auto;
+}
+.img-preview .img-remove {
+    position: absolute;
+    top: 6px; right: 6px;
+    background: rgba(212, 122, 106, 0.95);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+}
+.img-preview .img-remove:hover { background: #B13E3E; }
+
+.img-size-info {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--gray);
+    margin-top: 4px;
+    font-style: italic;
+}
+
+/* ===== Тесты ===== */
+.quiz-block {
+    background: var(--bg-soft);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border-left: 4px solid var(--blue);
+}
+.quiz-q {
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 10px;
+    color: var(--ink);
+}
+.quiz-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    border-radius: 10px;
+    background: var(--white);
+    cursor: pointer;
+    font-size: 0.87rem;
+    transition: 0.15s;
+    border: 1px solid transparent;
+}
+.quiz-option:hover { border-color: var(--blue); }
+.quiz-option input { margin-top: 3px; accent-color: var(--blue); cursor: pointer; flex-shrink: 0; }
+.quiz-option.correct { background: var(--green-l); border-color: var(--green); }
+.quiz-option.incorrect { background: var(--danger-l); border-color: var(--danger); }
+
+.quiz-feedback {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    display: none;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.ok { background: var(--green-l); color: var(--green-d); }
+.quiz-feedback.err { background: var(--danger-l); color: var(--danger); }
+
+.quiz-actions { margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+
+.quiz-result {
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    display: none;
+}
+.quiz-result.show { display: block; }
+.quiz-result.pass { background: var(--green-l); color: var(--green-d); }
+.quiz-result.fail { background: var(--danger-l); color: var(--danger); }
+
+/* ===== Инфо-блоки ===== */
+.info-block {
+    background: var(--blue-l);
+    border-left: 4px solid var(--blue);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 0.88rem;
+}
+.warn-block {
+    background: var(--danger-l);
+    border-left: 4px solid var(--danger);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 0.88rem;
+}
+.tip-block {
+    background: var(--green-l);
+    border-left: 4px solid var(--green);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 14px;
+    font-size: 0.88rem;
+}
+
+/* ===== Экспорт-бар ===== */
+.export-bar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 12px 16px;
+    background: var(--beige-l);
+    border-radius: 12px;
+    align-items: center;
+}
+.export-bar .lbl {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-right: 6px;
+}
+
+/* ===== Toast ===== */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 9999;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+.toast.show { opacity: 1; }
+
+/* ===== Печать ===== */
+@media print {
+    body { background: white; padding: 0; font-size: 11pt; }
+    .header, .tabs, .progress-wrap, .export-bar, .btn, .quiz-actions, .img-upload { display: none !important; }
+    .tab-content { display: none !important; }
+    .tab-content.active { display: block !important; }
+    .tab-content.print-all { display: block !important; page-break-before: always; }
+    .tab-content.print-all:first-of-type { page-break-before: avoid; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; margin-bottom: 10px; }
+    .quiz-feedback { display: none !important; }
+    .quiz-result { display: block !important; }
+    textarea, input { border: 1px solid #999 !important; background: white !important; }
+    .img-preview { border: 1px solid #999 !important; page-break-inside: avoid; }
+    .img-preview .img-remove { display: none !important; }
+    .img-size-info { display: none !important; }
+}
+
+/* ===== Адаптив ===== */
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .card { padding: 16px 18px; }
+    .header { padding: 12px 16px; }
+    .tab-btn { font-size: 0.7rem; padding: 7px 11px; }
+    .field-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Шапка -->
+    <div class="header">
+        <div class="logo">📓 <span class="gradient">Рабочая тетрадь</span> · Педагогический дизайн с ИИ</div>
+        <div class="header-actions">
+            <button class="btn btn-success btn-sm" id="printAllBtn">📄 Сохранить всё в PDF</button>
+            <button class="btn btn-outline btn-sm" id="saveJsonBtn">💾 Резервная копия</button>
+            <button class="btn btn-outline btn-sm" id="loadJsonBtn">📂 Восстановить</button>
+            <button class="btn btn-danger btn-sm" id="resetBtn">🗑️ Сбросить</button>
+        </div>
+    </div>
+
+    <!-- Прогресс -->
+    <div class="progress-wrap">
+        <span class="progress-label">📊 Прогресс заполнения:</span>
+        <div class="progress-bar"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+        <span class="progress-value" id="progressValue">0%</span>
+    </div>
+
+    <!-- Вкладки -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="t0"><span class="tab-check"></span>0. Входной контроль</button>
+        <button class="tab-btn" data-tab="t1"><span class="tab-check"></span>1. Педдизайн</button>
+        <button class="tab-btn" data-tab="t2"><span class="tab-check"></span>2. ИИ-инструменты</button>
+        <button class="tab-btn" data-tab="t3"><span class="tab-check"></span>3. Материалы</button>
+        <button class="tab-btn" data-tab="t4"><span class="tab-check"></span>4. Конструкторы</button>
+        <button class="tab-btn" data-tab="t5"><span class="tab-check"></span>5. Проект</button>
+    </div>
+
+    <!-- ============ ВКЛАДКА 0 ============ -->
+    <div class="tab-content active" id="tab-t0">
+        <div class="export-bar">
+            <span class="lbl">Экспорт раздела:</span>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">📄 Сохранить в PDF</button>
+        </div>
+
+        <div class="card" style="background: linear-gradient(135deg, #EAF3F7 0%, #F5EBD8 100%); border: 2px solid var(--blue);">
+            <div class="card-title" style="color: var(--blue-d); font-size: 1.15rem;">📖 Как работать с тетрадью</div>
+
+            <p style="margin-bottom: 12px; font-size: 0.95rem;">
+                <strong>Добро пожаловать на курс «Педагогический дизайн с ИИ»!</strong> Перед вами — рабочая тетрадь, которую вы будете заполнять на протяжении всех 6 разделов курса. Здесь вы фиксируете свои идеи, промпты, результаты работы с ИИ и конструкторами. В конце курса тетрадь станет основой вашего итогового проекта.
+            </p>
+
+            <div style="background: white; border-radius: 12px; padding: 16px 20px; margin-bottom: 14px; border-left: 4px solid var(--green);">
+                <div style="font-weight: 700; color: var(--green-d); margin-bottom: 10px; font-size: 1rem;">🚀 Пошаговая инструкция</div>
+
+                <ol style="margin-left: 20px; line-height: 1.7; font-size: 0.9rem;">
+                    <li style="margin-bottom: 6px;">
+                        <strong>Скачайте файл</strong> рабочей тетради на свой компьютер. Это обычный HTML-файл — откройте его двойным кликом. Он откроется в любом браузере (Chrome, Edge, Firefox, Яндекс).
+                    </li>
+                    <li style="margin-bottom: 6px;">
+                        <strong>Заполняйте по мере прохождения курса.</strong> Тетрадь состоит из 6 вкладок — по одной на каждый раздел. Заходите в нужную вкладку и отвечайте на вопросы, заполняйте поля, проходите тесты.
+                    </li>
+                    <li style="margin-bottom: 6px;">
+                        <strong>Ваши ответы сохраняются автоматически</strong> в браузере. Можно закрыть файл и вернуться позже — данные не потеряются.
+                    </li>
+                    <li style="margin-bottom: 6px;">
+                        <strong>Загружайте свои изображения</strong> прямо в тетрадь: схемы, скриншоты, фото. Они автоматически сжимаются до удобного размера, а затем попадают в итоговый PDF.
+                    </li>
+                    <li style="margin-bottom: 6px;">
+                        <strong>После каждого раздела</strong> нажимайте кнопку <span style="background: var(--blue); color: white; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem;">📄 Сохранить в PDF</span> — браузер предложит сохранить страницу как PDF-файл. Этот PDF вы загружаете в Moodle как отчёт по разделу.
+                    </li>
+                    <li style="margin-bottom: 6px;">
+                        <strong>В конце курса</strong> нажмите кнопку <span style="background: var(--green); color: white; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem;">📄 Сохранить всё в PDF</span> в шапке — получите полную тетрадь одним файлом для итоговой сдачи.
+                    </li>
+                </ol>
+            </div>
+
+            <div style="background: #FDF3D6; border-radius: 12px; padding: 14px 18px; margin-bottom: 14px; border-left: 4px solid var(--warn);">
+                <div style="font-weight: 700; color: #A67C3A; margin-bottom: 8px;">💡 Важные советы</div>
+                <ul style="margin-left: 20px; line-height: 1.7; font-size: 0.88rem;">
+                    <li style="margin-bottom: 4px;">Работайте в одном и том же браузере на одном и том же компьютере — тогда данные будут сохраняться корректно.</li>
+                    <li style="margin-bottom: 4px;">Если хотите продолжить на другом устройстве — нажмите <strong>«💾 Резервная копия»</strong> в шапке, скачайте файл и на другом устройстве нажмите <strong>«📂 Восстановить»</strong>.</li>
+                    <li style="margin-bottom: 4px;">Для загрузки в тетрадь лучше использовать <strong>скриншоты</strong>, а не фотографии с телефона — они легче и чётче.</li>
+                    <li style="margin-bottom: 4px;">Не бойтесь ошибаться в тестах — они для самопроверки, а не для оценки. Оценка ставится по итоговому проекту.</li>
+                </ul>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 14px 18px; border-left: 4px solid var(--blue);">
+                <div style="font-weight: 700; color: var(--blue-d); margin-bottom: 8px;">📤 Что сдавать в Moodle</div>
+                <ul style="margin-left: 20px; line-height: 1.7; font-size: 0.88rem;">
+                    <li style="margin-bottom: 4px;">После раздела <strong>1</strong> — PDF по разделу 1</li>
+                    <li style="margin-bottom: 4px;">После раздела <strong>2</strong> — PDF по разделу 2</li>
+                    <li style="margin-bottom: 4px;">После раздела <strong>3</strong> — PDF по разделу 3</li>
+                    <li style="margin-bottom: 4px;">После раздела <strong>4</strong> — PDF по разделу 4</li>
+                    <li style="margin-bottom: 4px;">После раздела <strong>5</strong> — PDF по разделу 5</li>
+                    <li style="margin-bottom: 4px;">В конце курса — <strong>итоговый PDF всей тетради</strong> (одним файлом)</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 14px; font-size: 0.85rem; color: var(--ink-soft); text-align: center; font-style: italic;">
+                Удачи! Если что-то непонятно — задавайте вопросы в чате курса.
+            </p>
+        </div>
+
+        <div class="card">
+            <div class="card-title">👤 Данные слушателя</div>
+            <div class="field-row">
+                <div class="field">
+                    <label>ФИО</label>
+                    <input type="text" data-field="fio" placeholder="Иванова Анна Сергеевна">
+                </div>
+                <div class="field">
+                    <label>Организация</label>
+                    <input type="text" data-field="org" placeholder="БПОУ ВО «Вологодский аграрно-экономический колледж»">
+                </div>
+            </div>
+            <div class="field-row">
+                <div class="field">
+                    <label>Дисциплина / специальность</label>
+                    <input type="text" data-field="discipline" placeholder="Ветеринария">
+                </div>
+                <div class="field">
+                    <label>Дата заполнения</label>
+                    <input type="date" data-field="date">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🎯 Входной контроль</div>
+            <div class="card-subtitle">
+                Ответьте на вопросы, чтобы определить ваш стартовый уровень. Результат не влияет на итоговую оценку — это точка отсчёта.
+            </div>
+
+            <div class="quiz-block" data-quiz="entry" data-q="1" data-answer="1">
+                <div class="quiz-q">1. Что такое педагогический дизайн?</div>
+                <label class="quiz-option"><input type="radio" name="eq1" value="0"> Украшение класса наглядными материалами</label>
+                <label class="quiz-option"><input type="radio" name="eq1" value="1"> Системное проектирование учебного опыта для достижения целей</label>
+                <label class="quiz-option"><input type="radio" name="eq1" value="2"> Использование компьютеров на занятии</label>
+                <label class="quiz-option"><input type="radio" name="eq1" value="3"> Метод проведения лекций</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="entry" data-q="2" data-answer="2">
+                <div class="quiz-q">2. Сколько уровней в таксономии Блума?</div>
+                <label class="quiz-option"><input type="radio" name="eq2" value="0"> 3</label>
+                <label class="quiz-option"><input type="radio" name="eq2" value="1"> 4</label>
+                <label class="quiz-option"><input type="radio" name="eq2" value="2"> 6</label>
+                <label class="quiz-option"><input type="radio" name="eq2" value="3"> 8</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="entry" data-q="3" data-answer="1">
+                <div class="quiz-q">3. Что такое промпт?</div>
+                <label class="quiz-option"><input type="radio" name="eq3" value="0"> Название программы для рисования</label>
+                <label class="quiz-option"><input type="radio" name="eq3" value="1"> Текстовый запрос к ИИ для получения результата</label>
+                <label class="quiz-option"><input type="radio" name="eq3" value="2"> Тип компьютерной мыши</label>
+                <label class="quiz-option"><input type="radio" name="eq3" value="3"> Формат файла для презентации</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="entry" data-q="4" data-answer="2">
+                <div class="quiz-q">4. Четыре этапа цикла Колба — это:</div>
+                <label class="quiz-option"><input type="radio" name="eq4" value="0"> Чтение → письмо → счёт → игра</label>
+                <label class="quiz-option"><input type="radio" name="eq4" value="1"> Лекция → практика → экзамен → зачёт</label>
+                <label class="quiz-option"><input type="radio" name="eq4" value="2"> Опыт → рефлексия → осмысление → применение</label>
+                <label class="quiz-option"><input type="radio" name="eq4" value="3"> План → реализация → контроль → коррекция</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="entry" data-q="5" data-answer="3">
+                <div class="quiz-q">5. Можно ли использовать ИИ для создания тестов?</div>
+                <label class="quiz-option"><input type="radio" name="eq5" value="0"> Нет, это запрещено</label>
+                <label class="quiz-option"><input type="radio" name="eq5" value="1"> Да, но только на английском языке</label>
+                <label class="quiz-option"><input type="radio" name="eq5" value="2"> Да, без проверки и редактирования</label>
+                <label class="quiz-option"><input type="radio" name="eq5" value="3"> Да, с обязательной проверкой фактов и адаптацией</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-primary btn-sm" data-check-quiz="entry">✔ Проверить ответы</button>
+                <button class="btn btn-outline btn-sm" data-clear-quiz="entry">↻ Очистить</button>
+            </div>
+            <div class="quiz-result" data-result="entry"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💭 Что вы ждёте от курса?</div>
+            <div class="field">
+                <label>Ваши ожидания <span class="hint">(2–3 предложения)</span></label>
+                <textarea data-field="expectations" rows="3" placeholder="Чему хотите научиться, какие задачи решить..."></textarea>
+            </div>
+            <div class="field">
+                <label>Ваш опыт работы с ИИ <span class="hint">(что уже пробовали)</span></label>
+                <textarea data-field="ai_experience" rows="3" placeholder="Например: пробовал(а) ChatGPT для генерации текстов..."></textarea>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🖼️ Ваше фото или скриншот рабочего места <span class="hint">(опционально)</span></div>
+            <label class="img-upload">
+                📎 Нажмите, чтобы загрузить изображение
+                <input type="file" accept="image/*" data-image="photo">
+            </label>
+            <div id="preview_photo"></div>
+        </div>
+    </div>
+
+    <!-- ============ ВКЛАДКА 1 ============ -->
+    <div class="tab-content" id="tab-t1">
+        <div class="export-bar">
+            <span class="lbl">Экспорт раздела:</span>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">📄 Сохранить в PDF</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 1.1. Аудит своего занятия</div>
+            <div class="card-subtitle">Возьмите любое занятие, которое вы проводили в последнее время, и ответьте на три вопроса педагогического дизайна.</div>
+
+            <div class="field">
+                <label>Тема занятия</label>
+                <input type="text" data-field="audit_topic" placeholder="Например: Диагностика пироплазмоза у собак">
+            </div>
+            <div class="field">
+                <label>1. Какова была цель занятия? <span class="hint">(чему должны были научиться студенты)</span></label>
+                <textarea data-field="audit_goal" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>2. Какие методы и формы вы использовали?</label>
+                <textarea data-field="audit_methods" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>3. Как вы проверяли, что цель достигнута?</label>
+                <textarea data-field="audit_check" rows="3"></textarea>
+            </div>
+            <div class="field">
+                <label>Что бы вы изменили, если бы проектировали заново?</label>
+                <textarea data-field="audit_improve" rows="3"></textarea>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 1.2. Таксономия Блума: трансформация задания</div>
+            <div class="card-subtitle">Возьмите простое задание по вашей дисциплине и преобразуйте его в задания для каждого уровня таксономии Блума.</div>
+
+            <div class="field"><label>Исходное задание (уровень «Знание»)</label><textarea data-field="bloom_source" rows="2"></textarea></div>
+            <div class="field"><label>Понимание</label><textarea data-field="bloom_ponimanie" rows="2"></textarea></div>
+            <div class="field"><label>Применение</label><textarea data-field="bloom_primenenie" rows="2"></textarea></div>
+            <div class="field"><label>Анализ</label><textarea data-field="bloom_analiz" rows="2"></textarea></div>
+            <div class="field"><label>Синтез</label><textarea data-field="bloom_sintez" rows="2"></textarea></div>
+            <div class="field"><label>Оценка</label><textarea data-field="bloom_ocenka" rows="2"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 1.3. Цикл Колба для вашего занятия</div>
+            <div class="field"><label>Этап «Опыт»</label><textarea data-field="kolb_opyt" rows="3"></textarea></div>
+            <div class="field"><label>Этап «Рефлексия»</label><textarea data-field="kolb_reflex" rows="3"></textarea></div>
+            <div class="field"><label>Этап «Осмысление»</label><textarea data-field="kolb_osmysl" rows="3"></textarea></div>
+            <div class="field"><label>Этап «Применение»</label><textarea data-field="kolb_primen" rows="3"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 1.4. Матрица планирования</div>
+            <div class="field"><label>Опыт + Знание / Понимание</label><textarea data-field="matrix_1" rows="2"></textarea></div>
+            <div class="field"><label>Опыт + Применение</label><textarea data-field="matrix_2" rows="2"></textarea></div>
+            <div class="field"><label>Рефлексия + Понимание / Анализ</label><textarea data-field="matrix_3" rows="2"></textarea></div>
+            <div class="field"><label>Осмысление + Знание / Понимание</label><textarea data-field="matrix_4" rows="2"></textarea></div>
+            <div class="field"><label>Применение + Применение / Анализ / Оценка</label><textarea data-field="matrix_5" rows="2"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✅ Проверочный тест по разделу 1</div>
+
+            <div class="quiz-block" data-quiz="quiz1" data-q="1" data-answer="2">
+                <div class="quiz-q">1. Какой вопрос НЕ относится к педагогическому дизайну?</div>
+                <label class="quiz-option"><input type="radio" name="q1_1" value="0"> Куда мы идём?</label>
+                <label class="quiz-option"><input type="radio" name="q1_1" value="1"> Как мы туда придём?</label>
+                <label class="quiz-option"><input type="radio" name="q1_1" value="2"> Сколько человек в группе?</label>
+                <label class="quiz-option"><input type="radio" name="q1_1" value="3"> Как мы узнаем, что пришли?</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz1" data-q="2" data-answer="0">
+                <div class="quiz-q">2. Какой уровень таксономии Блума самый высокий?</div>
+                <label class="quiz-option"><input type="radio" name="q1_2" value="0"> Оценка</label>
+                <label class="quiz-option"><input type="radio" name="q1_2" value="1"> Синтез</label>
+                <label class="quiz-option"><input type="radio" name="q1_2" value="2"> Анализ</label>
+                <label class="quiz-option"><input type="radio" name="q1_2" value="3"> Применение</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz1" data-q="3" data-answer="1">
+                <div class="quiz-q">3. С какого этапа начинается цикл Колба?</div>
+                <label class="quiz-option"><input type="radio" name="q1_3" value="0"> Осмысление</label>
+                <label class="quiz-option"><input type="radio" name="q1_3" value="1"> Опыт</label>
+                <label class="quiz-option"><input type="radio" name="q1_3" value="2"> Рефлексия</label>
+                <label class="quiz-option"><input type="radio" name="q1_3" value="3"> Применение</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz1" data-q="4" data-answer="3">
+                <div class="quiz-q">4. Какой уровень НЕ входит в таксономию Блума?</div>
+                <label class="quiz-option"><input type="radio" name="q1_4" value="0"> Знание</label>
+                <label class="quiz-option"><input type="radio" name="q1_4" value="1"> Понимание</label>
+                <label class="quiz-option"><input type="radio" name="q1_4" value="2"> Анализ</label>
+                <label class="quiz-option"><input type="radio" name="q1_4" value="3"> Мотивация</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz1" data-q="5" data-answer="0">
+                <div class="quiz-q">5. Для чего нужна Матрица планирования?</div>
+                <label class="quiz-option"><input type="radio" name="q1_5" value="0"> Чтобы объединить этапы Колба и уровни Блума</label>
+                <label class="quiz-option"><input type="radio" name="q1_5" value="1"> Чтобы распечатать расписание</label>
+                <label class="quiz-option"><input type="radio" name="q1_5" value="2"> Чтобы вести учёт посещаемости</label>
+                <label class="quiz-option"><input type="radio" name="q1_5" value="3"> Чтобы проверять домашние задания</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-primary btn-sm" data-check-quiz="quiz1">✔ Проверить</button>
+                <button class="btn btn-outline btn-sm" data-clear-quiz="quiz1">↻ Очистить</button>
+            </div>
+            <div class="quiz-result" data-result="quiz1"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💭 Рефлексия по разделу 1</div>
+            <div class="field"><label>Что было самым полезным?</label><textarea data-field="refl1_useful" rows="2"></textarea></div>
+            <div class="field"><label>Что осталось непонятным?</label><textarea data-field="refl1_unclear" rows="2"></textarea></div>
+            <div class="field"><label>Как вы примените это в своей практике?</label><textarea data-field="refl1_apply" rows="2"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🖼️ Загрузите свою матрицу планирования <span class="hint">(фото или скриншот)</span></div>
+            <label class="img-upload">
+                📎 Загрузить изображение
+                <input type="file" accept="image/*" data-image="matrix_img">
+            </label>
+            <div id="preview_matrix_img"></div>
+        </div>
+    </div>
+
+    <!-- ============ ВКЛАДКА 2 ============ -->
+    <div class="tab-content" id="tab-t2">
+        <div class="export-bar">
+            <span class="lbl">Экспорт раздела:</span>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">📄 Сохранить в PDF</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 2.2. Знакомство с ИИ-инструментами</div>
+            <div class="card-subtitle">Зарегистрируйтесь в 2–3 сервисах и попробуйте каждый. Зафиксируйте результат.</div>
+
+            <div class="field"><label>Инструмент 1 (текстовый ИИ)</label><input type="text" data-field="ai_tool1" placeholder="Например: YandexGPT"></div>
+            <div class="field"><label>Что пробовали? Какой результат?</label><textarea data-field="ai_tool1_result" rows="3"></textarea></div>
+            <div class="field"><label>Инструмент 2 (изображения)</label><input type="text" data-field="ai_tool2" placeholder="Например: Kandinsky"></div>
+            <div class="field"><label>Что пробовали? Какой результат?</label><textarea data-field="ai_tool2_result" rows="3"></textarea></div>
+            <div class="field"><label>Инструмент 3 (по выбору)</label><input type="text" data-field="ai_tool3" placeholder="Например: GigaChat"></div>
+            <div class="field"><label>Что пробовали? Какой результат?</label><textarea data-field="ai_tool3_result" rows="3"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 2.3. Безопасность и этика</div>
+            <div class="card-subtitle">Составьте для своих студентов памятку по безопасному использованию ИИ.</div>
+
+            <div class="field"><label>Правило 1</label><input type="text" data-field="safety_1" placeholder="Например: не вводить персональные данные"></div>
+            <div class="field"><label>Правило 2</label><input type="text" data-field="safety_2"></div>
+            <div class="field"><label>Правило 3</label><input type="text" data-field="safety_3"></div>
+            <div class="field"><label>Правило 4</label><input type="text" data-field="safety_4"></div>
+            <div class="field"><label>Правило 5</label><input type="text" data-field="safety_5"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 2.4. Составление промптов</div>
+            <div class="card-subtitle">Составьте 5 промптов для своей дисциплины: тест, план занятия, изображение, памятка, кейс.</div>
+
+            <div class="field"><label>Промпт 1. Тест</label><textarea data-field="prompt_test" rows="3"></textarea></div>
+            <div class="field"><label>Промпт 2. План занятия</label><textarea data-field="prompt_plan" rows="3"></textarea></div>
+            <div class="field"><label>Промпт 3. Изображение</label><textarea data-field="prompt_image" rows="3"></textarea></div>
+            <div class="field"><label>Промпт 4. Памятка для студента</label><textarea data-field="prompt_memo" rows="3"></textarea></div>
+            <div class="field"><label>Промпт 5. Кейс / ситуационная задача</label><textarea data-field="prompt_case" rows="3"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✅ Проверочный тест по разделу 2</div>
+
+            <div class="quiz-block" data-quiz="quiz2" data-q="1" data-answer="3">
+                <div class="quiz-q">1. Какие данные НЕЛЬЗЯ загружать в открытые ИИ-сервисы?</div>
+                <label class="quiz-option"><input type="radio" name="q2_1" value="0"> Общие вопросы по теме</label>
+                <label class="quiz-option"><input type="radio" name="q2_1" value="1"> Учебные материалы</label>
+                <label class="quiz-option"><input type="radio" name="q2_1" value="2"> Схемы и иллюстрации</label>
+                <label class="quiz-option"><input type="radio" name="q2_1" value="3"> Персональные данные студентов</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz2" data-q="2" data-answer="1">
+                <div class="quiz-q">2. Что такое «галлюцинация» ИИ?</div>
+                <label class="quiz-option"><input type="radio" name="q2_2" value="0"> Сбой программы</label>
+                <label class="quiz-option"><input type="radio" name="q2_2" value="1"> Уверенный, но неверный ответ ИИ</label>
+                <label class="quiz-option"><input type="radio" name="q2_2" value="2"> Вирус в системе</label>
+                <label class="quiz-option"><input type="radio" name="q2_2" value="3"> Ошибка пользователя</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz2" data-q="3" data-answer="2">
+                <div class="quiz-q">3. Модель RCFT для промпта включает:</div>
+                <label class="quiz-option"><input type="radio" name="q2_3" value="0"> Результат, цель, формат, текст</label>
+                <label class="quiz-option"><input type="radio" name="q2_3" value="1"> Работа, контекст, файл, тема</label>
+                <label class="quiz-option"><input type="radio" name="q2_3" value="2"> Роль, контекст, формат, задача</label>
+                <label class="quiz-option"><input type="radio" name="q2_3" value="3"> Ресурс, цель, форма, требование</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz2" data-q="4" data-answer="0">
+                <div class="quiz-q">4. Что делать, если ИИ дал ссылку на несуществующий закон?</div>
+                <label class="quiz-option"><input type="radio" name="q2_4" value="0"> Проверить в официальном источнике</label>
+                <label class="quiz-option"><input type="radio" name="q2_4" value="1"> Использовать как есть</label>
+                <label class="quiz-option"><input type="radio" name="q2_4" value="2"> Удалить и забыть</label>
+                <label class="quiz-option"><input type="radio" name="q2_4" value="3"> Спросить у ИИ ещё раз</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz2" data-q="5" data-answer="2">
+                <div class="quiz-q">5. Какой ИИ-инструмент лучше для генерации изображений?</div>
+                <label class="quiz-option"><input type="radio" name="q2_5" value="0"> YandexGPT</label>
+                <label class="quiz-option"><input type="radio" name="q2_5" value="1"> DeepSeek</label>
+                <label class="quiz-option"><input type="radio" name="q2_5" value="2"> Kandinsky</label>
+                <label class="quiz-option"><input type="radio" name="q2_5" value="3"> GigaChat</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-primary btn-sm" data-check-quiz="quiz2">✔ Проверить</button>
+                <button class="btn btn-outline btn-sm" data-clear-quiz="quiz2">↻ Очистить</button>
+            </div>
+            <div class="quiz-result" data-result="quiz2"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💭 Рефлексия по разделу 2</div>
+            <div class="field"><label>Какой инструмент оказался наиболее полезным?</label><textarea data-field="refl2_useful" rows="2"></textarea></div>
+            <div class="field"><label>Что было сложным?</label><textarea data-field="refl2_hard" rows="2"></textarea></div>
+            <div class="field"><label>Какие риски вы видите для своей дисциплины?</label><textarea data-field="refl2_risks" rows="2"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🖼️ Пример вашего промпта и результата</div>
+            <label class="img-upload">
+                📎 Загрузить скриншот (промпт + ответ ИИ)
+                <input type="file" accept="image/*" data-image="prompt_img">
+            </label>
+            <div id="preview_prompt_img"></div>
+        </div>
+    </div>
+
+    <!-- ============ ВКЛАДКА 3 ============ -->
+    <div class="tab-content" id="tab-t3">
+        <div class="export-bar">
+            <span class="lbl">Экспорт раздела:</span>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">📄 Сохранить в PDF</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 3.1. Генерация текстов</div>
+            <div class="card-subtitle">Создайте с помощью ИИ три текстовых материала для своего занятия.</div>
+            <div class="field"><label>План занятия (результат ИИ)</label><textarea data-field="text_plan" rows="4"></textarea></div>
+            <div class="field"><label>Тест (10 вопросов)</label><textarea data-field="text_test" rows="4"></textarea></div>
+            <div class="field"><label>Рабочий лист для студентов</label><textarea data-field="text_worksheet" rows="4"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 3.2. Генерация изображений</div>
+            <div class="card-subtitle">Создайте 3 изображения по теме своего занятия. Зафиксируйте промпты и результат.</div>
+
+            <div class="field"><label>Изображение 1: промпт</label><textarea data-field="img1_prompt" rows="2"></textarea></div>
+            <label class="img-upload">
+                📎 Загрузить изображение 1
+                <input type="file" accept="image/*" data-image="img1">
+            </label>
+            <div id="preview_img1"></div>
+
+            <div class="field" style="margin-top:14px;"><label>Изображение 2: промпт</label><textarea data-field="img2_prompt" rows="2"></textarea></div>
+            <label class="img-upload">
+                📎 Загрузить изображение 2
+                <input type="file" accept="image/*" data-image="img2">
+            </label>
+            <div id="preview_img2"></div>
+
+            <div class="field" style="margin-top:14px;"><label>Изображение 3: промпт</label><textarea data-field="img3_prompt" rows="2"></textarea></div>
+            <label class="img-upload">
+                📎 Загрузить изображение 3
+                <input type="file" accept="image/*" data-image="img3">
+            </label>
+            <div id="preview_img3"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 3.3. Редактирование и адаптация</div>
+            <div class="field"><label>Что было (фрагмент ИИ)</label><textarea data-field="edit_before" rows="3"></textarea></div>
+            <div class="field"><label>Что стало (ваш вариант)</label><textarea data-field="edit_after" rows="3"></textarea></div>
+            <div class="field"><label>Почему изменили? Что добавили?</label><textarea data-field="edit_reason" rows="3"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 3.4. Комплект материалов к занятию</div>
+            <div class="field">
+                <label>Компоненты комплекта (отметьте готовые)</label>
+                <label class="check-row"><input type="checkbox" data-field="kit_plan"> План занятия</label>
+                <label class="check-row"><input type="checkbox" data-field="kit_presentation"> Презентация</label>
+                <label class="check-row"><input type="checkbox" data-field="kit_images"> Изображения (5–10)</label>
+                <label class="check-row"><input type="checkbox" data-field="kit_test"> Тест</label>
+                <label class="check-row"><input type="checkbox" data-field="kit_case"> Кейс</label>
+                <label class="check-row"><input type="checkbox" data-field="kit_checklist"> Чек-лист оценивания</label>
+            </div>
+            <div class="field"><label>Что ещё нужно создать?</label><textarea data-field="kit_todo" rows="3"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✅ Проверочный тест по разделу 3</div>
+
+            <div class="quiz-block" data-quiz="quiz3" data-q="1" data-answer="2">
+                <div class="quiz-q">1. Что обязательно нужно делать с текстом, сгенерированным ИИ?</div>
+                <label class="quiz-option"><input type="radio" name="q3_1" value="0"> Сразу использовать</label>
+                <label class="quiz-option"><input type="radio" name="q3_1" value="1"> Удалить и написать заново</label>
+                <label class="quiz-option"><input type="radio" name="q3_1" value="2"> Проверить факты и адаптировать</label>
+                <label class="quiz-option"><input type="radio" name="q3_1" value="3"> Перевести на английский</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz3" data-q="2" data-answer="0">
+                <div class="quiz-q">2. Какой формат изображения лучше для презентации?</div>
+                <label class="quiz-option"><input type="radio" name="q3_2" value="0"> 16:9</label>
+                <label class="quiz-option"><input type="radio" name="q3_2" value="1"> 4:3</label>
+                <label class="quiz-option"><input type="radio" name="q3_2" value="2"> Квадратный</label>
+                <label class="quiz-option"><input type="radio" name="q3_2" value="3"> Вертикальный</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz3" data-q="3" data-answer="3">
+                <div class="quiz-q">3. Что делать, если ИИ сгенерировал неправильный текст?</div>
+                <label class="quiz-option"><input type="radio" name="q3_3" value="0"> Оставить как есть</label>
+                <label class="quiz-option"><input type="radio" name="q3_3" value="1"> Удалить весь текст</label>
+                <label class="quiz-option"><input type="radio" name="q3_3" value="2"> Перегенерировать без изменений</label>
+                <label class="quiz-option"><input type="radio" name="q3_3" value="3"> Исправить вручную и адаптировать</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz3" data-q="4" data-answer="1">
+                <div class="quiz-q">4. Что такое «рабочий лист»?</div>
+                <label class="quiz-option"><input type="radio" name="q3_4" value="0"> Список сотрудников</label>
+                <label class="quiz-option"><input type="radio" name="q3_4" value="1"> Раздаточный материал с заданиями для студента</label>
+                <label class="quiz-option"><input type="radio" name="q3_4" value="2"> Документ для отчётности</label>
+                <label class="quiz-option"><input type="radio" name="q3_4" value="3"> Таблица оценок</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz3" data-q="5" data-answer="0">
+                <div class="quiz-q">5. Какой единый стиль материалов важен?</div>
+                <label class="quiz-option"><input type="radio" name="q3_5" value="0"> Цвета, шрифты, макеты, подписи</label>
+                <label class="quiz-option"><input type="radio" name="q3_5" value="1"> Только шрифты</label>
+                <label class="quiz-option"><input type="radio" name="q3_5" value="2"> Только цвета</label>
+                <label class="quiz-option"><input type="radio" name="q3_5" value="3"> Только макеты</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-primary btn-sm" data-check-quiz="quiz3">✔ Проверить</button>
+                <button class="btn btn-outline btn-sm" data-clear-quiz="quiz3">↻ Очистить</button>
+            </div>
+            <div class="quiz-result" data-result="quiz3"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💭 Рефлексия по разделу 3</div>
+            <div class="field"><label>Что оказалось сложнее: генерация или редактирование?</label><textarea data-field="refl3_hard" rows="2"></textarea></div>
+            <div class="field"><label>Сколько времени сэкономил ИИ?</label><textarea data-field="refl3_time" rows="2"></textarea></div>
+        </div>
+    </div>
+
+    <!-- ============ ВКЛАДКА 4 ============ -->
+    <div class="tab-content" id="tab-t4">
+        <div class="export-bar">
+            <span class="lbl">Экспорт раздела:</span>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">📄 Сохранить в PDF</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 4.1. Знакомство с конструкторами «ВетСим»</div>
+            <div class="card-subtitle">Выберите 3 конструктора, которые вы будете использовать в своём проекте.</div>
+
+            <div class="field"><label>Конструктор 1</label><input type="text" data-field="constr1" placeholder="Например: Конструктор тестов"></div>
+            <div class="field"><label>Для чего будете использовать</label><textarea data-field="constr1_use" rows="2"></textarea></div>
+            <div class="field"><label>Конструктор 2</label><input type="text" data-field="constr2"></div>
+            <div class="field"><label>Для чего будете использовать</label><textarea data-field="constr2_use" rows="2"></textarea></div>
+            <div class="field"><label>Конструктор 3</label><input type="text" data-field="constr3"></div>
+            <div class="field"><label>Для чего будете использовать</label><textarea data-field="constr3_use" rows="2"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 4.2. Тест и задание на соответствие</div>
+            <div class="field"><label>Ссылка на тест (HTML)</label><input type="text" data-field="link_test" placeholder="Ссылка или QR-код"></div>
+            <div class="field"><label>Ссылка на задание на соответствие</label><input type="text" data-field="link_match"></div>
+            <div class="field"><label>Что было сложнее всего?</label><textarea data-field="constr_hard" rows="2"></textarea></div>
+            <label class="img-upload">
+                📎 Загрузить скриншот теста
+                <input type="file" accept="image/*" data-image="test_img">
+            </label>
+            <div id="preview_test_img"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 4.3. Тренажёр с метками</div>
+            <div class="field"><label>Тема тренажёра</label><input type="text" data-field="labels_topic"></div>
+            <div class="field"><label>Ссылка на тренажёр</label><input type="text" data-field="link_labels"></div>
+            <div class="field"><label>Какие структуры подписаны (5–10 меток)?</label><textarea data-field="labels_list" rows="3"></textarea></div>
+            <label class="img-upload">
+                📎 Загрузить скриншот тренажёра с метками
+                <input type="file" accept="image/*" data-image="labels_img">
+            </label>
+            <div id="preview_labels_img"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 4.4. Комплексный тренажёр</div>
+            <div class="field"><label>Ссылка на комплексный тренажёр</label><input type="text" data-field="link_complex"></div>
+            <div class="field"><label>Какие вкладки входят в тренажёр?</label><textarea data-field="complex_tabs" rows="3"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✅ Проверочный тест по разделу 4</div>
+
+            <div class="quiz-block" data-quiz="quiz4" data-q="1" data-answer="1">
+                <div class="quiz-q">1. Работают ли тренажёры «ВетСим» без интернета?</div>
+                <label class="quiz-option"><input type="radio" name="q4_1" value="0"> Нет, только онлайн</label>
+                <label class="quiz-option"><input type="radio" name="q4_1" value="1"> Да, экспортированные HTML-файлы работают офлайн</label>
+                <label class="quiz-option"><input type="radio" name="q4_1" value="2"> Только с VPN</label>
+                <label class="quiz-option"><input type="radio" name="q4_1" value="3"> Только в Moodle</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz4" data-q="2" data-answer="2">
+                <div class="quiz-q">2. Что такое комплексный тренажёр?</div>
+                <label class="quiz-option"><input type="radio" name="q4_2" value="0"> Одна схема</label>
+                <label class="quiz-option"><input type="radio" name="q4_2" value="1"> Один тест</label>
+                <label class="quiz-option"><input type="radio" name="q4_2" value="2"> Объединение нескольких заданий в один HTML-файл</label>
+                <label class="quiz-option"><input type="radio" name="q4_2" value="3"> Презентация</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz4" data-q="3" data-answer="0">
+                <div class="quiz-q">3. Сколько типов вопросов поддерживает Конструктор тестов?</div>
+                <label class="quiz-option"><input type="radio" name="q4_3" value="0"> 4 (одиночный, множественный, текстовый, сопоставление)</label>
+                <label class="quiz-option"><input type="radio" name="q4_3" value="1"> 2</label>
+                <label class="quiz-option"><input type="radio" name="q4_3" value="2"> 6</label>
+                <label class="quiz-option"><input type="radio" name="q4_3" value="3"> 1</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz4" data-q="4" data-answer="3">
+                <div class="quiz-q">4. Где хранятся метки на изображениях в тренажёрах «ВетСим»?</div>
+                <label class="quiz-option"><input type="radio" name="q4_4" value="0"> В отдельном файле на сервере</label>
+                <label class="quiz-option"><input type="radio" name="q4_4" value="1"> В настройках браузера</label>
+                <label class="quiz-option"><input type="radio" name="q4_4" value="2"> В базе данных</label>
+                <label class="quiz-option"><input type="radio" name="q4_4" value="3"> Внутри HTML-файла тренажёра</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz4" data-q="5" data-answer="1">
+                <div class="quiz-q">5. Что можно экспортировать из Конструктора тестов?</div>
+                <label class="quiz-option"><input type="radio" name="q4_5" value="0"> Только текст</label>
+                <label class="quiz-option"><input type="radio" name="q4_5" value="1"> HTML (для студентов) и JSON (для редактирования)</label>
+                <label class="quiz-option"><input type="radio" name="q4_5" value="2"> Только PDF</label>
+                <label class="quiz-option"><input type="radio" name="q4_5" value="3"> Только DOCX</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-primary btn-sm" data-check-quiz="quiz4">✔ Проверить</button>
+                <button class="btn btn-outline btn-sm" data-clear-quiz="quiz4">↻ Очистить</button>
+            </div>
+            <div class="quiz-result" data-result="quiz4"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">💭 Рефлексия по разделу 4</div>
+            <div class="field"><label>Какой конструктор вам понравился больше всего?</label><textarea data-field="refl4_like" rows="2"></textarea></div>
+            <div class="field"><label>Что было сложно?</label><textarea data-field="refl4_hard" rows="2"></textarea></div>
+        </div>
+    </div>
+
+    <!-- ============ ВКЛАДКА 5 ============ -->
+    <div class="tab-content" id="tab-t5">
+        <div class="export-bar">
+            <span class="lbl">Экспорт раздела:</span>
+            <button class="btn btn-primary btn-sm" onclick="window.print()">📄 Сохранить в PDF</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📌 5. Проектирование занятия «под ключ»</div>
+            <div class="card-subtitle">Ваш итоговый проект. Заполните все разделы.</div>
+
+            <div class="field"><label>Тема занятия</label><input type="text" data-field="project_topic"></div>
+            <div class="field"><label>Цель занятия</label><textarea data-field="project_goal" rows="2"></textarea></div>
+            <div class="field"><label>Планируемые результаты</label><textarea data-field="project_results" rows="2"></textarea></div>
+            <div class="field"><label>Структура занятия (этапы, время)</label><textarea data-field="project_structure" rows="4"></textarea></div>
+            <div class="field"><label>Использованные ИИ-инструменты</label><textarea data-field="project_ai" rows="2"></textarea></div>
+            <div class="field"><label>Использованные конструкторы</label><textarea data-field="project_constructors" rows="2"></textarea></div>
+            <label class="img-upload">
+                📎 Загрузить фото / скриншот вашего занятия
+                <input type="file" accept="image/*" data-image="project_img">
+            </label>
+            <div id="preview_project_img"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📁 Материалы для ФОС</div>
+            <div class="field"><label>Какие КИМ вы подготовили для ФОС?</label><textarea data-field="fos_kim" rows="3"></textarea></div>
+            <div class="field"><label>Какие критерии оценивания разработали?</label><textarea data-field="fos_criteria" rows="3"></textarea></div>
+            <div class="field"><label>Какие эталоны ответов подготовили?</label><textarea data-field="fos_answers" rows="3"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">✅ Итоговый тест по разделу 5</div>
+
+            <div class="quiz-block" data-quiz="quiz5" data-q="1" data-answer="1">
+                <div class="quiz-q">1. Что входит в итоговый проект?</div>
+                <label class="quiz-option"><input type="radio" name="q5_1" value="0"> Только план занятия</label>
+                <label class="quiz-option"><input type="radio" name="q5_1" value="1"> Комплект материалов + тренажёры + ФОС</label>
+                <label class="quiz-option"><input type="radio" name="q5_1" value="2"> Только тест</label>
+                <label class="quiz-option"><input type="radio" name="q5_1" value="3"> Только презентация</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz5" data-q="2" data-answer="2">
+                <div class="quiz-q">2. Что такое КИМ?</div>
+                <label class="quiz-option"><input type="radio" name="q5_2" value="0"> Название конструктора</label>
+                <label class="quiz-option"><input type="radio" name="q5_2" value="1"> Тип браузера</label>
+                <label class="quiz-option"><input type="radio" name="q5_2" value="2"> Контрольно-измерительные материалы</label>
+                <label class="quiz-option"><input type="radio" name="q5_2" value="3"> Формат файла</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz5" data-q="3" data-answer="0">
+                <div class="quiz-q">3. Какие критерии оценивания нужны для ФОС?</div>
+                <label class="quiz-option"><input type="radio" name="q5_3" value="0"> Чёткие, измеримые, с эталонами ответов</label>
+                <label class="quiz-option"><input type="radio" name="q5_3" value="1"> Примерные, «на глаз»</label>
+                <label class="quiz-option"><input type="radio" name="q5_3" value="2"> Только количество баллов</label>
+                <label class="quiz-option"><input type="radio" name="q5_3" value="3"> Не нужны</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz5" data-q="4" data-answer="3">
+                <div class="quiz-q">4. Что делать после защиты проекта?</div>
+                <label class="quiz-option"><input type="radio" name="q5_4" value="0"> Забыть о нём</label>
+                <label class="quiz-option"><input type="radio" name="q5_4" value="1"> Удалить все файлы</label>
+                <label class="quiz-option"><input type="radio" name="q5_4" value="2"> Отдать коллегам</label>
+                <label class="quiz-option"><input type="radio" name="q5_4" value="3"> Внедрить в практику, доработать, поделиться</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-block" data-quiz="quiz5" data-q="5" data-answer="1">
+                <div class="quiz-q">5. Какие форматы можно использовать для экспорта тренажёров?</div>
+                <label class="quiz-option"><input type="radio" name="q5_5" value="0"> Только PDF</label>
+                <label class="quiz-option"><input type="radio" name="q5_5" value="1"> HTML (для студентов), JSON (для редактирования)</label>
+                <label class="quiz-option"><input type="radio" name="q5_5" value="2"> Только DOCX</label>
+                <label class="quiz-option"><input type="radio" name="q5_5" value="3"> Только изображения</label>
+                <div class="quiz-feedback"></div>
+            </div>
+
+            <div class="quiz-actions">
+                <button class="btn btn-primary btn-sm" data-check-quiz="quiz5">✔ Проверить</button>
+                <button class="btn btn-outline btn-sm" data-clear-quiz="quiz5">↻ Очистить</button>
+            </div>
+            <div class="quiz-result" data-result="quiz5"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">📝 Анкета удовлетворённости курсом</div>
+            <div class="card-subtitle">Заполняется после защиты проекта.</div>
+
+            <div class="field">
+                <label>1. Насколько курс был полезен для вашей практики? (1–10)</label>
+                <input type="number" data-field="sat_useful" min="1" max="10" placeholder="1–10">
+            </div>
+            <div class="field"><label>2. Что было самым ценным?</label><textarea data-field="sat_value" rows="3"></textarea></div>
+            <div class="field"><label>3. Что оказалось сложным?</label><textarea data-field="sat_hard" rows="3"></textarea></div>
+            <div class="field"><label>4. Какие темы хотели бы углубить?</label><textarea data-field="sat_deepen" rows="3"></textarea></div>
+            <div class="field">
+                <label>5. Будете ли использовать ИИ и конструкторы в работе?</label>
+                <select data-field="sat_use">
+                    <option value="">— выберите —</option>
+                    <option value="Да, регулярно">Да, регулярно</option>
+                    <option value="Иногда">Иногда</option>
+                    <option value="Пока не уверен(а)">Пока не уверен(а)</option>
+                    <option value="Нет">Нет</option>
+                </select>
+            </div>
+            <div class="field"><label>6. Ваши предложения по улучшению курса</label><textarea data-field="sat_suggestions" rows="3"></textarea></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🎯 Итоговая рефлексия</div>
+            <div class="field"><label>Чему вы научились на курсе?</label><textarea data-field="final_learn" rows="3"></textarea></div>
+            <div class="field"><label>Что изменится в вашей практике?</label><textarea data-field="final_change" rows="3"></textarea></div>
+            <div class="field"><label>Что будете делать дальше?</label><textarea data-field="final_next" rows="3"></textarea></div>
+        </div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const STORAGE_KEY = 'vetsim_workbook_v3';
+const IMG_KEY = 'vetsim_workbook_images_v3';
+const MAX_DIMENSION = 1280;   // максимальная сторона изображения после сжатия
+const JPEG_QUALITY = 0.75;    // качество JPEG (0–1)
+const MAX_FILE_SIZE_MB = 5;   // предупреждение при загрузке больших файлов
+
+// ============ ДАТА ============
+function autoDate() {
+    const dateEl = document.querySelector('[data-field="date"]');
+    if (!dateEl) return;
+    if (!dateEl.value) {
+        const today = new Date().toISOString().slice(0, 10);
+        dateEl.value = today;
+    }
+}
+
+// ============ СЖАТИЕ ИЗОБРАЖЕНИЙ ============
+/**
+ * Сжимает изображение: ужимает до MAX_DIMENSION по длинной стороне,
+ * сохраняет в JPEG с указанным качеством.
+ * Возвращает Promise с dataURL.
+ */
+function compressImage(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+            const img = new Image();
+            img.onload = () => {
+                let { width, height } = img;
+
+                // Пропорциональное уменьшение
+                if (width > MAX_DIMENSION || height > MAX_DIMENSION) {
+                    if (width >= height) {
+                        height = Math.round(height * (MAX_DIMENSION / width));
+                        width = MAX_DIMENSION;
+                    } else {
+                        width = Math.round(width * (MAX_DIMENSION / height));
+                        height = MAX_DIMENSION;
+                    }
+                }
+
+                // Рисуем на canvas
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+
+                // Белый фон (для прозрачных PNG)
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, width, height);
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Экспорт в JPEG
+                const compressed = canvas.toDataURL('image/jpeg', JPEG_QUALITY);
+
+                // Размер в КБ
+                const sizeKB = Math.round((compressed.length - 'data:image/jpeg;base64,'.length) * 0.75 / 1024);
+                resolve({ dataUrl: compressed, sizeKB, width, height });
+            };
+            img.onerror = () => reject(new Error('Не удалось прочитать изображение'));
+            img.src = ev.target.result;
+        };
+        reader.onerror = () => reject(new Error('Ошибка чтения файла'));
+        reader.readAsDataURL(file);
+    });
+}
+
+// ============ ИЗОБРАЖЕНИЯ ============
+function loadImages() {
+    try {
+        const raw = localStorage.getItem(IMG_KEY);
+        if (!raw) return {};
+        return JSON.parse(raw);
+    } catch (e) { return {}; }
+}
+
+function saveImages(images) {
+    try {
+        localStorage.setItem(IMG_KEY, JSON.stringify(images));
+    } catch (e) {
+        console.warn('Images too large for localStorage');
+        showToast('⚠️ Хранилище переполнено. Скачайте PDF и резервную копию.');
+    }
+}
+
+function renderImagePreview(key, dataUrl, sizeKB) {
+    const preview = document.getElementById('preview_' + key);
+    if (!preview) return;
+    if (!dataUrl) {
+        preview.innerHTML = '';
+        return;
+    }
+    const sizeInfo = sizeKB ? `<span class="img-size-info">Размер после сжатия: ~${sizeKB} КБ</span>` : '';
+    preview.innerHTML = `
+        <div class="img-preview">
+            <img src="${dataUrl}" alt="Загруженное изображение">
+            <button class="img-remove" data-img-remove="${key}" title="Удалить">✕</button>
+        </div>
+        ${sizeInfo}
+    `;
+    const btn = preview.querySelector('[data-img-remove]');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            const images = loadImages();
+            delete images[key];
+            saveImages(images);
+            renderImagePreview(key, null);
+            showToast('Изображение удалено');
+        });
+    }
+}
+
+function initImageUploads() {
+    const images = loadImages();
+    Object.keys(images).forEach(key => {
+        const img = images[key];
+        renderImagePreview(key, img.dataUrl || img, img.sizeKB);
+    });
+
+    $$('input[data-image]').forEach(input => {
+        input.addEventListener('change', async e => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // Проверка размера исходного файла
+            if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                if (!confirm(`Файл больше ${MAX_FILE_SIZE_MB} МБ. Он будет сжат автоматически до ~1280 px по длинной стороне. Продолжить?`)) {
+                    input.value = '';
+                    return;
+                }
+            }
+
+            try {
+                showToast('⏳ Сжимаем изображение...');
+                const result = await compressImage(file);
+                const key = input.dataset.image;
+                const imgs = loadImages();
+                imgs[key] = { dataUrl: result.dataUrl, sizeKB: result.sizeKB };
+                saveImages(imgs);
+                renderImagePreview(key, result.dataUrl, result.sizeKB);
+                showToast(`🖼️ Загружено: ${result.width}×${result.height}, ~${result.sizeKB} КБ`);
+            } catch (err) {
+                console.error(err);
+                showToast('❌ Ошибка загрузки изображения');
+            }
+            input.value = '';
+        });
+    });
+}
+
+// ============ ЗАГРУЗКА / СОХРАНЕНИЕ ДАННЫХ ============
+function loadSaved() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        Object.keys(data).forEach(key => {
+            const el = document.querySelector(`[data-field="${key}"]`);
+            if (!el) return;
+            if (el.type === 'checkbox') el.checked = data[key];
+            else el.value = data[key];
+        });
+    } catch (e) { console.warn('load error', e); }
+}
+
+function save() {
+    const data = {};
+    $$('[data-field]').forEach(el => {
+        const key = el.dataset.field;
+        if (el.type === 'checkbox') data[key] = el.checked;
+        else data[key] = el.value;
+    });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+    updateProgress();
+}
+
+// ============ ПРОГРЕСС ============
+function updateProgress() {
+    const fields = $$('[data-field]');
+    if (!fields.length) return;
+    let filled = 0;
+    fields.forEach(el => {
+        if (el.type === 'checkbox') { if (el.checked) filled++; }
+        else if (el.value && el.value.trim() !== '') filled++;
+    });
+    const pct = Math.round((filled / fields.length) * 100);
+    $('#progressFill').style.width = pct + '%';
+    $('#progressValue').textContent = pct + '%';
+
+    $$('.tab-btn').forEach(btn => {
+        const tabId = 'tab-' + btn.dataset.tab;
+        const tab = document.getElementById(tabId);
+        if (!tab) return;
+        const tabFields = tab.querySelectorAll('[data-field]');
+        let tabFilled = 0;
+        tabFields.forEach(el => {
+            if (el.type === 'checkbox') { if (el.checked) tabFilled++; }
+            else if (el.value && el.value.trim() !== '') tabFilled++;
+        });
+        btn.classList.toggle('completed', tabFields.length > 0 && tabFilled / tabFields.length >= 0.8);
+    });
+}
+
+// ============ ВКЛАДКИ ============
+$$('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        $$('.tab-btn').forEach(b => b.classList.remove('active'));
+        $$('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = document.getElementById('tab-' + btn.dataset.tab);
+        if (tab) tab.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+});
+
+// ============ ТЕСТЫ ============
+$$('[data-check-quiz]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const quizName = btn.dataset.checkQuiz;
+        const blocks = document.querySelectorAll(`[data-quiz="${quizName}"]`);
+        let correct = 0, total = 0;
+
+        blocks.forEach(block => {
+            const correctAnswer = block.dataset.answer;
+            const selected = block.querySelector('input[type="radio"]:checked');
+            total++;
+
+            block.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            const feedback = block.querySelector('.quiz-feedback');
+
+            if (!selected) {
+                if (feedback) {
+                    feedback.textContent = '⚠️ Ответ не выбран';
+                    feedback.className = 'quiz-feedback show err';
+                }
+                return;
+            }
+
+            if (selected.value === correctAnswer) {
+                correct++;
+                selected.parentElement.classList.add('correct');
+                if (feedback) {
+                    feedback.textContent = '✅ Верно!';
+                    feedback.className = 'quiz-feedback show ok';
+                }
+            } else {
+                selected.parentElement.classList.add('incorrect');
+                block.querySelectorAll('input[type="radio"]').forEach(r => {
+                    if (r.value === correctAnswer) r.parentElement.classList.add('correct');
+                });
+                if (feedback) {
+                    feedback.textContent = '❌ Неверно. Правильный ответ подсвечен зелёным.';
+                    feedback.className = 'quiz-feedback show err';
+                }
+            }
+        });
+
+        const result = document.querySelector(`[data-result="${quizName}"]`);
+        if (result) {
+            const pct = total > 0 ? Math.round((correct / total) * 100) : 0;
+            const pass = pct >= 70;
+            result.textContent = `Результат: ${correct} из ${total} (${pct}%) — ${pass ? '✅ зачёт' : '❌ попробуйте ещё раз'}`;
+            result.className = `quiz-result show ${pass ? 'pass' : 'fail'}`;
+        }
+        save();
+    });
+});
+
+$$('[data-clear-quiz]').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const quizName = btn.dataset.clearQuiz;
+        const blocks = document.querySelectorAll(`[data-quiz="${quizName}"]`);
+        blocks.forEach(block => {
+            block.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            block.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('correct', 'incorrect'));
+            const feedback = block.querySelector('.quiz-feedback');
+            if (feedback) feedback.className = 'quiz-feedback';
+        });
+        const result = document.querySelector(`[data-result="${quizName}"]`);
+        if (result) result.className = 'quiz-result';
+        save();
+    });
+});
+
+// ============ ПЕЧАТЬ ВСЕЙ ТЕТРАДИ ============
+$('#printAllBtn').addEventListener('click', () => {
+    // Помечаем все вкладки для печати
+    $$('.tab-content').forEach(tab => tab.classList.add('print-all'));
+    // Даём браузеру время применить стили
+    setTimeout(() => {
+        window.print();
+        // После печати убираем классы
+        setTimeout(() => {
+            $$('.tab-content').forEach(tab => tab.classList.remove('print-all'));
+        }, 500);
+    }, 100);
+});
+
+// ============ АВТОСОХРАНЕНИЕ ============
+document.addEventListener('input', e => {
+    if (e.target.matches('[data-field]')) {
+        clearTimeout(window._saveTimer);
+        window._saveTimer = setTimeout(save, 400);
+    }
+});
+document.addEventListener('change', e => {
+    if (e.target.matches('[data-field]')) save();
+});
+
+// ============ РЕЗЕРВНАЯ КОПИЯ (JSON) ============
+$('#saveJsonBtn').addEventListener('click', () => {
+    const data = {};
+    $$('[data-field]').forEach(el => {
+        const key = el.dataset.field;
+        if (el.type === 'checkbox') data[key] = el.checked;
+        else data[key] = el.value;
+    });
+    const images = loadImages();
+    const payload = { fields: data, images: images, version: 3 };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    const fio = data.fio ? data.fio.replace(/\s+/g, '_') : 'rabota';
+    link.download = `Тетрадь_${fio}_${new Date().toISOString().slice(0,10)}.json`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    showToast('💾 Резервная копия сохранена');
+});
+
+// ============ ВОССТАНОВЛЕНИЕ ИЗ JSON ============
+$('#loadJsonBtn').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+            try {
+                const parsed = JSON.parse(ev.target.result);
+                const data = parsed.fields || parsed;
+                const images = parsed.images || {};
+
+                Object.keys(data).forEach(key => {
+                    const el = document.querySelector(`[data-field="${key}"]`);
+                    if (!el) return;
+                    if (el.type === 'checkbox') el.checked = data[key];
+                    else el.value = data[key];
+                });
+
+                if (Object.keys(images).length) {
+                    saveImages(images);
+                    Object.keys(images).forEach(key => {
+                        const img = images[key];
+                        renderImagePreview(key, img.dataUrl || img, img.sizeKB);
+                    });
+                }
+
+                save();
+                showToast('📂 Данные восстановлены');
+            } catch (err) {
+                console.error(err);
+                showToast('❌ Ошибка чтения файла');
+            }
+        };
+        reader.readAsText(file);
+    };
+    input.click();
+});
+
+// ============ СБРОС ============
+$('#resetBtn').addEventListener('click', () => {
+    if (!confirm('Сбросить все ответы? Это действие нельзя отменить.')) return;
+    if (!confirm('Точно сбросить? Все данные будут удалены.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(IMG_KEY);
+    $$('[data-field]').forEach(el => {
+        if (el.type === 'checkbox') el.checked = false;
+        else el.value = '';
+    });
+    $$('.quiz-option').forEach(opt => opt.classList.remove('correct', 'incorrect'));
+    $$('.quiz-feedback').forEach(f => f.className = 'quiz-feedback');
+    $$('.quiz-result').forEach(r => r.className = 'quiz-result');
+    $$('[id^="preview_"]').forEach(p => p.innerHTML = '');
+    autoDate();
+    save();
+    updateProgress();
+    showToast('🗑️ Все данные сброшены');
+});
+
+// ============ TOAST ============
+function showToast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ============ ИНИЦИАЛИЗАЦИЯ ============
+document.addEventListener('DOMContentLoaded', () => {
+    loadSaved();
+    autoDate();
+    initImageUploads();
+    save();
+    updateProgress();
+});
+
+</script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Конструктор 1 промпта · ВетСим</title>
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --cream: #FDF8F0;
+    --white: #FFFFFF;
+    --bg-soft: #F4EFE4;
+    --blue: #2C7DA0;
+    --blue-d: #236B8A;
+    --blue-l: #D4E3ED;
+    --green: #6B9E6B;
+    --green-d: #5A865A;
+    --green-l: #D6E8D0;
+    --beige: #E8D9BE;
+    --beige-l: #F5EBD8;
+    --ink: #1A2A3A;
+    --ink-soft: #5F7C62;
+    --gray: #B0BC9C;
+    --danger: #D47A6A;
+    --danger-l: #FDE8E0;
+    --warn: #E8B84C;
+    --radius: 18px;
+    --shadow: 0 2px 12px rgba(80,60,30,0.06);
+}
+
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.55;
+    padding: 16px;
+    min-height: 100vh;
+}
+
+.container { max-width: 1200px; margin: 0 auto; }
+
+/* ===== Шапка ===== */
+.header {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+    margin-bottom: 16px;
+}
+.header .logo { font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 8px; }
+.header .logo .gradient {
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.header .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.btn {
+    background: var(--beige);
+    border: none;
+    padding: 9px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.15s;
+    white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); opacity: 0.9; }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: var(--blue-d); }
+.btn-success { background: var(--green); color: white; }
+.btn-success:hover { background: var(--green-d); }
+.btn-outline { background: transparent; border: 2px solid var(--beige); }
+.btn-outline:hover { background: var(--beige-l); }
+.btn-sm { padding: 6px 14px; font-size: 0.75rem; }
+.btn-lg { padding: 14px 32px; font-size: 1rem; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* ===== Инструкция сверху ===== */
+.intro {
+    background: linear-gradient(135deg, var(--blue-l), var(--beige-l));
+    border-radius: var(--radius);
+    padding: 20px 26px;
+    margin-bottom: 16px;
+    border-left: 5px solid var(--blue);
+}
+.intro h2 { font-size: 1.05rem; color: var(--blue-d); margin-bottom: 10px; }
+.intro p { font-size: 0.92rem; margin-bottom: 8px; }
+.intro ol { margin-left: 22px; font-size: 0.92rem; line-height: 1.7; }
+.intro li { margin-bottom: 4px; }
+
+/* ===== Двухколоночная сетка ===== */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+}
+
+/* ===== Карточки ===== */
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    border: 1px solid #E7EDE2;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+}
+.card-title {
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--blue);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #E7EDE2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ===== Поля ===== */
+.field { margin-bottom: 14px; display: flex; flex-direction: column; gap: 5px; }
+.field label {
+    font-weight: 600;
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.field .hint {
+    font-size: 0.72rem;
+    color: var(--gray);
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-left: 6px;
+}
+.field input[type="text"],
+.field input[type="number"],
+.field textarea,
+.field select {
+    padding: 10px 14px;
+    border: 1px solid #D9D0BD;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    background: var(--cream);
+    color: var(--ink);
+    outline: none;
+    transition: 0.15s;
+    width: 100%;
+}
+.field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--blue);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+.field textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+
+.field-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.field-row .field { flex: 1; min-width: 140px; }
+
+/* ===== Чек-боксы ===== */
+.check-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+}
+.check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--bg-soft);
+    border-radius: 10px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.15s;
+}
+.check-item:hover { background: var(--beige-l); }
+.check-item input[type="checkbox"] {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    accent-color: var(--green);
+    cursor: pointer;
+}
+
+/* ===== Предпросмотр ===== */
+.preview-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    border: 2px solid var(--green);
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    position: sticky;
+    top: 16px;
+}
+.preview-title {
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: var(--green-d);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--green-l);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.preview-title .status {
+    font-size: 0.72rem;
+    background: var(--green-l);
+    color: var(--green-d);
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+.preview-content {
+    background: var(--bg-soft);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 600px;
+    overflow-y: auto;
+    color: var(--ink);
+    border: 1px solid #E7EDE2;
+}
+.preview-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+
+/* ===== Toast ===== */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0;
+    transition: 0.3s;
+    z-index: 9999;
+    pointer-events: none;
+    max-width: 90%;
+    text-align: center;
+}
+.toast.show { opacity: 1; }
+
+/* ===== Печать ===== */
+@media print {
+    body { background: white; padding: 0; }
+    .header, .intro, .preview-actions, .btn { display: none !important; }
+    .grid { grid-template-columns: 1fr; }
+    .preview-card { border: 1px solid #999; box-shadow: none; position: static; }
+    .preview-content {
+        max-height: none;
+        overflow: visible;
+        border: 1px solid #ccc;
+        font-size: 10pt;
+    }
+    .card { box-shadow: none; border: 1px solid #ddd; }
+}
+
+@media (max-width: 700px) {
+    .card { padding: 16px 18px; }
+    .preview-card { padding: 16px 18px; }
+    .header { padding: 12px 16px; }
+    .btn { font-size: 0.75rem; padding: 7px 14px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Шапка -->
+    <div class="header">
+        <div class="logo">🛠️ <span class="gradient">Конструктор 1 промпта</span> · ВетСим</div>
+        <div class="actions">
+            <button class="btn btn-outline btn-sm" id="resetBtn">🗑️ Очистить</button>
+            <button class="btn btn-outline btn-sm" id="printBtn">📄 Сохранить в PDF</button>
+        </div>
+    </div>
+
+    <!-- Инструкция -->
+    <div class="intro">
+        <h2>📖 Как пользоваться конструктором</h2>
+        <p>Этот конструктор соберёт за вас большой, подробный промпт — инструкцию для ИИ. Заполните поля слева, и справа появится готовый текст, который можно скопировать в DeepSeek или другую нейросеть.</p>
+        <ol>
+            <li><strong>Заполните поля</strong> — как вас зовут, что вы преподаёте, какие задачи.</li>
+            <li><strong>Посмотрите предпросмотр</strong> справа — он собирается автоматически.</li>
+            <li><strong>Нажмите «📋 Скопировать промпт»</strong> — текст попадёт в буфер обмена.</li>
+            <li><strong>Откройте DeepSeek</strong> и вставьте промпт в поле чата (Ctrl+V или Cmd+V).</li>
+            <li><strong>Отправьте сообщение</strong> — ИИ представится и начнёт вам помогать.</li>
+        </ol>
+        <p style="margin-top: 10px; font-size: 0.85rem; color: var(--ink-soft);">
+            💡 <strong>Совет:</strong> чем подробнее вы заполните поля, тем точнее будет помогать ИИ.
+        </p>
+    </div>
+
+    <!-- Двухколоночная сетка -->
+    <div class="grid">
+
+        <!-- ============ ЛЕВАЯ КОЛОНКА — ФОРМА ============ -->
+        <div>
+
+            <div class="card">
+                <div class="card-title">👤 О вас</div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label>Как к вам обращаться</label>
+                        <input type="text" id="name" placeholder="Алла Сергеевна">
+                    </div>
+                    <div class="field">
+                        <label>Ваша роль</label>
+                        <input type="text" id="role" placeholder="преподаватель ветеринарных дисциплин СПО">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Специальность (ФГОС) <span class="hint">полное название</span></label>
+                    <input type="text" id="specialty" placeholder="36.02.01 «Ветеринария»">
+                </div>
+
+                <div class="field">
+                    <label>Дисциплины / МДК <span class="hint">через запятую</span></label>
+                    <textarea id="disciplines" rows="2" placeholder="Эпизоотология и инфекционные болезни, Зоогигиена и ветеринарная санитария"></textarea>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label>Курсы / группы</label>
+                        <input type="text" id="courses" placeholder="2–4 курс">
+                    </div>
+                    <div class="field">
+                        <label>Ваш опыт <span class="hint">как педагога</span></label>
+                        <select id="experience">
+                            <option value="начинающий преподаватель">начинающий преподаватель</option>
+                            <option value="преподаватель со стажем 1–3 года">преподаватель со стажем 1–3 года</option>
+                            <option value="опытный преподаватель">опытный преподаватель</option>
+                            <option value="практикующий специалист, недавно в преподавании">практикующий специалист, недавно в преподавании</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label>Ваш практический опыт вне преподавания <span class="hint">опционально</span></label>
+                    <textarea id="practice" rows="2" placeholder="Например: 5 лет работала ветеринарным врачом в клинике"></textarea>
+                </div>
+
+                <div class="field">
+                    <label>Ваш опыт работы с ИИ</label>
+                    <select id="ai_exp">
+                        <option value="я работаю с искусственным интеллектом впервые">работаю с ИИ впервые</option>
+                        <option value="я немного пробовал(а) ИИ, но не уверенно">немного пробовал(а), но не уверенно</option>
+                        <option value="я иногда использую ИИ в работе">иногда использую ИИ</option>
+                        <option value="я регулярно использую ИИ">регулярно использую ИИ</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Язык общения с ИИ</label>
+                    <select id="language">
+                        <option value="простым и понятным языком, без сложных терминов">простой и понятный</option>
+                        <option value="профессиональным языком, я готов(а) к терминам">профессиональный</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎯 Мои задачи на ближайшее время</div>
+                <div class="check-list">
+                    <label class="check-item"><input type="checkbox" class="task-check" value="Разработать УМК в соответствии с новым ФГОС 2025 года и рабочей программой" checked> Разработать УМК по новому ФГОС</label>
+                    <label class="check-item"><input type="checkbox" class="task-check" value="Продолжать занятия по старому учебному плану, используя современные подходы"> Вести занятия по старому плану с новыми подходами</label>
+                    <label class="check-item"><input type="checkbox" class="task-check" value="Научиться проектировать занятия на основе таксономии Блума (от знания к оценке)" checked> Проектировать занятия по таксономии Блума</label>
+                    <label class="check-item"><input type="checkbox" class="task-check" value="Сделать обучение практико-ориентированным, чтобы студенты видели связь с реальной практикой" checked> Сделать обучение практико-ориентированным</label>
+                    <label class="check-item"><input type="checkbox" class="task-check" value="Создавать современные учебные материалы: задания, кейсы, тесты, схемы, таблицы" checked> Создавать современные учебные материалы</label>
+                </div>
+                <div class="field" style="margin-top: 10px;">
+                    <label>Свои задачи <span class="hint">по одной в строке, опционально</span></label>
+                    <textarea id="custom_tasks" rows="2" placeholder="Например: подготовить открытое занятие к декабрю"></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🤝 Как ИИ может мне помогать</div>
+                <div class="check-list">
+                    <label class="check-item"><input type="checkbox" class="help-check" value="Разработка УМК: объясняй структуру по новому ФГОС, помогай структурировать рабочую программу, проверяй логику и полноту материалов" checked> Разработка УМК</label>
+                    <label class="check-item"><input type="checkbox" class="help-check" value="Проектирование занятий: помогай формулировать измеримые цели, предлагай задания для каждого уровня таксономии Блума, подсказывай связь теории с практикой" checked> Проектирование занятий</label>
+                    <label class="check-item"><input type="checkbox" class="help-check" value="Создание учебных материалов: генерируй кейсы, тесты, ситуационные задачи, схемы, таблицы, алгоритмы; предлагай идеи для практических работ и проектов" checked> Создание учебных материалов</label>
+                    <label class="check-item"><input type="checkbox" class="help-check" value="Методическая поддержка: отвечай на вопросы, предлагай современные подходы, помогай адаптировать материалы под разный уровень студентов" checked> Методическая поддержка</label>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📏 Правила работы со мной</div>
+                <div class="check-list">
+                    <label class="check-item"><input type="checkbox" class="rule-check" value="Ты не заменяешь меня. Ты — помощник, который экономит время и даёт второе мнение" checked> Не заменяешь меня, а помогаешь</label>
+                    <label class="check-item"><input type="checkbox" class="rule-check" value="Всегда проверяй факты. Если не уверен в чём-то — скажи, что нужно уточнить по учебнику, нормативному документу или методичке" checked> Проверяй факты, предупреждай о сомнениях</label>
+                    <label class="check-item"><input type="checkbox" class="rule-check" value="Учитывай мой практический опыт. Я — практик, помоги мне «перевести» его в учебные материалы" checked> Учитывай мой практический опыт</label>
+                    <label class="check-item"><input type="checkbox" class="rule-check" value="Говори простым языком, я только начинаю работать с ИИ и в преподавании" checked> Говори простым языком</label>
+                    <label class="check-item"><input type="checkbox" class="rule-check" value="Поддерживай меня. Если я устала или сомневаюсь — предложи вдохновляющую идею или напомни, что я справлюсь" checked> Поддерживай, когда я устаю или сомневаюсь</label>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎭 Роль ИИ для меня</div>
+                <div class="field">
+                    <label>Кем должен быть ИИ в вашей работе</label>
+                    <select id="ai_role">
+                        <option value="мой методический наставник и соавтор. Не заменяй меня, а помогай мне расти. Не решай за меня, а предлагай варианты. Не суди, а поддерживай">Методический наставник и соавтор</option>
+                        <option value="мой рабочий помощник. Помогай быстро делать черновики, экономь моё время">Рабочий помощник</option>
+                        <option value="мой строгий, но доброжелательный критик. Проверяй мои материалы, находи слабые места, но объясняй, как улучшить">Строгий критик</option>
+                        <option value="мой генератор идей. Предлагай много вариантов, я выберу">Генератор идей</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label>Своя фраза-роль <span class="hint">опционально — если хотите уточнить</span></label>
+                    <input type="text" id="custom_role" placeholder="Например: мой спокойный напарник, который не устаёт">
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============ ПРАВАЯ КОЛОНКА — ПРЕДПРОСМОТР ============ -->
+        <div>
+            <div class="preview-card">
+                <div class="preview-title">
+                    <span>📄 Предпросмотр промпта</span>
+                    <span class="status" id="status">Черновик</span>
+                </div>
+                <div class="preview-content" id="preview">Заполните поля слева, чтобы увидеть готовый промпт...</div>
+                <div class="preview-actions">
+                    <button class="btn btn-primary" id="copyBtn">📋 Скопировать промпт</button>
+                    <button class="btn btn-success" id="downloadBtn">💾 Скачать .txt</button>
+                    <button class="btn btn-outline" id="printPreviewBtn">📄 Сохранить в PDF</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+const $ = sel => document.querySelector(sel);
+
+// ============ СБОРКА ПРОМПТА ============
+function buildPrompt() {
+    const name = $('#name').value.trim() || 'преподаватель';
+    const role = $('#role').value.trim() || 'преподаватель СПО';
+    const specialty = $('#specialty').value.trim() || '[укажите специальность по ФГОС]';
+    const disciplines = $('#disciplines').value.trim() || '[укажите ваши дисциплины]';
+    const courses = $('#courses').value.trim() || '[курсы]';
+    const experience = $('#experience').value;
+    const practice = $('#practice').value.trim();
+    const aiExp = $('#ai_exp').value;
+    const language = $('#language').value;
+    const aiRole = $('#ai_role').value;
+    const customRole = $('#custom_role').value.trim();
+
+    // Собираем задачи
+    const tasks = [];
+    document.querySelectorAll('.task-check:checked').forEach(cb => tasks.push(cb.value));
+    const customTasks = $('#custom_tasks').value.trim();
+    if (customTasks) {
+        customTasks.split('\n').forEach(line => {
+            if (line.trim()) tasks.push(line.trim());
+        });
+    }
+
+    // Собираем помощь
+    const helps = [];
+    document.querySelectorAll('.help-check:checked').forEach(cb => helps.push(cb.value));
+
+    // Собираем правила
+    const rules = [];
+    document.querySelectorAll('.rule-check:checked').forEach(cb => rules.push(cb.value));
+
+    // Формируем промпт
+    let p = '';
+
+    p += `Ты — ${aiRole}${customRole ? ', ' + customRole : ''}.\n\n`;
+
+    p += `Я — ${role} в системе СПО (специальность ${specialty}).\n`;
+    p += `Меня зовут ${name}.\n`;
+    p += `Мой опыт: ${experience}.\n`;
+    if (practice) p += `Мой практический опыт вне преподавания: ${practice}.\n`;
+    p += `Мой опыт работы с ИИ: ${aiExp}.\n\n`;
+
+    p += `### Мои дисциплины:\n`;
+    disciplines.split(',').forEach(d => {
+        if (d.trim()) p += `- ${d.trim()}\n`;
+    });
+    p += `\n### Курсы, с которыми я работаю:\n${courses}\n\n`;
+
+    if (tasks.length) {
+        p += `### Мои задачи на ближайшее время:\n`;
+        tasks.forEach((t, i) => { p += `${i + 1}. ${t}\n`; });
+        p += '\n';
+    }
+
+    if (helps.length) {
+        p += `### Как ты можешь мне помогать:\n`;
+        helps.forEach((h, i) => { p += `${i + 1}. ${h}\n`; });
+        p += '\n';
+    }
+
+    if (rules.length) {
+        p += `### Важные правила:\n`;
+        rules.forEach((r, i) => { p += `${i + 1}. ${r}\n`; });
+        p += '\n';
+    }
+
+    p += `### Как я хочу, чтобы ты со мной общался:\n`;
+    p += `- Говори ${language}.\n`;
+    p += `- Всегда предупреждай, если что-то требует проверки.\n`;
+    p += `- Предлагай варианты, а не решай за меня.\n\n`;
+
+    p += `### Примеры моих запросов:\n`;
+    p += `- «Помоги разработать структуру УМК по моей дисциплине для нового ФГОС».\n`;
+    p += `- «Создай 5 кейсов по теме для студентов [курс]. Для каждого — правильный ответ и пояснение».\n`;
+    p += `- «Предложи задания по теме для каждого уровня таксономии Блума».\n`;
+    p += `- «Проверь мой план занятия — что я упустил(а)?»\n\n`;
+
+    p += `### Твоя роль:\n`;
+    p += `Ты — ${aiRole}${customRole ? ', ' + customRole : ''}. Помогай мне расти, предлагай варианты, поддерживай. Спасибо, что ты со мной! 💚`;
+
+    return p;
+}
+
+// ============ ОБНОВЛЕНИЕ ПРЕДПРОСМОТРА ============
+function updatePreview() {
+    const preview = buildPrompt();
+    $('#preview').textContent = preview;
+
+    // Обновляем статус
+    const status = $('#status');
+    const name = $('#name').value.trim();
+    const specialty = $('#specialty').value.trim();
+    const disciplines = $('#disciplines').value.trim();
+    const filled = [name, specialty, disciplines].filter(Boolean).length;
+
+    if (filled === 0) {
+        status.textContent = 'Черновик';
+        status.style.background = 'var(--beige-l)';
+        status.style.color = 'var(--ink-soft)';
+    } else if (filled === 3) {
+        status.textContent = '✅ Готово';
+        status.style.background = 'var(--green-l)';
+        status.style.color = 'var(--green-d)';
+    } else {
+        status.textContent = 'Заполнено ' + filled + '/3';
+        status.style.background = '#FFF3CD';
+        status.style.color = '#8B6914';
+    }
+
+    // Сохраняем в localStorage
+    saveToStorage();
+}
+
+// ============ СОХРАНЕНИЕ / ЗАГРУЗКА ============
+const FIELDS_KEY = 'vetsim_prompt_builder_v1';
+
+function saveToStorage() {
+    const data = {};
+    document.querySelectorAll('input[id], textarea[id], select[id]').forEach(el => {
+        if (el.type === 'checkbox' || el.type === 'radio') data[el.id] = el.checked;
+        else data[el.id] = el.value;
+    });
+
+    const checks = { tasks: [], helps: [], rules: [] };
+    document.querySelectorAll('.task-check').forEach((cb, i) => {
+        if (cb.checked) checks.tasks.push(i);
+    });
+    document.querySelectorAll('.help-check').forEach((cb, i) => {
+        if (cb.checked) checks.helps.push(i);
+    });
+    document.querySelectorAll('.rule-check').forEach((cb, i) => {
+        if (cb.checked) checks.rules.push(i);
+    });
+    data._checks = checks;
+
+    try {
+        localStorage.setItem(FIELDS_KEY, JSON.stringify(data));
+    } catch (e) {}
+}
+
+function loadFromStorage() {
+    try {
+        const raw = localStorage.getItem(FIELDS_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+
+        Object.keys(data).forEach(key => {
+            if (key === '_checks') return;
+            const el = document.getElementById(key);
+            if (!el) return;
+            if (el.type === 'checkbox' || el.type === 'radio') el.checked = data[key];
+            else el.value = data[key];
+        });
+
+        if (data._checks) {
+            const taskChecks = document.querySelectorAll('.task-check');
+            const helpChecks = document.querySelectorAll('.help-check');
+            const ruleChecks = document.querySelectorAll('.rule-check');
+
+            taskChecks.forEach((cb, i) => cb.checked = false);
+            helpChecks.forEach((cb, i) => cb.checked = false);
+            ruleChecks.forEach((cb, i) => cb.checked = false);
+
+            data._checks.tasks.forEach(i => { if (taskChecks[i]) taskChecks[i].checked = true; });
+            data._checks.helps.forEach(i => { if (helpChecks[i]) helpChecks[i].checked = true; });
+            data._checks.rules.forEach(i => { if (ruleChecks[i]) ruleChecks[i].checked = true; });
+        }
+    } catch (e) { console.warn('load error', e); }
+}
+
+// ============ ОЧИСТКА ============
+function resetAll() {
+    if (!confirm('Очистить все поля? Ваши данные будут удалены.')) return;
+    localStorage.removeItem(FIELDS_KEY);
+
+    document.querySelectorAll('input[type="text"], textarea').forEach(el => el.value = '');
+    document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+
+    // Восстанавливаем отмеченные чек-боксы по умолчанию
+    document.querySelectorAll('.check-item input').forEach(cb => cb.checked = false);
+
+    // Ставим галочки по умолчанию
+    const defaultChecked = [
+        'Разработать УМК в соответствии с новым ФГОС 2025 года и рабочей программой',
+        'Научиться проектировать занятия на основе таксономии Блума (от знания к оценке)',
+        'Сделать обучение практико-ориентированным, чтобы студенты видели связь с реальной практикой',
+        'Создавать современные учебные материалы: задания, кейсы, тесты, схемы, таблицы',
+        'Разработка УМК: объясняй структуру по новому ФГОС, помогай структурировать рабочую программу, проверяй логику и полноту материалов',
+        'Проектирование занятий: помогай формулировать измеримые цели, предлагай задания для каждого уровня таксономии Блума, подсказывай связь теории с практикой',
+        'Создание учебных материалов: генерируй кейсы, тесты, ситуационные задачи, схемы, таблицы, алгоритмы; предлагай идеи для практических работ и проектов',
+        'Методическая поддержка: отвечай на вопросы, предлагай современные подходы, помогай адаптировать материалы под разный уровень студентов',
+        'Ты не заменяешь меня. Ты — помощник, который экономит время и даёт второе мнение',
+        'Всегда проверяй факты. Если не уверен в чём-то — скажи, что нужно уточнить по учебнику, нормативному документу или методичке',
+        'Учитывай мой практический опыт. Я — практик, помоги мне «перевести» его в учебные материалы',
+        'Говори простым языком, я только начинаю работать с ИИ и в преподавании',
+        'Поддерживай меня. Если я устала или сомневаюсь — предложи вдохновляющую идею или напомни, что я справлюсь'
+    ];
+
+    document.querySelectorAll('.check-item input').forEach(cb => {
+        if (defaultChecked.includes(cb.value)) cb.checked = true;
+    });
+
+    updatePreview();
+    showToast('🗑️ Поля очищены');
+}
+
+// ============ КОПИРОВАНИЕ ============
+async function copyPrompt() {
+    const text = buildPrompt();
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast('📋 Промпт скопирован в буфер обмена');
+    } catch (e) {
+        // Фолбэк для старых браузеров
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('📋 Промпт скопирован');
+    }
+}
+
+// ============ СКАЧИВАНИЕ ============
+function downloadPrompt() {
+    const text = buildPrompt();
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    const name = $('#name').value.trim() || 'prompt';
+    link.download = `Промпт_${name.replace(/\s+/g, '_')}.txt`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    showToast('💾 Файл сохранён');
+}
+
+// ============ TOAST ============
+function showToast(msg) {
+    const t = $('#toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ============ ПЕЧАТЬ В PDF ============
+function printPage() {
+    window.print();
+}
+
+// ============ ИНИЦИАЛИЗАЦИЯ ============
+document.addEventListener('DOMContentLoaded', () => {
+    loadFromStorage();
+    updatePreview();
+
+    // Все поля ввода и чек-боксы
+    document.querySelectorAll('input, textarea, select').forEach(el => {
+        el.addEventListener('input', updatePreview);
+        el.addEventListener('change', updatePreview);
+    });
+
+    // Кнопки
+    $('#copyBtn').addEventListener('click', copyPrompt);
+    $('#downloadBtn').addEventListener('click', downloadPrompt);
+    $('#resetBtn').addEventListener('click', resetAll);
+    $('#printBtn').addEventListener('click', printPage);
+    $('#printPreviewBtn').addEventListener('click', printPage);
+});
+
+</script>
+
+</body>
+</html>

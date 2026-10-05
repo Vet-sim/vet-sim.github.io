@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Курс «Педагогический дизайн с ИИ» · Стартовая страница</title>
+<meta name="description" content="Стартовая страница курса повышения квалификации для преподавателей СПО. Все материалы курса в одном месте.">
+
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --cream: #FDF8F0;
+    --white: #FFFFFF;
+    --bg-soft: #F4EFE4;
+    --blue: #2C7DA0;
+    --blue-d: #236B8A;
+    --blue-l: #D4E3ED;
+    --green: #6B9E6B;
+    --green-d: #5A865A;
+    --green-l: #D6E8D0;
+    --beige: #E8D9BE;
+    --beige-l: #F5EBD8;
+    --ink: #1A2A3A;
+    --ink-soft: #5F7C62;
+    --gray: #B0BC9C;
+    --danger: #D47A6A;
+    --warn: #E8B84C;
+    --radius: 22px;
+    --shadow: 0 4px 24px rgba(80,60,30,0.08);
+}
+
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 60px;
+    min-height: 100vh;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(107,163,199,0.06), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(123,160,91,0.06), transparent 40%);
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* ===== ШАПКА ===== */
+.hero {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 40px 36px;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle, rgba(232,217,190,0.5), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -100px; left: -100px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(107,163,199,0.2), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+.hero .badge {
+    display: inline-block;
+    background: var(--beige-l);
+    color: var(--green-d);
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+}
+.hero h1 {
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 14px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+}
+.hero h1 .gradient {
+    background: linear-gradient(135deg, var(--blue), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.hero .subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    color: var(--ink-soft);
+    max-width: 640px;
+    margin: 0 auto 8px;
+    line-height: 1.55;
+}
+.hero .meta {
+    font-size: 0.88rem;
+    color: var(--gray);
+    margin-top: 8px;
+}
+
+/* ===== КАК РАБОТАТЬ ===== */
+.intro {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 26px 32px;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+    margin-bottom: 20px;
+    border-left: 5px solid var(--green);
+}
+.intro h2 {
+    font-size: 1.15rem;
+    color: var(--green-d);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.intro p {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+.intro ol {
+    margin-left: 24px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+.intro li { margin-bottom: 6px; }
+.intro strong { color: var(--ink); }
+
+/* ===== СЕТКА КАРТОЧЕК ===== */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 26px;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+    text-decoration: none;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    transition: 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px -10px rgba(80,60,30,0.15);
+    border-color: var(--blue);
+}
+.card::after {
+    content: '→';
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 1.4rem;
+    color: var(--blue);
+    opacity: 0.4;
+    transition: 0.25s;
+}
+.card:hover::after {
+    opacity: 1;
+    transform: translateX(4px);
+}
+.card-icon {
+    font-size: 2.6rem;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+.card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--blue-d);
+    margin-bottom: 8px;
+    line-height: 1.3;
+}
+.card-desc {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    flex-grow: 1;
+    margin-bottom: 14px;
+}
+.card-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    background: var(--beige-l);
+    color: var(--ink-soft);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    width: fit-content;
+}
+.card.primary {
+    background: linear-gradient(135deg, #F0F6FA, #EAF3F7);
+    border-color: var(--blue-l);
+}
+.card.primary .card-icon { color: var(--blue); }
+.card.success {
+    background: linear-gradient(135deg, #F0FAEB, #E8F5E8);
+    border-color: var(--green-l);
+}
+.card.success .card-icon { color: var(--green-d); }
+.card.warm {
+    background: linear-gradient(135deg, #FFF9E8, #F5EBD8);
+    border-color: var(--beige);
+}
+
+/* ===== ССЫЛКА НА DEEPSEEK ===== */
+.deepseek-block {
+    background: linear-gradient(135deg, #1A2A3A, #2C3E54);
+    color: white;
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow);
+}
+.deepseek-block .left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    min-width: 240px;
+}
+.deepseek-block .icon {
+    font-size: 2.4rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+.deepseek-block h3 {
+    font-size: 1.15rem;
+    margin-bottom: 4px;
+    color: white;
+}
+.deepseek-block p {
+    font-size: 0.88rem;
+    opacity: 0.85;
+    line-height: 1.45;
+}
+.deepseek-block .right {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.deepseek-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: 0.2s;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.deepseek-btn:hover {
+    background: var(--green-d);
+    transform: translateY(-2px);
+    color: white;
+}
+.deepseek-btn.secondary {
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+.deepseek-btn.secondary:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: white;
+}
+
+/* ===== ПОСЛЕДОВАТЕЛЬНОСТЬ ===== */
+.flow {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 26px 32px;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+    margin-bottom: 20px;
+    border-left: 5px solid var(--warn);
+}
+.flow h2 {
+    font-size: 1.15rem;
+    color: #A67C3A;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.flow-steps {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+.flow-step {
+    flex: 1;
+    min-width: 140px;
+    background: var(--bg-soft);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+}
+.flow-step .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: var(--warn);
+    color: white;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+.flow-step .lbl {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--ink);
+}
+.flow-step .txt {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.45;
+}
+
+/* ===== ПОДДЕРЖКА ===== */
+.support {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 24px 32px;
+    box-shadow: var(--shadow);
+    border: 1px solid #E7EDE2;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.support h2 {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+}
+.support p {
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+}
+.support .links {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+}
+.support .links a {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--blue);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+.support .links a:hover { color: var(--blue-d); }
+
+/* ===== ПОДВАЛ ===== */
+.footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--gray);
+    padding-top: 20px;
+    line-height: 1.7;
+}
+.footer a {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--blue);
+}
+.footer a:hover { color: var(--blue-d); }
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 700px) {
+    body { padding: 16px 12px 40px; }
+    .hero { padding: 28px 22px; }
+    .intro, .flow, .support { padding: 20px 22px; }
+    .card { padding: 22px 20px; }
+    .deepseek-block { padding: 22px 22px; }
+    .deepseek-block .right { width: 100%; }
+    .deepseek-btn { flex: 1; justify-content: center; }
+    .flow-steps { flex-direction: column; }
+}
+
+/* ===== ПЕЧАТЬ ===== */
+@media print {
+    body { background: white; padding: 0; }
+    .card:hover { transform: none; }
+    .deepseek-block { background: white; color: black; border: 1px solid #ccc; }
+    .deepseek-block h3, .deepseek-block p { color: black; }
+    .deepseek-btn { border: 1px solid #999; color: black; background: white; }
+    .hero::before, .hero::after { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== ШАПКА ===== -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">🎓 Курс повышения квалификации</div>
+            <h1>Педагогический дизайн с ИИ:<br><span class="gradient">создаём урок под ключ</span></h1>
+            <p class="subtitle">
+                Добро пожаловать! Это стартовая страница курса. Здесь собраны все материалы,
+                которые понадобятся вам в работе.
+            </p>
+            <p class="meta">36 академических часов · 13 недель · 6 разделов</p>
+        </div>
+    </section>
+
+    <!-- ===== КАК РАБОТАТЬ ===== -->
+    <section class="intro">
+        <h2>📖 Как работать с материалами курса</h2>
+        <p>Курс построен так, чтобы каждый элемент был полезен и не перегружал. Работайте в своём темпе.</p>
+        <ol>
+            <li><strong>Скачайте рабочую тетрадь</strong> и откройте её в браузере. Заполняйте её по мере прохождения курса.</li>
+            <li><strong>Зарегистрируйтесь в DeepSeek</strong> — это бесплатная нейросеть, которая будет вашим помощником. Инструкция — ниже.</li>
+            <li><strong>Соберите свой первый промпт</strong> в конструкторе — это «инструкция» для ИИ. Вставьте её в DeepSeek — и начнём.</li>
+            <li><strong>После каждого раздела</strong> сохраняйте PDF рабочей тетради и загружайте его в Moodle.</li>
+            <li><strong>В конце курса</strong> соберёте итоговый проект — комплект материалов к своему занятию.</li>
+        </ol>
+    </section>
+
+    <!-- ===== ПОСЛЕДОВАТЕЛЬНОСТЬ ===== -->
+    <section class="flow">
+        <h2>🎯 Последовательность работы</h2>
+        <div class="flow-steps">
+            <div class="flow-step">
+                <span class="num">1</span>
+                <span class="lbl">Тетрадь</span>
+                <span class="txt">Заполняйте по мере прохождения курса</span>
+            </div>
+            <div class="flow-step">
+                <span class="num">2</span>
+                <span class="lbl">DeepSeek</span>
+                <span class="txt">Зарегистрируйтесь по инструкции</span>
+            </div>
+            <div class="flow-step">
+                <span class="num">3</span>
+                <span class="lbl">Промпт</span>
+                <span class="txt">Соберите в конструкторе</span>
+            </div>
+            <div class="flow-step">
+                <span class="num">4</span>
+                <span class="lbl">Практика</span>
+                <span class="txt">Работайте с ИИ на занятии</span>
+            </div>
+            <div class="flow-step">
+                <span class="num">5</span>
+                <span class="lbl">Проект</span>
+                <span class="txt">Соберите итоговый комплект</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== КАРТОЧКИ МАТЕРИАЛОВ ===== -->
+    <section class="cards">
+
+        <a class="card success" href="rabochaya-tetrad-peddesign-ai.html" target="_blank">
+            <div class="card-icon">📓</div>
+            <div class="card-title">Рабочая тетрадь</div>
+            <div class="card-desc">
+                Главный документ курса. Заполняйте её по мере прохождения 6 разделов.
+                Внутри — теория, практика, автопроверка тестов, места для изображений.
+                В конце — сохраните PDF и загрузите в Moodle.
+            </div>
+            <span class="card-badge">📝 Заполнить</span>
+        </a>
+
+        <a class="card primary" href="deepseek-instruction.html" target="_blank">
+            <div class="card-icon">🤖</div>
+            <div class="card-title">Регистрация в DeepSeek</div>
+            <div class="card-desc">
+                Пошаговая инструкция для тех, кто ещё не работал с ИИ.
+                5 шагов, ответы на частые вопросы, советы по безопасности.
+                Займёт 5 минут.
+            </div>
+            <span class="card-badge">🚀 Начать</span>
+        </a>
+
+        <a class="card warm" href="prompt-builder.html" target="_blank">
+            <div class="card-icon">🛠️</div>
+            <div class="card-title">Конструктор промпта</div>
+            <div class="card-desc">
+                Соберите свой первый большой промпт — «инструкцию» для ИИ.
+                Заполните поля, получите готовый текст, скопируйте в DeepSeek.
+                ИИ познакомится с вами и станет вашим наставником.
+            </div>
+            <span class="card-badge">✨ Собрать</span>
+        </a>
+
+    </section>
+
+    <!-- ===== ССЫЛКА НА DEEPSEEK ===== -->
+    <section class="deepseek-block">
+        <div class="left">
+            <div class="icon">💬</div>
+            <div>
+                <h3>DeepSeek — рабочая среда курса</h3>
+                <p>Чат с нейросетью, где вы будете работать с промптами. Открывайте здесь, если нужно зайти напрямую.</p>
+            </div>
+        </div>
+        <div class="right">
+            <a class="deepseek-btn" href="https://chat.deepseek.com" target="_blank" rel="noopener">
+                🌐 Открыть DeepSeek
+            </a>
+            <a class="deepseek-btn secondary" href="deepseek-instruction.html" target="_blank">
+                📖 Инструкция
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== ПОДДЕРЖКА ===== -->
+    <section class="support">
+        <h2>💚 Если что-то пошло не так</h2>
+        <p>
+            Задавайте вопросы в чате курса или на очном занятии. Все материалы открыты —
+            вы можете скачивать их, открывать офлайн, распечатывать.
+        </p>
+        <div class="links">
+            <a href="https://vk.ru/vet_sim" target="_blank" rel="noopener">💬 Сообщество ВКонтакте</a>
+            <a href="https://vk.ru/vetsimpros" target="_blank" rel="noopener">📚 Группа поддержки</a>
+        </div>
+    </section>
+
+    <!-- ===== ПОДВАЛ ===== -->
+    <div class="footer">
+        <p>© 2026 ВетСим · Интерактивные тренажёры для ветеринарного образования</p>
+        <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">Creative Commons BY-NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+    </div>
+
+</div>
+
+<script>
+'use strict';
+
+// ============================================================
+// Проверка: файлы рядом с хабом
+// ============================================================
+// Если открыть index.html через file://, браузеры не всегда
+// могут проверить существование файлов. Оставим это без проверки,
+// но добавим аккуратную подсказку пользователю.
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Небольшая анимация карточек при загрузке
+    const cards = document.querySelectorAll('.card');
+    cards.forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(12px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 150 * i);
+    });
+});
+</script>
+
+</body>
+</html>

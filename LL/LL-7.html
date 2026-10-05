@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Латинский язык · Урок 7 · ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #1A2A3A;
+    padding: 16px;
+    min-height: 100vh;
+}
+
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* ===== ШАПКА ===== */
+.header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 14px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 16px;
+    border: 1px solid #E7EDE2;
+}
+.header .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #1A2A3A;
+}
+.header .logo .gradient {
+    background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.header .logo .sub {
+    font-weight: 400;
+    font-size: 0.7rem;
+    color: #7B8D6E;
+}
+.header-stats {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+}
+.header-stats .score {
+    background: #2C7DA0;
+    color: white;
+    padding: 4px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+}
+.header-stats .progress-text { color: #5F7C62; }
+
+/* ===== КНОПКИ ===== */
+.btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s;
+    font-family: inherit;
+    font-size: 0.78rem;
+    color: #1A2A3A;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-success { background: #6B9E6B; color: white; }
+.btn-success:hover { background: #5A865A; }
+.btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+.btn-outline:hover { background: #F0EEE5; }
+.btn-sm { padding: 3px 12px; font-size: 0.7rem; }
+
+/* ===== ВКЛАДКИ ===== */
+.tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.tab-btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    color: #3E5C4A;
+}
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: #2C7DA0; color: white; }
+
+.tab-content { display: none; animation: fadeIn 0.25s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== КАРТОЧКИ ===== */
+.card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 18px 22px;
+    border: 1px solid #E7EDE2;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 14px;
+}
+.card-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #2C7DA0;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.card-title .badge {
+    font-size: 0.65rem;
+    background: #E7EDE2;
+    color: #5F7C62;
+    padding: 0 12px;
+    border-radius: 40px;
+    font-weight: 500;
+}
+
+/* ===== ТЕСТ ===== */
+.q { padding: 12px 0; border-bottom: 1px solid #f0ebe3; }
+.q:last-child { border-bottom: none; }
+.q-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+.q-title .num {
+    color: #2C7DA0;
+    font-weight: 700;
+    margin-right: 4px;
+}
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.option {
+    background: #FEFCF9;
+    border: 2px solid #E7EDE2;
+    border-radius: 40px;
+    padding: 8px 18px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.option:hover { background: #F3F7F2; border-color: #A3B18A; }
+.option.selected {
+    background: #E9F0E3;
+    border-color: #2C7DA0;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+.option .marker {
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    background: #E2EAD9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #5F7C62;
+    font-size: 0.8rem;
+}
+.option.selected .marker {
+    background: #2C7DA0;
+    color: white;
+}
+
+.test-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+    color: #5F7C62;
+}
+.test-progress .bar {
+    flex: 1;
+    height: 6px;
+    background: #E7EDE2;
+    border-radius: 20px;
+    overflow: hidden;
+}
+.test-progress .bar-fill {
+    height: 100%;
+    background: #2C7DA0;
+    border-radius: 20px;
+    transition: width 0.3s;
+}
+
+.timer {
+    background: #2C7DA0;
+    color: white;
+    padding: 6px 20px;
+    border-radius: 40px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+    min-width: 90px;
+    text-align: center;
+    transition: 0.3s;
+}
+.timer.warning { background: #D4A373; }
+.timer.danger { background: #b13e3e; animation: pulse 1s infinite; }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ===== ТЕОРИЯ ===== */
+.latin {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #1F4E6E;
+    font-weight: 700;
+}
+.theory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+}
+.theory-box {
+    background: #F9FBF8;
+    border: 1px solid #E7EDE2;
+    border-radius: 1rem;
+    padding: 14px;
+}
+.theory-box h3 {
+    color: #2C7DA0;
+    font-size: 0.88rem;
+    margin-bottom: 8px;
+}
+.theory-box p, .theory-box li {
+    font-size: 0.83rem;
+    line-height: 1.6;
+}
+.theory-box ul { padding-left: 18px; }
+
+.notice {
+    background: #F7F3E8;
+    border-left: 4px solid #2C7DA0;
+    padding: 10px 14px;
+    border-radius: 0 1rem 1rem 0;
+    margin: 10px 0;
+    font-size: 0.83rem;
+    line-height: 1.55;
+}
+.notice.green { background: #E8F5E8; border-left-color: #6B9E6B; }
+.notice.blue { background: #E8F0F5; border-left-color: #2C7DA0; }
+.notice.red { background: #FDF0E8; border-left-color: #b13e3e; }
+.notice.orange { background: #FDF3E8; border-left-color: #D4A373; }
+
+.visual-block {
+    background: #F0F5F0;
+    border-radius: 1rem;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #1F4E6E;
+    border: 1px solid #D9E7D9;
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+/* ===== ТАБЛИЦЫ ===== */
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+table.lesson-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+table.lesson-table th, table.lesson-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #E7EDE2;
+    text-align: left;
+}
+table.lesson-table th {
+    background: #F3F7F2;
+    color: #2C7DA0;
+    font-weight: 700;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+table.lesson-table tr:last-child td { border-bottom: none; }
+table.lesson-table td.male { color: #2C7DA0; font-weight: 600; }
+table.lesson-table td.fem { color: #b16286; font-weight: 600; }
+table.lesson-table td.neut { color: #6B9E6B; font-weight: 600; }
+
+/* ===== ЛЕКСИКА ===== */
+.lexicon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 8px;
+}
+.lex-card {
+    background: #F9FBF8;
+    border: 1px solid #E7EDE2;
+    border-radius: 1rem;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+.lex-card .lex-latin {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    color: #1F4E6E;
+    font-size: 0.92rem;
+    display: block;
+    margin-bottom: 2px;
+}
+.lex-card .lex-form {
+    color: #7B8D6E;
+    font-size: 0.72rem;
+    font-style: italic;
+    display: block;
+    margin-bottom: 4px;
+}
+.lex-card .lex-trans {
+    color: #3E5C4A;
+    font-weight: 500;
+}
+.lex-section-title {
+    font-weight: 700;
+    color: #2C7DA0;
+    font-size: 0.88rem;
+    margin: 14px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #E7EDE2;
+}
+.lex-section-title:first-child { margin-top: 0; }
+
+/* ===== ПРАКТИКА ===== */
+.exercise {
+    background: #F9FBF8;
+    border: 1px solid #E7EDE2;
+    border-radius: 1rem;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+}
+.exercise h3 {
+    font-size: 0.9rem;
+    color: #2C7DA0;
+    margin-bottom: 8px;
+}
+.exercise table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+.exercise table th, .exercise table td {
+    padding: 6px 8px;
+    border: 1px solid #E7EDE2;
+    text-align: left;
+}
+.exercise table th {
+    background: #F3F7F2;
+    color: #2C7DA0;
+    font-size: 0.72rem;
+}
+.exercise input[type="text"] {
+    width: 100%;
+    padding: 6px 10px;
+    border: 2px solid #D9D0BD;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    background: white;
+    color: #3E5C4A;
+    outline: none;
+    transition: 0.15s;
+}
+.exercise input:focus {
+    border-color: #2C7DA0;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+.exercise input.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.exercise input.wrong { border-color: #b13e3e; background: #FDF0E8; }
+.exercise select {
+    width: 100%;
+    padding: 6px 10px;
+    border: 2px solid #D9D0BD;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    background: white;
+    color: #3E5C4A;
+    outline: none;
+    cursor: pointer;
+}
+.exercise select.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.exercise select.wrong { border-color: #b13e3e; background: #FDF0E8; }
+
+.exercise-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.result-msg {
+    margin-top: 10px;
+    padding: 10px 14px;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: none;
+}
+.result-msg.show { display: block; }
+.result-msg.ok { background: #E8F5E8; color: #2E7D32; }
+.result-msg.no { background: #FDF0E8; color: #b13e3e; }
+
+/* ===== ФИНАЛЬНЫЙ ЭКРАН ТЕСТА ===== */
+.final-screen {
+    text-align: center;
+    padding: 30px 20px;
+}
+.final-screen .score-big {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #1F4E6E;
+    line-height: 1;
+}
+.final-screen .icon { font-size: 3.5rem; margin-bottom: 8px; }
+.final-screen .message {
+    font-size: 1.05rem;
+    color: #3E5C4A;
+    margin: 12px 0 20px;
+    line-height: 1.5;
+}
+.final-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    max-width: 500px;
+    margin: 0 auto 20px;
+}
+.stat-box {
+    background: #F9FBF8;
+    border: 1px solid #E7EDE2;
+    border-radius: 1rem;
+    padding: 12px;
+}
+.stat-box .num { font-size: 1.5rem; font-weight: 700; color: #2C7DA0; }
+.stat-box .lbl { font-size: 0.7rem; color: #7B8D6E; text-transform: uppercase; }
+
+/* ===== ФУТЕР ===== */
+footer {
+    margin-top: 20px;
+    padding: 16px;
+    background: white;
+    border-radius: 1.5rem;
+    border: 1px solid #E7EDE2;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #7B8D6E;
+    line-height: 1.6;
+}
+footer strong { color: #1F4E6E; }
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+    .header .logo { font-size: 0.95rem; }
+    .header-stats { justify-content: space-between; }
+    .card { padding: 14px 16px; }
+    .tab-btn { font-size: 0.68rem; padding: 5px 12px; }
+    .q-title { font-size: 0.85rem; }
+    .option { padding: 8px 14px; font-size: 0.82rem; }
+    .exercise { padding: 12px; }
+    .exercise table { font-size: 0.75rem; }
+    .exercise table th, .exercise table td { padding: 4px 6px; }
+    .final-screen .score-big { font-size: 2.4rem; }
+    .visual-block { font-size: 0.7rem; padding: 10px 12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== ШАПКА ===== -->
+<header class="header">
+    <div class="logo">📚 <span class="gradient">Lingua Latina</span><span class="sub">· Урок 7. III склонение. Гласный и смешанный типы</span></div>
+    <div class="header-stats">
+        <span class="progress-text" id="headerStatus">Входной тест · III склонение (согласный тип)</span>
+        <span class="score" id="headerScore">⭐ 0</span>
+    </div>
+</header>
+
+<!-- ===== ВКЛАДКИ ===== -->
+<div class="tabs">
+    <button class="tab-btn active" data-tab="test">🧪 Входной тест</button>
+    <button class="tab-btn" data-tab="theory">📖 Теория</button>
+    <button class="tab-btn" data-tab="lexicon">📚 Лексика</button>
+    <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+    <button class="tab-btn" data-tab="vet">🐾 Ветпрактика</button>
+</div>
+
+<!-- ===== ВКЛАДКА 1. ВХОДНОЙ ТЕСТ ===== -->
+<section class="tab-content active" id="tab-test">
+    <div class="card">
+        <div class="card-title">
+            <span>🧪 Входной тест: III склонение, согласный тип (урок 6)</span>
+            <span class="badge" id="testBadge">20 вопросов</span>
+        </div>
+
+        <div id="testStart">
+            <div class="notice">
+                <strong>Проверка знаний предыдущего урока.</strong> Вопросы и варианты перемешиваются. 20 заданий из 22 слов — часть на перевод с латыни, часть на перевод с русского. Время — 15 минут. Результат — в процентах.
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                <button class="btn btn-primary" id="startTestBtn">🚀 Начать тест</button>
+            </div>
+        </div>
+
+        <div id="testProgress" style="display:none;">
+            <div class="test-progress">
+                <span id="testProgressText">Вопрос 1 из 20</span>
+                <div class="bar"><div class="bar-fill" id="testBarFill"></div></div>
+                <span id="testProgressPct">0%</span>
+                <span class="timer" id="testTimer">15:00</span>
+            </div>
+            <div id="questionCard"></div>
+            <div class="exercise-controls" id="testControls" style="justify-content:flex-end;">
+                <button class="btn btn-primary" id="testNextBtn" disabled>Далее ▶</button>
+            </div>
+        </div>
+
+        <div id="testFinal" style="display:none;"></div>
+    </div>
+</section>
+
+<!-- ===== ВКЛАДКА 2. ТЕОРИЯ ===== -->
+<section class="tab-content" id="tab-theory">
+
+    <div class="card">
+        <div class="card-title"><span>📖 Три типа III склонения</span></div>
+        <div class="notice blue">
+            <strong>Общий признак III склонения:</strong> <span class="latin">Gen. sing. = -is</span>. Тип склонения определяется по основе и окончанию <span class="latin">Nom. sing.</span>
+        </div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Признак</th><th>Согласный тип</th><th>Гласный тип</th><th>Смешанный тип</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Род</td><td>m, f, n</td><td class="neut">n только</td><td>m, f, n</td></tr>
+                    <tr><td>Nom. sing.</td><td>разные</td><td class="latin">-e, -al, -ar</td><td class="latin">-es, -is и др.</td></tr>
+                    <tr><td>Gen. plur.</td><td class="latin">-um</td><td class="latin">-ium</td><td class="latin">-ium</td></tr>
+                    <tr><td>Nom. plur. (n)</td><td class="latin">-a</td><td class="latin">-ia</td><td class="latin">-a / -ia</td></tr>
+                    <tr><td>Пример</td><td><span class="latin">radix, radicis, f</span></td><td><span class="latin">animal, animalis, n</span></td><td><span class="latin">auris, is, f</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Гласный тип</span></div>
+        <div class="notice green">
+            К гласному типу относятся <strong>только существительные среднего рода</strong> с окончанием в <span class="latin">Nom. sing.</span>: <span class="latin">-e</span>, <span class="latin">-al</span>, <span class="latin">-ar</span>.
+        </div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Примеры</h3>
+                <ul>
+                    <li><span class="latin">rete, retis, n</span> — сеть</li>
+                    <li><span class="latin">animal, animalis, n</span> — животное</li>
+                    <li><span class="latin">calcar, calcaris, n</span> — шпора</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>Ключевые окончания</h3>
+                <ul>
+                    <li><span class="latin">Nom. plur.</span> → <span class="latin">-ia</span></li>
+                    <li><span class="latin">Gen. plur.</span> → <span class="latin">-ium</span></li>
+                    <li><span class="latin">Abl. sing.</span> → <span class="latin">-i</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <p style="font-size:0.85rem; margin-top:14px; margin-bottom:6px;">Образец: <span class="latin">animal, animalis, n</span> — животное</p>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Падеж</th><th>Singularis</th><th>Pluralis</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nom.</td><td class="latin">animal</td><td class="latin neut">animal-ia</td></tr>
+                    <tr><td>Gen.</td><td class="latin">animal-is</td><td class="latin">animal-ium</td></tr>
+                    <tr><td>Dat.</td><td class="latin">animal-i</td><td class="latin">animal-ibus</td></tr>
+                    <tr><td>Acc.</td><td class="latin">animal</td><td class="latin neut">animal-ia</td></tr>
+                    <tr><td>Abl.</td><td class="latin">animal-i</td><td class="latin">animal-ibus</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Смешанный тип</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Группа 1: Равносложные</h3>
+                <p>Одинаковое количество слогов в <span class="latin">Nom.</span> и <span class="latin">Gen. sing.</span>, окончания <span class="latin">-es</span>, <span class="latin">-is</span>.</p>
+                <ul>
+                    <li><span class="latin">auris, is, f</span> — ухо</li>
+                    <li><span class="latin">basis, is, f</span> — основание</li>
+                    <li><span class="latin">canalis, is, m</span> — канал</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>Группа 2: Основа на несколько согласных</h3>
+                <ul>
+                    <li><span class="latin">dens, dentis, m</span> — зуб (dent-)</li>
+                    <li><span class="latin">pars, partis, f</span> — часть (part-)</li>
+                    <li><span class="latin">pons, pontis, m</span> — мост (pont-)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="notice orange">
+            <strong>NB!</strong> Главное отличие от согласного типа: <span class="latin">Gen. plur.</span> → <span class="latin">-ium</span> (вместо <span class="latin">-um</span>).
+        </div>
+
+        <p style="font-size:0.85rem; margin-top:14px; margin-bottom:6px;">Образец 1: <span class="latin">auris, is, f</span> — ухо</p>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Падеж</th><th>Singularis</th><th>Pluralis</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nom.</td><td class="latin">auris</td><td class="latin">aur-es</td></tr>
+                    <tr><td>Gen.</td><td class="latin">aur-is</td><td class="latin">aur-ium</td></tr>
+                    <tr><td>Dat.</td><td class="latin">aur-i</td><td class="latin">aur-ibus</td></tr>
+                    <tr><td>Acc.</td><td class="latin">aur-em</td><td class="latin">aur-es</td></tr>
+                    <tr><td>Abl.</td><td class="latin">aur-e</td><td class="latin">aur-ibus</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p style="font-size:0.85rem; margin-top:14px; margin-bottom:6px;">Образец 2: <span class="latin">dens, dentis, m</span> — зуб</p>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Падеж</th><th>Singularis</th><th>Pluralis</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nom.</td><td class="latin">dens</td><td class="latin">dent-es</td></tr>
+                    <tr><td>Gen.</td><td class="latin">dent-is</td><td class="latin">dent-ium</td></tr>
+                    <tr><td>Dat.</td><td class="latin">dent-i</td><td class="latin">dent-ibus</td></tr>
+                    <tr><td>Acc.</td><td class="latin">dent-em</td><td class="latin">dent-es</td></tr>
+                    <tr><td>Abl.</td><td class="latin">dent-e</td><td class="latin">dent-ibus</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Сводная таблица окончаний III склонения</span></div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Падеж</th><th>Согласный тип</th><th>Гласный тип</th><th>Смешанный тип</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nom. sing.</td><td>разные</td><td class="latin">-e, -al, -ar</td><td class="latin">-es, -is и др.</td></tr>
+                    <tr><td>Gen. sing.</td><td class="latin">-is</td><td class="latin">-is</td><td class="latin">-is</td></tr>
+                    <tr><td>Nom. plur. (m/f)</td><td class="latin">-es</td><td>—</td><td class="latin">-es</td></tr>
+                    <tr><td>Nom. plur. (n)</td><td class="latin">-a</td><td class="latin">-ia</td><td class="latin">-a / -ia</td></tr>
+                    <tr><td>Gen. plur.</td><td class="latin">-um</td><td class="latin">-ium</td><td class="latin">-ium</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="notice blue">
+            <strong>Запомни:</strong> <span class="latin">Gen. plur.</span> на <span class="latin">-ium</span> — признак гласного и смешанного типов; на <span class="latin">-um</span> — согласного.
+        </div>
+    </div>
+
+</section>
+
+<!-- ===== ВКЛАДКА 3. ЛЕКСИКА ===== -->
+<section class="tab-content" id="tab-lexicon">
+    <div class="card">
+        <div class="card-title">
+            <span>📚 Лексический минимум III склонения (гласный и смешанный типы)</span>
+            <span class="badge">11 слов</span>
+        </div>
+        <div class="notice" style="margin-bottom:12px;">
+            Запомни словарную форму: <span class="latin">Nom. sing.</span>, <span class="latin">Gen. sing.</span>, род. Для гласного типа род — только средний.
+        </div>
+
+        <div class="lex-section-title">📗 Гласный тип (n)</div>
+        <div class="lexicon-grid" id="lexVowel"></div>
+
+        <div class="lex-section-title">📘 Смешанный тип (m, f, n)</div>
+        <div class="lexicon-grid" id="lexMixed"></div>
+    </div>
+</section>
+
+<!-- ===== ВКЛАДКА 4. ПРАКТИКА ===== -->
+<section class="tab-content" id="tab-practice">
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 1. Определите тип склонения</span></div>
+        <div class="exercise" id="ex1">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Слово</th><th>Тип склонения</th></tr></thead>
+                    <tbody id="ex1Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex1">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex1">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex1Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 2. Выделите основу существительных</span></div>
+        <div class="exercise" id="ex2">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Слово</th><th>Gen. sing.</th><th>Основа</th></tr></thead>
+                    <tbody id="ex2Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex2">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex2">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex2Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 3. Просклоняйте существительные</span></div>
+        <div class="exercise" id="ex3">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Слово</th><th>Nom. sing.</th><th>Gen. sing.</th><th>Nom. plur.</th><th>Gen. plur.</th></tr></thead>
+                    <tbody id="ex3Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex3">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex3">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex3Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 4. Переведите анатомические термины (лат → рус)</span></div>
+        <div class="exercise" id="ex4">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Латинский термин</th><th>Перевод</th></tr></thead>
+                    <tbody id="ex4Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex4">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex4">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex4Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 5. Переведите на латинский язык (рус → лат)</span></div>
+        <div class="exercise" id="ex5">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Русский термин</th><th>Латинский термин</th></tr></thead>
+                    <tbody id="ex5Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex5">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex5">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex5Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 6. Восстановите пропущенные окончания</span></div>
+        <div class="exercise" id="ex6">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Фраза</th><th>Окончание / форма</th></tr></thead>
+                    <tbody id="ex6Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex6">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex6">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex6Result"></div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ===== ВКЛАДКА 5. ВЕТПРАКТИКА ===== -->
+<section class="tab-content" id="tab-vet">
+    <div class="card">
+        <div class="card-title"><span>🐾 Профессиональная вставка. Заполни карту пациента</span></div>
+        <div class="notice blue">
+            <strong>Ты — ветеринарный фельдшер.</strong> Заполни карту пациента латинскими терминами. Используй слова III склонения гласного и смешанного типов.
+        </div>
+
+        <div class="exercise" id="ex7">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Русский диагноз</th><th>Латинский диагноз</th></tr></thead>
+                    <tbody id="ex7Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex7">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex7">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex7Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📝 Задание 19. Переведи с латинского на русский</span></div>
+        <div class="exercise" id="ex8">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Латинский термин</th><th>Перевод</th></tr></thead>
+                    <tbody id="ex8Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex8">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex8">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex8Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📖 Справочные термины</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>ANIMAL, ANIMALIS, N — животное</h3>
+                <ul>
+                    <li><span class="latin">animal domesticum</span> — домашнее животное</li>
+                    <li><span class="latin">animal laborans</span> — рабочее животное</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>AURIS, IS, F — ухо</h3>
+                <ul>
+                    <li><span class="latin">auris externa</span> — наружное ухо</li>
+                    <li><span class="latin">auris media</span> — среднее ухо</li>
+                    <li><span class="latin">auris interna</span> — внутреннее ухо</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>DENS, DENTIS, M — зуб</h3>
+                <ul>
+                    <li><span class="latin">dens incisivus</span> — резцовый зуб</li>
+                    <li><span class="latin">dens caninus</span> — клык</li>
+                    <li><span class="latin">dens molaris</span> — коренной зуб</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>BASIS, IS, F — основание</h3>
+                <ul>
+                    <li><span class="latin">basis cranii</span> — основание черепа</li>
+                    <li><span class="latin">basis cordis</span> — основание сердца</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ФУТЕР ===== -->
+<footer>
+    © ВетСим — ветеринарное просвещение · Латинский язык в ветеринарии<br>
+    <strong>Автор проекта и тренажёра: Тераевич Алла Сергеевна</strong><br>
+    Урок 7. III склонение существительных. Гласный и смешанный типы · Работает офлайн
+</footer>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    const $ = id => document.getElementById(id);
+
+    // ================================================================
+    //  ДАННЫЕ: ЛЕКСИКА УРОКА 6 (III склонение, согласный тип)
+    //  Используется для входного теста
+    // ================================================================
+    const LESSON6_WORDS = [
+        { latin: 'apex', form: 'apex, apicis, m', ru: 'верхушка' },
+        { latin: 'cortex', form: 'cortex, corticis, m', ru: 'кора' },
+        { latin: 'margo', form: 'margo, marginis, m', ru: 'край' },
+        { latin: 'paries', form: 'paries, parietis, m', ru: 'стенка' },
+        { latin: 'pes', form: 'pes, pedis, m', ru: 'нога, стопа' },
+        { latin: 'pulmo', form: 'pulmo, pulmonis, m', ru: 'лёгкое' },
+        { latin: 'ren', form: 'ren, renis, m', ru: 'почка' },
+        { latin: 'tendo', form: 'tendo, tendinis, m', ru: 'сухожилие' },
+        { latin: 'thorax', form: 'thorax, thoracis, m', ru: 'грудная клетка' },
+        { latin: 'articulatio', form: 'articulatio, articulationis, f', ru: 'сустав' },
+        { latin: 'cartilago', form: 'cartilago, cartilaginis, f', ru: 'хрящ' },
+        { latin: 'cervix', form: 'cervix, cervicis, f', ru: 'шея' },
+        { latin: 'extremitas', form: 'extremitas, extremitatis, f', ru: 'конечность' },
+        { latin: 'radix', form: 'radix, radicis, f', ru: 'корень' },
+        { latin: 'regio', form: 'regio, regionis, f', ru: 'область' },
+        { latin: 'abdomen', form: 'abdomen, abdominis, n', ru: 'живот' },
+        { latin: 'caput', form: 'caput, capitis, n', ru: 'голова' },
+        { latin: 'corpus', form: 'corpus, corporis, n', ru: 'тело' },
+        { latin: 'femur', form: 'femur, femoris, n', ru: 'бедро' },
+        { latin: 'foramen', form: 'foramen, foraminis, n', ru: 'отверстие' },
+        { latin: 'os', form: 'os, oris, n', ru: 'рот' },
+        { latin: 'vas', form: 'vas, vasis, n', ru: 'сосуд' }
+    ];
+
+    // ================================================================
+    //  ДАННЫЕ: ЛЕКСИКА УРОКА 7 (гласный и смешанный типы)
+    // ================================================================
+    const VOWEL_TYPE = [
+        { latin: 'animal', form: 'animal, animalis, n', ru: 'животное' },
+        { latin: 'calcar', form: 'calcar, calcaris, n', ru: 'шпора' },
+        { latin: 'rete', form: 'rete, retis, n', ru: 'сеть' }
+    ];
+
+    const MIXED_TYPE = [
+        { latin: 'auris', form: 'auris, is, f', ru: 'ухо' },
+        { latin: 'basis', form: 'basis, is, f', ru: 'основание' },
+        { latin: 'canalis', form: 'canalis, is, m', ru: 'канал' },
+        { latin: 'dens', form: 'dens, dentis, m', ru: 'зуб' },
+        { latin: 'pars', form: 'pars, partis, f', ru: 'часть' },
+        { latin: 'pelvis', form: 'pelvis, is, f', ru: 'таз' },
+        { latin: 'pons', form: 'pons, pontis, m', ru: 'мост' },
+        { latin: 'phalanx', form: 'phalanx, phalangis, f', ru: 'фаланга' }
+    ];
+
+    // ================================================================
+    //  УТИЛИТЫ
+    // ================================================================
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function norm(s) {
+        return String(s).toLowerCase().replace(/[.,;:!?\s]/g, '').replace(/ё/g, 'е');
+    }
+
+    // ================================================================
+    //  ВКЛАДКИ
+    // ================================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            $('tab-' + btn.dataset.tab).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // ================================================================
+    //  ВХОДНОЙ ТЕСТ (урок 6 — III склонение, согласный тип)
+    // ================================================================
+    const TEST_DURATION = 15 * 60;
+    let testQuestions = [];
+    let testCurrent = 0;
+    let testAnswers = [];
+    let testTimerInterval = null;
+    let testSecondsLeft = TEST_DURATION;
+    let testActive = false;
+
+    function prepareTestQuestions() {
+        const pool = shuffle(LESSON6_WORDS).slice(0, 20);
+        return pool.map(w => {
+            const isLatinToRu = Math.random() < 0.5;
+            let questionText, correctAnswer, distractors;
+
+            if (isLatinToRu) {
+                questionText = `Что означает <span class="latin">${escapeHtml(w.latin)}</span>?`;
+                correctAnswer = w.ru;
+                const others = LESSON6_WORDS.filter(x => x.ru !== w.ru).map(x => x.ru);
+                distractors = shuffle([...new Set(others)]).slice(0, 5);
+            } else {
+                questionText = `Как по-латыни «${escapeHtml(w.ru)}»?`;
+                correctAnswer = w.latin;
+                const others = LESSON6_WORDS.filter(x => x.latin !== w.latin).map(x => x.latin);
+                distractors = shuffle([...new Set(others)]).slice(0, 5);
+            }
+
+            const options = shuffle([correctAnswer, ...distractors]);
+            return {
+                question: questionText,
+                options: options,
+                correct: options.indexOf(correctAnswer),
+                word: w
+            };
+        });
+    }
+
+    function startTest() {
+        testActive = true;
+        testQuestions = prepareTestQuestions();
+        testCurrent = 0;
+        testAnswers = new Array(testQuestions.length).fill(null);
+        testSecondsLeft = TEST_DURATION;
+
+        $('testStart').style.display = 'none';
+        $('testProgress').style.display = 'block';
+        $('testFinal').style.display = 'none';
+        $('testBadge').textContent = testQuestions.length + ' вопросов';
+
+        startTestTimer();
+        renderTestQuestion();
+    }
+
+    function startTestTimer() {
+        updateTestTimerDisplay();
+        if (testTimerInterval) clearInterval(testTimerInterval);
+        testTimerInterval = setInterval(() => {
+            testSecondsLeft--;
+            updateTestTimerDisplay();
+            if (testSecondsLeft <= 0) {
+                clearInterval(testTimerInterval);
+                finishTest(true);
+            }
+        }, 1000);
+    }
+
+    function updateTestTimerDisplay() {
+        const m = Math.floor(testSecondsLeft / 60);
+        const s = testSecondsLeft % 60;
+        const el = $('testTimer');
+        el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        el.classList.remove('warning', 'danger');
+        if (testSecondsLeft <= 60) el.classList.add('danger');
+        else if (testSecondsLeft <= 300) el.classList.add('warning');
+    }
+
+    function renderTestQuestion() {
+        const q = testQuestions[testCurrent];
+        const total = testQuestions.length;
+        const percent = Math.round((testCurrent / total) * 100);
+
+        $('testProgressText').textContent = `Вопрос ${testCurrent + 1} из ${total}`;
+        $('testBarFill').style.width = percent + '%';
+        $('testProgressPct').textContent = percent + '%';
+
+        const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е'];
+        let html = `<div class="q">
+            <div class="q-title"><span class="num">${testCurrent + 1}.</span> ${q.question}</div>
+            <div class="options">`;
+        q.options.forEach((opt, i) => {
+            const selected = testAnswers[testCurrent] === i;
+            html += `<div class="option ${selected ? 'selected' : ''}" data-idx="${i}">
+                <div class="marker">${letters[i]}</div>
+                <div class="text">${escapeHtml(opt)}</div>
+            </div>`;
+        });
+        html += '</div></div>';
+
+        $('questionCard').innerHTML = html;
+
+        $('questionCard').querySelectorAll('.option').forEach(optEl => {
+            optEl.addEventListener('click', () => {
+                testAnswers[testCurrent] = parseInt(optEl.dataset.idx);
+                renderTestQuestion();
+                $('testNextBtn').disabled = false;
+            });
+        });
+
+        const nextBtn = $('testNextBtn');
+        nextBtn.textContent = testCurrent === total - 1 ? '🏁 Завершить' : 'Далее ▶';
+        nextBtn.disabled = testAnswers[testCurrent] === null;
+    }
+
+    $('startTestBtn').addEventListener('click', startTest);
+
+    $('testNextBtn').addEventListener('click', () => {
+        if (testAnswers[testCurrent] === null) return;
+        if (testCurrent === testQuestions.length - 1) {
+            finishTest(false);
+        } else {
+            testCurrent++;
+            renderTestQuestion();
+        }
+    });
+
+    function finishTest(timeout) {
+        testActive = false;
+        if (testTimerInterval) clearInterval(testTimerInterval);
+
+        let correct = 0;
+        testQuestions.forEach((q, i) => {
+            if (testAnswers[i] === q.correct) correct++;
+        });
+        const total = testQuestions.length;
+        const percent = Math.round((correct / total) * 100);
+
+        $('testProgress').style.display = 'none';
+        $('testFinal').style.display = 'block';
+
+        const icon = percent >= 90 ? '🏆' : percent >= 75 ? '🎉' : percent >= 60 ? '😊' : '📚';
+        const message = percent >= 90 ? 'Отличный результат! Согласный тип III склонения усвоен.' :
+                        percent >= 75 ? 'Хороший результат! Вы уверенно знаете слова.' :
+                        percent >= 60 ? 'Неплохо, но стоит повторить некоторые слова.' :
+                        'Рекомендуем вернуться к лексике урока 6 и повторить согласный тип.';
+
+        const timeoutMsg = timeout ? '<div style="color:#b13e3e; font-weight:600; margin-bottom:12px;">⏰ Время вышло! Тест завершён автоматически.</div>' : '';
+
+        let html = `<div class="final-screen">
+            ${timeoutMsg}
+            <div class="icon">${icon}</div>
+            <div class="score-big">${percent}%</div>
+            <div class="message">${message}</div>
+            <div class="final-stats">
+                <div class="stat-box"><div class="num">${correct}</div><div class="lbl">Верно</div></div>
+                <div class="stat-box"><div class="num">${total - correct}</div><div class="lbl">Ошибок</div></div>
+                <div class="stat-box"><div class="num">${total}</div><div class="lbl">Всего</div></div>
+            </div>`;
+
+        html += `<div style="text-align:left; max-width:700px; margin:0 auto;">`;
+        html += `<div style="font-weight:700; color:#2C7DA0; margin-bottom:8px;">Разбор ответов:</div>`;
+        testQuestions.forEach((q, i) => {
+            const userIdx = testAnswers[i];
+            const userAnswer = userIdx !== null ? q.options[userIdx] : '— не отвечено —';
+            const correctAnswer = q.options[q.correct];
+            const ok = userIdx === q.correct;
+            html += `<div style="background:${ok ? '#E8F5E8' : '#FDF0E8'}; border-radius:12px; padding:8px 12px; margin-bottom:6px; font-size:0.82rem;">
+                <div style="font-weight:600; color:${ok ? '#2E7D32' : '#b13e3e'};">${i + 1}. ${q.question}</div>
+                <div style="font-size:0.78rem; color:#3E5C4A; margin-top:3px;">
+                    ${ok ? '✅ ' + escapeHtml(userAnswer) : '❌ Ваш ответ: ' + escapeHtml(userAnswer) + ' · ✅ Правильно: ' + escapeHtml(correctAnswer)}
+                </div>
+            </div>`;
+        });
+        html += `</div>`;
+        html += `<button class="btn btn-primary" style="margin-top:16px;" onclick="location.reload()">🔄 Пройти заново</button>`;
+        html += `</div>`;
+
+        $('testFinal').innerHTML = html;
+
+        $('headerScore').textContent = '⭐ ' + percent;
+        $('headerStatus').textContent = 'Входной тест завершён · ' + percent + '%';
+    }
+
+    // ================================================================
+    //  ЛЕКСИКА
+    // ================================================================
+    function renderLexicon() {
+        const gridVowel = $('lexVowel');
+        const gridMixed = $('lexMixed');
+
+        function renderGroup(grid, list) {
+            let html = '';
+            list.forEach(a => {
+                html += `<div class="lex-card">
+                    <span class="lex-latin">${escapeHtml(a.latin)}</span>
+                    <span class="lex-form">${escapeHtml(a.form)}</span>
+                    <span class="lex-trans">${escapeHtml(a.ru)}</span>
+                </div>`;
+            });
+            grid.innerHTML = html;
+        }
+
+        renderGroup(gridVowel, VOWEL_TYPE);
+        renderGroup(gridMixed, MIXED_TYPE);
+    }
+
+    // ================================================================
+    //  ПРАКТИКА
+    // ================================================================
+    const EXERCISES = {
+        ex1: {
+            rows: [
+                { cell1: 'animal, animalis, n', answer: 'гласный' },
+                { cell1: 'auris, is, f', answer: 'смешанный' },
+                { cell1: 'rete, is, n', answer: 'гласный' },
+                { cell1: 'dens, dentis, m', answer: 'смешанный' },
+                { cell1: 'calcar, aris, n', answer: 'гласный' },
+                { cell1: 'pars, partis, f', answer: 'смешанный' },
+                { cell1: 'basis, is, f', answer: 'смешанный' },
+                { cell1: 'radix, radicis, f', answer: 'согласный' },
+                { cell1: 'corpus, corporis, n', answer: 'согласный' },
+                { cell1: 'pons, pontis, m', answer: 'смешанный' }
+            ]
+        },
+        ex2: {
+            rows: [
+                { cell1: 'animal, animalis, n', answerGen: 'animalis', answerBase: 'animal' },
+                { cell1: 'auris, is, f', answerGen: 'auris', answerBase: 'aur' },
+                { cell1: 'dens, dentis, m', answerGen: 'dentis', answerBase: 'dent' },
+                { cell1: 'rete, is, n', answerGen: 'retis', answerBase: 'ret' },
+                { cell1: 'pars, partis, f', answerGen: 'partis', answerBase: 'part' },
+                { cell1: 'basis, is, f', answerGen: 'basis', answerBase: 'bas' },
+                { cell1: 'canalis, is, m', answerGen: 'canalis', answerBase: 'canal' },
+                { cell1: 'calcar, aris, n', answerGen: 'calcaris', answerBase: 'calcar' }
+            ]
+        },
+        ex3: {
+            rows: [
+                { cell1: 'animal, animalis, n', nomSg: 'animal', genSg: 'animalis', nomPl: 'animalia', genPl: 'animalium' },
+                { cell1: 'auris, is, f', nomSg: 'auris', genSg: 'auris', nomPl: 'aures', genPl: 'aurium' },
+                { cell1: 'dens, dentis, m', nomSg: 'dens', genSg: 'dentis', nomPl: 'dentes', genPl: 'dentium' },
+                { cell1: 'rete, is, n', nomSg: 'rete', genSg: 'retis', nomPl: 'retia', genPl: 'retium' },
+                { cell1: 'pars, partis, f', nomSg: 'pars', genSg: 'partis', nomPl: 'partes', genPl: 'partium' },
+                { cell1: 'canalis, is, m', nomSg: 'canalis', genSg: 'canalis', nomPl: 'canales', genPl: 'canalium' },
+                { cell1: 'calcar, aris, n', nomSg: 'calcar', genSg: 'calcaris', nomPl: 'calcaria', genPl: 'calcarиум'.replace('и','i') }
+            ]
+        },
+        ex4: {
+            rows: [
+                { cell1: 'auris externa', answer: 'наружное ухо' },
+                { cell1: 'auris media', answer: 'среднее ухо' },
+                { cell1: 'auris interna', answer: 'внутреннее ухо' },
+                { cell1: 'dens incisivus', answer: 'резцовый зуб' },
+                { cell1: 'dens caninus', answer: 'клык' },
+                { cell1: 'dens molaris', answer: 'коренной зуб' },
+                { cell1: 'basis cranii', answer: 'основание черепа' },
+                { cell1: 'animal domesticum', answer: 'домашнее животное' },
+                { cell1: 'pars thoracica', answer: 'грудная часть' },
+                { cell1: 'canalis vertebralis', answer: 'позвоночный канал' }
+            ]
+        },
+        ex5: {
+            rows: [
+                { cell1: 'наружное ухо', answer: 'auris externa' },
+                { cell1: 'среднее ухо', answer: 'auris media' },
+                { cell1: 'внутреннее ухо', answer: 'auris interna' },
+                { cell1: 'резцовый зуб', answer: 'dens incisivus' },
+                { cell1: 'клык', answer: 'dens caninus' },
+                { cell1: 'коренной зуб', answer: 'dens molaris' },
+                { cell1: 'основание черепа', answer: 'basis cranii' },
+                { cell1: 'домашнее животное', answer: 'animal domesticum' },
+                { cell1: 'грудная часть', answer: 'pars thoracica' },
+                { cell1: 'позвоночный канал', answer: 'canalis vertebralis' }
+            ]
+        },
+        ex6: {
+            rows: [
+                { cell1: 'aur_ externa (наружное ухо)', answer: 'auris' },
+                { cell1: 'dens incisiv_ (резцовый зуб)', answer: 'dens incisivus' },
+                { cell1: 'basi_ cranii (основание черепа)', answer: 'basis' },
+                { cell1: 'animal domestic_ (домашнее животное)', answer: 'animal domesticum' },
+                { cell1: 'part_ thoracica (грудная часть)', answer: 'pars' },
+                { cell1: 'canal_ vertebralis (позвоночный канал)', answer: 'canalis' }
+            ]
+        },
+        ex7: {
+            rows: [
+                { cell1: 'Наружное ухо', answer: 'auris externa' },
+                { cell1: 'Резцовый зуб', answer: 'dens incisivus' },
+                { cell1: 'Основание черепа', answer: 'basis cranii' },
+                { cell1: 'Домашнее животное', answer: 'animal domesticum' },
+                { cell1: 'Позвоночный канал', answer: 'canalis vertebralis' },
+                { cell1: 'Грудная часть', answer: 'pars thoracica' }
+            ]
+        },
+        ex8: {
+            rows: [
+                { cell1: 'Auris externa et auris media.', answer: 'Наружное ухо и среднее ухо.' },
+                { cell1: 'Dens incisivus et dens caninus.', answer: 'Резцовый зуб и клык.' },
+                { cell1: 'Basis cranii et canalis vertebralis.', answer: 'Основание черепа и позвоночный канал.' },
+                { cell1: 'Animal domesticum et pars thoracica.', answer: 'Домашнее животное и грудная часть.' }
+            ]
+        }
+    };
+
+    function renderExercises() {
+        // Ex1 — тип склонения
+        let html = '';
+        EXERCISES.ex1.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><select data-ex="ex1" data-row="${i}" data-col="answer">
+                    <option value="">—</option>
+                    <option value="согласный">согласный</option>
+                    <option value="гласный">гласный</option>
+                    <option value="смешанный">смешанный</option>
+                </select></td>
+            </tr>`;
+        });
+        $('ex1Body').innerHTML = html;
+
+        // Ex2 — основа
+        html = '';
+        EXERCISES.ex2.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex2" data-row="${i}" data-col="gen" placeholder="radicis"></td>
+                <td><input type="text" data-ex="ex2" data-row="${i}" data-col="base" placeholder="radic"></td>
+            </tr>`;
+        });
+        $('ex2Body').innerHTML = html;
+
+        // Ex3 — склонение
+        html = '';
+        EXERCISES.ex3.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex3" data-row="${i}" data-col="nomSg"></td>
+                <td><input type="text" data-ex="ex3" data-row="${i}" data-col="genSg"></td>
+                <td><input type="text" data-ex="ex3" data-row="${i}" data-col="nomPl"></td>
+                <td><input type="text" data-ex="ex3" data-row="${i}" data-col="genPl"></td>
+            </tr>`;
+        });
+        $('ex3Body').innerHTML = html;
+
+        // Ex4 — лат → рус
+        html = '';
+        EXERCISES.ex4.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex4" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex4Body').innerHTML = html;
+
+        // Ex5 — рус → лат
+        html = '';
+        EXERCISES.ex5.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex5" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex5Body').innerHTML = html;
+
+        // Ex6 — восстановить окончания
+        html = '';
+        EXERCISES.ex6.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex6" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex6Body').innerHTML = html;
+
+        // Ex7 — карта пациента
+        html = '';
+        EXERCISES.ex7.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex7" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex7Body').innerHTML = html;
+
+        // Ex8 — перевод предложений
+        html = '';
+        EXERCISES.ex8.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex8" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex8Body').innerHTML = html;
+    }
+
+    function checkExercise(id) {
+        const ex = EXERCISES[id];
+        let correct = 0;
+        let total = 0;
+        const resultEl = $(id + 'Result');
+
+        if (id === 'ex1') {
+            ex.rows.forEach((r, i) => {
+                const sel = document.querySelector(`select[data-ex="ex1"][data-row="${i}"][data-col="answer"]`);
+                const ok = sel.value === r.answer;
+                sel.classList.toggle('correct', ok);
+                sel.classList.toggle('wrong', !ok && sel.value !== '');
+                total++;
+                if (ok) correct++;
+            });
+        } else if (id === 'ex2') {
+            ex.rows.forEach((r, i) => {
+                const inGen = document.querySelector(`input[data-ex="ex2"][data-row="${i}"][data-col="gen"]`);
+                const inBase = document.querySelector(`input[data-ex="ex2"][data-row="${i}"][data-col="base"]`);
+                const gOk = norm(inGen.value) === norm(r.answerGen);
+                const bOk = norm(inBase.value) === norm(r.answerBase);
+                inGen.classList.toggle('correct', gOk);
+                inGen.classList.toggle('wrong', !gOk && inGen.value.trim() !== '');
+                inBase.classList.toggle('correct', bOk);
+                inBase.classList.toggle('wrong', !bOk && inBase.value.trim() !== '');
+                total += 2;
+                if (gOk) correct++;
+                if (bOk) correct++;
+            });
+        } else if (id === 'ex3') {
+            ex.rows.forEach((r, i) => {
+                const fields = ['nomSg', 'genSg', 'nomPl', 'genPl'];
+                const answers = [r.nomSg, r.genSg, r.nomPl, r.genPl];
+                fields.forEach((f, k) => {
+                    const inp = document.querySelector(`input[data-ex="ex3"][data-row="${i}"][data-col="${f}"]`);
+                    const ok = norm(inp.value) === norm(answers[k]);
+                    inp.classList.toggle('correct', ok);
+                    inp.classList.toggle('wrong', !ok && inp.value.trim() !== '');
+                    total++;
+                    if (ok) correct++;
+                });
+            });
+        } else if (id === 'ex4' || id === 'ex5' || id === 'ex6' || id === 'ex7' || id === 'ex8') {
+            ex.rows.forEach((r, i) => {
+                const inp = document.querySelector(`input[data-ex="${id}"][data-row="${i}"][data-col="answer"]`);
+                const ok = norm(inp.value) === norm(r.answer);
+                inp.classList.toggle('correct', ok);
+                inp.classList.toggle('wrong', !ok && inp.value.trim() !== '');
+                total++;
+                if (ok) correct++;
+            });
+        }
+
+        const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+        resultEl.className = 'result-msg show ' + (percent >= 80 ? 'ok' : 'no');
+        resultEl.innerHTML = `Правильно: <strong>${correct} из ${total}</strong> (${percent}%).` +
+            (percent === 100 ? ' Отлично!' :
+             percent >= 80 ? ' Хорошо!' :
+             percent >= 60 ? ' Есть над чем поработать.' :
+             ' Стоит повторить правила.');
+    }
+
+    function resetExercise(id) {
+        document.querySelectorAll(`[data-ex="${id}"]`).forEach(el => {
+            el.value = '';
+            el.classList.remove('correct', 'wrong');
+        });
+        $(id + 'Result').classList.remove('show');
+    }
+
+    document.querySelectorAll('[data-check]').forEach(btn => {
+        btn.addEventListener('click', () => checkExercise(btn.dataset.check));
+    });
+    document.querySelectorAll('[data-reset]').forEach(btn => {
+        btn.addEventListener('click', () => resetExercise(btn.dataset.reset));
+    });
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+    renderLexicon();
+    renderExercises();
+
+})();
+</script>
+</body>
+</html>

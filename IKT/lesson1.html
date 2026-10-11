@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Информатика · Первый урок · ВетСим</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Montserrat','Segoe UI',system-ui,sans-serif;
+  background:#FDF8F0; color:#1A2A3A; padding:16px; min-height:100vh;
+}
+.container { max-width:1150px; margin:0 auto; }
+
+/* Шапка */
+.header {
+  background:white; border-radius:1.5rem; padding:14px 24px;
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  gap:10px; box-shadow:0 2px 10px rgba(0,0,0,.04); margin-bottom:16px;
+  border:1px solid #E7EDE2;
+}
+.header .logo { display:flex; align-items:center; gap:8px; font-weight:700; font-size:1.15rem; }
+.header .logo .gradient {
+  background:linear-gradient(135deg,#2C7DA0,#6B9E6B);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.header .logo .sub { font-weight:400; font-size:.7rem; color:#7B8D6E; display:block; }
+.header-stats { display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:.8rem; }
+.header-stats .timer {
+  background:#2C7DA0; color:white; padding:6px 20px; border-radius:40px;
+  font-weight:700; font-size:.95rem; font-variant-numeric:tabular-nums;
+  min-width:100px; text-align:center; transition:.3s;
+}
+.header-stats .timer.warning { background:#D4A373; }
+.header-stats .timer.danger { background:#b13e3e; animation:pulse 1s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+.header-stats .progress-text { color:#5F7C62; max-width:340px; }
+
+/* Кнопки */
+.btn {
+  background:#EBE3D2; border:none; padding:7px 20px; border-radius:40px;
+  font-weight:600; cursor:pointer; transition:.15s; font-family:inherit;
+  font-size:.8rem; color:#1A2A3A; display:inline-flex; align-items:center; gap:6px;
+  text-decoration:none;
+}
+.btn:hover { opacity:.85; transform:translateY(-1px); }
+.btn:active { transform:scale(.96); }
+.btn-primary { background:#2C7DA0; color:white; }
+.btn-primary:hover { background:#236B8A; }
+.btn-success { background:#6B9E6B; color:white; }
+.btn-success:hover { background:#5A865A; }
+.btn-outline { background:transparent; border:1px solid #D9D0BD; }
+.btn-outline:hover { background:#F0EEE5; }
+.btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+
+/* Вкладки */
+.tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.tab-btn {
+  background:#EBE3D2; border:none; padding:7px 18px; border-radius:40px;
+  font-weight:600; font-size:.76rem; cursor:pointer; transition:.2s;
+  font-family:inherit; color:#3E5C4A;
+}
+.tab-btn:hover { opacity:.85; }
+.tab-btn.active { background:#2C7DA0; color:white; }
+
+.tab-content { display:none; animation:fadeIn .25s ease; }
+.tab-content.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+
+/* Карточки */
+.card {
+  background:white; border-radius:1.5rem; padding:20px 24px;
+  border:1px solid #E7EDE2; box-shadow:0 2px 10px rgba(0,0,0,.04);
+  margin-bottom:14px;
+}
+.card-title {
+  font-weight:700; font-size:1rem; color:#2C7DA0; margin-bottom:12px;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:8px; line-height:1.4;
+}
+.card-title .badge {
+  font-size:.65rem; background:#E7EDE2; color:#5F7C62;
+  padding:3px 12px; border-radius:40px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.3px;
+}
+.badge.blue { background:#DBEAF2; color:#1F4E6E; }
+.badge.green { background:#E2EFD8; color:#4A6B3A; }
+.badge.orange { background:#FBE4D0; color:#8A5A2B; }
+
+/* Уведомления */
+.notice {
+  background:#F7F3E8; border-left:4px solid #2C7DA0;
+  padding:10px 14px; border-radius:0 1rem 1rem 0;
+  margin:10px 0; font-size:.85rem; line-height:1.6;
+}
+.notice.green { background:#E8F5E8; border-left-color:#6B9E6B; }
+.notice.blue { background:#E8F0F5; border-left-color:#2C7DA0; }
+.notice.orange { background:#FDF3E8; border-left-color:#D4A373; }
+.notice.red { background:#FDF0E8; border-left-color:#b13e3e; }
+.notice strong { color:#1F4E6E; }
+
+/* Сетки */
+.grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+
+.theory-box {
+  background:#F9FBF8; border:1px solid #E7EDE2;
+  border-radius:1rem; padding:14px 16px;
+}
+.theory-box h3 {
+  color:#2C7DA0; font-size:.88rem; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.theory-box p, .theory-box li { font-size:.83rem; line-height:1.6; }
+.theory-box ul { padding-left:18px; margin-top:4px; }
+.theory-box ul li { margin-bottom:3px; }
+
+.latin {
+  font-family:Georgia,'Times New Roman',serif;
+  color:#1F4E6E; font-weight:700;
+}
+
+/* Тест */
+.q { padding:12px 0; border-bottom:1px solid #f0ebe3; }
+.q:last-child { border-bottom:none; }
+.q-title { font-weight:600; font-size:.9rem; margin-bottom:10px; line-height:1.55; }
+.q-title .num { color:#2C7DA0; font-weight:700; margin-right:4px; }
+.options { display:flex; flex-direction:column; gap:6px; }
+.option {
+  background:#FEFCF9; border:2px solid #E7EDE2; border-radius:40px;
+  padding:8px 18px; font-size:.85rem; cursor:pointer; transition:.15s;
+  display:flex; align-items:center; gap:10px;
+}
+.option:hover { background:#F3F7F2; border-color:#A3B18A; }
+.option.selected { background:#E9F0E3; border-color:#2C7DA0; box-shadow:0 0 0 3px rgba(44,125,160,.1); }
+.option .marker {
+  width:26px; height:26px; min-width:26px; background:#E2EAD9;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-weight:700; color:#5F7C62; font-size:.8rem;
+}
+.option.selected .marker { background:#2C7DA0; color:white; }
+
+/* Ссылки-карточки */
+.link-card {
+  background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem;
+  padding:14px 18px; display:flex; align-items:center; gap:12px;
+  text-decoration:none; color:#1A2A3A; transition:.15s;
+}
+.link-card:hover { background:#F3F7F2; border-color:#A3B18A; transform:translateY(-1px); }
+.link-card .icon { font-size:1.6rem; }
+.link-card .text { flex:1; }
+.link-card .text strong { display:block; color:#1F4E6E; font-size:.9rem; margin-bottom:2px; }
+.link-card .text span { font-size:.78rem; color:#5F7C62; }
+
+/* Чек-лист */
+.checklist { list-style:none; padding:0; }
+.checklist li {
+  padding:8px 12px; background:#F9FBF8; border-radius:.75rem;
+  margin-bottom:6px; font-size:.85rem; display:flex; align-items:flex-start; gap:8px;
+}
+.checklist li::before { content:'✓'; color:#6B9E6B; font-weight:700; }
+
+.result-msg {
+  margin-top:10px; padding:10px 14px; border-radius:1rem;
+  font-size:.85rem; font-weight:500; line-height:1.55;
+}
+.result-msg.ok { background:#E8F5E8; color:#2E7D32; }
+.result-msg.no { background:#FDF0E8; color:#b13e3e; }
+
+/* Футер */
+footer {
+  margin-top:20px; padding:16px; background:white; border-radius:1.5rem;
+  border:1px solid #E7EDE2; text-align:center; font-size:.75rem;
+  color:#7B8D6E; line-height:1.6;
+}
+footer strong { color:#1F4E6E; }
+
+@media (max-width:700px) {
+  body { padding:10px; }
+  .header { flex-direction:column; align-items:stretch; padding:12px 16px; }
+  .header .logo { font-size:.95rem; }
+  .header-stats { justify-content:space-between; }
+  .card { padding:14px 16px; }
+  .tab-btn { font-size:.68rem; padding:5px 12px; }
+  .q-title { font-size:.85rem; }
+  .option { padding:8px 14px; font-size:.82rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="logo">
+    💻 <span class="gradient">Информатика</span>
+    <span class="sub">· Первый урок · 36.02.01 Ветеринария</span>
+  </div>
+  <div class="header-stats">
+    <span class="progress-text" id="headerStatus">Урок 1 · Введение</span>
+    <span class="timer" id="lessonTimer">90:00</span>
+  </div>
+</header>
+
+<!-- ВКЛАДКИ -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="start">🎬 Старт</button>
+  <button class="tab-btn" data-tab="anketa">📋 Анкета</button>
+  <button class="tab-btn" data-tab="why">🧠 Зачем это всё</button>
+  <button class="tab-btn" data-tab="test">🧪 Входной тест</button>
+  <button class="tab-btn" data-tab="vetsim">🐾 ВетСим</button>
+  <button class="tab-btn" data-tab="final">🎯 Финал</button>
+</div>
+
+<!-- ===== ВКЛАДКА 1. СТАРТ ===== -->
+<section class="tab-content active" id="tab-start">
+  <div class="card">
+    <div class="card-title"><span>🎬 Добро пожаловать</span><span class="badge blue">5-10 мин</span></div>
+    <div class="notice blue">
+      <strong>Приветствие.</strong> Меня зовут Тераевич Алла Сергеевна. Я — ветеринарный врач и преподаватель.
+      Я буду вести у вас <strong>Информатику</strong>. И это не случайно — сейчас объясню, почему.
+    </div>
+    <div class="notice green">
+      <strong>Правила на уроке:</strong> можно ошибаться. Нельзя — молчать, если непонятно.
+      Спрашивать — нормально. Помогать друг другу — приветствуется.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:14px 0 8px;">Знакомство</h3>
+    <p style="font-size:.85rem; line-height:1.6;">
+      Каждый называет <strong>имя</strong> и <strong>одно животное</strong>, с которым хотел бы работать.
+      Я записываю — это поможет мне лучше понять группу.
+    </p>
+    <div class="notice orange">
+      <strong>Важно:</strong> это не экзамен. Это знакомство. Я хочу понять, с кем работаю.
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 2. АНКЕТА ===== -->
+<section class="tab-content" id="tab-anketa">
+  <div class="card">
+    <div class="card-title"><span>📋 Анкета студента</span><span class="badge orange">10-15 мин</span></div>
+    <div class="notice">
+      <strong>Зачем:</strong> чтобы я знала, с кем имею дело. Что вы уже умеете, что интересно, чего ждёте.
+      Это <strong>не экзамен</strong>, оценок не будет. Отвечайте честно.
+    </div>
+
+    <div style="text-align:center; padding:20px 0;">
+      <p style="font-size:1.05rem; font-weight:600; color:#1F4E6E; margin-bottom:16px;">
+        Откройте анкету по ссылке:
+      </p>
+      <a href="https://forms.yandex.ru/u/6acbc11e9029029bc8c439db" target="_blank" class="btn btn-primary"
+         style="font-size:1rem; padding:14px 40px;">
+        📝 Заполнить анкету
+      </a>
+      <p style="font-size:.8rem; color:#7B8D6E; margin-top:14px;">
+        Или отсканируйте QR-код на экране (я покажу).
+      </p>
+    </div>
+
+    <div class="notice blue">
+      <strong>Что внутри:</strong> 20 коротких вопросов. Опыт, навыки, интересы, ожидания.
+      Займёт 5-7 минут.
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 3. ЗАЧЕМ ЭТО ВСЁ ===== -->
+<section class="tab-content" id="tab-why">
+  <div class="card">
+    <div class="card-title"><span>🧠 Зачем ветеринару информатика?</span><span class="badge blue">10 мин</span></div>
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>📊 Базы данных</h3>
+        <p>Учёт животных в клинике, приюте, на ферме. Без базы данных — хаос.</p>
+      </div>
+      <div class="theory-box">
+        <h3>🧮 Электронные таблицы</h3>
+        <p>Расчёт доз лекарств, составление рационов, анализ показателей.</p>
+      </div>
+      <div class="theory-box">
+        <h3>🌐 Интернет</h3>
+        <p>Поиск информации о болезнях, общение с коллегами, повышение квалификации.</p>
+      </div>
+      <div class="theory-box">
+        <h3>📄 Документы</h3>
+        <p>Заполнение отчётов, ведение карт пациентов, оформление справок.</p>
+      </div>
+    </div>
+    <div class="notice green" style="margin-top:14px;">
+      <strong>А ещё есть ВетСим.</strong> Цифровая среда, которую я создаю. Там уже есть
+      <strong>более 20 конструкторов</strong>, витрина тренажёров, цифровая зачётка и дневники становления.
+      И мне нужны помощники. Об этом — дальше.
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 4. ВХОДНОЙ ТЕСТ ===== -->
+<section class="tab-content" id="tab-test">
+  <div class="card">
+    <div class="card-title"><span>🧪 Входной тест: диагностика</span><span class="badge">12 вопросов</span></div>
+    <div class="notice">
+      <strong>Это не экзамен.</strong> Мне нужно понять, с чем мы работаем, чтобы не тратить ваше время
+      на то, что вы уже знаете. Оценок не будет.
+    </div>
+    <div id="testArea"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;">
+      <button class="btn btn-primary" id="checkTestBtn" disabled>✅ Проверить</button>
+      <button class="btn btn-outline" id="resetTestBtn">🔄 Сбросить</button>
+    </div>
+    <div class="result-msg" id="testResult" style="display:none;"></div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 5. ВЕТСИМ ===== -->
+<section class="tab-content" id="tab-vetsim">
+  <div class="card">
+    <div class="card-title"><span>🐾 ВетСим — что это и зачем</span><span class="badge green">20 мин</span></div>
+    <div class="notice blue">
+      <strong>ВетСим</strong> — цифровая экосистема для ветеринарного образования.
+      Проект создаётся <strong>одним человеком</strong> (мной) с помощью ИИ.
+      И мне нужны помощники.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Что уже есть в ВетСим</h3>
+    <div class="grid-2">
+      <a href="https://vet-sim.github.io/universal.html" target="_blank" class="link-card">
+        <div class="icon">🧩</div>
+        <div class="text">
+          <strong>20+ конструкторов</strong>
+          <span>Создавай тренажёры без программирования</span>
+        </div>
+      </a>
+      <a href="https://vet-sim.github.io/showcase.html" target="_blank" class="link-card">
+        <div class="icon">🎬</div>
+        <div class="text">
+          <strong>Витрина тренажёров</strong>
+          <span>Готовые тренажёры, созданные в конструкторах</span>
+        </div>
+      </a>
+      <a href="https://vet-sim.github.io/professional.html" target="_blank" class="link-card">
+        <div class="icon">📘</div>
+        <div class="text">
+          <strong>Инструкции к конструкторам</strong>
+          <span>К каждому конструктору — понятное руководство</span>
+        </div>
+      </a>
+      <a href="https://vetsim.ru/students/students.html" target="_blank" class="link-card">
+        <div class="icon">📊</div>
+        <div class="text">
+          <strong>Цифровая зачётка</strong>
+          <span>Успехи, оценки, прогресс — в одном месте</span>
+        </div>
+      </a>
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Что готовится к запуску</h3>
+    <div class="notice orange">
+      <strong>Дневники становления</strong> — сквозные трекеры для всех курсов: рефлексия, цели, привычки,
+      профессиональный рост. От первого курса до выпуска.
+      Пока <strong>не загружены на сайт</strong> — чтобы раньше времени не украли.
+      Под них будет <strong>конкурсный проект</strong>. Если хочешь участвовать — подойди после урока.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Где общаться</h3>
+    <div class="grid-2">
+      <a href="https://vk.ru/vetsimpros" target="_blank" class="link-card">
+        <div class="icon">📢</div>
+        <div class="text">
+          <strong>ВК: Ветеринарное просвещение</strong>
+          <span>Группа для студентов, школьников, врачей</span>
+        </div>
+      </a>
+        </div>
+      </a>
+    </div>
+
+    <div class="notice orange" style="margin-top:14px;">
+      <strong>Приглашение к участию.</strong> Если тебе интересно — подойди после урока.
+      Я расскажу, что можно делать: тестировать, предлагать идеи, создавать контент,
+      стать модератором группы ВК.
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 6. ФИНАЛ ===== -->
+<section class="tab-content" id="tab-final">
+  <div class="card">
+    <div class="card-title"><span>🎯 Итоги урока</span><span class="badge blue">10 мин</span></div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin-bottom:8px;">Рефлексия</h3>
+    <p style="font-size:.85rem; line-height:1.6; margin-bottom:12px;">
+      Ответьте на 3 вопроса (устно или в чате):
+    </p>
+    <ul class="checklist">
+      <li>Что нового вы узнали сегодня?</li>
+      <li>Что было непонятно?</li>
+      <li>Что хотели бы изучить подробнее?</li>
+    </ul>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Домашнее задание</h3>
+    <div class="notice green">
+      Подумайте, какая информация в работе ветеринара самая важная.
+      Запишите <strong>3 пункта</strong>. Обсудим на следующем уроке.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Приглашение</h3>
+    <div class="notice orange">
+      Если хочешь стать помощником в развитии ВетСим — подойди после урока.
+      Если хочешь стать модератором группы ВК — тоже подойди.
+      Я жду именно тех, кому <strong>интересно</strong>.
+    </div>
+  </div>
+</section>
+
+<!-- ФУТЕР -->
+<footer>
+  © ВетСим — ветеринарное просвещение · Информатика для ветеринаров<br>
+  <strong>Автор проекта: Тераевич Алла Сергеевна</strong><br>
+  Первый урок · 36.02.01 Ветеринария · Работает офлайн
+</footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+
+  // ===== ВКЛАДКИ =====
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      $('tab-' + btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  // ===== ТАЙМЕР УРОКА (90 минут) =====
+  let lessonSeconds = 90 * 60;
+  const timerEl = $('lessonTimer');
+  function updateTimer(){
+    const m = Math.floor(lessonSeconds / 60);
+    const s = lessonSeconds % 60;
+    timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    timerEl.classList.remove('warning','danger');
+    if (lessonSeconds <= 300) timerEl.classList.add('danger');
+    else if (lessonSeconds <= 900) timerEl.classList.add('warning');
+  }
+  updateTimer();
+  setInterval(() => {
+    if (lessonSeconds > 0) { lessonSeconds--; updateTimer(); }
+  }, 1000);
+
+  // ===== ВХОДНОЙ ТЕСТ =====
+  // Вопросы храним без пометки "правильный = первый".
+  // При запуске перемешиваем и вопросы, и варианты ответов.
+  const TEST_QUESTIONS_RAW = [
+    {
+      q: 'Что такое информация?',
+      correct: 'Сведения об окружающем мире',
+      wrong: ['Только текст в книге', 'Только числа', 'Только картинки']
+    },
+    {
+      q: 'Сколько бит в 1 байте?',
+      correct: '8',
+      wrong: ['4', '16', '1024']
+    },
+    {
+      q: 'Сколько байт в 1 Кбайте?',
+      correct: '1024',
+      wrong: ['1000', '512', '2048']
+    },
+    {
+      q: 'Что такое файл?',
+      correct: 'Поименованная область на носителе',
+      wrong: ['Папка', 'Программа', 'Устройство']
+    },
+    {
+      q: 'Устройство для ввода текста:',
+      correct: 'Клавиатура',
+      wrong: ['Монитор', 'Принтер', 'Колонки']
+    },
+    {
+      q: 'Программа для работы с текстом:',
+      correct: 'Word',
+      wrong: ['Excel', 'Paint', 'Браузер']
+    },
+    {
+      q: 'Что такое операционная система?',
+      correct: 'Программа для управления компьютером',
+      wrong: ['Игра', 'Текстовый файл', 'Сайт']
+    },
+    {
+      q: 'Как найти информацию в интернете?',
+      correct: 'Ввести запрос в поисковик',
+      wrong: ['Позвонить другу', 'Открыть Word', 'Выключить компьютер']
+    },
+    {
+      q: 'Что такое электронная почта?',
+      correct: 'Сервис для обмена сообщениями',
+      wrong: ['Игра', 'Программа для рисования', 'База данных']
+    },
+    {
+      q: 'Как сохранить файл?',
+      correct: 'Ctrl+S или Файл → Сохранить',
+      wrong: ['Ctrl+C', 'Ctrl+V', 'Ctrl+Z']
+    },
+    {
+      q: 'Что такое антивирус?',
+      correct: 'Программа для защиты от вредоносных программ',
+      wrong: ['Игра', 'Браузер', 'Текстовый редактор']
+    },
+    {
+      q: 'Что такое папка?',
+      correct: 'Контейнер для файлов',
+      wrong: ['Файл', 'Программа', 'Устройство']
+    }
+  ];
+
+  let testQuestions = [];   // перемешанные вопросы с перемешанными вариантами
+  let testRendered = false;
+
+  function shuffle(arr){
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function prepareTest(){
+    testQuestions = shuffle(TEST_QUESTIONS_RAW).map(item => {
+      // Перемешиваем все варианты, отдельно запоминаем индекс правильного
+      const options = shuffle([item.correct, ...item.wrong]);
+      return {
+        q: item.q,
+        options: options,
+        correct: options.indexOf(item.correct)
+      };
+    });
+  }
+
+  function renderTest(){
+    if (testRendered) return;
+    testRendered = true;
+    prepareTest();
+
+    let html = '';
+    testQuestions.forEach((q, i) => {
+      html += `<div class="q">
+        <div class="q-title"><span class="num">${i+1}.</span> ${q.q}</div>
+        <div class="options">`;
+      q.options.forEach((opt, j) => {
+        html += `<div class="option" data-q="${i}" data-o="${j}">
+          <div class="marker">${String.fromCharCode(1040+j)}</div>
+          <div>${opt}</div>
+        </div>`;
+      });
+      html += `</div></div>`;
+    });
+    $('testArea').innerHTML = html;
+
+    $('testArea').querySelectorAll('.option').forEach(el => {
+      el.addEventListener('click', () => {
+        const q = el.dataset.q;
+        $('testArea').querySelectorAll(`.option[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        checkTestReady();
+      });
+    });
+  }
+
+  function checkTestReady(){
+    const answered = $('testArea').querySelectorAll('.option.selected').length;
+    $('checkTestBtn').disabled = answered < testQuestions.length;
+  }
+
+  $('checkTestBtn').addEventListener('click', () => {
+    let correct = 0;
+    testQuestions.forEach((q, i) => {
+      const selected = $('testArea').querySelector(`.option[data-q="${i}"].selected`);
+      if (selected && parseInt(selected.dataset.o) === q.correct) correct++;
+    });
+    const percent = Math.round((correct / testQuestions.length) * 100);
+    const result = $('testResult');
+    result.style.display = 'block';
+    result.className = 'result-msg ' + (percent >= 70 ? 'ok' : 'no');
+    result.innerHTML = `<strong>Результат: ${correct} из ${testQuestions.length} (${percent}%)</strong><br>` +
+      (percent >= 90 ? 'Отличный уровень! Можно двигаться дальше.' :
+       percent >= 70 ? 'Хороший уровень. Есть небольшие пробелы.' :
+       percent >= 50 ? 'Средний уровень. Повторим основы.' :
+       'Низкий уровень. Будем работать вместе.');
+  });
+
+  $('resetTestBtn').addEventListener('click', () => {
+    // Полный сброс: заново перемешиваем и вопросы, и ответы
+    testRendered = false;
+    $('testResult').style.display = 'none';
+    $('checkTestBtn').disabled = true;
+    renderTest();
+  });
+
+  // Рендер теста при первом открытии вкладки
+  document.querySelector('.tab-btn[data-tab="test"]').addEventListener('click', renderTest);
+
+})();
+</script>
+</body>
+</html>

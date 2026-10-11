@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Доение ПРО — тренажёр подготовки операторов машинного доения | ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    min-height: 100vh;
+    padding: 16px;
+    color: #1b5e20;
+  }
+  .container { max-width: 950px; margin: 0 auto; }
+  .header {
+    background: linear-gradient(135deg, #2e7d32, #1b5e20);
+    color: #fff;
+    border-radius: 1.5rem;
+    padding: 20px 28px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+  }
+  .header h1 { font-size: 1.6rem; margin-bottom: 4px; }
+  .header p { font-size: 0.85rem; opacity: 0.95; }
+  .timer {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    background: rgba(255,255,255,0.2);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1rem;
+    display: none;
+  }
+  .timer.show { display: block; }
+  .timer.warning { background: #ffcdd2; color: #b71c1c; animation: pulse 0.5s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+  .mode-screen { padding: 20px 0; }
+  .mode-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .mode-card {
+    background: #fff;
+    border: 2px solid #dcedc8;
+    border-radius: 1.2rem;
+    padding: 24px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: left;
+  }
+  .mode-card:hover { background: #f1f8e9; border-color: #43a047; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(46,125,50,0.15); }
+  .mode-card .icon { font-size: 2.2rem; margin-bottom: 10px; }
+  .mode-card h3 { color: #2e7d32; margin-bottom: 8px; font-size: 1.1rem; }
+  .mode-card p { color: #558b2f; font-size: 0.85rem; line-height: 1.5; }
+
+  .progress-bar { display: flex; gap: 5px; padding: 12px 0; }
+  .progress-step { flex: 1; height: 6px; background: #c8e6c9; border-radius: 3px; transition: 0.3s; }
+  .progress-step.active { background: #43a047; }
+  .progress-step.done { background: #2e7d32; }
+
+  .content { padding: 10px 0; }
+  .step-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #66bb6a; margin-bottom: 6px; font-weight: 600; }
+  .question { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; line-height: 1.4; color: #1b5e20; }
+  .question-type {
+    display: inline-block;
+    font-size: 0.7rem;
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .answers { display: flex; flex-direction: column; gap: 8px; }
+  .answer {
+    padding: 12px 16px;
+    background: #f9fbe7;
+    border: 2px solid #dcedc8;
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .answer:hover { background: #f1f8e9; border-color: #aed581; }
+  .answer.selected { background: #c8e6c9; border-color: #43a047; }
+  .answer.correct { background: #c8e6c9; border-color: #2e7d32; }
+  .answer.wrong { background: #ffcdd2; border-color: #c62828; }
+  .answer .marker {
+    width: 22px; height: 22px; border-radius: 50%;
+    border: 2px solid #aed581; display: flex; align-items: center;
+    justify-content: center; font-size: 0.7rem; font-weight: 700;
+    flex-shrink: 0; color: #558b2f;
+  }
+  .answer.selected .marker { background: #43a047; border-color: #43a047; color: #fff; }
+
+  .btn {
+    background: linear-gradient(135deg, #43a047, #2e7d32);
+    color: #fff; border: none; padding: 12px 28px; border-radius: 1rem;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    transition: 0.2s; margin-top: 16px; font-family: inherit;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,125,50,0.4); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-secondary { background: #fff; color: #2e7d32; border: 2px solid #2e7d32; margin-left: 8px; }
+
+  .feedback {
+    margin-top: 16px; padding: 14px 18px; border-radius: 1rem;
+    font-size: 0.9rem; line-height: 1.5; display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { background: #e8f5e9; border-left: 4px solid #2e7d32; color: #1b5e20; }
+  .feedback.wrong { background: #ffebee; border-left: 4px solid #c62828; color: #b71c1c; }
+  .feedback.info { background: #e3f2fd; border-left: 4px solid #1976d2; color: #0d47a1; }
+
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 14px 16px; background: #fff; border-radius: 1rem;
+    margin-bottom: 8px; border: 2px solid #dcedc8; transition: 0.2s;
+  }
+  .checklist-item.done { background: #e8f5e9; border-color: #43a047; }
+  .checklist-item .check {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid #aed581; display: flex; align-items: center;
+    justify-content: center; font-size: 0.8rem; cursor: pointer;
+    flex-shrink: 0; transition: 0.2s;
+  }
+  .checklist-item.done .check { background: #43a047; border-color: #43a047; color: #fff; }
+  .checklist-item .text { flex: 1; font-size: 0.9rem; line-height: 1.4; }
+  .checklist-item .text strong { display: block; margin-bottom: 4px; color: #1b5e20; }
+  .checklist-item .text small { color: #558b2f; font-size: 0.8rem; }
+
+  .result-screen { text-align: center; padding: 20px 0; display: none; }
+  .result-screen.show { display: block; }
+  .result-score { font-size: 3.5rem; font-weight: 800; color: #2e7d32; margin: 16px 0; }
+  .result-percent { font-size: 1.4rem; color: #66bb6a; margin-bottom: 16px; }
+  .result-grade {
+    font-size: 1.1rem; font-weight: 700; padding: 10px 28px;
+    border-radius: 1rem; display: inline-block; margin-bottom: 20px;
+  }
+  .grade-5 { background: #c8e6c9; color: #1b5e20; }
+  .grade-4 { background: #fff9c4; color: #f57f17; }
+  .grade-3 { background: #ffe0b2; color: #e65100; }
+  .grade-2 { background: #ffcdd2; color: #b71c1c; }
+  .review {
+    text-align: left; background: #f9fbe7; border-radius: 1rem;
+    padding: 20px; margin-top: 20px; max-height: 400px; overflow-y: auto;
+  }
+  .review h3 { color: #2e7d32; margin-bottom: 12px; font-size: 1rem; }
+  .review-item { padding: 10px 0; border-bottom: 1px solid #dcedc8; font-size: 0.85rem; line-height: 1.5; }
+  .review-item:last-child { border-bottom: none; }
+  .review-item .num { font-weight: 700; color: #2e7d32; }
+  .review-item .ok { color: #2e7d32; font-weight: 600; }
+  .review-item .bad { color: #c62828; font-weight: 600; }
+
+  .footer { text-align: center; font-size: 0.7rem; color: #7B8D6E; margin-top: 24px; padding-top: 16px; border-top: 1px solid #dcedc8; }
+  .footer a { color: #2e7d32; text-decoration: none; }
+  .hidden { display: none; }
+  .hint { font-size: 0.8rem; color: #66bb6a; margin-top: 8px; font-style: italic; }
+
+  @media (max-width: 600px) {
+    .content { padding: 10px; }
+    .question { font-size: 1rem; }
+    .btn { width: 100%; margin-left: 0; margin-top: 8px; }
+    .btn-secondary { margin-left: 0; }
+    .timer { position: static; margin-top: 10px; display: inline-block; }
+    .mode-cards { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <h1>🐄 Доение ПРО</h1>
+    <p>Тренажёр подготовки операторов машинного доения · 4 этапа</p>
+    <div class="timer" id="timer">⏱ 15:00</div>
+  </header>
+
+  <!-- ЭКРАН ВЫБОРА РЕЖИМА -->
+  <div class="mode-screen" id="modeScreen">
+    <div class="mode-cards">
+      <div class="mode-card" onclick="startMode('algorithm')">
+        <div class="icon">📋</div>
+        <h3>Этап 1. Освоение алгоритма</h3>
+        <p>11 шагов с деталями. Интерактивный чек-лист. Отмечай выполненные шаги.</p>
+      </div>
+      <div class="mode-card" onclick="startMode('test')">
+        <div class="icon">📝</div>
+        <h3>Этап 2. Тестирование</h3>
+        <p>20 вопросов по алгоритму. 15 минут. Перемешивание, разбор ошибок.</p>
+      </div>
+      <div class="mode-card" onclick="startMode('contest')">
+        <div class="icon">🏆</div>
+        <h3>Этап 3. Подготовка к конкурсу</h3>
+        <p>Симуляция по критериям: санитарная подготовка, разборка/сборка, доение.</p>
+      </div>
+      <div class="mode-card" onclick="startMode('exam')">
+        <div class="icon">⏱</div>
+        <h3>Этап 4. Закрепление с таймером</h3>
+        <p>6 минут на разборку/сборку + 100 секунд на доение. Штрафы за просрочку.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЭКРАН ТРЕНАЖЁРА -->
+  <div id="quizScreen" class="hidden">
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="content">
+      <div class="step-title" id="stepTitle"></div>
+      <span class="question-type" id="questionType"></span>
+      <div class="question" id="questionText"></div>
+      <div id="answersBox"></div>
+      <div class="hint" id="hintBox"></div>
+      <button class="btn" id="nextBtn" disabled>Ответить</button>
+      <button class="btn btn-secondary" onclick="exitToMenu()">В меню</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН РЕЗУЛЬТАТА -->
+  <div class="result-screen" id="resultScreen">
+    <div class="content">
+      <h2>Результат</h2>
+      <div class="result-score" id="resultScore">0/0</div>
+      <div class="result-percent" id="resultPercent">0%</div>
+      <div class="result-grade" id="resultGrade"></div>
+      <div class="review" id="reviewBox"></div>
+      <button class="btn" onclick="restart()">Пройти заново</button>
+      <button class="btn btn-secondary" onclick="exitToMenu()">В меню</button>
+    </div>
+  </div>
+
+  <div class="footer">🐾 ВетСим — ветеринарное образование · <a href="https://vetsim.ru">vetsim.ru</a></div>
+</div>
+
+<script>
+// ============================================================
+// ЭТАП 1. АЛГОРИТМ (11 ШАГОВ)
+// ============================================================
+const ALGORITHM = [
+  { step: "Шаг 1. Санитарная подготовка оператора", text: "Чистый халат, головной убор. Руки вымыты, ногти короткие. Без украшений и посторонних предметов в карманах.", details: "Баллы на конкурсе: 5" },
+  { step: "Шаг 2. Проверка аппарата", text: "Отсутствие воды в межстенном пространстве. Частота пульсаций (по паспорту). Вакуум 42–48 кПа. Работа сосковых чулок пальцем.", details: "Баллы: 2. Штраф за непроверку вакуума и пульсации." },
+  { step: "Шаг 3. Сдаивание первых струек", text: "3–4 струи с каждого соска в кружку с тёмным дном. Контроль мастита, удаление кератозной пробки.", details: "Баллы: 4" },
+  { step: "Шаг 4. Подмывание вымени", text: "Тёплой водой 40–45°C. Не выше 50°C, не ниже 38°C.", details: "Баллы: 1" },
+  { step: "Шаг 5. Вытирание с массажем", text: "Индивидуальной салфеткой. Массаж кончиков сосков. Выждать 1–1,5 минуты до подключения (окситоцин).", details: "Время: 1–1,5 мин" },
+  { step: "Шаг 6. Подключение аппарата", text: "Надеть стаканы: сначала дальние соски, затем ближние. Без прососов и шипения.", details: "Баллы: 2" },
+  { step: "Шаг 7. Контроль доения", text: "Следить за положением стаканов, поведением животного, равномерностью потока.", details: "Баллы: 4" },
+  { step: "Шаг 8. Машинное додаивание", text: "При снижении потока ниже 400 г/мин оттянуть аппарат вниз. Цель: извлечь последнее, самое жирное молоко.", details: "Баллы: 2" },
+  { step: "Шаг 9. Отключение аппарата", text: "Закрыть клапан коллектора. Подождать 25–30 сек. Снять стаканы. Закрыть кран на вакуум-проводе.", details: "Баллы: 1. Штраф за снятие при действующем вакууме." },
+  { step: "Шаг 10. Обработка сосков", text: "В течение 30 секунд после снятия. Дезинфекция (йод, хлоргексидин). Сосковый канал закрывается 20–30 минут.", details: "Критично для профилактики мастита" },
+  { step: "Шаг 11. Уход за аппаратом", text: "Слить молоко. Промыть тёплой водой (до 40°C). Не горячей — свёртывание белка. Подготовить к следующему доению.", details: "Баллы: 2" }
+];
+
+// ============================================================
+// ЭТАП 2. ТЕСТ (20 ВОПРОСОВ)
+// ============================================================
+const TEST_QUESTIONS = [
+  { type: "Одиночный выбор", question: "Сколько времени на разборку/сборку аппарата на конкурсе?", answers: [{ text: "3 минуты", correct: false }, { text: "6 минут", correct: true }, { text: "10 минут", correct: false }, { text: "15 минут", correct: false }], explanation: "На конкурсе — 6 минут." },
+  { type: "Множественный выбор", question: "Что проверить в аппарате перед доением?", answers: [{ text: "Отсутствие воды в межстенном пространстве", correct: true }, { text: "Частота пульсаций", correct: true }, { text: "Вакуум 42–48 кПа", correct: true }, { text: "Работа сосковых чулок", correct: true }, { text: "Цвет аппарата", correct: false }, { text: "Вес аппарата", correct: false }], explanation: "Проверяют воду, пульсацию, вакуум, чулки." },
+  { type: "Одиночный выбор", question: "Сколько струй сдаивают с каждого соска?", answers: [{ text: "1–2", correct: false }, { text: "3–4", correct: true }, { text: "5–6", correct: false }, { text: "10", correct: false }], explanation: "3–4 струи для контроля мастита." },
+  { type: "Одиночный выбор", question: "Какая температура воды для подмывания вымени?", answers: [{ text: "30–35°C", correct: false }, { text: "40–45°C", correct: true }, { text: "50–55°C", correct: false }, { text: "60°C", correct: false }], explanation: "40–45°C — оптимально." },
+  { type: "Одиночный выбор", question: "Сколько времени выждать после массажа до подключения?", answers: [{ text: "10 секунд", correct: false }, { text: "30 секунд", correct: false }, { text: "1–1,5 минуты", correct: true }, { text: "5 минут", correct: false }], explanation: "1–1,5 минуты — выброс окситоцина." },
+  { type: "Одиночный выбор", question: "Какие соски надевают первыми?", answers: [{ text: "Ближние", correct: false }, { text: "Дальние", correct: true }, { text: "Передние", correct: false }, { text: "Задние", correct: false }], explanation: "Сначала дальние, затем ближние." },
+  { type: "Одиночный выбор", question: "При каком потоке начинают машинное додаивание?", answers: [{ text: "Ниже 400 г/мин", correct: true }, { text: "Выше 400 г/мин", correct: false }, { text: "При полной остановке", correct: false }, { text: "Через 5 минут", correct: false }], explanation: "При снижении ниже 400 г/мин." },
+  { type: "Одиночный выбор", question: "Сколько ждать после закрытия клапана перед снятием стаканов?", answers: [{ text: "Сразу снять", correct: false }, { text: "5 секунд", correct: false }, { text: "25–30 секунд", correct: true }, { text: "1 минуту", correct: false }], explanation: "25–30 секунд для спада вакуума." },
+  { type: "Одиночный выбор", question: "В течение какого времени обрабатывают соски после доения?", answers: [{ text: "В течение 30 секунд", correct: true }, { text: "Через 5 минут", correct: false }, { text: "Через 10 минут", correct: false }, { text: "Не обрабатывают", correct: false }], explanation: "В течение 30 секунд — критично." },
+  { type: "Одиночный выбор", question: "Какой вакуум оптимален при доении?", answers: [{ text: "30–35 кПа", correct: false }, { text: "42–48 кПа", correct: true }, { text: "55–60 кПа", correct: false }, { text: "70 кПа", correct: false }], explanation: "42–48 кПа — оптимально." },
+  { type: "Множественный выбор", question: "Что является нарушением технологии машинного доения?", answers: [{ text: "Снятие аппарата при действующем вакууме", correct: true }, { text: "Впускание воздуха пальцем в стакан", correct: true }, { text: "Холостое доение", correct: true }, { text: "Проверка пульсации", correct: false }, { text: "Массаж вымени", correct: false }], explanation: "Нарушения: снятие при вакууме, впускание воздуха, холостое доение." },
+  { type: "Одиночный выбор", question: "Что такое «холостое» доение?", answers: [{ text: "Доение без стимуляции", correct: false }, { text: "Работа аппарата без молока", correct: true }, { text: "Доение без проверки", correct: false }, { text: "Ручное доение", correct: false }], explanation: "Холостое доение — работа аппарата без молока, травмирует соски." },
+  { type: "Одиночный выбор", question: "Сколько времени на теоретический этап конкурса?", answers: [{ text: "10 минут", correct: false }, { text: "15 минут", correct: true }, { text: "20 минут", correct: false }, { text: "30 минут", correct: false }], explanation: "15 минут, 20 вопросов." },
+  { type: "Одиночный выбор", question: "Сколько баллов за санитарную подготовку на конкурсе?", answers: [{ text: "2", correct: false }, { text: "5", correct: true }, { text: "10", correct: false }, { text: "15", correct: false }], explanation: "5 баллов." },
+  { type: "Одиночный выбор", question: "Сколько баллов за разборку/сборку на конкурсе?", answers: [{ text: "5", correct: false }, { text: "10", correct: false }, { text: "15", correct: true }, { text: "20", correct: false }], explanation: "15 баллов." },
+  { type: "Одиночный выбор", question: "Сколько баллов за подготовку + доение на конкурсе?", answers: [{ text: "20", correct: false }, { text: "30", correct: false }, { text: "40", correct: true }, { text: "50", correct: false }], explanation: "40 баллов." },
+  { type: "Одиночный выбор", question: "Какой прибор используют для оценки чистоты молока?", answers: [{ text: "Микроскоп", correct: false }, { text: "Прибор «Рекорд»", correct: true }, { text: "Термометр", correct: false }, { text: "Весы", correct: false }], explanation: "Прибор «Рекорд», ГОСТ Р52054-2003." },
+  { type: "Одиночный выбор", question: "Сколько времени на доение одной коровы на конкурсе?", answers: [{ text: "50 секунд", correct: false }, { text: "100 секунд", correct: true }, { text: "150 секунд", correct: false }, { text: "200 секунд", correct: false }], explanation: "100 секунд." },
+  { type: "Одиночный выбор", question: "Что оценивают в полноте выдаивания?", answers: [{ text: "Остаточное молоко", correct: true }, { text: "Цвет молока", correct: false }, { text: "Температуру", correct: false }, { text: "Запах", correct: false }], explanation: "Остаточное молоко. Баллы: 10." },
+  { type: "Одиночный выбор", question: "Что делать после отключения аппарата?", answers: [{ text: "Обработать соски дезинфектантом", correct: true }, { text: "Вымыть вымя", correct: false }, { text: "Помассировать вымя", correct: false }, { text: "Ничего", correct: false }], explanation: "Обработать соски в течение 30 секунд." }
+];
+
+// ============================================================
+// СОСТОЯНИЕ
+// ============================================================
+let currentMode = 'algorithm';
+let currentQuestions = [];
+let currentIndex = 0;
+let userAnswers = [];
+let score = 0;
+let timerInterval = null;
+let timeLeft = 0;
+let startTime = 0;
+
+// ============================================================
+// УТИЛИТЫ
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function shuffleAnswers(question) {
+  const q = JSON.parse(JSON.stringify(question));
+  q.answers = shuffle(q.answers);
+  return q;
+}
+
+// ============================================================
+// ЗАПУСК РЕЖИМА
+// ============================================================
+function startMode(mode) {
+  currentMode = mode;
+  document.getElementById('modeScreen').classList.add('hidden');
+  document.getElementById('quizScreen').classList.remove('hidden');
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('timer').classList.remove('show');
+  clearInterval(timerInterval);
+
+  if (mode === 'algorithm') {
+    renderAlgorithm();
+  } else if (mode === 'test') {
+    currentQuestions = shuffle(TEST_QUESTIONS).map(q => shuffleAnswers(q));
+    currentIndex = 0;
+    userAnswers = [];
+    score = 0;
+    startTime = Date.now();
+    timeLeft = 900; // 15 минут
+    document.getElementById('timer').classList.add('show');
+    startTimer();
+    renderQuestion();
+  } else if (mode === 'contest') {
+    renderContest();
+  } else if (mode === 'exam') {
+    renderExam();
+  }
+}
+
+function startTimer() {
+  updateTimerDisplay();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      finishTest();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const min = Math.floor(timeLeft / 60);
+  const sec = timeLeft % 60;
+  const el = document.getElementById('timer');
+  el.textContent = `⏱ ${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  el.classList.toggle('warning', timeLeft <= 60);
+}
+
+// ============================================================
+// ЭТАП 1. АЛГОРИТМ
+// ============================================================
+function renderAlgorithm() {
+  document.getElementById('stepTitle').textContent = 'Этап 1. Освоение алгоритма';
+  document.getElementById('questionType').textContent = 'Чек-лист · 11 шагов';
+  document.getElementById('questionText').textContent = 'Отмечайте выполненные шаги. Если пропущен — подсказка.';
+  document.getElementById('hintBox').textContent = '💡 Нажмите на кружок, чтобы отметить шаг выполненным';
+
+  const box = document.getElementById('answersBox');
+  box.innerHTML = '';
+  box.className = '';
+
+  ALGORITHM.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'checklist-item';
+    div.innerHTML = `
+      <div class="check" data-index="${i}">${i+1}</div>
+      <div class="text">
+        <strong>${item.step}</strong>
+        ${item.text}
+        <small>${item.details}</small>
+      </div>
+    `;
+    div.querySelector('.check').onclick = function() {
+      div.classList.toggle('done');
+      this.textContent = div.classList.contains('done') ? '✓' : (i+1);
+      checkAlgorithmComplete();
+    };
+    box.appendChild(div);
+  });
+
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.textContent = 'Завершить этап';
+  nextBtn.disabled = true;
+  nextBtn.onclick = () => showResult(ALGORITHM.length, ALGORITHM.length);
+}
+
+function checkAlgorithmComplete() {
+  const total = document.querySelectorAll('.checklist-item').length;
+  const done = document.querySelectorAll('.checklist-item.done').length;
+  document.getElementById('nextBtn').disabled = done < total;
+  document.getElementById('hintBox').textContent = `Отмечено: ${done} из ${total}`;
+}
+
+// ============================================================
+// ЭТАП 2. ТЕСТ
+// ============================================================
+function renderQuestion() {
+  const q = currentQuestions[currentIndex];
+  document.getElementById('stepTitle').textContent = `Вопрос ${currentIndex + 1} из ${currentQuestions.length}`;
+  document.getElementById('questionType').textContent = q.type;
+  document.getElementById('questionText').textContent = q.question;
+  document.getElementById('hintBox').textContent = q.type.includes('Множественный') ? 'Выберите все верные варианты' : 'Выберите один вариант';
+
+  const box = document.getElementById('answersBox');
+  box.className = 'answers';
+  box.innerHTML = '';
+
+  const isMultiple = q.type.includes('Множественный');
+
+  q.answers.forEach((ans, i) => {
+    const div = document.createElement('div');
+    div.className = 'answer';
+    div.dataset.index = i;
+    div.innerHTML = `<span class="marker">${String.fromCharCode(65+i)}</span><span>${ans.text}</span>`;
+    div.onclick = () => toggleAnswer(div, isMultiple);
+    box.appendChild(div);
+  });
+
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? 'Завершить' : 'Ответить';
+  nextBtn.disabled = true;
+  nextBtn.onclick = submitAnswer;
+}
+
+function toggleAnswer(div, isMultiple) {
+  if (div.classList.contains('correct') || div.classList.contains('wrong')) return;
+  if (isMultiple) {
+    div.classList.toggle('selected');
+  } else {
+    document.querySelectorAll('.answer').forEach(a => a.classList.remove('selected'));
+    div.classList.add('selected');
+  }
+  document.getElementById('nextBtn').disabled = document.querySelectorAll('.answer.selected').length === 0;
+}
+
+function submitAnswer() {
+  const q = currentQuestions[currentIndex];
+  const isMultiple = q.type.includes('Множественный');
+  const selected = [...document.querySelectorAll('.answer.selected')];
+  const selectedIndices = selected.map(s => parseInt(s.dataset.index));
+  const correctIndices = q.answers.map((a, i) => a.correct ? i : -1).filter(i => i !== -1);
+
+  let isCorrect;
+  if (isMultiple) {
+    const allCorrect = correctIndices.every(i => selectedIndices.includes(i));
+    const noWrong = selectedIndices.every(i => correctIndices.includes(i));
+    isCorrect = allCorrect && noWrong;
+  } else {
+    isCorrect = selectedIndices.length === 1 && correctIndices.includes(selectedIndices[0]);
+  }
+
+  if (isCorrect) score++;
+
+  userAnswers.push({ question: q, selected: selectedIndices, isCorrect, correctIndices });
+
+  document.querySelectorAll('.answer').forEach(div => {
+    const idx = parseInt(div.dataset.index);
+    div.classList.remove('selected');
+    if (correctIndices.includes(idx)) div.classList.add('correct');
+    else if (selectedIndices.includes(idx)) div.classList.add('wrong');
+    div.onclick = null;
+  });
+
+  const fb = document.createElement('div');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.innerHTML = `<strong>${isCorrect ? '✅ Верно!' : '❌ Ошибка'}</strong><br>${q.explanation}`;
+  document.getElementById('answersBox').after(fb);
+
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.disabled = false;
+  nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? 'Показать результат' : 'Следующий вопрос';
+  nextBtn.onclick = nextQuestion;
+}
+
+function nextQuestion() {
+  const fb = document.querySelector('.feedback');
+  if (fb) fb.remove();
+  currentIndex++;
+  if (currentIndex >= currentQuestions.length) {
+    finishTest();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishTest() {
+  clearInterval(timerInterval);
+  document.getElementById('timer').classList.remove('show');
+  showResult(score, currentQuestions.length, userAnswers);
+}
+
+// ============================================================
+// ЭТАП 3. КОНКУРС
+// ============================================================
+function renderContest() {
+  document.getElementById('stepTitle').textContent = 'Этап 3. Подготовка к конкурсу';
+  document.getElementById('questionType').textContent = 'Симуляция по критериям';
+  document.getElementById('questionText').textContent = 'Блоки конкурса: санитарная подготовка, разборка/сборка, доение, чистота молока, полнота выдаивания.';
+  document.getElementById('hintBox').textContent = '💡 Отмечайте выполненные блоки';
+
+  const blocks = [
+    { name: "Санитарная подготовка", points: 5 },
+    { name: "Разборка/сборка аппарата", points: 15 },
+    { name: "Подготовка + доение", points: 40 },
+    { name: "Чистота молока", points: 5 },
+    { name: "Полнота выдаивания", points: 10 }
+  ];
+
+  const box = document.getElementById('answersBox');
+  box.className = '';
+  box.innerHTML = '';
+
+  blocks.forEach((block, i) => {
+    const div = document.createElement('div');
+    div.className = 'checklist-item';
+    div.innerHTML = `
+      <div class="check" data-index="${i}">${i+1}</div>
+      <div class="text">
+        <strong>${block.name}</strong>
+        Баллы: ${block.points}
+      </div>
+    `;
+    div.querySelector('.check').onclick = function() {
+      div.classList.toggle('done');
+      this.textContent = div.classList.contains('done') ? '✓' : (i+1);
+    };
+    box.appendChild(div);
+  });
+
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.textContent = 'Завершить';
+  nextBtn.disabled = false;
+  nextBtn.onclick = () => showResult(5, 5);
+}
+
+// ============================================================
+// ЭТАП 4. ЭКЗАМЕН С ТАЙМЕРОМ
+// ============================================================
+function renderExam() {
+  document.getElementById('stepTitle').textContent = 'Этап 4. Закрепление с таймером';
+  document.getElementById('questionType').textContent = 'Экзамен · 6 минут';
+  document.getElementById('questionText').textContent = 'Проверка готовности: разборка/сборка (6 мин) + доение (100 сек). Штрафы за просрочку.';
+  document.getElementById('hintBox').textContent = '⏱ Таймер: 6 минут';
+
+  timeLeft = 360;
+  document.getElementById('timer').classList.add('show');
+  startTimer();
+
+  const box = document.getElementById('answersBox');
+  box.className = '';
+  box.innerHTML = '';
+
+  const steps = [
+    "Разборка аппарата",
+    "Сборка аппарата",
+    "Проверка вакуума",
+    "Проверка пульсации",
+    "Сдаивание первых струй",
+    "Подмывание вымени",
+    "Вытирание с массажем",
+    "Подключение стаканов",
+    "Контроль доения",
+    "Машинное додаивание",
+    "Отключение аппарата",
+    "Обработка сосков"
+  ];
+
+  steps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'checklist-item';
+    div.innerHTML = `
+      <div class="check" data-index="${i}">${i+1}</div>
+      <div class="text">${step}</div>
+    `;
+    div.querySelector('.check').onclick = function() {
+      div.classList.toggle('done');
+      this.textContent = div.classList.contains('done') ? '✓' : (i+1);
+    };
+    box.appendChild(div);
+  });
+
+  const nextBtn = document.getElementById('nextBtn');
+  nextBtn.textContent = 'Завершить экзамен';
+  nextBtn.disabled = false;
+  nextBtn.onclick = () => {
+    clearInterval(timerInterval);
+    const done = document.querySelectorAll('.checklist-item.done').length;
+    const total = steps.length;
+    showResult(done, total);
+  };
+}
+
+// ============================================================
+// РЕЗУЛЬТАТ
+// ============================================================
+function showResult(sc, total, answers) {
+  clearInterval(timerInterval);
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('timer').classList.remove('show');
+  document.getElementById('resultScreen').classList.add('show');
+
+  const percent = total > 0 ? Math.round((sc / total) * 100) : 0;
+  document.getElementById('resultScore').textContent = `${sc}/${total}`;
+  document.getElementById('resultPercent').textContent = `${percent}%`;
+
+  const gradeEl = document.getElementById('resultGrade');
+  let grade, cls;
+  if (percent >= 90) { grade = 'Оценка: 5 (отлично)'; cls = 'grade-5'; }
+  else if (percent >= 75) { grade = 'Оценка: 4 (хорошо)'; cls = 'grade-4'; }
+  else if (percent >= 60) { grade = 'Оценка: 3 (удовлетворительно)'; cls = 'grade-3'; }
+  else { grade = 'Оценка: 2 (неудовлетворительно)'; cls = 'grade-2'; }
+  gradeEl.textContent = grade;
+  gradeEl.className = 'result-grade ' + cls;
+
+  const reviewBox = document.getElementById('reviewBox');
+  reviewBox.innerHTML = '<h3>📋 Разбор</h3>';
+
+  if (answers && answers.length > 0) {
+    answers.forEach((ua, i) => {
+      const q = ua.question;
+      const correctTexts = q.answers.filter((a, idx) => ua.correctIndices.includes(idx)).map(a => a.text).join('; ');
+      const selectedTexts = ua.selected.length ? ua.selected.map(idx => q.answers[idx].text).join('; ') : '— не выбрано —';
+      const item = document.createElement('div');
+      item.className = 'review-item';
+      item.innerHTML = `
+        <div class="num">${i+1}. ${q.type}</div>
+        <div><strong>Вопрос:</strong> ${q.question}</div>
+        <div><strong>Ваш ответ:</strong> <span class="${ua.isCorrect ? 'ok' : 'bad'}">${selectedTexts}</span></div>
+        ${!ua.isCorrect ? `<div><strong>Правильный ответ:</strong> <span class="ok">${correctTexts}</span></div>` : ''}
+        <div style="color:#558b2f;font-size:0.8rem;"><em>${q.explanation}</em></div>
+      `;
+      reviewBox.appendChild(item);
+    });
+  } else {
+    reviewBox.innerHTML += '<p>Этап завершён. Продолжайте подготовку!</p>';
+  }
+}
+
+function exitToMenu() {
+  clearInterval(timerInterval);
+  document.getElementById('modeScreen').classList.remove('hidden');
+  document.getElementById('quizScreen').classList.add('hidden');
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('timer').classList.remove('show');
+}
+
+function restart() {
+  startMode(currentMode);
+}
+
+// ============================================================
+// СТАРТ
+// ============================================================
+// Ждём выбора режима
+</script>
+</body>
+</html>

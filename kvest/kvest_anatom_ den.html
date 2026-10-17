@@ -2,88 +2,178 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Квест: Анатомия</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🧬 Квест: Анатомия</title>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <style>
-  body { font-family: sans-serif; background: #f7f4ef; color: #333; margin: 0; padding: 20px; }
-  h1, h2 { color: #2e5d4b; }
-  .screen { display: none; }
-  .screen.active { display: block; }
-  button { background: #2e5d4b; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; margin: 8px 0; cursor: pointer; }
-  button:disabled { background: #aaa; cursor: not-allowed; }
-  input, select { padding: 10px; font-size: 16px; width: 100%; margin: 8px 0; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
-  .zone { border: 1px solid #ccc; padding: 16px; border-radius: 10px; margin: 12px 0; background: white; }
-  .done { background: #d4edda; border-color: #2e5d4b; }
-  .checkbox-row { display: flex; align-items: center; margin: 6px 0; }
-  .checkbox-row input { width: auto; margin-right: 10px; }
-  .timer { font-size: 24px; font-weight: bold; color: #b33; margin: 10px 0; }
-  .timer.ok { color: #2e5d4b; }
-  .timer.warn { color: #d97706; }
-  .timer.over { color: #b91c1c; }
-  .certificate {
-    background: #fffdf7;
-    border: 4px double #2e5d4b;
-    padding: 30px;
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #e8f5e9 0%, #f7f4ef 50%, #fce4ec 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 16px;
+    color: #2b2b2b;
+    -webkit-tap-highlight-color: transparent;
+  }
+  h1, h2 { color: #2e5d4b; margin: 0 0 12px; }
+  h1 { font-size: clamp(22px, 5vw, 32px); }
+  h2 { font-size: clamp(18px, 4vw, 26px); }
+  p { font-size: clamp(14px, 3.5vw, 18px); line-height: 1.5; }
+
+  .screen { display: none; max-width: 700px; margin: 0 auto; }
+  .screen.active { display: block; animation: fadeIn 0.4s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  button {
+    background: linear-gradient(135deg, #2e5d4b, #3d8b6a);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-size: clamp(15px, 4vw, 18px);
+    font-weight: 600;
+    margin: 10px 0;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 4px 14px rgba(46, 93, 75, 0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  button:active { transform: scale(0.97); box-shadow: 0 2px 6px rgba(46, 93, 75, 0.3); }
+  button:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+
+  input {
+    padding: 14px;
+    font-size: 16px;
+    width: 100%;
+    margin: 8px 0;
     border-radius: 12px;
+    border: 2px solid #cfe3d8;
+    background: #fff;
+    transition: border-color 0.2s;
+  }
+  input:focus { outline: none; border-color: #3d8b6a; }
+
+  .card {
+    border: 2px solid #cfe3d8;
+    padding: 18px;
+    border-radius: 18px;
+    margin: 14px 0;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    transition: all 0.2s;
+  }
+  .card.done { background: linear-gradient(135deg, #d4edda, #b7e4c7); border-color: #2e5d4b; }
+  .card h3 { margin: 0 0 8px; font-size: clamp(17px, 4vw, 20px); }
+
+  .checkbox-row {
+    display: flex; align-items: center; margin: 8px 0;
+    padding: 8px 10px; border-radius: 10px;
+    background: #f7faf8;
+    font-size: clamp(14px, 3.5vw, 16px);
+    cursor: pointer;
+  }
+  .checkbox-row input { width: 22px; height: 22px; margin-right: 12px; accent-color: #2e5d4b; flex-shrink: 0; }
+
+  .timer {
+    font-size: clamp(26px, 7vw, 40px);
+    font-weight: 800;
+    text-align: center;
+    margin: 14px 0;
+    padding: 12px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: inset 0 0 0 3px #cfe3d8;
+    letter-spacing: 2px;
+  }
+  .timer.ok { color: #2e5d4b; }
+  .timer.warn { color: #d97706; box-shadow: inset 0 0 0 3px #fbbf24; }
+  .timer.over { color: #b91c1c; box-shadow: inset 0 0 0 3px #ef4444; }
+
+  .certificate {
+    background: linear-gradient(135deg, #fffdf7, #f0f7f3);
+    border: 4px double #2e5d4b;
+    padding: clamp(20px, 5vw, 40px);
+    border-radius: 20px;
     text-align: center;
     margin: 20px 0;
     color: #2e5d4b;
+    box-shadow: 0 8px 30px rgba(46,93,75,0.15);
   }
-  .certificate h2 { font-size: 28px; margin-bottom: 8px; }
-  .certificate .team-name { font-size: 24px; font-weight: bold; margin: 16px 0; color: #b8860b; }
-  .certificate .small { font-size: 14px; color: #555; margin-top: 20px; }
+  .certificate h2 { font-size: clamp(22px, 5vw, 34px); letter-spacing: 3px; margin-bottom: 16px; }
+  .certificate .team-name { font-size: clamp(20px, 5vw, 30px); font-weight: 800; margin: 18px 0; color: #b8860b; }
+  .certificate .small { font-size: clamp(12px, 3vw, 15px); color: #555; margin-top: 16px; }
+
+  .top-bar {
+    position: fixed; top: 12px; right: 12px; z-index: 100;
+    display: flex; gap: 8px;
+  }
+  .icon-btn {
+    width: 46px; height: 46px; padding: 0; margin: 0;
+    border-radius: 50%; font-size: 20px;
+    display: flex; align-items: center; justify-content: center;
+    background: #fff; color: #2e5d4b;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+
+  .emoji-big { font-size: clamp(28px, 7vw, 44px); display: block; margin-bottom: 6px; }
+
+  .zones-grid { display: grid; gap: 12px; }
 </style>
 </head>
 <body>
 
+<div class="top-bar">
+  <button class="icon-btn" id="musicBtn" onclick="toggleMusic()" title="Музыка">🎵</button>
+</div>
+
 <!-- Старт -->
 <div id="start" class="screen active">
-  <h1>Квест: Анатомия</h1>
-  <p>Введите название команды:</p>
-  <input type="text" id="teamName" placeholder="Например: Хирурги">
-  <button onclick="startQuest()">Начать</button>
+  <h1>🧬 Квест: Анатомия</h1>
+  <p>🚀 Введите название команды, чтобы начать путешествие по миру анатомии:</p>
+  <input type="text" id="teamName" placeholder="Например: 🦴 Хирурги">
+  <button onclick="startQuest()">✨ Начать квест</button>
 </div>
 
 <!-- Карта -->
 <div id="map" class="screen">
   <h1 id="teamTitle"></h1>
-  <p>Выберите зону или продолжайте по порядку:</p>
-  <div id="zones"></div>
-  <button id="finishBtn" onclick="finishQuest()" disabled>Завершить квест</button>
+  <p>🗺️ Выберите зону или продолжайте по порядку:</p>
+  <div id="zones" class="zones-grid"></div>
+  <button id="finishBtn" onclick="finishQuest()" disabled>🎉 Завершить квест</button>
 </div>
 
 <!-- Зона А -->
 <div id="zoneA" class="screen">
-  <h2>Зона А. Микроскопы и гистопрепараты</h2>
+  <h2>🔬 Зона А. Микроскопы и гистопрепараты</h2>
   <div class="timer" id="timerA">05:00</div>
-  <p>Опознайте не менее 6 препаратов. Отметьте те, которые определили:</p>
+  <p>🧫 Опознайте не менее 6 препаратов. Отметьте те, которые определили:</p>
   <div id="zoneAList"></div>
-  <button id="btnA" onclick="completeZone('A')">Готово</button>
+  <button id="btnA" onclick="completeZone('A')">✅ Готово</button>
 </div>
 
 <!-- Зона Б -->
 <div id="zoneB" class="screen">
-  <h2>Зона Б. Муляж свиньи</h2>
+  <h2>🐷 Зона Б. Муляж свиньи</h2>
   <div class="timer" id="timerB">05:00</div>
-  <p>Разберите и соберите муляж правильно. Отметьте, когда выполнено:</p>
-  <div class="checkbox-row"><input type="checkbox" id="b1"><label for="b1">Разобрали</label></div>
-  <div class="checkbox-row"><input type="checkbox" id="b2"><label for="b2">Собрали правильно</label></div>
-  <button id="btnB" onclick="completeZone('B')">Готово</button>
+  <p>🫀 Разберите и соберите муляж правильно. Отметьте, когда выполнено:</p>
+  <div class="checkbox-row"><input type="checkbox" id="b1"><label for="b1">🧩 Разобрали</label></div>
+  <div class="checkbox-row"><input type="checkbox" id="b2"><label for="b2">🫁 Собрали правильно</label></div>
+  <button id="btnB" onclick="completeZone('B')">✅ Готово</button>
 </div>
 
 <!-- Зона В -->
 <div id="zoneC" class="screen">
-  <h2>Зона В. Скелеты и рентгеновские снимки</h2>
+  <h2>🦴 Зона В. Скелеты и рентген</h2>
   <div class="timer" id="timerC">05:00</div>
-  <p>Опознайте не менее 3 снимков. Отметьте те, которые определили:</p>
+  <p>📸 Опознайте не менее 3 снимков. Отметьте те, которые определили:</p>
   <div id="zoneCList"></div>
-  <button id="btnC" onclick="completeZone('C')">Готово</button>
+  <button id="btnC" onclick="completeZone('C')">✅ Готово</button>
 </div>
 
 <!-- Финал -->
 <div id="final" class="screen">
-  <h1>Квест пройден!</h1>
+  <h1>🎉 Квест пройден!</h1>
   <div id="certificate" class="certificate">
     <h2>СЕРТИФИКАТ</h2>
     <p>подтверждает, что команда</p>
@@ -91,23 +181,23 @@
     <p>успешно прошла квест «Анатомия»</p>
     <p>в кабинете анатомии ВетСим</p>
     <p class="small" id="certDate"></p>
-    <p class="small">Да будет так, ВетСим!</p>
+    <p class="small">🐾 Да будет так, ВетСим!</p>
   </div>
-  <button onclick="saveCertificate()">Сохранить как картинку</button>
+  <button onclick="saveCertificate()">💾 Сохранить как картинку</button>
 </div>
 
 <script>
   const team = { name: '', zones: { A: false, B: false, C: false } };
 
   const zoneAData = [
-    'Костная ткань', 'Кожа без волос', 'Почка', 'Гиалиновый хрящ',
-    'Лёгкое кошки', 'Поперечно-полосатая мышечная ткань языка',
-    'Высокий призматический эпителий', 'Гидра', 'Язык', 'Лапка мухи'
+    '🦴 Костная ткань', '🧴 Кожа без волос', '🫘 Почка', '🧊 Гиалиновый хрящ',
+    '🫁 Лёгкое кошки', '💪 Поперечно-полосатая мышечная ткань языка',
+    '🔬 Высокий призматический эпителий', '🌿 Гидра', '👅 Язык', '🪰 Лапка мухи'
   ];
 
   const zoneCData = [
-    'Собака, череп', 'Кошка, таз', 'Кролик, конечность',
-    'Собака, позвоночник', 'Кошка, череп', 'Кролик, череп'
+    '🐶 Собака, череп', '🐱 Кошка, таз', '🐰 Кролик, конечность',
+    '🐕 Собака, позвоночник', '🐈 Кошка, череп', '🐇 Кролик, череп'
   ];
 
   let timerInterval = null;
@@ -115,25 +205,109 @@
   let currentTimerEl = null;
   let currentZoneBtn = null;
 
+  // --- Музыка через Web Audio API ---
+  let audioCtx = null;
+  let musicPlaying = false;
+  let musicNodes = [];
+
+  function startMusic() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.06;
+    masterGain.connect(audioCtx.destination);
+
+    // Мягкая последовательность аккордов (лёгкая, ненавязчивая)
+    const chords = [
+      [261.63, 329.63, 392.00], // C
+      [293.66, 349.23, 440.00], // Dm
+      [329.63, 392.00, 493.88], // Em
+      [349.23, 440.00, 523.25]  // F
+    ];
+
+    let chordIndex = 0;
+
+    function playChord() {
+      if (!musicPlaying) return;
+      const chord = chords[chordIndex];
+      const now = audioCtx.currentTime;
+
+      chord.forEach((freq, i) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.3, now + 1.0);
+        gain.gain.linearRampToValueAtTime(0, now + 3.8);
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start(now);
+        osc.stop(now + 4);
+        musicNodes.push(osc);
+      });
+
+      chordIndex = (chordIndex + 1) % chords.length;
+      setTimeout(playChord, 3800);
+    }
+
+    musicPlaying = true;
+    playChord();
+  }
+
+  function stopMusic() {
+    musicPlaying = false;
+    musicNodes.forEach(n => { try { n.stop(); } catch(e){} });
+    musicNodes = [];
+  }
+
+  function toggleMusic() {
+    if (!audioCtx) {
+      startMusic();
+      document.getElementById('musicBtn').textContent = '🔇';
+      return;
+    }
+    if (musicPlaying) {
+      stopMusic();
+      document.getElementById('musicBtn').textContent = '🎵';
+    } else {
+      musicPlaying = true;
+      document.getElementById('musicBtn').textContent = '🔇';
+      // Перезапуск
+      const master = audioCtx.createGain();
+      master.gain.value = 0.06;
+      master.connect(audioCtx.destination);
+      startMusic();
+    }
+  }
+
+  // --- Квест ---
   function startQuest() {
     const name = document.getElementById('teamName').value.trim();
     if (!name) { alert('Введите название команды'); return; }
     team.name = name;
-    document.getElementById('teamTitle').textContent = 'Команда: ' + name;
+    document.getElementById('teamTitle').textContent = '👥 Команда: ' + name;
     renderZones();
     show('map');
+    if (!audioCtx) { startMusic(); document.getElementById('musicBtn').textContent = '🔇'; }
   }
 
   function renderZones() {
     const container = document.getElementById('zones');
     container.innerHTML = '';
+    const zoneMeta = {
+      A: { icon: '🔬', name: 'Микроскопы и гистопрепараты' },
+      B: { icon: '🐷', name: 'Муляж свиньи' },
+      C: { icon: '🦴', name: 'Скелеты и рентген' }
+    };
     ['A', 'B', 'C'].forEach(z => {
       const done = team.zones[z];
       const div = document.createElement('div');
-      div.className = 'zone' + (done ? ' done' : '');
-      div.innerHTML = `<h3>Зона ${z}</h3><p>${done ? 'Пройдено' : 'Не пройдено'}</p>`;
+      div.className = 'card' + (done ? ' done' : '');
+      div.innerHTML = `<h3>${zoneMeta[z].icon} Зона ${z}. ${zoneMeta[z].name}</h3>
+        <p>${done ? '✅ Пройдено' : '⏳ Не пройдено'}</p>`;
       if (!done) {
-        div.innerHTML += `<button onclick="openZone('${z}')">Перейти</button>`;
+        div.innerHTML += `<button onclick="openZone('${z}')">🚀 Перейти</button>`;
       }
       container.appendChild(div);
     });
@@ -159,7 +333,7 @@
       updateTimerDisplay();
       if (secondsLeft <= 0) {
         clearInterval(timerInterval);
-        currentTimerEl.textContent = 'Время вышло';
+        currentTimerEl.textContent = '⏰ Время вышло';
         currentTimerEl.className = 'timer over';
         currentZoneBtn.disabled = true;
       }
@@ -169,7 +343,7 @@
   function updateTimerDisplay() {
     const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
     const s = (secondsLeft % 60).toString().padStart(2, '0');
-    currentTimerEl.textContent = `${m}:${s}`;
+    currentTimerEl.textContent = `⏱️ ${m}:${s}`;
     currentTimerEl.className = 'timer';
     if (secondsLeft <= 60) currentTimerEl.classList.add('warn');
     else currentTimerEl.classList.add('ok');
@@ -186,7 +360,7 @@
     const now = new Date();
     const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
     document.getElementById('certTeam').textContent = team.name;
-    document.getElementById('certDate').textContent = `Дата: ${dateStr}`;
+    document.getElementById('certDate').textContent = `📅 Дата: ${dateStr}`;
     show('final');
   }
 
@@ -203,6 +377,7 @@
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
   }
 
   function fillList(containerId, data, prefix) {

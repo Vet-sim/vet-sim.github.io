@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Квест: Анатомия</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  body { font-family: sans-serif; background: #f7f4ef; color: #333; margin: 0; padding: 20px; }
+  h1, h2 { color: #2e5d4b; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  button { background: #2e5d4b; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-size: 16px; margin: 8px 0; cursor: pointer; }
+  button:disabled { background: #aaa; cursor: not-allowed; }
+  input, select { padding: 10px; font-size: 16px; width: 100%; margin: 8px 0; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
+  .zone { border: 1px solid #ccc; padding: 16px; border-radius: 10px; margin: 12px 0; background: white; }
+  .done { background: #d4edda; border-color: #2e5d4b; }
+  .checkbox-row { display: flex; align-items: center; margin: 6px 0; }
+  .checkbox-row input { width: auto; margin-right: 10px; }
+  .timer { font-size: 24px; font-weight: bold; color: #b33; margin: 10px 0; }
+  .timer.ok { color: #2e5d4b; }
+  .timer.warn { color: #d97706; }
+  .timer.over { color: #b91c1c; }
+  .certificate {
+    background: #fffdf7;
+    border: 4px double #2e5d4b;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 20px 0;
+    color: #2e5d4b;
+  }
+  .certificate h2 { font-size: 28px; margin-bottom: 8px; }
+  .certificate .team-name { font-size: 24px; font-weight: bold; margin: 16px 0; color: #b8860b; }
+  .certificate .small { font-size: 14px; color: #555; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<!-- Старт -->
+<div id="start" class="screen active">
+  <h1>Квест: Анатомия</h1>
+  <p>Введите название команды:</p>
+  <input type="text" id="teamName" placeholder="Например: Хирурги">
+  <button onclick="startQuest()">Начать</button>
+</div>
+
+<!-- Карта -->
+<div id="map" class="screen">
+  <h1 id="teamTitle"></h1>
+  <p>Выберите зону или продолжайте по порядку:</p>
+  <div id="zones"></div>
+  <button id="finishBtn" onclick="finishQuest()" disabled>Завершить квест</button>
+</div>
+
+<!-- Зона А -->
+<div id="zoneA" class="screen">
+  <h2>Зона А. Микроскопы и гистопрепараты</h2>
+  <div class="timer" id="timerA">05:00</div>
+  <p>Опознайте не менее 6 препаратов. Отметьте те, которые определили:</p>
+  <div id="zoneAList"></div>
+  <button id="btnA" onclick="completeZone('A')">Готово</button>
+</div>
+
+<!-- Зона Б -->
+<div id="zoneB" class="screen">
+  <h2>Зона Б. Муляж свиньи</h2>
+  <div class="timer" id="timerB">05:00</div>
+  <p>Разберите и соберите муляж правильно. Отметьте, когда выполнено:</p>
+  <div class="checkbox-row"><input type="checkbox" id="b1"><label for="b1">Разобрали</label></div>
+  <div class="checkbox-row"><input type="checkbox" id="b2"><label for="b2">Собрали правильно</label></div>
+  <button id="btnB" onclick="completeZone('B')">Готово</button>
+</div>
+
+<!-- Зона В -->
+<div id="zoneC" class="screen">
+  <h2>Зона В. Скелеты и рентгеновские снимки</h2>
+  <div class="timer" id="timerC">05:00</div>
+  <p>Опознайте не менее 3 снимков. Отметьте те, которые определили:</p>
+  <div id="zoneCList"></div>
+  <button id="btnC" onclick="completeZone('C')">Готово</button>
+</div>
+
+<!-- Финал -->
+<div id="final" class="screen">
+  <h1>Квест пройден!</h1>
+  <div id="certificate" class="certificate">
+    <h2>СЕРТИФИКАТ</h2>
+    <p>подтверждает, что команда</p>
+    <div class="team-name" id="certTeam">—</div>
+    <p>успешно прошла квест «Анатомия»</p>
+    <p>в кабинете анатомии ВетСим</p>
+    <p class="small" id="certDate"></p>
+    <p class="small">Да будет так, ВетСим!</p>
+  </div>
+  <button onclick="saveCertificate()">Сохранить как картинку</button>
+</div>
+
+<script>
+  const team = { name: '', zones: { A: false, B: false, C: false } };
+
+  const zoneAData = [
+    'Костная ткань', 'Кожа без волос', 'Почка', 'Гиалиновый хрящ',
+    'Лёгкое кошки', 'Поперечно-полосатая мышечная ткань языка',
+    'Высокий призматический эпителий', 'Гидра', 'Язык', 'Лапка мухи'
+  ];
+
+  const zoneCData = [
+    'Собака, череп', 'Кошка, таз', 'Кролик, конечность',
+    'Собака, позвоночник', 'Кошка, череп', 'Кролик, череп'
+  ];
+
+  let timerInterval = null;
+  let secondsLeft = 300;
+  let currentTimerEl = null;
+  let currentZoneBtn = null;
+
+  function startQuest() {
+    const name = document.getElementById('teamName').value.trim();
+    if (!name) { alert('Введите название команды'); return; }
+    team.name = name;
+    document.getElementById('teamTitle').textContent = 'Команда: ' + name;
+    renderZones();
+    show('map');
+  }
+
+  function renderZones() {
+    const container = document.getElementById('zones');
+    container.innerHTML = '';
+    ['A', 'B', 'C'].forEach(z => {
+      const done = team.zones[z];
+      const div = document.createElement('div');
+      div.className = 'zone' + (done ? ' done' : '');
+      div.innerHTML = `<h3>Зона ${z}</h3><p>${done ? 'Пройдено' : 'Не пройдено'}</p>`;
+      if (!done) {
+        div.innerHTML += `<button onclick="openZone('${z}')">Перейти</button>`;
+      }
+      container.appendChild(div);
+    });
+    const allDone = team.zones.A && team.zones.B && team.zones.C;
+    document.getElementById('finishBtn').disabled = !allDone;
+  }
+
+  function openZone(z) {
+    show('zone' + z);
+    startTimer(z);
+  }
+
+  function startTimer(z) {
+    clearInterval(timerInterval);
+    secondsLeft = 300;
+    currentTimerEl = document.getElementById('timer' + z);
+    currentZoneBtn = document.getElementById('btn' + z);
+    currentZoneBtn.disabled = false;
+    updateTimerDisplay();
+
+    timerInterval = setInterval(() => {
+      secondsLeft--;
+      updateTimerDisplay();
+      if (secondsLeft <= 0) {
+        clearInterval(timerInterval);
+        currentTimerEl.textContent = 'Время вышло';
+        currentTimerEl.className = 'timer over';
+        currentZoneBtn.disabled = true;
+      }
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
+    const s = (secondsLeft % 60).toString().padStart(2, '0');
+    currentTimerEl.textContent = `${m}:${s}`;
+    currentTimerEl.className = 'timer';
+    if (secondsLeft <= 60) currentTimerEl.classList.add('warn');
+    else currentTimerEl.classList.add('ok');
+  }
+
+  function completeZone(z) {
+    clearInterval(timerInterval);
+    team.zones[z] = true;
+    renderZones();
+    show('map');
+  }
+
+  function finishQuest() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('certTeam').textContent = team.name;
+    document.getElementById('certDate').textContent = `Дата: ${dateStr}`;
+    show('final');
+  }
+
+  function saveCertificate() {
+    const cert = document.getElementById('certificate');
+    html2canvas(cert, { scale: 2, backgroundColor: '#fffdf7' }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = `certificate_${team.name || 'team'}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
+  }
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function fillList(containerId, data, prefix) {
+    const c = document.getElementById(containerId);
+    data.forEach((item, i) => {
+      const row = document.createElement('div');
+      row.className = 'checkbox-row';
+      row.innerHTML = `<input type="checkbox" id="${prefix}${i}"><label for="${prefix}${i}">${item}</label>`;
+      c.appendChild(row);
+    });
+  }
+  fillList('zoneAList', zoneAData, 'a');
+  fillList('zoneCList', zoneCData, 'c');
+</script>
+
+</body>
+</html>

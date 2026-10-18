@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Дневник студента-ветеринара (2 курс, 1 семестр) | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== ГЛОБАЛЬНЫЙ СТИЛЬ ===== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, sans-serif;
+            color: #3E5C4A;
+            padding: 1.2rem;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(44, 125, 160, 0.03) 0%, transparent 60%);
+            background-attachment: fixed;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; }
+
+        /* ===== ШАПКА ===== */
+        .header {
+            background: white;
+            padding: 1rem 1.8rem;
+            border-radius: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+            border: 1px solid rgba(163, 177, 138, 0.3);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2C7DA0;
+        }
+        .logo span { color: #A3B18A; }
+        .logo small {
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #A3B18A;
+            margin-left: 0.5rem;
+        }
+
+        .week-badge {
+            background: #2C7DA0;
+            color: white;
+            padding: 0.3rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .header-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .btn {
+            background: #EBE3D2;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            color: #3E5C4A;
+        }
+        .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-primary { background: #A3B18A; color: #2C4027; }
+        .btn-accent { background: #2C7DA0; color: white; }
+        .btn-danger { background: #D4A373; color: white; }
+        .btn-outline { background: transparent; border: 2px solid #D4A373; color: #D4A373; }
+        .btn-outline:hover { background: #D4A373; color: white; }
+
+        /* ===== ИМЯ ПОЛЬЗОВАТЕЛЯ ===== */
+        .user-greeting {
+            background: white;
+            border-radius: 2rem;
+            padding: 0.8rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(163, 177, 138, 0.2);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+        }
+
+        .user-greeting .greeting-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #3E5C4A;
+        }
+        .user-greeting .greeting-text strong { color: #2C7DA0; }
+
+        .user-greeting .name-input {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .user-greeting .name-input input {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            border: 2px solid #dce5da;
+            font-family: inherit;
+            font-size: 0.9rem;
+            background: #FDF8F0;
+            width: 180px;
+            transition: 0.15s;
+            color: #1e2f2a;
+        }
+        .user-greeting .name-input input:focus {
+            border-color: #2C7DA0;
+            outline: none;
+        }
+        .user-greeting .name-input button {
+            background: #2C7DA0;
+            border: none;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.15s;
+            font-size: 0.8rem;
+        }
+        .user-greeting .name-input button:hover { background: #236B8A; }
+
+        /* ===== БЕЙДЖИ ===== */
+        .badges-block {
+            background: white;
+            border-radius: 2rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(163, 177, 138, 0.2);
+        }
+
+        .badges-title {
+            font-weight: 600;
+            color: #2C7DA0;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .badges-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .badge-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.4rem 0.8rem;
+            border-radius: 1.2rem;
+            background: #F9F6EF;
+            border: 2px solid #ede7dd;
+            transition: 0.15s;
+            min-width: 70px;
+        }
+
+        .badge-item.unlocked {
+            border-color: #2C7DA0;
+            background: #e8f0f5;
+            box-shadow: 0 2px 8px rgba(44, 125, 160, 0.15);
+        }
+
+        .badge-item .badge-icon { font-size: 1.8rem; }
+        .badge-item .badge-name {
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: #3E5C4A;
+            text-align: center;
+            margin-top: 2px;
+        }
+        .badge-item .badge-status {
+            font-size: 0.5rem;
+            color: #8a9b7a;
+            margin-top: 2px;
+        }
+        .badge-item.locked {
+            opacity: 0.4;
+            filter: grayscale(0.6);
+        }
+
+        /* ===== КАРТОЧКИ ===== */
+        .card {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.2rem 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 1.2rem;
+            border: 1px solid rgba(163, 177, 138, 0.2);
+        }
+
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2C7DA0;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .card-title .icon { font-size: 1.3rem; }
+
+        /* ===== РАСПИСАНИЕ ===== */
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: 60px repeat(5, 1fr);
+            gap: 4px;
+            font-size: 0.75rem;
+            align-items: center;
+        }
+
+        .schedule-grid .time-label {
+            font-weight: 600;
+            color: #A3B18A;
+            text-align: center;
+            padding: 4px 0;
+            font-size: 0.7rem;
+        }
+
+        .schedule-grid .day-header {
+            font-weight: 700;
+            color: #2C7DA0;
+            text-align: center;
+            padding: 6px 0;
+            background: #F4EFE4;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+        }
+
+        .schedule-grid .cell {
+            background: #FEFAF2;
+            border-radius: 0.8rem;
+            padding: 4px 6px;
+            min-height: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #EDE8DC;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .schedule-grid .cell.done {
+            background: #CBE0C0;
+            border-color: #A3B18A;
+        }
+
+        .schedule-grid .cell .subject {
+            font-weight: 600;
+            font-size: 0.65rem;
+            line-height: 1.2;
+        }
+        .schedule-grid .cell .teacher {
+            font-size: 0.55rem;
+            color: #7B8D6E;
+        }
+
+        .schedule-grid .cell .check-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 2px;
+            align-self: center;
+            color: #A3B18A;
+            transition: 0.2s;
+        }
+        .schedule-grid .cell .check-btn:hover { color: #2C7DA0; }
+        .schedule-grid .cell.done .check-btn { color: #2C4027; }
+
+        .schedule-edit {
+            margin-top: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .schedule-edit input, .schedule-edit select {
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #E5DDCF;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-family: inherit;
+            background: #FEFAF2;
+        }
+        .schedule-edit .btn { padding: 0.3rem 1rem; font-size: 0.7rem; }
+
+        /* ===== ФОРМЫ ===== */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.8rem; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8rem; }
+
+        .field-label {
+            font-weight: 600;
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 0.2rem;
+            color: #3E5C4A;
+        }
+
+        input[type="text"], input[type="number"], textarea, select {
+            width: 100%;
+            padding: 0.4rem 1rem;
+            border: 1px solid #E5DDCF;
+            border-radius: 2rem;
+            font-family: inherit;
+            font-size: 0.85rem;
+            background: #FEFAF2;
+            transition: 0.2s;
+            color: #1e2f2a;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+            border-color: #2C7DA0;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1);
+        }
+
+        textarea { border-radius: 1.2rem; resize: vertical; min-height: 50px; }
+
+        /* ===== ПРОМПТ ДЛЯ ИИ ===== */
+        .prompt-box {
+            background: #e8f0f5;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.5rem 0;
+        }
+
+        .prompt-box .prompt-label {
+            font-weight: 700;
+            color: #2C7DA0;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .prompt-box .prompt-text {
+            font-size: 0.85rem;
+            color: #3E5C4A;
+            margin-top: 4px;
+            font-style: italic;
+        }
+
+        /* ===== СОВЕТ НАСТАВНИКА ===== */
+        .mentor-tip {
+            background: #fcf4e8;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D4A373;
+            margin: 0.5rem 0;
+        }
+
+        .mentor-tip .tip-label {
+            font-weight: 700;
+            color: #D4A373;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .mentor-tip .tip-text {
+            font-size: 0.85rem;
+            color: #3E5C4A;
+            margin-top: 4px;
+        }
+
+        /* ===== ТРЕКЕР ПРИВЫЧЕК ===== */
+        .habit-grid {
+            display: grid;
+            grid-template-columns: 1fr repeat(7, 1fr);
+            gap: 0.3rem;
+            font-size: 0.7rem;
+            align-items: center;
+        }
+
+        .habit-grid .label {
+            font-weight: 600;
+            color: #3E5C4A;
+            padding-right: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .habit-grid .day-label {
+            text-align: center;
+            font-weight: 600;
+            color: #A3B18A;
+            font-size: 0.6rem;
+        }
+
+        .habit-grid input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2C7DA0;
+            cursor: pointer;
+            justify-self: center;
+        }
+
+        /* ===== ПРОФЕССИОНАЛЬНАЯ ЦЕЛЬ ===== */
+        .goal-box {
+            background: #f0f7ea;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            border: 2px dashed #A3B18A;
+            margin: 0.5rem 0;
+        }
+
+        .goal-box .goal-label {
+            font-weight: 700;
+            color: #A3B18A;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== ПРОГРЕСС ===== */
+        .progress-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .progress-bar-bg {
+            flex: 1;
+            height: 8px;
+            background: #F4EFE4;
+            border-radius: 1rem;
+            overflow: hidden;
+            min-width: 100px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #A3B18A, #2C7DA0);
+            border-radius: 1rem;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        .progress-text { font-weight: 700; color: #2C7DA0; font-size: 0.85rem; white-space: nowrap; }
+
+        .progress-stats {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .progress-stats span { background: #F4EFE4; padding: 0.2rem 0.8rem; border-radius: 2rem; }
+
+        .motivation-message {
+            background: #e8f0f5;
+            border-radius: 1.2rem;
+            padding: 0.8rem 1.2rem;
+            margin: 0.5rem 0 0;
+            border-left: 4px solid #2C7DA0;
+            font-size: 0.9rem;
+            color: #3E5C4A;
+            display: none;
+        }
+
+        .motivation-message.show { display: block; }
+
+        /* ===== МОДАЛКА ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+
+        .modal {
+            background: white;
+            border-radius: 2rem;
+            padding: 2rem;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+        }
+        .modal h2 { margin-bottom: 0.5rem; color: #3E5C4A; }
+        .modal .close-btn {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #7B8D6E;
+        }
+
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.7rem;
+            color: #B0BC9C;
+            border-top: 1px solid #E5DDCF;
+            padding-top: 1rem;
+        }
+
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 700px) {
+            body { padding: 0.8rem; }
+            .header { flex-direction: column; align-items: stretch; text-align: center; }
+            .header-actions { justify-content: center; }
+            .user-greeting { flex-direction: column; text-align: center; }
+            .user-greeting .name-input { justify-content: center; }
+            .schedule-grid { font-size: 0.6rem; grid-template-columns: 45px repeat(5, 1fr); }
+            .schedule-grid .cell .subject { font-size: 0.55rem; }
+            .habit-grid { font-size: 0.55rem; grid-template-columns: 1fr repeat(7, 1fr); }
+            .habit-grid .day-label { font-size: 0.5rem; }
+            .habit-grid input[type="checkbox"] { width: 14px; height: 14px; }
+            .grid-3 { grid-template-columns: 1fr 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .badges-grid { justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            body { padding: 0.5rem; }
+            .card { padding: 0.8rem 1rem; }
+            .grid-3 { grid-template-columns: 1fr; }
+            .logo { font-size: 1.2rem; }
+            .logo small { font-size: 0.65rem; display: block; margin-left: 0; }
+            .schedule-grid { font-size: 0.5rem; grid-template-columns: 35px repeat(5, 1fr); }
+        }
+
+        @media print {
+            body { background: white !important; padding: 0.3in !important; }
+            .no-print { display: none !important; }
+            .card { box-shadow: none !important; border: 1px solid #eee; page-break-inside: avoid; }
+            .header { box-shadow: none !important; border: 1px solid #eee; }
+            input, textarea { border: 1px solid #ccc !important; background: #fefefe !important; }
+            .habit-grid { font-size: 0.6rem; }
+            .badge-item { border-color: #ccc !important; }
+            .badge-item.unlocked { border-color: #2C7DA0 !important; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card { animation: fadeIn 0.3s ease; }
+
+        @keyframes badgeUnlock {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .badge-item.unlocked { animation: badgeUnlock 0.5s ease; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- ===== ШАПКА ===== -->
+    <header class="header">
+        <div class="logo">
+            🐾 Вет<span>Сим</span>
+            <small>дневник студента · 2 курс · 1 семестр</small>
+        </div>
+        <div class="week-badge" id="weekBadge">Неделя 1–16</div>
+        <div class="header-actions no-print">
+            <button class="btn btn-primary" id="saveBtn">💾 Сохранить</button>
+            <button class="btn btn-accent" onclick="window.print()">🖨️ Печать</button>
+            <button class="btn btn-danger" id="resetBtn">🔄 Сбросить</button>
+        </div>
+    </header>
+
+    <!-- ===== ИМЯ ПОЛЬЗОВАТЕЛЯ ===== -->
+    <div class="user-greeting">
+        <div class="greeting-text" id="greetingText">
+            👋 Привет, <strong>студент-ветеринар 2 курса</strong>! Ты уже не новичок. Теперь ты учишься мыслить как специалист.
+        </div>
+        <div class="name-input no-print">
+            <input type="text" id="userNameInput" placeholder="Введи своё имя..." maxlength="30">
+            <button id="saveNameBtn">Сохранить</button>
+        </div>
+    </div>
+
+    <!-- ===== БЕЙДЖИ ===== -->
+    <div class="badges-block no-print" id="badgesBlock">
+        <div class="badges-title">
+            🏅 Мои достижения
+            <span style="font-size:0.7rem; font-weight:400; color:#7B8D6E;">профессиональный рост</span>
+        </div>
+        <div class="badges-grid" id="badgesGrid"></div>
+    </div>
+
+    <!-- ===== РАСПИСАНИЕ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📅</span> Моё расписание</div>
+        <div class="schedule-grid" id="scheduleGrid"></div>
+        <div class="schedule-edit no-print">
+            <select id="scheduleDaySelect">
+                <option value="0">ПН</option>
+                <option value="1">ВТ</option>
+                <option value="2">СР</option>
+                <option value="3">ЧТ</option>
+                <option value="4">ПТ</option>
+            </select>
+            <input type="text" id="scheduleSubjectInput" placeholder="Предмет" style="flex:1; min-width:80px;">
+            <input type="text" id="scheduleTeacherInput" placeholder="Преподаватель" style="flex:1; min-width:80px;">
+            <button class="btn btn-primary" id="addScheduleBtn">➕ Добавить</button>
+            <button class="btn btn-outline" id="clearScheduleBtn">🧹 Очистить день</button>
+        </div>
+        <div style="font-size:0.65rem; color:#7B8D6E; margin-top:0.3rem;">💡 Нажмите на ⬜, чтобы отметить занятие как выполненное</div>
+    </div>
+
+    <!-- ===== ПРОФЕССИОНАЛЬНЫЙ ДЕНЬ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📚</span> Мой профессиональный день</div>
+        <div class="grid-3">
+            <div>
+                <label class="field-label">⏰ Начало занятий</label>
+                <input type="text" id="startTime" placeholder="8:30">
+            </div>
+            <div>
+                <label class="field-label">📖 Количество пар</label>
+                <input type="number" id="pairs" min="0" value="0">
+            </div>
+            <div>
+                <label class="field-label">⏳ Самостоятельная работа (ч)</label>
+                <input type="number" id="selfStudy" min="0" value="0" step="0.5">
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ЛАТИНСКИЙ ЯЗЫК ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📖</span> Латинский язык в ветеринарии</div>
+        <div>
+            <label class="field-label">📝 Термины, которые я сегодня учил(а)</label>
+            <input type="text" id="latinTerms" placeholder="musculus, os, costa, articulatio...">
+        </div>
+        <div>
+            <label class="field-label">🔄 Склонения и падежи — что отрабатывал(а)?</label>
+            <input type="text" id="latinGrammar" placeholder="I–V склонения, родительный падеж, окончания...">
+        </div>
+        <div>
+            <label class="field-label">📖 Что я читал(а) на латыни?</label>
+            <textarea id="latinReading" rows="2" placeholder="Анатомические термины, названия мышц, костей, органов..."></textarea>
+        </div>
+        <div class="mentor-tip">
+            <div class="tip-label">💡 Совет наставника</div>
+            <div class="tip-text">Латынь — это язык профессии. Каждый новый термин — это кирпичик в твоём профессиональном словаре.</div>
+        </div>
+    </div>
+
+    <!-- ===== АНАТОМИЯ И ФИЗИОЛОГИЯ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🧬</span> Анатомия и физиология животных</div>
+        <div>
+            <label class="field-label">🦴 Какую систему органов сегодня изучали?</label>
+            <input type="text" id="anatomySystem" placeholder="Опорно-двигательная, сердечно-сосудистая, дыхательная...">
+        </div>
+        <div>
+            <label class="field-label">🔬 Что я узнал(а) о строении и функции?</label>
+            <textarea id="anatomyDetails" rows="2" placeholder="Строение сердца, функции печени, механизм дыхания..."></textarea>
+        </div>
+        <div>
+            <label class="field-label">🧠 Связь анатомии и физиологии: что понял(а)?</label>
+            <textarea id="anatomyConnection" rows="2" placeholder="Как строение определяет функцию, примеры из практики..."></textarea>
+        </div>
+        <div class="mentor-tip">
+            <div class="tip-label">💡 Совет наставника</div>
+            <div class="tip-text">Анатомия — это карта тела. Физиология — это инструкция по его работе. Вместе они дают понимание целостной системы.</div>
+        </div>
+    </div>
+
+    <!-- ===== ФАРМАКОЛОГИЯ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">💊</span> Ветеринарная фармакология</div>
+        <div>
+            <label class="field-label">💉 Какие лекарственные средства сегодня изучали?</label>
+            <input type="text" id="pharmaDrugs" placeholder="Антибиотики, противовоспалительные, анестетики...">
+        </div>
+        <div>
+            <label class="field-label">📐 Формы выпуска и дозировки</label>
+            <input type="text" id="pharmaForms" placeholder="Таблетки, инъекции, мази, капли, дозировки...">
+        </div>
+        <div>
+            <label class="field-label">⚙️ Механизм действия (что запомнил(а)?)</label>
+            <textarea id="pharmaMechanism" rows="2" placeholder="Как действует препарат, на какие рецепторы, эффекты..."></textarea>
+        </div>
+        <div class="mentor-tip">
+            <div class="tip-label">💡 Совет наставника</div>
+            <div class="tip-text">Фармакология — это не просто список препаратов. Это понимание того, как лекарство работает в организме животного.</div>
+        </div>
+    </div>
+
+    <!-- ===== ЗООГИГИЕНА И ЖИВОТНОВОДСТВО ===== -->
+    <div class="card">
+       <div class="card-title"><span class="icon">🐄</span> Зоогигиена и животноводство</div>
+       <div>
+           <label class="field-label">🏠 Условия содержания животных (что сегодня изучали?)</label>
+           <input type="text" id="zooHygiene" placeholder="Микроклимат, вентиляция, освещение, подстилка, плотность посадки...">
+       </div>
+       <div>
+           <label class="field-label">🐮 Породы и продуктивность</label>
+           <input type="text" id="zooBreeds" placeholder="Породы КРС, свиней, овец, птиц, молочная/мясная продуктивность...">
+       </div>
+    <div>
+           <label class="field-label">📋 Санитарно-гигиенические требования</label>
+           <textarea id="zooSanitary" rows="2" placeholder="Нормы площади, температурный режим, влажность, газовый состав..."></textarea>
+      </div>
+      <div class="mentor-tip">
+          <div class="tip-label">💡 Совет наставника</div>
+          <div class="tip-text">Здоровье животного начинается с условий его содержания. Гигиена и соблюдение санитарных норм — основа профилактики заболеваний.</div>
+      </div>
+    </div>
+
+    <!-- ===== КЛИНИЧЕСКОЕ МЫШЛЕНИЕ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🩺</span> Клиническое мышление</div>
+        <div>
+            <label class="field-label">🤔 Этическая дилемма дня (что обсуждали?)</label>
+            <input type="text" id="clinicalEthics" placeholder="Эвтаназия, лечение vs качество жизни, доступность помощи...">
+        </div>
+        <div>
+            <label class="field-label">📋 Диагностический кейс (что разбирали?)</label>
+            <textarea id="clinicalCase" rows="2" placeholder="Симптомы, дифференциальная диагностика, план обследования..."></textarea>
+        </div>
+        <div>
+            <label class="field-label">💊 Стратегия лечения (что предложили бы?)</label>
+            <textarea id="clinicalTreatment" rows="2" placeholder="Препараты, дозировки, схема, контроль эффективности..."></textarea>
+        </div>
+        <div class="mentor-tip">
+            <div class="tip-label">💡 Совет наставника</div>
+            <div class="tip-text">Клиническое мышление — это умение видеть целостную картину. Связывай симптомы, диагноз и лечение в единую логику.</div>
+        </div>
+    </div>
+
+    <!-- ===== МОЯ ПРОФЕССИОНАЛЬНАЯ ЦЕЛЬ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> Моя профессиональная цель</div>
+        <div class="goal-box">
+            <div class="goal-label">🎯 Цель на семестр</div>
+            <input type="text" id="semesterGoal" placeholder="Например: освоить 100 латинских терминов, изучить фармакологию 20 препаратов...">
+        </div>
+        <div class="goal-box" style="margin-top:0.5rem;">
+            <div class="goal-label">📋 Мои шаги к цели (что я сделал(а) сегодня?)</div>
+            <textarea id="goalSteps" rows="2" placeholder="Сегодня я выучил(а) 10 терминов, разобрал(а) механизм действия..."></textarea>
+        </div>
+        <div class="mentor-tip">
+            <div class="tip-label">💡 Совет наставника</div>
+            <div class="tip-text">Ты уже на втором курсе. Твои цели становятся более конкретными и профессиональными. Записывай их и двигайся к ним каждый день.</div>
+        </div>
+    </div>
+
+    <!-- ===== ЗАБОТА О СЕБЕ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🌿</span> Забота о себе</div>
+        <div class="grid-2">
+            <div>
+                <label class="field-label">😴 Сон (часов)</label>
+                <input type="number" id="sleepHours" min="0" max="12" value="7" step="0.5">
+            </div>
+            <div>
+                <label class="field-label">🥗 Полезный приём пищи</label>
+                <input type="text" id="healthyMeal" placeholder="Что полезного я сегодня ел(а)?">
+            </div>
+            <div>
+                <label class="field-label">🚶 Прогулка / активность</label>
+                <input type="text" id="activity" placeholder="Что делали и сколько времени">
+            </div>
+            <div>
+                <label class="field-label">🎯 Уровень усталости (1–10)</label>
+                <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <span style="font-size:0.7rem;">1</span>
+                    <input type="range" id="fatigueLevel" min="1" max="10" value="5" style="flex:1;">
+                    <span id="fatigueValue" style="font-weight:700; color:#2C7DA0;">5</span>
+                    <span style="font-size:0.7rem;">10</span>
+                </div>
+            </div>
+        </div>
+        <div class="mentor-tip" style="margin-top:0.5rem;">
+            <div class="tip-label">💡 Совет наставника</div>
+            <div class="tip-text">Ветеринарный специалист, заботясь о других, должен заботиться и о себе. Восстановление — это профессиональный навык.</div>
+        </div>
+    </div>
+
+    <!-- ===== ТРЕКЕР ПРИВЫЧЕК ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🔄</span> Трекер полезных привычек</div>
+        <div class="habit-grid" id="habitGrid"></div>
+    </div>
+
+    <!-- ===== РЕФЛЕКСИЯ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">✨</span> Рефлексия дня</div>
+        <div style="display: flex; flex-direction: column; gap: 0.6rem;">
+            <div>
+                <label class="field-label">🧠 Какое знание сегодня было самым важным?</label>
+                <textarea id="newLearned" rows="2" placeholder="Что из изученного сегодня имеет наибольшее практическое значение?"></textarea>
+            </div>
+            <div>
+                <label class="field-label">🔗 Как сегодняшние знания связаны с практикой ветеринарии?</label>
+                <textarea id="practiceConnection" rows="2" placeholder="Где я могу применить это в работе с животными?"></textarea>
+            </div>
+            <div>
+                <label class="field-label">❓ Какие вопросы у меня остались?</label>
+                <textarea id="questions" rows="2" placeholder="Что было непонятно, что хотелось бы разобрать подробнее?"></textarea>
+            </div>
+            <div>
+                <label class="field-label">🙏 За что я благодарен(на) сегодня?</label>
+                <textarea id="gratitude" rows="2" placeholder="Преподавателю, другу, новому знанию, пониманию..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== ПРОМПТ ДЛЯ ИИ ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">🤖</span> Промпт для ИИ (профессиональная рефлексия)</div>
+        <div class="prompt-box">
+            <div class="prompt-label">💬 Готовый промпт для нейросети</div>
+            <div class="prompt-text">«Ты — наставник студента-ветеринара 2 курса. Прочитай мои записи в дневнике за сегодня. Задай мне 3 вопроса, которые помогут мне глубже осмыслить изученный материал и увидеть его применение в клинической практике. Помоги мне понять, как я могу применить эти знания в работе с животными».</div>
+        </div>
+        <div style="margin-top:0.5rem;">
+            <label class="field-label">✍️ Запиши ответы на вопросы ИИ (или свои мысли):</label>
+            <textarea id="aiReflection" rows="2" placeholder="Вопросы, которые задал(а) себе после диалога с ИИ..."></textarea>
+        </div>
+    </div>
+
+    <!-- ===== ПРОГРЕСС ===== -->
+    <div class="card">
+        <div class="card-title"><span class="icon">📊</span> Мой прогресс за неделю</div>
+        <div class="progress-wrapper">
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-text" id="progressText">0%</div>
+        </div>
+        <div class="progress-stats">
+            <span>📖 Пар: <strong id="totalPairs">0</strong></span>
+            <span>⏳ Самост. работы: <strong id="totalSelfStudy">0</strong> ч</span>
+            <span>📝 Терминов: <strong id="totalTerms">0</strong></span>
+            <span>💊 Препаратов: <strong id="totalDrugs">0</strong></span>
+            <span>😴 Сон: <strong id="avgSleep">0</strong> ч</span>
+        </div>
+        <div class="motivation-message" id="motivationMsg"></div>
+    </div>
+
+    <!-- ===== ПОДВАЛ ===== -->
+    <div class="footer">
+        © ВетСим — ветеринарное просвещение · 2 курс — время профессионального становления
+    </div>
+
+</div>
+
+<!-- ===== МОДАЛКА СБРОСА ===== -->
+<div class="modal-overlay" id="resetModal">
+    <div class="modal">
+        <button class="close-btn" id="resetModalClose">&times;</button>
+        <h2>🔄 Сбросить данные</h2>
+        <div class="modal-body">
+            <p>Вы уверены, что хотите очистить все данные текущей недели? Это действие необратимо.</p>
+            <div style="display: flex; gap: 0.8rem; margin-top: 1.2rem; justify-content: flex-end;">
+                <button class="btn btn-outline" id="resetModalCancel">Отмена</button>
+                <button class="btn btn-danger" id="resetModalConfirm">Сбросить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        "use strict";
+
+        const STORAGE_KEY = 'vet_student_year2_semester1_v1';
+
+        const DAYS = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+        const DAYS_SHORT = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ'];
+        const TIME_SLOTS = ['8:30', '10:15', '12:00', '13:45', '15:30', '17:15'];
+
+        const HABITS = [
+            { id: 'latin', label: '📖 Латынь (15 мин+)' },
+            { id: 'anatomy', label: '🧬 Анатомия (повтор)' },
+            { id: 'pharma', label: '💊 Фармакология (изучение)' },
+            { id: 'clinical', label: '🩺 Клиническое мышление' },
+            { id: 'reading', label: '📚 Чтение о профессии' },
+            { id: 'sleep', label: '😴 Сон 7–8 ч' },
+            { id: 'gratitude', label: '🙏 Благодарность' }
+        ];
+
+        const BADGES = [
+            { id: 'terminologist', name: 'Терминолог', icon: '📖', condition: 3 },
+            { id: 'anatomist', name: 'Анатом', icon: '🦴', condition: 5 },
+            { id: 'pharmacologist', name: 'Фармаколог', icon: '💊', condition: 5 },
+            { id: 'clinician', name: 'Клиницист', icon: '🩺', condition: 5 },
+            { id: 'thinker', name: 'Мыслитель', icon: '🧠', condition: 10 },
+            { id: 'professional', name: 'Профессионал', icon: '🌟', condition: 15 },
+            { id: 'hygienist', name: 'Зоогигиенист', icon: '🏠', condition: 5 },
+            { id: 'zoologist', name: 'Зоотехник', icon: '🐄', condition: 5 },
+            { id: 'goal_achiever', name: 'Целеустремлённый', icon: '🎯', condition: 3 },
+            { id: 'dedicated', name: 'Преданный', icon: '❤️', condition: 20 }
+        ];
+
+        let data = {};
+        let userName = '';
+
+            const ALL_INPUTS = [
+           'startTime', 'pairs', 'selfStudy',
+           'latinTerms', 'latinGrammar', 'latinReading',
+           'anatomySystem', 'anatomyDetails', 'anatomyConnection',
+           'pharmaDrugs', 'pharmaForms', 'pharmaMechanism',
+           'zooHygiene', 'zooBreeds', 'zooSanitary',  // zooFeeding заменён на zooSanitary
+           'clinicalEthics', 'clinicalCase', 'clinicalTreatment',
+           'semesterGoal', 'goalSteps',
+           'sleepHours', 'healthyMeal', 'activity', 'fatigueLevel',
+           'newLearned', 'practiceConnection', 'questions', 'gratitude',
+           'aiReflection'
+         ];
+
+        const el = {};
+
+        function initDOM() {
+            const ids = [
+                'weekBadge', 'greetingText', 'userNameInput', 'saveNameBtn',
+                'saveBtn', 'resetBtn', 'resetModal', 'resetModalClose',
+                'resetModalCancel', 'resetModalConfirm', 'progressFill',
+                'progressText', 'totalPairs', 'totalSelfStudy', 'totalTerms',
+                'totalDrugs', 'avgSleep', 'motivationMsg', 'badgesGrid',
+                'scheduleGrid', 'scheduleDaySelect', 'scheduleSubjectInput',
+                'scheduleTeacherInput', 'addScheduleBtn', 'clearScheduleBtn',
+                'habitGrid', 'fatigueValue'
+            ];
+            ids.forEach(id => {
+                el[id] = document.getElementById(id);
+            });
+
+            ALL_INPUTS.forEach(id => {
+                el[id] = document.getElementById(id);
+            });
+        }
+
+        function loadData() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    data = parsed.data || {};
+                    userName = parsed.userName || '';
+                    return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    data: data,
+                    userName: userName
+                }));
+            } catch (e) {}
+        }
+
+        function saveAllData() {
+            ALL_INPUTS.forEach(id => {
+                const val = el[id]?.value;
+                if (val !== undefined) {
+                    if (id === 'pairs' || id === 'selfStudy' || id === 'sleepHours') {
+                        data[id] = parseFloat(val) || 0;
+                    } else if (id === 'fatigueLevel') {
+                        data[id] = parseInt(val) || 5;
+                    } else {
+                        data[id] = val || '';
+                    }
+                }
+            });
+            if (data.habits === undefined) data.habits = {};
+            if (data.schedule === undefined) data.schedule = {};
+
+            saveData();
+            updateProgress();
+        }
+
+        function renderGreeting() {
+            const name = userName || 'студент 2 курса';
+            el.greetingText.innerHTML = `👋 Привет, <strong>${escapeHtml(name)}</strong>! Ты уже не новичок. Теперь ты учишься мыслить как специалист.`;
+            el.userNameInput.value = userName;
+        }
+
+        function saveName() {
+            const name = el.userNameInput.value.trim();
+            if (name.length > 0) {
+                userName = name;
+                saveData();
+                renderGreeting();
+                showToast('✅ Имя сохранено!');
+            } else {
+                alert('Пожалуйста, введите своё имя.');
+            }
+        }
+
+        function renderBadges() {
+            const done = getCompletedDays();
+            const latinCount = countLatinEntries();
+            const anatCount = countAnatomyEntries();
+            const pharmaCount = countPharmaEntries();
+            const clinicalCount = countClinicalEntries();
+            const zooCount = countZooEntries();
+            const goalFilled = (data.semesterGoal || '').trim().length > 0;
+            const gratitudeCount = countGratitudeEntries();
+
+            const unlocked = BADGES.filter(b => {
+                if (b.id === 'terminologist') return latinCount >= 5;
+                if (b.id === 'anatomist') return anatCount >= 5;
+                if (b.id === 'pharmacologist') return pharmaCount >= 5;
+                if (b.id === 'clinician') return clinicalCount >= 5;
+                if (b.id === 'hygienist') return zooCount >= 5;
+                if (b.id === 'zoologist') return zooCount >= 3;
+                if (b.id === 'goal_achiever') return goalFilled;
+                if (b.id === 'thinker') return latinCount >= 3 && anatCount >= 3 && pharmaCount >= 3;
+                if (b.id === 'dedicated') return done >= 20;
+                return done >= b.condition;
+            });
+
+            let html = '';
+            BADGES.forEach(b => {
+                const isUnlocked = unlocked.some(u => u.id === b.id);
+                html += `
+                    <div class="badge-item ${isUnlocked ? 'unlocked' : 'locked'}">
+                        <div class="badge-icon">${b.icon}</div>
+                        <div class="badge-name">${b.name}</div>
+                        <div class="badge-status">${isUnlocked ? '✅' : '🔒'}</div>
+                    </div>
+                `;
+            });
+            el.badgesGrid.innerHTML = html;
+        }
+
+        function getCompletedDays() {
+            let count = 0;
+            for (let i = 0; i < 7; i++) {
+                const dayKey = `day_${i}`;
+                if (data[dayKey]) count++;
+            }
+            return count;
+        }
+
+        function countFieldEntries(fieldId) {
+            const val = data[fieldId] || '';
+            const entries = val.split(',').filter(s => s.trim().length > 0);
+            return entries.length;
+        }
+
+        function countLatinEntries() {
+            return countFieldEntries('latinTerms') + countFieldEntries('latinGrammar') + countFieldEntries('latinReading');
+        }
+
+        function countAnatomyEntries() {
+            return countFieldEntries('anatomySystem') + countFieldEntries('anatomyDetails') + countFieldEntries('anatomyConnection');
+        }
+
+        function countPharmaEntries() {
+            return countFieldEntries('pharmaDrugs') + countFieldEntries('pharmaForms') + countFieldEntries('pharmaMechanism');
+        }
+
+        function countClinicalEntries() {
+            return countFieldEntries('clinicalEthics') + countFieldEntries('clinicalCase') + countFieldEntries('clinicalTreatment');
+        }
+
+        function countZooEntries() {
+            return countFieldEntries('zooHygiene') + countFieldEntries('zooBreeds') + countFieldEntries('zooSanitary');
+        }
+
+        function countGratitudeEntries() {
+            return countFieldEntries('gratitude');
+        }
+
+        function getMotivationMessage(done) {
+            const messages = [
+                { upTo: 0, text: '🐾 Начни свой путь! Заполняй дневник каждый день.' },
+                { upTo: 3, text: '🌟 Отличный старт! Ты уже делаешь первые шаги в профессию.' },
+                { upTo: 5, text: '📚 Ты становишься настоящим исследователем! Продолжай в том же духе.' },
+                { upTo: 10, text: '💪 Ты настойчив! Каждый день — это вклад в твоё будущее.' },
+                { upTo: 15, text: '🩺 Ты уже почти профессионал! Ещё немного — и ты выпускник.' },
+                { upTo: 20, text: '🎓 ПОЗДРАВЛЯЮ! Ты завершил дневник первого семестра. Ты — настоящий студент-ветеринар!' },
+                { upTo: 99, text: '🌟 Ты сделал это! Ветеринария ждёт тебя!' }
+            ];
+            let msg = messages[0].text;
+            for (const m of messages) {
+                if (done <= m.upTo) { msg = m.text; break; }
+            }
+            return msg;
+        }
+
+        function renderSchedule() {
+            const grid = el.scheduleGrid;
+            let html = '';
+
+            const dates = getWeekDates();
+            html += `<div class="time-label"></div>`;
+            for (let d = 0; d < 5; d++) {
+                const dateStr = formatDate(dates[d]);
+                html += `<div class="day-header">${DAYS_SHORT[d]}<br><span style="font-weight:400; font-size:0.55rem;">${dateStr}</span></div>`;
+            }
+
+            for (let t = 0; t < TIME_SLOTS.length; t++) {
+                html += `<div class="time-label">${TIME_SLOTS[t]}</div>`;
+                for (let d = 0; d < 5; d++) {
+                    const dayData = data.schedule && data.schedule[d] ? data.schedule[d] : [];
+                    const item = dayData[t] || { subject: '', teacher: '', done: false };
+                    const doneClass = item.done ? 'done' : '';
+                    html += `
+                        <div class="cell ${doneClass}" data-day="${d}" data-time="${t}">
+                            <span class="subject">${item.subject || '—'}</span>
+                            <span class="teacher">${item.teacher || ''}</span>
+                            <button class="check-btn" data-day="${d}" data-time="${t}">${item.done ? '✅' : '⬜'}</button>
+                        </div>
+                    `;
+                }
+            }
+
+            grid.innerHTML = html;
+
+            grid.querySelectorAll('.check-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const day = parseInt(this.dataset.day);
+                    const time = parseInt(this.dataset.time);
+                    toggleScheduleItem(day, time);
+                });
+            });
+        }
+
+        function toggleScheduleItem(day, time) {
+            if (!data.schedule) data.schedule = {};
+            if (!data.schedule[day]) data.schedule[day] = [];
+            if (!data.schedule[day][time]) {
+                data.schedule[day][time] = { subject: '', teacher: '', done: false };
+            }
+            data.schedule[day][time].done = !data.schedule[day][time].done;
+            saveAllData();
+            renderSchedule();
+        }
+
+        function addScheduleItem() {
+            const day = parseInt(el.scheduleDaySelect.value);
+            const subject = el.scheduleSubjectInput.value.trim();
+            const teacher = el.scheduleTeacherInput.value.trim();
+            if (!subject) { alert('Введите название предмета'); return; }
+            if (!data.schedule) data.schedule = {};
+            if (!data.schedule[day]) data.schedule[day] = [];
+
+            let added = false;
+            for (let t = 0; t < TIME_SLOTS.length; t++) {
+                if (!data.schedule[day][t] || !data.schedule[day][t].subject) {
+                    data.schedule[day][t] = { subject, teacher, done: false };
+                    added = true;
+                    break;
+                }
+            }
+            if (!added) { alert('Все ячейки заняты. Очистите одну.'); return; }
+            el.scheduleSubjectInput.value = '';
+            el.scheduleTeacherInput.value = '';
+            saveAllData();
+            renderSchedule();
+        }
+
+        function clearScheduleDay() {
+            const day = parseInt(el.scheduleDaySelect.value);
+            if (!confirm(`Очистить все занятия на ${DAYS_SHORT[day]}?`)) return;
+            if (!data.schedule) data.schedule = {};
+            data.schedule[day] = [];
+            saveAllData();
+            renderSchedule();
+        }
+
+        function renderHabits() {
+            const grid = el.habitGrid;
+            const dates = getWeekDates();
+            let html = `<div class="label"></div>`;
+            for (let i = 0; i < 7; i++) {
+                html += `<div class="day-label">${DAYS[i]}<br><small>${formatDate(dates[i])}</small></div>`;
+            }
+            for (const habit of HABITS) {
+                html += `<div class="label">${habit.label}</div>`;
+                for (let d = 0; d < 7; d++) {
+                    const day = DAYS[d];
+                    const checked = data.habits && data.habits[habit.id] && data.habits[habit.id][day] ? 'checked' : '';
+                    html += `<input type="checkbox" class="habit-check" data-habit="${habit.id}" data-day="${day}" ${checked}>`;
+                }
+            }
+            grid.innerHTML = html;
+
+            grid.querySelectorAll('.habit-check').forEach(cb => {
+                cb.addEventListener('change', function() {
+                    const habitId = this.dataset.habit;
+                    const day = this.dataset.day;
+                    if (!data.habits) data.habits = {};
+                    if (!data.habits[habitId]) data.habits[habitId] = {};
+                    data.habits[habitId][day] = this.checked;
+                    saveAllData();
+                });
+            });
+        }
+
+        function updateProgress() {
+            let score = 0;
+            const totalItems = 8;
+
+            if (parseInt(data.pairs) > 0) score++;
+            if (parseFloat(data.selfStudy) > 0) score++;
+            if (countLatinEntries() > 0) score++;
+            if (countAnatomyEntries() > 0) score++;
+            if (countPharmaEntries() > 0) score++;
+            if (countZooEntries() > 0) score++;
+            if (countClinicalEntries() > 0) score++;
+            if ((data.gratitude || '').trim().length > 0) score++;
+
+            const percent = Math.min(100, Math.round((score / totalItems) * 100));
+            el.progressFill.style.width = percent + '%';
+            el.progressText.textContent = percent + '%';
+
+            el.totalPairs.textContent = parseInt(data.pairs) || 0;
+            el.totalSelfStudy.textContent = parseFloat(data.selfStudy) || 0;
+            el.totalTerms.textContent = countLatinEntries();
+            el.totalDrugs.textContent = countPharmaEntries();
+            el.avgSleep.textContent = parseFloat(data.sleepHours) || 0;
+
+            const done = getCompletedDays();
+            const msg = getMotivationMessage(done);
+            el.motivationMsg.textContent = '💬 ' + msg;
+            el.motivationMsg.classList.add('show');
+
+            renderBadges();
+        }
+
+        function getWeekDates() {
+            const now = new Date();
+            const day = now.getDay() || 7;
+            const diff = day - 1;
+            const monday = new Date(now);
+            monday.setDate(now.getDate() - diff);
+            const dates = [];
+            for (let i = 0; i < 7; i++) {
+                const d = new Date(monday);
+                d.setDate(monday.getDate() + i);
+                dates.push(d);
+            }
+            return dates;
+        }
+
+        function formatDate(d) {
+            const dd = String(d.getDate()).padStart(2, '0');
+            const mm = String(d.getMonth() + 1).padStart(2, '0');
+            return `${dd}.${mm}`;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position:fixed; bottom:30px; left:50%; transform:translateX(-50%);
+                background:#1F4E6E; color:white; padding:10px 24px;
+                border-radius:40px; font-weight:600; font-size:0.85rem;
+                box-shadow:0 4px 16px rgba(0,0,0,0.15);
+                z-index:2000; text-align:center; max-width:90%;
+                opacity:0; transition:opacity 0.3s ease;
+            `;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.style.opacity = '1', 10);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        function resetWeek() {
+            localStorage.removeItem(STORAGE_KEY);
+            data = { habits: {}, schedule: {} };
+            userName = '';
+            ALL_INPUTS.forEach(id => {
+                if (id === 'fatigueLevel') data[id] = 5;
+                else if (id === 'pairs' || id === 'selfStudy' || id === 'sleepHours') data[id] = 0;
+                else data[id] = '';
+            });
+            ALL_INPUTS.forEach(id => {
+                const elInput = document.getElementById(id);
+                if (elInput) {
+                    if (id === 'fatigueLevel') elInput.value = 5;
+                    else if (id === 'pairs' || id === 'selfStudy' || id === 'sleepHours') elInput.value = 0;
+                    else elInput.value = '';
+                }
+            });
+            document.querySelectorAll('.habit-check').forEach(cb => cb.checked = false);
+            data.habits = {};
+            saveData();
+            renderGreeting();
+            renderSchedule();
+            renderHabits();
+            updateProgress();
+            el.resetModal.classList.remove('active');
+            showToast('🔄 Данные сброшены');
+        }
+
+        function init() {
+            initDOM();
+
+            const loaded = loadData();
+
+            if (!loaded) {
+                data = { habits: {}, schedule: {} };
+                ALL_INPUTS.forEach(id => {
+                    if (id === 'fatigueLevel') data[id] = 5;
+                    else if (id === 'sleepHours') data[id] = 7;
+                    else data[id] = 0;
+                });
+            }
+
+            renderGreeting();
+            renderSchedule();
+            renderHabits();
+
+            ALL_INPUTS.forEach(id => {
+                const elInput = document.getElementById(id);
+                if (elInput && data[id] !== undefined) {
+                    if (id === 'fatigueLevel') {
+                        elInput.value = data[id];
+                        document.getElementById('fatigueValue').textContent = data[id];
+                    } else {
+                        elInput.value = data[id];
+                    }
+                }
+            });
+
+            updateProgress();
+
+            el.saveBtn.addEventListener('click', function() {
+                saveAllData();
+                showToast('✅ Дневник сохранён!');
+            });
+
+            el.resetBtn.addEventListener('click', function() {
+                el.resetModal.classList.add('active');
+            });
+
+            el.resetModalClose.addEventListener('click', function() {
+                el.resetModal.classList.remove('active');
+            });
+            el.resetModalCancel.addEventListener('click', function() {
+                el.resetModal.classList.remove('active');
+            });
+            el.resetModalConfirm.addEventListener('click', resetWeek);
+            el.resetModal.addEventListener('click', function(e) {
+                if (e.target === this) el.resetModal.classList.remove('active');
+            });
+
+            el.addScheduleBtn.addEventListener('click', addScheduleItem);
+            el.clearScheduleBtn.addEventListener('click', clearScheduleDay);
+
+            el.saveNameBtn.addEventListener('click', saveName);
+            el.userNameInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') saveName();
+            });
+
+            ALL_INPUTS.forEach(id => {
+                const elInput = document.getElementById(id);
+                if (elInput) {
+                    elInput.addEventListener('input', saveAllData);
+                    elInput.addEventListener('change', saveAllData);
+                }
+            });
+
+            const fatigueInput = document.getElementById('fatigueLevel');
+            if (fatigueInput) {
+                fatigueInput.addEventListener('input', function() {
+                    document.getElementById('fatigueValue').textContent = this.value;
+                    saveAllData();
+                });
+            }
+
+            const weekNum = getWeekNumber();
+            el.weekBadge.textContent = `Неделя ${weekNum}`;
+
+            window.addEventListener('beforeunload', saveAllData);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    })();
+</script>
+</body>
+</html>

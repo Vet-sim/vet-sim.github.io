@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Инструкционная карта · Кожа — зеркало здоровья | ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #3E5C4A;
+    padding: 16px;
+    line-height: 1.5;
+  }
+  .container { max-width: 950px; margin: 0 auto; }
+  
+  /* Шапка */
+  header {
+    background: linear-gradient(135deg, #2C7DA0, #1F4E6E);
+    color: #fff;
+    padding: 20px 28px;
+    border-radius: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  header h1 { font-size: 1.4rem; margin-bottom: 4px; }
+  header p { font-size: 0.85rem; opacity: 0.95; }
+  header .meta { font-size: 0.75rem; margin-top: 6px; opacity: 0.9; }
+
+  /* Данные команды */
+  .team-info {
+    background: #fff;
+    border-radius: 1.2rem;
+    padding: 14px 20px;
+    margin-bottom: 16px;
+    border: 2px solid #A3B18A;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+  .team-info label { font-weight: 600; font-size: 0.85rem; }
+  .team-info input {
+    padding: 6px 14px;
+    border: 2px solid #dce5da;
+    border-radius: 2rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: #FDF8F0;
+    flex: 1;
+    min-width: 120px;
+  }
+
+  /* Карточки */
+  .card {
+    background: #fff;
+    border-radius: 1.2rem;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #EDE8DC;
+    position: relative;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2C7DA0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .variant-badge {
+    display: inline-block;
+    background: #fff3e0;
+    color: #e65100;
+    padding: 2px 10px;
+    border-radius: 1rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .card-subtitle {
+    font-size: 0.8rem;
+    color: #7B8D6E;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+
+  /* Таймер */
+  .timer-widget {
+    background: #F0F7FA;
+    border: 2px solid #2C7DA0;
+    border-radius: 1rem;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .timer-display {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #2C7DA0;
+    font-variant-numeric: tabular-nums;
+    min-width: 65px;
+  }
+  .timer-display.warning { color: #c62828; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .btn-timer {
+    background: #fff;
+    border: 1px solid #2C7DA0;
+    color: #2C7DA0;
+    padding: 4px 12px;
+    border-radius: 1rem;
+    font-weight: 600;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .btn-timer:hover { background: #2C7DA0; color: #fff; }
+
+  /* Методичка */
+  details.methodology {
+    background: #F9F6EF;
+    border-left: 4px solid #A3B18A;
+    border-radius: 0.8rem;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+  }
+  details.methodology summary {
+    font-weight: 700;
+    color: #5F7C62;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+  }
+  details.methodology[open] summary { margin-bottom: 8px; }
+  details.methodology p { margin-bottom: 6px; }
+  details.methodology ul { margin-left: 20px; margin-bottom: 6px; }
+  details.methodology li { margin-bottom: 4px; }
+  details.methodology strong { color: #1A2A3A; }
+
+  /* Поля */
+  .field-label {
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: block;
+    margin-bottom: 4px;
+    color: #3E5C4A;
+  }
+  input[type="text"], textarea {
+    width: 100%;
+    padding: 8px 14px;
+    border: 2px solid #E5DDCF;
+    border-radius: 1rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: #FEFAF2;
+    transition: 0.2s;
+    color: #1e2f2a;
+  }
+  input[type="text"]:focus, textarea:focus {
+    border-color: #2C7DA0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1);
+  }
+  textarea { resize: vertical; min-height: 60px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Таблицы */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.85rem;
+  }
+  th, td {
+    border: 1px solid #E5DDCF;
+    padding: 8px;
+    text-align: left;
+  }
+  th {
+    background: #F4EFE4;
+    font-weight: 600;
+    color: #2C7DA0;
+    font-size: 0.8rem;
+  }
+  td input { border: none; background: transparent; padding: 4px; width: 100%; }
+  td input:focus { box-shadow: none; border: none; }
+
+  /* Кнопки */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .btn {
+    background: linear-gradient(135deg, #43a047, #2e7d32);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,125,50,0.3); }
+  .btn-secondary { background: #fff; color: #2e7d32; border: 2px solid #2e7d32; }
+
+  /* Ссылки */
+  .links-box {
+    background: #e8f0f5;
+    border-radius: 1rem;
+    padding: 16px;
+    margin-top: 20px;
+    font-size: 0.85rem;
+  }
+  .links-box h3 { color: #1F4E6E; margin-bottom: 8px; font-size: 0.95rem; }
+  .links-box ul { list-style: none; }
+  .links-box li { margin-bottom: 6px; }
+  .links-box a { color: #2C7DA0; font-weight: 600; text-decoration: none; word-break: break-all; }
+  .links-box a:hover { text-decoration: underline; }
+
+  .footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #B0BC9C;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #E5DDCF;
+  }
+
+  @media (max-width: 700px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    body { padding: 10px; }
+    header { padding: 16px; }
+    header h1 { font-size: 1.1rem; }
+    .card { padding: 16px; }
+    .card-header { flex-direction: column; }
+  }
+  @media print {
+    body { background: #fff; padding: 0.3in; }
+    .no-print, .timer-widget, details.methodology summary { display: none !important; }
+    details.methodology { border: none; padding: 0; margin-bottom: 10px; }
+    details.methodology[open] { display: block; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    input, textarea { border: 1px solid #ccc; background: #fff; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>🐾 Инструкционная карта</h1>
+    <p>«Кожа — зеркало здоровья: макро- и микроскопическое строение кожи, её производных и молочной железы»</p>
+    <div class="meta">ВетСим · МДК 02.01 · 2 курс · группа 122 · 36.02.01 Ветеринария</div>
+  </header>
+
+  <div class="team-info no-print">
+    <label>Команда:</label>
+    <input type="text" id="teamName" placeholder="Название команды">
+    <label>Дата:</label>
+    <input type="text" id="date" placeholder="дд.мм.гггг">
+  </div>
+
+  <!-- РАЗДЕЛ 1 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🔍 Раздел 1. Симптомы <span class="variant-badge">Станция «Живой уголок»</span></div>
+      <div class="timer-widget no-print" id="widget-zone1">
+        <span class="timer-display" id="timer-zone1">15:00</span>
+        <button class="btn-timer" onclick="toggleTimer('zone1')">▶ Старт</button>
+        <button class="btn-timer" onclick="resetTimer('zone1')">↺</button>
+      </div>
+    </div>
+    <div class="card-subtitle">Заполняется после осмотра морской свинки (в скобках — варианты: кролик, собака, кошка)</div>
+
+    <details class="methodology no-print">
+      <summary>📖 Методические указания к станции 1</summary>
+      <p><strong>Цель:</strong> провести клинический осмотр кожного покрова и шерсти животного.</p>
+      <ul>
+        <li><strong>Шаг 1.</strong> Визуальный осмотр: оцените цвет кожи (бледно-розовый, гиперемия, цианоз), наличие алопеций (облысения), расчёсов, корочек, шелушения.</li>
+        <li><strong>Шаг 2.</strong> Пальпация: тыльной стороной ладони оцените локальную температуру, влажность.</li>
+        <li><strong>Шаг 3.</strong> Оценка тургора: соберите кожу в складку на холке и отпустите. В норме складка расправляется мгновенно (замедление — признак обезвоживания).</li>
+        <li><strong>Шаг 4.</strong> Оценка шерсти: обратите внимание на блеск, густоту, прочность удержания в фолликулах.</li>
+      </ul>
+    </details>
+
+    <div class="grid-2">
+      <div>
+        <label class="field-label">Цвет кожи</label>
+        <input type="text" id="skinColor" placeholder="Бледно-розовый, гиперемия, цианоз...">
+      </div>
+      <div>
+        <label class="field-label">Тургор (скорость расправления складки)</label>
+        <input type="text" id="turgor" placeholder="Мгновенно, замедленно...">
+      </div>
+      <div>
+        <label class="field-label">Состояние шерсти</label>
+        <input type="text" id="wool" placeholder="Блеск, тусклая, алопеции...">
+      </div>
+      <div>
+        <label class="field-label">Наличие расчёсов, корок</label>
+        <input type="text" id="scratches" placeholder="Есть / нет, локализация...">
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label class="field-label">Дополнительные наблюдения</label>
+      <textarea id="extra1" placeholder="Что ещё заметили при осмотре..."></textarea>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 2 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🔬 Раздел 2. Микроскопия <span class="variant-badge">Станция «Гистология»</span></div>
+      <div class="timer-widget no-print" id="widget-zone2">
+        <span class="timer-display" id="timer-zone2">15:00</span>
+        <button class="btn-timer" onclick="toggleTimer('zone2')">▶ Старт</button>
+        <button class="btn-timer" onclick="resetTimer('zone2')">↺</button>
+      </div>
+    </div>
+    <div class="card-subtitle">Заполняется после работы с микропрепаратами и скотч-тестом</div>
+
+    <details class="methodology">
+      <summary>📖 Методические указания к станции 2</summary>
+      <p><strong>1. Кожа без волос (малое увеличение):</strong></p>
+      <ul>
+        <li>Эпидермис образован многослойным плоским ороговевающим эпителием. Найдите гребешки росткового слоя, вдающиеся в дерму.</li>
+        <li>Дерма: рассмотрите сосочковый слой (рыхлая соединительная ткань, капилляры) и сетчатый (плотные пучки коллагеновых волокон).</li>
+        <li>Подкожный слой: рыхлая соединительная ткань с адипоцитами (жировыми клетками).</li>
+      </ul>
+      <p><strong>2. Кожа с волосом (продольный срез):</strong></p>
+      <ul>
+        <li>Найдите волосяной фолликул. В глубине — <em>волосяная луковица</em>, в нее вдается <em>волосяной сосочек</em> с сосудами.</li>
+        <li>Рядом с корнем волоса залегают альвеолярные <em>сальные железы</em> (выводные протоки открываются в воронку волоса).</li>
+        <li>Глубже, в сетчатом слое дермы, найдите <em>потовые железы</em> в виде свернутого «клубка».</li>
+      </ul>
+      <p><strong>3. Молочная железа:</strong></p>
+      <ul>
+        <li>Под малым увеличением видны дольки железистой ткани, разделенные прослойками соединительной ткани (стромой).</li>
+        <li>В альвеолах (концевых отделах) виден секрет — молоко. Стенка альвеолы состоит из железистых клеток и миоэпителиальных (корзинчатых) клеток.</li>
+      </ul>
+      <p><strong>4. Скотч-тест (демодекоз):</strong> рассмотрите клещей Demodex (удлиненное «сигарообразное» тело) под микроскопом.</p>
+    </details>
+
+    <table>
+      <tr>
+        <th>Препарат</th>
+        <th>Что нашли (детали строения)</th>
+      </tr>
+      <tr>
+        <td>Кожа с волосами</td>
+        <td><input type="text" id="micro1" placeholder="Фолликул, сальные/потовые железы..."></td>
+      </tr>
+      <tr>
+        <td>Кожа без волос</td>
+        <td><input type="text" id="micro2" placeholder="Слои эпидермиса, сосочки дермы..."></td>
+      </tr>
+      <tr>
+        <td>Молочная железа</td>
+        <td><input type="text" id="micro3" placeholder="Альвеолы, протоки, миоэпителий..."></td>
+      </tr>
+      <tr>
+        <td>Скотч-тест (демодекоз)</td>
+        <td><input type="text" id="micro4" placeholder="Найдены / не найдены клещи..."></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- РАЗДЕЛ 3 -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🐴 Раздел 3. Сравнение копыт <span class="variant-badge">Станция «Копыта и копытца»</span></div>
+      <div class="timer-widget no-print" id="widget-zone3">
+        <span class="timer-display" id="timer-zone3">15:00</span>
+        <button class="btn-timer" onclick="toggleTimer('zone3')">▶ Старт</button>
+        <button class="btn-timer" onclick="resetTimer('zone3')">↺</button>
+      </div>
+    </div>
+    <div class="card-subtitle">Сначала найдите детали строения на норме, затем сравните с патологией (муляжи)</div>
+
+    <details class="methodology no-print">
+      <summary>📖 Методические указания к станции 3</summary>
+      <ul>
+        <li><strong>Шаг 1. Норма.</strong> На нормальных препаратах (или тренажере) найдите: <em>кайму</em> (продуцирует глазурь), <em>венчик</em> (трубчатый рог), <em>стенку</em> (листочковый рог), <em>подошву</em> (мягкий рог) и <em>стрелку</em>.</li>
+        <li><strong>Шаг 2. Патология.</strong> Осмотрите муляжи с патологией (ламинит, трещины, флегмона венчика).</li>
+        <li><strong>Шаг 3. Сравнение.</strong> Опишите, как изменилась форма, поверхность или структура рога при патологии. Обратите внимание на «голодные борозды» при ламините.</li>
+      </ul>
+    </details>
+
+    <table>
+      <tr>
+        <th>Структура</th>
+        <th>Норма (лошадь / КРС)</th>
+        <th>Патология (ламинит, трещины, флегмона)</th>
+      </tr>
+      <tr>
+        <td>Кайма</td>
+        <td><input type="text" id="norm1" placeholder="Состояние"></td>
+        <td><input type="text" id="pat1" placeholder="Что изменилось"></td>
+      </tr>
+      <tr>
+        <td>Венчик</td>
+        <td><input type="text" id="norm2" placeholder="Состояние"></td>
+        <td><input type="text" id="pat2" placeholder="Что изменилось"></td>
+      </tr>
+      <tr>
+        <td>Стенка</td>
+        <td><input type="text" id="norm3" placeholder="Состояние"></td>
+        <td><input type="text" id="pat3" placeholder="Что изменилось"></td>
+      </tr>
+      <tr>
+        <td>Подошва</td>
+        <td><input type="text" id="norm4" placeholder="Состояние"></td>
+        <td><input type="text" id="pat4" placeholder="Что изменилось"></td>
+      </tr>
+      <tr>
+        <td>Стрелка</td>
+        <td><input type="text" id="norm5" placeholder="Состояние"></td>
+        <td><input type="text" id="pat5" placeholder="Что изменилось"></td>
+      </tr>
+    </table>
+
+    <div style="margin-top:12px;">
+      <label class="field-label">Общий вывод по сравнению</label>
+      <textarea id="hoofConclusion" placeholder="Чем отличается норма от патологии..."></textarea>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 4 -->
+  <div class="card">
+    <div class="card-title">🎯 Раздел 4. Анализ и профилактика</div>
+    <div class="card-subtitle">Заполняется после обсуждения в команде</div>
+
+    <div>
+      <label class="field-label">Что это может быть? (предварительное заключение)</label>
+      <textarea id="analysis" placeholder="На основании симптомов, микроскопии и сравнения копыт..."></textarea>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label class="field-label">Что делать? (профилактика и меры)</label>
+      <textarea id="prevention" placeholder="Обработка, карантин, условия содержания..."></textarea>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 5. ГРУППОВОЕ РЕШЕНИЕ -->
+  <div class="card">
+    <div class="card-title">🧩 Раздел 5. Групповое решение <span class="variant-badge">Вариатив</span></div>
+    <div class="card-subtitle">Дублирование тренажёра «Групповое принятие решений». Заполняется, если нет доступа к интерактивной доске</div>
+
+    <div style="background:#e8f0f5; padding:10px 16px; border-radius:1rem; margin-bottom:14px; border-left:4px solid #2C7DA0;">
+      <div style="font-weight:700; color:#2C7DA0; font-size:0.75rem; text-transform:uppercase; margin-bottom:4px;">📌 Вариативность</div>
+      <div style="font-size:0.85rem; color:#3E5C4A;">
+        <strong>Вариант А:</strong> работа у интерактивной доски.<br>
+        <strong>Вариант Б:</strong> работа по подгруппам на ноутбуках (ссылка на тренажер ниже).
+      </div>
+    </div>
+
+    <table>
+      <tr>
+        <th>Этап тренажёра</th>
+        <th>Что выбрала команда</th>
+        <th>Ловушки (если были)</th>
+      </tr>
+      <tr>
+        <td>1. Первичный сбор информации</td>
+        <td><input type="text" id="gr1" placeholder="Ваш выбор"></td>
+        <td><input type="text" id="gr1t" placeholder="Что было ловушкой"></td>
+      </tr>
+      <tr>
+        <td>2. Осмотр и дифдиагностика</td>
+        <td><input type="text" id="gr2" placeholder="Ваш выбор"></td>
+        <td><input type="text" id="gr2t" placeholder="Что было ловушкой"></td>
+      </tr>
+      <tr>
+        <td>3. Интерпретация и тактика</td>
+        <td><input type="text" id="gr3" placeholder="Ваш выбор"></td>
+        <td><input type="text" id="gr3t" placeholder="Что было ловушкой"></td>
+      </tr>
+      <tr>
+        <td>4. Профилактика и биобезопасность</td>
+        <td><input type="text" id="gr4" placeholder="Ваш выбор"></td>
+        <td><input type="text" id="gr4t" placeholder="Что было ловушкой"></td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- РАЗДЕЛ 6. РЕФЛЕКСИЯ -->
+  <div class="card">
+    <div class="card-title">✨ Раздел 6. Рефлексия <span class="variant-badge">Вариатив</span></div>
+    <div class="card-subtitle">Можно заполнить в рабочей тетради или здесь — электронно</div>
+
+    <div style="margin-top:14px;">
+      <label class="field-label">Что было самым сложным на уроке?</label>
+      <textarea id="refl1" placeholder="Ваш ответ..."></textarea>
+    </div>
+    <div style="margin-top:12px;">
+      <label class="field-label">Как ИИ помог при подготовке ответа на вопрос корреспондента?</label>
+      <textarea id="refl2" placeholder="Ваш ответ..."></textarea>
+    </div>
+    <div style="margin-top:12px;">
+      <label class="field-label">Что понял о связи строения кожи и здоровья?</label>
+      <textarea id="refl3" placeholder="Ваш ответ..."></textarea>
+    </div>
+  </div>
+
+  <!-- ССЫЛКИ -->
+  <div class="links-box">
+    <h3>🌐 Цифровые ресурсы урока</h3>
+    <ul>
+      <li>🧩 <strong>Тренажёр «Групповое принятие решений»:</strong> <a href="https://vet-sim.github.io/metodist_goda/demodecosis_decision.html" target="_blank">Открыть</a></li>
+      <li>📓 <strong>Дневник студента:</strong> <a href="https://vet-sim.github.io/metodist_goda/student_diary_2.1.html" target="_blank">Открыть</a></li>
+      <li>📋 <strong>Инструкционная карта (эта страница):</strong> <a href="https://vet-sim.github.io/metodist_goda/instruction_card.html" target="_blank">Открыть</a></li>
+      <li>🐾 <strong>Экосистема ВетСим:</strong> <a href="https://vetsim.ru" target="_blank">vetsim.ru</a> / <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a></li>
+    </ul>
+  </div>
+
+  <!-- КНОПКИ -->
+  <div class="btn-row no-print">
+    <button class="btn" id="saveBtn">💾 Сохранить</button>
+    <button class="btn btn-secondary" onclick="window.print()">🖨️ Печать</button>
+    <button class="btn btn-secondary" id="clearBtn">🧹 Очистить</button>
+  </div>
+
+  <div class="footer">
+    © ВетСим — ветеринарное просвещение · vetsim.ru · Инструкционная карта к занятию «Кожа — зеркало здоровья»
+  </div>
+
+</div>
+
+<script>
+  // ==========================================
+  // ЛОГИКА СОХРАНЕНИЯ ДАННЫХ
+  // ==========================================
+  const STORAGE_KEY = 'vetsim_skin_card_v3';
+
+  const FIELDS = [
+    'teamName', 'date',
+    'skinColor', 'turgor', 'wool', 'scratches', 'extra1',
+    'micro1', 'micro2', 'micro3', 'micro4',
+    'norm1', 'norm2', 'norm3', 'norm4', 'norm5',
+    'pat1', 'pat2', 'pat3', 'pat4', 'pat5', 'hoofConclusion',
+    'analysis', 'prevention',
+    'gr1', 'gr1t', 'gr2', 'gr2t', 'gr3', 'gr3t', 'gr4', 'gr4t',
+    'refl1', 'refl2', 'refl3'
+  ];
+
+  function saveData() {
+    const data = {};
+    FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) data[id] = el.value;
+    });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  }
+
+  function loadData() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const data = JSON.parse(raw);
+        FIELDS.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && data[id] !== undefined) el.value = data[id];
+        });
+      }
+    } catch(e) {}
+  }
+
+  function clearData() {
+    if (!confirm('Очистить все поля карты?')) return;
+    FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    localStorage.removeItem(STORAGE_KEY);
+  }
+
+  // ==========================================
+  // ЛОГИКА ТАЙМЕРОВ
+  // ==========================================
+  const timers = {
+    zone1: { interval: null, time: 900, running: false },
+    zone2: { interval: null, time: 900, running: false },
+    zone3: { interval: null, time: 900, running: false }
+  };
+
+  function formatTime(seconds) {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+
+  function updateTimerDisplay(zone) {
+    const display = document.getElementById(`timer-${zone}`);
+    const time = timers[zone].time;
+    display.textContent = formatTime(time);
+    
+    if (time <= 120) {
+      display.classList.add('warning');
+    } else {
+      display.classList.remove('warning');
+    }
+  }
+
+  function toggleTimer(zone) {
+    const t = timers[zone];
+    const btn = document.querySelector(`#widget-${zone} .btn-timer`);
+    
+    if (t.running) {
+      // Пауза
+      clearInterval(t.interval);
+      t.running = false;
+      btn.textContent = '▶ Старт';
+    } else {
+      // Старт
+      if (t.time <= 0) return; // Если время вышло, ждем сброса
+      t.running = true;
+      btn.textContent = '⏸ Пауза';
+      
+      t.interval = setInterval(() => {
+        t.time--;
+        updateTimerDisplay(zone);
+        if (t.time <= 0) {
+          clearInterval(t.interval);
+          t.running = false;
+          btn.textContent = '▶ Старт';
+          display.textContent = "ВРЕМЯ!"; // or play a sound
+          display.classList.add('warning');
+        }
+      }, 1000);
+    }
+  }
+
+  function resetTimer(zone) {
+    const t = timers[zone];
+    clearInterval(t.interval);
+    t.time = 900;
+    t.running = false;
+    const btn = document.querySelector(`#widget-${zone} .btn-timer`);
+    btn.textContent = '▶ Старт';
+    updateTimerDisplay(zone);
+  }
+
+  // ==========================================
+  // ИНИЦИАЛИЗАЦИЯ
+  // ==========================================
+  document.addEventListener('DOMContentLoaded', function() {
+    loadData();
+    
+    // Слушатели для полей ввода
+    FIELDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', saveData);
+        el.addEventListener('change', saveData);
+      }
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      saveData();
+      alert('✅ Карта сохранена!');
+    });
+    
+    document.getElementById('clearBtn').addEventListener('click', clearData);
+    window.addEventListener('beforeunload', saveData);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Латинский язык · Урок 9 · ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #1A2A3A;
+    padding: 16px;
+    min-height: 100vh;
+    line-height: 1.5;
+}
+
+.container { max-width: 1150px; margin: 0 auto; }
+
+/* ===== ШАПКА ===== */
+.header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 14px 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 16px;
+    border: 1px solid #E7EDE2;
+}
+.header .logo { font-weight: 700; font-size: 1.05rem; color: #1A2A3A; }
+.header .logo .gradient {
+    background: linear-gradient(135deg, #2C7DA0, #6B9E6B);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.header .logo .sub {
+    font-weight: 400; font-size: 0.72rem;
+    color: #7B8D6E; display: block; margin-top: 2px;
+}
+.header-stats { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.82rem; }
+.header-stats .score {
+    background: #2C7DA0; color: white;
+    padding: 4px 16px; border-radius: 40px; font-weight: 600;
+}
+.header-stats .progress-text { color: #5F7C62; max-width: 340px; }
+
+/* ===== КНОПКИ ===== */
+.btn {
+    background: #EBE3D2; border: none;
+    padding: 7px 20px; border-radius: 40px;
+    font-weight: 600; cursor: pointer;
+    transition: 0.15s; font-family: inherit;
+    font-size: 0.8rem; color: #1A2A3A;
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-success { background: #6B9E6B; color: white; }
+.btn-success:hover { background: #5A865A; }
+.btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+.btn-outline:hover { background: #F0EEE5; }
+.btn-sm { padding: 4px 14px; font-size: 0.72rem; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+/* ===== ВКЛАДКИ ===== */
+.tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.tab-btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 7px 18px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.76rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    color: #3E5C4A;
+}
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: #2C7DA0; color: white; }
+
+.tab-content { display: none; animation: fadeIn 0.25s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== КАРТОЧКИ ===== */
+.card {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 20px 24px;
+    border: 1px solid #E7EDE2;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    margin-bottom: 14px;
+}
+.card-title {
+    font-weight: 700; font-size: 1rem; color: #2C7DA0;
+    margin-bottom: 12px; display: flex;
+    justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 8px; line-height: 1.4;
+}
+.card-title .badge {
+    font-size: 0.65rem; background: #E7EDE2;
+    color: #5F7C62; padding: 3px 12px;
+    border-radius: 40px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.3px;
+}
+.badge.blue { background: #DBEAF2; color: #1F4E6E; }
+.badge.green { background: #E2EFD8; color: #4A6B3A; }
+.badge.orange { background: #FBE4D0; color: #8A5A2B; }
+
+/* ===== ТЕСТ ===== */
+.q { padding: 12px 0; border-bottom: 1px solid #f0ebe3; }
+.q:last-child { border-bottom: none; }
+.q-title {
+    font-weight: 600; font-size: 0.9rem;
+    margin-bottom: 10px; line-height: 1.55;
+}
+.q-title .num { color: #2C7DA0; font-weight: 700; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 6px; }
+.option {
+    background: #FEFCF9; border: 2px solid #E7EDE2;
+    border-radius: 40px; padding: 8px 18px;
+    font-size: 0.85rem; cursor: pointer;
+    transition: 0.15s; display: flex;
+    align-items: center; gap: 10px;
+}
+.option:hover { background: #F3F7F2; border-color: #A3B18A; }
+.option.selected {
+    background: #E9F0E3; border-color: #2C7DA0;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+.option .marker {
+    width: 26px; height: 26px; min-width: 26px;
+    background: #E2EAD9; border-radius: 50%;
+    display: flex; align-items: center;
+    justify-content: center; font-weight: 700;
+    color: #5F7C62; font-size: 0.8rem;
+}
+.option.selected .marker { background: #2C7DA0; color: white; }
+
+.test-progress {
+    display: flex; align-items: center;
+    gap: 12px; margin-bottom: 12px;
+    font-size: 0.8rem; color: #5F7C62;
+}
+.test-progress .bar {
+    flex: 1; height: 6px; background: #E7EDE2;
+    border-radius: 20px; overflow: hidden; min-width: 80px;
+}
+.test-progress .bar-fill {
+    height: 100%; background: #2C7DA0;
+    border-radius: 20px; transition: width 0.3s;
+}
+.timer {
+    background: #2C7DA0; color: white;
+    padding: 6px 20px; border-radius: 40px;
+    font-weight: 700; font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+    min-width: 90px; text-align: center;
+    transition: 0.3s;
+}
+.timer.warning { background: #D4A373; }
+.timer.danger { background: #b13e3e; animation: pulse 1s infinite; }
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ===== ТЕОРИЯ ===== */
+.latin {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #1F4E6E; font-weight: 700;
+}
+.theory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px; margin-top: 10px;
+}
+.theory-box {
+    background: #F9FBF8; border: 1px solid #E7EDE2;
+    border-radius: 1rem; padding: 14px 16px;
+}
+.theory-box h3 {
+    color: #2C7DA0; font-size: 0.88rem;
+    margin-bottom: 8px; display: flex;
+    align-items: center; gap: 6px;
+}
+.theory-box p, .theory-box li {
+    font-size: 0.83rem; line-height: 1.6;
+}
+.theory-box ul { padding-left: 18px; margin-top: 4px; }
+.theory-box ul li { margin-bottom: 3px; }
+
+.notice {
+    background: #F7F3E8; border-left: 4px solid #2C7DA0;
+    padding: 10px 14px; border-radius: 0 1rem 1rem 0;
+    margin: 10px 0; font-size: 0.83rem; line-height: 1.6;
+}
+.notice.green { background: #E8F5E8; border-left-color: #6B9E6B; }
+.notice.blue { background: #E8F0F5; border-left-color: #2C7DA0; }
+.notice.red { background: #FDF0E8; border-left-color: #b13e3e; }
+.notice.orange { background: #FDF3E8; border-left-color: #D4A373; }
+.notice strong { color: #1F4E6E; }
+
+/* ===== ТАБЛИЦЫ ===== */
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+table.lesson-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.82rem; background: white;
+    border-radius: 12px; overflow: hidden;
+}
+table.lesson-table th, table.lesson-table td {
+    padding: 8px 12px; border-bottom: 1px solid #E7EDE2;
+    text-align: left; vertical-align: top;
+}
+table.lesson-table th {
+    background: #F3F7F2; color: #2C7DA0;
+    font-weight: 700; font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.3px;
+}
+table.lesson-table tr:last-child td { border-bottom: none; }
+table.lesson-table td.male { color: #2C7DA0; font-weight: 600; }
+table.lesson-table td.fem { color: #b16286; font-weight: 600; }
+table.lesson-table td.neut { color: #6B9E6B; font-weight: 600; }
+
+/* ===== ЛЕКСИКА ===== */
+.lexicon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 8px;
+}
+.lex-card {
+    background: #F9FBF8; border: 1px solid #E7EDE2;
+    border-radius: 1rem; padding: 10px 14px;
+    font-size: 0.82rem; line-height: 1.5;
+}
+.lex-card .lex-latin {
+    font-family: Georgia, serif; font-weight: 700;
+    color: #1F4E6E; font-size: 0.92rem;
+    display: block; margin-bottom: 2px;
+}
+.lex-card .lex-form {
+    color: #7B8D6E; font-size: 0.72rem;
+    font-style: italic; display: block; margin-bottom: 4px;
+}
+.lex-card .lex-trans { color: #3E5C4A; font-weight: 500; }
+.lex-section-title {
+    font-weight: 700; color: #2C7DA0;
+    font-size: 0.88rem; margin: 14px 0 8px;
+    padding-bottom: 4px; border-bottom: 2px solid #E7EDE2;
+}
+.lex-section-title:first-child { margin-top: 0; }
+
+/* ===== ПРАКТИКА ===== */
+.exercise {
+    background: #F9FBF8; border: 1px solid #E7EDE2;
+    border-radius: 1rem; padding: 14px 18px;
+    margin-bottom: 12px;
+}
+.exercise.advanced {
+    background: #FDF7EC; border-color: #E8D9B8;
+    border-left: 4px solid #D4A373;
+}
+.exercise h3 {
+    font-size: 0.9rem; color: #2C7DA0;
+    margin-bottom: 8px; display: flex;
+    align-items: center; gap: 6px;
+}
+.exercise.advanced h3 { color: #8A5A2B; }
+.exercise table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.82rem;
+}
+.exercise table th, .exercise table td {
+    padding: 6px 8px; border: 1px solid #E7EDE2;
+    text-align: left; vertical-align: top;
+}
+.exercise table th {
+    background: #F3F7F2; color: #2C7DA0;
+    font-size: 0.72rem;
+}
+.exercise input[type="text"] {
+    width: 100%; padding: 6px 10px;
+    border: 2px solid #D9D0BD;
+    border-radius: 20px; font-family: inherit;
+    font-size: 0.82rem; background: white;
+    color: #3E5C4A; outline: none;
+    transition: 0.15s;
+}
+.exercise input:focus {
+    border-color: #2C7DA0;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+.exercise input.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.exercise input.wrong { border-color: #b13e3e; background: #FDF0E8; }
+.exercise select {
+    width: 100%; padding: 6px 10px;
+    border: 2px solid #D9D0BD;
+    border-radius: 20px; font-family: inherit;
+    font-size: 0.82rem; background: white;
+    color: #3E5C4A; outline: none;
+    cursor: pointer;
+}
+.exercise select.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.exercise select.wrong { border-color: #b13e3e; background: #FDF0E8; }
+
+.exercise-controls {
+    display: flex; gap: 8px;
+    flex-wrap: wrap; margin-top: 10px;
+}
+.result-msg {
+    margin-top: 10px; padding: 10px 14px;
+    border-radius: 1rem; font-size: 0.85rem;
+    font-weight: 500; display: none; line-height: 1.55;
+}
+.result-msg.show { display: block; }
+.result-msg.ok { background: #E8F5E8; color: #2E7D32; }
+.result-msg.no { background: #FDF0E8; color: #b13e3e; }
+.result-msg.info { background: #E8F0F5; color: #1F4E6E; }
+
+/* ===== ФИНАЛЬНЫЙ ЭКРАН ===== */
+.final-screen { text-align: center; padding: 30px 20px; }
+.final-screen .score-big {
+    font-size: 3rem; font-weight: 800;
+    color: #1F4E6E; line-height: 1;
+}
+.final-screen .icon { font-size: 3.5rem; margin-bottom: 8px; }
+.final-screen .message {
+    font-size: 1.05rem; color: #3E5C4A;
+    margin: 12px 0 20px; line-height: 1.5;
+}
+.final-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px; max-width: 520px;
+    margin: 0 auto 20px;
+}
+.stat-box {
+    background: #F9FBF8; border: 1px solid #E7EDE2;
+    border-radius: 1rem; padding: 12px;
+}
+.stat-box .num { font-size: 1.5rem; font-weight: 700; color: #2C7DA0; }
+.stat-box .lbl { font-size: 0.7rem; color: #7B8D6E; text-transform: uppercase; }
+
+/* ===== ФУТЕР ===== */
+footer {
+    margin-top: 20px; padding: 16px;
+    background: white; border-radius: 1.5rem;
+    border: 1px solid #E7EDE2;
+    text-align: center; font-size: 0.75rem;
+    color: #7B8D6E; line-height: 1.6;
+}
+footer strong { color: #1F4E6E; }
+
+/* ===== АДАПТИВ ===== */
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+    .header .logo { font-size: 0.95rem; }
+    .header-stats { justify-content: space-between; }
+    .card { padding: 14px 16px; }
+    .tab-btn { font-size: 0.68rem; padding: 5px 12px; }
+    .q-title { font-size: 0.85rem; }
+    .option { padding: 8px 14px; font-size: 0.82rem; }
+    .exercise { padding: 12px; }
+    .exercise table { font-size: 0.75rem; }
+    .exercise table th, .exercise table td { padding: 4px 6px; }
+    .final-screen .score-big { font-size: 2.4rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ===== ШАПКА ===== -->
+<header class="header">
+    <div class="logo">📚 <span class="gradient">Lingua Latina</span><span class="sub">· Урок 9. Степени сравнения прилагательных</span></div>
+    <div class="header-stats">
+        <span class="progress-text" id="headerStatus">Входной тест · Урок 8: прилагательные 2-й группы</span>
+        <span class="score" id="headerScore">⭐ 0</span>
+    </div>
+</header>
+
+<!-- ===== ВКЛАДКИ ===== -->
+<div class="tabs">
+    <button class="tab-btn active" data-tab="test">🧪 Входной тест</button>
+    <button class="tab-btn" data-tab="theory">📖 Теория</button>
+    <button class="tab-btn" data-tab="lexicon">📚 Лексика</button>
+    <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+    <button class="tab-btn" data-tab="advanced">⭐ Дополнительно</button>
+    <button class="tab-btn" data-tab="vet">🐾 Ветпрактика</button>
+</div>
+
+<!-- ===== ВКЛАДКА 1. ВХОДНОЙ ТЕСТ ===== -->
+<section class="tab-content active" id="tab-test">
+    <div class="card">
+        <div class="card-title">
+            <span>🧪 Входной тест: урок 8 — прилагательные 2-й группы</span>
+            <span class="badge" id="testBadge">25 вопросов</span>
+        </div>
+
+        <div id="testStart">
+            <div class="notice">
+                <strong>Проверка знаний предыдущего урока.</strong> Тест включает <strong>лексику</strong> урока 8 (прилагательные 2-й группы) и <strong>теорию</strong> (подгруппы, словарная форма, склонение по III склонению, суффиксы). 25 заданий, 15 минут. Вопросы и варианты перемешиваются. Результат — в процентах.
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                <button class="btn btn-primary" id="startTestBtn">🚀 Начать тест</button>
+            </div>
+        </div>
+
+        <div id="testProgress" style="display:none;">
+            <div class="test-progress">
+                <span id="testProgressText">Вопрос 1 из 25</span>
+                <div class="bar"><div class="bar-fill" id="testBarFill"></div></div>
+                <span id="testProgressPct">0%</span>
+                <span class="timer" id="testTimer">15:00</span>
+            </div>
+            <div id="questionCard"></div>
+            <div class="exercise-controls" id="testControls" style="justify-content:flex-end;">
+                <button class="btn btn-primary" id="testNextBtn" disabled>Далее ▶</button>
+            </div>
+        </div>
+
+        <div id="testFinal" style="display:none;"></div>
+    </div>
+</section>
+
+<!-- ===== ВКЛАДКА 2. ТЕОРИЯ ===== -->
+<section class="tab-content" id="tab-theory">
+
+    <div class="card">
+        <div class="card-title"><span>📖 Три степени сравнения</span></div>
+        <div class="notice blue">
+            Качественные прилагательные в латинском языке имеют <strong>три степени сравнения</strong> — как в русском.
+        </div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Степень</th><th>Название</th><th>Значение</th><th>Пример</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>1. Положительная</td><td><span class="latin">Gradus positivus</span></td><td>признак без сравнения</td><td><span class="latin">longus, a, um</span> — длинный</td></tr>
+                    <tr><td>2. Сравнительная</td><td><span class="latin">Gradus comparativus</span></td><td>признак в большей/меньшей степени</td><td><span class="latin">longior, ius</span> — более длинный</td></tr>
+                    <tr><td>3. Превосходная</td><td><span class="latin">Gradus superlativus</span></td><td>признак в наивысшей степени</td><td><span class="latin">longissimus, a, um</span> — самый длинный</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Образование сравнительной степени</span></div>
+        <div class="notice green">
+            Сравнительная степень образуется от <strong>основы прилагательного</strong> в положительной степени с помощью суффиксов:
+        </div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Род</th><th>Суффикс</th><th>Окончание</th><th>Пример</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="male">Мужской / Женский (m/f)</td><td class="latin">-ior</td><td>—</td><td><span class="latin">longior</span> — более длинный, -ая</td></tr>
+                    <tr><td class="neut">Средний (n)</td><td class="latin">-ius</td><td>—</td><td><span class="latin">longius</span> — более длинное</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="notice orange">
+            <strong>NB!</strong> У прилагательных 2-й группы с одним окончанием основа берётся по <span class="latin">Gen. sing.</span> (например, <span class="latin">recens, ntis</span> → основа <span class="latin">recent-</span> → <span class="latin">recentior</span>).
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Склонение в сравнительной степени</span></div>
+        <div class="notice blue">
+            Все прилагательные в сравнительной степени склоняются по <strong>согласному типу III склонения</strong>. В <span class="latin">Gen. sing.</span> все три рода имеют окончание <span class="latin">-ioris</span>.
+        </div>
+
+        <p style="font-size:0.85rem; margin-bottom:6px;">Образец: <span class="latin">longior, ius</span> — более длинный, -ая, -ое</p>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Падеж</th><th>m / f</th><th>n</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nom. sing.</td><td class="latin">long-ior</td><td class="latin neut">long-ius</td></tr>
+                    <tr><td>Gen. sing.</td><td class="latin">long-ior-is</td><td class="latin">long-ior-is</td></tr>
+                    <tr><td>Nom. plur.</td><td class="latin">long-ior-es</td><td class="latin neut">long-ior-a</td></tr>
+                    <tr><td>Gen. plur.</td><td class="latin">long-ior-um</td><td class="latin">long-ior-um</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Прилагательные только в сравнительной степени</span></div>
+        <div class="notice">
+            Некоторые прилагательные утратили положительную степень и употребляются только в сравнительной. Эти формы нужно запомнить.
+        </div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Прилагательное</th><th>Перевод</th><th>Происхождение</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="latin">anterior, anterius</td><td>передний</td><td>от <span class="latin">ante</span> (впереди)</td></tr>
+                    <tr><td class="latin">posterior, posterius</td><td>задний</td><td>от <span class="latin">post</span> (позади)</td></tr>
+                    <tr><td class="latin">superior, superius</td><td>верхний</td><td>от <span class="latin">super</span> (над)</td></tr>
+                    <tr><td class="latin">inferior, inferius</td><td>нижний</td><td>от <span class="latin">infer</span> (под)</td></tr>
+                    <tr><td class="latin">major, majus</td><td>большой</td><td>от <span class="latin">magnus</span></td></tr>
+                    <tr><td class="latin">minor, minus</td><td>малый</td><td>от <span class="latin">parvus</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Образование превосходной степени</span></div>
+        <div class="notice green">
+            Превосходная степень образуется от основы прилагательного с помощью суффикса <span class="latin">-issim-</span> и родовых окончаний <span class="latin">-us, -a, -um</span> (как у прилагательных 1-й группы).
+        </div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Положительная</th><th>Основа</th><th>Превосходная</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="latin">longus, a, um</span></td><td class="latin">long-</td><td><span class="latin">longissimus, a, um</span></td></tr>
+                    <tr><td><span class="latin">brevis, e</span></td><td class="latin">brev-</td><td><span class="latin">brevissimus, a, um</span></td></tr>
+                    <tr><td><span class="latin">acer, acris, acre</span></td><td class="latin">acr-</td><td><span class="latin">acerrimus, a, um</span> (особое образование)</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="notice orange">
+            <strong>NB!</strong> Прилагательные на <span class="latin">-er</span> (мужской род) образуют превосходную степень через суффикс <span class="latin">-rim-</span>: <span class="latin">acer → acerrimus</span>, <span class="latin">celer → celerrimus</span>.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Неправильные степени сравнения</span></div>
+        <div class="notice red">
+            <strong>Эти формы нужно запомнить!</strong> Степени сравнения образуются от разных основ.
+        </div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead>
+                    <tr><th>Положительная</th><th>Сравнительная</th><th>Превосходная</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><span class="latin">bonus, a, um</span> — хороший</td><td class="latin">melior, melius</td><td class="latin">optimus, a, um</td></tr>
+                    <tr><td><span class="latin">malus, a, um</span> — плохой</td><td class="latin">pejor, pejus</td><td class="latin">pessimus, a, um</td></tr>
+                    <tr><td><span class="latin">magnus, a, um</span> — большой</td><td class="latin">major, majus</td><td class="latin">maximus, a, um</td></tr>
+                    <tr><td><span class="latin">parvus, a, um</span> — малый</td><td class="latin">minor, minus</td><td class="latin">minimus, a, um</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</section>
+
+<!-- ===== ВКЛАДКА 3. ЛЕКСИКА ===== -->
+<section class="tab-content" id="tab-lexicon">
+    <div class="card">
+        <div class="card-title">
+            <span>📚 Лексический минимум: степени сравнения</span>
+            <span class="badge">10 слов</span>
+        </div>
+        <div class="notice" style="margin-bottom:12px;">
+            Запомни словарную форму и перевод. Неправильные степени сравнения нужно знать наизусть.
+        </div>
+
+        <div class="lex-section-title">📗 Прилагательные только в сравнительной степени</div>
+        <div class="lexicon-grid" id="lexCompar"></div>
+
+        <div class="lex-section-title">📘 Неправильные степени сравнения</div>
+        <div class="lexicon-grid" id="lexIrreg"></div>
+    </div>
+</section>
+
+<!-- ===== ВКЛАДКА 4. ПРАКТИКА ===== -->
+<section class="tab-content" id="tab-practice">
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 1. Образуйте степени сравнения</span></div>
+        <div class="exercise" id="ex1">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Положительная</th><th>Сравнительная (m/f)</th><th>Сравнительная (n)</th><th>Превосходная</th></tr></thead>
+                    <tbody id="ex1Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex1">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex1">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex1Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 2. Определите степень сравнения</span></div>
+        <div class="exercise" id="ex2">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Прилагательное</th><th>Степень</th></tr></thead>
+                    <tbody id="ex2Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex2">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex2">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex2Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 3. Согласуйте прилагательные с существительными</span></div>
+        <div class="exercise" id="ex3">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Существительное</th><th>Прилагательное</th><th>Термин</th></tr></thead>
+                    <tbody id="ex3Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex3">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex3">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex3Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 4. Переведите анатомические термины (лат → рус)</span></div>
+        <div class="exercise" id="ex4">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Латинский термин</th><th>Перевод</th></tr></thead>
+                    <tbody id="ex4Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex4">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex4">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex4Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 5. Переведите на латинский язык (рус → лат)</span></div>
+        <div class="exercise" id="ex5">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Русский термин</th><th>Латинский термин</th></tr></thead>
+                    <tbody id="ex5Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex5">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex5">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex5Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 6. Просклоняйте прилагательное в сравнительной степени</span></div>
+        <div class="exercise" id="ex6">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Падеж</th><th>m/f</th><th>n</th></tr></thead>
+                    <tbody id="ex6Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex6">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex6">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex6Result"></div>
+        </div>
+    </div>
+
+</section>
+
+<!-- ===== ВКЛАДКА 5. ДОПОЛНИТЕЛЬНО ===== -->
+<section class="tab-content" id="tab-advanced">
+    <div class="card">
+        <div class="card-title">
+            <span>⭐ Дополнительные задания для тех, кто справился быстрее</span>
+            <span class="badge orange">3 задания</span>
+        </div>
+        <div class="notice orange">
+            Эти задания — повышенной сложности. Они проверяют умение <strong>анализировать</strong> степени сравнения,
+            <strong>согласовывать</strong> их с существительными и <strong>переводить</strong> клинические термины
+            со степенями сравнения.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 7. Определите и образуйте недостающие формы</span></div>
+        <div class="exercise advanced" id="ex7">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Положительная</th><th>Сравнительная</th><th>Превосходная</th></tr></thead>
+                    <tbody id="ex7Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex7">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex7">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex7Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 8. Переведите клинические термины</span></div>
+        <div class="exercise advanced" id="ex8">
+            <div class="notice" style="margin-top:0;">
+                В каждом термине есть прилагательное в степени сравнения. Переведите на русский язык.
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Латинский термин</th><th>Перевод</th></tr></thead>
+                    <tbody id="ex8Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex8">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex8">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex8Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 9. Анализ термина: определите степень и форму</span></div>
+        <div class="exercise advanced" id="ex9">
+            <div class="notice" style="margin-top:0;">
+                Дан термин. Определите степень сравнения прилагательного и его словарную форму.
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Термин</th><th>Степень</th><th>Словарная форма</th></tr></thead>
+                    <tbody id="ex9Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex9">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex9">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex9Result"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ВКЛАДКА 6. ВЕТПРАКТИКА ===== -->
+<section class="tab-content" id="tab-vet">
+    <div class="card">
+        <div class="card-title"><span>🐾 Профессиональная вставка. Заполни карту пациента</span></div>
+        <div class="notice blue">
+            <strong>Ты — ветеринарный фельдшер.</strong> Заполни карту пациента латинскими терминами со степенями сравнения.
+        </div>
+
+        <div class="exercise" id="ex10">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Русский диагноз</th><th>Латинский диагноз</th></tr></thead>
+                    <tbody id="ex10Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex10">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex10">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex10Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📝 Задание 21. Переведи с латинского на русский</span></div>
+        <div class="exercise" id="ex11">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Латинское предложение</th><th>Перевод</th></tr></thead>
+                    <tbody id="ex11Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex11">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex11">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex11Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📖 Справочные термины</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>PALPEBRA SUPERIOR / INFERIOR</h3>
+                <ul>
+                    <li><span class="latin">palpebra superior</span> — верхнее веко</li>
+                    <li><span class="latin">palpebra inferior</span> — нижнее веко</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>MUSCULUS ANTERIOR / POSTERIOR</h3>
+                <ul>
+                    <li><span class="latin">musculus anterior</span> — передняя мышца</li>
+                    <li><span class="latin">musculus posterior</span> — задняя мышца</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>FORAMEN MAGNUM / CORNU MINUS</h3>
+                <ul>
+                    <li><span class="latin">foramen magnum</span> — большое отверстие</li>
+                    <li><span class="latin">cornu minus</span> — малый рог</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>ПРЕВОСХОДНАЯ СТЕПЕНЬ</h3>
+                <ul>
+                    <li><span class="latin">musculus longissimus</span> — длиннейшая мышца</li>
+                    <li><span class="latin">ligamentum latissimum</span> — широчайшая связка</li>
+                    <li><span class="latin">dosis maxima</span> — максимальная доза</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== ФУТЕР ===== -->
+<footer>
+    © ВетСим — ветеринарное просвещение · Латинский язык в ветеринарии<br>
+    <strong>Автор проекта и тренажёра: Тераевич Алла Сергеевна</strong><br>
+    Урок 9. Степени сравнения прилагательных · Работает офлайн
+</footer>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    const $ = id => document.getElementById(id);
+
+    // ================================================================
+    //  ЛЕКСИКА УРОКА 8 (для входного теста)
+    // ================================================================
+    const LEX8_WORDS = [
+        { latin: 'abdominalis', form: 'abdominalis, e', ru: 'брюшной' },
+        { latin: 'articularis', form: 'articularis, e', ru: 'суставной' },
+        { latin: 'auricularis', form: 'auricularis, e', ru: 'ушной' },
+        { latin: 'brevis', form: 'brevis, e', ru: 'короткий' },
+        { latin: 'caudalis', form: 'caudalis, e', ru: 'хвостовой' },
+        { latin: 'cervicalis', form: 'cervicalis, e', ru: 'шейный' },
+        { latin: 'costalis', form: 'costalis, e', ru: 'рёберный' },
+        { latin: 'cranialis', form: 'cranialis, e', ru: 'черепной' },
+        { latin: 'dorsalis', form: 'dorsalis, e', ru: 'спинной' },
+        { latin: 'facialis', form: 'facialis, e', ru: 'лицевой' },
+        { latin: 'frontalis', form: 'frontalis, e', ru: 'лобный' },
+        { latin: 'lacrimalis', form: 'lacrimalis, e', ru: 'слёзный' },
+        { latin: 'lateralis', form: 'lateralis, e', ru: 'боковой' },
+        { latin: 'lingualis', form: 'lingualis, e', ru: 'языковой' },
+        { latin: 'lumbalis', form: 'lumbalis, e', ru: 'поясничный' },
+        { latin: 'occipitalis', form: 'occipitalis, e', ru: 'затылочный' },
+        { latin: 'pulmonalis', form: 'pulmonalis, e', ru: 'лёгочный' },
+        { latin: 'radialis', form: 'radialis, e', ru: 'лучевой' },
+        { latin: 'renalis', form: 'renalis, e', ru: 'почечный' },
+        { latin: 'sacralis', form: 'sacralis, e', ru: 'крестцовый' },
+        { latin: 'sternalis', form: 'sternalis, e', ru: 'грудинный' },
+        { latin: 'superficialis', form: 'superficialis, e', ru: 'поверхностный' },
+        { latin: 'synovialis', form: 'synovialis, e', ru: 'синовиальный' },
+        { latin: 'temporalis', form: 'temporalis, e', ru: 'височный' },
+        { latin: 'thoracalis', form: 'thoracalis, e', ru: 'грудной' },
+        { latin: 'acer', form: 'acer, acris, acre', ru: 'острый' },
+        { latin: 'celer', form: 'celer, celeris, celere', ru: 'быстрый' },
+        { latin: 'recens', form: 'recens, ntis', ru: 'свежий' },
+        { latin: 'simplex', form: 'simplex, icis', ru: 'простой' }
+    ];
+
+    // ================================================================
+    //  ТЕОРИЯ УРОКА 8 (для входного теста)
+    // ================================================================
+    const THEORY8_QUESTIONS = [
+        {
+            q: 'По какому склонению склоняются прилагательные 2-й группы?',
+            correct: 'По III склонению',
+            wrong: ['По I склонению', 'По II склонению', 'По IV склонению']
+        },
+        {
+            q: 'Какое окончание в Nom. sing. у прилагательных 2-й группы с двумя окончаниями (m/f)?',
+            correct: '-is',
+            wrong: ['-us', '-er', '-a']
+        },
+        {
+            q: 'Какое окончание в Nom. sing. у прилагательных 2-й группы с двумя окончаниями (n)?',
+            correct: '-e',
+            wrong: ['-um', '-is', '-a']
+        },
+        {
+            q: 'Как записывается словарная форма прилагательного с двумя окончаниями?',
+            correct: 'brevis, e',
+            wrong: ['brevis, a, um', 'brevis, is, e', 'brevis, um']
+        },
+        {
+            q: 'Какое окончание Gen. plur. у прилагательных 2-й группы?',
+            correct: '-ium',
+            wrong: ['-um', '-arum', '-orum']
+        },
+        {
+            q: 'Какое окончание Nom. plur. (n) у прилагательных 2-й группы?',
+            correct: '-ia',
+            wrong: ['-a', '-es', '-um']
+        },
+        {
+            q: 'К какой подгруппе относится прилагательное acer, acris, acre?',
+            correct: 'Три окончания',
+            wrong: ['Два окончания', 'Одно окончание', 'Не имеет окончаний']
+        },
+        {
+            q: 'К какой подгруппе относится прилагательное recens, ntis?',
+            correct: 'Одно окончание',
+            wrong: ['Два окончания', 'Три окончания', 'Без окончаний']
+        },
+        {
+            q: 'Какие суффиксы указывают на принадлежность прилагательных ко 2-й группе?',
+            correct: '-al-, -ar-',
+            wrong: ['-ic-, -in-, -os-', '-issim-', '-ior-']
+        },
+        {
+            q: 'Какое окончание Nom. sing. (m/f) у прилагательных с одним окончанием?',
+            correct: 'разные окончания',
+            wrong: ['всегда -is', 'всегда -er', 'всегда -e']
+        },
+        {
+            q: 'Как согласуется прилагательное 2-й группы с существительным?',
+            correct: 'В роде, числе и падеже',
+            wrong: ['Только в роде', 'Только в числе', 'По порядку слов']
+        },
+        {
+            q: 'Какой словарной формой записывается прилагательное с тремя окончаниями?',
+            correct: 'm, f, n',
+            wrong: ['m/f, n', 'Nom. + Gen.', 'только m']
+        },
+        {
+            q: 'К какой группе относятся прилагательные с суффиксом -ic-?',
+            correct: 'К 1-й группе (I–II склонение)',
+            wrong: ['Ко 2-й группе (III склонение)', 'К III склонению', 'Ни к одной']
+        },
+        {
+            q: 'Какой основой пользуются для склонения прилагательных 2-й группы?',
+            correct: 'Основой Gen. sing. без окончания -is',
+            wrong: ['Основой Nom. sing.', 'Основой Dat. sing.', 'Основой Acc. sing.']
+        }
+    ];
+
+    // ================================================================
+    //  УТИЛИТЫ
+    // ================================================================
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function norm(s) {
+        return String(s).toLowerCase().replace(/[.,;:!?\s«»"]/g, '').replace(/ё/g, 'е');
+    }
+
+    // ================================================================
+    //  ВКЛАДКИ
+    // ================================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            $('tab-' + btn.dataset.tab).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // ================================================================
+    //  ВХОДНОЙ ТЕСТ
+    // ================================================================
+    const TEST_DURATION = 15 * 60;
+    let testQuestions = [];
+    let testCurrent = 0;
+    let testAnswers = [];
+    let testTimerInterval = null;
+    let testSecondsLeft = TEST_DURATION;
+
+    function prepareTestQuestions() {
+        const lexPool = shuffle(LEX8_WORDS).slice(0, 11);
+        const theoryPool = shuffle(THEORY8_QUESTIONS).slice(0, 14);
+
+        const lexQs = lexPool.map(w => {
+            const isLatinToRu = Math.random() < 0.5;
+            let questionText, correctAnswer, distractors;
+            if (isLatinToRu) {
+                questionText = `Что означает <span class="latin">${escapeHtml(w.latin)}</span>?`;
+                correctAnswer = w.ru;
+                const others = LEX8_WORDS.filter(x => x.ru !== w.ru).map(x => x.ru);
+                distractors = shuffle([...new Set(others)]).slice(0, 3);
+            } else {
+                questionText = `Как по-латыни «${escapeHtml(w.ru)}»?`;
+                correctAnswer = w.latin;
+                const others = LEX8_WORDS.filter(x => x.latin !== w.latin).map(x => x.latin);
+                distractors = shuffle([...new Set(others)]).slice(0, 3);
+            }
+            const options = shuffle([correctAnswer, ...distractors]);
+            return {
+                question: questionText,
+                options: options,
+                correct: options.indexOf(correctAnswer)
+            };
+        });
+
+        const theoryQs = theoryPool.map(t => {
+            const options = shuffle([t.correct, ...t.wrong]);
+            return {
+                question: t.q,
+                options: options,
+                correct: options.indexOf(t.correct)
+            };
+        });
+
+        return shuffle([...lexQs, ...theoryQs]);
+    }
+
+    function startTest() {
+        testQuestions = prepareTestQuestions();
+        testCurrent = 0;
+        testAnswers = new Array(testQuestions.length).fill(null);
+        testSecondsLeft = TEST_DURATION;
+
+        $('testStart').style.display = 'none';
+        $('testProgress').style.display = 'block';
+        $('testFinal').style.display = 'none';
+        $('testBadge').textContent = testQuestions.length + ' вопросов';
+
+        startTestTimer();
+        renderTestQuestion();
+    }
+
+    function startTestTimer() {
+        updateTestTimerDisplay();
+        if (testTimerInterval) clearInterval(testTimerInterval);
+        testTimerInterval = setInterval(() => {
+            testSecondsLeft--;
+            updateTestTimerDisplay();
+            if (testSecondsLeft <= 0) {
+                clearInterval(testTimerInterval);
+                finishTest(true);
+            }
+        }, 1000);
+    }
+
+    function updateTestTimerDisplay() {
+        const m = Math.floor(testSecondsLeft / 60);
+        const s = testSecondsLeft % 60;
+        const el = $('testTimer');
+        el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        el.classList.remove('warning', 'danger');
+        if (testSecondsLeft <= 60) el.classList.add('danger');
+        else if (testSecondsLeft <= 300) el.classList.add('warning');
+    }
+
+    function renderTestQuestion() {
+        const q = testQuestions[testCurrent];
+        const total = testQuestions.length;
+        const percent = Math.round((testCurrent / total) * 100);
+
+        $('testProgressText').textContent = `Вопрос ${testCurrent + 1} из ${total}`;
+        $('testBarFill').style.width = percent + '%';
+        $('testProgressPct').textContent = percent + '%';
+
+        const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е'];
+        let html = `<div class="q">
+            <div class="q-title"><span class="num">${testCurrent + 1}.</span> ${q.question}</div>
+            <div class="options">`;
+        q.options.forEach((opt, i) => {
+            const selected = testAnswers[testCurrent] === i;
+            html += `<div class="option ${selected ? 'selected' : ''}" data-idx="${i}">
+                <div class="marker">${letters[i]}</div>
+                <div class="text">${escapeHtml(opt)}</div>
+            </div>`;
+        });
+        html += '</div></div>';
+
+        $('questionCard').innerHTML = html;
+
+        $('questionCard').querySelectorAll('.option').forEach(optEl => {
+            optEl.addEventListener('click', () => {
+                testAnswers[testCurrent] = parseInt(optEl.dataset.idx);
+                renderTestQuestion();
+                $('testNextBtn').disabled = false;
+            });
+        });
+
+        const nextBtn = $('testNextBtn');
+        nextBtn.textContent = testCurrent === total - 1 ? '🏁 Завершить' : 'Далее ▶';
+        nextBtn.disabled = testAnswers[testCurrent] === null;
+    }
+
+    $('startTestBtn').addEventListener('click', startTest);
+
+    $('testNextBtn').addEventListener('click', () => {
+        if (testAnswers[testCurrent] === null) return;
+        if (testCurrent === testQuestions.length - 1) {
+            finishTest(false);
+        } else {
+            testCurrent++;
+            renderTestQuestion();
+        }
+    });
+
+    function finishTest(timeout) {
+        if (testTimerInterval) clearInterval(testTimerInterval);
+
+        let correct = 0;
+        testQuestions.forEach((q, i) => {
+            if (testAnswers[i] === q.correct) correct++;
+        });
+        const total = testQuestions.length;
+        const percent = Math.round((correct / total) * 100);
+
+        $('testProgress').style.display = 'none';
+        $('testFinal').style.display = 'block';
+
+        const icon = percent >= 90 ? '🏆' : percent >= 75 ? '🎉' : percent >= 60 ? '😊' : '📚';
+        const message = percent >= 90 ? 'Отличный результат! Урок 8 усвоен полностью.' :
+                        percent >= 75 ? 'Хороший результат! Материал усвоен уверенно.' :
+                        percent >= 60 ? 'Неплохо, но стоит повторить некоторые темы.' :
+                        'Рекомендуем вернуться к уроку 8 и повторить теорию и лексику.';
+
+        const timeoutMsg = timeout ? '<div style="color:#b13e3e; font-weight:600; margin-bottom:12px;">⏰ Время вышло! Тест завершён автоматически.</div>' : '';
+
+        let html = `<div class="final-screen">
+            ${timeoutMsg}
+            <div class="icon">${icon}</div>
+            <div class="score-big">${percent}%</div>
+            <div class="message">${message}</div>
+            <div class="final-stats">
+                <div class="stat-box"><div class="num">${correct}</div><div class="lbl">Верно</div></div>
+                <div class="stat-box"><div class="num">${total - correct}</div><div class="lbl">Ошибок</div></div>
+                <div class="stat-box"><div class="num">${total}</div><div class="lbl">Всего</div></div>
+            </div>`;
+
+        html += `<div style="text-align:left; max-width:750px; margin:0 auto;">`;
+        html += `<div style="font-weight:700; color:#2C7DA0; margin-bottom:8px;">Разбор ответов:</div>`;
+        testQuestions.forEach((q, i) => {
+            const userIdx = testAnswers[i];
+            const userAnswer = userIdx !== null ? q.options[userIdx] : '— не отвечено —';
+            const correctAnswer = q.options[q.correct];
+            const ok = userIdx === q.correct;
+            html += `<div style="background:${ok ? '#E8F5E8' : '#FDF0E8'}; border-radius:12px; padding:8px 12px; margin-bottom:6px; font-size:0.82rem;">
+                <div style="font-weight:600; color:${ok ? '#2E7D32' : '#b13e3e'};">${i + 1}. ${q.question}</div>
+                <div style="font-size:0.78rem; color:#3E5C4A; margin-top:3px;">
+                    ${ok ? '✅ ' + escapeHtml(userAnswer) : '❌ Ваш ответ: ' + escapeHtml(userAnswer) + ' · ✅ Правильно: ' + escapeHtml(correctAnswer)}
+                </div>
+            </div>`;
+        });
+        html += `</div>`;
+        html += `<button class="btn btn-primary" style="margin-top:16px;" onclick="location.reload()">🔄 Пройти заново</button>`;
+        html += `</div>`;
+
+        $('testFinal').innerHTML = html;
+        $('headerScore').textContent = '⭐ ' + percent;
+        $('headerStatus').textContent = 'Входной тест завершён · ' + percent + '%';
+    }
+
+    // ================================================================
+    //  ЛЕКСИКА
+    // ================================================================
+    const LEX_COMPAR = [
+        { latin: 'anterior', form: 'anterior, anterius', ru: 'передний' },
+        { latin: 'posterior', form: 'posterior, posterius', ru: 'задний' },
+        { latin: 'superior', form: 'superior, superius', ru: 'верхний' },
+        { latin: 'inferior', form: 'inferior, inferius', ru: 'нижний' },
+        { latin: 'major', form: 'major, majus', ru: 'большой' },
+        { latin: 'minor', form: 'minor, minus', ru: 'малый' }
+    ];
+
+    const LEX_IRREG = [
+        { latin: 'bonus / melior / optimus', form: 'bonus, a, um → melior, melius → optimus, a, um', ru: 'хороший → лучший → наилучший' },
+        { latin: 'malus / pejor / pessimus', form: 'malus, a, um → pejor, pejus → pessimus, a, um', ru: 'плохой → худший → наихудший' },
+        { latin: 'magnus / major / maximus', form: 'magnus, a, um → major, majus → maximus, a, um', ru: 'большой → больший → наибольший' },
+        { latin: 'parvus / minor / minimus', form: 'parvus, a, um → minor, minus → minimus, a, um', ru: 'малый → меньший → наименьший' }
+    ];
+
+    function renderLexicon() {
+        function renderGroup(gridId, list) {
+            const grid = $(gridId);
+            let html = '';
+            list.forEach(a => {
+                html += `<div class="lex-card">
+                    <span class="lex-latin">${escapeHtml(a.latin)}</span>
+                    <span class="lex-form">${escapeHtml(a.form)}</span>
+                    <span class="lex-trans">${escapeHtml(a.ru)}</span>
+                </div>`;
+            });
+            grid.innerHTML = html;
+        }
+        renderGroup('lexCompar', LEX_COMPAR);
+        renderGroup('lexIrreg', LEX_IRREG);
+    }
+
+    // ================================================================
+    //  ПРАКТИКА
+    // ================================================================
+    const EXERCISES = {
+        ex1: {
+            rows: [
+                { cell1: 'longus, a, um', compM: 'longior', compN: 'longius', sup: 'longissimus, a, um' },
+                { cell1: 'brevis, e', compM: 'brevior', compN: 'brevius', sup: 'brevissimus, a, um' },
+                { cell1: 'latus, a, um', compM: 'latior', compN: 'latius', sup: 'latissimus, a, um' },
+                { cell1: 'profundus, a, um', compM: 'profundior', compN: 'profundius', sup: 'profundissimus, a, um' },
+                { cell1: 'recens, ntis', compM: 'recentior', compN: 'recentius', sup: 'recentissimus, a, um' }
+            ]
+        },
+        ex2: {
+            rows: [
+                { cell1: 'longus', answer: 'положительная' },
+                { cell1: 'longior', answer: 'сравнительная' },
+                { cell1: 'longissimus', answer: 'превосходная' },
+                { cell1: 'superior', answer: 'сравнительная' },
+                { cell1: 'optimus', answer: 'превосходная' },
+                { cell1: 'brevis', answer: 'положительная' },
+                { cell1: 'brevior', answer: 'сравнительная' },
+                { cell1: 'pessimus', answer: 'превосходная' },
+                { cell1: 'major', answer: 'сравнительная' },
+                { cell1: 'maximus', answer: 'превосходная' }
+            ]
+        },
+        ex3: {
+            rows: [
+                { cell1: 'palpebra, ae, f', cell2: 'superior, superius', answer: 'palpebra superior' },
+                { cell1: 'labium, i, n', cell2: 'inferior, inferius', answer: 'labium inferius' },
+                { cell1: 'musculus, i, m', cell2: 'anterior, anterius', answer: 'musculus anterior' },
+                { cell1: 'arteria, ae, f', cell2: 'posterior, posterius', answer: 'arteria posterior' },
+                { cell1: 'vena, ae, f', cell2: 'superior, superius', answer: 'vena superior' },
+                { cell1: 'costa, ae, f', cell2: 'inferior, inferius', answer: 'costa inferior' },
+                { cell1: 'foramen, inis, n', cell2: 'magnus, a, um', answer: 'foramen magnum' },
+                { cell1: 'cornu, us, n', cell2: 'minor, minus', answer: 'cornu minus' }
+            ]
+        },
+        ex4: {
+            rows: [
+                { cell1: 'palpebra superior', answer: 'верхнее веко' },
+                { cell1: 'palpebra inferior', answer: 'нижнее веко' },
+                { cell1: 'foramen magnum', answer: 'большое отверстие' },
+                { cell1: 'cornu minus', answer: 'малый рог' },
+                { cell1: 'trochanter major', answer: 'большой вертел' },
+                { cell1: 'musculus anterior', answer: 'передняя мышца' },
+                { cell1: 'arteria posterior', answer: 'задняя артерия' },
+                { cell1: 'musculus longissimus', answer: 'длиннейшая мышца' },
+                { cell1: 'ligamentum latissimum', answer: 'широчайшая связка' },
+                { cell1: 'dosis maxima', answer: 'максимальная доза' },
+                { cell1: 'dosis minima', answer: 'минимальная доза' },
+                { cell1: 'prognosis optima', answer: 'наилучший прогноз' }
+            ]
+        },
+        ex5: {
+            rows: [
+                { cell1: 'верхнее веко', answer: 'palpebra superior' },
+                { cell1: 'нижнее веко', answer: 'palpebra inferior' },
+                { cell1: 'большое отверстие', answer: 'foramen magnum' },
+                { cell1: 'малый рог', answer: 'cornu minus' },
+                { cell1: 'большой вертел', answer: 'trochanter major' },
+                { cell1: 'передняя мышца', answer: 'musculus anterior' },
+                { cell1: 'задняя артерия', answer: 'arteria posterior' },
+                { cell1: 'длиннейшая мышца', answer: 'musculus longissimus' },
+                { cell1: 'широчайшая связка', answer: 'ligamentum latissimum' },
+                { cell1: 'максимальная доза', answer: 'dosis maxima' },
+                { cell1: 'минимальная доза', answer: 'dosis minima' },
+                { cell1: 'наилучший прогноз', answer: 'prognosis optima' }
+            ]
+        },
+        ex6: {
+            rows: [
+                { cell1: 'Nom. sing.', mf: 'longior', n: 'longius' },
+                { cell1: 'Gen. sing.', mf: 'longioris', n: 'longioris' },
+                { cell1: 'Nom. plur.', mf: 'longiores', n: 'longiora' },
+                { cell1: 'Gen. plur.', mf: 'longiorum', n: 'longiorum' }
+            ]
+        },
+        ex7: {
+            rows: [
+                { cell1: 'longus, a, um', comp: 'longior, ius', sup: 'longissimus, a, um' },
+                { cell1: '—', comp: 'brevior, ius', sup: 'brevissimus, a, um' },
+                { cell1: '—', comp: 'latior, ius', sup: 'latissimus, a, um' },
+                { cell1: 'superior, superius', comp: 'superior, superius', sup: 'supremus / summus' },
+                { cell1: '—', comp: '—', sup: 'optimus, a, um' },
+                { cell1: 'major, majus', comp: 'major, majus', sup: 'maximus, a, um' }
+            ]
+        },
+        ex8: {
+            rows: [
+                { cell1: 'musculus latissimus dorsi', answer: 'широчайшая мышца спины' },
+                { cell1: 'vena cava inferior', answer: 'нижняя полая вена' },
+                { cell1: 'vena cava superior', answer: 'верхняя полая вена' },
+                { cell1: 'arteria genus descendens', answer: 'нисходящая артерия колена' },
+                { cell1: 'foramen ischiadicum majus', answer: 'большое седалищное отверстие' },
+                { cell1: 'foramen ischiadicum minus', answer: 'малое седалищное отверстие' }
+            ]
+        },
+        ex9: {
+            rows: [
+                { cell1: 'palpebra superior', answerStep: 'сравнительная', answerForm: 'superior, superius' },
+                { cell1: 'musculus longissimus', answerStep: 'превосходная', answerForm: 'longus, a, um' },
+                { cell1: 'foramen magnum', answerStep: 'сравнительная', answerForm: 'magnus, a, um' },
+                { cell1: 'dosis minima', answerStep: 'превосходная', answerForm: 'parvus, a, um' },
+                { cell1: 'trochanter major', answerStep: 'сравнительная', answerForm: 'magnus, a, um' }
+            ]
+        },
+        ex10: {
+            rows: [
+                { cell1: 'Верхнее веко', answer: 'palpebra superior' },
+                { cell1: 'Нижнее веко', answer: 'palpebra inferior' },
+                { cell1: 'Большое отверстие', answer: 'foramen magnum' },
+                { cell1: 'Передняя мышца', answer: 'musculus anterior' },
+                { cell1: 'Задняя артерия', answer: 'arteria posterior' },
+                { cell1: 'Длиннейшая мышца', answer: 'musculus longissimus' }
+            ]
+        },
+        ex11: {
+            rows: [
+                { cell1: 'Palpebra superior et palpebra inferior.', answer: 'Верхнее веко и нижнее веко.' },
+                { cell1: 'Foramen magnum et cornu minus.', answer: 'Большое отверстие и малый рог.' },
+                { cell1: 'Musculus anterior et arteria posterior.', answer: 'Передняя мышца и задняя артерия.' },
+                { cell1: 'Musculus longissimus et ligamentum latissimum.', answer: 'Длиннейшая мышца и широчайшая связка.' },
+                { cell1: 'Dosis maxima et dosis minima.', answer: 'Максимальная доза и минимальная доза.' }
+            ]
+        }
+    };
+
+    function renderExercises() {
+        // Ex1
+        let html = '';
+        EXERCISES.ex1.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex1" data-row="${i}" data-col="compM"></td>
+                <td><input type="text" data-ex="ex1" data-row="${i}" data-col="compN"></td>
+                <td><input type="text" data-ex="ex1" data-row="${i}" data-col="sup"></td>
+            </tr>`;
+        });
+        $('ex1Body').innerHTML = html;
+
+        // Ex2
+        html = '';
+        EXERCISES.ex2.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><select data-ex="ex2" data-row="${i}" data-col="answer">
+                    <option value="">—</option>
+                    <option value="положительная">положительная</option>
+                    <option value="сравнительная">сравнительная</option>
+                    <option value="превосходная">превосходная</option>
+                </select></td>
+            </tr>`;
+        });
+        $('ex2Body').innerHTML = html;
+
+        // Ex3
+        html = '';
+        EXERCISES.ex3.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td>${escapeHtml(r.cell2)}</td>
+                <td><input type="text" data-ex="ex3" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex3Body').innerHTML = html;
+
+        // Ex4
+        html = '';
+        EXERCISES.ex4.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex4" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex4Body').innerHTML = html;
+
+        // Ex5
+        html = '';
+        EXERCISES.ex5.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex5" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex5Body').innerHTML = html;
+
+        // Ex6
+        html = '';
+        EXERCISES.ex6.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex6" data-row="${i}" data-col="mf"></td>
+                <td><input type="text" data-ex="ex6" data-row="${i}" data-col="n"></td>
+            </tr>`;
+        });
+        $('ex6Body').innerHTML = html;
+
+        // Ex7 (advanced)
+        html = '';
+        EXERCISES.ex7.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex7" data-row="${i}" data-col="comp"></td>
+                <td><input type="text" data-ex="ex7" data-row="${i}" data-col="sup"></td>
+            </tr>`;
+        });
+        $('ex7Body').innerHTML = html;
+
+        // Ex8 (advanced)
+        html = '';
+        EXERCISES.ex8.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex8" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex8Body').innerHTML = html;
+
+        // Ex9 (advanced)
+        html = '';
+        EXERCISES.ex9.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><select data-ex="ex9" data-row="${i}" data-col="step">
+                    <option value="">—</option>
+                    <option value="положительная">положительная</option>
+                    <option value="сравнительная">сравнительная</option>
+                    <option value="превосходная">превосходная</option>
+                </select></td>
+                <td><input type="text" data-ex="ex9" data-row="${i}" data-col="form"></td>
+            </tr>`;
+        });
+        $('ex9Body').innerHTML = html;
+
+        // Ex10
+        html = '';
+        EXERCISES.ex10.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex10" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex10Body').innerHTML = html;
+
+        // Ex11
+        html = '';
+        EXERCISES.ex11.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex11" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex11Body').innerHTML = html;
+    }
+
+    function checkExercise(id) {
+        const ex = EXERCISES[id];
+        let correct = 0;
+        let total = 0;
+        const resultEl = $(id + 'Result');
+
+        if (id === 'ex1') {
+            ex.rows.forEach((r, i) => {
+                const fields = ['compM', 'compN', 'sup'];
+                const answers = [r.compM, r.compN, r.sup];
+                fields.forEach((f, k) => {
+                    const inp = document.querySelector(`input[data-ex="ex1"][data-row="${i}"][data-col="${f}"]`);
+                    const ok = norm(inp.value) === norm(answers[k]);
+                    inp.classList.toggle('correct', ok);
+                    inp.classList.toggle('wrong', !ok && inp.value.trim() !== '');
+                    total++;
+                    if (ok) correct++;
+                });
+            });
+        } else if (id === 'ex2') {
+            ex.rows.forEach((r, i) => {
+                const sel = document.querySelector(`select[data-ex="ex2"][data-row="${i}"][data-col="answer"]`);
+                const ok = sel.value === r.answer;
+                sel.classList.toggle('correct', ok);
+                sel.classList.toggle('wrong', !ok && sel.value !== '');
+                total++;
+                if (ok) correct++;
+            });
+        } else if (id === 'ex3' || id === 'ex4' || id === 'ex5' || id === 'ex8' || id === 'ex10' || id === 'ex11') {
+            ex.rows.forEach((r, i) => {
+                const inp = document.querySelector(`input[data-ex="${id}"][data-row="${i}"][data-col="answer"]`);
+                const ok = norm(inp.value) === norm(r.answer);
+                inp.classList.toggle('correct', ok);
+                inp.classList.toggle('wrong', !ok && inp.value.trim() !== '');
+                total++;
+                if (ok) correct++;
+            });
+        } else if (id === 'ex6') {
+            ex.rows.forEach((r, i) => {
+                const fields = ['mf', 'n'];
+                const answers = [r.mf, r.n];
+                fields.forEach((f, k) => {
+                    const inp = document.querySelector(`input[data-ex="ex6"][data-row="${i}"][data-col="${f}"]`);
+                    const ok = norm(inp.value) === norm(answers[k]);
+                    inp.classList.toggle('correct', ok);
+                    inp.classList.toggle('wrong', !ok && inp.value.trim() !== '');
+                    total++;
+                    if (ok) correct++;
+                });
+            });
+        } else if (id === 'ex7') {
+            ex.rows.forEach((r, i) => {
+                const inpC = document.querySelector(`input[data-ex="ex7"][data-row="${i}"][data-col="comp"]`);
+                const inpS = document.querySelector(`input[data-ex="ex7"][data-row="${i}"][data-col="sup"]`);
+                const cOk = norm(inpC.value) === norm(r.comp);
+                const sOk = norm(inpS.value) === norm(r.sup);
+                inpC.classList.toggle('correct', cOk);
+                inpC.classList.toggle('wrong', !cOk && inpC.value.trim() !== '');
+                inpS.classList.toggle('correct', sOk);
+                inpS.classList.toggle('wrong', !sOk && inpS.value.trim() !== '');
+                total += 2;
+                if (cOk) correct++;
+                if (sOk) correct++;
+            });
+        } else if (id === 'ex9') {
+            ex.rows.forEach((r, i) => {
+                const selStep = document.querySelector(`select[data-ex="ex9"][data-row="${i}"][data-col="step"]`);
+                const inpForm = document.querySelector(`input[data-ex="ex9"][data-row="${i}"][data-col="form"]`);
+                const stOk = selStep.value === r.answerStep;
+                const fOk = norm(inpForm.value) === norm(r.answerForm);
+                selStep.classList.toggle('correct', stOk);
+                selStep.classList.toggle('wrong', !stOk && selStep.value !== '');
+                inpForm.classList.toggle('correct', fOk);
+                inpForm.classList.toggle('wrong', !fOk && inpForm.value.trim() !== '');
+                total += 2;
+                if (stOk) correct++;
+                if (fOk) correct++;
+            });
+        }
+
+        const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+        resultEl.className = 'result-msg show ' + (percent >= 80 ? 'ok' : 'no');
+        resultEl.innerHTML = `Правильно: <strong>${correct} из ${total}</strong> (${percent}%).` +
+            (percent === 100 ? ' Отлично!' :
+             percent >= 80 ? ' Хорошо!' :
+             percent >= 60 ? ' Есть над чем поработать.' :
+             ' Стоит повторить правила.');
+    }
+
+    function resetExercise(id) {
+        document.querySelectorAll(`[data-ex="${id}"]`).forEach(el => {
+            el.value = '';
+            el.classList.remove('correct', 'wrong');
+        });
+        $(id + 'Result').classList.remove('show');
+    }
+
+    document.querySelectorAll('[data-check]').forEach(btn => {
+        btn.addEventListener('click', () => checkExercise(btn.dataset.check));
+    });
+    document.querySelectorAll('[data-reset]').forEach(btn => {
+        btn.addEventListener('click', () => resetExercise(btn.dataset.reset));
+    });
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+    renderLexicon();
+    renderExercises();
+
+})();
+</script>
+</body>
+</html>

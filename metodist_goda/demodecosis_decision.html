@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Групповое принятие решений · Демодекоз морской свинки | ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    background: #F4F7F9;
+    color: #1A2A3A;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .header {
+    background: white;
+    border-radius: 1.5rem;
+    padding: 16px 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .header .logo { font-weight: 800; font-size: 1.1rem; color: #1A2A3A; }
+  .header .logo span { color: #2C7DA0; }
+  .header .timer {
+    background: #F0F7FA;
+    padding: 4px 16px;
+    border-radius: 40px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #2C7DA0;
+  }
+  .stage-card {
+    background: white;
+    border-radius: 2rem;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    border: 1px solid #E7EDE2;
+    margin-bottom: 20px;
+  }
+  .stage-context {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #2C7DA0;
+    background: #F0F7FA;
+    padding: 12px 18px;
+    border-radius: 1rem;
+    margin-bottom: 12px;
+    border-left: 4px solid #2C7DA0;
+  }
+  .stage-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1A2A3A;
+    margin-bottom: 8px;
+  }
+  .stage-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #3E5C4A;
+    margin-bottom: 12px;
+  }
+  .stage-media img, .stage-media video {
+    max-width: 100%;
+    border-radius: 1rem;
+    margin-bottom: 10px;
+  }
+  .choices { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+  .choice-btn {
+    padding: 12px 20px;
+    border-radius: 2.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+    text-align: left;
+    background: #F4EFE4;
+    border: 2px solid #D9D0BD;
+    color: #1A2A3A;
+    width: 100%;
+  }
+  .choice-btn:hover {
+    border-color: #2C7DA0;
+    background: #D4E3ED;
+    transform: translateX(4px);
+  }
+  .choice-btn.selected {
+    border-color: #2C7DA0;
+    background: #D4E3ED;
+  }
+  .choice-btn.reveal-correct {
+    border-color: #6B9E6B;
+    background: #E8F5E8;
+  }
+  .choice-btn.reveal-wrong {
+    border-color: #D4A373;
+    background: #FDF0E8;
+  }
+  .choice-btn .feedback {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: #5F7C62;
+    margin-top: 4px;
+    padding: 6px 12px;
+    background: #F9F6EF;
+    border-radius: 1rem;
+    display: none;
+  }
+  .choice-btn .feedback.show { display: block; }
+  .choice-btn .votes {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: #7B8D6E;
+    margin-left: 8px;
+  }
+  .progress-info {
+    font-size: 0.8rem;
+    color: #7B8D6E;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  .progress-bar {
+    height: 6px;
+    background: #E7EDE2;
+    border-radius: 40px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .progress-bar .fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2C7DA0, #6B9E6B);
+    border-radius: 40px;
+    transition: width 0.4s ease;
+  }
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .btn {
+    background: #EBE3D2;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 2.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    color: #1A2A3A;
+  }
+  .btn-primary { background: #2C7DA0; color: #fff; }
+  .btn-primary:hover { background: #236B8A; }
+  .btn-success { background: #6B9E6B; color: #fff; }
+  .btn-success:hover { background: #5A865A; }
+  .btn-outline { background: transparent; border: 2px solid #D9D0BD; }
+  .btn-outline:hover { background: #F0EEE5; }
+  .footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #7B8D6E;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #E7EDE2;
+  }
+  .footer a { color: #2C7DA0; text-decoration: none; }
+  @media (max-width: 600px) {
+    .stage-card { padding: 1.2rem; }
+    .header { flex-direction: column; align-items: stretch; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="logo">🧩 <span>Групповое принятие решений</span></div>
+    <div class="timer">⏱️ 10 мин на обсуждение</div>
+  </div>
+
+  <div id="app">
+    <div class="progress-info">
+      <span id="stageCounter">Шаг 1 из 4</span>
+      <span id="stageTitleHeader">Первичный сбор информации</span>
+    </div>
+    <div class="progress-bar">
+      <div class="fill" id="progressFill" style="width:25%;"></div>
+    </div>
+
+    <div class="stage-card" id="stageCard">
+      <div class="stage-context" id="stageContext"></div>
+      <div class="stage-title" id="stageTitle"></div>
+      <div class="stage-text" id="stageText"></div>
+      <div class="stage-media" id="stageMedia"></div>
+      <div class="choices" id="choicesContainer"></div>
+      <div class="controls">
+        <button class="btn btn-primary" id="revealBtn">📊 Показать результаты</button>
+        <button class="btn btn-outline" id="resetVotesBtn">🔄 Сбросить голоса</button>
+        <button class="btn btn-outline" id="nextBtn">➡️ Следующий этап</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer">🐾 ВетСим — ветеринарное образование · <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a></div>
+</div>
+
+<script>
+const PROJECT = {
+  title: "Демодекоз морской свинки",
+  description: "Клинический случай: очаговое выпадение шерсти, зуд, шелушение",
+  timer: 10,
+  stages: [
+    {
+      id: 1,
+      title: "Первичный сбор информации",
+      context: "Владелец принёс морскую свинку, самец, 1 год 3 мес., вес ~750 г, длинношёрстная. Жалобы: очаговое выпадение шерсти на боках и крупе, сильный зуд, расчёсы до ранок, снижение аппетита. За 2 недели появились шелушение, покраснение, корочки. Дома есть ещё одна морская свинка — у неё признаков нет.",
+      text: "Какие данные необходимо собрать на приёме в первую очередь?",
+      image: "",
+      video: "",
+      audio: "",
+      choices: [
+        { text: "Собрать анамнез: рацион, условия содержания, уборка, другие животные", isCorrect: true, feedback: "Верно! Это база любого клинического осмотра." },
+        { text: "Осмотреть всю кожу: где алопеции, есть ли покраснение, корочки, расчёсы", isCorrect: true, feedback: "Верно! Локализация и характер поражений — ключ к диагнозу." },
+        { text: "Оценить общее состояние: аппетит, вес, активность", isCorrect: true, feedback: "Верно! Это показывает, насколько страдает организм." },
+        { text: "Сразу назначить антибиотики", isCorrect: false, feedback: "Ловушка! Без диагностики это необоснованно." },
+        { text: "Сделать рентген грудной клетки", isCorrect: false, feedback: "Ловушка! Не относится к кожной патологии." },
+        { text: "Спросить, чешется ли владелец после контакта с животным", isCorrect: true, feedback: "Верно! Некоторые клещи могут быть опасны для человека." }
+      ]
+    },
+    {
+      id: 2,
+      title: "Осмотр и дифференциальная диагностика",
+      context: "Вы осмотрели животное. Кожа в области алопеций покрасневшая, с шелушением и корочками. Расчёсы по бокам. Владелец говорит, что вторая свинка здорова.",
+      text: "Какие диагностические процедуры нужно провести?",
+      image: "",
+      video: "",
+      audio: "",
+      choices: [
+        { text: "Глубокий соскоб кожи (до крови) с поражённых участков", isCorrect: true, feedback: "Верно! Это «золотой стандарт» для выявления клещей." },
+        { text: "Микроскопия соскоба: поиск клещей Demodex", isCorrect: true, feedback: "Верно! Клещи имеют удлинённое «сигарообразное» тело." },
+        { text: "Соскоб для исключения других клещей (Trixacarus)", isCorrect: true, feedback: "Верно! Это частая причина зуда у морских свинок." },
+        { text: "Лампа Вуда для исключения грибковых заболеваний", isCorrect: true, feedback: "Верно! Дерматофитозы часто идут параллельно." },
+        { text: "Трихоскопия волоса (осмотр волоса под лупой)", isCorrect: false, feedback: "Ловушка! Это не основной метод при подозрении на демодекоз." },
+        { text: "Кожные пробы на аллергию", isCorrect: false, feedback: "Ловушка! У грызунов в рутине не применяются." }
+      ]
+    },
+    {
+      id: 3,
+      title: "Интерпретация результатов и тактика",
+      context: "Результаты исследований: микроскопия соскоба — найдены клещи Demodex caviae (5–7 в поле зрения). Лампа Вуда — отрицательно. Цитология — единичные кокки, признаки вторичного воспаления. Общее состояние: аппетит снижен, вес в норме.",
+      text: "Какова тактика ведения пациента?",
+      image: "",
+      video: "",
+      audio: "",
+      choices: [
+        { text: "Назначить противопаразитарный препарат (ивермектин) по точному расчёту веса", isCorrect: true, feedback: "Верно! Это препарат выбора при демодекозе." },
+        { text: "Обрабатывать поражённые участки антисептиком (хлоргексидин)", isCorrect: true, feedback: "Верно! Это профилактика вторичной инфекции." },
+        { text: "Обработать клетку и инвентарь акарицидным средством", isCorrect: true, feedback: "Верно! Это предотвращает повторное заражение." },
+        { text: "Изолировать больное животное от других грызунов", isCorrect: true, feedback: "Верно! До отрицательного соскоба — обязательно." },
+        { text: "Назначить гормональные мази (кортикостероиды)", isCorrect: false, feedback: "Ловушка! При паразитарной инвазии противопоказаны." },
+        { text: "Применить средство «Неостомазан» для обработки кожи", isCorrect: false, feedback: "Ловушка! Токсичен для морских свинок." }
+      ]
+    },
+    {
+      id: 4,
+      title: "Профилактика и меры биобезопасности",
+      context: "Вы успешно начали лечение. Владелец спрашивает, что делать дальше, чтобы болезнь не вернулась и не заразила вторую свинку.",
+      text: "Что рекомендовать владельцу для профилактики?",
+      image: "",
+      video: "",
+      audio: "",
+      choices: [
+        { text: "Убирать клетку не реже 2 раз в неделю с полной заменой подстилки", isCorrect: true, feedback: "Верно! Чистота — основа профилактики." },
+        { text: "Обрабатывать клетку и аксессуары акарицидным средством", isCorrect: true, feedback: "Верно! Это уничтожает клещей в окружающей среде." },
+        { text: "Обработать всех контактных грызунов профилактически", isCorrect: true, feedback: "Верно! Даже если признаков нет — риск заражения есть." },
+        { text: "Соблюдать карантин для новых животных (2–3 недели)", isCorrect: true, feedback: "Верно! Это предотвращает занос инфекции." },
+        { text: "Обеспечить полноценное питание с витамином C", isCorrect: true, feedback: "Верно! Морские свинки не синтезируют витамин C сами." },
+        { text: "Купать морскую свинку шампунем от блох для кошек", isCorrect: false, feedback: "Ловушка! Большинство таких средств токсичны для грызунов." }
+      ]
+    }
+  ]
+};
+
+let currentStageIndex = 0;
+let votes = {};
+let revealed = false;
+
+function getStage(index) { return PROJECT.stages[index] || null; }
+
+function renderStage(index) {
+  const stage = getStage(index);
+  if (!stage) return;
+
+  document.getElementById('stageContext').textContent = '📋 ' + stage.context;
+  document.getElementById('stageTitle').textContent = stage.title;
+  document.getElementById('stageText').textContent = stage.text;
+  document.getElementById('stageCounter').textContent = 'Шаг ' + (index + 1) + ' из ' + PROJECT.stages.length;
+  document.getElementById('stageTitleHeader').textContent = stage.title;
+  document.getElementById('progressFill').style.width = ((index + 1) / PROJECT.stages.length * 100) + '%';
+
+  const mediaEl = document.getElementById('stageMedia');
+  mediaEl.innerHTML = '';
+  if (stage.image) mediaEl.innerHTML += '<img src="' + stage.image + '" alt="Изображение">';
+  if (stage.video) mediaEl.innerHTML += '<video src="' + stage.video + '" controls></video>';
+  if (stage.audio) mediaEl.innerHTML += '<audio src="' + stage.audio + '" controls style="width:100%;margin-top:8px;"></audio>';
+
+  const container = document.getElementById('choicesContainer');
+  container.innerHTML = '';
+
+  if (!votes[index]) {
+    votes[index] = {};
+    stage.choices.forEach(function(_, i) { votes[index][i] = 0; });
+  }
+
+  stage.choices.forEach(function(choice, i) {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.dataset.index = i;
+    const voteCount = votes[index][i] || 0;
+    btn.innerHTML = choice.text + ' <span class="votes">(' + voteCount + ' голос' + (voteCount !== 1 ? 'а' : '') + ')</span><div class="feedback" id="feedback-' + index + '-' + i + '">' + (choice.feedback || '') + '</div>';
+    btn.addEventListener('click', function() {
+      if (revealed) return;
+      votes[index][i] = (votes[index][i] || 0) + 1;
+      renderStage(index);
+    });
+    container.appendChild(btn);
+  });
+
+  revealed = false;
+  document.getElementById('revealBtn').textContent = '📊 Показать результаты';
+  document.getElementById('revealBtn').disabled = false;
+}
+
+function revealResults() {
+  const stage = getStage(currentStageIndex);
+  if (!stage) return;
+  revealed = true;
+
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach(function(btn, i) {
+    const choice = stage.choices[i];
+    if (choice.isCorrect) {
+      btn.classList.add('reveal-correct');
+    } else {
+      btn.classList.add('reveal-wrong');
+    }
+    const feedback = btn.querySelector('.feedback');
+    if (feedback) feedback.classList.add('show');
+  });
+
+  document.getElementById('revealBtn').textContent = '✅ Результаты показаны';
+  document.getElementById('revealBtn').disabled = true;
+}
+
+function resetVotes() {
+  if (votes[currentStageIndex]) {
+    const stage = getStage(currentStageIndex);
+    if (stage) {
+      stage.choices.forEach(function(_, i) { votes[currentStageIndex][i] = 0; });
+    }
+  }
+  revealed = false;
+  renderStage(currentStageIndex);
+  document.getElementById('revealBtn').textContent = '📊 Показать результаты';
+  document.getElementById('revealBtn').disabled = false;
+}
+
+function nextStage() {
+  if (currentStageIndex < PROJECT.stages.length - 1) {
+    currentStageIndex++;
+    renderStage(currentStageIndex);
+    document.getElementById('revealBtn').textContent = '📊 Показать результаты';
+    document.getElementById('revealBtn').disabled = false;
+  } else {
+    alert('🎉 Вы прошли все этапы сценария!');
+  }
+}
+
+renderStage(0);
+
+document.getElementById('revealBtn').addEventListener('click', revealResults);
+document.getElementById('resetVotesBtn').addEventListener('click', resetVotes);
+document.getElementById('nextBtn').addEventListener('click', nextStage);
+</script>
+</body>
+</html>

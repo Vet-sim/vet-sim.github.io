@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Информатика · Урок 1.1 · ВетСим</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Montserrat','Segoe UI',system-ui,sans-serif;
+  background:#FDF8F0; color:#1A2A3A; padding:16px; min-height:100vh;
+}
+.container { max-width:1150px; margin:0 auto; }
+.header {
+  background:white; border-radius:1.5rem; padding:14px 24px;
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  gap:10px; box-shadow:0 2px 10px rgba(0,0,0,.04); margin-bottom:16px;
+  border:1px solid #E7EDE2;
+}
+.header .logo { display:flex; align-items:center; gap:8px; font-weight:700; font-size:1.15rem; }
+.header .logo .gradient {
+  background:linear-gradient(135deg,#2C7DA0,#6B9E6B);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.header .logo .sub { font-weight:400; font-size:.7rem; color:#7B8D6E; display:block; }
+.header-stats { display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:.8rem; }
+.header-stats .timer {
+  background:#2C7DA0; color:white; padding:6px 20px; border-radius:40px;
+  font-weight:700; font-size:.95rem; font-variant-numeric:tabular-nums;
+  min-width:100px; text-align:center; transition:.3s;
+}
+.header-stats .timer.warning { background:#D4A373; }
+.header-stats .timer.danger { background:#b13e3e; animation:pulse 1s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+.tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.tab-btn {
+  background:#EBE3D2; border:none; padding:7px 18px; border-radius:40px;
+  font-weight:600; font-size:.76rem; cursor:pointer; transition:.2s;
+  font-family:inherit; color:#3E5C4A;
+}
+.tab-btn:hover { opacity:.85; }
+.tab-btn.active { background:#2C7DA0; color:white; }
+.tab-content { display:none; animation:fadeIn .25s ease; }
+.tab-content.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+.card {
+  background:white; border-radius:1.5rem; padding:20px 24px;
+  border:1px solid #E7EDE2; box-shadow:0 2px 10px rgba(0,0,0,.04);
+  margin-bottom:14px;
+}
+.card-title {
+  font-weight:700; font-size:1rem; color:#2C7DA0; margin-bottom:12px;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:8px; line-height:1.4;
+}
+.card-title .badge {
+  font-size:.65rem; background:#E7EDE2; color:#5F7C62;
+  padding:3px 12px; border-radius:40px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.3px;
+}
+.badge.blue { background:#DBEAF2; color:#1F4E6E; }
+.badge.green { background:#E2EFD8; color:#4A6B3A; }
+.badge.orange { background:#FBE4D0; color:#8A5A2B; }
+.notice {
+  background:#F7F3E8; border-left:4px solid #2C7DA0;
+  padding:10px 14px; border-radius:0 1rem 1rem 0;
+  margin:10px 0; font-size:.85rem; line-height:1.6;
+}
+.notice.green { background:#E8F5E8; border-left-color:#6B9E6B; }
+.notice.blue { background:#E8F0F5; border-left-color:#2C7DA0; }
+.notice.orange { background:#FDF3E8; border-left-color:#D4A373; }
+.notice.red { background:#FDF0E8; border-left-color:#b13e3e; }
+.notice strong { color:#1F4E6E; }
+.grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+.theory-box {
+  background:#F9FBF8; border:1px solid #E7EDE2;
+  border-radius:1rem; padding:14px 16px;
+}
+.theory-box h3 {
+  color:#2C7DA0; font-size:.88rem; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.theory-box p, .theory-box li { font-size:.83rem; line-height:1.6; }
+.theory-box ul { padding-left:18px; margin-top:4px; }
+.theory-box ul li { margin-bottom:3px; }
+.latin { font-family:Georgia,'Times New Roman',serif; color:#1F4E6E; font-weight:700; }
+.q { padding:12px 0; border-bottom:1px solid #f0ebe3; }
+.q:last-child { border-bottom:none; }
+.q-title { font-weight:600; font-size:.9rem; margin-bottom:10px; line-height:1.55; }
+.q-title .num { color:#2C7DA0; font-weight:700; margin-right:4px; }
+.options { display:flex; flex-direction:column; gap:6px; }
+.option {
+  background:#FEFCF9; border:2px solid #E7EDE2; border-radius:40px;
+  padding:8px 18px; font-size:.85rem; cursor:pointer; transition:.15s;
+  display:flex; align-items:center; gap:10px;
+}
+.option:hover { background:#F3F7F2; border-color:#A3B18A; }
+.option.selected { background:#E9F0E3; border-color:#2C7DA0; box-shadow:0 0 0 3px rgba(44,125,160,.1); }
+.option .marker {
+  width:26px; height:26px; min-width:26px; background:#E2EAD9;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-weight:700; color:#5F7C62; font-size:.8rem;
+}
+.option.selected .marker { background:#2C7DA0; color:white; }
+.test-progress { display:flex; align-items:center; gap:12px; margin-bottom:12px; font-size:.8rem; color:#5F7C62; }
+.test-progress .bar { flex:1; height:6px; background:#E7EDE2; border-radius:20px; overflow:hidden; min-width:80px; }
+.test-progress .bar-fill { height:100%; background:#2C7DA0; border-radius:20px; transition:width .3s; }
+.btn {
+  background:#EBE3D2; border:none; padding:7px 20px; border-radius:40px;
+  font-weight:600; cursor:pointer; transition:.15s; font-family:inherit;
+  font-size:.8rem; color:#1A2A3A; display:inline-flex; align-items:center; gap:6px;
+  text-decoration:none;
+}
+.btn:hover { opacity:.85; transform:translateY(-1px); }
+.btn:active { transform:scale(.96); }
+.btn-primary { background:#2C7DA0; color:white; }
+.btn-primary:hover { background:#236B8A; }
+.btn-success { background:#6B9E6B; color:white; }
+.btn-success:hover { background:#5A865A; }
+.btn-outline { background:transparent; border:1px solid #D9D0BD; }
+.btn-outline:hover { background:#F0EEE5; }
+.btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+.result-msg { margin-top:10px; padding:10px 14px; border-radius:1rem; font-size:.85rem; font-weight:500; line-height:1.55; }
+.result-msg.ok { background:#E8F5E8; color:#2E7D32; }
+.result-msg.no { background:#FDF0E8; color:#b13e3e; }
+.link-card {
+  background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem;
+  padding:14px 18px; display:flex; align-items:center; gap:12px;
+  text-decoration:none; color:#1A2A3A; transition:.15s;
+}
+.link-card:hover { background:#F3F7F2; border-color:#A3B18A; transform:translateY(-1px); }
+.link-card .icon { font-size:1.6rem; }
+.link-card .text { flex:1; }
+.link-card .text strong { display:block; color:#1F4E6E; font-size:.9rem; margin-bottom:2px; }
+.link-card .text span { font-size:.78rem; color:#5F7C62; }
+.checklist { list-style:none; padding:0; }
+.checklist li {
+  padding:8px 12px; background:#F9FBF8; border-radius:.75rem;
+  margin-bottom:6px; font-size:.85rem; display:flex; align-items:flex-start; gap:8px;
+}
+.checklist li::before { content:'✓'; color:#6B9E6B; font-weight:700; }
+footer {
+  margin-top:20px; padding:16px; background:white; border-radius:1.5rem;
+  border:1px solid #E7EDE2; text-align:center; font-size:.75rem;
+  color:#7B8D6E; line-height:1.6;
+}
+footer strong { color:#1F4E6E; }
+@media (max-width:700px) {
+  body { padding:10px; }
+  .header { flex-direction:column; align-items:stretch; padding:12px 16px; }
+  .header .logo { font-size:.95rem; }
+  .header-stats { justify-content:space-between; }
+  .card { padding:14px 16px; }
+  .tab-btn { font-size:.68rem; padding:5px 12px; }
+  .q-title { font-size:.85rem; }
+  .option { padding:8px 14px; font-size:.82rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="logo">
+    💻 <span class="gradient">Информатика</span>
+    <span class="sub">· Урок 1.1 · Компьютер и цифровое представление информации</span>
+  </div>
+  <div class="header-stats">
+    <span class="progress-text" id="headerStatus">Урок 1.1 · Входной тест</span>
+    <span class="timer" id="lessonTimer">90:00</span>
+  </div>
+</header>
+
+<!-- ВКЛАДКИ -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="start">🎬 Старт</button>
+  <button class="tab-btn" data-tab="test">🧪 Входной тест</button>
+  <button class="tab-btn" data-tab="theory">📖 Теория</button>
+  <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+  <button class="tab-btn" data-tab="consolidation">🎯 Закрепление</button>
+  <button class="tab-btn" data-tab="reflection">💬 Рефлексия</button>
+</div>
+
+<!-- ===== ВКЛАДКА 1. СТАРТ ===== -->
+<section class="tab-content active" id="tab-start">
+  <div class="card">
+    <div class="card-title"><span>🎬 Добро пожаловать</span><span class="badge blue">5 мин</span></div>
+    <div class="notice blue">
+      <strong>Тема урока:</strong> Компьютер и цифровое представление информации.
+    </div>
+    <div class="notice green">
+      <strong>Цель:</strong> понять, как устроен компьютер, что такое цифровое представление информации, и как это связано с ветеринарной практикой.
+    </div>
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:14px 0 8px;">Что сегодня будет:</h3>
+    <ul class="checklist">
+      <li>Входной тест (20 вопросов, 15 минут) — проверка знаний урока 1.</li>
+      <li>Теория: техника безопасности, тенденции развития, ИИ, файловая система, облачные технологии.</li>
+      <li>Практика: работа с файловой системой, облачными сервисами, ВетСим.</li>
+      <li>Закрепление: кейсы из ветеринарной практики.</li>
+      <li>Рефлексия: итоги и домашнее задание.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 2. ВХОДНОЙ ТЕСТ ===== -->
+<section class="tab-content" id="tab-test">
+  <div class="card">
+    <div class="card-title"><span>🧪 Входной тест: урок 1</span><span class="badge" id="testBadge">20 вопросов · 15 минут</span></div>
+    <div id="testStart">
+      <div class="notice">
+        <strong>Это не экзамен.</strong> Тест проверяет, как вы усвоили материал урока 1. 20 вопросов, 15 минут. Вопросы разных типов: единичный выбор, множественный выбор, соответствие, ввод краткого ответа. Результат — в % верных ответов. После теста вы увидите свои ошибки.
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+        <button class="btn btn-primary" id="startTestBtn">🚀 Начать тест</button>
+      </div>
+    </div>
+    <div id="testProgress" style="display:none;">
+      <div class="test-progress">
+        <span id="testProgressText">Вопрос 1 из 20</span>
+        <div class="bar"><div class="bar-fill" id="testBarFill"></div></div>
+        <span id="testProgressPct">0%</span>
+        <span class="timer" id="testTimer">15:00</span>
+      </div>
+      <div id="questionCard"></div>
+      <div class="exercise-controls" id="testControls" style="justify-content:flex-end; display:flex; gap:8px; margin-top:10px;">
+        <button class="btn btn-primary" id="testNextBtn" disabled>Далее ▶</button>
+      </div>
+    </div>
+    <div id="testFinal" style="display:none;"></div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 3. ТЕОРИЯ ===== -->
+<section class="tab-content" id="tab-theory">
+  <div class="card">
+    <div class="card-title"><span>📖 Теория: 5 блоков</span><span class="badge blue">20 мин</span></div>
+
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>1. Техника безопасности и гигиена</h3>
+        <ul>
+          <li>Работа за компьютером — не более 1,5–2 часов без перерыва.</li>
+          <li>Перерыв каждые 30–40 минут (гимнастика для глаз).</li>
+          <li>Правильная осанка, расстояние до экрана — 50–70 см.</li>
+          <li>СИЗ: защитные очки (при необходимости), антибликовый экран.</li>
+        </ul>
+      </div>
+      <div class="theory-box">
+        <h3>2. Тенденции развития</h3>
+        <ul>
+          <li><strong>Параллельные вычисления</strong> — одновременная обработка данных.</li>
+          <li><strong>Многопроцессорные системы</strong> — несколько процессоров в одном компьютере.</li>
+          <li><strong>Суперкомпьютеры</strong> — для сложных расчётов (климат, генетика).</li>
+          <li><strong>Распределённые системы</strong> — обработка больших данных (Big Data).</li>
+        </ul>
+      </div>
+      <div class="theory-box">
+        <h3>3. Микроконтроллеры и роботы</h3>
+        <ul>
+          <li><strong>Микроконтроллеры</strong> — маленькие компьютеры в устройствах (датчики, приборы).</li>
+          <li><strong>Роботизированные производства</strong> — автоматизация (роботы-дояры, сортировщики).</li>
+          <li><strong>В ветеринарии:</strong> датчики на фермах, автоматические кормушки, роботы-дояры.</li>
+        </ul>
+      </div>
+      <div class="theory-box">
+        <h3>4. Искусственный интеллект</h3>
+        <ul>
+          <li><strong>Сферы применения:</strong> диагностика, анализ снимков, прогнозирование.</li>
+          <li><strong>В ветеринарии:</strong> ИИ помогает распознавать болезни по фото, анализировать анализы.</li>
+          <li><strong>Перспективы:</strong> персонализированное лечение, мониторинг здоровья животных.</li>
+        </ul>
+      </div>
+      <div class="theory-box">
+        <h3>5. Файловая система и облака</h3>
+        <ul>
+          <li><strong>Файловая система</strong> — структура папок и файлов.</li>
+          <li><strong>Поиск</strong> — по имени, типу, дате.</li>
+          <li><strong>Облачные технологии</strong> — Яндекс.Диск, Google Drive.</li>
+          <li><strong>Мобильные устройства</strong> — доступ к данным с телефона.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="notice orange" style="margin-top:14px;">
+      <strong>Связь с ветеринарией:</strong> все эти технологии используются в современной ветеринарной клинике — от электронных карт пациентов до ИИ-диагностики.
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 4. ПРАКТИКА ===== -->
+<section class="tab-content" id="tab-practice">
+  <div class="card">
+    <div class="card-title"><span>🧩 Практика: 3 задания</span><span class="badge orange">20 мин</span></div>
+
+    <div class="notice blue">
+      <strong>Задание 1.</strong> Создайте структуру папок для ветеринарной клиники (на компьютере или в облаке): «Пациенты», «Документы», «Анализы», «Фото».
+    </div>
+    <div class="notice blue">
+      <strong>Задание 2.</strong> Найдите в файловой системе документ по названию (например, «Карта пациента»). Опишите, как вы это сделали.
+    </div>
+    <div class="notice blue">
+      <strong>Задание 3.</strong> Откройте ВетСим (<a href="https://vet-sim.github.io/universal.html" target="_blank">vet-sim.github.io/universal.html</a>), выберите один тренажёр, пройдите его. Ответьте: «Как это связано с темой урока?»
+    </div>
+
+    <div class="notice green">
+      <strong>Обсуждение:</strong> какие технологии из теории вы увидели в ВетСим?
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 5. ЗАКРЕПЛЕНИЕ ===== -->
+<section class="tab-content" id="tab-consolidation">
+  <div class="card">
+    <div class="card-title"><span>🎯 Закрепление: кейсы</span><span class="badge green">15 мин</span></div>
+
+    <div class="notice">
+      <strong>Кейс 1.</strong> Ветеринарная клиника хочет перейти на облачное хранение данных. Какие преимущества и риски? (Обсудите в группах по 3–4 человека.)
+    </div>
+    <div class="notice">
+      <strong>Кейс 2.</strong> Как ИИ может помочь в диагностике заболеваний животных? Приведите примеры.
+    </div>
+    <div class="notice">
+      <strong>Кейс 3.</strong> Как файловая система помогает в работе ветеринарного фельдшера?
+    </div>
+
+    <div class="notice orange">
+      <strong>Презентация:</strong> каждая группа представляет свой ответ (2–3 минуты).
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 6. РЕФЛЕКСИЯ ===== -->
+<section class="tab-content" id="tab-reflection">
+  <div class="card">
+    <div class="card-title"><span>💬 Рефлексия</span><span class="badge blue">10 мин</span></div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin-bottom:8px;">Ответьте на вопросы:</h3>
+    <ul class="checklist">
+      <li>Что нового вы узнали сегодня?</li>
+      <li>Что было сложным?</li>
+      <li>Где это пригодится в вашей профессии?</li>
+    </ul>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Домашнее задание:</h3>
+    <div class="notice green">
+      Найдите пример использования ИИ в ветеринарии. Подготовьте короткое сообщение (3–5 предложений).
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Ссылки для самостоятельной работы:</h3>
+    <div class="grid-2">
+      <a href="https://vet-sim.github.io/universal.html" target="_blank" class="link-card">
+        <div class="icon">🧩</div>
+        <div class="text">
+          <strong>ВетСим: конструкторы</strong>
+          <span>20+ тренажёров по ветеринарии</span>
+        </div>
+      </a>
+      <a href="https://vetsim.ru/students/students.html" target="_blank" class="link-card">
+        <div class="icon">📊</div>
+        <div class="text">
+          <strong>ВетСим: студентам</strong>
+          <span>Дневники, зачётка, тренажёры</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ФУТЕР -->
+<footer>
+  © ВетСим — ветеринарное просвещение · ООД 10 «Информатика»<br>
+  <strong>Урок 1.1 · Компьютер и цифровое представление информации</strong><br>
+  36.02.01 Ветеринария · Работает офлайн
+</footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+
+  // ===== ВКЛАДКИ =====
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      $('tab-' + btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  // ===== ТАЙМЕР УРОКА (90 минут) =====
+  let lessonSeconds = 90 * 60;
+  const timerEl = $('lessonTimer');
+  function updateTimer(){
+    const m = Math.floor(lessonSeconds / 60);
+    const s = lessonSeconds % 60;
+    timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    timerEl.classList.remove('warning','danger');
+    if (lessonSeconds <= 300) timerEl.classList.add('danger');
+    else if (lessonSeconds <= 900) timerEl.classList.add('warning');
+  }
+  updateTimer();
+  setInterval(() => {
+    if (lessonSeconds > 0) { lessonSeconds--; updateTimer(); }
+  }, 1000);
+
+  // ===== ВХОДНОЙ ТЕСТ =====
+  // 20 вопросов: разные типы, таксономия Блума
+  const TEST_QUESTIONS_RAW = [
+    // 1-5: единичный выбор (Знать)
+    { type: 'single', q: 'Что такое информация?', correct: 'Сведения об окружающем мире', wrong: ['Только текст в книге', 'Только числа', 'Только картинки'] },
+    { type: 'single', q: 'Сколько бит в 1 байте?', correct: '8', wrong: ['4', '16', '1024'] },
+    { type: 'single', q: 'Что такое файл?', correct: 'Поименованная область на носителе', wrong: ['Папка', 'Программа', 'Устройство'] },
+    { type: 'single', q: 'Что такое операционная система?', correct: 'Программа для управления компьютером', wrong: ['Игра', 'Текстовый файл', 'Сайт'] },
+    { type: 'single', q: 'Какое устройство является устройством ввода?', correct: 'Клавиатура', wrong: ['Монитор', 'Принтер', 'Колонки'] },
+
+    // 6-10: множественный выбор (Понимать)
+    { type: 'multi', q: 'Укажите устройства вывода информации. Выберите два верных варианта.', correct: ['Монитор', 'Принтер'], wrong: ['Клавиатура', 'Мышь', 'Сканер'] },
+    { type: 'multi', q: 'Укажите программы для работы с текстом. Выберите два верных варианта.', correct: ['Word', 'Блокнот'], wrong: ['Excel', 'Paint', 'Браузер'] },
+    { type: 'multi', q: 'Укажите меры защиты информации. Выберите три верных варианта.', correct: ['Антивирус', 'Парольная защита', 'Резервное копирование'], wrong: ['Удаление файлов', 'Отключение компьютера'] },
+    { type: 'multi', q: 'Укажите облачные сервисы. Выберите два верных варианта.', correct: ['Яндекс.Диск', 'Google Drive'], wrong: ['Word', 'Excel', 'Paint'] },
+    { type: 'multi', q: 'Укажите устройства хранения информации. Выберите два верных варианта.', correct: ['Жёсткий диск', 'Флешка'], wrong: ['Процессор', 'Оперативная память', 'Монитор'] },
+
+    // 11-15: соответствие (Уметь)
+    { type: 'match', q: 'Установите соответствие: устройство — функция.', pairs: [['Процессор', 'Обработка данных'], ['Оперативная память', 'Временное хранение'], ['Жёсткий диск', 'Долговременное хранение']] },
+    { type: 'match', q: 'Установите соответствие: тип файла — расширение.', pairs: [['Текстовый документ', '.docx'], ['Электронная таблица', '.xlsx'], ['Презентация', '.pptx']] },
+    { type: 'match', q: 'Установите соответствие: система счисления — основание.', pairs: [['Двоичная', '2'], ['Восьмеричная', '8'], ['Десятичная', '10'], ['Шестнадцатеричная', '16']] },
+    { type: 'match', q: 'Установите соответствие: угроза — способ защиты.', pairs: [['Вирус', 'Антивирус'], ['Потеря данных', 'Резервное копирование'], ['Несанкционированный доступ', 'Пароль']] },
+    { type: 'match', q: 'Установите соответствие: облачный сервис — назначение.', pairs: [['Яндекс.Диск', 'Хранение файлов'], ['Google Drive', 'Совместная работа'], ['Почта', 'Обмен сообщениями']] },
+
+    // 16-20: краткий ответ (Владеть)
+    { type: 'short', q: 'Минимальная единица измерения информации — это __________.', correct: ['бит'] },
+    { type: 'short', q: 'Устройство для вывода информации на бумагу — это __________.', correct: ['принтер'] },
+    { type: 'short', q: 'Программа для работы с электронными таблицами — это __________.', correct: ['excel', 'microsoft excel'] },
+    { type: 'short', q: 'Совокупность программ, обеспечивающих работу компьютера, — это __________.', correct: ['программное обеспечение', 'по'] },
+    { type: 'short', q: 'Учётно-отчётная документация ветеринарной деятельности, ведущаяся в электронном виде, — это __________.', correct: ['электронный документооборот', 'электронная документация'] }
+  ];
+
+  let testQuestions = [];
+  let testCurrent = 0;
+  let testAnswers = [];
+  let testTimerInterval = null;
+  let testSecondsLeft = 15 * 60;
+  let testRendered = false;
+
+  function shuffle(arr){
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function prepareTest(){
+    testQuestions = shuffle(TEST_QUESTIONS_RAW).map(item => {
+      if (item.type === 'single' || item.type === 'multi') {
+        const options = shuffle([...item.correct, ...item.wrong]);
+        return {
+          type: item.type,
+          q: item.q,
+          options: options,
+          correct: item.correct
+        };
+      }
+      if (item.type === 'match') {
+        const pairs = item.pairs;
+        const left = shuffle(pairs.map(p => p[0]));
+        const right = shuffle(pairs.map(p => p[1]));
+        return {
+          type: 'match',
+          q: item.q,
+          left: left,
+          right: right,
+          pairs: pairs
+        };
+      }
+      return {
+        type: 'short',
+        q: item.q,
+        correct: item.correct
+      };
+    });
+  }
+
+  function startTest(){
+    prepareTest();
+    testCurrent = 0;
+    testAnswers = new Array(testQuestions.length).fill(null);
+    testSecondsLeft = 15 * 60;
+    $('testStart').style.display = 'none';
+    $('testProgress').style.display = 'block';
+    $('testFinal').style.display = 'none';
+    $('testBadge').textContent = testQuestions.length + ' вопросов · 15 минут';
+    startTestTimer();
+    renderTestQuestion();
+  }
+
+  function startTestTimer(){
+    updateTestTimerDisplay();
+    if (testTimerInterval) clearInterval(testTimerInterval);
+    testTimerInterval = setInterval(() => {
+      testSecondsLeft--;
+      updateTestTimerDisplay();
+      if (testSecondsLeft <= 0) {
+        clearInterval(testTimerInterval);
+        finishTest(true);
+      }
+    }, 1000);
+  }
+
+  function updateTestTimerDisplay(){
+    const m = Math.floor(testSecondsLeft / 60);
+    const s = testSecondsLeft % 60;
+    const el = $('testTimer');
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.classList.remove('warning', 'danger');
+    if (testSecondsLeft <= 60) el.classList.add('danger');
+    else if (testSecondsLeft <= 300) el.classList.add('warning');
+  }
+
+  function renderTestQuestion(){
+    const q = testQuestions[testCurrent];
+    const total = testQuestions.length;
+    const percent = Math.round((testCurrent / total) * 100);
+    $('testProgressText').textContent = `Вопрос ${testCurrent + 1} из ${total}`;
+    $('testBarFill').style.width = percent + '%';
+    $('testProgressPct').textContent = percent + '%';
+
+    let html = `<div class="q"><div class="q-title"><span class="num">${testCurrent + 1}.</span> ${q.q}</div>`;
+
+    if (q.type === 'single' || q.type === 'multi') {
+      html += '<div class="options">';
+      q.options.forEach((opt, i) => {
+        const selected = testAnswers[testCurrent] && testAnswers[testCurrent].includes(opt);
+        html += `<div class="option ${selected ? 'selected' : ''}" data-idx="${i}" data-type="${q.type}">
+          <div class="marker">${String.fromCharCode(1040 + i)}</div>
+          <div>${opt}</div>
+        </div>`;
+      });
+      html += '</div>';
+    } else if (q.type === 'match') {
+      html += '<div style="font-size:.8rem; color:#5F7C62; margin-bottom:6px;">Соедините пары (выберите левый и правый элемент):</div>';
+      html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">';
+      html += '<div>' + q.left.map((l, i) => `<div class="option" data-side="left" data-idx="${i}" data-type="match">${l}</div>`).join('') + '</div>';
+      html += '<div>' + q.right.map((r, i) => `<div class="option" data-side="right" data-idx="${i}" data-type="match">${r}</div>`).join('') + '</div>';
+      html += '</div>';
+    } else if (q.type === 'short') {
+      html += `<input type="text" id="shortAnswer" placeholder="Введите ответ..." style="width:100%; padding:10px 14px; border:2px solid #D9D0BD; border-radius:20px; font-family:inherit; font-size:.9rem; margin-top:8px;">`;
+    }
+
+    html += '</div>';
+    $('questionCard').innerHTML = html;
+
+    if (q.type === 'single' || q.type === 'multi') {
+      $('questionCard').querySelectorAll('.option').forEach(optEl => {
+        optEl.addEventListener('click', () => {
+          const idx = parseInt(optEl.dataset.idx);
+          const opt = q.options[idx];
+          if (q.type === 'single') {
+            testAnswers[testCurrent] = [opt];
+            $('questionCard').querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            optEl.classList.add('selected');
+          } else {
+            if (!testAnswers[testCurrent]) testAnswers[testCurrent] = [];
+            const pos = testAnswers[testCurrent].indexOf(opt);
+            if (pos >= 0) {
+              testAnswers[testCurrent].splice(pos, 1);
+              optEl.classList.remove('selected');
+            } else {
+              testAnswers[testCurrent].push(opt);
+              optEl.classList.add('selected');
+            }
+          }
+          checkTestReady();
+        });
+      });
+    } else if (q.type === 'match') {
+      let selectedLeft = null;
+      $('questionCard').querySelectorAll('.option').forEach(optEl => {
+        optEl.addEventListener('click', () => {
+          if (optEl.dataset.side === 'left') {
+            $('questionCard').querySelectorAll('[data-side="left"]').forEach(o => o.classList.remove('selected'));
+            optEl.classList.add('selected');
+            selectedLeft = optEl;
+          } else {
+            if (!selectedLeft) return;
+            const leftText = selectedLeft.textContent.trim();
+            const rightText = optEl.textContent.trim();
+            if (!testAnswers[testCurrent]) testAnswers[testCurrent] = [];
+            testAnswers[testCurrent] = testAnswers[testCurrent].filter(p => p[0] !== leftText);
+            testAnswers[testCurrent].push([leftText, rightText]);
+            selectedLeft.classList.remove('selected');
+            selectedLeft = null;
+            checkTestReady();
+          }
+        });
+      });
+    } else if (q.type === 'short') {
+      const inp = $('shortAnswer');
+      inp.value = testAnswers[testCurrent] || '';
+      inp.addEventListener('input', () => {
+        testAnswers[testCurrent] = inp.value;
+        checkTestReady();
+      });
+    }
+
+    const nextBtn = $('testNextBtn');
+    nextBtn.textContent = testCurrent === total - 1 ? '🏁 Завершить' : 'Далее ▶';
+    nextBtn.disabled = !hasAnswer(testCurrent);
+  }
+
+  function hasAnswer(idx){
+    const q = testQuestions[idx];
+    const a = testAnswers[idx];
+    if (!a) return false;
+    if (q.type === 'single' || q.type === 'multi') return a.length > 0;
+    if (q.type === 'match') return a.length === q.pairs.length;
+    if (q.type === 'short') return a.trim().length > 0;
+    return false;
+  }
+
+  function checkTestReady(){
+    $('testNextBtn').disabled = !hasAnswer(testCurrent);
+  }
+
+  $('startTestBtn').addEventListener('click', startTest);
+
+  $('testNextBtn').addEventListener('click', () => {
+    if (!hasAnswer(testCurrent)) return;
+    if (testCurrent === testQuestions.length - 1) {
+      finishTest(false);
+    } else {
+      testCurrent++;
+      renderTestQuestion();
+    }
+  });
+
+  function finishTest(timeout){
+    if (testTimerInterval) clearInterval(testTimerInterval);
+
+    let correct = 0;
+    testQuestions.forEach((q, i) => {
+      const a = testAnswers[i];
+      if (!a) return;
+      if (q.type === 'single' || q.type === 'multi') {
+        const correctSet = new Set(q.correct);
+        const answerSet = new Set(a);
+        if (correctSet.size === answerSet.size && [...correctSet].every(x => answerSet.has(x))) correct++;
+      } else if (q.type === 'match') {
+        const correctPairs = q.pairs;
+        if (a.length === correctPairs.length && a.every(p => correctPairs.some(cp => cp[0] === p[0] && cp[1] === p[1]))) correct++;
+      } else if (q.type === 'short') {
+        const norm = a.toLowerCase().trim();
+        if (q.correct.some(c => norm.includes(c.toLowerCase()))) correct++;
+      }
+    });
+
+    const total = testQuestions.length;
+    const percent = Math.round((correct / total) * 100);
+
+    $('testProgress').style.display = 'none';
+    $('testFinal').style.display = 'block';
+
+    const icon = percent >= 90 ? '🏆' : percent >= 70 ? '🎉' : percent >= 50 ? '😊' : '📚';
+    const message = percent >= 90 ? 'Отличный результат! Материал урока 1 усвоен полностью.' :
+                    percent >= 70 ? 'Хороший результат! Материал усвоен уверенно.' :
+                    percent >= 50 ? 'Неплохо, но стоит повторить некоторые темы.' :
+                    'Рекомендуем вернуться к уроку 1 и повторить теорию.';
+
+    const timeoutMsg = timeout ? '<div style="color:#b13e3e; font-weight:600; margin-bottom:12px;">⏰ Время вышло! Тест завершён автоматически.</div>' : '';
+
+    let html = `<div style="text-align:center; padding:30px 20px;">
+      ${timeoutMsg}
+      <div style="font-size:3.5rem; margin-bottom:8px;">${icon}</div>
+      <div style="font-size:3rem; font-weight:800; color:#1F4E6E; line-height:1;">${percent}%</div>
+      <div style="font-size:1.05rem; color:#3E5C4A; margin:12px 0 20px; line-height:1.5;">${message}</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; max-width:520px; margin:0 auto 20px;">
+        <div style="background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:12px;">
+          <div style="font-size:1.5rem; font-weight:700; color:#2C7DA0;">${correct}</div>
+          <div style="font-size:.7rem; color:#7B8D6E; text-transform:uppercase;">Верно</div>
+        </div>
+        <div style="background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:12px;">
+          <div style="font-size:1.5rem; font-weight:700; color:#2C7DA0;">${total - correct}</div>
+          <div style="font-size:.7rem; color:#7B8D6E; text-transform:uppercase;">Ошибок</div>
+        </div>
+        <div style="background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:12px;">
+          <div style="font-size:1.5rem; font-weight:700; color:#2C7DA0;">${total}</div>
+          <div style="font-size:.7rem; color:#7B8D6E; text-transform:uppercase;">Всего</div>
+        </div>
+      </div>`;
+
+    html += `<div style="text-align:left; max-width:750px; margin:0 auto;">`;
+    html += `<div style="font-weight:700; color:#2C7DA0; margin-bottom:8px;">Разбор ответов:</div>`;
+    testQuestions.forEach((q, i) => {
+      const a = testAnswers[i];
+      let userAnswer = '— не отвечено —';
+      let correctAnswer = '';
+      let ok = false;
+
+      if (q.type === 'single' || q.type === 'multi') {
+        userAnswer = a && a.length ? a.join(', ') : '—';
+        correctAnswer = q.correct.join(', ');
+        if (a && a.length) {
+          const correctSet = new Set(q.correct);
+          const answerSet = new Set(a);
+          ok = correctSet.size === answerSet.size && [...correctSet].every(x => answerSet.has(x));
+        }
+      } else if (q.type === 'match') {
+        userAnswer = a && a.length ? a.map(p => p.join(' → ')).join('; ') : '—';
+        correctAnswer = q.pairs.map(p => p.join(' → ')).join('; ');
+        if (a && a.length === q.pairs.length) {
+          ok = a.every(p => q.pairs.some(cp => cp[0] === p[0] && cp[1] === p[1]));
+        }
+      } else if (q.type === 'short') {
+        userAnswer = a || '—';
+        correctAnswer = q.correct[0];
+        if (a) {
+          const norm = a.toLowerCase().trim();
+          ok = q.correct.some(c => norm.includes(c.toLowerCase()));
+        }
+      }
+
+      html += `<div style="background:${ok ? '#E8F5E8' : '#FDF0E8'}; border-radius:12px; padding:8px 12px; margin-bottom:6px; font-size:.82rem;">
+        <div style="font-weight:600; color:${ok ? '#2E7D32' : '#b13e3e'};">${i + 1}. ${q.q}</div>
+        <div style="font-size:.78rem; color:#3E5C4A; margin-top:3px;">
+          ${ok ? '✅ ' + userAnswer : '❌ Ваш ответ: ' + userAnswer + ' · ✅ Правильно: ' + correctAnswer}
+        </div>
+      </div>`;
+    });
+    html += `</div>`;
+    html += `<button class="btn btn-primary" style="margin-top:16px;" onclick="location.reload()">🔄 Пройти заново</button>`;
+    html += `</div>`;
+
+    $('testFinal').innerHTML = html;
+    $('headerStatus').textContent = 'Входной тест завершён · ' + percent + '%';
+  }
+
+})();
+</script>
+</body>
+</html>

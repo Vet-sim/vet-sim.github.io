@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Информатика · Урок 2 · ВетСим</title>
+<title>Информатика · Урок 1.1 · ВетСим</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -198,10 +198,10 @@ footer strong { color:#1F4E6E; }
 <header class="header">
   <div class="logo">
     💻 <span class="gradient">Информатика</span>
-    <span class="sub">· Урок 2 · Компьютер и цифровое представление информации</span>
+    <span class="sub">· Урок 1.1 · Компьютер и цифровое представление информации</span>
   </div>
   <div class="header-stats">
-    <span class="progress-text" id="headerStatus">Урок 2 · Входной тест</span>
+    <span class="progress-text" id="headerStatus">Урок 1.1 · Входной тест</span>
     <span class="timer" id="lessonTimer">90:00</span>
   </div>
 </header>
@@ -503,11 +503,12 @@ footer strong { color:#1F4E6E; }
         ['Оперативная память', 'Внутреннее'],
         ['Принтер', 'Внешнее']
       ] },
+    // ИСПРАВЛЕНО: два ответа были одинаковыми ("Ввод") — теперь они уникальны
     { type: 'match',
       q: 'Установите соответствие: устройство — ввод или вывод информации.',
       pairs: [
-        ['Клавиатура', 'Ввод'],
-        ['Мышь', 'Ввод'],
+        ['Клавиатура', 'Ввод (клавиатура)'],
+        ['Мышь', 'Ввод (мышь)'],
         ['Монитор', 'Вывод']
       ] },
     { type: 'match',
@@ -728,6 +729,7 @@ footer strong { color:#1F4E6E; }
           const side = optEl.dataset.side;
           const value = optEl.dataset.value;
           const pairs = testAnswers[testCurrent] || [];
+          
           if (side === 'left') {
             // Если уже в паре — распарить
             const existing = pairs.find(p => p[0] === value);
@@ -742,15 +744,15 @@ footer strong { color:#1F4E6E; }
             renderTestQuestion();
           } else {
             if (!matchSelectedLeft) return;
-            const rightTaken = pairs.some(p => p[1] === value);
+            // Если правый уже занят — отменяем старую пару и создаём новую
+            const rightTaken = pairs.find(p => p[1] === value);
             if (rightTaken) {
-              // Отменить правую пару
+              // Удаляем старую пару и добавляем новую
               testAnswers[testCurrent] = pairs.filter(p => p[1] !== value);
-              renderTestQuestion();
-              checkTestReady();
-              return;
+              testAnswers[testCurrent].push([matchSelectedLeft, value]);
+            } else {
+              testAnswers[testCurrent] = [...pairs, [matchSelectedLeft, value]];
             }
-            testAnswers[testCurrent] = [...pairs, [matchSelectedLeft, value]];
             matchSelectedLeft = null;
             renderTestQuestion();
             checkTestReady();

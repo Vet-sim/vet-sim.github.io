@@ -8,1000 +8,766 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: 'Montserrat', system-ui, sans-serif;
-    background: #FDF8F0;
-    color: #3E5C4A;
-    padding: 16px;
-    line-height: 1.5;
-  }
-  .container { max-width: 950px; margin: 0 auto; }
-  
-  /* Шапка */
-  header {
-    background: linear-gradient(135deg, #2C7DA0, #1F4E6E);
-    color: #fff;
-    padding: 20px 28px;
-    border-radius: 1.5rem;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  header h1 { font-size: 1.4rem; margin-bottom: 4px; }
-  header p { font-size: 0.85rem; opacity: 0.95; }
-  header .meta { font-size: 0.75rem; margin-top: 6px; opacity: 0.9; }
-
-  /* Навигация (вкладки) */
-  .tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  .tab-btn {
-    background: #fff;
-    border: 2px solid #E5DDCF;
-    color: #3E5C4A;
-    padding: 8px 20px;
-    border-radius: 2rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    font-family: inherit;
-  }
-  .tab-btn:hover { background: #F9F6EF; }
-  .tab-btn.active {
-    background: linear-gradient(135deg, #2e7d32, #43a047);
-    color: #fff;
-    border-color: #2e7d32;
-  }
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
-
-  /* Данные команды */
-  .team-info {
-    background: #fff;
-    border-radius: 1.2rem;
-    padding: 14px 20px;
-    margin-bottom: 16px;
-    border: 2px solid #A3B18A;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-  }
-  .team-info label { font-weight: 600; font-size: 0.85rem; }
-  .team-info input {
-    padding: 6px 14px;
-    border: 2px solid #dce5da;
-    border-radius: 2rem;
-    font-family: inherit;
-    font-size: 0.9rem;
-    background: #FDF8F0;
-    flex: 1;
-    min-width: 120px;
-  }
-
-  /* Карточки */
-  .card {
-    background: #fff;
-    border-radius: 1.2rem;
-    padding: 20px 24px;
-    margin-bottom: 16px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    border: 1px solid #EDE8DC;
-    position: relative;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 4px;
-  }
-  .card-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #2C7DA0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .variant-badge {
-    display: inline-block;
-    background: #fff3e0;
-    color: #e65100;
-    padding: 2px 10px;
-    border-radius: 1rem;
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-  }
-  .card-subtitle {
-    font-size: 0.8rem;
-    color: #7B8D6E;
-    margin-bottom: 14px;
-    font-style: italic;
-  }
-
-  /* Таймер */
-  .timer-widget {
-    background: #F0F7FA;
-    border: 2px solid #2C7DA0;
-    border-radius: 1rem;
-    padding: 8px 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .timer-display {
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: #2C7DA0;
-    font-variant-numeric: tabular-nums;
-    min-width: 65px;
-  }
-  .timer-display.warning { color: #c62828; animation: pulse 1s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-  .btn-timer {
-    background: #fff;
-    border: 1px solid #2C7DA0;
-    color: #2C7DA0;
-    padding: 4px 12px;
-    border-radius: 1rem;
-    font-weight: 600;
-    font-size: 0.75rem;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  .btn-timer:hover { background: #2C7DA0; color: #fff; }
-
-  /* Методичка */
-  details.methodology {
-    background: #F9F6EF;
-    border-left: 4px solid #A3B18A;
-    border-radius: 0.8rem;
-    padding: 10px 16px;
-    margin-bottom: 16px;
-    font-size: 0.85rem;
-  }
-  details.methodology summary {
-    font-weight: 700;
-    color: #5F7C62;
-    cursor: pointer;
-    user-select: none;
-    outline: none;
-  }
-  details.methodology[open] summary { margin-bottom: 8px; }
-  details.methodology p { margin-bottom: 6px; }
-  details.methodology ul { margin-left: 20px; margin-bottom: 6px; }
-  details.methodology li { margin-bottom: 4px; }
-  details.methodology strong { color: #1A2A3A; }
-
-  /* Поля */
-  .field-label {
-    font-weight: 600;
-    font-size: 0.8rem;
-    display: block;
-    margin-bottom: 4px;
-    color: #3E5C4A;
-  }
-  input[type="text"], textarea {
-    width: 100%;
-    padding: 8px 14px;
-    border: 2px solid #E5DDCF;
-    border-radius: 1rem;
-    font-family: inherit;
-    font-size: 0.9rem;
-    background: #FEFAF2;
-    transition: 0.2s;
-    color: #1e2f2a;
-  }
-  input[type="text"]:focus, textarea:focus {
-    border-color: #2C7DA0;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.1);
-  }
-  textarea { resize: vertical; min-height: 60px; }
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-  /* Таблицы */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 8px;
-    font-size: 0.85rem;
-  }
-  th, td {
-    border: 1px solid #E5DDCF;
-    padding: 8px;
-    text-align: left;
-    vertical-align: top;
-  }
-  th {
-    background: #F4EFE4;
-    font-weight: 600;
-    color: #2C7DA0;
-    font-size: 0.8rem;
-  }
-  td input { border: none; background: transparent; padding: 4px; width: 100%; }
-  td input:focus { box-shadow: none; border: none; }
-
-  /* Кнопки */
-  .btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .btn {
-    background: linear-gradient(135deg, #43a047, #2e7d32);
-    color: #fff;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 2rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s;
-    font-family: inherit;
-  }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,125,50,0.3); }
-  .btn-secondary { background: #fff; color: #2e7d32; border: 2px solid #2e7d32; }
-
-  /* Ссылки */
-  .links-box {
-    background: #e8f0f5;
-    border-radius: 1rem;
-    padding: 16px;
-    margin-top: 20px;
-    font-size: 0.85rem;
-  }
-  .links-box h3 { color: #1F4E6E; margin-bottom: 8px; font-size: 0.95rem; }
-  .links-box ul { list-style: none; }
-  .links-box li { margin-bottom: 6px; }
-  .links-box a { color: #2C7DA0; font-weight: 600; text-decoration: none; word-break: break-all; }
-  .links-box a:hover { text-decoration: underline; }
-
-  /* Подвал */
-  .footer {
-    text-align: center;
-    font-size: 0.75rem;
-    color: #B0BC9C;
-    margin-top: 24px;
-    padding-top: 16px;
-    border-top: 1px solid #E5DDCF;
-  }
-  .footer strong { color: #1F4E6E; }
-
-  /* Стили для технологической карты */
-  .tech-map h2 { color: #1F4E6E; margin: 20px 0 10px; font-size: 1.1rem; }
-  .tech-map h3 { color: #2C7DA0; margin: 16px 0 8px; font-size: 1rem; }
-  .tech-map p, .tech-map li { font-size: 0.85rem; line-height: 1.6; }
-  .tech-map ul, .tech-map ol { margin-left: 20px; margin-bottom: 10px; }
-  .tech-map table { margin-top: 10px; }
-  .tech-map th { background: #E8F0F5; color: #1F4E6E; }
-  .tech-map td { font-size: 0.8rem; }
-  .tech-map .highlight { background: #E8F5E8; border-left: 4px solid #6B9E6B; padding: 10px 14px; border-radius: 0 1rem 1rem 0; margin: 10px 0; }
-
-  @media (max-width: 700px) {
-    .grid-2 { grid-template-columns: 1fr; }
-    body { padding: 10px; }
-    header { padding: 16px; }
-    header h1 { font-size: 1.1rem; }
-    .card { padding: 16px; }
-    .card-header { flex-direction: column; }
-    table { font-size: 0.75rem; }
-    th, td { padding: 5px; }
-  }
-  @media print {
-    body { background: #fff; padding: 0.3in; }
-    .no-print, .timer-widget, details.methodology summary, .tabs { display: none !important; }
-    details.methodology { border: none; padding: 0; margin-bottom: 10px; }
-    details.methodology[open] { display: block; }
-    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
-    input, textarea { border: 1px solid #ccc; background: #fff; }
-    .tab-content { display: block !important; }
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Montserrat',system-ui,sans-serif;background:#FDF8F0;color:#3E5C4A;padding:16px;line-height:1.5}
+.container{max-width:1000px;margin:0 auto}
+header{background:linear-gradient(135deg,#2C7DA0,#1F4E6E);color:#fff;padding:22px 28px;border-radius:1.5rem;margin-bottom:20px;text-align:center}
+header h1{font-size:1.45rem;margin-bottom:5px}
+header p{font-size:.9rem;opacity:.95}
+header .meta{font-size:.78rem;margin-top:7px;opacity:.9}
+.tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.tab-btn{background:#fff;border:2px solid #E5DDCF;color:#3E5C4A;padding:8px 20px;border-radius:2rem;font-size:.85rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit}
+.tab-btn:hover{background:#F9F6EF}
+.tab-btn.active{background:linear-gradient(135deg,#2e7d32,#43a047);color:#fff;border-color:#2e7d32}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.team-info{background:#fff;border-radius:1.2rem;padding:14px 20px;margin-bottom:16px;border:2px solid #A3B18A;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.team-info label{font-weight:600;font-size:.85rem}
+.team-info input{padding:6px 14px;border:2px solid #dce5da;border-radius:2rem;font-family:inherit;font-size:.9rem;background:#FDF8F0;flex:1;min-width:120px}
+.card{background:#fff;border-radius:1.2rem;padding:20px 24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(0,0,0,.05);border:1px solid #EDE8DC}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:4px}
+.card-title{font-size:1.05rem;font-weight:700;color:#2C7DA0;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.variant-badge{display:inline-block;background:#fff3e0;color:#e65100;padding:2px 10px;border-radius:1rem;font-size:.65rem;font-weight:600;text-transform:uppercase}
+.card-subtitle{font-size:.8rem;color:#7B8D6E;margin-bottom:14px;font-style:italic}
+.timer-widget{background:#F0F7FA;border:2px solid #2C7DA0;border-radius:1rem;padding:8px 16px;display:flex;align-items:center;gap:12px}
+.timer-display{font-size:1.2rem;font-weight:800;color:#2C7DA0;font-variant-numeric:tabular-nums;min-width:65px}
+.timer-display.warning{color:#c62828;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.btn-timer{background:#fff;border:1px solid #2C7DA0;color:#2C7DA0;padding:4px 12px;border-radius:1rem;font-weight:600;font-size:.75rem;cursor:pointer;transition:.2s;font-family:inherit}
+.btn-timer:hover{background:#2C7DA0;color:#fff}
+details.methodology{background:#F9F6EF;border-left:4px solid #A3B18A;border-radius:.8rem;padding:10px 16px;margin-bottom:16px;font-size:.85rem}
+details.methodology summary{font-weight:700;color:#5F7C62;cursor:pointer;user-select:none;outline:none}
+details.methodology[open] summary{margin-bottom:8px}
+details.methodology p{margin-bottom:6px}
+details.methodology ul{margin-left:20px;margin-bottom:6px}
+details.methodology li{margin-bottom:4px}
+details.methodology strong{color:#1A2A3A}
+details.answer{background:#E8F5E8;border-left:4px solid #2e7d32;border-radius:.8rem;padding:10px 16px;margin-top:12px;font-size:.85rem}
+details.answer summary{font-weight:700;color:#2e7d32;cursor:pointer}
+details.answer ul{margin:8px 0 0 20px}
+details.answer li{margin-bottom:4px}
+.field-label{font-weight:600;font-size:.8rem;display:block;margin-bottom:4px;color:#3E5C4A}
+input[type=text],textarea{width:100%;padding:8px 14px;border:2px solid #E5DDCF;border-radius:1rem;font-family:inherit;font-size:.9rem;background:#FEFAF2;transition:.2s;color:#1e2f2a}
+input[type=text]:focus,textarea:focus{border-color:#2C7DA0;outline:none;box-shadow:0 0 0 3px rgba(44,125,160,.1)}
+textarea{resize:vertical;min-height:60px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.85rem}
+th,td{border:1px solid #E5DDCF;padding:8px;text-align:left;vertical-align:top}
+th{background:#F4EFE4;font-weight:600;color:#2C7DA0;font-size:.8rem}
+td input[type=text]{border:none;background:transparent;padding:4px;width:100%}
+td input[type=text]:focus{box-shadow:none}
+td textarea{min-height:70px;border:1px solid #E5DDCF}
+.check-list label{display:flex;align-items:flex-start;gap:7px;margin-bottom:6px;font-size:.84rem}
+.check-list input[type=checkbox]{margin-top:3px;accent-color:#2e7d32}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.btn{background:linear-gradient(135deg,#43a047,#2e7d32);color:#fff;border:none;padding:12px 28px;border-radius:2rem;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;font-family:inherit}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(46,125,50,.3)}
+.btn-secondary{background:#fff;color:#2e7d32;border:2px solid #2e7d32}
+.links-box{background:#e8f0f5;border-radius:1rem;padding:16px;margin-top:20px;font-size:.85rem}
+.links-box h3{color:#1F4E6E;margin-bottom:8px;font-size:.95rem}
+.links-box ul{list-style:none}
+.links-box li{margin-bottom:6px}
+.links-box a{color:#2C7DA0;font-weight:600;text-decoration:none;word-break:break-all}
+.links-box a:hover{text-decoration:underline}
+.footer{text-align:center;font-size:.75rem;color:#B0BC9C;margin-top:24px;padding-top:16px;border-top:1px solid #E5DDCF}
+.footer strong{color:#1F4E6E}
+.tech-map h2{color:#1F4E6E;margin:20px 0 10px;font-size:1.1rem}
+.tech-map h3{color:#2C7DA0;margin:16px 0 8px;font-size:1rem}
+.tech-map p,.tech-map li{font-size:.85rem;line-height:1.6}
+.tech-map ul,.tech-map ol{margin-left:20px;margin-bottom:10px}
+.tech-map table{margin-top:10px}
+.tech-map th{background:#E8F0F5;color:#1F4E6E}
+.tech-map td{font-size:.8rem}
+.tech-map .highlight{background:#E8F5E8;border-left:4px solid #6B9E6B;padding:10px 14px;border-radius:0 1rem 1rem 0;margin:10px 0}
+.safety{background:#FFF4E5;border-left:4px solid #EF6C00;border-radius:.8rem;padding:10px 16px;margin-bottom:14px;font-size:.85rem}
+.safety strong{color:#BF360C}
+@media(max-width:700px){.grid-2{grid-template-columns:1fr}body{padding:10px}header{padding:16px}header h1{font-size:1.1rem}.card{padding:16px}.card-header{flex-direction:column}table{font-size:.75rem}th,td{padding:5px}}
+@media print{body{background:#fff;padding:.3in}.no-print,.timer-widget,.tabs{display:none!important}details.methodology,details.answer{border:none;padding:0;margin-bottom:10px}details.methodology,details.answer{display:block!important}details.methodology summary,details.answer summary{display:none}.card{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid}input,textarea{border:1px solid #ccc;background:#fff}.tab-content{display:block!important}}
 </style>
 </head>
 <body>
 <div class="container">
 
-  <header>
-    <h1>🐾 Инструкционная карта</h1>
-    <p>«Кожа — зеркало здоровья: макро- и микроскопическое строение кожи, её производных и молочной железы»</p>
-    <div class="meta">ВетСим · МДК 02.01 · 2 курс · группа 122 · 36.02.01 Ветеринария</div>
-  </header>
+<header>
+  <h1>🐾 Инструкционная карта</h1>
+  <p>«Кожа — зеркало здоровья: макро- и микроскопическое строение кожи, её производных и молочной железы»</p>
+  <div class="meta">ВетСим · МДК 02.01 · 2 курс · группа 122 · 36.02.01 Ветеринария</div>
+</header>
 
-  <!-- ВКЛАДКИ -->
-  <div class="tabs no-print">
-    <button class="tab-btn active" data-tab="card">📋 Инструкционная карта</button>
-    <button class="tab-btn" data-tab="tech">📊 Технологическая карта занятия</button>
+<div class="tabs no-print">
+  <button class="tab-btn active" data-tab="card">📋 Инструкционная карта</button>
+  <button class="tab-btn" data-tab="tech">📊 Технологическая карта занятия</button>
+</div>
+
+<div class="tab-content active" id="tab-card">
+  <div class="team-info no-print">
+    <label>Команда:</label>
+    <input type="text" id="teamName" placeholder="Название команды">
+    <label>Дата:</label>
+    <input type="text" id="date" placeholder="дд.мм.гггг">
   </div>
 
-  <!-- ======================================================= -->
-  <!-- ВКЛАДКА 1: ИНСТРУКЦИОННАЯ КАРТА (существующая)          -->
-  <!-- ======================================================= -->
-  <div class="tab-content active" id="tab-card">
-    <div class="team-info no-print">
-      <label>Команда:</label>
-      <input type="text" id="teamName" placeholder="Название команды">
-      <label>Дата:</label>
-      <input type="text" id="date" placeholder="дд.мм.гггг">
-    </div>
+  <div class="safety">
+    <strong>⚠️ Техника безопасности и биобезопасность.</strong>
+    Работайте с животным спокойно, без резких движений и громких звуков. Не кормите животное без разрешения преподавателя. При осмотре используйте перчатки; после работы вымойте руки и обработайте рабочую поверхность. Соблюдайте осторожность при работе со стеклянными предметными и покровными стёклами, микроскопом и биологическим материалом.
+  </div>
 
-    <!-- РАЗДЕЛ 1 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">🔍 Раздел 1. Симптомы <span class="variant-badge">Станция «Живой уголок»</span></div>
-        <div class="timer-widget no-print" id="widget-zone1">
-          <span class="timer-display" id="timer-zone1">15:00</span>
-          <button class="btn-timer" onclick="toggleTimer('zone1')">▶ Старт</button>
-          <button class="btn-timer" onclick="resetTimer('zone1')">↺</button>
-        </div>
-      </div>
-      <div class="card-subtitle">Заполняется после осмотра морской свинки (в скобках — варианты: кролик, собака, кошка)</div>
-
-      <details class="methodology no-print">
-        <summary>📖 Методические указания к станции 1</summary>
-        <p><strong>Цель:</strong> провести клинический осмотр кожного покрова и шерсти животного.</p>
-        <ul>
-          <li><strong>Шаг 1.</strong> Визуальный осмотр: оцените цвет кожи (бледно-розовый, гиперемия, цианоз), наличие алопеций (облысения), расчёсов, корочек, шелушения.</li>
-          <li><strong>Шаг 2.</strong> Пальпация: тыльной стороной ладони оцените локальную температуру, влажность.</li>
-          <li><strong>Шаг 3.</strong> Оценка тургора: соберите кожу в складку на холке и отпустите. В норме складка расправляется мгновенно (замедление — признак обезвоживания).</li>
-          <li><strong>Шаг 4.</strong> Оценка шерсти: обратите внимание на блеск, густоту, прочность удержания в фолликулах.</li>
-        </ul>
-      </details>
-
-      <div class="grid-2">
-        <div>
-          <label class="field-label">Цвет кожи</label>
-          <input type="text" id="skinColor" placeholder="Бледно-розовый, гиперемия, цианоз...">
-        </div>
-        <div>
-          <label class="field-label">Тургор (скорость расправления складки)</label>
-          <input type="text" id="turgor" placeholder="Мгновенно, замедленно...">
-        </div>
-        <div>
-          <label class="field-label">Состояние шерсти</label>
-          <input type="text" id="wool" placeholder="Блеск, тусклая, алопеции...">
-        </div>
-        <div>
-          <label class="field-label">Наличие расчёсов, корок</label>
-          <input type="text" id="scratches" placeholder="Есть / нет, локализация...">
-        </div>
-      </div>
-
-      <div style="margin-top:12px;">
-        <label class="field-label">Дополнительные наблюдения</label>
-        <textarea id="extra1" placeholder="Что ещё заметили при осмотре..."></textarea>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🔍 Раздел 1. Клинический осмотр кожного покрова <span class="variant-badge">Станция «Живой уголок»</span></div>
+      <div class="timer-widget no-print" id="widget-zone1">
+        <span class="timer-display" id="timer-zone1">15:00</span>
+        <button class="btn-timer" onclick="toggleTimer('zone1')">▶ Старт</button>
+        <button class="btn-timer" onclick="resetTimer('zone1')">↺</button>
       </div>
     </div>
+    <div class="card-subtitle">Заполняется после осмотра морской свинки. При необходимости используется кролик, собака или кошка.</div>
 
-    <!-- РАЗДЕЛ 2 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">🔬 Раздел 2. Микроскопия <span class="variant-badge">Станция «Гистология»</span></div>
-        <div class="timer-widget no-print" id="widget-zone2">
-          <span class="timer-display" id="timer-zone2">15:00</span>
-          <button class="btn-timer" onclick="toggleTimer('zone2')">▶ Старт</button>
-          <button class="btn-timer" onclick="resetTimer('zone2')">↺</button>
-        </div>
-      </div>
-      <div class="card-subtitle">Заполняется после работы с микропрепаратами и скотч-тестом</div>
+    <details class="methodology no-print">
+      <summary>📖 Алгоритм клинического осмотра</summary>
+      <p><strong>Цель:</strong> провести осмотр кожного покрова и шерсти животного, выявить возможные признаки нарушения здоровья.</p>
+      <ul>
+        <li><strong>Шаг 1.</strong> Проведите визуальный осмотр: оцените цвет видимых кожных покровов, состояние шерсти, наличие алопеций, расчёсов, корочек, шелушения, сыпи, ран и истечений.</li>
+        <li><strong>Шаг 2.</strong> Проведите пальпацию тыльной стороной кисти: оцените местную температуру и влажность кожи.</li>
+        <li><strong>Шаг 3.</strong> Оцените тургор кожи: соберите небольшую складку кожи в области холки и отпустите. В норме складка расправляется быстро.</li>
+        <li><strong>Шаг 4.</strong> Оцените шерстный покров: блеск, густоту, равномерность, прочность удержания волос.</li>
+        <li><strong>Шаг 5.</strong> Зафиксируйте локализацию выявленных изменений и заполните раздел карты.</li>
+      </ul>
+    </details>
 
-      <details class="methodology">
-        <summary>📖 Методические указания к станции 2</summary>
-        <p><strong>1. Кожа без волос (малое увеличение):</strong></p>
-        <ul>
-          <li>Эпидермис образован многослойным плоским ороговевающим эпителием. Найдите гребешки росткового слоя, вдающиеся в дерму.</li>
-          <li>Дерма: рассмотрите сосочковый слой (рыхлая соединительная ткань, капилляры) и сетчатый (плотные пучки коллагеновых волокон).</li>
-          <li>Подкожный слой: рыхлая соединительная ткань с адипоцитами (жировыми клетками).</li>
-        </ul>
-        <p><strong>2. Кожа с волосом (продольный срез):</strong></p>
-        <ul>
-          <li>Найдите волосяной фолликул. В глубине — <em>волосяная луковица</em>, в нее вдается <em>волосяной сосочек</em> с сосудами.</li>
-          <li>Рядом с корнем волоса залегают альвеолярные <em>сальные железы</em> (выводные протоки открываются в воронку волоса).</li>
-          <li>Глубже, в сетчатом слое дермы, найдите <em>потовые железы</em> в виде свернутого «клубка».</li>
-        </ul>
-        <p><strong>3. Молочная железа:</strong></p>
-        <ul>
-          <li>Под малым увеличением видны дольки железистой ткани, разделенные прослойками соединительной ткани (стромой).</li>
-          <li>В альвеолах (концевых отделах) виден секрет — молоко. Стенка альвеолы состоит из железистых клеток и миоэпителиальных (корзинчатых) клеток.</li>
-        </ul>
-        <p><strong>4. Скотч-тест (демодекоз):</strong> рассмотрите клещей Demodex (удлиненное «сигарообразное» тело) под микроскопом.</p>
-      </details>
-
-      <table>
-        <tr>
-          <th>Препарат</th>
-          <th>Что нашли (детали строения)</th>
-        </tr>
-        <tr>
-          <td>Кожа с волосами</td>
-          <td><input type="text" id="micro1" placeholder="Фолликул, сальные/потовые железы..."></td>
-        </tr>
-        <tr>
-          <td>Кожа без волос</td>
-          <td><input type="text" id="micro2" placeholder="Слои эпидермиса, сосочки дермы..."></td>
-        </tr>
-        <tr>
-          <td>Молочная железа</td>
-          <td><input type="text" id="micro3" placeholder="Альвеолы, протоки, миоэпителий..."></td>
-        </tr>
-        <tr>
-          <td>Скотч-тест (демодекоз)</td>
-          <td><input type="text" id="micro4" placeholder="Найдены / не найдены клещи..."></td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- РАЗДЕЛ 3 -->
-    <div class="card">
-      <div class="card-header">
-        <div class="card-title">🐴 Раздел 3. Сравнение копыт <span class="variant-badge">Станция «Копыта и копытца»</span></div>
-        <div class="timer-widget no-print" id="widget-zone3">
-          <span class="timer-display" id="timer-zone3">15:00</span>
-          <button class="btn-timer" onclick="toggleTimer('zone3')">▶ Старт</button>
-          <button class="btn-timer" onclick="resetTimer('zone3')">↺</button>
-        </div>
-      </div>
-      <div class="card-subtitle">Сначала найдите детали строения на норме, затем сравните с патологией (муляжи)</div>
-
-      <details class="methodology no-print">
-        <summary>📖 Методические указания к станции 3</summary>
-        <ul>
-          <li><strong>Шаг 1. Норма.</strong> На нормальных препаратах (или тренажере) найдите: <em>кайму</em> (продуцирует глазурь), <em>венчик</em> (трубчатый рог), <em>стенку</em> (листочковый рог), <em>подошву</em> (мягкий рог) и <em>стрелку</em>.</li>
-          <li><strong>Шаг 2. Патология.</strong> Осмотрите муляжи с патологией (ламинит, трещины, флегмона венчика).</li>
-          <li><strong>Шаг 3. Сравнение.</strong> Опишите, как изменилась форма, поверхность или структура рога при патологии. Обратите внимание на «голодные борозды» при ламините.</li>
-        </ul>
-      </details>
-
-      <table>
-        <tr>
-          <th>Структура</th>
-          <th>Норма (лошадь / КРС)</th>
-          <th>Патология (ламинит, трещины, флегмона)</th>
-        </tr>
-        <tr>
-          <td>Кайма</td>
-          <td><input type="text" id="norm1" placeholder="Состояние"></td>
-          <td><input type="text" id="pat1" placeholder="Что изменилось"></td>
-        </tr>
-        <tr>
-          <td>Венчик</td>
-          <td><input type="text" id="norm2" placeholder="Состояние"></td>
-          <td><input type="text" id="pat2" placeholder="Что изменилось"></td>
-        </tr>
-        <tr>
-          <td>Стенка</td>
-          <td><input type="text" id="norm3" placeholder="Состояние"></td>
-          <td><input type="text" id="pat3" placeholder="Что изменилось"></td>
-        </tr>
-        <tr>
-          <td>Подошва</td>
-          <td><input type="text" id="norm4" placeholder="Состояние"></td>
-          <td><input type="text" id="pat4" placeholder="Что изменилось"></td>
-        </tr>
-        <tr>
-          <td>Стрелка</td>
-          <td><input type="text" id="norm5" placeholder="Состояние"></td>
-          <td><input type="text" id="pat5" placeholder="Что изменилось"></td>
-        </tr>
-      </table>
-
-      <div style="margin-top:12px;">
-        <label class="field-label">Общий вывод по сравнению</label>
-        <textarea id="hoofConclusion" placeholder="Чем отличается норма от патологии..."></textarea>
-      </div>
-    </div>
-
-    <!-- РАЗДЕЛ 4 -->
-    <div class="card">
-      <div class="card-title">🎯 Раздел 4. Анализ и профилактика</div>
-      <div class="card-subtitle">Заполняется после обсуждения в команде</div>
-
+    <div class="grid-2">
       <div>
-        <label class="field-label">Что это может быть? (предварительное заключение)</label>
-        <textarea id="analysis" placeholder="На основании симптомов, микроскопии и сравнения копыт..."></textarea>
+        <label class="field-label">Цвет кожи и видимых слизистых оболочек</label>
+        <input type="text" id="skinColor" placeholder="Бледно-розовый, гиперемия, цианоз...">
       </div>
-
-      <div style="margin-top:12px;">
-        <label class="field-label">Что делать? (профилактика и меры)</label>
-        <textarea id="prevention" placeholder="Обработка, карантин, условия содержания..."></textarea>
+      <div>
+        <label class="field-label">Тургор кожи</label>
+        <input type="text" id="turgor" placeholder="Складка расправляется быстро / медленно">
       </div>
-    </div>
-
-    <!-- РАЗДЕЛ 5. ГРУППОВОЕ РЕШЕНИЕ -->
-    <div class="card">
-      <div class="card-title">🧩 Раздел 5. Групповое решение <span class="variant-badge">Вариатив</span></div>
-      <div class="card-subtitle">Дублирование тренажёра «Групповое принятие решений». Заполняется, если нет доступа к интерактивной доске</div>
-
-      <div style="background:#e8f0f5; padding:10px 16px; border-radius:1rem; margin-bottom:14px; border-left:4px solid #2C7DA0;">
-        <div style="font-weight:700; color:#2C7DA0; font-size:0.75rem; text-transform:uppercase; margin-bottom:4px;">📌 Вариативность</div>
-        <div style="font-size:0.85rem; color:#3E5C4A;">
-          <strong>Вариант А:</strong> работа у интерактивной доски.<br>
-          <strong>Вариант Б:</strong> работа по подгруппам на ноутбуках (ссылка на тренажер ниже).
-        </div>
+      <div>
+        <label class="field-label">Состояние шерстного покрова</label>
+        <input type="text" id="wool" placeholder="Блестящая, тусклая, алопеции, линька...">
       </div>
-
-      <table>
-        <tr>
-          <th>Этап тренажёра</th>
-          <th>Что выбрала команда</th>
-          <th>Ловушки (если были)</th>
-        </tr>
-        <tr>
-          <td>1. Первичный сбор информации</td>
-          <td><input type="text" id="gr1" placeholder="Ваш выбор"></td>
-          <td><input type="text" id="gr1t" placeholder="Что было ловушкой"></td>
-        </tr>
-        <tr>
-          <td>2. Осмотр и дифдиагностика</td>
-          <td><input type="text" id="gr2" placeholder="Ваш выбор"></td>
-          <td><input type="text" id="gr2t" placeholder="Что было ловушкой"></td>
-        </tr>
-        <tr>
-          <td>3. Интерпретация и тактика</td>
-          <td><input type="text" id="gr3" placeholder="Ваш выбор"></td>
-          <td><input type="text" id="gr3t" placeholder="Что было ловушкой"></td>
-        </tr>
-        <tr>
-          <td>4. Профилактика и биобезопасность</td>
-          <td><input type="text" id="gr4" placeholder="Ваш выбор"></td>
-          <td><input type="text" id="gr4t" placeholder="Что было ловушкой"></td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- РАЗДЕЛ 6. РЕФЛЕКСИЯ -->
-    <div class="card">
-      <div class="card-title">✨ Раздел 6. Рефлексия <span class="variant-badge">Вариатив</span></div>
-      <div class="card-subtitle">Можно заполнить в рабочей тетради или здесь — электронно</div>
-
-      <div style="margin-top:14px;">
-        <label class="field-label">Что было самым сложным на уроке?</label>
-        <textarea id="refl1" placeholder="Ваш ответ..."></textarea>
-      </div>
-      <div style="margin-top:12px;">
-        <label class="field-label">Как ИИ помог при подготовке ответа на вопрос корреспондента?</label>
-        <textarea id="refl2" placeholder="Ваш ответ..."></textarea>
-      </div>
-      <div style="margin-top:12px;">
-        <label class="field-label">Что понял о связи строения кожи и здоровья?</label>
-        <textarea id="refl3" placeholder="Ваш ответ..."></textarea>
+      <div>
+        <label class="field-label">Расчёсы, корочки, шелушение, раны</label>
+        <input type="text" id="scratches" placeholder="Есть / нет; локализация и характер">
       </div>
     </div>
 
-    <!-- ССЫЛКИ -->
-    <div class="links-box">
-      <h3>🌐 Цифровые ресурсы урока</h3>
+    <div style="margin-top:12px;">
+      <label class="field-label">Дополнительные наблюдения</label>
+      <textarea id="extra1" placeholder="Поведение животного, зуд, состояние ушных раковин, лап, живота..."></textarea>
+    </div>
+
+    <details class="answer">
+      <summary>✅ Самопроверка</summary>
       <ul>
-        <li>🧩 <strong>Тренажёр «Групповое принятие решений»:</strong> <a href="https://vet-sim.github.io/metodist_goda/demodecosis_decision.html" target="_blank">Открыть</a></li>
-        <li>📓 <strong>Дневник студента:</strong> <a href="https://vet-sim.github.io/metodist_goda/student_diary_2.1.html" target="_blank">Открыть</a></li>
-        <li>📋 <strong>Инструкционная карта (эта страница):</strong> <a href="https://vet-sim.github.io/metodist_goda/instruction_card.html" target="_blank">Открыть</a></li>
-        <li>🐾 <strong>Экосистема ВетСим:</strong> <a href="https://vetsim.ru" target="_blank">vetsim.ru</a> / <a href="https://vet-sim.github.io" target="_blank">vet-sim.github.io</a></li>
+        <li>Указаны не менее трёх показателей осмотра.</li>
+        <li>Описана локализация изменений, а не только их наличие.</li>
+        <li>Сделано предположение о возможной причине выявленных изменений.</li>
       </ul>
+    </details>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🔬 Раздел 2. Микроскопия <span class="variant-badge">Станция «Гистология»</span></div>
+      <div class="timer-widget no-print" id="widget-zone2">
+        <span class="timer-display" id="timer-zone2">15:00</span>
+        <button class="btn-timer" onclick="toggleTimer('zone2')">▶ Старт</button>
+        <button class="btn-timer" onclick="resetTimer('zone2')">↺</button>
+      </div>
+    </div>
+    <div class="card-subtitle">Заполняется после работы с микропрепаратами кожи, молочной железы и скотч-тестом.</div>
+
+    <details class="methodology">
+      <summary>📖 Алгоритм работы с микроскопом и микропрепаратами</summary>
+      <p><strong>Общие правила работы:</strong></p>
+      <ul>
+        <li>Начните с малого увеличения: сначала определите общий план строения препарата.</li>
+        <li>Перемещайте препарат медленно от края к центру, последовательно рассматривая участки среза.</li>
+        <li>Переходите к большому увеличению только после того, как нашли нужную структуру при малом увеличении.</li>
+        <li>Регулируйте освещение и резкость постепенно; не используйте грубый винт при большом увеличении.</li>
+        <li>После работы поставьте препарат в штатив, выключите освещение и накройте микроскоп.</li>
+      </ul>
+
+      <p><strong>Препарат 1. Кожа без волос.</strong></p>
+      <ul>
+        <li>Найдите границу между эпидермисом и дермой.</li>
+        <li>Определите, какой слой образован многослойным плоским ороговевающим эпителием.</li>
+        <li>Сравните сосочковый и сетчатый слои дермы по плотности и характеру расположения соединительнотканных волокон.</li>
+        <li>Найдите подкожную основу, содержащую жировые клетки — адипоциты.</li>
+      </ul>
+
+      <p><strong>Препарат 2. Кожа с волосом в продольном срезе.</strong></p>
+      <ul>
+        <li>Найдите волос. Определите его стержень и корень.</li>
+        <li>Найдите волосяную луковицу и расположенный в ней волосяной сосочек с сосудами.</li>
+        <li>Обнаружьте сальные железы, расположенные рядом с корнем волоса.</li>
+        <li>Найдите потовые железы в глубоких слоях дермы.</li>
+      </ul>
+
+      <p><strong>Препарат 3. Молочная железа лактирующей коровы.</strong></p>
+      <ul>
+        <li>Найдите дольки железистой ткани, разделённые прослойками соединительной ткани — стромой.</li>
+        <li>Рассмотрите альвеолы и секрет в их просвете.</li>
+        <li>Определите железистые клетки и миоэпителиальные клетки в стенке альвеолы.</li>
+        <li>Найдите кровеносные сосуды и пучки гладкой мышечной ткани в строме.</li>
+      </ul>
+
+      <p><strong>Препарат 4. Скотч-тест на демодекоз.</strong></p>
+      <ul>
+        <li>Рассмотрите препарат сначала при малом, затем при большом увеличении.</li>
+        <li>При обнаружении клещей опишите их форму, размеры, количество и локализацию.</li>
+        <li>Сформулируйте предварительное заключение и предложите дальнейшую диагностическую тактику.</li>
+      </ul>
+    </details>
+
+    <table>
+      <tr>
+        <th style="width:30%;">Препарат</th>
+        <th style="width:34%;">Структуры для распознавания</th>
+        <th style="width:36%;">Результат команды</th>
+      </tr>
+      <tr>
+        <td><strong>Кожа без волос</strong></td>
+        <td class="check-list">
+          <label><input type="checkbox"> Эпидермис</label>
+          <label><input type="checkbox"> Сосочковый слой дермы</label>
+          <label><input type="checkbox"> Сетчатый слой дермы</label>
+          <label><input type="checkbox"> Подкожная основа с адипоцитами</label>
+        </td>
+        <td><textarea id="micro2" placeholder="Какой признак помог определить каждый слой?"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Кожа с волосом</strong></td>
+        <td class="check-list">
+          <label><input type="checkbox"> Стержень и корень волоса</label>
+          <label><input type="checkbox"> Волосяная луковица</label>
+          <label><input type="checkbox"> Волосяной сосочек</label>
+          <label><input type="checkbox"> Сальные железы</label>
+          <label><input type="checkbox"> Потовые железы</label>
+        </td>
+        <td><textarea id="micro1" placeholder="Где расположены найденные структуры?"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Молочная железа</strong></td>
+        <td class="check-list">
+          <label><input type="checkbox"> Дольки железистой ткани</label>
+          <label><input type="checkbox"> Альвеолы и секрет</label>
+          <label><input type="checkbox"> Миоэпителиальные клетки</label>
+          <label><input type="checkbox"> Соединительнотканная строма</label>
+          <label><input type="checkbox"> Сосуды и гладкомышечные пучки</label>
+        </td>
+        <td><textarea id="micro3" placeholder="Как строение альвеол связано с функцией молочной железы?"></textarea></td>
+      </tr>
+      <tr>
+        <td><strong>Скотч-тест</strong></td>
+        <td class="check-list">
+          <label><input type="checkbox"> Клещи <em>Demodex</em> обнаружены</label>
+          <label><input type="checkbox"> Клещи не обнаружены</label>
+        </td>
+        <td><textarea id="micro4" placeholder="Описание препарата и предварительное заключение"></textarea></td>
+      </tr>
+    </table>
+
+    <div style="margin-top:12px;">
+      <label class="field-label">Вывод команды: как строение кожи и молочной железы связано с их функциями?</label>
+      <textarea id="microConclusion" placeholder="Например: многослойный ороговевающий эпителий защищает организм...; миоэпителиальные клетки участвуют в выведении молока..."></textarea>
     </div>
 
-    <!-- КНОПКИ -->
-    <div class="btn-row no-print">
-      <button class="btn" id="saveBtn">💾 Сохранить</button>
-      <button class="btn btn-secondary" onclick="window.print()">🖨️ Печать</button>
-      <button class="btn btn-secondary" id="clearBtn">🧹 Очистить</button>
+    <details class="answer">
+      <summary>✅ Эталон для самопроверки — откройте после выполнения задания</summary>
+      <ul>
+        <li><strong>Кожа без волос:</strong> эпидермис образован многослойным плоским ороговевающим эпителием; в дерме различают сосочковый и сетчатый слои; подкожная основа содержит адипоциты.</li>
+        <li><strong>Кожа с волосом:</strong> волос имеет стержень и корень; корень заканчивается волосяной луковицей, в которую входит волосяной сосочек; рядом расположены сальные железы; потовые железы находятся в глубоких слоях дермы.</li>
+        <li><strong>Молочная железа:</strong> железистая ткань образует дольки и альвеолы; в просвете альвеол виден секрет; в стенке альвеолы есть железистые и миоэпителиальные клетки; строма содержит сосуды и гладкомышечные элементы.</li>
+        <li><strong>Скотч-тест:</strong> при обнаружении клещей <em>Demodex</em> можно предположить демодекоз; необходимо подтвердить диагноз и определить тактику лечения и обработки.</li>
+      </ul>
+    </details>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🐴 Раздел 3. Сравнение копыт: норма и патология <span class="variant-badge">Станция «Копыта и копытца»</span></div>
+      <div class="timer-widget no-print" id="widget-zone3">
+        <span class="timer-display" id="timer-zone3">15:00</span>
+        <button class="btn-timer" onclick="toggleTimer('zone3')">▶ Старт</button>
+        <button class="btn-timer" onclick="resetTimer('zone3')">↺</button>
+      </div>
+    </div>
+    <div class="card-subtitle">Сначала найдите детали строения на муляже или тренажёре нормы, затем сравните их с патологическими изменениями.</div>
+
+    <details class="methodology no-print">
+      <summary>📖 Алгоритм работы на станции</summary>
+      <ul>
+        <li><strong>Шаг 1. Норма.</strong> Найдите кайму, венчик, стенку, подошву и стрелку. Определите их расположение и особенности строения.</li>
+        <li><strong>Шаг 2. Патология.</strong> Осмотрите муляжи с ламинитом, трещинами или флегмоной венчика.</li>
+        <li><strong>Шаг 3. Сравнение.</strong> Опишите изменения формы, поверхности, цвета и структуры рога. Обратите внимание на возможные «голодные борозды» при ламините.</li>
+        <li><strong>Шаг 4. Вывод.</strong> Объясните, как выявленные изменения могут влиять на опорную функцию и самочувствие животного.</li>
+      </ul>
+    </details>
+
+    <table>
+      <tr>
+        <th style="width:18%;">Структура</th>
+        <th style="width:41%;">Норма</th>
+        <th style="width:41%;">Патология</th>
+      </tr>
+      <tr>
+        <td>Кайма</td>
+        <td><input type="text" id="norm1" placeholder="Расположение, состояние"></td>
+        <td><input type="text" id="pat1" placeholder="Что изменилось"></td>
+      </tr>
+      <tr>
+        <td>Венчик</td>
+        <td><input type="text" id="norm2" placeholder="Расположение, состояние"></td>
+        <td><input type="text" id="pat2" placeholder="Что изменилось"></td>
+      </tr>
+      <tr>
+        <td>Стенка</td>
+        <td><input type="text" id="norm3" placeholder="Расположение, состояние"></td>
+        <td><input type="text" id="pat3" placeholder="Что изменилось"></td>
+      </tr>
+      <tr>
+        <td>Подошва</td>
+        <td><input type="text" id="norm4" placeholder="Расположение, состояние"></td>
+        <td><input type="text" id="pat4" placeholder="Что изменилось"></td>
+      </tr>
+      <tr>
+        <td>Стрелка</td>
+        <td><input type="text" id="norm5" placeholder="Расположение, состояние"></td>
+        <td><input type="text" id="pat5" placeholder="Что изменилось"></td>
+      </tr>
+    </table>
+
+    <div style="margin-top:12px;">
+      <label class="field-label">Общий вывод по сравнению нормы и патологии</label>
+      <textarea id="hoofConclusion" placeholder="Какие изменения выявлены и как они влияют на животное?"></textarea>
     </div>
   </div>
 
-  <!-- ======================================================= -->
-  <!-- ВКЛАДКА 2: ТЕХНОЛОГИЧЕСКАЯ КАРТА ЗАНЯТИЯ              -->
-  <!-- ======================================================= -->
-  <div class="tab-content" id="tab-tech">
-    <div class="card tech-map">
-      <div class="card-title">📊 Технологическая карта занятия</div>
-      <div class="card-subtitle">«Кожа — зеркало здоровья: макро- и микроскопическое строение кожи, её производных и молочной железы»</div>
+  <div class="card">
+    <div class="card-title">🎯 Раздел 4. Анализ, предварительное заключение и профилактика</div>
+    <div class="card-subtitle">Заполняется после обсуждения результатов всех станций в команде.</div>
 
-      <h2>Блок 1. Паспорт занятия</h2>
-      <table>
-        <tr><th>Параметр</th><th>Значение</th></tr>
-        <tr><td>Тема занятия</td><td>«Кожа — зеркало здоровья: макро- и микроскопическое строение кожи, её производных и молочной железы»</td></tr>
-        <tr><td>Дисциплина/МДК</td><td>МДК 02.01 «Анатомия и физиология животных» (в рамках ПМ.02)</td></tr>
-        <tr><td>Курс, группа</td><td>2 курс, группа 122, специальность 36.02.01 Ветеринария</td></tr>
-        <tr><td>Тип занятия</td><td>Практическое занятие с элементами ролевой игры (панельная дискуссия) и цифрового группового решения</td></tr>
-        <tr><td>Продолжительность</td><td>90 минут</td></tr>
-        <tr><td>УМК</td><td>Авторские методические разработки (Тераевич А.С.), экосистема «ВетСим»</td></tr>
-      </table>
-
-      <h2>Блок 2. Цель и задачи</h2>
-      <div class="highlight">
-        <strong>Цель занятия:</strong> Создать условия для формирования у обучающихся знаний об анатомо-топографических характеристиках кожи и её производных с учетом видовых особенностей; для освоения умений определять клиническое состояние животных общими и инструментальными методами; для формирования практического опыта проведения обследования общего и физиологического состояния животных.
+    <div class="grid-2">
+      <div>
+        <label class="field-label">Предварительное заключение</label>
+        <select id="diagnosis" style="width:100%;padding:8px 14px;border:2px solid #E5DDCF;border-radius:1rem;font-family:inherit;font-size:.9rem;background:#FEFAF2;color:#1e2f2a;">
+          <option value="">— выберите наиболее вероятный вариант —</option>
+          <option>Демодекоз</option>
+          <option>Дерматофитоз</option>
+          <option>Аллергический дерматит</option>
+          <option>Механическое повреждение кожи</option>
+          <option>Нарушение условий содержания и ухода</option>
+          <option>Требуется дополнительная диагностика</option>
+        </select>
       </div>
-      <table>
-        <tr><th>Группа</th><th>Задачи (по рабочей программе)</th></tr>
-        <tr>
-          <td>Образовательные (предметные)</td>
-          <td>Обучающиеся научатся: определять клиническое состояние животных общими и инструментальными методами; использовать терапевтический и диагностический ветеринарный инструментарий. Обучающиеся узнают: анатомо-топографические характеристики организма животных с учетом видовых особенностей; нормативные данные физиологических показателей у животных.</td>
-        </tr>
-        <tr>
-          <td>Развивающие (метапредметные)</td>
-          <td>Обучающиеся смогут анализировать информацию, сравнивать норму и патологию, работать в команде, формулировать ответ от имени эксперта (с использованием ИИ).</td>
-        </tr>
-        <tr>
-          <td>Воспитательные (личностные)</td>
-          <td>Обучающиеся осознают ценность профессиональной коммуникации, важность заботы о здоровье животных, ответственность за результат командной работы.</td>
-        </tr>
-      </table>
+      <div>
+        <label class="field-label">Какие данные подтверждают заключение?</label>
+        <input type="text" id="diagnosisProof" placeholder="Данные осмотра, микроскопии, скотч-теста...">
+      </div>
+    </div>
 
-      <h2>Блок 3. Планируемые результаты (УУД)</h2>
-      <table>
-        <tr><th>Направление</th><th>Результаты</th></tr>
-        <tr><td>Личностные</td><td>Самоопределение в профессии (понимание роли ветеринарного фельдшера); смыслообразование (связь теории с практикой); нравственно-этическая ориентация (ответственность за здоровье животных).</td></tr>
-        <tr><td>Метапредметные (регулятивные)</td><td>Целеполагание (постановка цели на этапе мотивации); планирование (работа по инструкционной карте); контроль (сверка с эталоном); коррекция (исправление ошибок в тесте); оценка (рефлексия).</td></tr>
-        <tr><td>Метапредметные (познавательные)</td><td>Общеучебные (работа с текстом, таблицами); логические (сравнение нормы и патологии, анализ микропрепаратов); постановка проблемы (кейс с морской свинкой).</td></tr>
-        <tr><td>Метапредметные (коммуникативные)</td><td>Планирование сотрудничества (работа в команде); постановка вопросов (интервью с экспертами); умение выражать мысли (ответы на вопросы журналиста); разрешение конфликтов (в групповом решении).</td></tr>
-        <tr><td>Предметные</td><td>Знание слоёв кожи, производных, строения молочной железы; умение осматривать и пальпировать кожу; умение работать с микроскопом; умение формулировать ответ от имени эксперта.</td></tr>
-      </table>
+    <div style="margin-top:12px;">
+      <label class="field-label">Обоснование команды</label>
+      <textarea id="analysis" placeholder="Используйте данные разделов 1–3: клинические признаки, результаты микроскопии и скотч-теста, данные о копытах при необходимости."></textarea>
+    </div>
 
-      <h2>Блок 3.1. Формируемые компетенции (ФГОС № 657, 2020)</h2>
-      <table>
-        <tr>
-          <th>Тип компетенции</th>
-          <th>Код</th>
-          <th>Формулировка (сответствует рабочей программе)</th>
-          <th>Как формируется на занятии</th>
-        </tr>
-        <tr>
-          <td>Профессиональные (ПК)</td>
-          <td>ПК 2.2</td>
-          <td>Выполнение лечебно-диагностических ветеринарных манипуляций.</td>
-          <td>Станция 1 (осмотр животного), Станция 2 (взятие соскоба, микроскопия), Станция 3 (сравнение нормы и патологии), Интервью (обсуждение тактики), Групповое решение (тренажер).</td>
-        </tr>
-        <tr>
-          <td>Общие (ОК)</td>
-          <td>ОК 01</td>
-          <td>Выбирать способы решения задач профессиональной деятельности применительно к различным контекстам.</td>
-          <td>Ротация станций: выбор алгоритма действий в зависимости от ситуации (осмотр, микроскопия, сравнение).</td>
-        </tr>
-        <tr>
-          <td>Общие (ОК)</td>
-          <td>ОК 02</td>
-          <td>Использовать современные средства поиска, анализа и интерпретации информации и информационные технологии для выполнения задач профессиональной деятельности.</td>
-          <td>Работа с HTML-инструкционной картой, дневником, тестом; использование ИИ при подготовке ответов.</td>
-        </tr>
-        <tr>
-          <td>Общие (ОК)</td>
-          <td>ОК 03</td>
-          <td>Планировать и реализовывать собственное профессиональное и личностное развитие...</td>
-          <td>Рефлексия, заполнение дневника (раздел «Моя профессиональная цель»).</td>
-        </tr>
-        <tr>
-          <td>Общие (ОК)</td>
-          <td>ОК 04</td>
-          <td>Эффективно взаимодействовать и работать в коллективе и команде.</td>
-          <td>Работа в командах на станциях, интервью, групповое решение.</td>
-        </tr>
-        <tr>
-          <td>Общие (ОК)</td>
-          <td>ОК 05</td>
-          <td>Осуществлять устную и письменную коммуникацию на государственном языке РФ с учетом особенностей социального и культурного контекста.</td>
-          <td>Ответы экспертов, формулировка вопросов журналиста, заполнение инструкционной карты.</td>
-        </tr>
-        <tr>
-          <td>Общие (ОК)</td>
-          <td>ОК 07</td>
-          <td>Содействовать сохранению окружающей среды, ресурсосбережению...</td>
-          <td>Обсуждение мер биобезопасности и профилактики (в тренажере «Групповое решение» — этап «Профилактика»).</td>
-        </tr>
-      </table>
-
-      <h2>Блок 4. Оборудование и ресурсы</h2>
-      <table>
-        <tr><th>Тип</th><th>Содержание</th></tr>
-        <tr><td>Технические средства</td><td>Ноутбуки (1 на команду), интерактивная доска, микроскопы световые бинокулярные, лупы, перчатки.</td></tr>
-        <tr><td>Программное обеспечение</td><td>HTML-файлы: инструкционная карта, тренажер «Групповое принятие решений», тест (20 вопросов).</td></tr>
-        <tr><td>Раздаточные материалы</td><td>Карточки с ролями (журналист, 9 экспертов), микропрепараты кожи и молочной железы, муляжи копыт (норма + патология), рабочие тетради.</td></tr>
-        <tr><td>Цифровые ресурсы</td><td>https://vetsim.ru, https://vet-sim.github.io, https://vet-sim.github.io/metodist_goda/instruction_card.html</td></tr>
-        <tr><td>СанПиН и ТБ</td><td>Ограничение времени работы с экраном (не более 30 мин суммарно), чередование видов деятельности, инструктаж по работе с микроскопом и животными.</td></tr>
-      </table>
-
-      <h2>Блок 5. Ход занятия</h2>
-      <table>
-        <tr>
-          <th>Этап занятия (время)</th>
-          <th>Деятельность преподавателя</th>
-          <th>Деятельность обучающихся</th>
-          <th>Формы работы</th>
-          <th>Планируемые результаты (УУД)</th>
-          <th>Критерии оценивания</th>
-        </tr>
-        <tr>
-          <td>1. Организационный момент (5 мин)</td>
-          <td>Приветствие. Деление на 3 команды. Выдача ноутбуков. Распределение ролей (журналист, 9 экспертов). Инструктаж по станциям и ТБ.</td>
-          <td>Воспринимают информацию, задают вопросы. Распределяют роли.</td>
-          <td>Фронтальная</td>
-          <td>Регулятивные: самоорганизация. Коммуникативные: планирование.</td>
-          <td>Наблюдение (готовность к работе).</td>
-        </tr>
-        <tr>
-          <td>2. Мотивация и постановка учебной задачи (7 мин)</td>
-          <td>Задает вопрос: «Почему ветеринарный фельдшер начинает осмотр с кожи?». Демонстрирует кейс (морская свинка с алопециями).</td>
-          <td>Отвечают на вопрос. Формулируют цель занятия.</td>
-          <td>Фронтальная</td>
-          <td>Личностные: смыслообразование. Регулятивные: целеполагание.</td>
-          <td>Наблюдение (активность, правильность формулировки цели).</td>
-        </tr>
-        <tr>
-          <td>3. Актуализация знаний (5 мин)</td>
-          <td>Задает устные вопросы: слои кожи, производные, тургор, функции, линька.</td>
-          <td>Отвечают на вопросы фронтально.</td>
-          <td>Фронтальная</td>
-          <td>Познавательные: воспроизведение знаний.</td>
-          <td>Устный опрос (правильность ответов).</td>
-        </tr>
-        <tr>
-          <td>4. Ротация станций (45 мин)</td>
-          <td>Координирует работу команд. Консультирует при затруднениях. Следит за таймингом (15 мин на станцию).</td>
-          <td>Работают в 3 зонах: 1) осмотр животного; 2) микроскопия; 3) копыта. Заполняют разделы инструкционной карты.</td>
-          <td>Групповая</td>
-          <td>Познавательные: анализ, сравнение. Коммуникативные: сотрудничество.</td>
-          <td>Наблюдение (заполнение карты). Самооценка (чек-лист).</td>
-        </tr>
-        <tr>
-          <td>5. Интервью (10 мин)</td>
-          <td>Организует интервью. Корректирует ответы экспертов.</td>
-          <td>Журналист задает вопросы. Эксперты отвечают (по 1 мин).</td>
-          <td>Групповая, фронтальная</td>
-          <td>Коммуникативные: постановка вопросов, выражение мыслей.</td>
-          <td>Наблюдение (аргументация, связь с практикой).</td>
-        </tr>
-        <tr>
-          <td>6. Групповое решение (10 мин)</td>
-          <td>Организует работу с тренажером на доске.</td>
-          <td>Проходят 4 этапа тренажера, голосуют.</td>
-          <td>Коллективная</td>
-          <td>Регулятивные: контроль, коррекция. Познавательные: анализ.</td>
-          <td>Наблюдение (правильность выбора, аргументация).</td>
-        </tr>
-        <tr>
-          <td>7. Проверка усвоения (8 мин)</td>
-          <td>Организует тест на ноутбуках.</td>
-          <td>Проходят тест индивидуально (20 вопросов, 8 мин).</td>
-          <td>Индивидуальная</td>
-          <td>Регулятивные: самоконтроль, оценка.</td>
-          <td>Автоматическая оценка (баллы, разбор ошибок).</td>
-        </tr>
-        <tr>
-          <td>8. Рефлексия (5 мин)</td>
-          <td>Задает вопросы: «Что понял? Как ИИ помог? Что понял о связи кожи и здоровья?».</td>
-          <td>Отвечают на вопросы, заполняют «Лестницу успеха».</td>
-          <td>Индивидуальная, фронтальная</td>
-          <td>Регулятивные: оценка, самооценка.</td>
-          <td>Самооценка (устные ответы, заполнение).</td>
-        </tr>
-        <tr>
-          <td>9. Домашнее задание (2 мин)</td>
-          <td>Объясняет домашнее задание: обязательное (заполнить дневник) и творческое (подготовить сообщение с ИИ).</td>
-          <td>Записывают задание, задают вопросы.</td>
-          <td>Фронтальная</td>
-          <td>Регулятивные: планирование.</td>
-          <td>Наблюдение (вопросы по заданию).</td>
-        </tr>
-      </table>
-
-      <h2>Блок 6. Дифференциация заданий</h2>
-      <table>
-        <tr><th>Уровень</th><th>Задание</th><th>Как выбирается</th></tr>
-        <tr><td>Базовый</td><td>Описать слои кожи на микропрепарате (назвать, подписать).</td><td>Обязательно для всех.</td></tr>
-        <tr><td>Повышенный</td><td>Сравнить норму и патологию копыт (найти 3 различия).</td><td>По рекомендации преподавателя.</td></tr>
-        <tr><td>Высокий</td><td>Сформулировать ответ журналиста от имени эксперта (с использованием ИИ при подготовке).</td><td>По выбору обучающегося.</td></tr>
-      </table>
-
-      <h2>Блок 7. Критерии оценивания</h2>
-      <table>
-        <tr><th>Этап</th><th>Критерии</th><th>Шкала</th><th>Форма</th><th>Инструмент</th></tr>
-        <tr><td>Ротация станций</td><td>Заполнение карты (полнота, точность)</td><td>0–2 балла за раздел</td><td>Самооценка</td><td>Чек-лист</td></tr>
-        <tr><td>Интервью</td><td>Глубина ответа, аргументация, связь с практикой</td><td>0–2 балла</td><td>Наблюдение</td><td>Карта наблюдения</td></tr>
-        <tr><td>Групповое решение</td><td>Правильность выбора, аргументация</td><td>0–2 балла</td><td>Наблюдение</td><td>Протокол тренажера</td></tr>
-        <tr><td>Тест</td><td>Количество правильных ответов</td><td>0–20 баллов (оценка по шкале)</td><td>Автоматическая</td><td>HTML-тест</td></tr>
-      </table>
-
-      <h2>Блок 8. Рефлексия (инструменты)</h2>
-      <ul>
-        <li><strong>«Лестница успеха»:</strong> обучающиеся отмечают, на какой ступени они находятся (знаю, понимаю, умею, могу применить).</li>
-        <li><strong>«Незаконченное предложение»:</strong> «Сегодня я узнал...», «Было сложно...», «Я понял, что...».</li>
-      </ul>
-
-      <h2>Блок 9. Домашнее задание</h2>
-      <table>
-        <tr><th>Часть</th><th>Задание</th><th>Форма</th><th>Критерии</th></tr>
-        <tr><td>Обязательная</td><td>Заполнить разделы дневника: «Анатомия и физиология животных», «Клиническое мышление».</td><td>Электронная (HTML-дневник)</td><td>Полнота, рефлексивность</td></tr>
-        <tr><td>Творческая (по выбору)</td><td>Подготовить сообщение с ИИ на тему «Кожа — зеркало здоровья» (5–7 предложений).</td><td>Устное сообщение</td><td>Научность, доступность, использование ИИ</td></tr>
-      </table>
-
-      <h2>Блок 10. Межпредметные связи</h2>
-      <table>
-        <tr><th>Дисциплина</th><th>Связь</th></tr>
-        <tr><td>Латинский язык</td><td>Латинские названия органов кожного покрова (cutis, pilus, ungula).</td></tr>
-        <tr><td>Фармакология</td><td>Препараты для лечения кожных болезней (мази, антисептики).</td></tr>
-        <tr><td>Хирургия</td><td>Травмы кожи, раны, ожоги, обморожения.</td></tr>
-        <tr><td>Эпизоотология</td><td>Дерматофитозы (опасные для человека).</td></tr>
-      </table>
-
-      <h2>Блок 11. Ожидаемый результат</h2>
-      <p>Обучающиеся знают слои кожи, производные, строение молочной железы; умеют осматривать и пальпировать кожу, работать с микроскопом, формулировать ответ от имени эксперта; понимают связь строения кожи с диагностикой и профилактикой заболеваний.</p>
-
-      <h2>Блок 12. Возможные риски и пути их преодоления</h2>
-      <table>
-        <tr><th>Риск</th><th>Пути преодоления</th></tr>
-        <tr><td>Технические сбои (не открывается HTML, не работает доска)</td><td>Заранее проверить все файлы, иметь резервные копии на флешке.</td></tr>
-        <tr><td>Нехватка времени (не успевают пройти все станции)</td><td>Строго следить за таймингом, сократить обсуждение на этапе рефлексии.</td></tr>
-        <tr><td>Низкая активность (студенты не включаются в интервью)</td><td>Заранее распределить роли, дать карточки с вопросами, поддержать.</td></tr>
-        <tr><td>Перегрузка (много информации)</td><td>Чередовать виды деятельности, использовать динамическую паузу.</td></tr>
-      </table>
-
-      <h2>Блок 13. Адаптация для обучающихся с ОВЗ</h2>
-      <ul>
-        <li>Увеличение времени на выполнение заданий (по необходимости).</li>
-        <li>Раздаточные материалы с крупным шрифтом.</li>
-        <li>Индивидуальные карточки с алгоритмом действий.</li>
-        <li>Помощь тьютора (при наличии).</li>
-      </ul>
+    <div style="margin-top:12px;">
+      <label class="field-label">Рекомендуемые меры: лечение, обработка, профилактика, биобезопасность</label>
+      <textarea id="prevention" placeholder="Изоляция или карантин, обработка, дезинфекция, контроль состояния животного, обращение к ветеринарному специалисту..."></textarea>
     </div>
   </div>
 
-  <!-- ПОДВАЛ (обновлён) -->
-  <div class="footer">
-    © ВетСим — ветеринарное просвещение · vetsim.ru · Инструкционная карта к занятию «Кожа — зеркало здоровья»<br>
-    <strong>Автор урока: Тераевич А.С. — преподаватель ветеринарных дисциплин БПОУ ВО «Вологодский аграрно-экономический колледж»</strong>
+  <div class="card">
+    <div class="card-title">🧩 Раздел 5. Групповое решение <span class="variant-badge">Вариатив</span></div>
+    <div class="card-subtitle">Дублирование тренажёра «Групповое принятие решений». Заполняется, если нет доступа к интерактивной доске.</div>
+
+    <div style="background:#e8f0f5;padding:10px 16px;border-radius:1rem;margin-bottom:14px;border-left:4px solid #2C7DA0;">
+      <div style="font-weight:700;color:#2C7DA0;font-size:.75rem;text-transform:uppercase;margin-bottom:4px;">📌 Вариативность</div>
+      <div style="font-size:.85rem;color:#3E5C4A;">
+        <strong>Вариант А:</strong> работа у интерактивной доски.<br>
+        <strong>Вариант Б:</strong> работа по подгруппам на ноутбуках по ссылке ниже.
+      </div>
+    </div>
+
+    <table>
+      <tr>
+        <th style="width:34%;">Этап тренажёра</th>
+        <th style="width:33%;">Выбор команды</th>
+        <th style="width:33%;">Ловушки и обсуждение</th>
+      </tr>
+      <tr>
+        <td>1. Первичный сбор информации</td>
+        <td><input type="text" id="gr1" placeholder="Выбор команды"></td>
+        <td><input type="text" id="gr1t" placeholder="Какая ловушка была?"></td>
+      </tr>
+      <tr>
+        <td>2. Осмотр и дифференциальная диагностика</td>
+        <td><input type="text" id="gr2" placeholder="Выбор команды"></td>
+        <td><input type="text" id="gr2t" placeholder="Какая ловушка была?"></td>
+      </tr>
+      <tr>
+        <td>3. Интерпретация результатов и тактика</td>
+        <td><input type="text" id="gr3" placeholder="Выбор команды"></td>
+        <td><input type="text" id="gr3t" placeholder="Какая ловушка была?"></td>
+      </tr>
+      <tr>
+        <td>4. Профилактика и биобезопасность</td>
+        <td><input type="text" id="gr4" placeholder="Выбор команды"></td>
+        <td><input type="text" id="gr4t" placeholder="Какая ловушка была?"></td>
+      </tr>
+    </table>
   </div>
+
+  <div class="card">
+    <div class="card-title">✨ Раздел 6. Рефлексия и самооценка <span class="variant-badge">Вариатив</span></div>
+    <div class="card-subtitle">Можно заполнить в рабочей тетради или электронно на этой странице.</div>
+
+    <div class="grid-2">
+      <div>
+        <label class="field-label">Мой уровень по теме «Кожа и её производные»</label>
+        <select id="selfLevel" style="width:100%;padding:8px 14px;border:2px solid #E5DDCF;border-radius:1rem;font-family:inherit;font-size:.9rem;background:#FEFAF2;color:#1e2f2a;">
+          <option value="">— выберите уровень —</option>
+          <option>Знаю основные термины</option>
+          <option>Понимаю строение и функции</option>
+          <option>Умею работать с препаратами</option>
+          <option>Могу применить знания в клинической ситуации</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Что было самым сложным?</label>
+        <input type="text" id="difficult" placeholder="Например: поиск потовых желёз, интерпретация скотч-теста...">
+      </div>
+    </div>
+
+    <div style="margin-top:12px;">
+      <label class="field-label">Как ИИ помог при подготовке ответа на вопрос корреспондента?</label>
+      <textarea id="refl2" placeholder="Например: помог структурировать ответ, найти факты, упростить формулировки; что пришлось проверить самостоятельно?"></textarea>
+    </div>
+    <div style="margin-top:12px;">
+      <label class="field-label">Что я понял о связи строения кожи и здоровья животного?</label>
+      <textarea id="refl3" placeholder="Ваш вывод..."></textarea>
+    </div>
+  </div>
+
+  <div class="links-box">
+    <h3>🌐 Цифровые ресурсы занятия</h3>
+    <ul>
+      <li>🧩 <strong>Тренажёр «Групповое принятие решений»:</strong> <a href="https://vet-sim.github.io/metodist_goda/demodecosis_decision.html" target="_blank" rel="noopener">открыть</a></li>
+      <li>📓 <strong>Дневник студента:</strong> <a href="https://vet-sim.github.io/metodist_goda/student_diary_2.1.html" target="_blank" rel="noopener">открыть</a></li>
+      <li>📋 <strong>Инструкционная карта:</strong> <a href="https://vet-sim.github.io/metodist_goda/instruction_card.html" target="_blank" rel="noopener">открыть</a></li>
+      <li>🐾 <strong>Экосистема ВетСим:</strong> <a href="https://vetsim.ru" target="_blank" rel="noopener">vetsim.ru</a> / <a href="https://vet-sim.github.io" target="_blank" rel="noopener">vet-sim.github.io</a></li>
+    </ul>
+  </div>
+
+  <div class="btn-row no-print">
+    <button class="btn" id="saveBtn">💾 Сохранить</button>
+    <button class="btn btn-secondary" onclick="window.print()">🖨️ Печать</button>
+    <button class="btn btn-secondary" id="clearBtn">🧹 Очистить</button>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-tech">
+  <div class="card tech-map">
+    <div class="card-title">📊 Технологическая карта занятия</div>
+    <div class="card-subtitle">«Кожа — зеркало здоровья: макро- и микроскопическое строение кожи, её производных и молочной железы»</div>
+
+    <h2>Блок 1. Паспорт занятия</h2>
+    <table>
+      <tr><th style="width:30%;">Параметр</th><th>Значение</th></tr>
+      <tr><td>Тема занятия</td><td>«Кожа — зеркало здоровья: макро- и микроскопическое строение кожи, её производных и молочной железы»</td></tr>
+      <tr><td>Дисциплина / МДК</td><td>МДК 02.01 «Анатомия и физиология животных» в рамках ПМ.02</td></tr>
+      <tr><td>Курс, группа</td><td>2 курс, группа 122, специальность 36.02.01 Ветеринария</td></tr>
+      <tr><td>Тип занятия</td><td>Практическое занятие с элементами ролевой игры, панельной дискуссии и цифрового группового решения</td></tr>
+      <tr><td>Продолжительность</td><td>90 минут</td></tr>
+      <tr><td>УМК</td><td>Авторские методические разработки Тераевич А. С., экосистема «ВетСим»</td></tr>
+    </table>
+
+    <h2>Блок 2. Цель и задачи</h2>
+    <div class="highlight">
+      <strong>Цель занятия:</strong> создать условия для формирования у обучающихся знаний об анатомо-топографических особенностях кожи и её производных с учётом видовых особенностей; для освоения умений определять клиническое состояние животных общими и инструментальными методами; для формирования начального опыта проведения обследования общего и физиологического состояния животных.
+    </div>
+    <table>
+      <tr><th style="width:28%;">Группа задач</th><th>Содержание</th></tr>
+      <tr>
+        <td>Образовательные</td>
+        <td>Обучающиеся узнают анатомо-топографические характеристики организма животных с учётом видовых особенностей; научатся определять клиническое состояние животных общими и инструментальными методами; распознавать основные структуры кожи, её производных и молочной железы на микропрепаратах.</td>
+      </tr>
+      <tr>
+        <td>Развивающие</td>
+        <td>Обучающиеся смогут анализировать информацию, сравнивать норму и патологию, работать в команде, формулировать аргументированный ответ от имени эксперта с использованием ИИ на этапе подготовки.</td>
+      </tr>
+      <tr>
+        <td>Воспитательные</td>
+        <td>Формирование профессиональной коммуникации, ответственности за здоровье животных, соблюдения биобезопасности и этичного обращения с животными.</td>
+      </tr>
+    </table>
+
+    <h2>Блок 3. Планируемые результаты</h2>
+    <table>
+      <tr><th style="width:28%;">Направление</th><th>Результаты</th></tr>
+      <tr><td>Личностные</td><td>Осознание роли ветеринарного специалиста; связь теории с практикой; ответственность за здоровье животных.</td></tr>
+      <tr><td>Регулятивные</td><td>Целеполагание, планирование по инструкционной карте, самоконтроль, коррекция, самооценка.</td></tr>
+      <tr><td>Познавательные</td><td>Работа с текстом, таблицами и микропрепаратами; сравнение нормы и патологии; анализ клинической ситуации.</td></tr>
+      <tr><td>Коммуникативные</td><td>Сотрудничество в команде, формулирование вопросов и ответов, участие в панельной дискуссии.</td></tr>
+      <tr><td>Предметные</td><td>Знание слоёв кожи, её производных и строения молочной железы; умение проводить осмотр и пальпацию кожи, работать с микроскопом, интерпретировать результаты скотч-теста.</td></tr>
+    </table>
+
+    <h2>Блок 3.1. Формируемые компетенции</h2>
+    <table>
+      <tr><th style="width:22%;">Тип</th><th style="width:14%;">Код</th><th style="width:32%;">Формулировка</th><th>Реализация на занятии</th></tr>
+      <tr><td>Профессиональная</td><td>ПК 2.2</td><td>Выполнение лечебно-диагностических ветеринарных манипуляций.</td><td>Осмотр животного, элементы взятия соскоба, микроскопия, анализ патологии, групповое решение.</td></tr>
+      <tr><td>Общая</td><td>ОК 01</td><td>Выбирать способы решения задач профессиональной деятельности применительно к различным контекстам.</td><td>Выбор алгоритма действий на станциях и в тренажёре.</td></tr>
+      <tr><td>Общая</td><td>ОК 02</td><td>Использовать современные средства поиска, анализа и интерпретации информации и информационные технологии.</td><td>HTML-карта, дневник, тест, тренажёр, подготовка ответов с использованием ИИ.</td></tr>
+      <tr><td>Общая</td><td>ОК 03</td><td>Планировать и реализовывать собственное профессиональное и личностное развитие.</td><td>Рефлексия и дневник профессионального становления.</td></tr>
+      <tr><td>Общая</td><td>ОК 04</td><td>Эффективно взаимодействовать и работать в коллективе и команде.</td><td>Работа на станциях, интервью, групповое принятие решения.</td></tr>
+      <tr><td>Общая</td><td>ОК 05</td><td>Осуществлять устную и письменную коммуникацию на государственном языке РФ.</td><td>Ответы экспертов, заполнение карты, формулирование выводов.</td></tr>
+      <tr><td>Общая</td><td>ОК 07</td><td>Содействовать сохранению окружающей среды, ресурсосбережению.</td><td>Обсуждение биобезопасности, обработки и профилактики.</td></tr>
+    </table>
+
+    <h2>Блок 4. Оборудование и ресурсы</h2>
+    <table>
+      <tr><th style="width:28%;">Тип</th><th>Содержание</th></tr>
+      <tr><td>Технические средства</td><td>Ноутбуки — 1 на команду, интерактивная доска, световые бинокулярные микроскопы, лупы, перчатки.</td></tr>
+      <tr><td>Программное обеспечение</td><td>HTML-инструкционная карта, дневник студента, тренажёр «Групповое принятие решений», итоговый тест из 20 вопросов.</td></tr>
+      <tr><td>Раздаточные материалы</td><td>Карточки ролей: журналист и 9 экспертов; микропрепараты кожи с волосом и без волос, молочной железы; препараты для скотч-теста; муляжи копыт в норме и при патологии; рабочие тетради.</td></tr>
+      <tr><td>Цифровые ресурсы</td><td><a href="https://vetsim.ru" target="_blank" rel="noopener">vetsim.ru</a>, <a href="https://vet-sim.github.io" target="_blank" rel="noopener">vet-sim.github.io</a></td></tr>
+      <tr><td>Санитарные требования</td><td>Инструктаж по безопасному обращению с животным, микроскопом, стёклами и биологическим материалом; перчатки; обработка рук и рабочих поверхностей.</td></tr>
+    </table>
+
+    <h2>Блок 5. Ход занятия</h2>
+    <table>
+      <tr>
+        <th style="width:17%;">Этап, время</th>
+        <th style="width:25%;">Деятельность преподавателя</th>
+        <th style="width:25%;">Деятельность обучающихся</th>
+        <th style="width:11%;">Форма</th>
+        <th style="width:22%;">Результат / критерий</th>
+      </tr>
+      <tr><td>1. Организационный, 5 мин</td><td>Приветствует, делит на команды, выдаёт ноутбуки, распределяет роли, проводит инструктаж по станциям и безопасности.</td><td>Готовятся к работе, распределяют роли, задают вопросы.</td><td>Фронтальная</td><td>Готовность к работе, соблюдение инструкций.</td></tr>
+      <tr><td>2. Мотивация, 7 мин</td><td>Демонстрирует кейс морской свинки с алопециями и расчёсами, задаёт проблемный вопрос.</td><td>Высказывают предположения, формулируют цель занятия.</td><td>Фронтальная</td><td>Сформулирована учебная задача.</td></tr>
+      <tr><td>3. Актуализация, 5 мин</td><td>Организует фронтальный опрос.</td><td>Отвечают на вопросы о слоях кожи, производных, тургоре, функциях кожи и линьке.</td><td>Фронтальная</td><td>Правильность и полнота ответов.</td></tr>
+      <tr><td>4. Ротация станций, 45 мин</td><td>Координирует работу, консультирует, контролирует тайминг: по 15 минут на станцию.</td><td>Проходят станции «Живой уголок», «Гистология», «Копыта и копытца», заполняют карту.</td><td>Групповая</td><td>Полнота и точность заполнения разделов 1–3.</td></tr>
+      <tr><td>5. Интервью, 10 мин</td><td>Организует панельную дискуссию, корректирует ответы.</td><td>Журналист задаёт вопросы, эксперты дают аргументированные ответы по 1 минуте.</td><td>Групповая, фронтальная</td><td>Аргументация, научность, связь с практикой.</td></tr>
+      <tr><td>6. Групповое решение, 10 мин</td><td>Организует работу с тренажёром.</td><td>Проходят четыре этапа, обсуждают варианты и фиксируют ловушки.</td><td>Коллективная</td><td>Обоснованность выбора, участие всех членов команды.</td></tr>
+      <tr><td>7. Проверка усвоения, 8 мин</td><td>Организует индивидуальное выполнение теста.</td><td>Выполняют тест из 20 вопросов на ноутбуках.</td><td>Индивидуальная</td><td>Автоматическая оценка, разбор ошибок.</td></tr>
+      <tr><td>8. Рефлексия, 5 мин</td><td>Организует самооценку и обсуждение.</td><td>Отмечают уровень усвоения, отвечают на вопросы рефлексии.</td><td>Индивидуальная, фронтальная</td><td>Заполнен раздел 6 карты.</td></tr>
+      <tr><td>9. Домашнее задание, 2 мин</td><td>Разъясняет обязательную и творческую части задания.</td><td>Записывают задание, уточняют требования.</td><td>Фронтальная</td><td>Понимание задания.</td></tr>
+    </table>
+
+    <h2>Блок 6. Дифференциация</h2>
+    <table>
+      <tr><th style="width:20%;">Уровень</th><th>Задание</th><th style="width:25%;">Условие выполнения</th></tr>
+      <tr><td>Базовый</td><td>Найти и обозначить основные структуры кожи и молочной железы на микропрепаратах.</td><td>Обязательно для всех.</td></tr>
+      <tr><td>Повышенный</td><td>Сравнить норму и патологию копыт, найти не менее трёх различий.</td><td>По рекомендации преподавателя.</td></tr>
+      <tr><td>Высокий</td><td>Сформулировать ответ журналисту от имени эксперта и обосновать предварительный диагноз по кейсу.</td><td>По выбору обучающегося.</td></tr>
+    </table>
+
+    <h2>Блок 7. Критерии оценивания</h2>
+    <table>
+      <tr><th style="width:22%;">Этап</th><th>Критерии</th><th style="width:18%;">Шкала</th><th style="width:20%;">Форма</th></tr>
+      <tr><td>Ротация станций</td><td>Полнота и точность заполнения разделов 1–3, соблюдение алгоритма.</td><td>0–2 балла за раздел</td><td>Самооценка и наблюдение</td></tr>
+      <tr><td>Интервью</td><td>Научность, аргументация, доступность, связь с практикой.</td><td>0–2 балла</td><td>Наблюдение</td></tr>
+      <tr><td>Групповое решение</td><td>Обоснованность выбора, анализ ловушек, участие в обсуждении.</td><td>0–2 балла</td><td>Наблюдение</td></tr>
+      <tr><td>Тест</td><td>Количество правильных ответов.</td><td>0–20 баллов</td><td>Автоматическая</td></tr>
+    </table>
+
+    <h2>Блок 8. Домашнее задание</h2>
+    <table>
+      <tr><th style="width:22%;">Часть</th><th>Задание</th><th style="width:22%;">Форма</th><th style="width:22%;">Критерии</th></tr>
+      <tr><td>Обязательная</td><td>Заполнить разделы дневника «Анатомия и физиология животных» и «Клиническое мышление».</td><td>Электронный дневник</td><td>Полнота, рефлексивность</td></tr>
+      <tr><td>Творческая, по выбору</td><td>Подготовить сообщение с использованием ИИ на тему «Кожа — зеркало здоровья» объёмом 5–7 предложений.</td><td>Устное сообщение</td><td>Научность, доступность, самостоятельная проверка фактов</td></tr>
+    </table>
+
+    <h2>Блок 9. Межпредметные связи</h2>
+    <table>
+      <tr><th style="width:25%;">Дисциплина</th><th>Связь с занятием</th></tr>
+      <tr><td>Латинский язык</td><td>Термины: <em>cutis</em>, <em>pilus</em>, <em>ungula</em>.</td></tr>
+      <tr><td>Фармакология</td><td>Лекарственные формы для лечения заболеваний кожи.</td></tr>
+      <tr><td>Хирургия</td><td>Травмы, раны, ожоги, обморожения.</td></tr>
+      <tr><td>Эпизоотология</td><td>Дерматофитозы и меры биобезопасности.</td></tr>
+      <tr><td>Паразитология</td><td>Эктопаразиты, демодекоз, скотч-тест.</td></tr>
+    </table>
+
+    <h2>Блок 10. Риски и их предупреждение</h2>
+    <table>
+      <tr><th style="width:35%;">Риск</th><th>Пути преодоления</th></tr>
+      <tr><td>Технический сбой</td><td>Проверить файлы заранее, иметь резервные копии на флешке и бумажные версии карты.</td></tr>
+      <tr><td>Нехватка времени</td><td>Использовать таймеры, чётко фиксировать момент смены станций.</td></tr>
+      <tr><td>Пассивность при интервью</td><td>Заранее распределить роли, выдать карточки с вопросами и опорными тезисами.</td></tr>
+      <tr><td>Перегрузка информацией</td><td>Чередовать практическую, цифровую и коммуникативную деятельность.</td></tr>
+      <tr><td>Стресс животного</td><td>Ограничить время контакта, обеспечить спокойную обстановку, прекратить осмотр при признаках беспокойства.</td></tr>
+    </table>
+
+    <h2>Блок 11. Адаптация для обучающихся с ОВЗ</h2>
+    <ul>
+      <li>Увеличение времени на выполнение заданий при необходимости.</li>
+      <li>Раздаточные материалы с крупным шрифтом.</li>
+      <li>Индивидуальные карточки с пошаговым алгоритмом.</li>
+      <li>Помощь тьютора или преподавателя при работе с микроскопом и цифровыми ресурсами.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  © ВетСим — ветеринарное просвещение · <a href="https://vetsim.ru" target="_blank" rel="noopener">vetsim.ru</a> · Инструкционная карта к занятию «Кожа — зеркало здоровья»<br>
+  <strong>Автор занятия: Тераевич Алла Сергеевна, преподаватель ветеринарных дисциплин БПОУ ВО «Вологодский аграрно-экономический колледж»</strong>
+</div>
 
 </div>
 
 <script>
-  // ==========================================
-  // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
-  // ==========================================
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      window.scrollTo({top:0, behavior:'smooth'});
-    });
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
   });
+});
 
-  // ==========================================
-  // ЛОГИКА СОХРАНЕНИЯ ДАННЫХ
-  // ==========================================
-  const STORAGE_KEY = 'vetsim_skin_card_v3';
+const STORAGE_KEY='vetsim_skin_card_v4';
 
-  const FIELDS = [
-    'teamName', 'date',
-    'skinColor', 'turgor', 'wool', 'scratches', 'extra1',
-    'micro1', 'micro2', 'micro3', 'micro4',
-    'norm1', 'norm2', 'norm3', 'norm4', 'norm5',
-    'pat1', 'pat2', 'pat3', 'pat4', 'pat5', 'hoofConclusion',
-    'analysis', 'prevention',
-    'gr1', 'gr1t', 'gr2', 'gr2t', 'gr3', 'gr3t', 'gr4', 'gr4t',
-    'refl1', 'refl2', 'refl3'
-  ];
+const FIELDS=[
+  'teamName','date',
+  'skinColor','turgor','wool','scratches','extra1',
+  'micro1','micro2','micro3','micro4','microConclusion',
+  'norm1','norm2','norm3','norm4','norm5',
+  'pat1','pat2','pat3','pat4','pat5','hoofConclusion',
+  'diagnosis','diagnosisProof','analysis','prevention',
+  'gr1','gr1t','gr2','gr2t','gr3','gr3t','gr4','gr4t',
+  'selfLevel','difficult','refl2','refl3'
+];
 
-  function saveData() {
-    const data = {};
-    FIELDS.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) data[id] = el.value;
+const CHECKBOXES=[
+  'chk_skin_epidermis','chk_skin_papillary','chk_skin_reticular','chk_skin_subcutis',
+  'chk_hair_shaft','chk_hair_bulb','chk_hair_papilla','chk_sebaceous','chk_sweat',
+  'chk_udder_lobules','chk_udder_alveoli','chk_udder_myoepithelium','chk_udder_stroma','chk_udder_vessels',
+  'chk_demodex_yes','chk_demodex_no'
+];
+
+function saveData(){
+  const data={};
+  FIELDS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)data[id]=el.value;
+  });
+  CHECKBOXES.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)data[id]=el.checked;
+  });
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){}
+}
+
+function loadData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return;
+    const data=JSON.parse(raw);
+    FIELDS.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el&&data[id]!==undefined)el.value=data[id];
     });
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
-  }
-
-  function loadData() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const data = JSON.parse(raw);
-        FIELDS.forEach(id => {
-          const el = document.getElementById(id);
-          if (el && data[id] !== undefined) el.value = data[id];
-        });
-      }
-    } catch(e) {}
-  }
-
-  function clearData() {
-    if (!confirm('Очистить все поля карты?')) return;
-    FIELDS.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
+    CHECKBOXES.forEach(id=>{
+      const el=document.getElementById(id);
+      if(el&&data[id]!==undefined)el.checked=data[id];
     });
-    localStorage.removeItem(STORAGE_KEY);
-  }
+  }catch(e){}
+}
 
-  // ==========================================
-  // ЛОГИКА ТАЙМЕРОВ
-  // ==========================================
-  const timers = {
-    zone1: { interval: null, time: 900, running: false },
-    zone2: { interval: null, time: 900, running: false },
-    zone3: { interval: null, time: 900, running: false }
-  };
+function clearData(){
+  if(!confirm('Очистить все поля инструкционной карты?'))return;
+  FIELDS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.value='';
+  });
+  CHECKBOXES.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.checked=false;
+  });
+  localStorage.removeItem(STORAGE_KEY);
+}
 
-  function formatTime(seconds) {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-  }
+const timers={
+  zone1:{interval:null,time:900,running:false},
+  zone2:{interval:null,time:900,running:false},
+  zone3:{interval:null,time:900,running:false}
+};
 
-  function updateTimerDisplay(zone) {
-    const display = document.getElementById(`timer-${zone}`);
-    const time = timers[zone].time;
-    display.textContent = formatTime(time);
-    
-    if (time <= 120) {
-      display.classList.add('warning');
-    } else {
-      display.classList.remove('warning');
-    }
-  }
+function formatTime(sec){
+  const m=Math.floor(sec/60),s=sec%60;
+  return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
 
-  function toggleTimer(zone) {
-    const t = timers[zone];
-    const btn = document.querySelector(`#widget-${zone} .btn-timer`);
-    
-    if (t.running) {
-      clearInterval(t.interval);
-      t.running = false;
-      btn.textContent = '▶ Старт';
-    } else {
-      if (t.time <= 0) return;
-      t.running = true;
-      btn.textContent = '⏸ Пауза';
-      
-      t.interval = setInterval(() => {
-        t.time--;
-        updateTimerDisplay(zone);
-        if (t.time <= 0) {
-          clearInterval(t.interval);
-          t.running = false;
-          btn.textContent = '▶ Старт';
-          display.textContent = "ВРЕМЯ!";
-          display.classList.add('warning');
-        }
-      }, 1000);
-    }
-  }
+function updateTimerDisplay(zone){
+  const display=document.getElementById('timer-'+zone);
+  const time=timers[zone].time;
+  display.textContent=formatTime(time);
+  display.classList.toggle('warning',time<=120);
+}
 
-  function resetTimer(zone) {
-    const t = timers[zone];
+function toggleTimer(zone){
+  const t=timers[zone];
+  const btn=document.querySelector('#widget-'+zone+' .btn-timer');
+  if(t.running){
     clearInterval(t.interval);
-    t.time = 900;
-    t.running = false;
-    const btn = document.querySelector(`#widget-${zone} .btn-timer`);
-    btn.textContent = '▶ Старт';
-    updateTimerDisplay(zone);
-  }
-
-  // ==========================================
-  // ИНИЦИАЛИЗАЦИЯ
-  // ==========================================
-  document.addEventListener('DOMContentLoaded', function() {
-    loadData();
-    
-    FIELDS.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('input', saveData);
-        el.addEventListener('change', saveData);
+    t.running=false;
+    btn.textContent='▶ Старт';
+  }else{
+    if(t.time<=0)return;
+    t.running=true;
+    btn.textContent='⏸ Пауза';
+    t.interval=setInterval(()=>{
+      t.time--;
+      updateTimerDisplay(zone);
+      if(t.time<=0){
+        clearInterval(t.interval);
+        t.running=false;
+        btn.textContent='▶ Старт';
+        document.getElementById('timer-'+zone).textContent='ВРЕМЯ!';
+        document.getElementById('timer-'+zone).classList.add('warning');
       }
-    });
+    },1000);
+  }
+}
 
-    document.getElementById('saveBtn').addEventListener('click', function() {
-      saveData();
-      alert('✅ Карта сохранена!');
-    });
-    
-    document.getElementById('clearBtn').addEventListener('click', clearData);
-    window.addEventListener('beforeunload', saveData);
+function resetTimer(zone){
+  const t=timers[zone];
+  clearInterval(t.interval);
+  t.time=900;
+  t.running=false;
+  const btn=document.querySelector('#widget-'+zone+' .btn-timer');
+  btn.textContent='▶ Старт';
+  updateTimerDisplay(zone);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  loadData();
+  FIELDS.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){
+      el.addEventListener('input',saveData);
+      el.addEventListener('change',saveData);
+    }
   });
+  CHECKBOXES.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.addEventListener('change',saveData);
+  });
+  document.getElementById('saveBtn').addEventListener('click',()=>{
+    saveData();
+    alert('✅ Инструкционная карта сохранена в этом браузере.');
+  });
+  document.getElementById('clearBtn').addEventListener('click',clearData);
+  window.addEventListener('beforeunload',saveData);
+  updateTimerDisplay('zone1');
+  updateTimerDisplay('zone2');
+  updateTimerDisplay('zone3');
+});
 </script>
 </body>
 </html>

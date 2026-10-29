@@ -8,624 +8,408 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: 'Montserrat', system-ui, sans-serif;
-    background: #FDF8F0;
-    color: #3E5C4A;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  .container { max-width: 800px; margin: 0 auto; }
-  .header {
-    background: linear-gradient(135deg, #2C7DA0, #1F4E6E);
-    color: #fff;
-    border-radius: 1.5rem;
-    padding: 20px 28px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  .header h1 { font-size: 1.4rem; margin-bottom: 4px; }
-  .header p { font-size: 0.85rem; opacity: 0.95; }
-  
-  .timer-bar {
-    background: #fff;
-    border-radius: 1rem;
-    padding: 10px 18px;
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: #2C7DA0;
-  }
-  .timer-bar .timer-value { font-size: 1.2rem; font-weight: 800; }
-  .timer-bar .timer-value.warning { color: #D4A373; animation: pulse 0.5s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-  .progress-info {
-    font-size: 0.8rem;
-    color: #7B8D6E;
-    margin-bottom: 8px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .progress-bar {
-    height: 6px;
-    background: #E7EDE2;
-    border-radius: 40px;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-  .progress-bar .fill {
-    height: 100%;
-    background: linear-gradient(90deg, #2C7DA0, #6B9E6B);
-    border-radius: 40px;
-    transition: width 0.4s ease;
-  }
-
-  .card {
-    background: #fff;
-    border-radius: 1.5rem;
-    padding: 24px 28px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.05);
-    border: 1px solid #EDE8DC;
-    margin-bottom: 16px;
-  }
-  .question-type {
-    display: inline-block;
-    background: #e8f0f5;
-    color: #2C7DA0;
-    padding: 3px 12px;
-    border-radius: 1rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-  }
-  .question-text {
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: #1A2A3A;
-    margin-bottom: 16px;
-    line-height: 1.5;
-  }
-
-  .answers { display: flex; flex-direction: column; gap: 8px; }
-  .answer {
-    padding: 12px 18px;
-    background: #F9F6EF;
-    border: 2px solid #D9D0BD;
-    border-radius: 1rem;
-    cursor: pointer;
-    transition: 0.15s;
-    font-size: 0.9rem;
-    line-height: 1.4;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .answer:hover { border-color: #2C7DA0; background: #F0F7FA; }
-  .answer.selected { border-color: #2C7DA0; background: #D4E3ED; }
-  .answer.correct { border-color: #6B9E6B; background: #E8F5E8; }
-  .answer.wrong { border-color: #D4A373; background: #FDF0E8; }
-  .answer .marker {
-    width: 22px; height: 22px; border-radius: 50%;
-    border: 2px solid #D9D0BD; display: flex; align-items: center;
-    justify-content: center; font-size: 0.7rem; font-weight: 700;
-    flex-shrink: 0; color: #7B8D6E;
-  }
-  .answer.selected .marker { background: #2C7DA0; border-color: #2C7DA0; color: #fff; }
-
-  .seq-pool, .seq-target {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    min-height: 50px; padding: 10px; border-radius: 1rem;
-    margin-bottom: 10px;
-  }
-  .seq-pool { background: #f4f4f4; border: 2px dashed #ccc; }
-  .seq-target { background: #e8f5e9; border: 2px solid #aed581; flex-direction: column; }
-  .seq-item {
-    padding: 8px 16px; background: #fff; border: 1px solid #ddd;
-    border-radius: 0.5rem; cursor: pointer; font-size: 0.85rem;
-    transition: 0.2s;
-  }
-  .seq-item:hover { background: #f0f0f0; }
-
-  .match-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-  .match-col { display: flex; flex-direction: column; gap: 8px; }
-  .match-item {
-    padding: 10px 14px; background: #F9F6EF; border: 2px solid #D9D0BD;
-    border-radius: 1rem; cursor: pointer; font-size: 0.85rem; transition: 0.2s;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .match-item:hover { border-color: #2C7DA0; }
-  .match-item.selected { border-color: #2C7DA0; background: #D4E3ED; }
-  .match-item.matched { background: #E8F5E8; border-color: #6B9E6B; cursor: default; }
-  .match-badge {
-    background: #2C7DA0; color: #fff; font-size: 0.7rem; padding: 2px 6px;
-    border-radius: 1rem; margin-left: 8px;
-  }
-
-  .btn {
-    background: linear-gradient(135deg, #43a047, #2e7d32);
-    color: #fff; border: none; padding: 12px 28px; border-radius: 2rem;
-    font-size: 0.9rem; font-weight: 600; cursor: pointer;
-    transition: 0.2s; margin-top: 16px; font-family: inherit;
-  }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,125,50,0.3); }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-  
-  .feedback {
-    margin-top: 14px; padding: 12px 16px; border-radius: 1rem;
-    font-size: 0.85rem; line-height: 1.5; display: none;
-  }
-  .feedback.show { display: block; }
-  .feedback.correct { background: #E8F5E8; border-left: 4px solid #6B9E6B; color: #1b5e20; }
-  .feedback.wrong { background: #FDF0E8; border-left: 4px solid #D4A373; color: #b71c1c; }
-
-  .result-screen { display: none; text-align: center; }
-  .result-screen.show { display: block; }
-  .result-score { font-size: 4rem; font-weight: 800; color: #2C7DA0; margin: 16px 0; }
-  .result-percent { font-size: 1.5rem; color: #6B9E6B; margin-bottom: 16px; }
-  .result-grade {
-    font-size: 1.2rem; font-weight: 700; padding: 10px 28px;
-    border-radius: 2rem; display: inline-block; margin-bottom: 20px;
-  }
-  .grade-5 { background: #E8F5E8; color: #2e7d32; }
-  .grade-4 { background: #FFF9C4; color: #f57f17; }
-  .grade-3 { background: #FFE0B2; color: #e65100; }
-  .grade-2 { background: #FFCDD2; color: #b71c1c; }
-  
-  .review {
-    text-align: left; background: #F9F6EF; border-radius: 1rem;
-    padding: 20px; margin-top: 20px; max-height: 500px; overflow-y: auto;
-  }
-  .review h3 { color: #2C7DA0; margin-bottom: 12px; font-size: 1rem; }
-  .review-item { padding: 10px 0; border-bottom: 1px solid #E7EDE2; font-size: 0.85rem; line-height: 1.5; }
-  .review-item:last-child { border-bottom: none; }
-  .review-item .num { font-weight: 700; color: #2C7DA0; }
-  .review-item .ok { color: #2e7d32; font-weight: 600; }
-  .review-item .bad { color: #c62828; font-weight: 600; }
-
-  .footer { text-align: center; font-size: 0.75rem; color: #7B8D6E; margin-top: 24px; padding-top: 16px; border-top: 1px solid #E7EDE2; }
-  .footer a { color: #2C7DA0; text-decoration: none; }
-  
-  @media (max-width: 600px) {
-    body { padding: 10px; }
-    .card { padding: 18px; }
-    .question-text { font-size: 0.95rem; }
-    .match-container { grid-template-columns: 1fr; gap: 10px; }
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Montserrat',system-ui,sans-serif;background:#FDF8F0;color:#3E5C4A;min-height:100vh;padding:20px}
+.container{max-width:820px;margin:0 auto}
+.header{background:linear-gradient(135deg,#2C7DA0,#1F4E6E);color:#fff;border-radius:1.5rem;padding:20px 28px;margin-bottom:20px;text-align:center}
+.header h1{font-size:1.4rem;margin-bottom:4px}
+.header p{font-size:.85rem;opacity:.95}
+.card{background:#fff;border-radius:1.5rem;padding:24px 28px;box-shadow:0 4px 16px rgba(0,0,0,.05);border:1px solid #EDE8DC;margin-bottom:16px}
+.timer-bar{background:#fff;border-radius:1rem;padding:10px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:.85rem;font-weight:600;color:#2C7DA0}
+.timer-value{font-size:1.2rem;font-weight:800}
+.timer-value.warning{color:#c62828;animation:pulse .6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+.progress-info{font-size:.8rem;color:#7B8D6E;margin-bottom:8px;display:flex;justify-content:space-between}
+.progress-bar{height:6px;background:#E7EDE2;border-radius:40px;overflow:hidden;margin-bottom:16px}
+.progress-bar .fill{height:100%;background:linear-gradient(90deg,#2C7DA0,#6B9E6B);border-radius:40px;transition:width .4s ease}
+.question-type{display:inline-block;background:#e8f0f5;color:#2C7DA0;padding:3px 12px;border-radius:1rem;font-size:.7rem;font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:.3px}
+.question-text{font-size:1.05rem;font-weight:600;color:#1A2A3A;margin-bottom:16px;line-height:1.5}
+.answers{display:flex;flex-direction:column;gap:8px}
+.answer{padding:12px 18px;background:#F9F6EF;border:2px solid #D9D0BD;border-radius:1rem;cursor:pointer;transition:.15s;font-size:.9rem;line-height:1.4;display:flex;align-items:center;gap:10px}
+.answer:hover{border-color:#2C7DA0;background:#F0F7FA}
+.answer.selected{border-color:#2C7DA0;background:#D4E3ED}
+.answer.correct{border-color:#6B9E6B;background:#E8F5E8}
+.answer.wrong{border-color:#D4A373;background:#FDF0E8}
+.answer .marker{width:22px;height:22px;border-radius:50%;border:2px solid #D9D0BD;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0;color:#7B8D6E}
+.answer.selected .marker{background:#2C7DA0;border-color:#2C7DA0;color:#fff}
+.seq-pool,.seq-target{display:flex;flex-wrap:wrap;gap:8px;min-height:52px;padding:10px;border-radius:1rem;margin-bottom:10px}
+.seq-pool{background:#f4f4f4;border:2px dashed #ccc}
+.seq-target{background:#e8f5e9;border:2px solid #aed581;flex-direction:column}
+.seq-item{padding:8px 16px;background:#fff;border:1px solid #ddd;border-radius:.5rem;cursor:pointer;font-size:.85rem;transition:.2s}
+.seq-item:hover{background:#f0f0f0}
+.match-container{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.match-col{display:flex;flex-direction:column;gap:8px}
+.match-item{padding:10px 14px;background:#F9F6EF;border:2px solid #D9D0BD;border-radius:1rem;cursor:pointer;font-size:.85rem;transition:.2s;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.match-item:hover{border-color:#2C7DA0}
+.match-item.selected{border-color:#2C7DA0;background:#D4E3ED}
+.match-item.matched{background:#E8F5E8;border-color:#6B9E6B}
+.match-badge{background:#2C7DA0;color:#fff;font-size:.7rem;padding:2px 6px;border-radius:1rem}
+.btn{background:linear-gradient(135deg,#43a047,#2e7d32);color:#fff;border:none;padding:12px 28px;border-radius:2rem;font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s;margin-top:16px;font-family:inherit}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(46,125,50,.3)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-secondary{background:#fff;color:#2e7d32;border:2px solid #2e7d32}
+.feedback{margin-top:14px;padding:12px 16px;border-radius:1rem;font-size:.85rem;line-height:1.5;display:none}
+.feedback.show{display:block}
+.feedback.correct{background:#E8F5E8;border-left:4px solid #6B9E6B;color:#1b5e20}
+.feedback.wrong{background:#FDF0E8;border-left:4px solid #D4A373;color:#b71c1c}
+.start-screen,.result-screen{display:none}
+.start-screen.show,.result-screen.show{display:block}
+.field-label{font-weight:600;font-size:.82rem;display:block;margin-bottom:4px}
+input[type=text]{width:100%;padding:9px 14px;border:2px solid #E5DDCF;border-radius:1rem;font-family:inherit;font-size:.9rem;background:#FEFAF2;color:#1e2f2a}
+.result-score{font-size:3.6rem;font-weight:800;color:#2C7DA0;margin:14px 0}
+.result-percent{font-size:1.4rem;color:#6B9E6B;margin-bottom:14px}
+.result-grade{font-size:1.15rem;font-weight:700;padding:10px 26px;border-radius:2rem;display:inline-block;margin-bottom:18px}
+.grade-5{background:#E8F5E8;color:#2e7d32}
+.grade-4{background:#FFF9C4;color:#f57f17}
+.grade-3{background:#FFE0B2;color:#e65100}
+.grade-2{background:#FFCDD2;color:#b71c1c}
+.review{text-align:left;background:#F9F6EF;border-radius:1rem;padding:18px;margin-top:18px;max-height:460px;overflow-y:auto}
+.review h3{color:#2C7DA0;margin-bottom:10px;font-size:1rem}
+.review-item{padding:10px 0;border-bottom:1px solid #E7EDE2;font-size:.84rem;line-height:1.5}
+.review-item:last-child{border-bottom:none}
+.review-item .num{font-weight:700;color:#2C7DA0}
+.ok{color:#2e7d32;font-weight:600}
+.bad{color:#c62828;font-weight:600}
+.footer{text-align:center;font-size:.75rem;color:#7B8D6E;margin-top:22px;padding-top:14px;border-top:1px solid #E7EDE2}
+.footer a{color:#2C7DA0;text-decoration:none}
+@media(max-width:600px){body{padding:10px}.card{padding:18px}.question-text{font-size:.95rem}.match-container{grid-template-columns:1fr;gap:10px}}
+@media print{body{background:#fff;padding:.3in}.btn{display:none}.card{box-shadow:none;border:1px solid #ddd}}
 </style>
 </head>
 <body>
 <div class="container">
-  <div class="header">
-    <h1>🐾 Тест · Кожа — зеркало здоровья</h1>
-    <p>20 вопросов · 8 минут · закрепление</p>
-  </div>
 
-  <div class="timer-bar" id="timerBar">
+<div class="header">
+  <h1>🐾 Тест · Кожа — зеркало здоровья</h1>
+  <p>20 вопросов · 10 минут · закрепление темы</p>
+</div>
+
+<div class="card start-screen show" id="startScreen">
+  <h2 style="color:#2C7DA0;margin-bottom:8px;">Перед началом</h2>
+  <p style="font-size:.9rem;margin-bottom:14px;">
+    Тест содержит 20 заданий: с одиночным и множественным выбором, установлением последовательности и соответствия.
+    На выполнение отводится <strong>10 минут</strong>. После истечения времени тест завершится автоматически.
+  </p>
+  <div style="margin-bottom:12px;">
+    <label class="field-label" for="studentName">Фамилия и имя</label>
+    <input type="text" id="studentName" placeholder="Иванов Иван">
+  </div>
+  <div style="margin-bottom:16px;">
+    <label class="field-label" for="studentGroup">Группа</label>
+    <input type="text" id="studentGroup" placeholder="122">
+  </div>
+  <button class="btn" id="startBtn">Начать тест</button>
+</div>
+
+<div id="quizScreen" style="display:none;">
+  <div class="timer-bar">
     <span>⏱️ Осталось времени:</span>
-    <span class="timer-value" id="timerValue">08:00</span>
+    <span class="timer-value" id="timerValue">10:00</span>
   </div>
 
-  <div id="quizScreen">
-    <div class="progress-info">
-      <span id="questionCounter">Вопрос 1 из 20</span>
-      <span id="scoreDisplay">Баллов: 0</span>
-    </div>
-    <div class="progress-bar">
-      <div class="fill" id="progressFill" style="width:5%;"></div>
-    </div>
-
-    <div class="card">
-      <span class="question-type" id="questionType"></span>
-      <div class="question-text" id="questionText"></div>
-      <div id="dynamicArea"></div>
-      <div class="feedback" id="feedbackBox"></div>
-      <button class="btn" id="nextBtn" disabled>Ответить</button>
-    </div>
+  <div class="progress-info">
+    <span id="questionCounter">Вопрос 1 из 20</span>
+    <span id="scoreDisplay">Баллов: 0</span>
   </div>
+  <div class="progress-bar"><div class="fill" id="progressFill" style="width:5%;"></div></div>
 
-  <div class="result-screen" id="resultScreen">
-    <div class="card">
-      <h2>Результат</h2>
-      <div class="result-score" id="resultScore">0/20</div>
-      <div class="result-percent" id="resultPercent">0%</div>
-      <div class="result-grade" id="resultGrade"></div>
-      <div class="review" id="reviewBox"></div>
-      <button class="btn" onclick="restart()">Пройти заново</button>
-    </div>
+  <div class="card">
+    <span class="question-type" id="questionType"></span>
+    <div class="question-text" id="questionText"></div>
+    <div id="dynamicArea"></div>
+    <div class="feedback" id="feedbackBox"></div>
+    <button class="btn" id="nextBtn" disabled>Ответить</button>
   </div>
+</div>
 
-  <div class="footer">🐾 ВетСим — ветеринарное образование · <a href="https://vetsim.ru" target="_blank">vetsim.ru</a></div>
+<div class="card result-screen" id="resultScreen">
+  <h2 style="color:#2C7DA0;">Результат теста</h2>
+  <div id="resultStudent" style="font-size:.9rem;color:#7B8D6E;margin-top:6px;"></div>
+  <div class="result-score" id="resultScore">0/20</div>
+  <div class="result-percent" id="resultPercent">0%</div>
+  <div class="result-grade" id="resultGrade"></div>
+  <div class="review" id="reviewBox"></div>
+  <button class="btn btn-secondary" id="copyBtn">📋 Скопировать результат</button>
+  <button class="btn" onclick="restart()">Пройти заново</button>
+</div>
+
+<div class="footer">🐾 ВетСим — ветеринарное образование · <a href="https://vetsim.ru" target="_blank" rel="noopener">vetsim.ru</a></div>
 </div>
 
 <script>
-// ============ БАЗА ВОПРОСОВ (20 шт по Блуму) ============
-const QUESTIONS = [
-  // --- БЛОК 1. ЗНАНИЕ ---
-  { type: "Одиночный выбор", question: "Из какого эмбрионального зачатка развивается эпидермис?", answers: [{ text: "Мезенхима", correct: false }, { text: "Эктодерма", correct: true }, { text: "Энтодерма", correct: false }, { text: "Мезодерма", correct: false }], explanation: "Эпидермис развивается из эктодермы. Дерма и гиподерма — из мезенхимы." },
-  { type: "Одиночный выбор", question: "Какой слой эпидермиса является камбиальным (в нём происходят митозы)?", answers: [{ text: "Роговой", correct: false }, { text: "Зернистый", correct: false }, { text: "Базальный", correct: true }, { text: "Блестящий", correct: false }], explanation: "В базальном слое происходят митозы, обеспечивающие обновление клеток." },
-  { type: "Множественный выбор", question: "Что относится к производным кожи? (выберите все верные)", answers: [{ text: "Волосы", correct: true }, { text: "Мякиши", correct: true }, { text: "Рога", correct: true }, { text: "Копыта", correct: true }, { text: "Молочная железа", correct: true }, { text: "Печень", correct: false }], explanation: "Производные кожи: волосы, мякиши, рога, копыта, копытца, кожные железы (сальные, потовые, молочная)." },
-  { type: "Одиночный выбор", question: "Какая структура продуцирует глазурь копыта?", answers: [{ text: "Копытная стенка", correct: false }, { text: "Копытная кайма", correct: true }, { text: "Копытный венчик", correct: false }, { text: "Копытная подошва", correct: false }], explanation: "Глазурь продуцирует копытная кайма." },
-  { type: "Одиночный выбор", question: "Тип секреции сальных желёз?", answers: [{ text: "Мерокриновая", correct: false }, { text: "Апокриновая", correct: false }, { text: "Голокриновая", correct: true }, { text: "Паракринная", correct: false }], explanation: "Сальные железы — голокриновые (клетка полностью разрушается)." },
-  { type: "Одиночный выбор", question: "Чем выстланы альвеолы молочной железы?", answers: [{ text: "Многослойным плоским эпителием", correct: false }, { text: "Однослойным секреторным эпителием", correct: true }, { text: "Кубическим эпителием", correct: false }, { text: "Цилиндрическим эпителием", correct: false }], explanation: "Альвеолы выстланы однослойным секреторным эпителием (лактоцитами)." },
-  { type: "Множественный выбор", question: "Что входит в состав копыта? (выберите все верные)", answers: [{ text: "Кайма", correct: true }, { text: "Венчик", correct: true }, { text: "Стенка", correct: true }, { text: "Подошва", correct: true }, { text: "Стрелка", correct: true }, { text: "Копытная кость", correct: false }], explanation: "В состав копыта входят: кайма, венчик, стенка, подошва, стрелка." },
-  { type: "Одиночный выбор", question: "Что такое тургор кожи?", answers: [{ text: "Цвет кожи", correct: false }, { text: "Эластичность и упругость кожи", correct: true }, { text: "Толщина кожи", correct: false }, { text: "Температура кожи", correct: false }], explanation: "Тургор — эластичность кожи. Оценивается методом кожной складки." },
-
-  // --- БЛОК 2. ПОНИМАНИЕ ---
-  { type: "Одиночный выбор", question: "Куда открываются протоки сальных желёз?", answers: [{ text: "На поверхность кожи", correct: false }, { text: "В воронку волоса", correct: true }, { text: "В потовую железу", correct: false }, { text: "В дерму", correct: false }], explanation: "Протоки сальных желёз открываются в воронку волоса." },
-  { type: "Множественный выбор", question: "Какие гормоны регулируют лактацию? (выберите все верные)", answers: [{ text: "Пролактин", correct: true }, { text: "Окситоцин", correct: true }, { text: "Кортизол", correct: true }, { text: "Адреналин", correct: false }, { text: "Инсулин", correct: false }, { text: "Тестостерон", correct: false }], explanation: "Лактацию регулируют пролактин, окситоцин, кортизол, соматотропин." },
-  { type: "Одиночный выбор", question: "Где расположены потовые железы?", answers: [{ text: "В эпидермисе", correct: false }, { text: "В дерме и гиподерме", correct: true }, { text: "В роговом слое", correct: false }, { text: "В волосяной луковице", correct: false }], explanation: "Потовые железы расположены в глубоких слоях дермы и в гиподерме." },
-  { type: "Одиночный выбор", question: "Где расположен молочный колодец (цистерна) у коровы?", answers: [{ text: "В толще соска, ниже сфинктера", correct: false }, { text: "В основании соска, над сосковым каналом", correct: true }, { text: "В паренхиме доли, между альвеолами", correct: false }, { text: "В соединительнотканной строме", correct: false }], explanation: "Молочная цистерна — расширенная полость в основании соска, где накапливается молоко перед доением." },
-
-  // --- БЛОК 3. ПРИМЕНЕНИЕ ---
-  { type: "Одиночный выбор", question: "Что ищем в соскобе при демодекозе?", answers: [{ text: "Бактерии", correct: false }, { text: "Клещей Demodex", correct: true }, { text: "Грибы", correct: false }, { text: "Вирусы", correct: false }], explanation: "При демодекозе в соскобе находят клещей Demodex." },
-  { type: "Одиночный выбор", question: "В результате резаной раны повреждена кожа. За счёт какого слоя будет восстанавливаться эпидермис?", answers: [{ text: "За счёт сосочкового слоя дермы", correct: false }, { text: "За счёт базального слоя эпидермиса", correct: true }, { text: "За счёт рогового слоя", correct: false }, { text: "За счёт гиподермы", correct: false }], explanation: "Базальный слой (камбий) содержит стволовые клетки, которые делятся и восстанавливают эпидермис." },
-  { type: "Одиночный выбор", question: "Какие клетки молочной железы способствуют выведению молока при доении?", answers: [{ text: "Лактоциты (секреторные)", correct: false }, { text: "Миоэпителиальные клетки", correct: true }, { text: "Фибробласты", correct: false }, { text: "Клетки соединительной ткани", correct: false }], explanation: "Миоэпителиальные (корзинчатые) клетки сокращаются под действием окситоцина и выжимают молоко из альвеол в протоки." },
-
-  // --- БЛОК 4. АНАЛИЗ ---
-  { type: "Множественный выбор", question: "Какие слои кожи не имеют кровеносных сосудов? (выберите все верные)", answers: [{ text: "Эпидермис", correct: true }, { text: "Роговой слой", correct: true }, { text: "Дерма", correct: false }, { text: "Гиподерма", correct: false }, { text: "Сосочковый слой", correct: false }, { text: "Базальный слой", correct: false }], explanation: "Эпидермис (включая роговой слой) не имеет сосудов. Питание — диффузное из дермы." },
-  { type: "Одиночный выбор", question: "Что такое «голодные борозды» на копыте?", answers: [{ text: "Признак ламинита", correct: true }, { text: "Признак авитаминоза", correct: false }, { text: "Норма", correct: false }, { text: "Признак перекорма", correct: false }], explanation: "«Голодные борозды» — признак перенесённого ламинита." },
-
-  // --- БЛОК 5. СИНТЕЗ ---
-  { type: "Последовательность", question: "Установите правильную последовательность слоёв эпидермиса (начиная с самого глубокого):", sequence: ["Базальный", "Шиповатый", "Зернистый", "Блестящий", "Роговой"], explanation: "Слои эпидермиса снизу вверх: Базальный (камбий) → Шиповатый → Зернистый → Блестящий → Роговой." },
-  { type: "Соответствие", question: "Установите соответствие между латинскими и русскими названиями органов кожного покрова:", matches: [{ left: "Cutis", right: "Кожа" }, { left: "Glandula mammaria", right: "Молочная железа" }, { left: "Pilus", right: "Волос" }, { left: "Ungula", right: "Копыто" }], explanation: "Cutis — кожа, Glandula mammaria — молочная железа, Pilus — волос, Ungula — копыто." }
+const QUESTIONS=[
+{type:"Одиночный выбор",question:"Из какого эмбрионального зачатка развивается эпидермис?",answers:[{text:"Из мезенхимы",correct:false},{text:"Из эктодермы",correct:true},{text:"Из энтодермы",correct:false},{text:"Из мезодермы",correct:false}],explanation:"Эпидермис развивается из эктодермы. Дерма и подкожная основа формируются из мезенхимы."},
+{type:"Одиночный выбор",question:"В каком слое эпидермиса происходят митозы и обновление клеток?",answers:[{text:"В роговом слое",correct:false},{text:"В зернистом слое",correct:false},{text:"В базальном слое",correct:true},{text:"В блестящем слое",correct:false}],explanation:"Базальный слой является ростковым: в нём происходит деление клеток и обновление эпидермиса."},
+{type:"Множественный выбор",question:"Что относится к производным кожи? Выберите все верные варианты.",answers:[{text:"Волосы",correct:true},{text:"Мякиши",correct:true},{text:"Рога",correct:true},{text:"Копыта",correct:true},{text:"Молочная железа",correct:true},{text:"Печень",correct:false}],explanation:"К производным кожи относят волосы, мякиши, рога, копыта, копытца и кожные железы, включая молочную железу."},
+{type:"Одиночный выбор",question:"Какая структура копыта продуцирует глазурь?",answers:[{text:"Копытная стенка",correct:false},{text:"Копытная кайма",correct:true},{text:"Копытный венчик",correct:false},{text:"Копытная подошва",correct:false}],explanation:"Глазурь копыта продуцируется копытной каймой."},
+{type:"Одиночный выбор",question:"Какой тип секреции характерен для сальных желёз?",answers:[{text:"Мерокриновый",correct:false},{text:"Апокриновый",correct:false},{text:"Голокриновый",correct:true},{text:"Паракриновый",correct:false}],explanation:"Сальные железы относятся к голокриновым: секрет образуется при разрушении секреторных клеток."},
+{type:"Множественный выбор",question:"Какие клетки участвуют в образовании стенки альвеолы молочной железы? Выберите все верные варианты.",answers:[{text:"Лактоциты — секреторные клетки",correct:true},{text:"Миоэпителиальные клетки",correct:true},{text:"Фибробласты",correct:false},{text:"Эритроциты",correct:false},{text:"Нейроны",correct:false}],explanation:"Стенку альвеолы образуют секреторные лактоциты и миоэпителиальные клетки, способствующие выведению молока."},
+{type:"Множественный выбор",question:"Что входит в состав копыта? Выберите все верные варианты.",answers:[{text:"Кайма",correct:true},{text:"Венчик",correct:true},{text:"Стенка",correct:true},{text:"Подошва",correct:true},{text:"Стрелка",correct:true},{text:"Копытная кость",correct:false}],explanation:"В состав копыта входят кайма, венчик, стенка, подошва и стрелка."},
+{type:"Одиночный выбор",question:"Что такое тургор кожи?",answers:[{text:"Цвет кожи",correct:false},{text:"Эластичность и упругость кожи",correct:true},{text:"Толщина кожи",correct:false},{text:"Температура кожи",correct:false}],explanation:"Тургор — это эластичность и упругость кожи. Его оценивают по скорости расправления кожной складки."},
+{type:"Одиночный выбор",question:"Куда открываются выводные протоки сальных желёз?",answers:[{text:"На поверхность эпидермиса",correct:false},{text:"В воронку волоса",correct:true},{text:"В просвет потовой железы",correct:false},{text:"В соединительнотканную строму",correct:false}],explanation:"Выводные протоки сальных желёз открываются в воронку волоса."},
+{type:"Одиночный выбор",question:"Какой гормон непосредственно вызывает сокращение миоэпителиальных клеток и молокоотдачу?",answers:[{text:"Пролактин",correct:false},{text:"Окситоцин",correct:true},{text:"Инсулин",correct:false},{text:"Тироксин",correct:false}],explanation:"Окситоцин вызывает сокращение миоэпителиальных клеток альвеол и способствует выведению молока."},
+{type:"Одиночный выбор",question:"Где преимущественно расположены потовые железы?",answers:[{text:"В роговом слое эпидермиса",correct:false},{text:"В дерме и подкожной основе",correct:true},{text:"В волосяной луковице",correct:false},{text:"В просвете сальной железы",correct:false}],explanation:"Потовые железы расположены в глубоких слоях дермы и подкожной основе."},
+{type:"Одиночный выбор",question:"Где накапливается молоко между доениями?",answers:[{text:"В альвеолах и цистернах вымени",correct:true},{text:"В кровеносных сосудах вымени",correct:false},{text:"В миоэпителиальных клетках",correct:false},{text:"В соединительнотканной строме",correct:false}],explanation:"Молоко накапливается в альвеолах, протоках, цистерне вымени и цистерне соска."},
+{type:"Одиночный выбор",question:"Что выявляют при микроскопии соскоба при демодекозе?",answers:[{text:"Бактерии",correct:false},{text:"Клещей рода Demodex",correct:true},{text:"Грибы рода Microsporum",correct:false},{text:"Вирусы",correct:false}],explanation:"При демодекозе в соскобе обнаруживают клещей рода Demodex."},
+{type:"Одиночный выбор",question:"За счёт какого слоя происходит регенерация эпидермиса после поверхностного повреждения?",answers:[{text:"За счёт сосочкового слоя дермы",correct:false},{text:"За счёт базального слоя эпидермиса",correct:true},{text:"За счёт рогового слоя",correct:false},{text:"За счёт подкожной основы",correct:false}],explanation:"Базальный слой содержит камбиальные клетки, которые делятся и обеспечивают восстановление эпидермиса."},
+{type:"Одиночный выбор",question:"Какие клетки молочной железы способствуют выведению молока при доении?",answers:[{text:"Лактоциты",correct:false},{text:"Миоэпителиальные клетки",correct:true},{text:"Фибробласты",correct:false},{text:"Адипоциты",correct:false}],explanation:"Миоэпителиальные клетки сокращаются под действием окситоцина и способствуют выведению молока из альвеол."},
+{type:"Одиночный выбор",question:"Какой слой кожи не содержит кровеносных сосудов?",answers:[{text:"Эпидермис",correct:true},{text:"Дерма",correct:false},{text:"Подкожная основа",correct:false},{text:"Сосочковый слой дермы",correct:false}],explanation:"В эпидермисе нет кровеносных сосудов; его питание происходит диффузно из сосудов дермы."},
+{type:"Одиночный выбор",question:"Что такое «голодные борозды» на копыте?",answers:[{text:"Признак перенесённого ламинита",correct:true},{text:"Вариант нормального строения копыта",correct:false},{text:"Признак недостатка воды",correct:false},{text:"Признак перекорма",correct:false}],explanation:"«Голодные борозды» являются следствием нарушения роста рога, часто связанного с перенесённым ламинитом."},
+{type:"Множественный выбор",question:"Какие функции выполняет кожа? Выберите все верные варианты.",answers:[{text:"Защитная",correct:true},{text:"Терморегуляторная",correct:true},{text:"Секреторная",correct:true},{text:"Рецепторная",correct:true},{text:"Образование эритроцитов",correct:false}],explanation:"Кожа выполняет защитную, терморегуляторную, секреторную, выделительную и рецепторную функции."},
+{type:"Последовательность",question:"Установите последовательность слоёв эпидермиса начиная с самого глубокого.",sequence:["Базальный слой","Шиповатый слой","Зернистый слой","Блестящий слой","Роговой слой"],explanation:"Снизу вверх: базальный, шиповатый, зернистый, блестящий и роговой слои."},
+{type:"Соответствие",question:"Установите соответствие между латинскими и русскими названиями.",matches:[{left:"Cutis",right:"Кожа"},{left:"Glandula mammaria",right:"Молочная железа"},{left:"Pilus",right:"Волос"},{left:"Ungula",right:"Копыто"}],explanation:"Cutis — кожа; glandula mammaria — молочная железа; pilus — волос; ungula — копыто."}
 ];
 
-// ============ СОСТОЯНИЕ ============
-let currentQuestions = [];
-let currentIndex = 0;
-let userAnswers = [];
-let score = 0;
-let timerInterval = null;
-let timeLeft = 480; // 8 минут
+let currentQuestions=[],currentIndex=0,userAnswers=[],score=0,timerInterval=null,timeLeft=600;
+let seqSelected=[],matchSelectedLeft=null,matchPairs={};
+const STORAGE_KEY='vetsim_skin_test_results_v1';
 
-let seqSelected = [];
-let matchSelectedLeft = null;
-let matchPairs = {};
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
-// ============ УТИЛИТЫ ============
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
+function shuffleQuestion(q){
+  const n=JSON.parse(JSON.stringify(q));
+  if(n.type.includes('Одиночный')||n.type.includes('Множественный'))n.answers=shuffle(n.answers);
+  if(n.type==='Последовательность')n.pool=shuffle([...n.sequence]);
+  if(n.type==='Соответствие')n.rightColumn=shuffle(n.matches.map(m=>m.right));
+  return n;
 }
 
-function shuffleQuestion(q) {
-  const newQ = JSON.parse(JSON.stringify(q));
-  if (newQ.type.includes('Одиночный') || newQ.type.includes('Множественный')) {
-    newQ.answers = shuffle(newQ.answers);
-  }
-  if (newQ.type === 'Последовательность') {
-    newQ.pool = shuffle([...newQ.sequence]);
-  }
-  if (newQ.type === 'Соответствие') {
-    newQ.rightColumn = shuffle(newQ.matches.map(m => m.right));
-  }
-  return newQ;
+function startTimer(){
+  timeLeft=600;updateTimer();clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0)finishQuiz();},1000);
 }
 
-// ============ ТАЙМЕР ============
-function startTimer() {
-  timeLeft = 480;
-  updateTimerDisplay();
-  clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    updateTimerDisplay();
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      finishQuiz();
-    }
-  }, 1000);
+function updateTimer(){
+  const m=Math.floor(timeLeft/60),s=timeLeft%60;
+  const el=document.getElementById('timerValue');
+  el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  el.classList.toggle('warning',timeLeft<=60);
 }
 
-function updateTimerDisplay() {
-  const min = Math.floor(timeLeft / 60);
-  const sec = timeLeft % 60;
-  const el = document.getElementById('timerValue');
-  el.textContent = String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
-  el.classList.toggle('warning', timeLeft <= 60);
-}
-
-// ============ ИНИЦИАЛИЗАЦИЯ ============
-function init() {
-  currentQuestions = shuffle(QUESTIONS).map(q => shuffleQuestion(q));
-  currentIndex = 0;
-  userAnswers = [];
-  score = 0;
-
-  document.getElementById('quizScreen').style.display = 'block';
+function startQuiz(){
+  const name=document.getElementById('studentName').value.trim();
+  const group=document.getElementById('studentGroup').value.trim();
+  if(!name){alert('Укажите фамилию и имя.');return;}
+  window.studentName=name;
+  window.studentGroup=group||'—';
+  currentQuestions=shuffle(QUESTIONS).map(shuffleQuestion);
+  currentIndex=0;userAnswers=[];score=0;
+  document.getElementById('startScreen').classList.remove('show');
   document.getElementById('resultScreen').classList.remove('show');
-  document.getElementById('timerBar').style.display = 'flex';
-
-  startTimer();
-  renderQuestion();
+  document.getElementById('quizScreen').style.display='block';
+  startTimer();renderQuestion();
 }
 
-// ============ ОТРИСОВКА ============
-function renderQuestion() {
-  const q = currentQuestions[currentIndex];
-  document.getElementById('questionType').textContent = q.type;
-  document.getElementById('questionText').textContent = q.question;
-  document.getElementById('questionCounter').textContent = `Вопрос ${currentIndex + 1} из ${currentQuestions.length}`;
-  document.getElementById('scoreDisplay').textContent = `Баллов: ${score}`;
-  document.getElementById('progressFill').style.width = ((currentIndex + 1) / currentQuestions.length * 100) + '%';
-
-  const area = document.getElementById('dynamicArea');
-  area.innerHTML = '';
-  
-  const nextBtn = document.getElementById('nextBtn');
-  nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? 'Завершить' : 'Ответить';
-  nextBtn.disabled = true;
-  nextBtn.onclick = submitAnswer;
-
-  const fb = document.getElementById('feedbackBox');
-  fb.className = 'feedback';
-  fb.innerHTML = '';
-
-  seqSelected = [];
-  matchSelectedLeft = null;
-  matchPairs = {};
-
-  if (q.type.includes('Одиночный') || q.type.includes('Множественный')) {
-    renderStandard(q, area, nextBtn);
-  } else if (q.type === 'Последовательность') {
-    renderSequence(q, area, nextBtn);
-  } else if (q.type === 'Соответствие') {
-    renderMatching(q, area, nextBtn);
-  }
+function renderQuestion(){
+  const q=currentQuestions[currentIndex];
+  document.getElementById('questionType').textContent=q.type;
+  document.getElementById('questionText').textContent=q.question;
+  document.getElementById('questionCounter').textContent=`Вопрос ${currentIndex+1} из ${currentQuestions.length}`;
+  document.getElementById('scoreDisplay').textContent=`Баллов: ${score}`;
+  document.getElementById('progressFill').style.width=((currentIndex+1)/currentQuestions.length*100)+'%';
+  const area=document.getElementById('dynamicArea');area.innerHTML='';
+  const nextBtn=document.getElementById('nextBtn');
+  nextBtn.textContent=currentIndex===currentQuestions.length-1?'Завершить':'Ответить';
+  nextBtn.disabled=true;nextBtn.onclick=submitAnswer;
+  const fb=document.getElementById('feedbackBox');fb.className='feedback';fb.innerHTML='';
+  seqSelected=[];matchSelectedLeft=null;matchPairs={};
+  if(q.type.includes('Одиночный')||q.type.includes('Множественный'))renderStandard(q,area,nextBtn);
+  else if(q.type==='Последовательность')renderSequence(q,area,nextBtn);
+  else if(q.type==='Соответствие')renderMatching(q,area,nextBtn);
 }
 
-function renderStandard(q, area, nextBtn) {
-  const isMultiple = q.type.includes('Множественный');
-  const box = document.createElement('div');
-  box.className = 'answers';
-  
-  q.answers.forEach((ans, i) => {
-    const div = document.createElement('div');
-    div.className = 'answer';
-    div.dataset.index = i;
-    div.innerHTML = `<span class="marker">${String.fromCharCode(65 + i)}</span><span>${ans.text}</span>`;
-    div.onclick = () => {
-      if (div.classList.contains('correct') || div.classList.contains('wrong')) return;
-      if (isMultiple) {
-        div.classList.toggle('selected');
-      } else {
-        box.querySelectorAll('.answer').forEach(a => a.classList.remove('selected'));
-        div.classList.add('selected');
-      }
-      nextBtn.disabled = box.querySelectorAll('.answer.selected').length === 0;
+function renderStandard(q,area,nextBtn){
+  const multiple=q.type.includes('Множественный');
+  const box=document.createElement('div');box.className='answers';
+  q.answers.forEach((ans,i)=>{
+    const div=document.createElement('div');div.className='answer';div.dataset.index=i;
+    div.innerHTML=`<span class="marker">${String.fromCharCode(65+i)}</span><span>${ans.text}</span>`;
+    div.onclick=()=>{
+      if(div.classList.contains('correct')||div.classList.contains('wrong'))return;
+      if(multiple)div.classList.toggle('selected');
+      else{box.querySelectorAll('.answer').forEach(a=>a.classList.remove('selected'));div.classList.add('selected');}
+      nextBtn.disabled=box.querySelectorAll('.answer.selected').length===0;
     };
     box.appendChild(div);
   });
   area.appendChild(box);
 }
 
-function renderSequence(q, area, nextBtn) {
-  const target = document.createElement('div');
-  target.className = 'seq-target';
-  target.id = 'seqTarget';
-  
-  const pool = document.createElement('div');
-  pool.className = 'seq-pool';
-  pool.id = 'seqPool';
-
-  q.pool.forEach(item => {
-    const el = document.createElement('div');
-    el.className = 'seq-item';
-    el.textContent = item;
-    el.dataset.val = item;
-    el.onclick = () => {
-      target.appendChild(el);
-      seqSelected.push(item);
-      el.onclick = () => {
-        pool.appendChild(el);
-        seqSelected = seqSelected.filter(x => x !== item);
-        nextBtn.disabled = seqSelected.length === 0;
-        el.onclick = arguments.callee;
-      };
-      nextBtn.disabled = seqSelected.length === 0;
-    };
-    pool.appendChild(el);
+function renderSequence(q,area,nextBtn){
+  const target=document.createElement('div');target.className='seq-target';target.id='seqTarget';
+  const pool=document.createElement('div');pool.className='seq-pool';pool.id='seqPool';
+  const moveToTarget=el=>{
+    target.appendChild(el);seqSelected.push(el.dataset.val);
+    el.onclick=()=>moveToPool(el);
+    nextBtn.disabled=false;
+  };
+  const moveToPool=el=>{
+    pool.appendChild(el);seqSelected=seqSelected.filter(x=>x!==el.dataset.val);
+    el.onclick=()=>moveToTarget(el);
+    nextBtn.disabled=seqSelected.length===0;
+  };
+  q.pool.forEach(item=>{
+    const el=document.createElement('div');el.className='seq-item';el.textContent=item;el.dataset.val=item;
+    el.onclick=()=>moveToTarget(el);pool.appendChild(el);
   });
-
-  area.appendChild(pool);
-  area.appendChild(document.createElement('hr')).style.margin = '10px 0';
-  area.appendChild(target);
+  area.appendChild(pool);area.appendChild(target);
 }
 
-function renderMatching(q, area, nextBtn) {
-  const container = document.createElement('div');
-  container.className = 'match-container';
+function renderMatching(q,area,nextBtn){
+  const container=document.createElement('div');container.className='match-container';
+  const leftCol=document.createElement('div');leftCol.className='match-col';
+  const rightCol=document.createElement('div');rightCol.className='match-col';
+  const updateButton=()=>nextBtn.disabled=Object.keys(matchPairs).length!==q.matches.length;
 
-  const leftCol = document.createElement('div');
-  leftCol.className = 'match-col';
-  
-  const rightCol = document.createElement('div');
-  rightCol.className = 'match-col';
-
-  q.matches.forEach((m, i) => {
-    const el = document.createElement('div');
-    el.className = 'match-item';
-    el.textContent = m.left;
-    el.dataset.idx = i;
-    el.onclick = () => {
-      if (el.classList.contains('matched')) return;
-      leftCol.querySelectorAll('.match-item').forEach(x => x.classList.remove('selected'));
-      el.classList.add('selected');
-      matchSelectedLeft = i;
+  q.matches.forEach((m,i)=>{
+    const el=document.createElement('div');el.className='match-item';el.textContent=m.left;el.dataset.idx=i;
+    el.onclick=()=>{
+      if(el.classList.contains('matched'))return;
+      leftCol.querySelectorAll('.match-item').forEach(x=>x.classList.remove('selected'));
+      el.classList.add('selected');matchSelectedLeft=i;
     };
     leftCol.appendChild(el);
   });
 
-  q.rightColumn.forEach((text, i) => {
-    const el = document.createElement('div');
-    el.className = 'match-item';
-    el.textContent = text;
-    el.dataset.text = text;
-    el.onclick = () => {
-      if (el.classList.contains('matched')) return;
-      if (matchSelectedLeft === null) return;
-
-      matchPairs[matchSelectedLeft] = text;
-      
-      const leftEl = leftCol.querySelector(`.match-item[data-idx="${matchSelectedLeft}"]`);
-      leftEl.classList.remove('selected');
-      leftEl.classList.add('matched');
-      leftEl.innerHTML = `${leftEl.textContent} <span class="match-badge">↔</span>`;
-      
-      el.classList.add('matched');
-      el.innerHTML = `<span class="match-badge">↔</span> ${text}`;
-
-      matchSelectedLeft = null;
-      
-      if (Object.keys(matchPairs).length === q.matches.length) {
-        nextBtn.disabled = false;
-      }
+  q.rightColumn.forEach(text=>{
+    const el=document.createElement('div');el.className='match-item';el.textContent=text;el.dataset.text=text;
+    el.onclick=()=>{
+      if(matchSelectedLeft===null)return;
+      const leftIdx=matchSelectedLeft;
+      const leftEl=leftCol.querySelector(`.match-item[data-idx="${leftIdx}"]`);
+      matchPairs[leftIdx]=text;
+      leftEl.classList.remove('selected');leftEl.classList.add('matched');
+      leftEl.innerHTML=`${q.matches[leftIdx].left} <span class="match-badge">↔</span>`;
+      el.classList.add('matched');el.innerHTML=`<span class="match-badge">↔</span> ${text}`;
+      const undo=()=>{
+        delete matchPairs[leftIdx];
+        leftEl.classList.remove('matched');leftEl.innerHTML=q.matches[leftIdx].left;
+        el.classList.remove('matched');el.innerHTML=text;
+        leftEl.onclick=originalLeftClick;el.onclick=originalRightClick;
+        updateButton();
+      };
+      const originalLeftClick=el0=>{undo();};
+      const originalRightClick=el0=>{undo();};
+      leftEl.onclick=undo;el.onclick=undo;
+      matchSelectedLeft=null;updateButton();
     };
     rightCol.appendChild(el);
   });
 
-  container.appendChild(leftCol);
-  container.appendChild(rightCol);
-  area.appendChild(container);
+  container.appendChild(leftCol);container.appendChild(rightCol);area.appendChild(container);
 }
 
-// ============ ПРОВЕРКА ============
-function submitAnswer() {
-  const q = currentQuestions[currentIndex];
-  let isCorrect = false;
-  let userAnswerText = "";
-
-  if (q.type.includes('Одиночный') || q.type.includes('Множественный')) {
-    const isMultiple = q.type.includes('Множественный');
-    const selected = [...document.querySelectorAll('.answer.selected')];
-    const selectedIndices = selected.map(s => parseInt(s.dataset.index));
-    const correctIndices = q.answers.map((a, i) => a.correct ? i : -1).filter(i => i !== -1);
-
-    if (isMultiple) {
-      const allCorrect = correctIndices.every(i => selectedIndices.includes(i));
-      const noWrong = selectedIndices.every(i => correctIndices.includes(i));
-      isCorrect = allCorrect && noWrong;
-    } else {
-      isCorrect = selectedIndices.length === 1 && correctIndices.includes(selectedIndices[0]);
-    }
-
-    userAnswerText = selected.map(s => s.textContent.trim()).join('; ') || '— не выбрано —';
-    
-    document.querySelectorAll('.answer').forEach((div) => {
-      const idx = parseInt(div.dataset.index);
-      div.classList.remove('selected');
-      if (correctIndices.includes(idx)) div.classList.add('correct');
-      else if (selectedIndices.includes(idx)) div.classList.add('wrong');
-      div.onclick = null;
+function submitAnswer(){
+  const q=currentQuestions[currentIndex];
+  let correct=false,userText='';
+  if(q.type.includes('Одиночный')||q.type.includes('Множественный')){
+    const multiple=q.type.includes('Множественный');
+    const selected=[...document.querySelectorAll('.answer.selected')];
+    const selectedIndices=selected.map(s=>parseInt(s.dataset.index));
+    const correctIndices=q.answers.map((a,i)=>a.correct?i:-1).filter(i=>i!==-1);
+    correct=multiple?(correctIndices.every(i=>selectedIndices.includes(i))&&selectedIndices.every(i=>correctIndices.includes(i))):(selectedIndices.length===1&&correctIndices.includes(selectedIndices[0]));
+    userText=selected.map(s=>s.textContent.trim()).join('; ')||'— не выбрано —';
+    document.querySelectorAll('.answer').forEach(div=>{
+      const idx=parseInt(div.dataset.index);div.classList.remove('selected');
+      if(correctIndices.includes(idx))div.classList.add('correct');
+      else if(selectedIndices.includes(idx))div.classList.add('wrong');
+      div.onclick=null;
     });
-
-  } else if (q.type === 'Последовательность') {
-    isCorrect = seqSelected.every((val, index) => val === q.sequence[index]);
-    userAnswerText = seqSelected.join(' → ');
-    
-    const targetItems = document.querySelectorAll('#seqTarget .seq-item');
-    targetItems.forEach((el, i) => {
-      el.style.border = (el.dataset.val === q.sequence[i]) ? '2px solid #6B9E6B' : '2px solid #D4A373';
-      el.style.background = (el.dataset.val === q.sequence[i]) ? '#E8F5E8' : '#FDF0E8';
-      el.onclick = null;
+  }else if(q.type==='Последовательность'){
+    correct=seqSelected.every((v,i)=>v===q.sequence[i]);
+    userText=seqSelected.join(' → ')||'— не выбрано —';
+    document.querySelectorAll('#seqTarget .seq-item').forEach((el,i)=>{
+      const ok=el.dataset.val===q.sequence[i];
+      el.style.border=ok?'2px solid #6B9E6B':'2px solid #D4A373';
+      el.style.background=ok?'#E8F5E8':'#FDF0E8';el.onclick=null;
     });
-    document.querySelectorAll('#seqPool .seq-item').forEach(el => el.onclick = null);
-
-  } else if (q.type === 'Соответствие') {
-    isCorrect = q.matches.every((m, i) => matchPairs[i] === m.right);
-    userAnswerText = Object.keys(matchPairs).map(k => `${q.matches[k].left} → ${matchPairs[k]}`).join('; ');
-    document.querySelectorAll('.match-item').forEach(el => el.onclick = null);
+    document.querySelectorAll('#seqPool .seq-item').forEach(el=>el.onclick=null);
+  }else if(q.type==='Соответствие'){
+    correct=q.matches.every((m,i)=>matchPairs[i]===m.right);
+    userText=Object.keys(matchPairs).map(k=>`${q.matches[k].left} → ${matchPairs[k]}`).join('; ')||'— не выбрано —';
+    document.querySelectorAll('.match-item').forEach(el=>el.onclick=null);
   }
-
-  if (isCorrect) score++;
-
-  userAnswers.push({ question: q, userAnswerText, isCorrect });
-
-  const fb = document.getElementById('feedbackBox');
-  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
-  fb.innerHTML = `<strong>${isCorrect ? '✅ Верно!' : '❌ Ошибка'}</strong><br>${q.explanation}`;
-
-  document.getElementById('scoreDisplay').textContent = `Баллов: ${score}`;
-
-  const nextBtn = document.getElementById('nextBtn');
-  nextBtn.disabled = false;
-  nextBtn.textContent = currentIndex === currentQuestions.length - 1 ? 'Показать результат' : 'Следующий вопрос';
-  nextBtn.onclick = nextQuestion;
+  if(correct)score++;
+  userAnswers.push({question:q,userAnswerText:userText,isCorrect:correct});
+  const fb=document.getElementById('feedbackBox');
+  fb.className='feedback show '+(correct?'correct':'wrong');
+  fb.innerHTML=`<strong>${correct?'✅ Верно!':'❌ Ошибка'}</strong><br>${q.explanation}`;
+  document.getElementById('scoreDisplay').textContent=`Баллов: ${score}`;
+  const nextBtn=document.getElementById('nextBtn');
+  nextBtn.disabled=false;
+  nextBtn.textContent=currentIndex===currentQuestions.length-1?'Показать результат':'Следующий вопрос';
+  nextBtn.onclick=nextQuestion;
 }
 
-function nextQuestion() {
+function nextQuestion(){
   currentIndex++;
-  if (currentIndex >= currentQuestions.length) {
-    finishQuiz();
-  } else {
-    renderQuestion();
-  }
+  if(currentIndex>=currentQuestions.length)finishQuiz();else renderQuestion();
 }
 
-// ============ ЗАВЕРШЕНИЕ ============
-function finishQuiz() {
+function finishQuiz(){
   clearInterval(timerInterval);
-  document.getElementById('timerBar').style.display = 'none';
-  document.getElementById('quizScreen').style.display = 'none';
-  const resultScreen = document.getElementById('resultScreen');
-  resultScreen.classList.add('show');
-
-  const total = currentQuestions.length;
-  const percent = Math.round((score / total) * 100);
-
-  document.getElementById('resultScore').textContent = `${score}/${total}`;
-  document.getElementById('resultPercent').textContent = `${percent}%`;
-
-  const gradeEl = document.getElementById('resultGrade');
-  let grade, cls;
-  if (percent >= 90) { grade = 'Оценка: 5 (отлично)'; cls = 'grade-5'; }
-  else if (percent >= 75) { grade = 'Оценка: 4 (хорошо)'; cls = 'grade-4'; }
-  else if (percent >= 60) { grade = 'Оценка: 3 (удовлетворительно)'; cls = 'grade-3'; }
-  else { grade = 'Оценка: 2 (неудовлетворительно)'; cls = 'grade-2'; }
-  gradeEl.textContent = grade;
-  gradeEl.className = 'result-grade ' + cls;
-
-  const reviewBox = document.getElementById('reviewBox');
-  reviewBox.innerHTML = '<h3>📋 Разбор ответов</h3>';
-
-  userAnswers.forEach((ua, i) => {
-    const q = ua.question;
-    let correctText = "";
-    if (q.type === 'Последовательность') correctText = q.sequence.join(' → ');
-    else if (q.type === 'Соответствие') correctText = q.matches.map(m => `${m.left} → ${m.right}`).join('; ');
-    else correctText = q.answers.filter(a => a.correct).map(a => a.text).join('; ');
-
-    const item = document.createElement('div');
-    item.className = 'review-item';
-    item.innerHTML = `
-      <div class="num">${i + 1}. ${q.type}</div>
-      <div style="margin: 4px 0;"><strong>Вопрос:</strong> ${q.question}</div>
-      <div><strong>Ваш ответ:</strong> <span class="${ua.isCorrect ? 'ok' : 'bad'}">${ua.userAnswerText}</span></div>
-      ${!ua.isCorrect ? `<div><strong>Правильный ответ:</strong> <span class="ok">${correctText}</span></div>` : ''}
-      <div style="margin-top: 4px; color: #558b2f; font-size: 0.8rem;"><em>${q.explanation}</em></div>
-    `;
-    reviewBox.appendChild(item);
+  document.getElementById('quizScreen').style.display='none';
+  const result=document.getElementById('resultScreen');result.classList.add('show');
+  const total=currentQuestions.length,percent=Math.round(score/total*100);
+  document.getElementById('resultStudent').textContent=`${window.studentName||'—'} · группа ${window.studentGroup||'—'}`;
+  document.getElementById('resultScore').textContent=`${score}/${total}`;
+  document.getElementById('resultPercent').textContent=`${percent}%`;
+  const gradeEl=document.getElementById('resultGrade');
+  let grade,cls;
+  if(percent>=90){grade='Оценка: 5 (отлично)';cls='grade-5';}
+  else if(percent>=75){grade='Оценка: 4 (хорошо)';cls='grade-4';}
+  else if(percent>=60){grade='Оценка: 3 (удовлетворительно)';cls='grade-3';}
+  else{grade='Оценка: 2 (неудовлетворительно)';cls='grade-2';}
+  gradeEl.textContent=grade;gradeEl.className='result-grade '+cls;
+  const box=document.getElementById('reviewBox');
+  box.innerHTML='<h3>📋 Разбор ответов</h3>';
+  userAnswers.forEach((ua,i)=>{
+    const q=ua.question;let correctText='';
+    if(q.type==='Последовательность')correctText=q.sequence.join(' → ');
+    else if(q.type==='Соответствие')correctText=q.matches.map(m=>`${m.left} → ${m.right}`).join('; ');
+    else correctText=q.answers.filter(a=>a.correct).map(a=>a.text).join('; ');
+    const item=document.createElement('div');item.className='review-item';
+    item.innerHTML=`<div class="num">${i+1}. ${q.type}</div>
+    <div style="margin:4px 0;"><strong>Вопрос:</strong> ${q.question}</div>
+    <div><strong>Ваш ответ:</strong> <span class="${ua.isCorrect?'ok':'bad'}">${ua.userAnswerText}</span></div>
+    ${!ua.isCorrect?`<div><strong>Правильный ответ:</strong> <span class="ok">${correctText}</span></div>`:''}
+    <div style="margin-top:4px;color:#558b2f;font-size:.8rem;"><em>${q.explanation}</em></div>`;
+    box.appendChild(item);
   });
+  saveResult(score,total,percent,grade);
 }
 
-function restart() {
-  init();
+function saveResult(score,total,percent,grade){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    const results=raw?JSON.parse(raw):[];
+    results.push({
+      date:new Date().toLocaleString('ru-RU'),
+      name:window.studentName||'—',
+      group:window.studentGroup||'—',
+      score,total,percent,grade
+    });
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(results));
+  }catch(e){}
 }
 
-// ============ СТАРТ ============
-init();
+function copyResult(){
+  const text=`Тест «Кожа — зеркало здоровья»\nСтудент: ${window.studentName||'—'}\nГруппа: ${window.studentGroup||'—'}\nРезультат: ${score}/${currentQuestions.length} (${Math.round(score/currentQuestions.length*100)}%)\n${document.getElementById('resultGrade').textContent}`;
+  navigator.clipboard.writeText(text).then(()=>alert('Результат скопирован.')).catch(()=>alert('Скопируйте результат вручную.'));
+}
+
+function restart(){init();}
+
+function init(){
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('startScreen').classList.add('show');
+  document.getElementById('studentName').value='';
+  document.getElementById('studentGroup').value='';
+}
+
+document.getElementById('startBtn').addEventListener('click',startQuiz);
+document.getElementById('copyBtn').addEventListener('click',copyResult);
 </script>
 </body>
 </html>

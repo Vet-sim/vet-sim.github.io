@@ -348,28 +348,30 @@ td textarea{min-height:70px;border:1px solid #E5DDCF}
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">🎯 Раздел 4. Анализ, предварительное заключение и профилактика</div>
-    <div class="card-subtitle">Заполняется после обсуждения результатов всех станций в команде.</div>
+  <!-- РАЗДЕЛ 4. АНАЛИЗ -->
+<div class="card">
+  <div class="card-title">🎯 Раздел 4. Анализ строения и связь с профессиональной практикой</div>
+  <div class="card-subtitle">Заполняется после обсуждения результатов всех станций. Мы ещё не изучали конкретные заболевания, но можем проанализировать, как знание строения помогает в профессии.</div>
 
-    <div class="grid-2">
-      <div>
-        <label class="field-label">Предварительное заключение</label>
-        <select id="diagnosis" style="width:100%;padding:8px 14px;border:2px solid #E5DDCF;border-radius:1rem;font-family:inherit;font-size:.9rem;background:#FEFAF2;color:#1e2f2a;">
-          <option value="">— выберите наиболее вероятный вариант —</option>
-          <option>Демодекоз</option>
-          <option>Дерматофитоз</option>
-          <option>Аллергический дерматит</option>
-          <option>Механическое повреждение кожи</option>
-          <option>Нарушение условий содержания и ухода</option>
-          <option>Требуется дополнительная диагностика</option>
-        </select>
-      </div>
-      <div>
-        <label class="field-label">Какие данные подтверждают заключение?</label>
-        <input type="text" id="diagnosisProof" placeholder="Данные осмотра, микроскопии, скотч-теста...">
-      </div>
-    </div>
+  <table>
+    <tr>
+      <th>Вопрос для команды</th>
+      <th>Ответ команды</th>
+    </tr>
+    <tr>
+      <td>Какие структуры кожи мы изучили на препаратах?</td>
+      <td><textarea id="analysis1" placeholder="Перечислите: эпидермис, дерма, фолликулы, железы..."></textarea></td>
+    </tr>
+    <tr>
+      <td>Почему ветеринарному фельдшеру важно знать микроскопическое строение кожи?</td>
+      <td><textarea id="analysis2" placeholder="Например: чтобы понимать, где искать паразитов, как ставить соскоб..."></textarea></td>
+    </tr>
+    <tr>
+      <td>Как изменение строения (например, повреждение фолликула) может отразиться на здоровье животного?</td>
+      <td><textarea id="analysis3" placeholder="Например: выпадение шерсти, нарушение защиты, риск инфекции..."></textarea></td>
+    </tr>
+  </table>
+</div>
 
     <div style="margin-top:12px;">
       <label class="field-label">Обоснование команды</label>
@@ -423,36 +425,48 @@ td textarea{min-height:70px;border:1px solid #E5DDCF}
     </table>
   </div>
 
-  <div class="card">
-    <div class="card-title">✨ Раздел 6. Рефлексия и самооценка <span class="variant-badge">Вариатив</span></div>
-    <div class="card-subtitle">Можно заполнить в рабочей тетради или электронно на этой странице.</div>
+ <!-- РАЗДЕЛ 6. РЕФЛЕКСИЯ -->
+<div class="card">
+  <div class="card-title">✨ Раздел 6. Рефлексия и самооценка <span class="variant-badge">Вариатив</span></div>
+  <div class="card-subtitle">Можно заполнить в рабочей тетради или электронно на этой странице.</div>
 
-    <div class="grid-2">
-      <div>
-        <label class="field-label">Мой уровень по теме «Кожа и её производные»</label>
-        <select id="selfLevel" style="width:100%;padding:8px 14px;border:2px solid #E5DDCF;border-radius:1rem;font-family:inherit;font-size:.9rem;background:#FEFAF2;color:#1e2f2a;">
-          <option value="">— выберите уровень —</option>
-          <option>Знаю основные термины</option>
-          <option>Понимаю строение и функции</option>
-          <option>Умею работать с препаратами</option>
-          <option>Могу применить знания в клинической ситуации</option>
-        </select>
-      </div>
-      <div>
-        <label class="field-label">Что было самым сложным?</label>
-        <input type="text" id="difficult" placeholder="Например: поиск потовых желёз, интерпретация скотч-теста...">
-      </div>
-    </div>
-
-    <div style="margin-top:12px;">
-      <label class="field-label">Как ИИ помог при подготовке ответа на вопрос корреспондента?</label>
-      <textarea id="refl2" placeholder="Например: помог структурировать ответ, найти факты, упростить формулировки; что пришлось проверить самостоятельно?"></textarea>
-    </div>
-    <div style="margin-top:12px;">
-      <label class="field-label">Что я понял о связи строения кожи и здоровья животного?</label>
-      <textarea id="refl3" placeholder="Ваш вывод..."></textarea>
-    </div>
+  <div style="margin-top:14px;">
+    <label class="field-label">Мой уровень по теме «Кожа и её производные»</label>
+    <select id="reflLevel">
+      <option value="">— Выберите —</option>
+      <option value="1">1. Узнал новое, но пока не разобрался</option>
+      <option value="2">2. Понимаю, но нужна помощь</option>
+      <option value="3">3. Понимаю и могу применить по образцу</option>
+      <option value="4">4. Могу применить в новой ситуации</option>
+      <option value="5">5. Могу объяснить другому</option>
+    </select>
   </div>
+
+  <div style="margin-top:12px;">
+    <label class="field-label">Что было самым сложным?</label>
+    <textarea id="reflHard" placeholder="Ваш ответ..."></textarea>
+  </div>
+
+  <div style="margin-top:12px;">
+    <label class="field-label">Как ИИ помог при подготовке ответа на вопрос корреспондента?</label>
+    <textarea id="reflAI" placeholder="Ваш ответ..."></textarea>
+  </div>
+
+  <div style="margin-top:12px;">
+    <label class="field-label">Что я понял о связи строения кожи и здоровья животного?</label>
+    <textarea id="reflConnection" placeholder="Ваш ответ..."></textarea>
+  </div>
+
+  <div style="margin-top:12px;">
+    <label class="field-label">Как работа в команде помогла вам на станциях и в интервью?</label>
+    <textarea id="reflTeam" placeholder="Ваш ответ..."></textarea>
+  </div>
+
+  <div style="margin-top:12px;">
+    <label class="field-label">Где в будущей профессии вам могут пригодиться знания, полученные сегодня?</label>
+    <textarea id="reflFuture" placeholder="Ваш ответ..."></textarea>
+  </div>
+</div>
 
   <div class="links-box">
     <h3>🌐 Цифровые ресурсы занятия</h3>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Чек-лист наблюдения преподавателя · Кожа — зеркало здоровья | ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Montserrat',system-ui,sans-serif;background:#FDF8F0;color:#3E5C4A;padding:16px;line-height:1.5}
+.container{max-width:950px;margin:0 auto}
+header{background:linear-gradient(135deg,#2C7DA0,#1F4E6E);color:#fff;padding:20px 26px;border-radius:1.5rem;margin-bottom:18px;text-align:center}
+header h1{font-size:1.35rem;margin-bottom:5px}
+header p{font-size:.88rem;opacity:.95}
+.card{background:#fff;border-radius:1.2rem;padding:20px 24px;margin-bottom:16px;border:1px solid #EDE8DC;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.card h2{color:#2C7DA0;font-size:1.05rem;margin-bottom:4px}
+.card .subtitle{font-size:.8rem;color:#7B8D6E;font-style:italic;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{font-weight:600;font-size:.82rem;display:block;margin-bottom:4px}
+input[type=text],textarea,select{width:100%;padding:8px 14px;border:2px solid #E5DDCF;border-radius:1rem;font-family:inherit;font-size:.9rem;background:#FEFAF2;color:#1e2f2a}
+textarea{min-height:70px;resize:vertical}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:.84rem}
+th,td{border:1px solid #E5DDCF;padding:8px;text-align:left;vertical-align:top}
+th{background:#F4EFE4;color:#2C7DA0;font-size:.79rem}
+td.center{text-align:center}
+.scale{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.scale label{display:flex;align-items:center;gap:5px;font-weight:500;margin:0}
+input[type=checkbox],input[type=radio]{accent-color:#2e7d32;width:16px;height:16px}
+.check-item{display:flex;gap:9px;align-items:flex-start;margin-bottom:8px;font-size:.87rem}
+.check-item input{margin-top:3px}
+.note{background:#FFF4E5;border-left:4px solid #EF6C00;border-radius:.8rem;padding:10px 16px;margin-bottom:14px;font-size:.85rem}
+.note strong{color:#BF360C}
+.total{background:#E8F5E8;border-left:4px solid #2e7d32;border-radius:.8rem;padding:12px 16px;margin-top:12px;font-weight:700;color:#2e7d32}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.btn{background:linear-gradient(135deg,#43a047,#2e7d32);color:#fff;border:none;padding:11px 26px;border-radius:2rem;font-weight:600;font-size:.88rem;cursor:pointer;font-family:inherit}
+.btn.secondary{background:#fff;color:#2e7d32;border:2px solid #2e7d32}
+.links{background:#e8f0f5;border-radius:1rem;padding:14px 18px;font-size:.84rem;margin-top:16px}
+.links a{color:#2C7DA0;font-weight:600;text-decoration:none}
+.links a:hover{text-decoration:underline}
+footer{text-align:center;font-size:.74rem;color:#B0BC9C;margin-top:20px;padding-top:14px;border-top:1px solid #E5DDCF}
+@media(max-width:700px){.grid{grid-template-columns:1fr}body{padding:10px}.card{padding:16px}table{font-size:.76rem}th,td{padding:5px}}
+@media print{body{background:#fff;padding:.3in}.btn-row{display:none}input,textarea,select{border:1px solid #ccc;background:#fff}.card{box-shadow:none;border:1px solid #ddd;page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>📋 Чек-лист наблюдения преподавателя</h1>
+  <p>Практическое занятие «Кожа — зеркало здоровья: макро- и микроскопическое строение кожи, её производных и молочной железы»</p>
+</header>
+
+<div class="card">
+  <h2>1. Данные наблюдения</h2>
+  <div class="grid">
+    <div>
+      <label>Команда</label>
+      <input type="text" id="team" placeholder="Название команды">
+    </div>
+    <div>
+      <label>Дата проведения</label>
+      <input type="text" id="date" placeholder="дд.мм.гггг">
+    </div>
+    <div>
+      <label>Группа</label>
+      <input type="text" id="group" placeholder="122">
+    </div>
+    <div>
+      <label>Преподаватель</label>
+      <input type="text" id="teacher" placeholder="Тераевич А. С.">
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <strong>Как работать с чек-листом:</strong> отмечайте наблюдаемые проявления по ходу занятия. Шкала: <strong>0</strong> — не проявлено; <strong>1</strong> — проявлено частично; <strong>2</strong> — проявлено полно и самостоятельно. Итоговый балл носит диагностический характер и используется для обратной связи команде.
+</div>
+
+<div class="card">
+  <h2>2. Организация работы команды</h2>
+  <div class="check-item"><input type="checkbox" id="org1"><span>Команда готова к работе: распределены роли, открыта инструкционная карта.</span></div>
+  <div class="check-item"><input type="checkbox" id="org2"><span>Соблюдается ротация станций и регламент времени.</span></div>
+  <div class="check-item"><input type="checkbox" id="org3"><span>Все участники включены в выполнение заданий.</span></div>
+  <div class="check-item"><input type="checkbox" id="org4"><span>Соблюдаются требования безопасности при работе с животным, микроскопом и препаратами.</span></div>
+  <div class="check-item"><input type="checkbox" id="org5"><span>Результаты своевременно фиксируются в инструкционной карте.</span></div>
+
+  <table>
+    <tr><th style="width:52%;">Критерий</th><th style="width:48%;">Балл: 0 / 1 / 2</th></tr>
+    <tr><td>Самоорганизация и распределение обязанностей</td><td class="center"><span class="scale"><label><input type="radio" name="orgScore" value="0">0</label><label><input type="radio" name="orgScore" value="1">1</label><label><input type="radio" name="orgScore" value="2">2</label></span></td></tr>
+    <tr><td>Соблюдение алгоритма работы на станциях</td><td class="center"><span class="scale"><label><input type="radio" name="orgAlg" value="0">0</label><label><input type="radio" name="orgAlg" value="1">1</label><label><input type="radio" name="orgAlg" value="2">2</label></span></td></tr>
+    <tr><td>Взаимодействие и взаимопомощь в команде</td><td class="center"><span class="scale"><label><input type="radio" name="orgTeam" value="0">0</label><label><input type="radio" name="orgTeam" value="1">1</label><label><input type="radio" name="orgTeam" value="2">2</label></span></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>3. Станция «Живой уголок»: клинический осмотр</h2>
+  <div class="check-item"><input type="checkbox" id="clin1"><span>Проведён визуальный осмотр кожного покрова и шерсти.</span></div>
+  <div class="check-item"><input type="checkbox" id="clin2"><span>Оценены тургор, влажность и местная температура кожи.</span></div>
+  <div class="check-item"><input type="checkbox" id="clin3"><span>Выявленные изменения описаны с указанием локализации.</span></div>
+  <div class="check-item"><input type="checkbox" id="clin4"><span>Сформулировано предположение о возможной причине изменений.</span></div>
+  <div class="check-item"><input type="checkbox" id="clin5"><span>Соблюдается спокойное и бережное обращение с животным.</span></div>
+
+  <table>
+    <tr><th style="width:52%;">Критерий</th><th style="width:48%;">Балл: 0 / 1 / 2</th></tr>
+    <tr><td>Полнота клинического осмотра</td><td class="center"><span class="scale"><label><input type="radio" name="clinFull" value="0">0</label><label><input type="radio" name="clinFull" value="1">1</label><label><input type="radio" name="clinFull" value="2">2</label></span></td></tr>
+    <tr><td>Точность описания симптомов</td><td class="center"><span class="scale"><label><input type="radio" name="clinAcc" value="0">0</label><label><input type="radio" name="clinAcc" value="1">1</label><label><input type="radio" name="clinAcc" value="2">2</label></span></td></tr>
+    <tr><td>Умение связать симптомы с возможной патологией</td><td class="center"><span class="scale"><label><input type="radio" name="clinLink" value="0">0</label><label><input type="radio" name="clinLink" value="1">1</label><label><input type="radio" name="clinLink" value="2">2</label></span></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>4. Станция «Гистология»: микроскопия</h2>
+  <div class="check-item"><input type="checkbox" id="micro1"><span>Микроскоп настроен правильно; работа начинается с малого увеличения.</span></div>
+  <div class="check-item"><input type="checkbox" id="micro2"><span>На препарате кожи без волос найдены эпидермис, дерма и подкожная основа.</span></div>
+  <div class="check-item"><input type="checkbox" id="micro3"><span>На препарате кожи с волосом найдены фолликул, луковица, сосочек, сальные и потовые железы.</span></div>
+  <div class="check-item"><input type="checkbox" id="micro4"><span>На препарате молочной железы распознаны дольки, альвеолы, секрет, строма и миоэпителий.</span></div>
+  <div class="check-item"><input type="checkbox" id="micro5"><span>Результат скотч-теста описан объективно; сформулировано предварительное заключение.</span></div>
+  <div class="check-item"><input type="checkbox" id="micro6"><span>Сделан вывод о связи строения кожи и молочной железы с их функциями.</span></div>
+
+  <table>
+    <tr><th style="width:52%;">Критерий</th><th style="width:48%;">Балл: 0 / 1 / 2</th></tr>
+    <tr><td>Соблюдение техники микроскопирования</td><td class="center"><span class="scale"><label><input type="radio" name="microTech" value="0">0</label><label><input type="radio" name="microTech" value="1">1</label><label><input type="radio" name="microTech" value="2">2</label></span></td></tr>
+    <tr><td>Правильность распознавания гистологических структур</td><td class="center"><span class="scale"><label><input type="radio" name="microKnow" value="0">0</label><label><input type="radio" name="microKnow" value="1">1</label><label><input type="radio" name="microKnow" value="2">2</label></span></td></tr>
+    <tr><td>Качество описания и обоснования результатов</td><td class="center"><span class="scale"><label><input type="radio" name="microDesc" value="0">0</label><label><input type="radio" name="microDesc" value="1">1</label><label><input type="radio" name="microDesc" value="2">2</label></span></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>5. Станция «Копыта и копытца»: норма и патология</h2>
+  <div class="check-item"><input type="checkbox" id="hoof1"><span>Найдены основные структуры копыта в норме.</span></div>
+  <div class="check-item"><input type="checkbox" id="hoof2"><span>Проведено сравнение нормы и патологии.</span></div>
+  <div class="check-item"><input type="checkbox" id="hoof3"><span>Описаны конкретные изменения формы, поверхности или структуры рога.</span></div>
+  <div class="check-item"><input type="checkbox" id="hoof4"><span>Сформулирован вывод о влиянии патологии на животное.</span></div>
+
+  <table>
+    <tr><th style="width:52%;">Критерий</th><th style="width:48%;">Балл: 0 / 1 / 2</th></tr>
+    <tr><td>Распознавание структур в норме</td><td class="center"><span class="scale"><label><input type="radio" name="hoofNorm" value="0">0</label><label><input type="radio" name="hoofNorm" value="1">1</label><label><input type="radio" name="hoofNorm" value="2">2</label></span></td></tr>
+    <tr><td>Качество сравнения нормы и патологии</td><td class="center"><span class="scale"><label><input type="radio" name="hoofComp" value="0">0</label><label><input type="radio" name="hoofComp" value="1">1</label><label><input type="radio" name="hoofComp" value="2">2</label></span></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>6. Панельная дискуссия и групповое решение</h2>
+  <div class="check-item"><input type="checkbox" id="disc1"><span>Эксперт отвечает по существу вопроса, использует научные факты.</span></div>
+  <div class="check-item"><input type="checkbox" id="disc2"><span>Ответ логичен, доступен и связан с практикой ветеринарной работы.</span></div>
+  <div class="check-item"><input type="checkbox" id="disc3"><span>ИИ использован как инструмент подготовки, а ответ сформулирован самостоятельно.</span></div>
+  <div class="check-item"><input type="checkbox" id="disc4"><span>Команда обсуждает варианты, аргументирует выбор и учитывает «ловушки».</span></div>
+  <div class="check-item"><input type="checkbox" id="disc5"><span>Предварительное заключение подкреплено данными осмотра, микроскопии и скотч-теста.</span></div>
+
+  <table>
+    <tr><th style="width:52%;">Критерий</th><th style="width:48%;">Балл: 0 / 1 / 2</th></tr>
+    <tr><td>Аргументированность ответа эксперта</td><td class="center"><span class="scale"><label><input type="radio" name="discArg" value="0">0</label><label><input type="radio" name="discArg" value="1">1</label><label><input type="radio" name="discArg" value="2">2</label></span></td></tr>
+    <tr><td>Качество группового обсуждения</td><td class="center"><span class="scale"><label><input type="radio" name="discGroup" value="0">0</label><label><input type="radio" name="discGroup" value="1">1</label><label><input type="radio" name="discGroup" value="2">2</label></span></td></tr>
+    <tr><td>Обоснованность предварительного диагноза</td><td class="center"><span class="scale"><label><input type="radio" name="discDiag" value="0">0</label><label><input type="radio" name="discDiag" value="1">1</label><label><input type="radio" name="discDiag" value="2">2</label></span></td></tr>
+  </table>
+</div>
+
+<div class="card">
+  <h2>7. Рефлексия и самооценка</h2>
+  <div class="check-item"><input type="checkbox" id="refl1"><span>Обучающиеся определяют свой уровень усвоения темы.</span></div>
+  <div class="check-item"><input type="checkbox" id="refl2"><span>Называют конкретные затруднения, а не только общие формулировки.</span></div>
+  <div class="check-item"><input type="checkbox" id="refl3"><span>Формулируют вывод о связи строения кожи со здоровьем животного.</span></div>
+  <div class="check-item"><input type="checkbox" id="refl4"><span>Оценивают пользу и ограничения использования ИИ при подготовке.</span></div>
+
+  <div style="margin-top:12px;">
+    <label>Наиболее успешный элемент работы команды</label>
+    <textarea id="strengths" placeholder="Что получилось особенно хорошо..."></textarea>
+  </div>
+  <div style="margin-top:12px;">
+    <label>Затруднения и ошибки</label>
+    <textarea id="difficulties" placeholder="Какие задания, термины или действия вызвали затруднения..."></textarea>
+  </div>
+  <div style="margin-top:12px;">
+    <label>Рекомендации команде</label>
+    <textarea id="recommendations" placeholder="Что доработать, на что обратить внимание при подготовке к следующему занятию..."></textarea>
+  </div>
+</div>
+
+<div class="card">
+  <h2>8. Итоговая оценка наблюдения</h2>
+  <div class="grid">
+    <div>
+      <label>Суммарный балл наблюдения</label>
+      <input type="text" id="totalScore" placeholder="0–24 балла">
+    </div>
+    <div>
+      <label>Уровень сформированности умений</label>
+      <select id="level">
+        <option value="">— выберите уровень —</option>
+        <option>Высокий: выполняет задания самостоятельно, аргументированно</option>
+        <option>Средний: выполняет с незначительными уточнениями</option>
+        <option>Базовый: выполняет при поддержке преподавателя</option>
+        <option>Требуется дополнительная поддержка</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="total">
+    Рекомендуемая интерпретация: 20–24 балла — высокий уровень; 14–19 — средний; 8–13 — базовый; менее 8 — требуется дополнительная поддержка.
+  </div>
+
+  <div class="btn-row no-print">
+    <button class="btn" id="saveBtn">💾 Сохранить</button>
+    <button class="btn secondary" onclick="window.print()">🖨️ Печать</button>
+    <button class="btn secondary" id="clearBtn">🧹 Очистить</button>
+  </div>
+</div>
+
+<div class="links">
+  <strong>Сопутствующие ресурсы:</strong>
+  <a href="https://vet-sim.github.io/metodist_goda/instruction_card.html" target="_blank" rel="noopener">Инструкционная карта</a> ·
+  <a href="https://vet-sim.github.io/metodist_goda/student_diary_2.1.html" target="_blank" rel="noopener">Дневник студента</a> ·
+  <a href="https://vet-sim.github.io/metodist_goda/demodecosis_decision.html" target="_blank" rel="noopener">Тренажёр «Групповое принятие решений»</a>
+</div>
+
+<footer>
+  © ВетСим · Чек-лист наблюдения преподавателя к занятию «Кожа — зеркало здоровья»<br>
+  <strong>Автор: Тераевич Алла Сергеевна, БПОУ ВО «Вологодский аграрно-экономический колледж»</strong>
+</footer>
+
+</div>
+
+<script>
+const STORAGE_KEY='vetsim_teacher_checklist_v1';
+const FIELDS=['team','date','group','teacher','strengths','difficulties','recommendations','totalScore','level'];
+const CHECKS=['org1','org2','org3','org4','org5','clin1','clin2','clin3','clin4','clin5','micro1','micro2','micro3','micro4','micro5','micro6','hoof1','hoof2','hoof3','hoof4','disc1','disc2','disc3','disc4','disc5','refl1','refl2','refl3','refl4'];
+const RADIOS=['orgScore','orgAlg','orgTeam','clinFull','clinAcc','clinLink','microTech','microKnow','microDesc','hoofNorm','hoofComp','discArg','discGroup','discDiag'];
+
+function save(){
+  const d={};
+  FIELDS.forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.value;});
+  CHECKS.forEach(id=>{const e=document.getElementById(id);if(e)d[id]=e.checked;});
+  RADIOS.forEach(name=>{
+    const el=document.querySelector('input[name="'+name+'"]:checked');
+    if(el)d[name]=el.value;
+  });
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}catch(e){}
+}
+
+function load(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return;
+    const d=JSON.parse(raw);
+    FIELDS.forEach(id=>{const e=document.getElementById(id);if(e&&d[id]!==undefined)e.value=d[id];});
+    CHECKS.forEach(id=>{const e=document.getElementById(id);if(e&&d[id]!==undefined)e.checked=d[id];});
+    RADIOS.forEach(name=>{
+      if(d[name]!==undefined){
+        const el=document.querySelector('input[name="'+name+'"][value="'+d[name]+'"]');
+        if(el)el.checked=true;
+      }
+    });
+  }catch(e){}
+}
+
+function clear(){
+  if(!confirm('Очистить чек-лист наблюдения?'))return;
+  FIELDS.forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  CHECKS.forEach(id=>{const e=document.getElementById(id);if(e)e.checked=false;});
+  document.querySelectorAll('input[type=radio]').forEach(e=>e.checked=false);
+  localStorage.removeItem(STORAGE_KEY);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  load();
+  FIELDS.forEach(id=>{const e=document.getElementById(id);if(e){e.addEventListener('input',save);e.addEventListener('change',save);}});
+  CHECKS.forEach(id=>{const e=document.getElementById(id);if(e)e.addEventListener('change',save);});
+  document.querySelectorAll('input[type=radio]').forEach(e=>e.addEventListener('change',save));
+  document.getElementById('saveBtn').addEventListener('click',()=>{save();alert('✅ Чек-лист сохранён в этом браузере.');});
+  document.getElementById('clearBtn').addEventListener('click',clear);
+  window.addEventListener('beforeunload',save);
+});
+</script>
+</body>
+</html>

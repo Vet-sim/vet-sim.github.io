@@ -620,7 +620,7 @@ textarea { resize: vertical; min-height: 80px; }
         <div class="card-header">
             <div class="card-title">📓 Дневник работ (пример)</div>
         </div>
-        <div class="card-subtitle">Заполняется по форме. Компетенции выбираются из выпадающего списка.</div>
+        <div class="card-subtitle">Заполняется по форме. Можно выбрать несколько компетенций.</div>
 
         <div id="diaryEntries"></div>
 
@@ -708,7 +708,6 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // ПЕЧАТЬ ТОЛЬКО АКТИВНОЙ ВКЛАДКИ
 // ==========================================
 function printTab(tabId) {
-    // Добавляем временный класс для печати только нужной вкладки
     const style = document.createElement('style');
     style.id = 'print-override';
     style.textContent = `
@@ -795,7 +794,20 @@ function saveAll() {
     // Дневник
     document.querySelectorAll('.diary-entry').forEach(entry => {
         const row = {};
-        entry.querySelectorAll('input, textarea, select').forEach((el, idx) => { row['d' + idx] = el.value; });
+
+        entry.querySelectorAll('input, textarea, select').forEach((el, idx) => {
+            if (el.classList.contains('comp-multi')) {
+                const vals = Array.from(el.selectedOptions).map(o => o.value);
+                const compString = vals.join(', ');
+
+                // d5 сохраняем для совместимости со старыми данными и печатью
+                row['d' + idx] = compString;
+                row['d_comp'] = compString;
+            } else {
+                row['d' + idx] = el.value;
+            }
+        });
+
         data.diaryEntries.push(row);
     });
 
@@ -938,7 +950,14 @@ function renderTable1(saved) {
 }
 
 function renderTable2(saved) {
-    const items = ['1. Выход делового приплода, голов', '2. Получено телят на 100 коров, голов', '3. Браковка коров, %', '4. Процент яловости коров, %', '5. % обеспеченности стада тёлками старше двух лет', '6. Коэффициент осеменения коров, %'];
+    const items = [
+        '1. Выход делового приплода, голов',
+        '2. Получено телят на 100 коров, голов',
+        '3. Браковка коров, %',
+        '4. Процент яловости коров, %',
+        '5. % обеспеченности стада тёлками старше двух лет',
+        '6. Коэффициент осеменения коров, %'
+    ];
     const tbody = document.getElementById('t2Body');
     tbody.innerHTML = '';
     items.forEach((item, idx) => {
@@ -956,7 +975,12 @@ function renderTable2(saved) {
 }
 
 function renderTable3(saved) {
-    const items = ['Удой молока на 1 корову, кг', 'Среднесуточный прирост живой массы КРС, г', 'Выход телят на 100 коров, голов', 'Среднесуточный прирост живой массы свиней, г'];
+    const items = [
+        'Удой молока на 1 корову, кг',
+        'Среднесуточный прирост живой массы КРС, г',
+        'Выход телят на 100 коров, голов',
+        'Среднесуточный прирост живой массы свиней, г'
+    ];
     const tbody = document.getElementById('t3Body');
     tbody.innerHTML = '';
     items.forEach((item, idx) => {
@@ -1070,8 +1094,21 @@ function addDiaryEntry(data) {
     div.className = 'diary-entry';
     div.style.cssText = 'background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:14px; margin-bottom:12px;';
 
+    // Поддержка старых данных: d_comp или d5
+    const selectedComps = (data.d_comp || data.d5 || '')
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+
     const compOptions = COMPETENCIES.map(c =>
-        `<option value="${c}" ${data.d5 === c ? 'selected' : ''}>${c}</option>`
+        `<option value="${c}" ${selectedComps.includes(c) ? 'selected' : ''}>${c}</option>`
+    ).join('');
+
+    const compCheckboxes = COMPETENCIES.map(c =>
+        `<label style="display:inline-flex; align-items:center; gap:4px; margin:2px 8px 2px 0; font-size:0.78rem; cursor:pointer;">
+            <input type="checkbox" class="comp-check" value="${c}" ${selectedComps.includes(c) ? 'checked' : ''}>
+            ${c}
+        </label>`
     ).join('');
 
     div.innerHTML = `
@@ -1079,33 +1116,67 @@ function addDiaryEntry(data) {
             <div><label class="field-label">Дата</label><input type="text" value="${data.d0 || ''}" placeholder="дд.мм.гггг"></div>
             <div><label class="field-label">Место работы</label><input type="text" value="${data.d1 || ''}" placeholder="Организация / отделение"></div>
         </div>
+
         <div style="margin-bottom:8px;">
-            <label class="field-label">Код компетенции</label>
-            <select style="width:100%; padding:6px 12px; border:1px solid #E5DDCF; border-radius:8px; font-family:inherit; background:#fff;">
-                <option value="">— выберите —</option>
+            <label class="field-label">Коды компетенций (можно выбрать несколько)</label>
+            <select multiple id="compMulti" class="comp-multi" style="width:100%; padding:6px 12px; border:1px solid #E5DDCF; border-radius:8px; font-family:inherit; background:#fff; min-height:80px;">
                 ${compOptions}
             </select>
+            <div style="margin-top:6px;">${compCheckboxes}</div>
         </div>
+
         <div style="margin-bottom:8px;">
             <label class="field-label">Содержание и объём работы</label>
             <textarea>${data.d6 || ''}</textarea>
         </div>
+
         <div>
             <label class="field-label">Замечания руководителя</label>
             <input type="text" value="${data.d7 || ''}" placeholder="Замечания">
         </div>
+
         <div style="margin-top:8px; text-align:right;" class="no-print">
             <button class="btn btn-danger btn-sm removeDiary">🗑 Удалить запись</button>
         </div>
     `;
+
     container.appendChild(div);
+
+    // Синхронизация мультиселекта и чекбоксов
+    const multi = div.querySelector('#compMulti');
+    const checks = div.querySelectorAll('.comp-check');
+
+    function syncFromSelect() {
+        const vals = Array.from(multi.selectedOptions).map(o => o.value);
+        checks.forEach(ch => ch.checked = vals.includes(ch.value));
+        saveAll();
+    }
+
+    function syncFromChecks() {
+        const vals = Array.from(checks).filter(ch => ch.checked).map(ch => ch.value);
+        Array.from(multi.options).forEach(o => o.selected = vals.includes(o.value));
+        saveAll();
+    }
+
+    if (multi) {
+        multi.addEventListener('change', syncFromSelect);
+    }
+
+    checks.forEach(ch => ch.addEventListener('change', syncFromChecks));
+
     div.querySelectorAll('input, textarea, select').forEach(el => {
         el.addEventListener('input', saveAll);
         el.addEventListener('change', saveAll);
     });
+
     div.querySelector('.removeDiary').addEventListener('click', () => {
-        if (confirm('Удалить эту запись?')) { div.remove(); saveAll(); }
+        if (confirm('Удалить эту запись?')) {
+            div.remove();
+            saveAll();
+        }
     });
+
+    return div;
 }
 
 document.getElementById('addDiaryEntry').addEventListener('click', () => { addDiaryEntry(); saveAll(); });
@@ -1168,12 +1239,25 @@ function loadAll() {
     if (data.orgHead) document.getElementById('orgHead').value = data.orgHead;
 
     // План
-    if (data.planRows && data.planRows.length) data.planRows.forEach(r => addPlanRow(r));
-    else addPlanRow({ f0:'1', f1:'05.11.2025', f2:'Контора предприятия', f3:'Ознакомление с базовым предприятием, ветеринарным учреждением. Инструктаж по технике безопасности. Ознакомление с составом и должностными обязанностями ветеринарной службы предприятия. Правила внутреннего распорядка на предприятии. Устройство и оборудование ветеринарной аптеки. Инструктаж по биобезопасности. Ознакомительная экскурсия.', f4:'', f5:'Журнал по технике безопасности; Журнал по биобезопасности, журнал по электробезопасности' });
+    if (data.planRows && data.planRows.length) {
+        data.planRows.forEach(r => addPlanRow(r));
+    } else {
+        addPlanRow({
+            f0:'1',
+            f1:'05.11.2025',
+            f2:'Контора предприятия',
+            f3:'Ознакомление с базовым предприятием, ветеринарным учреждением. Инструктаж по технике безопасности. Ознакомление с составом и должностными обязанностями ветеринарной службы предприятия. Правила внутреннего распорядка на предприятии. Устройство и оборудование ветеринарной аптеки. Инструктаж по биобезопасности. Ознакомительная экскурсия.',
+            f4:'',
+            f5:'Журнал по технике безопасности; Журнал по биобезопасности, журнал по электробезопасности'
+        });
+    }
 
     // Дневник
-    if (data.diaryEntries && data.diaryEntries.length) data.diaryEntries.forEach(e => addDiaryEntry(e));
-    else addDiaryEntry();
+    if (data.diaryEntries && data.diaryEntries.length) {
+        data.diaryEntries.forEach(e => addDiaryEntry(e));
+    } else {
+        addDiaryEntry();
+    }
 
     // Итоговая таблица
     renderReportTable(data.reportValues);
@@ -1196,8 +1280,13 @@ function loadAll() {
         renderTable6(data.tables.t6);
         renderTable7(data.tables.t7);
     } else {
-        renderTable1(); renderTable2(); renderTable3(); renderTable4();
-        renderTable5(); renderTable6(); renderTable7();
+        renderTable1();
+        renderTable2();
+        renderTable3();
+        renderTable4();
+        renderTable5();
+        renderTable6();
+        renderTable7();
     }
 
     // Карта

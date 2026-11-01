@@ -839,10 +839,10 @@ function addPlanRow(data) {
     tr.innerHTML = `
         <td><input type="text" value="${data.f0 || ''}" placeholder="№"></td>
         <td><input type="text" value="${data.f1 || ''}" placeholder="Дата"></td>
-        <td><input type="text" value="${data.f2 || ''}" placeholder="Место работы"></td>
+        <td><textarea style="min-height:40px;">${data.f2 || ''}</textarea></td>
         <td><textarea>${data.f3 || ''}</textarea></td>
         <td><input type="text" value="${data.f4 || ''}" placeholder="Объём"></td>
-        <td><input type="text" value="${data.f5 || ''}" placeholder="Материалы"></td>
+        <td><textarea style="min-height:40px;">${data.f5 || ''}</textarea></td>
     `;
     tbody.appendChild(tr);
     tr.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', saveAll));

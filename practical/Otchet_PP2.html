@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Отчёт по производственной практике · ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    background: #FDF8F0;
+    color: #3E5C4A;
+    padding: 16px;
+    line-height: 1.5;
+}
+.container { max-width: 1100px; margin: 0 auto; }
+
+header {
+    background: linear-gradient(135deg, #2C7DA0, #1F4E6E);
+    color: #fff;
+    padding: 20px 28px;
+    border-radius: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+header h1 { font-size: 1.4rem; margin-bottom: 4px; }
+header p { font-size: 0.85rem; opacity: 0.95; }
+header .meta { font-size: 0.75rem; margin-top: 6px; opacity: 0.9; }
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+.tab-btn {
+    background: #fff;
+    border: 2px solid #E5DDCF;
+    color: #3E5C4A;
+    padding: 8px 20px;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+}
+.tab-btn:hover { background: #F9F6EF; }
+.tab-btn.active {
+    background: linear-gradient(135deg, #2e7d32, #43a047);
+    color: #fff;
+    border-color: #2e7d32;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.student-info {
+    background: #fff;
+    border-radius: 1.2rem;
+    padding: 14px 20px;
+    margin-bottom: 16px;
+    border: 2px solid #A3B18A;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+.student-info label { font-weight: 600; font-size: 0.85rem; }
+.student-info input {
+    padding: 6px 14px;
+    border: 2px solid #dce5da;
+    border-radius: 2rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: #FDF8F0;
+    flex: 1;
+    min-width: 150px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 1.2rem;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border: 1px solid #EDE8DC;
+}
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+.card-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #2C7DA0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.card-subtitle {
+    font-size: 0.8rem;
+    color: #7B8D6E;
+    margin-bottom: 14px;
+    font-style: italic;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.82rem;
+}
+th, td {
+    border: 1px solid #E5DDCF;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+}
+th {
+    background: #F4EFE4;
+    font-weight: 600;
+    color: #2C7DA0;
+    font-size: 0.78rem;
+}
+td input, td textarea {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 4px;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: #1e2f2a;
+}
+td input:focus, td textarea:focus { outline: none; background: #FEFAF2; }
+td textarea { min-height: 50px; resize: vertical; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.btn {
+    background: linear-gradient(135deg, #43a047, #2e7d32);
+    color: #fff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 2rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+    font-family: inherit;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,125,50,0.3); }
+.btn-secondary { background: #fff; color: #2e7d32; border: 2px solid #2e7d32; }
+.btn-danger { background: #D4A373; color: #fff; }
+.btn-danger:hover { background: #C99464; }
+.btn-sm { padding: 4px 12px; font-size: 0.75rem; }
+.btn-hint { background: #E8F0F5; color: #1F4E6E; border: 1px solid #B8D0DC; }
+
+.field-label {
+    font-weight: 600;
+    font-size: 0.8rem;
+    display: block;
+    margin-bottom: 4px;
+    color: #3E5C4A;
+}
+input[type="text"], input[type="number"], textarea {
+    width: 100%;
+    padding: 8px 14px;
+    border: 2px solid #E5DDCF;
+    border-radius: 1rem;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: #FEFAF2;
+    transition: 0.2s;
+    color: #1e2f2a;
+}
+input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+    border-color: #2C7DA0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(44,125,160,0.1);
+}
+textarea { resize: vertical; min-height: 80px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.hint {
+    background: #F9F6EF;
+    border-left: 4px solid #A3B18A;
+    border-radius: 0.8rem;
+    padding: 10px 16px;
+    margin: 10px 0;
+    font-size: 0.82rem;
+    display: none;
+}
+.hint.show { display: block; }
+.hint strong { color: #1F4E6E; }
+
+.map-preview {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 1rem;
+    border: 2px dashed #D9D0BD;
+    margin-top: 10px;
+    display: none;
+}
+.map-preview.show { display: block; }
+
+.result-cell {
+    font-weight: 700;
+    color: #1F4E6E;
+    font-size: 0.82rem;
+}
+
+.footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #B0BC9C;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #E5DDCF;
+}
+.footer strong { color: #1F4E6E; }
+
+@media (max-width: 700px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    body { padding: 10px; }
+    header { padding: 16px; }
+    header h1 { font-size: 1.1rem; }
+    .card { padding: 16px; }
+    .card-header { flex-direction: column; }
+    table { font-size: 0.72rem; }
+    th, td { padding: 4px; }
+}
+
+@media print {
+    body { background: #fff; padding: 0.3in; }
+    .no-print, .tabs { display: none !important; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    input, textarea { border: 1px solid #ccc; background: #fff; }
+    .tab-content { display: block !important; }
+    .tab-content:not(.active) { display: none !important; }
+    .hint { display: block !important; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+    <h1>📋 Отчёт по производственной практике</h1>
+    <p>Специальность 36.02.01 «Ветеринария» · ПП 01 и ПП 02</p>
+    <div class="meta">4 курс · ВетСим · Экосистема ветеринарного просвещения</div>
+</header>
+
+<div class="tabs no-print">
+    <button class="tab-btn active" data-tab="plan">📅 Календарный план-график</button>
+    <button class="tab-btn" data-tab="economy">🏭 Экономическая характеристика</button>
+    <button class="tab-btn" data-tab="diary">📓 Дневник работ</button>
+    <button class="tab-btn" data-tab="report">📊 Отчёт о практике</button>
+</div>
+
+<!-- ===== ВКЛАДКА 1: КАЛЕНДАРНЫЙ ПЛАН-ГРАФИК ===== -->
+<div class="tab-content active" id="tab-plan">
+    <div class="student-info no-print">
+        <label>Студент:</label>
+        <input type="text" id="studentName" placeholder="ФИО студента">
+        <label>Группа:</label>
+        <input type="text" id="studentGroup" placeholder="Группа">
+        <label>Период:</label>
+        <input type="text" id="practicePeriod" placeholder="с ... по ...">
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">📅 Календарный план-график прохождения практики</div>
+        </div>
+        <div class="card-subtitle">Добавляйте строки по мере необходимости. Таблица сохраняется автоматически.</div>
+
+        <table id="planTable">
+            <thead>
+                <tr>
+                    <th style="width:4%;">№</th>
+                    <th style="width:10%;">Дата</th>
+                    <th style="width:14%;">Место работы</th>
+                    <th style="width:36%;">Содержание работы</th>
+                    <th style="width:18%;">Объём работы</th>
+                    <th style="width:18%;">Необходимые материалы</th>
+                </tr>
+            </thead>
+            <tbody id="planBody"></tbody>
+        </table>
+
+        <div class="btn-row no-print">
+            <button class="btn" id="addPlanRow">➕ Добавить строку</button>
+            <button class="btn btn-secondary" id="savePlan">💾 Сохранить</button>
+            <button class="btn btn-secondary" onclick="printTab('tab-plan')">🖨️ Печать вкладки</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="field-label">Руководитель практики от организации</div>
+        <input type="text" id="orgHead" placeholder="ФИО, должность">
+    </div>
+</div>
+
+<!-- ===== ВКЛАДКА 2: ЭКОНОМИЧЕСКАЯ ХАРАКТЕРИСТИКА ===== -->
+<div class="tab-content" id="tab-economy">
+    <div class="card">
+        <div class="card-title">🗺️ Карта-схема хозяйства</div>
+        <div class="card-subtitle">Загрузите изображение карты-схемы с указанием ветеринарных и животноводческих объектов.</div>
+        <input type="file" id="mapUpload" accept="image/*" style="border:1px dashed #D9D0BD; padding:10px; border-radius:1rem; background:#FEFAF2;">
+        <img id="mapPreview" class="map-preview" alt="Карта-схема хозяйства">
+    </div>
+
+    <div class="card">
+        <div class="card-title">📝 Общие сведения о хозяйстве</div>
+        <div class="card-subtitle">История развития, современное состояние, производственная структура и специализация предприятия.</div>
+
+        <div style="margin-top:12px;">
+            <label class="field-label">История развития и современное состояние</label>
+            <textarea id="ecoHistory" placeholder="Год основания, основные этапы развития, текущее состояние..."></textarea>
+        </div>
+        <div style="margin-top:12px;">
+            <label class="field-label">Производственная структура и специализация</label>
+            <textarea id="ecoStructure" placeholder="Основные направления деятельности, структурные подразделения..."></textarea>
+        </div>
+        <div style="margin-top:12px;">
+            <label class="field-label">Природно-климатические и экономические условия</label>
+            <textarea id="ecoClimate" placeholder="Климатическая зона, экономические показатели, поголовье по видам и группам..."></textarea>
+        </div>
+        <div style="margin-top:12px;">
+            <label class="field-label">Организация ветеринарной службы, состав и должностные обязанности</label>
+            <textarea id="ecoVetService" placeholder="Структура ветеринарной службы, состав специалистов, обязанности..."></textarea>
+        </div>
+    </div>
+
+    <!-- Таблица 1 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Таблица 1. Рост поголовья скота в хозяйстве</div>
+            <button class="btn btn-hint btn-sm no-print" onclick="toggleHint('hint1')">📐 Формулы</button>
+        </div>
+        <div class="hint" id="hint1">
+            <strong>Формулы:</strong><br>
+            Графа 5 = (Факт 2024 / План 2024) × 100<br>
+            Графа 6 = (Факт 2024 / Факт 2023) × 100
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:20%;">Вид животного</th>
+                    <th>2023 год</th>
+                    <th colspan="2">2024 год</th>
+                    <th>2024 в % к плану</th>
+                    <th>2024 в % к 2023</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>план</th>
+                    <th>факт</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="t1Body"></tbody>
+        </table>
+        <div style="margin-top:12px;">
+            <label class="field-label">Вывод по таблице 1</label>
+            <textarea id="t1Conclusion" placeholder="Анализ изменений поголовья за 2 года, причины, мероприятия..."></textarea>
+        </div>
+    </div>
+
+    <!-- Таблица 2 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Таблица 2. Показатели воспроизводства стада</div>
+            <button class="btn btn-hint btn-sm no-print" onclick="toggleHint('hint2')">📐 Формулы</button>
+        </div>
+        <div class="hint" id="hint2">
+            <strong>Формулы:</strong><br>
+            Выход делового приплода = (Приплод / Маточное поголовье) × 100<br>
+            Получено телят на 100 коров = (Приплод / Коровы) × 100<br>
+            Браковка коров, % = (Выбраковано / Среднегодовое поголовье) × 100<br>
+            Яловость, % = (Яловые / Маточное поголовье) × 100
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:40%;">Показатели</th>
+                    <th>20__ год</th>
+                    <th>20__ год</th>
+                    <th>Отклонение (+; -)</th>
+                </tr>
+            </thead>
+            <tbody id="t2Body"></tbody>
+        </table>
+        <div style="margin-top:12px;">
+            <label class="field-label">Вывод по таблице 2</label>
+            <textarea id="t2Conclusion" placeholder="Причины снижения выхода приплода, выбраковки, яловости; мероприятия..."></textarea>
+        </div>
+    </div>
+
+    <!-- Таблица 3 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Таблица 3. Анализ продуктивности скота</div>
+            <button class="btn btn-hint btn-sm no-print" onclick="toggleHint('hint3')">📐 Формулы</button>
+        </div>
+        <div class="hint" id="hint3">
+            <strong>Формулы:</strong><br>
+            Удой на 1 корову = Валовое производство молока / Среднегодовое поголовье коров<br>
+            Среднесуточный прирост = (Прирост за год, ц × 100000) / (Поголовье × 365)<br>
+            Выход телят на 100 коров = (Приплод / Коровы) × 100
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:30%;">Показатели</th>
+                    <th>20__ год</th>
+                    <th colspan="2">20__ год</th>
+                    <th>% к плану</th>
+                    <th>% к прошлому году</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>план</th>
+                    <th>факт</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="t3Body"></tbody>
+        </table>
+        <div style="margin-top:12px;">
+            <label class="field-label">Вывод по таблице 3</label>
+            <textarea id="t3Conclusion" placeholder="Причины снижения продуктивности, мероприятия по росту..."></textarea>
+        </div>
+    </div>
+
+    <!-- Таблица 4 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Таблица 4. Выполнение плана производства продукции</div>
+            <button class="btn btn-hint btn-sm no-print" onclick="toggleHint('hint4')">📐 Формулы</button>
+        </div>
+        <div class="hint" id="hint4">
+            <strong>Формулы:</strong><br>
+            Отклонение от плана = Факт − План<br>
+            Отклонение от прошлого года = Факт − Прошлый год<br>
+            % выполнения плана = (Факт / План) × 100
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:25%;">Вид продукции</th>
+                    <th>20__ год</th>
+                    <th colspan="2">20__ год</th>
+                    <th>Отклонение от плана</th>
+                    <th>Отклонение от прошлого года</th>
+                    <th>% выполнения</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>план</th>
+                    <th>факт</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="t4Body"></tbody>
+        </table>
+        <div style="margin-top:12px;">
+            <label class="field-label">Вывод по таблице 4</label>
+            <textarea id="t4Conclusion" placeholder="Причины спада производства, мероприятия по увеличению..."></textarea>
+        </div>
+    </div>
+
+    <!-- Таблица 5 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Таблица 5. Расход кормов на 1 ц продукции, ц к.ед.</div>
+            <button class="btn btn-hint btn-sm no-print" onclick="toggleHint('hint5')">📐 Формулы</button>
+        </div>
+        <div class="hint" id="hint5">
+            <strong>Формулы:</strong> расчёт аналогичен таблице 3.<br>
+            % к плану = (Факт / План) × 100<br>
+            % к прошлому году = (Факт / Прошлый год) × 100
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:25%;">Вид продукции</th>
+                    <th>20__ год</th>
+                    <th colspan="2">20__ год</th>
+                    <th>% к плану</th>
+                    <th>% к прошлому году</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>план</th>
+                    <th>факт</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="t5Body"></tbody>
+        </table>
+        <div style="margin-top:12px;">
+            <label class="field-label">Вывод по таблице 5</label>
+            <textarea id="t5Conclusion" placeholder="Причины экономии или перерасхода кормов, пути рационального расходования..."></textarea>
+        </div>
+    </div>
+
+    <!-- Таблица 6 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Таблица 6. Себестоимость единицы продукции, руб.</div>
+            <button class="btn btn-hint btn-sm no-print" onclick="toggleHint('hint6')">📐 Формулы</button>
+        </div>
+        <div class="hint" id="hint6">
+            <strong>Формулы:</strong> расчёт аналогичен таблице 5.<br>
+            % к плану = (Факт / План) × 100<br>
+            % к прошлому году = (Факт / Прошлый год) × 100
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:25%;">Вид продукции</th>
+                    <th>20__ год</th>
+                    <th colspan="2">20__ год</th>
+                    <th>% к плану</th>
+                    <th>% к прошлому году</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>план</th>
+                    <th>факт</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="t6Body"></tbody>
+        </table>
+        <div style="margin-top:12px;">
+            <label class="field-label">Вывод по таблице 6</label>
+            <textarea id="t6Conclusion" placeholder="Причины роста себестоимости, пути снижения..."></textarea>
+        </div>
+    </div>
+
+    <!-- Таблица 7 -->
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Таблица 7. Анализ финансовых результатов</div>
+            <button class="btn btn-hint btn-sm no-print" onclick="toggleHint('hint7')">📐 Формулы</button>
+        </div>
+        <div class="hint" id="hint7">
+            <strong>Формулы:</strong><br>
+            Прибыль (убыток) = Выручка − Полная себестоимость<br>
+            Рентабельность, % = (Прибыль / Полная себестоимость) × 100<br>
+            Отклонение = Прибыль (отчётный год) − Прибыль (базисный год)
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:18%;">Вид продукции</th>
+                    <th colspan="2">Выручка, тыс. руб.</th>
+                    <th colspan="2">Полная себестоимость, тыс. руб.</th>
+                    <th colspan="2">Прибыль (+)/Убыток (−), тыс. руб.</th>
+                    <th colspan="2">Рентабельность, %</th>
+                    <th>Отклонение</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th>20__</th>
+                    <th>20__</th>
+                    <th>20__</th>
+                    <th>20__</th>
+                    <th>20__</th>
+                    <th>20__</th>
+                    <th>20__</th>
+                    <th>20__</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="t7Body"></tbody>
+        </table>
+        <div style="margin-top:12px;">
+            <label class="field-label">Вывод по таблице 7</label>
+            <textarea id="t7Conclusion" placeholder="Убыточные виды продукции и причины; факторы, влияющие на финансовый результат; пути повышения рентабельности..."></textarea>
+        </div>
+    </div>
+
+    <div class="btn-row no-print">
+        <button class="btn" onclick="saveAll()">💾 Сохранить всё</button>
+        <button class="btn btn-secondary" onclick="printTab('tab-economy')">🖨️ Печать вкладки «Экономическая характеристика»</button>
+    </div>
+</div>
+
+<!-- ===== ВКЛАДКА 3: ДНЕВНИК РАБОТ ===== -->
+<div class="tab-content" id="tab-diary">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">📓 Дневник работ (пример)</div>
+        </div>
+        <div class="card-subtitle">Заполняется по форме. Компетенции выбираются из выпадающего списка.</div>
+
+        <div id="diaryEntries"></div>
+
+        <div class="btn-row no-print">
+            <button class="btn" id="addDiaryEntry">➕ Добавить запись</button>
+            <button class="btn btn-secondary" id="saveDiary">💾 Сохранить</button>
+            <button class="btn btn-secondary" onclick="printTab('tab-diary')">🖨️ Печать вкладки</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== ВКЛАДКА 4: ОТЧЁТ О ПРАКТИКЕ ===== -->
+<div class="tab-content" id="tab-report">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">📊 Итоговая таблица работ</div>
+        </div>
+        <div class="card-subtitle">Укажите количество проведённых мероприятий за период практики.</div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th style="width:5%;">№</th>
+                    <th>Проведённые мероприятия</th>
+                    <th style="width:30%;">Объем работ (голов, проб, помещений)</th>
+                </tr>
+            </thead>
+            <tbody id="reportTableBody"></tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <div class="card-title">📝 Текстовые разделы отчёта</div>
+        <div class="card-subtitle">Заполните все разделы. Они сохраняются автоматически.</div>
+
+        <div style="margin-top:14px;">
+            <label class="field-label">Характеристика эпизоотического состояния хозяйства</label>
+            <textarea id="epizootic" placeholder="Суть проводимых противоэпизоотических мероприятий, благополучие или неблагополучие хозяйства по инфекционным и инвазионным болезням..."></textarea>
+        </div>
+        <div style="margin-top:14px;">
+            <label class="field-label">Анализ внутренних незаразных болезней</label>
+            <textarea id="nonContagious" placeholder="Причины массовых незаразных заболеваний животных с учётом их вида, возраста, сезонности и хозяйственных условий; методы, средства лечения и предупреждения заболеваемости..."></textarea>
+        </div>
+        <div style="margin-top:14px;">
+            <label class="field-label">Анализ акушерско-гинекологических заболеваний</label>
+            <textarea id="obstetric" placeholder="Причины заболеваемости, методы, средства лечения и профилактики заболеваний половых органов самок; мероприятия по борьбе с бесплодием и яловостью..."></textarea>
+        </div>
+        <div style="margin-top:14px;">
+            <label class="field-label">Заключение / выводы</label>
+            <textarea id="conclusion" placeholder="Общее впечатление о практике; в какой мере прохождение практики помогло закрепить теоретические знания и практические навыки; какие навыки отработаны, какие нет и почему; недостатки в организации практики и предложения по улучшению..."></textarea>
+        </div>
+        <div class="grid-2" style="margin-top:14px;">
+            <div>
+                <label class="field-label">Дата</label>
+                <input type="text" id="reportDate" placeholder="дд.мм.гггг">
+            </div>
+            <div>
+                <label class="field-label">Подпись студента</label>
+                <input type="text" id="studentSignature" placeholder="ФИО / подпись">
+            </div>
+        </div>
+        <div class="btn-row no-print">
+            <button class="btn" id="saveReport">💾 Сохранить</button>
+            <button class="btn btn-secondary" onclick="printTab('tab-report')">🖨️ Печать вкладки</button>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+    © ВетСим — ветеринарное просвещение · <a href="https://vetsim.ru" target="_blank" rel="noopener">vetsim.ru</a><br>
+    <strong>Шаблон отчёта по производственной практике · 36.02.01 Ветеринария</strong>
+</div>
+
+</div>
+
+<script>
+// ==========================================
+// ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+// ==========================================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        window.scrollTo({top:0, behavior:'smooth'});
+    });
+});
+
+// ==========================================
+// ПЕЧАТЬ ТОЛЬКО АКТИВНОЙ ВКЛАДКИ
+// ==========================================
+function printTab(tabId) {
+    // Добавляем временный класс для печати только нужной вкладки
+    const style = document.createElement('style');
+    style.id = 'print-override';
+    style.textContent = `
+        @media print {
+            .tab-content { display: none !important; }
+            #${tabId} { display: block !important; }
+        }
+    `;
+    document.head.appendChild(style);
+    window.print();
+    setTimeout(() => {
+        const el = document.getElementById('print-override');
+        if (el) el.remove();
+    }, 1000);
+}
+
+// ==========================================
+// КОМПЕТЕНЦИИ
+// ==========================================
+const COMPETENCIES = [
+    'ПК 1.1', 'ПК 1.2', 'ПК 1.3',
+    'ПК 2.1', 'ПК 2.2', 'ПК 2.3',
+    'ОК 01', 'ОК 02', 'ОК 03', 'ОК 04', 'ОК 05', 'ОК 06', 'ОК 07', 'ОК 08', 'ОК 09'
+];
+
+// ==========================================
+// ИТОГОВАЯ ТАБЛИЦА
+// ==========================================
+const REPORT_ITEMS = [
+    'Проведено вакцинаций',
+    'Проведено туберкулинизаций',
+    'Проведено дезинфекций',
+    'Проведено обработок животных',
+    'Взято проб крови',
+    'Определение сроков беременности',
+    'Проведено исследований на скрытые формы мастита',
+    'Проведено ВСЭ проб молока',
+    'Проведено вскрытий трупов животных',
+    'Оказано лечебной помощи всего:',
+    '— из них терапевтической (ВНБ)',
+    '— акушерско-гинекологической',
+    '— хирургической'
+];
+
+// ==========================================
+// ХРАНИЛИЩЕ
+// ==========================================
+const STORAGE_KEY = 'vetsim_practice_report_v2';
+
+function getData() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+    } catch(e) { return {}; }
+}
+
+function saveAll() {
+    const data = {
+        studentName: document.getElementById('studentName')?.value || '',
+        studentGroup: document.getElementById('studentGroup')?.value || '',
+        practicePeriod: document.getElementById('practicePeriod')?.value || '',
+        orgHead: document.getElementById('orgHead')?.value || '',
+        planRows: [],
+        diaryEntries: [],
+        reportValues: {},
+        tables: {},
+        economy: {},
+        epizootic: document.getElementById('epizootic')?.value || '',
+        nonContagious: document.getElementById('nonContagious')?.value || '',
+        obstetric: document.getElementById('obstetric')?.value || '',
+        conclusion: document.getElementById('conclusion')?.value || '',
+        reportDate: document.getElementById('reportDate')?.value || '',
+        studentSignature: document.getElementById('studentSignature')?.value || '',
+        mapData: document.getElementById('mapPreview')?.src || ''
+    };
+
+    // План
+    document.querySelectorAll('#planBody tr').forEach(tr => {
+        const row = {};
+        tr.querySelectorAll('input, textarea').forEach((el, idx) => { row['f' + idx] = el.value; });
+        data.planRows.push(row);
+    });
+
+    // Дневник
+    document.querySelectorAll('.diary-entry').forEach(entry => {
+        const row = {};
+        entry.querySelectorAll('input, textarea, select').forEach((el, idx) => { row['d' + idx] = el.value; });
+        data.diaryEntries.push(row);
+    });
+
+    // Итоговая таблица
+    document.querySelectorAll('#reportTableBody tr').forEach(tr => {
+        const inp = tr.querySelector('input');
+        if (inp) data.reportValues[inp.dataset.item] = inp.value;
+    });
+
+    // Таблицы экономики
+    ['t1', 't2', 't3', 't4', 't5', 't6', 't7'].forEach(tid => {
+        const rows = [];
+        document.querySelectorAll('#' + tid + 'Body tr').forEach(tr => {
+            const row = {};
+            tr.querySelectorAll('input, textarea').forEach((el, idx) => { row['c' + idx] = el.value; });
+            rows.push(row);
+        });
+        data.tables[tid] = rows;
+    });
+
+    // Тексты экономики
+    ['t1','t2','t3','t4','t5','t6','t7'].forEach(tid => {
+        const el = document.getElementById(tid + 'Conclusion');
+        if (el) data.economy[tid + 'Conclusion'] = el.value;
+    });
+    ['ecoHistory','ecoStructure','ecoClimate','ecoVetService'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) data.economy[id] = el.value;
+    });
+
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+}
+
+// ==========================================
+// ПЛАН-ГРАФИК
+// ==========================================
+function addPlanRow(data) {
+    data = data || {};
+    const tbody = document.getElementById('planBody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td><input type="text" value="${data.f0 || ''}" placeholder="№"></td>
+        <td><input type="text" value="${data.f1 || ''}" placeholder="Дата"></td>
+        <td><input type="text" value="${data.f2 || ''}" placeholder="Место работы"></td>
+        <td><textarea>${data.f3 || ''}</textarea></td>
+        <td><input type="text" value="${data.f4 || ''}" placeholder="Объём"></td>
+        <td><input type="text" value="${data.f5 || ''}" placeholder="Материалы"></td>
+    `;
+    tbody.appendChild(tr);
+    tr.querySelectorAll('input, textarea').forEach(el => el.addEventListener('input', saveAll));
+    return tr;
+}
+
+document.getElementById('addPlanRow').addEventListener('click', () => { addPlanRow(); saveAll(); });
+document.getElementById('savePlan').addEventListener('click', () => { saveAll(); alert('✅ План-график сохранён!'); });
+
+// ==========================================
+// ТАБЛИЦЫ ЭКОНОМИКИ
+// ==========================================
+function calcPct(fact, base) {
+    const f = parseFloat(fact), b = parseFloat(base);
+    if (!b || isNaN(f) || isNaN(b)) return '';
+    return ((f / b) * 100).toFixed(1);
+}
+
+function calcDiff(fact, base) {
+    const f = parseFloat(fact), b = parseFloat(base);
+    if (isNaN(f) || isNaN(b)) return '';
+    return (f - b).toFixed(1);
+}
+
+function calcProfit(revenue, cost) {
+    const r = parseFloat(revenue), c = parseFloat(cost);
+    if (isNaN(r) || isNaN(c)) return '';
+    return (r - c).toFixed(1);
+}
+
+function calcRent(profit, cost) {
+    const p = parseFloat(profit), c = parseFloat(cost);
+    if (!c || isNaN(p) || isNaN(c)) return '';
+    return ((p / c) * 100).toFixed(1);
+}
+
+function attachAutoCalc(tr, tid) {
+    const inputs = tr.querySelectorAll('input');
+    inputs.forEach(inp => inp.addEventListener('input', () => {
+        if (tid === 't1') {
+            const plan = inputs[2]?.value, fact = inputs[3]?.value, prev = inputs[1]?.value;
+            if (inputs[4]) inputs[4].value = calcPct(fact, plan);
+            if (inputs[5]) inputs[5].value = calcPct(fact, prev);
+        }
+        if (tid === 't2') {
+            const a = inputs[1]?.value, b = inputs[2]?.value;
+            if (inputs[3]) inputs[3].value = calcDiff(b, a);
+        }
+        if (tid === 't3' || tid === 't5' || tid === 't6') {
+            const prev = inputs[1]?.value, plan = inputs[2]?.value, fact = inputs[3]?.value;
+            if (inputs[4]) inputs[4].value = calcPct(fact, plan);
+            if (inputs[5]) inputs[5].value = calcPct(fact, prev);
+        }
+        if (tid === 't4') {
+            const prev = inputs[1]?.value, plan = inputs[2]?.value, fact = inputs[3]?.value;
+            if (inputs[4]) inputs[4].value = calcDiff(fact, plan);
+            if (inputs[5]) inputs[5].value = calcDiff(fact, prev);
+            if (inputs[6]) inputs[6].value = calcPct(fact, plan);
+        }
+        if (tid === 't7') {
+            const rev1 = inputs[1]?.value, rev2 = inputs[2]?.value;
+            const cost1 = inputs[3]?.value, cost2 = inputs[4]?.value;
+            const profit1 = calcProfit(rev1, cost1);
+            const profit2 = calcProfit(rev2, cost2);
+            if (inputs[5]) inputs[5].value = profit1;
+            if (inputs[6]) inputs[6].value = profit2;
+            if (inputs[7]) inputs[7].value = calcRent(profit1, cost1);
+            if (inputs[8]) inputs[8].value = calcRent(profit2, cost2);
+            if (inputs[9]) inputs[9].value = calcDiff(profit2, profit1);
+        }
+        saveAll();
+    }));
+}
+
+function renderTable1(saved) {
+    const items = ['Крупный рогатый скот, всего', 'в т.ч. коровы', 'Свиньи, всего', 'в т.ч. основные свиноматки'];
+    const tbody = document.getElementById('t1Body');
+    tbody.innerHTML = '';
+    items.forEach((item, idx) => {
+        const s = (saved && saved[idx]) || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item}</td>
+            <td><input type="number" value="${s.c0 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c1 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c2 || ''}" placeholder="0"></td>
+            <td><input type="text" value="${s.c3 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c4 || ''}" readonly class="result-cell"></td>
+        `;
+        tbody.appendChild(tr);
+        attachAutoCalc(tr, 't1');
+    });
+}
+
+function renderTable2(saved) {
+    const items = ['1. Выход делового приплода, голов', '2. Получено телят на 100 коров, голов', '3. Браковка коров, %', '4. Процент яловости коров, %', '5. % обеспеченности стада тёлками старше двух лет', '6. Коэффициент осеменения коров, %'];
+    const tbody = document.getElementById('t2Body');
+    tbody.innerHTML = '';
+    items.forEach((item, idx) => {
+        const s = (saved && saved[idx]) || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item}</td>
+            <td><input type="number" value="${s.c0 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c1 || ''}" placeholder="0"></td>
+            <td><input type="text" value="${s.c2 || ''}" readonly class="result-cell"></td>
+        `;
+        tbody.appendChild(tr);
+        attachAutoCalc(tr, 't2');
+    });
+}
+
+function renderTable3(saved) {
+    const items = ['Удой молока на 1 корову, кг', 'Среднесуточный прирост живой массы КРС, г', 'Выход телят на 100 коров, голов', 'Среднесуточный прирост живой массы свиней, г'];
+    const tbody = document.getElementById('t3Body');
+    tbody.innerHTML = '';
+    items.forEach((item, idx) => {
+        const s = (saved && saved[idx]) || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item}</td>
+            <td><input type="number" value="${s.c0 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c1 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c2 || ''}" placeholder="0"></td>
+            <td><input type="text" value="${s.c3 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c4 || ''}" readonly class="result-cell"></td>
+        `;
+        tbody.appendChild(tr);
+        attachAutoCalc(tr, 't3');
+    });
+}
+
+function renderTable4(saved) {
+    const items = ['Молоко', 'Прирост живой массы КРС', 'Прирост живой массы свиней'];
+    const tbody = document.getElementById('t4Body');
+    tbody.innerHTML = '';
+    items.forEach((item, idx) => {
+        const s = (saved && saved[idx]) || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item}</td>
+            <td><input type="number" value="${s.c0 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c1 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c2 || ''}" placeholder="0"></td>
+            <td><input type="text" value="${s.c3 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c4 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c5 || ''}" readonly class="result-cell"></td>
+        `;
+        tbody.appendChild(tr);
+        attachAutoCalc(tr, 't4');
+    });
+}
+
+function renderTable5(saved) {
+    const items = ['Молоко', 'Прирост живой массы КРС', 'Прирост живой массы свиней'];
+    const tbody = document.getElementById('t5Body');
+    tbody.innerHTML = '';
+    items.forEach((item, idx) => {
+        const s = (saved && saved[idx]) || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item}</td>
+            <td><input type="number" value="${s.c0 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c1 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c2 || ''}" placeholder="0"></td>
+            <td><input type="text" value="${s.c3 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c4 || ''}" readonly class="result-cell"></td>
+        `;
+        tbody.appendChild(tr);
+        attachAutoCalc(tr, 't5');
+    });
+}
+
+function renderTable6(saved) {
+    const items = ['Молоко', 'Прирост живой массы КРС', 'Прирост живой массы свиней'];
+    const tbody = document.getElementById('t6Body');
+    tbody.innerHTML = '';
+    items.forEach((item, idx) => {
+        const s = (saved && saved[idx]) || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item}</td>
+            <td><input type="number" value="${s.c0 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c1 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c2 || ''}" placeholder="0"></td>
+            <td><input type="text" value="${s.c3 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c4 || ''}" readonly class="result-cell"></td>
+        `;
+        tbody.appendChild(tr);
+        attachAutoCalc(tr, 't6');
+    });
+}
+
+function renderTable7(saved) {
+    const items = ['Молоко', 'Прирост живой массы КРС', 'Прирост живой массы свиней'];
+    const tbody = document.getElementById('t7Body');
+    tbody.innerHTML = '';
+    items.forEach((item, idx) => {
+        const s = (saved && saved[idx]) || {};
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${item}</td>
+            <td><input type="number" value="${s.c0 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c1 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c2 || ''}" placeholder="0"></td>
+            <td><input type="number" value="${s.c3 || ''}" placeholder="0"></td>
+            <td><input type="text" value="${s.c4 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c5 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c6 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c7 || ''}" readonly class="result-cell"></td>
+            <td><input type="text" value="${s.c8 || ''}" readonly class="result-cell"></td>
+        `;
+        tbody.appendChild(tr);
+        attachAutoCalc(tr, 't7');
+    });
+}
+
+// ==========================================
+// ДНЕВНИК
+// ==========================================
+function addDiaryEntry(data) {
+    data = data || {};
+    const container = document.getElementById('diaryEntries');
+    const div = document.createElement('div');
+    div.className = 'diary-entry';
+    div.style.cssText = 'background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:14px; margin-bottom:12px;';
+
+    const compOptions = COMPETENCIES.map(c =>
+        `<option value="${c}" ${data.d5 === c ? 'selected' : ''}>${c}</option>`
+    ).join('');
+
+    div.innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+            <div><label class="field-label">Дата</label><input type="text" value="${data.d0 || ''}" placeholder="дд.мм.гггг"></div>
+            <div><label class="field-label">Место работы</label><input type="text" value="${data.d1 || ''}" placeholder="Организация / отделение"></div>
+        </div>
+        <div style="margin-bottom:8px;">
+            <label class="field-label">Код компетенции</label>
+            <select style="width:100%; padding:6px 12px; border:1px solid #E5DDCF; border-radius:8px; font-family:inherit; background:#fff;">
+                <option value="">— выберите —</option>
+                ${compOptions}
+            </select>
+        </div>
+        <div style="margin-bottom:8px;">
+            <label class="field-label">Содержание и объём работы</label>
+            <textarea>${data.d6 || ''}</textarea>
+        </div>
+        <div>
+            <label class="field-label">Замечания руководителя</label>
+            <input type="text" value="${data.d7 || ''}" placeholder="Замечания">
+        </div>
+        <div style="margin-top:8px; text-align:right;" class="no-print">
+            <button class="btn btn-danger btn-sm removeDiary">🗑 Удалить запись</button>
+        </div>
+    `;
+    container.appendChild(div);
+    div.querySelectorAll('input, textarea, select').forEach(el => {
+        el.addEventListener('input', saveAll);
+        el.addEventListener('change', saveAll);
+    });
+    div.querySelector('.removeDiary').addEventListener('click', () => {
+        if (confirm('Удалить эту запись?')) { div.remove(); saveAll(); }
+    });
+}
+
+document.getElementById('addDiaryEntry').addEventListener('click', () => { addDiaryEntry(); saveAll(); });
+document.getElementById('saveDiary').addEventListener('click', () => { saveAll(); alert('✅ Дневник сохранён!'); });
+
+// ==========================================
+// ИТОГОВАЯ ТАБЛИЦА
+// ==========================================
+function renderReportTable(saved) {
+    const tbody = document.getElementById('reportTableBody');
+    tbody.innerHTML = '';
+    REPORT_ITEMS.forEach((item, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${idx + 1}</td>
+            <td>${item}</td>
+            <td><input type="text" data-item="${idx}" value="${(saved && saved[idx]) || ''}" placeholder="0"></td>
+        `;
+        tbody.appendChild(tr);
+        tr.querySelector('input').addEventListener('input', saveAll);
+    });
+}
+
+// ==========================================
+// КАРТА
+// ==========================================
+function initMap() {
+    const input = document.getElementById('mapUpload');
+    const preview = document.getElementById('mapPreview');
+    input.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            preview.src = ev.target.result;
+            preview.classList.add('show');
+            saveAll();
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// ==========================================
+// ПОДСКАЗКИ
+// ==========================================
+function toggleHint(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('show');
+}
+
+// ==========================================
+// ЗАГРУЗКА
+// ==========================================
+function loadAll() {
+    const data = getData();
+
+    if (data.studentName) document.getElementById('studentName').value = data.studentName;
+    if (data.studentGroup) document.getElementById('studentGroup').value = data.studentGroup;
+    if (data.practicePeriod) document.getElementById('practicePeriod').value = data.practicePeriod;
+    if (data.orgHead) document.getElementById('orgHead').value = data.orgHead;
+
+    // План
+    if (data.planRows && data.planRows.length) data.planRows.forEach(r => addPlanRow(r));
+    else addPlanRow({ f0:'1', f1:'05.11.2025', f2:'Контора предприятия', f3:'Ознакомление с базовым предприятием, ветеринарным учреждением. Инструктаж по технике безопасности. Ознакомление с составом и должностными обязанностями ветеринарной службы предприятия. Правила внутреннего распорядка на предприятии. Устройство и оборудование ветеринарной аптеки. Инструктаж по биобезопасности. Ознакомительная экскурсия.', f4:'', f5:'Журнал по технике безопасности; Журнал по биобезопасности, журнал по электробезопасности' });
+
+    // Дневник
+    if (data.diaryEntries && data.diaryEntries.length) data.diaryEntries.forEach(e => addDiaryEntry(e));
+    else addDiaryEntry();
+
+    // Итоговая таблица
+    renderReportTable(data.reportValues);
+
+    // Экономика
+    if (data.economy) {
+        Object.keys(data.economy).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = data.economy[id];
+        });
+    }
+
+    // Таблицы
+    if (data.tables) {
+        renderTable1(data.tables.t1);
+        renderTable2(data.tables.t2);
+        renderTable3(data.tables.t3);
+        renderTable4(data.tables.t4);
+        renderTable5(data.tables.t5);
+        renderTable6(data.tables.t6);
+        renderTable7(data.tables.t7);
+    } else {
+        renderTable1(); renderTable2(); renderTable3(); renderTable4();
+        renderTable5(); renderTable6(); renderTable7();
+    }
+
+    // Карта
+    if (data.mapData) {
+        const preview = document.getElementById('mapPreview');
+        preview.src = data.mapData;
+        preview.classList.add('show');
+    }
+
+    // Текстовые разделы
+    ['epizootic','nonContagious','obstetric','conclusion','reportDate','studentSignature'].forEach(id => {
+        if (data[id]) document.getElementById(id).value = data[id];
+    });
+
+    ['studentName','studentGroup','practicePeriod','orgHead','epizootic','nonContagious','obstetric','conclusion','reportDate','studentSignature'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', saveAll);
+    });
+}
+
+document.getElementById('saveReport').addEventListener('click', () => { saveAll(); alert('✅ Отчёт сохранён!'); });
+
+// ==========================================
+// ИНИЦИАЛИЗАЦИЯ
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    loadAll();
+    initMap();
+    window.addEventListener('beforeunload', saveAll);
+});
+</script>
+</body>
+</html>

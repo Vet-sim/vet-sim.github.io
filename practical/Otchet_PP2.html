@@ -792,24 +792,22 @@ function saveAll() {
     });
 
     // Дневник
-    document.querySelectorAll('.diary-entry').forEach(entry => {
-        const row = {};
+document.querySelectorAll('.diary-entry').forEach(entry => {
+    const row = {};
 
-        entry.querySelectorAll('input, textarea, select').forEach((el, idx) => {
-            if (el.classList.contains('comp-multi')) {
-                const vals = Array.from(el.selectedOptions).map(o => o.value);
-                const compString = vals.join(', ');
+    entry.querySelectorAll('input, textarea').forEach((el, idx) => {
+        if (el.classList.contains('comp-input')) {
+            const compString = el.value.trim();
 
-                // d5 сохраняем для совместимости со старыми данными и печатью
-                row['d' + idx] = compString;
-                row['d_comp'] = compString;
-            } else {
-                row['d' + idx] = el.value;
-            }
-        });
-
-        data.diaryEntries.push(row);
+            row['d5'] = compString;      // для совместимости со старыми данными
+            row['d_comp'] = compString;  // основное поле для компетенций
+        } else {
+            row['d' + idx] = el.value;
+        }
     });
+
+    data.diaryEntries.push(row);
+});
 
     // Итоговая таблица
     document.querySelectorAll('#reportTableBody tr').forEach(tr => {
@@ -1094,35 +1092,21 @@ function addDiaryEntry(data) {
     div.className = 'diary-entry';
     div.style.cssText = 'background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:14px; margin-bottom:12px;';
 
-    // Поддержка старых данных: d_comp или d5
-    const selectedComps = (data.d_comp || data.d5 || '')
-        .split(',')
-        .map(s => s.trim())
-        .filter(Boolean);
-
-    const compOptions = COMPETENCIES.map(c =>
-        `<option value="${c}" ${selectedComps.includes(c) ? 'selected' : ''}>${c}</option>`
-    ).join('');
-
-    const compCheckboxes = COMPETENCIES.map(c =>
-        `<label style="display:inline-flex; align-items:center; gap:4px; margin:2px 8px 2px 0; font-size:0.78rem; cursor:pointer;">
-            <input type="checkbox" class="comp-check" value="${c}" ${selectedComps.includes(c) ? 'checked' : ''}>
-            ${c}
-        </label>`
-    ).join('');
-
     div.innerHTML = `
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
-            <div><label class="field-label">Дата</label><input type="text" value="${data.d0 || ''}" placeholder="дд.мм.гггг"></div>
-            <div><label class="field-label">Место работы</label><input type="text" value="${data.d1 || ''}" placeholder="Организация / отделение"></div>
+            <div>
+                <label class="field-label">Дата</label>
+                <input type="text" value="${data.d0 || ''}" placeholder="дд.мм.гггг">
+            </div>
+            <div>
+                <label class="field-label">Место работы</label>
+                <input type="text" value="${data.d1 || ''}" placeholder="Организация / отделение">
+            </div>
         </div>
 
         <div style="margin-bottom:8px;">
-            <label class="field-label">Коды компетенций (можно выбрать несколько)</label>
-            <select multiple id="compMulti" class="comp-multi" style="width:100%; padding:6px 12px; border:1px solid #E5DDCF; border-radius:8px; font-family:inherit; background:#fff; min-height:80px;">
-                ${compOptions}
-            </select>
-            <div style="margin-top:6px;">${compCheckboxes}</div>
+            <label class="field-label">Коды компетенций</label>
+            <input type="text" class="comp-input" value="${data.d_comp || data.d5 || ''}" placeholder="Например: ПК 2.2, ОК 04">
         </div>
 
         <div style="margin-bottom:8px;">
@@ -1142,31 +1126,8 @@ function addDiaryEntry(data) {
 
     container.appendChild(div);
 
-    // Синхронизация мультиселекта и чекбоксов
-    const multi = div.querySelector('#compMulti');
-    const checks = div.querySelectorAll('.comp-check');
-
-    function syncFromSelect() {
-        const vals = Array.from(multi.selectedOptions).map(o => o.value);
-        checks.forEach(ch => ch.checked = vals.includes(ch.value));
-        saveAll();
-    }
-
-    function syncFromChecks() {
-        const vals = Array.from(checks).filter(ch => ch.checked).map(ch => ch.value);
-        Array.from(multi.options).forEach(o => o.selected = vals.includes(o.value));
-        saveAll();
-    }
-
-    if (multi) {
-        multi.addEventListener('change', syncFromSelect);
-    }
-
-    checks.forEach(ch => ch.addEventListener('change', syncFromChecks));
-
-    div.querySelectorAll('input, textarea, select').forEach(el => {
+    div.querySelectorAll('input, textarea').forEach(el => {
         el.addEventListener('input', saveAll);
-        el.addEventListener('change', saveAll);
     });
 
     div.querySelector('.removeDiary').addEventListener('click', () => {

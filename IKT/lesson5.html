@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Информатика · Урок 1.2 · ВетСим</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Montserrat','Segoe UI',system-ui,sans-serif;
+  background:#FDF8F0; color:#1A2A3A; padding:16px; min-height:100vh;
+}
+.container { max-width:1150px; margin:0 auto; }
+
+/* Шапка */
+.header {
+  background:white; border-radius:1.5rem; padding:14px 24px;
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  gap:10px; box-shadow:0 2px 10px rgba(0,0,0,.04); margin-bottom:16px;
+  border:1px solid #E7EDE2;
+}
+.header .logo { display:flex; align-items:center; gap:8px; font-weight:700; font-size:1.15rem; }
+.header .logo .gradient {
+  background:linear-gradient(135deg,#2C7DA0,#6B9E6B);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.header .logo .sub { font-weight:400; font-size:.7rem; color:#7B8D6E; display:block; }
+.header-stats { display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:.8rem; }
+.header-stats .timer {
+  background:#2C7DA0; color:white; padding:6px 20px; border-radius:40px;
+  font-weight:700; font-size:.95rem; font-variant-numeric:tabular-nums;
+  min-width:100px; text-align:center; transition:.3s;
+}
+.header-stats .timer.warning { background:#D4A373; }
+.header-stats .timer.danger { background:#b13e3e; animation:pulse 1s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+
+/* Вкладки */
+.tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.tab-btn {
+  background:#EBE3D2; border:none; padding:7px 18px; border-radius:40px;
+  font-weight:600; font-size:.76rem; cursor:pointer; transition:.2s;
+  font-family:inherit; color:#3E5C4A;
+}
+.tab-btn:hover { opacity:.85; }
+.tab-btn.active { background:#2C7DA0; color:white; }
+
+.tab-content { display:none; animation:fadeIn .25s ease; }
+.tab-content.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+
+/* Карточки */
+.card {
+  background:white; border-radius:1.5rem; padding:20px 24px;
+  border:1px solid #E7EDE2; box-shadow:0 2px 10px rgba(0,0,0,.04);
+  margin-bottom:14px;
+}
+.card-title {
+  font-weight:700; font-size:1rem; color:#2C7DA0; margin-bottom:12px;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:8px; line-height:1.4;
+}
+.card-title .badge {
+  font-size:.65rem; background:#E7EDE2; color:#5F7C62;
+  padding:3px 12px; border-radius:40px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.3px;
+}
+.badge.blue { background:#DBEAF2; color:#1F4E6E; }
+.badge.green { background:#E2EFD8; color:#4A6B3A; }
+.badge.orange { background:#FBE4D0; color:#8A5A2B; }
+
+/* Уведомления */
+.notice {
+  background:#F7F3E8; border-left:4px solid #2C7DA0;
+  padding:10px 14px; border-radius:0 1rem 1rem 0;
+  margin:10px 0; font-size:.85rem; line-height:1.6;
+}
+.notice.green { background:#E8F5E8; border-left-color:#6B9E6B; }
+.notice.blue { background:#E8F0F5; border-left-color:#2C7DA0; }
+.notice.orange { background:#FDF3E8; border-left-color:#D4A373; }
+.notice.red { background:#FDF0E8; border-left-color:#b13e3e; }
+.notice strong { color:#1F4E6E; }
+
+/* Сетки */
+.grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+
+/* Теория */
+.theory-box {
+  background:#F9FBF8; border:1px solid #E7EDE2;
+  border-radius:1rem; padding:14px 16px;
+}
+.theory-box h3 {
+  color:#2C7DA0; font-size:.88rem; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.theory-box p, .theory-box li { font-size:.83rem; line-height:1.6; }
+.theory-box ul, .theory-box ol { padding-left:18px; margin-top:4px; }
+.theory-box ul li, .theory-box ol li { margin-bottom:4px; }
+
+/* Формулы */
+.formula {
+  background:#F0F7FA; border:1px solid #B8D9E8;
+  border-radius:10px; padding:10px 14px; text-align:center;
+  font-family:Georgia,serif; font-size:1rem; color:#1F4E6E;
+  margin:10px 0;
+}
+.formula strong { color:#2C7DA0; }
+.latin { font-family:Georgia,'Times New Roman',serif; color:#1F4E6E; font-weight:700; }
+
+/* Кнопки */
+.btn {
+  background:#EBE3D2; border:none; padding:7px 20px; border-radius:40px;
+  font-weight:600; cursor:pointer; transition:.15s; font-family:inherit;
+  font-size:.8rem; color:#1A2A3A; display:inline-flex; align-items:center; gap:6px;
+  text-decoration:none;
+}
+.btn:hover { opacity:.85; transform:translateY(-1px); }
+.btn:active { transform:scale(.96); }
+.btn-primary { background:#2C7DA0; color:white; }
+.btn-primary:hover { background:#236B8A; }
+.btn-success { background:#6B9E6B; color:white; }
+.btn-success:hover { background:#5A865A; }
+.btn-outline { background:transparent; border:1px solid #D9D0BD; }
+.btn-outline:hover { background:#F0EEE5; }
+
+/* Раскрывающиеся блоки */
+details {
+  background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem;
+  padding:10px 14px; margin:8px 0; font-size:.85rem;
+}
+details summary {
+  cursor:pointer; font-weight:600; color:#1F4E6E; list-style:none;
+  display:flex; justify-content:space-between; align-items:center;
+}
+details summary::-webkit-details-marker { display:none; }
+details summary::after { content:'▼'; color:#2C7DA0; font-size:.7rem; }
+details[open] summary::after { content:'▲'; }
+details .content { margin-top:10px; padding-top:10px; border-top:1px solid #E7EDE2; line-height:1.6; }
+
+/* Калькулятор */
+.calc {
+  background:#F0F7FA; border:1px solid #B8D9E8; border-radius:1rem;
+  padding:14px 16px; margin:10px 0;
+}
+.calc label { font-size:.8rem; color:#3E5C4A; display:block; margin-bottom:4px; }
+.calc input, .calc select {
+  width:100%; padding:8px 12px; border:2px solid #D9D0BD;
+  border-radius:20px; font-family:inherit; font-size:.85rem;
+  background:white; outline:none; margin-bottom:8px;
+}
+.calc input:focus, .calc select:focus { border-color:#2C7DA0; }
+.calc .result {
+  background:white; border:2px solid #6B9E6B; border-radius:20px;
+  padding:10px 14px; text-align:center; font-weight:700;
+  color:#2E7D32; font-size:1rem;
+}
+
+/* Задачи */
+.task {
+  background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem;
+  padding:14px 16px; margin-bottom:12px;
+}
+.task h3 { font-size:.9rem; color:#2C7DA0; margin-bottom:6px; }
+.task p { font-size:.85rem; line-height:1.6; margin-bottom:8px; }
+.task .solution {
+  background:#E8F5E8; border-left:4px solid #6B9E6B;
+  padding:10px 14px; border-radius:0 .75rem .75rem 0;
+  font-size:.83rem; line-height:1.6; margin-top:8px;
+  display:none;
+}
+.task .solution.show { display:block; }
+
+/* Ссылки-карточки */
+.link-card {
+  background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem;
+  padding:14px 18px; display:flex; align-items:center; gap:12px;
+  text-decoration:none; color:#1A2A3A; transition:.15s;
+}
+.link-card:hover { background:#F3F7F2; border-color:#A3B18A; transform:translateY(-1px); }
+.link-card .icon { font-size:1.6rem; }
+.link-card .text { flex:1; }
+.link-card .text strong { display:block; color:#1F4E6E; font-size:.9rem; margin-bottom:2px; }
+.link-card .text span { font-size:.78rem; color:#5F7C62; }
+
+/* Чек-лист */
+.checklist { list-style:none; padding:0; }
+.checklist li {
+  padding:8px 12px; background:#F9FBF8; border-radius:.75rem;
+  margin-bottom:6px; font-size:.85rem; display:flex; align-items:flex-start; gap:8px;
+}
+.checklist li::before { content:'✓'; color:#6B9E6B; font-weight:700; }
+
+/* Футер */
+footer {
+  margin-top:20px; padding:16px; background:white; border-radius:1.5rem;
+  border:1px solid #E7EDE2; text-align:center; font-size:.75rem;
+  color:#7B8D6E; line-height:1.6;
+}
+footer strong { color:#1F4E6E; }
+
+@media (max-width:700px) {
+  body { padding:10px; }
+  .header { flex-direction:column; align-items:stretch; padding:12px 16px; }
+  .header .logo { font-size:.95rem; }
+  .header-stats { justify-content:space-between; }
+  .card { padding:14px 16px; }
+  .tab-btn { font-size:.68rem; padding:5px 12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="logo">
+    💻 <span class="gradient">Информатика</span>
+    <span class="sub">· Урок 1.2 · Информация и информационные процессы</span>
+  </div>
+  <div class="header-stats">
+    <span id="headerStatus" style="color:#5F7C62; max-width:340px;">Теория + практика</span>
+    <span class="timer" id="lessonTimer">90:00</span>
+  </div>
+</header>
+
+<!-- ВКЛАДКИ -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="start">🎬 Старт</button>
+  <button class="tab-btn" data-tab="theory1">📌 Блок 1. Информация</button>
+  <button class="tab-btn" data-tab="theory2">🔢 Блок 2. Кодирование</button>
+  <button class="tab-btn" data-tab="theory3">📡 Блок 3. Процессы</button>
+  <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+  <button class="tab-btn" data-tab="vetsim">🐾 ВетСим</button>
+</div>
+
+<!-- ===== ВКЛАДКА 1. СТАРТ ===== -->
+<section class="tab-content active" id="tab-start">
+  <div class="card">
+    <div class="card-title"><span>🎬 Добро пожаловать</span><span class="badge blue">5 мин</span></div>
+    <div class="notice blue">
+      <strong>Тема урока:</strong> Информация и информационные процессы.
+    </div>
+    <div class="notice green">
+      <strong>Цель:</strong> понять, что такое информация, как она кодируется и передаётся, и как это связано с ветеринарной практикой.
+    </div>
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:14px 0 8px;">Что сегодня будет:</h3>
+    <ul class="checklist">
+      <li>Блок 1: Информация, данные, знания. Дискретность.</li>
+      <li>Блок 2: Кодирование. Равномерные и неравномерные коды. Условие Фано.</li>
+      <li>Блок 3: Информационные процессы. Передача. Скорость. Хранение.</li>
+      <li>Практика: решение задач (с проверкой).</li>
+      <li>ВетСим: связь с проектом.</li>
+    </ul>
+    <div class="notice orange">
+      <strong>Связь с ветеринарией:</strong> всё, что вы узнаете сегодня, используется в клинике — от передачи анализов до хранения карт пациентов.
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 2. БЛОК 1 ===== -->
+<section class="tab-content" id="tab-theory1">
+  <div class="card">
+    <div class="card-title"><span>📌 Блок 1. Информация, данные, знания. Дискретность</span><span class="badge blue">20 мин</span></div>
+
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>📘 Информация</h3>
+        <p>Сведения об объектах и явлениях окружающего мира, которые <strong>уменьшают неопределённость</strong> знания о них.</p>
+      </div>
+      <div class="theory-box">
+        <h3>📊 Данные</h3>
+        <p>Информация, <strong>зафиксированная на носителе</strong> (текст, число, изображение, звук).</p>
+      </div>
+      <div class="theory-box">
+        <h3>🧠 Знания</h3>
+        <p>Информация, <strong>проверенная практикой</strong>, осмысленная и используемая для принятия решений.</p>
+      </div>
+      <div class="theory-box">
+        <h3>🔢 Дискретность</h3>
+        <p>Информация представляется в виде <strong>отдельных символов</strong> (букв, цифр, битов). Компьютер использует <strong>двоичный алфавит</strong> (0 и 1).</p>
+      </div>
+    </div>
+
+    <div class="notice green" style="margin-top:14px;">
+      <strong>Универсальность двоичного кодирования:</strong> любой вид информации (текст, число, изображение, звук, видео) можно закодировать двоичными последовательностями. Именно поэтому компьютер — универсальное устройство.
+    </div>
+
+    <details>
+      <summary>🩺 Пример из ветеринарии</summary>
+      <div class="content">
+        <p>Температура тела животного — это <strong>данные</strong> (число 39,5). Понимание того, что 39,5°C у собаки — это норма, а у кошки — отклонение, — это <strong>знание</strong>. А запись «у собаки температура 39,5°C» — это <strong>информация</strong>, которая уменьшает неопределённость (мы знаем, что делать).</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>💡 Вопрос для размышления</summary>
+      <div class="content">
+        <p>Приведите пример: где в работе ветеринарного фельдшера встречаются <strong>данные</strong>, где <strong>информация</strong>, а где <strong>знания</strong>?</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 3. БЛОК 2 ===== -->
+<section class="tab-content" id="tab-theory2">
+  <div class="card">
+    <div class="card-title"><span>🔢 Блок 2. Кодирование. Условие Фано</span><span class="badge blue">20 мин</span></div>
+
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>🔤 Кодирование</h3>
+        <p>Преобразование информации в форму, удобную для <strong>хранения, передачи или обработки</strong>.</p>
+      </div>
+      <div class="theory-box">
+        <h3>📏 Равномерный код</h3>
+        <p>Все кодовые слова <strong>одинаковой длины</strong> (например, ASCII: 1 символ = 8 бит). <strong>Всегда декодируется однозначно.</strong></p>
+      </div>
+      <div class="theory-box">
+        <h3>📐 Неравномерный код</h3>
+        <p>Кодовые слова <strong>разной длины</strong> (например, азбука Морзе). Требует <strong>условия Фано</strong>.</p>
+      </div>
+      <div class="theory-box">
+        <h3>✅ Условие Фано</h3>
+        <p><strong>Никакое кодовое слово не является началом (префиксом) другого кодового слова.</strong></p>
+      </div>
+    </div>
+
+    <div class="formula">
+      <strong>Условие Фано:</strong> A ≠ префикс B для любых A, B.
+    </div>
+
+    <div class="notice orange">
+      <strong>Обратное условие Фано:</strong> никакое кодовое слово не является <strong>окончанием</strong> (суффиксом) другого. Обеспечивает однозначное декодирование <strong>с конца</strong>.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:16px 0 8px;">Как проверить условие Фано</h3>
+    <ol style="font-size:.85rem; line-height:1.7; padding-left:20px;">
+      <li>Выписать все кодовые слова.</li>
+      <li>Сравнить каждое с каждым: не является ли одно началом другого.</li>
+      <li>Если ни одно не является началом другого — условие выполняется.</li>
+    </ol>
+
+    <details>
+      <summary>❌ Пример нарушения</summary>
+      <div class="content">
+        <p>А=0, Б=01. Код <code>01</code> можно декодировать как «АБ» (0 + 1) или как «Б» (01). <strong>Условие Фано нарушено.</strong></p>
+      </div>
+    </details>
+
+    <details>
+      <summary>✅ Пример выполнения</summary>
+      <div class="content">
+        <p>А=0, Б=10, В=110. Код <code>010110</code> декодируется однозначно: А, Б, В. <strong>Условие Фано выполнено.</strong></p>
+      </div>
+    </details>
+
+    <details>
+      <summary>🌳 Построение кода с помощью дерева</summary>
+      <div class="content">
+        <ul>
+          <li>Корень — пустой код.</li>
+          <li>Левое ребро — 0, правое — 1.</li>
+          <li>Кодовые слова — листья дерева.</li>
+          <li><strong>Условие Фано:</strong> ни один лист не является предком другого листа.</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 4. БЛОК 3 ===== -->
+<section class="tab-content" id="tab-theory3">
+  <div class="card">
+    <div class="card-title"><span>📡 Блок 3. Информационные процессы. Передача. Скорость. Хранение</span><span class="badge blue">15 мин</span></div>
+
+    <div class="grid-3">
+      <div class="theory-box">
+        <h3>📥 Сбор</h3>
+        <p>Наблюдение, измерение.</p>
+      </div>
+      <div class="theory-box">
+        <h3>⚙️ Обработка</h3>
+        <p>Преобразование, вычисления, анализ.</p>
+      </div>
+      <div class="theory-box">
+        <h3>📤 Передача</h3>
+        <p>От источника к приёмнику.</p>
+      </div>
+      <div class="theory-box">
+        <h3>💾 Хранение</h3>
+        <p>На носителях (жёсткий диск, флешка, облако).</p>
+      </div>
+      <div class="theory-box">
+        <h3>🔍 Поиск</h3>
+        <p>В файловой системе, в интернете.</p>
+      </div>
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:16px 0 8px;">Передача информации</h3>
+    <div class="formula" style="font-size:.9rem;">
+      Источник → Кодирующее устройство → <strong>Канал связи</strong> → Декодирующее устройство → Приёмник
+    </div>
+
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>📶 Сигнал</h3>
+        <p>Физический процесс, несущий информацию (электрический ток, радиоволна, свет).</p>
+      </div>
+      <div class="theory-box">
+        <h3>⚡ Искажение</h3>
+        <p>Изменение сигнала под действием <strong>помех</strong>. Для защиты используют <strong>помехоустойчивое кодирование</strong>.</p>
+      </div>
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:16px 0 8px;">Скорость передачи данных</h3>
+    <div class="formula">
+      <strong>V = I / t</strong><br>
+      <span style="font-size:.85rem; color:#5F7C62;">V — скорость (бит/с), I — объём (бит), t — время (с)</span>
+    </div>
+
+    <div class="notice blue">
+      <strong>Единицы:</strong> 1 Кбит/с = 1024 бит/с; 1 Мбит/с = 1024 Кбит/с; 1 Гбит/с = 1024 Мбит/с.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:16px 0 8px;">Хранение информации</h3>
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>💾 Носители</h3>
+        <ul>
+          <li>Жёсткий диск (HDD/SSD)</li>
+          <li>Флеш-память</li>
+          <li>Оптические диски (CD/DVD)</li>
+          <li>Облачные хранилища</li>
+        </ul>
+      </div>
+      <div class="theory-box">
+        <h3>📊 Объём памяти</h3>
+        <ul>
+          <li>1 байт = 8 бит</li>
+          <li>1 Кбайт = 1024 байт</li>
+          <li>1 Мбайт = 1024 Кбайт</li>
+          <li>1 Гбайт = 1024 Мбайт</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Калькулятор скорости -->
+    <div class="calc">
+      <h3 style="color:#1F4E6E; font-size:.9rem; margin-bottom:8px;">🧮 Мини-калькулятор скорости передачи</h3>
+      <label>Объём информации (Мбайт):</label>
+      <input type="number" id="calcSize" value="8" min="0" step="0.1">
+      <label>Скорость канала (Мбит/с):</label>
+      <input type="number" id="calcSpeed" value="2" min="0.1" step="0.1">
+      <button class="btn btn-primary" id="calcBtn" style="width:100%; justify-content:center;">Рассчитать время</button>
+      <div class="result" id="calcResult" style="margin-top:10px;">—</div>
+    </div>
+
+    <details>
+      <summary>🩺 Связь с ветеринарией</summary>
+      <div class="content">
+        <p>Передача рентгеновского снимка (объём ~10 Мбайт) по каналу со скоростью 1 Мбит/с займёт около <strong>80 секунд</strong>. Если канал медленный — врач будет ждать долго. Если канал с помехами — снимок может исказиться, и диагноз будет неверным.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 5. ПРАКТИКА ===== -->
+<section class="tab-content" id="tab-practice">
+  <div class="card">
+    <div class="card-title"><span>🧩 Практика: 5 задач</span><span class="badge orange">15 мин</span></div>
+
+    <div class="task">
+      <h3>Задача 1. Условие Фано (проверка)</h3>
+      <p>Даны коды: А=00, Б=01, В=10, Г=11. Выполняется ли условие Фано? Ответ обоснуйте.</p>
+      <button class="btn btn-outline" data-solution="sol1">Показать решение</button>
+      <div class="solution" id="sol1">
+        <strong>Решение:</strong> Да, выполняется. Все кодовые слова <strong>одинаковой длины</strong> (2 бита), поэтому ни одно не может быть началом другого. Это <strong>равномерный код</strong>.
+      </div>
+    </div>
+
+    <div class="task">
+      <h3>Задача 2. Условие Фано (нарушение)</h3>
+      <p>Даны коды: А=0, Б=01, В=10. Выполняется ли условие Фано? Может ли код <code>010</code> быть декодирован однозначно?</p>
+      <button class="btn btn-outline" data-solution="sol2">Показать решение</button>
+      <div class="solution" id="sol2">
+        <strong>Решение:</strong> Условие Фано <strong>нарушено</strong> (А=0 является началом Б=01). Код <code>010</code> можно декодировать как «А, Б, А» (0, 01, 0) или как «А, В, А»? Нет, 10 — это В, но <code>010</code> = 0 + 10 = А + В. Также <code>010</code> = 01 + 0 = Б + А. <strong>Неоднозначно.</strong>
+      </div>
+    </div>
+
+    <div class="task">
+      <h3>Задача 3. Построение кода (условие Фано)</h3>
+      <p>Для букв А, Б, В, Г используются коды: А=0, Б=10. Предложите кодовые слова для В и Г, чтобы выполнялось условие Фано.</p>
+      <button class="btn btn-outline" data-solution="sol3">Показать решение</button>
+      <div class="solution" id="sol3">
+        <strong>Решение:</strong> Свободные ветки: 110, 111 (или 1100, 1101 и т.д.). Например, В=110, Г=111. Проверка: ни одно не является началом другого.
+      </div>
+    </div>
+
+    <div class="task">
+      <h3>Задача 4. Скорость передачи</h3>
+      <p>Рентгеновский снимок имеет объём 8 Мбайт. Канал связи обеспечивает скорость 2 Мбит/с. За какое время снимок будет передан?</p>
+      <button class="btn btn-outline" data-solution="sol4">Показать решение</button>
+      <div class="solution" id="sol4">
+        <strong>Решение:</strong> 8 Мбайт = 8 × 1024 × 1024 × 8 бит = 67 108 864 бит. Время = 67 108 864 / (2 × 1024 × 1024) ≈ <strong>32 секунды</strong>.
+      </div>
+    </div>
+
+    <div class="task">
+      <h3>Задача 5. Связь с ветеринарией</h3>
+      <p>В клинику поступило животное. Врач передаёт в лабораторию: результаты осмотра (текст, 2 Кбайт), фото животного (3 Мбайт), запись кашля (1 Мбайт). Каков общий объём? Сколько времени займёт передача по каналу 1 Мбит/с?</p>
+      <button class="btn btn-outline" data-solution="sol5">Показать решение</button>
+      <div class="solution" id="sol5">
+        <strong>Решение:</strong> 2 Кбайт ≈ 0,002 Мбайт. Общий объём ≈ 4,002 Мбайт ≈ 4 × 1024 × 1024 × 8 = 33 554 432 бит. Время ≈ <strong>33,5 секунды</strong>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 6. ВЕТСИМ ===== -->
+<section class="tab-content" id="tab-vetsim">
+  <div class="card">
+    <div class="card-title"><span>🐾 ВетСим: связь с проектом</span><span class="badge green">5 мин</span></div>
+
+    <div class="notice blue">
+      <strong>ВетСим</strong> — цифровая экосистема для ветеринарного образования. В ней есть <strong>20+ конструкторов</strong>, витрина тренажёров, цифровая зачётка и дневники становления.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Как тема урока связана с ВетСим</h3>
+    <ul class="checklist">
+      <li><strong>Кодирование</strong> — тренажёры кодируют информацию (вопросы, ответы, изображения).</li>
+      <li><strong>Передача</strong> — данные передаются между устройствами (компьютер, телефон, сервер).</li>
+      <li><strong>Хранение</strong> — цифровая зачётка и дневники хранят данные о вашем прогрессе.</li>
+            <li><strong>Скорость</strong> — чем быстрее канал, тем быстрее вы получаете доступ к тренажёрам и материалам.</li>
+    </ul>
+
+    <div class="notice green" style="margin-top:14px;">
+      <strong>Попробуйте:</strong> откройте ВетСим, выберите тренажёр и подумайте — какая информация в нём закодирована? Как она передаётся? Где хранится?
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Ссылки</h3>
+    <div class="grid-2">
+      <a href="https://vet-sim.github.io/universal.html" target="_blank" class="link-card">
+        <div class="icon">🧩</div>
+        <div class="text">
+          <strong>20+ конструкторов</strong>
+          <span>Создавай тренажёры без программирования</span>
+        </div>
+      </a>
+      <a href="https://vetsim.ru/students/students.html" target="_blank" class="link-card">
+        <div class="icon">📊</div>
+        <div class="text">
+          <strong>Студентам</strong>
+          <span>Дневники, зачётка, тренажёры</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ФУТЕР -->
+<footer>
+  © ВетСим — ветеринарное просвещение · ООД 10 «Информатика»<br>
+  <strong>Урок 1.2 · Информация и информационные процессы</strong><br>
+  36.02.01 Ветеринария · Работает офлайн
+</footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+
+  // ===== ВКЛАДКИ =====
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      $('tab-' + btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  // ===== ТАЙМЕР УРОКА (90 минут) =====
+  let lessonSeconds = 90 * 60;
+  const timerEl = $('lessonTimer');
+  function updateTimer(){
+    const m = Math.floor(lessonSeconds / 60);
+    const s = lessonSeconds % 60;
+    timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    timerEl.classList.remove('warning','danger');
+    if (lessonSeconds <= 300) timerEl.classList.add('danger');
+    else if (lessonSeconds <= 900) timerEl.classList.add('warning');
+  }
+  updateTimer();
+  setInterval(() => {
+    if (lessonSeconds > 0) { lessonSeconds--; updateTimer(); }
+  }, 1000);
+
+  // ===== РАСКРЫТИЕ РЕШЕНИЙ ЗАДАЧ =====
+  document.querySelectorAll('[data-solution]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.solution;
+      const sol = $(id);
+      if (sol) {
+        sol.classList.toggle('show');
+        btn.textContent = sol.classList.contains('show') ? '🙈 Скрыть решение' : 'Показать решение';
+      }
+    });
+  });
+
+  // ===== МИНИ-КАЛЬКУЛЯТОР СКОРОСТИ =====
+  const calcBtn = $('calcBtn');
+  if (calcBtn) {
+    calcBtn.addEventListener('click', () => {
+      const sizeMB = parseFloat($('calcSize').value);
+      const speedMbps = parseFloat($('calcSpeed').value);
+      const result = $('calcResult');
+      if (!sizeMB || !speedMbps || sizeMB <= 0 || speedMbps <= 0) {
+        result.textContent = '⚠️ Введите положительные числа';
+        result.style.borderColor = '#b13e3e';
+        result.style.color = '#b13e3e';
+        return;
+      }
+      // Объём в битах
+      const sizeBits = sizeMB * 1024 * 1024 * 8;
+      // Скорость в бит/с
+      const speedBps = speedMbps * 1024 * 1024;
+      // Время в секундах
+      const timeSec = sizeBits / speedBps;
+
+      let timeText;
+      if (timeSec < 60) {
+        timeText = `${timeSec.toFixed(1)} с`;
+      } else if (timeSec < 3600) {
+        const min = Math.floor(timeSec / 60);
+        const sec = Math.round(timeSec % 60);
+        timeText = `${min} мин ${sec} с`;
+      } else {
+        const h = Math.floor(timeSec / 3600);
+        const min = Math.round((timeSec % 3600) / 60);
+        timeText = `${h} ч ${min} мин`;
+      }
+
+      result.innerHTML = `⏱️ Время передачи: <strong>${timeText}</strong><br><span style="font-size:.75rem; color:#5F7C62; font-weight:400;">(${sizeMB} Мбайт при ${speedMbps} Мбит/с)</span>`;
+      result.style.borderColor = '#6B9E6B';
+      result.style.color = '#2E7D32';
+    });
+  }
+
+})();
+</script>
+</body>
+</html>

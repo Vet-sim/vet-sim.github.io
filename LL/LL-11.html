@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Латинский язык · Урок 11 · ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif; background: #FDF8F0; color: #1A2A3A; padding: 16px; min-height: 100vh; line-height: 1.5; }
+.container { max-width: 1150px; margin: 0 auto; }
+
+.header { background: white; border-radius: 1.5rem; padding: 14px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 16px; border: 1px solid #E7EDE2; }
+.header .logo { font-weight: 700; font-size: 1.05rem; color: #1A2A3A; }
+.header .logo .gradient { background: linear-gradient(135deg, #2C7DA0, #6B9E6B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.header .logo .sub { font-weight: 400; font-size: 0.72rem; color: #7B8D6E; display: block; margin-top: 2px; }
+.header-stats { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.82rem; }
+.header-stats .score { background: #2C7DA0; color: white; padding: 4px 16px; border-radius: 40px; font-weight: 600; }
+.header-stats .progress-text { color: #5F7C62; max-width: 340px; }
+
+.btn { background: #EBE3D2; border: none; padding: 7px 20px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.15s; font-family: inherit; font-size: 0.8rem; color: #1A2A3A; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-success { background: #6B9E6B; color: white; }
+.btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+.btn-outline:hover { background: #F0EEE5; }
+.btn-sm { padding: 4px 14px; font-size: 0.72rem; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tab-btn { background: #EBE3D2; border: none; padding: 7px 18px; border-radius: 40px; font-weight: 600; font-size: 0.76rem; cursor: pointer; transition: 0.2s; font-family: inherit; color: #3E5C4A; }
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: #2C7DA0; color: white; }
+.tab-content { display: none; animation: fadeIn 0.25s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.card { background: white; border-radius: 1.5rem; padding: 20px 24px; border: 1px solid #E7EDE2; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 14px; }
+.card-title { font-weight: 700; font-size: 1rem; color: #2C7DA0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; line-height: 1.4; }
+.card-title .badge { font-size: 0.65rem; background: #E7EDE2; color: #5F7C62; padding: 3px 12px; border-radius: 40px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.badge.blue { background: #DBEAF2; color: #1F4E6E; }
+.badge.orange { background: #FBE4D0; color: #8A5A2B; }
+
+.q { padding: 12px 0; border-bottom: 1px solid #f0ebe3; }
+.q:last-child { border-bottom: none; }
+.q-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 10px; line-height: 1.55; }
+.q-title .num { color: #2C7DA0; font-weight: 700; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 6px; }
+.option { background: #FEFCF9; border: 2px solid #E7EDE2; border-radius: 40px; padding: 8px 18px; font-size: 0.85rem; cursor: pointer; transition: 0.15s; display: flex; align-items: center; gap: 10px; }
+.option:hover { background: #F3F7F2; border-color: #A3B18A; }
+.option.selected { background: #E9F0E3; border-color: #2C7DA0; box-shadow: 0 0 0 3px rgba(44,125,160,0.1); }
+.option .marker { width: 26px; height: 26px; min-width: 26px; background: #E2EAD9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #5F7C62; font-size: 0.8rem; }
+.option.selected .marker { background: #2C7DA0; color: white; }
+
+.test-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 0.8rem; color: #5F7C62; flex-wrap: wrap; }
+.test-progress .bar { flex: 1; height: 6px; background: #E7EDE2; border-radius: 20px; overflow: hidden; min-width: 80px; }
+.test-progress .bar-fill { height: 100%; background: #2C7DA0; border-radius: 20px; transition: width 0.3s; }
+.timer { background: #2C7DA0; color: white; padding: 6px 20px; border-radius: 40px; font-weight: 700; font-size: 0.95rem; font-variant-numeric: tabular-nums; min-width: 90px; text-align: center; transition: 0.3s; }
+.timer.warning { background: #D4A373; }
+.timer.danger { background: #b13e3e; animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+.latin { font-family: Georgia, 'Times New Roman', serif; color: #1F4E6E; font-weight: 700; }
+.theory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 10px; }
+.theory-box { background: #F9FBF8; border: 1px solid #E7EDE2; border-radius: 1rem; padding: 14px 16px; }
+.theory-box h3 { color: #2C7DA0; font-size: 0.88rem; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.theory-box p, .theory-box li { font-size: 0.83rem; line-height: 1.6; }
+.theory-box ul { padding-left: 18px; margin-top: 4px; }
+.theory-box ul li { margin-bottom: 3px; }
+
+.notice { background: #F7F3E8; border-left: 4px solid #2C7DA0; padding: 10px 14px; border-radius: 0 1rem 1rem 0; margin: 10px 0; font-size: 0.83rem; line-height: 1.6; }
+.notice.green { background: #E8F5E8; border-left-color: #6B9E6B; }
+.notice.blue { background: #E8F0F5; border-left-color: #2C7DA0; }
+.notice.orange { background: #FDF3E8; border-left-color: #D4A373; }
+.notice strong { color: #1F4E6E; }
+
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+table.lesson-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: white; border-radius: 12px; overflow: hidden; }
+table.lesson-table th, table.lesson-table td { padding: 8px 12px; border-bottom: 1px solid #E7EDE2; text-align: left; vertical-align: top; }
+table.lesson-table th { background: #F3F7F2; color: #2C7DA0; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.3px; }
+table.lesson-table tr:last-child td { border-bottom: none; }
+
+.lexicon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.lex-card { background: #F9FBF8; border: 1px solid #E7EDE2; border-radius: 1rem; padding: 10px 14px; font-size: 0.82rem; line-height: 1.5; }
+.lex-card .lex-latin { font-family: Georgia, serif; font-weight: 700; color: #1F4E6E; font-size: 0.92rem; display: block; margin-bottom: 2px; }
+.lex-card .lex-trans { color: #3E5C4A; font-weight: 500; }
+.lex-section-title { font-weight: 700; color: #2C7DA0; font-size: 0.88rem; margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 2px solid #E7EDE2; }
+.lex-section-title:first-child { margin-top: 0; }
+
+.exercise { background: #F9FBF8; border: 1px solid #E7EDE2; border-radius: 1rem; padding: 14px 18px; margin-bottom: 12px; }
+.exercise.advanced { background: #FDF7EC; border-color: #E8D9B8; border-left: 4px solid #D4A373; }
+.exercise h3 { font-size: 0.9rem; color: #2C7DA0; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.exercise.advanced h3 { color: #8A5A2B; }
+.exercise table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.exercise table th, .exercise table td { padding: 6px 8px; border: 1px solid #E7EDE2; text-align: left; vertical-align: top; }
+.exercise table th { background: #F3F7F2; color: #2C7DA0; font-size: 0.72rem; }
+.exercise input[type="text"] { width: 100%; padding: 6px 10px; border: 2px solid #D9D0BD; border-radius: 20px; font-family: inherit; font-size: 0.82rem; background: white; color: #3E5C4A; outline: none; transition: 0.15s; }
+.exercise input:focus { border-color: #2C7DA0; box-shadow: 0 0 0 3px rgba(44,125,160,0.1); }
+.exercise input.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.exercise input.wrong { border-color: #b13e3e; background: #FDF0E8; }
+
+.exercise-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.result-msg { margin-top: 10px; padding: 10px 14px; border-radius: 1rem; font-size: 0.85rem; font-weight: 500; display: none; line-height: 1.55; }
+.result-msg.show { display: block; }
+.result-msg.ok { background: #E8F5E8; color: #2E7D32; }
+.result-msg.no { background: #FDF0E8; color: #b13e3e; }
+
+.final-screen { text-align: center; padding: 30px 20px; }
+.final-screen .score-big { font-size: 3rem; font-weight: 800; color: #1F4E6E; line-height: 1; }
+.final-screen .icon { font-size: 3.5rem; margin-bottom: 8px; }
+.final-screen .message { font-size: 1.05rem; color: #3E5C4A; margin: 12px 0 20px; line-height: 1.5; }
+.final-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; max-width: 520px; margin: 0 auto 20px; }
+.stat-box { background: #F9FBF8; border: 1px solid #E7EDE2; border-radius: 1rem; padding: 12px; }
+.stat-box .num { font-size: 1.5rem; font-weight: 700; color: #2C7DA0; }
+.stat-box .lbl { font-size: 0.7rem; color: #7B8D6E; text-transform: uppercase; }
+
+footer { margin-top: 20px; padding: 16px; background: white; border-radius: 1.5rem; border: 1px solid #E7EDE2; text-align: center; font-size: 0.75rem; color: #7B8D6E; line-height: 1.6; }
+footer strong { color: #1F4E6E; }
+
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+    .header .logo { font-size: 0.95rem; }
+    .header-stats { justify-content: space-between; }
+    .card { padding: 14px 16px; }
+    .tab-btn { font-size: 0.68rem; padding: 5px 12px; }
+    .q-title { font-size: 0.85rem; }
+    .option { padding: 8px 14px; font-size: 0.82rem; }
+    .exercise { padding: 12px; }
+    .exercise table { font-size: 0.75rem; }
+    .exercise table th, .exercise table td { padding: 4px 6px; }
+    .final-screen .score-big { font-size: 2.4rem; }
+}
+@media (max-width: 450px) {
+    .tab-btn { font-size: 0.65rem; padding: 5px 10px; }
+    .option { padding: 7px 12px; font-size: 0.78rem; }
+    .option .marker { width: 22px; height: 22px; min-width: 22px; font-size: 0.72rem; }
+    .exercise table { font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="header">
+    <div class="logo">📚 <span class="gradient">Lingua Latina</span><span class="sub">· Урок 11. Клиническая терминология. Греческие терминоэлементы</span></div>
+    <div class="header-stats">
+        <span class="progress-text" id="headerStatus">Входной тест · Урок 10: числительные</span>
+        <span class="score" id="headerScore">⭐ 0</span>
+    </div>
+</header>
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="test">🧪 Входной тест</button>
+    <button class="tab-btn" data-tab="theory">📖 Теория</button>
+    <button class="tab-btn" data-tab="lexicon">📚 Лексика</button>
+    <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+    <button class="tab-btn" data-tab="advanced">⭐ Дополнительно</button>
+    <button class="tab-btn" data-tab="vet">🐾 Ветпрактика</button>
+</div>
+
+<section class="tab-content active" id="tab-test">
+    <div class="card">
+        <div class="card-title">
+            <span>🧪 Входной тест: урок 10 — числительные</span>
+            <span class="badge" id="testBadge">25 вопросов</span>
+        </div>
+        <div id="testStart">
+            <div class="notice">
+                <strong>Проверка знаний предыдущего урока.</strong> Тест включает <strong>лексику</strong> урока 10 (числительные) и <strong>теорию</strong> (виды, склонение, формы). 25 заданий, 15 минут. Вопросы и варианты перемешиваются. Результат — в процентах.
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                <button class="btn btn-primary" id="startTestBtn">🚀 Начать тест</button>
+            </div>
+        </div>
+        <div id="testProgress" style="display:none;">
+            <div class="test-progress">
+                <span id="testProgressText">Вопрос 1 из 25</span>
+                <div class="bar"><div class="bar-fill" id="testBarFill"></div></div>
+                <span id="testProgressPct">0%</span>
+                <span class="timer" id="testTimer">15:00</span>
+            </div>
+            <div id="questionCard"></div>
+            <div class="exercise-controls" style="justify-content:flex-end;">
+                <button class="btn btn-primary" id="testNextBtn" disabled>Далее ▶</button>
+            </div>
+        </div>
+        <div id="testFinal" style="display:none;"></div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-theory">
+    <div class="card">
+        <div class="card-title"><span>📖 Что такое клиническая терминология</span></div>
+        <div class="notice blue">
+            <strong>Клиническая терминология</strong> — совокупность терминов для описания болезней, патологических состояний, симптомов, методов диагностики и лечения. Базируется на <strong>греческом языке</strong> — исторически болезни впервые описывались греческими врачами (Гиппократ, Гален).
+        </div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Почему греческая?</h3>
+                <p>Греческий язык позволяет создавать <strong>компактные сложные слова</strong> — один термин вместо целой фразы.</p>
+                <p style="margin-top:6px;"><span class="latin">cholecystitis</span> = <span class="latin">inflammatio vesicae fellis</span> — воспаление желчного пузыря.</p>
+            </div>
+            <div class="theory-box">
+                <h3>Что такое терминоэлемент</h3>
+                <p><strong>Терминоэлемент (ТЭ)</strong> — регулярно повторяющийся компонент термина с закреплённым значением.</p>
+                <ul style="margin-top:6px;">
+                    <li>Корневые начальные — орган, ткань</li>
+                    <li>Корневые конечные — процесс, состояние</li>
+                    <li>Аффиксальные приставки / суффиксы</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Греческие приставки</span></div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead><tr><th>Приставка</th><th>Значение</th><th>Пример</th></tr></thead>
+                <tbody>
+                    <tr><td class="latin">a-, an-</td><td>отсутствие, отрицание</td><td><span class="latin">anaemia</span> — анемия</td></tr>
+                    <tr><td class="latin">dys-</td><td>нарушение, расстройство</td><td><span class="latin">dyspnoe</span> — одышка</td></tr>
+                    <tr><td class="latin">hyper-</td><td>повышение, превышение</td><td><span class="latin">hypertrophia</span> — гипертрофия</td></tr>
+                    <tr><td class="latin">hypo-</td><td>понижение, ослабление</td><td><span class="latin">hypoglycaemia</span> — гипогликемия</td></tr>
+                    <tr><td class="latin">endo-</td><td>внутри</td><td><span class="latin">endometritis</span> — эндометрит</td></tr>
+                    <tr><td class="latin">epi-</td><td>на, над, сверх</td><td><span class="latin">epidermis</span> — эпидермис</td></tr>
+                    <tr><td class="latin">peri-</td><td>вокруг, со всех сторон</td><td><span class="latin">pericarditis</span> — перикардит</td></tr>
+                    <tr><td class="latin">para-</td><td>около, отклонение</td><td><span class="latin">paratyphus</span> — паратиф</td></tr>
+                    <tr><td class="latin">syn-, sym-</td><td>вместе, совместно</td><td><span class="latin">synostosis</span> — синостоз</td></tr>
+                    <tr><td class="latin">dia-</td><td>сквозь, через</td><td><span class="latin">diagnosis</span> — диагноз</td></tr>
+                    <tr><td class="latin">meso-</td><td>средний, между</td><td><span class="latin">mesenterium</span> — брыжейка</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Начальные терминоэлементы (орган / ткань)</span></div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead><tr><th>ТЭ</th><th>Значение</th><th>Пример</th></tr></thead>
+                <tbody>
+                    <tr><td class="latin">cardi-</td><td>сердце</td><td><span class="latin">carditis</span></td></tr>
+                    <tr><td class="latin">gastr-</td><td>желудок</td><td><span class="latin">gastritis</span></td></tr>
+                    <tr><td class="latin">hepat-</td><td>печень</td><td><span class="latin">hepatitis</span></td></tr>
+                    <tr><td class="latin">nephr-</td><td>почка</td><td><span class="latin">nephritis</span></td></tr>
+                    <tr><td class="latin">oste-</td><td>кость</td><td><span class="latin">osteitis</span></td></tr>
+                    <tr><td class="latin">my-</td><td>мышца</td><td><span class="latin">myositis</span></td></tr>
+                    <tr><td class="latin">dermat-</td><td>кожа</td><td><span class="latin">dermatitis</span></td></tr>
+                    <tr><td class="latin">rhin-</td><td>нос</td><td><span class="latin">rhinitis</span></td></tr>
+                    <tr><td class="latin">ophthalm-</td><td>глаз</td><td><span class="latin">ophthalmitis</span></td></tr>
+                    <tr><td class="latin">neur-</td><td>нерв</td><td><span class="latin">neuritis</span></td></tr>
+                    <tr><td class="latin">arthr-</td><td>сустав</td><td><span class="latin">arthritis</span></td></tr>
+                    <tr><td class="latin">phleb-</td><td>вена</td><td><span class="latin">phlebitis</span></td></tr>
+                    <tr><td class="latin">pneumon-</td><td>лёгкое</td><td><span class="latin">pneumonia</span></td></tr>
+                    <tr><td class="latin">enter-</td><td>кишечник</td><td><span class="latin">enteritis</span></td></tr>
+                    <tr><td class="latin">cyst-</td><td>мочевой пузырь</td><td><span class="latin">cystitis</span></td></tr>
+                    <tr><td class="latin">myel-</td><td>спинной мозг</td><td><span class="latin">myelitis</span></td></tr>
+                    <tr><td class="latin">chondr-</td><td>хрящ</td><td><span class="latin">chondritis</span></td></tr>
+                    <tr><td class="latin">aden-</td><td>железа</td><td><span class="latin">adenitis</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Конечные терминоэлементы (процесс / состояние)</span></div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead><tr><th>ТЭ</th><th>Значение</th><th>Пример</th></tr></thead>
+                <tbody>
+                    <tr><td class="latin">-itis</td><td>воспаление</td><td><span class="latin">gastritis</span></td></tr>
+                    <tr><td class="latin">-osis</td><td>хроническое состояние / процесс</td><td><span class="latin">arthrosis</span></td></tr>
+                    <tr><td class="latin">-oma</td><td>опухоль</td><td><span class="latin">lipoma</span></td></tr>
+                    <tr><td class="latin">-pathia</td><td>болезнь, страдание</td><td><span class="latin">cardiopathia</span></td></tr>
+                    <tr><td class="latin">-logia</td><td>наука, учение</td><td><span class="latin">physiologia</span></td></tr>
+                    <tr><td class="latin">-aemia</td><td>состояние крови</td><td><span class="latin">leukaemia</span></td></tr>
+                    <tr><td class="latin">-uria</td><td>состояние мочи</td><td><span class="latin">haematuria</span></td></tr>
+                    <tr><td class="latin">-ectomia</td><td>удаление</td><td><span class="latin">nephrectomia</span></td></tr>
+                    <tr><td class="latin">-tomia</td><td>рассечение</td><td><span class="latin">gastrotomia</span></td></tr>
+                    <tr><td class="latin">-scopia</td><td>осмотр</td><td><span class="latin">gastroscopia</span></td></tr>
+                    <tr><td class="latin">-stomia</td><td>создание отверстия</td><td><span class="latin">gastrostomia</span></td></tr>
+                    <tr><td class="latin">-rrhagia</td><td>кровотечение</td><td><span class="latin">haemorrhagia</span></td></tr>
+                    <tr><td class="latin">-rrhoea</td><td>истечение</td><td><span class="latin">diarrhoea</span></td></tr>
+                    <tr><td class="latin">-stenosis</td><td>сужение</td><td><span class="latin">gastrostenosis</span></td></tr>
+                    <tr><td class="latin">-ectasia</td><td>расширение</td><td><span class="latin">gastroectasia</span></td></tr>
+                    <tr><td class="latin">-ptosis</td><td>опущение</td><td><span class="latin">nephroptosis</span></td></tr>
+                    <tr><td class="latin">-lysis</td><td>разрушение</td><td><span class="latin">osteolysis</span></td></tr>
+                    <tr><td class="latin">-genesis</td><td>образование, развитие</td><td><span class="latin">pathogenesis</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Модели построения терминов</span></div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead><tr><th>Модель</th><th>Формула</th><th>Пример</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>начальный ТЭ + конечный ТЭ</td><td><span class="latin">gastr- + -itis = gastritis</span></td></tr>
+                    <tr><td>2</td><td>приставка + начальный + конечный</td><td><span class="latin">hyper- + glyc- + -aemia = hyperglycaemia</span></td></tr>
+                    <tr><td>3</td><td>два начальных + конечный</td><td><span class="latin">cardi- + my- + -opathia = cardiomyopathia</span></td></tr>
+                    <tr><td>4</td><td>начальный + -o- + начальный + конечный</td><td><span class="latin">rhin- + -o- + laryng- + -itis = rhinolaryngitis</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-lexicon">
+    <div class="card">
+        <div class="card-title"><span>📚 Лексический минимум: терминоэлементы</span><span class="badge">35 ТЭ</span></div>
+        <div class="lex-section-title">📗 Греческие приставки</div>
+        <div class="lexicon-grid" id="lexPrefix"></div>
+        <div class="lex-section-title">📘 Начальные терминоэлементы</div>
+        <div class="lexicon-grid" id="lexRoots"></div>
+        <div class="lex-section-title">📙 Конечные терминоэлементы</div>
+        <div class="lexicon-grid" id="lexSuffix"></div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-practice">
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 1. Разберите термины по составу</span></div>
+        <div class="exercise" id="ex1">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Термин</th><th>Начальный ТЭ</th><th>Конечный ТЭ</th><th>Значение</th></tr></thead>
+                    <tbody id="ex1Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex1">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex1">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex1Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 2. Образуйте термины с заданным значением</span></div>
+        <div class="exercise" id="ex2">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Значение</th><th>Термин</th></tr></thead>
+                    <tbody id="ex2Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex2">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex2">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex2Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 3. Определите значение терминов по составу</span></div>
+        <div class="exercise" id="ex3">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Термин</th><th>Значение</th></tr></thead>
+                    <tbody id="ex3Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex3">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex3">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex3Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 4. Переведите на латинский язык</span></div>
+        <div class="exercise" id="ex4">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Русский термин</th><th>Латинский термин</th></tr></thead>
+                    <tbody id="ex4Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex4">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex4">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex4Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 5. Греческие приставки — определите значение</span></div>
+        <div class="exercise" id="ex5">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Термин</th><th>Значение</th></tr></thead>
+                    <tbody id="ex5Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex5">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex5">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex5Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 6. Соедините терминоэлемент и значение</span></div>
+        <div class="exercise" id="ex6">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Терминоэлемент</th><th>Значение</th></tr></thead>
+                    <tbody id="ex6Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex6">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex6">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex6Result"></div>
+        </div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-advanced">
+    <div class="card">
+        <div class="card-title">
+            <span>⭐ Дополнительные задания для тех, кто справился быстрее</span>
+            <span class="badge orange">3 задания</span>
+        </div>
+        <div class="notice orange">
+            Эти задания — повышенной сложности. Они проверяют умение <strong>разбирать сложные термины</strong>,
+            <strong>строить термины по моделям</strong> и <strong>переводить клинические диагнозы</strong>.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 7. Разберите сложные термины по составу</span></div>
+        <div class="exercise advanced" id="ex7">
+            <div class="notice" style="margin-top:0;">
+                Для каждого термина запишите все терминоэлементы и перевод.
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Термин</th><th>Состав</th><th>Перевод</th></tr></thead>
+                    <tbody id="ex7Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex7">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex7">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex7Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 8. Постройте термин по модели</span></div>
+        <div class="exercise advanced" id="ex8">
+            <div class="notice" style="margin-top:0;">
+                Дано значение и модель. Запишите термин.
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Значение</th><th>Модель</th><th>Термин</th></tr></thead>
+                    <tbody id="ex8Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex8">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex8">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex8Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 9. Переведите клинические диагнозы</span></div>
+        <div class="exercise advanced" id="ex9">
+            <div class="notice" style="margin-top:0;">
+                Переведите диагнозы с латинского на русский и определите значение терминоэлементов.
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Латинский диагноз</th><th>Русский перевод</th></tr></thead>
+                    <tbody id="ex9Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex9">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex9">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex9Result"></div>
+        </div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-vet">
+    <div class="card">
+        <div class="card-title"><span>🐾 Профессиональная вставка. Заполни карту пациента</span></div>
+        <div class="notice blue">
+            <strong>Ты — ветеринарный фельдшер.</strong> Заполни карту пациента клиническими терминами на латинском языке.
+        </div>
+        <div class="exercise" id="ex10">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Русский диагноз</th><th>Латинский диагноз</th></tr></thead>
+                    <tbody id="ex10Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex10">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex10">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex10Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📝 Задание 19. Переведи с латинского на русский</span></div>
+        <div class="exercise" id="ex11">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Латинский термин</th><th>Перевод</th></tr></thead>
+                    <tbody id="ex11Body"></tbody>
+                </table>
+            </div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex11">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex11">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex11Result"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📖 Справочные термины</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Названия болезней</h3>
+                <ul>
+                    <li><span class="latin">gastritis</span> — гастрит</li>
+                    <li><span class="latin">nephritis</span> — нефрит</li>
+                    <li><span class="latin">hepatitis</span> — гепатит</li>
+                    <li><span class="latin">arthritis</span> — артрит</li>
+                    <li><span class="latin">dermatitis</span> — дерматит</li>
+                    <li><span class="latin">bronchitis</span> — бронхит</li>
+                    <li><span class="latin">pneumonia</span> — пневмония</li>
+                    <li><span class="latin">cystitis</span> — цистит</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>Названия наук</h3>
+                <ul>
+                    <li><span class="latin">cardiologia</span> — кардиология</li>
+                    <li><span class="latin">neurologia</span> — неврология</li>
+                    <li><span class="latin">dermatologia</span> — дерматология</li>
+                    <li><span class="latin">nephrologia</span> — нефрология</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>Операции</h3>
+                <ul>
+                    <li><span class="latin">nephrectomia</span> — удаление почки</li>
+                    <li><span class="latin">gastrotomia</span> — рассечение желудка</li>
+                    <li><span class="latin">gastrostomia</span> — создание отверстия в желудке</li>
+                    <li><span class="latin">gastroscopia</span> — осмотр желудка</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>Патологические состояния</h3>
+                <ul>
+                    <li><span class="latin">nephroptosis</span> — опущение почки</li>
+                    <li><span class="latin">gastroectasia</span> — расширение желудка</li>
+                    <li><span class="latin">gastrostenosis</span> — сужение желудка</li>
+                    <li><span class="latin">osteolysis</span> — разрушение кости</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    © ВетСим — ветеринарное просвещение · Латинский язык в ветеринарии<br>
+    <strong>Автор проекта и тренажёра: Тераевич Алла Сергеевна</strong><br>
+    Урок 11. Клиническая терминология. Греческие терминоэлементы · Работает офлайн
+</footer>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    const $ = id => document.getElementById(id);
+
+    // ================================================================
+    //  ЛЕКСИКА УРОКА 10 (для входного теста)
+    // ================================================================
+    const LEX10_WORDS = [
+        { latin: 'unus, una, unum', ru: 'один, одна, одно' },
+        { latin: 'duo, duae, duo', ru: 'два, две, два' },
+        { latin: 'tres, tria', ru: 'три' },
+        { latin: 'primus, a, um', ru: 'первый' },
+        { latin: 'secundus, a, um', ru: 'второй' },
+        { latin: 'tertius, a, um', ru: 'третий' },
+        { latin: 'quartus, a, um', ru: 'четвёртый' },
+        { latin: 'quintus, a, um', ru: 'пятый' },
+        { latin: 'sextus, a, um', ru: 'шестой' },
+        { latin: 'septimus, a, um', ru: 'седьмой' },
+        { latin: 'singuli, ae, a', ru: 'по одному' },
+        { latin: 'bini, ae, a', ru: 'по два' },
+        { latin: 'terni, ae, a', ru: 'по три' },
+        { latin: 'semel', ru: 'однажды' },
+        { latin: 'bis', ru: 'дважды' },
+        { latin: 'ter', ru: 'трижды' }
+    ];
+
+    // ================================================================
+    //  ТЕОРИЯ УРОКА 10 (для входного теста)
+    // ================================================================
+    const THEORY10_QUESTIONS = [
+        { q: 'Сколько видов числительных в латинском языке?', correct: '4', wrong: ['2', '3', '5'] },
+        { q: 'Какие числительные отвечают на вопрос «сколько?»?', correct: 'Количественные', wrong: ['Порядковые', 'Разделительные', 'Наречия'] },
+        { q: 'Какие числительные отвечают на вопрос «который?»?', correct: 'Порядковые', wrong: ['Количественные', 'Разделительные', 'Наречия'] },
+        { q: 'Какие числительные отвечают на вопрос «по сколько?»?', correct: 'Разделительные', wrong: ['Порядковые', 'Количественные', 'Наречия'] },
+        { q: 'Какие числительные отвечают на вопрос «сколько раз?»?', correct: 'Наречия', wrong: ['Порядковые', 'Количественные', 'Разделительные'] },
+        { q: 'Какие количественные числительные склоняются?', correct: 'Только unus, duo, tres', wrong: ['Все от 1 до 10', 'Только unus', 'Только duo и tres'] },
+        { q: 'По какому склонению склоняются порядковые числительные?', correct: 'По I–II склонению', wrong: ['По III склонению', 'По IV склонению', 'Не склоняются'] },
+        { q: 'В каком числе употребляются разделительные числительные?', correct: 'Только во множественном', wrong: ['Только в единственном', 'В обоих числах', 'Не изменяются'] },
+        { q: 'Как переводится «primus»?', correct: 'первый', wrong: ['второй', 'третий', 'один'] },
+        { q: 'Как переводится «semel»?', correct: 'однажды', wrong: ['дважды', 'трижды', 'по одному'] },
+        { q: 'Как по-латыни «две кости»?', correct: 'duo ossa', wrong: ['duae ossa', 'duo os', 'duorum ossium'] },
+        { q: 'Как по-латыни «три артерии»?', correct: 'tres arteriae', wrong: ['tria arteriae', 'tres arteria', 'trium arteriarum'] },
+        { q: 'Где стоят порядковые числительные в термине?', correct: 'После существительного', wrong: ['Перед существительным', 'В начале термина', 'Не имеет значения'] },
+        { q: 'Какая форма Gen. sing. у числительного unus (все роды)?', correct: 'unius', wrong: ['uni', 'uno', 'unum'] }
+    ];
+
+    // ================================================================
+    //  УТИЛИТЫ
+    // ================================================================
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function norm(s) {
+        return String(s).toLowerCase().replace(/[.,;:!?\s«»"]/g, '').replace(/ё/g, 'е');
+    }
+
+    // ================================================================
+    //  ВКЛАДКИ
+    // ================================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            $('tab-' + btn.dataset.tab).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // ================================================================
+    //  ВХОДНОЙ ТЕСТ
+    // ================================================================
+    const TEST_DURATION = 15 * 60;
+    let testQuestions = [];
+    let testCurrent = 0;
+    let testAnswers = [];
+    let testTimerInterval = null;
+    let testSecondsLeft = TEST_DURATION;
+
+    function prepareTestQuestions() {
+        const lexPool = shuffle(LEX10_WORDS).slice(0, 11);
+        const theoryPool = shuffle(THEORY10_QUESTIONS).slice(0, 14);
+
+        const lexQs = lexPool.map(w => {
+            const isLatinToRu = Math.random() < 0.5;
+            let questionText, correctAnswer, distractors;
+            if (isLatinToRu) {
+                questionText = `Что означает <span class="latin">${escapeHtml(w.latin)}</span>?`;
+                correctAnswer = w.ru;
+                const others = LEX10_WORDS.filter(x => x.ru !== w.ru).map(x => x.ru);
+                distractors = shuffle([...new Set(others)]).slice(0, 3);
+            } else {
+                questionText = `Как по-латыни «${escapeHtml(w.ru)}»?`;
+                correctAnswer = w.latin;
+                const others = LEX10_WORDS.filter(x => x.latin !== w.latin).map(x => x.latin);
+                distractors = shuffle([...new Set(others)]).slice(0, 3);
+            }
+            const options = shuffle([correctAnswer, ...distractors]);
+            return { question: questionText, options, correct: options.indexOf(correctAnswer) };
+        });
+
+        const theoryQs = theoryPool.map(t => {
+            const options = shuffle([t.correct, ...t.wrong]);
+            return { question: t.q, options, correct: options.indexOf(t.correct) };
+        });
+
+        return shuffle([...lexQs, ...theoryQs]);
+    }
+
+    function startTest() {
+        testQuestions = prepareTestQuestions();
+        testCurrent = 0;
+        testAnswers = new Array(testQuestions.length).fill(null);
+        testSecondsLeft = TEST_DURATION;
+        $('testStart').style.display = 'none';
+        $('testProgress').style.display = 'block';
+        $('testFinal').style.display = 'none';
+        $('testBadge').textContent = testQuestions.length + ' вопросов';
+        startTestTimer();
+        renderTestQuestion();
+    }
+
+    function startTestTimer() {
+        updateTestTimerDisplay();
+        if (testTimerInterval) clearInterval(testTimerInterval);
+        testTimerInterval = setInterval(() => {
+            testSecondsLeft--;
+            updateTestTimerDisplay();
+            if (testSecondsLeft <= 0) {
+                clearInterval(testTimerInterval);
+                finishTest(true);
+            }
+        }, 1000);
+    }
+
+    function updateTestTimerDisplay() {
+        const m = Math.floor(testSecondsLeft / 60);
+        const s = testSecondsLeft % 60;
+        const el = $('testTimer');
+        el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+        el.classList.remove('warning', 'danger');
+        if (testSecondsLeft <= 60) el.classList.add('danger');
+        else if (testSecondsLeft <= 300) el.classList.add('warning');
+    }
+
+    function renderTestQuestion() {
+        const q = testQuestions[testCurrent];
+        const total = testQuestions.length;
+        const percent = Math.round((testCurrent / total) * 100);
+        $('testProgressText').textContent = `Вопрос ${testCurrent + 1} из ${total}`;
+        $('testBarFill').style.width = percent + '%';
+        $('testProgressPct').textContent = percent + '%';
+        const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е'];
+        let html = `<div class="q"><div class="q-title"><span class="num">${testCurrent + 1}.</span> ${q.question}</div><div class="options">`;
+        q.options.forEach((opt, i) => {
+            const selected = testAnswers[testCurrent] === i;
+            html += `<div class="option ${selected ? 'selected' : ''}" data-idx="${i}">
+                <div class="marker">${letters[i]}</div>
+                <div class="text">${escapeHtml(opt)}</div>
+            </div>`;
+        });
+        html += '</div></div>';
+        $('questionCard').innerHTML = html;
+        $('questionCard').querySelectorAll('.option').forEach(optEl => {
+            optEl.addEventListener('click', () => {
+                testAnswers[testCurrent] = parseInt(optEl.dataset.idx);
+                renderTestQuestion();
+                $('testNextBtn').disabled = false;
+            });
+        });
+        const nextBtn = $('testNextBtn');
+        nextBtn.textContent = testCurrent === total - 1 ? '🏁 Завершить' : 'Далее ▶';
+        nextBtn.disabled = testAnswers[testCurrent] === null;
+    }
+
+    $('startTestBtn').addEventListener('click', startTest);
+    $('testNextBtn').addEventListener('click', () => {
+        if (testAnswers[testCurrent] === null) return;
+        if (testCurrent === testQuestions.length - 1) finishTest(false);
+        else { testCurrent++; renderTestQuestion(); }
+    });
+
+    function finishTest(timeout) {
+        if (testTimerInterval) clearInterval(testTimerInterval);
+        let correct = 0;
+        testQuestions.forEach((q, i) => { if (testAnswers[i] === q.correct) correct++; });
+        const total = testQuestions.length;
+        const percent = Math.round((correct / total) * 100);
+        $('testProgress').style.display = 'none';
+        $('testFinal').style.display = 'block';
+        const icon = percent >= 90 ? '🏆' : percent >= 75 ? '🎉' : percent >= 60 ? '😊' : '📚';
+        const message = percent >= 90 ? 'Отличный результат! Урок 10 усвоен полностью.' :
+                        percent >= 75 ? 'Хороший результат! Материал усвоен уверенно.' :
+                        percent >= 60 ? 'Неплохо, но стоит повторить некоторые темы.' :
+                        'Рекомендуем вернуться к уроку 10 и повторить теорию и лексику.';
+        const timeoutMsg = timeout ? '<div style="color:#b13e3e; font-weight:600; margin-bottom:12px;">⏰ Время вышло! Тест завершён автоматически.</div>' : '';
+        let html = `<div class="final-screen">${timeoutMsg}
+            <div class="icon">${icon}</div>
+            <div class="score-big">${percent}%</div>
+            <div class="message">${message}</div>
+            <div class="final-stats">
+                <div class="stat-box"><div class="num">${correct}</div><div class="lbl">Верно</div></div>
+                <div class="stat-box"><div class="num">${total - correct}</div><div class="lbl">Ошибок</div></div>
+                <div class="stat-box"><div class="num">${total}</div><div class="lbl">Всего</div></div>
+            </div>`;
+        html += `<div style="text-align:left; max-width:750px; margin:0 auto;">`;
+        html += `<div style="font-weight:700; color:#2C7DA0; margin-bottom:8px;">Разбор ответов:</div>`;
+        testQuestions.forEach((q, i) => {
+            const userIdx = testAnswers[i];
+            const userAnswer = userIdx !== null ? q.options[userIdx] : '— не отвечено —';
+            const correctAnswer = q.options[q.correct];
+            const ok = userIdx === q.correct;
+            html += `<div style="background:${ok ? '#E8F5E8' : '#FDF0E8'}; border-radius:12px; padding:8px 12px; margin-bottom:6px; font-size:0.82rem;">
+                <div style="font-weight:600; color:${ok ? '#2E7D32' : '#b13e3e'};">${i + 1}. ${q.question}</div>
+                <div style="font-size:0.78rem; color:#3E5C4A; margin-top:3px;">
+                    ${ok ? '✅ ' + escapeHtml(userAnswer) : '❌ Ваш ответ: ' + escapeHtml(userAnswer) + ' · ✅ Правильно: ' + escapeHtml(correctAnswer)}
+                </div>
+            </div>`;
+        });
+        html += `</div>`;
+        html += `<button class="btn btn-primary" style="margin-top:16px;" onclick="location.reload()">🔄 Пройти заново</button></div>`;
+        $('testFinal').innerHTML = html;
+        $('headerScore').textContent = '⭐ ' + percent;
+        $('headerStatus').textContent = 'Входной тест завершён · ' + percent + '%';
+    }
+
+    // ================================================================
+    //  ЛЕКСИКА
+    // ================================================================
+    const LEX_PREFIX = [
+        { latin: 'a-, an-', ru: 'отсутствие, отрицание' },
+        { latin: 'dys-', ru: 'нарушение, расстройство' },
+        { latin: 'hyper-', ru: 'повышение, превышение' },
+        { latin: 'hypo-', ru: 'понижение, ослабление' },
+        { latin: 'endo-', ru: 'внутри' },
+        { latin: 'epi-', ru: 'на, над, сверх' },
+        { latin: 'peri-', ru: 'вокруг, со всех сторон' },
+        { latin: 'para-', ru: 'около, отклонение' },
+        { latin: 'syn-, sym-', ru: 'вместе, совместно' },
+        { latin: 'dia-', ru: 'сквозь, через' },
+        { latin: 'meso-', ru: 'средний, между' }
+    ];
+
+    const LEX_ROOTS = [
+        { latin: 'cardi-', ru: 'сердце' },
+        { latin: 'gastr-', ru: 'желудок' },
+        { latin: 'hepat-', ru: 'печень' },
+        { latin: 'nephr-', ru: 'почка' },
+        { latin: 'oste-', ru: 'кость' },
+        { latin: 'my-', ru: 'мышца' },
+        { latin: 'dermat-', ru: 'кожа' },
+        { latin: 'rhin-', ru: 'нос' },
+        { latin: 'ophthalm-', ru: 'глаз' },
+        { latin: 'neur-', ru: 'нерв' },
+        { latin: 'arthr-', ru: 'сустав' },
+        { latin: 'phleb-', ru: 'вена' },
+        { latin: 'pneumon-', ru: 'лёгкое' },
+        { latin: 'enter-', ru: 'кишечник' },
+        { latin: 'cyst-', ru: 'мочевой пузырь' },
+        { latin: 'myel-', ru: 'спинной мозг' },
+        { latin: 'chondr-', ru: 'хрящ' },
+        { latin: 'aden-', ru: 'железа' }
+    ];
+
+    const LEX_SUFFIX = [
+        { latin: '-itis', ru: 'воспаление' },
+        { latin: '-osis', ru: 'хроническое состояние' },
+        { latin: '-oma', ru: 'опухоль' },
+        { latin: '-pathia', ru: 'болезнь, страдание' },
+        { latin: '-logia', ru: 'наука, учение' },
+        { latin: '-aemia', ru: 'состояние крови' },
+        { latin: '-uria', ru: 'состояние мочи' },
+        { latin: '-ectomia', ru: 'удаление' },
+        { latin: '-tomia', ru: 'рассечение' },
+        { latin: '-scopia', ru: 'осмотр' },
+        { latin: '-stomia', ru: 'создание отверстия' },
+        { latin: '-rrhagia', ru: 'кровотечение' },
+        { latin: '-rrhoea', ru: 'истечение' },
+        { latin: '-stenosis', ru: 'сужение' },
+        { latin: '-ectasia', ru: 'расширение' },
+        { latin: '-ptosis', ru: 'опущение' },
+        { latin: '-lysis', ru: 'разрушение' },
+        { latin: '-genesis', ru: 'образование, развитие' }
+    ];
+
+    function renderLexicon() {
+        function renderGroup(gridId, list) {
+            const grid = $(gridId);
+            let html = '';
+            list.forEach(a => {
+                html += `<div class="lex-card">
+                    <span class="lex-latin">${escapeHtml(a.latin)}</span>
+                    <span class="lex-trans">${escapeHtml(a.ru)}</span>
+                </div>`;
+            });
+            grid.innerHTML = html;
+        }
+        renderGroup('lexPrefix', LEX_PREFIX);
+        renderGroup('lexRoots', LEX_ROOTS);
+        renderGroup('lexSuffix', LEX_SUFFIX);
+    }
+
+    // ================================================================
+    //  ПРАКТИКА
+    // ================================================================
+    const EXERCISES = {
+        ex1: {
+            rows: [
+                { cell1: 'gastritis', c2: 'gastr-', c3: '-itis', answer: 'воспаление желудка' },
+                { cell1: 'nephritis', c2: 'nephr-', c3: '-itis', answer: 'воспаление почки' },
+                { cell1: 'dermatitis', c2: 'dermat-', c3: '-itis', answer: 'воспаление кожи' },
+                { cell1: 'arthritis', c2: 'arthr-', c3: '-itis', answer: 'воспаление сустава' },
+                { cell1: 'bronchitis', c2: 'bronch-', c3: '-itis', answer: 'воспаление бронхов' },
+                { cell1: 'hepatitis', c2: 'hepat-', c3: '-itis', answer: 'воспаление печени' }
+            ]
+        },
+               ex2: {
+            rows: [
+                { cell1: 'воспаление сердца', answer: 'carditis' },
+                { cell1: 'воспаление почки', answer: 'nephritis' },
+                { cell1: 'воспаление сустава', answer: 'arthritis' },
+                { cell1: 'воспаление кожи', answer: 'dermatitis' },
+                { cell1: 'воспаление печени', answer: 'hepatitis' },
+                { cell1: 'наука о сердце', answer: 'cardiologia' },
+                { cell1: 'наука о нервах', answer: 'neurologia' }
+            ]
+        },
+        ex3: {
+            rows: [
+                { cell1: 'cardiomyopathia', answer: 'болезнь мышцы сердца' },
+                { cell1: 'nephroptosis', answer: 'опущение почки' },
+                { cell1: 'gastroectasia', answer: 'расширение желудка' },
+                { cell1: 'nephrectomia', answer: 'удаление почки' },
+                { cell1: 'gastrotomia', answer: 'рассечение желудка' },
+                { cell1: 'leucocytosis', answer: 'увеличение количества лейкоцитов' },
+                { cell1: 'hypoglycaemia', answer: 'понижение сахара в крови' }
+            ]
+        },
+        ex4: {
+            rows: [
+                { cell1: 'воспаление желудка', answer: 'gastritis' },
+                { cell1: 'воспаление почки', answer: 'nephritis' },
+                { cell1: 'воспаление кожи', answer: 'dermatitis' },
+                { cell1: 'наука о сердце', answer: 'cardiologia' },
+                { cell1: 'удаление почки', answer: 'nephrectomia' },
+                { cell1: 'расширение желудка', answer: 'gastroectasia' }
+            ]
+        },
+        ex5: {
+            rows: [
+                { cell1: 'anaemia', answer: 'отсутствие крови' },
+                { cell1: 'dyspnoe', answer: 'нарушение дыхания' },
+                { cell1: 'hypertension', answer: 'повышение давления' },
+                { cell1: 'hypotension', answer: 'понижение давления' },
+                { cell1: 'endocardium', answer: 'внутренняя оболочка сердца' },
+                { cell1: 'pericardium', answer: 'околосердечная сумка' },
+                { cell1: 'paratyphus', answer: 'заболевание, сходное с тифом' }
+            ]
+        },
+        ex6: {
+            rows: [
+                { cell1: 'cardi-', answer: 'сердце' },
+                { cell1: 'gastr-', answer: 'желудок' },
+                { cell1: 'hepat-', answer: 'печень' },
+                { cell1: 'nephr-', answer: 'почка' },
+                { cell1: 'oste-', answer: 'кость' },
+                { cell1: 'my-', answer: 'мышца' },
+                { cell1: 'dermat-', answer: 'кожа' },
+                { cell1: 'neur-', answer: 'нерв' },
+                { cell1: '-itis', answer: 'воспаление' },
+                { cell1: '-oma', answer: 'опухоль' },
+                { cell1: '-logia', answer: 'наука' },
+                { cell1: '-ectomia', answer: 'удаление' }
+            ]
+        },
+        ex7: {
+            rows: [
+                { cell1: 'cardiomyopathia', c2: 'cardi- + my- + -opathia', answer: 'болезнь мышцы сердца' },
+                { cell1: 'nephroptosis', c2: 'nephr- + -o- + -ptosis', answer: 'опущение почки' },
+                { cell1: 'gastrectasia', c2: 'gastr- + -ectasia', answer: 'расширение желудка' },
+                { cell1: 'nephrectomia', c2: 'nephr- + -ectomia', answer: 'удаление почки' },
+                { cell1: 'gastrotomia', c2: 'gastr- + -o- + -tomia', answer: 'рассечение желудка' },
+                { cell1: 'leucocytosis', c2: 'leuc- + -o- + -cyt- + -osis', answer: 'увеличение количества лейкоцитов' },
+                { cell1: 'hypoglycaemia', c2: 'hypo- + glyc- + -aemia', answer: 'понижение сахара в крови' }
+            ]
+        },
+        ex8: {
+            rows: [
+                { cell1: 'опущение почки', c2: 'nephr- + -ptosis', answer: 'nephroptosis' },
+                { cell1: 'расширение желудка', c2: 'gastr- + -ectasia', answer: 'gastroectasia' },
+                { cell1: 'удаление почки', c2: 'nephr- + -ectomia', answer: 'nephrectomia' },
+                { cell1: 'рассечение желудка', c2: 'gastr- + -tomia', answer: 'gastrotomia' },
+                { cell1: 'воспаление сердца', c2: 'cardi- + -itis', answer: 'carditis' },
+                { cell1: 'болезнь сердца', c2: 'cardi- + -pathia', answer: 'cardiopathia' },
+                { cell1: 'наука о сердце', c2: 'cardi- + -logia', answer: 'cardiologia' },
+                { cell1: 'повышение сахара в крови', c2: 'hyper- + glyc- + -aemia', answer: 'hyperglycaemia' }
+            ]
+        },
+        ex9: {
+            rows: [
+                { cell1: 'gastritis acuta', answer: 'острый гастрит' },
+                { cell1: 'nephritis chronica', answer: 'хронический нефрит' },
+                { cell1: 'dermatitis purulenta', answer: 'гнойный дерматит' },
+                { cell1: 'arthritis deformans', answer: 'деформирующий артрит' },
+                { cell1: 'hepatitis infectiosa', answer: 'инфекционный гепатит' },
+                { cell1: 'cardiomyopathia', answer: 'кардиомиопатия' }
+            ]
+        },
+        ex10: {
+            rows: [
+                { cell1: 'Острый гастрит', answer: 'gastritis acuta' },
+                { cell1: 'Хронический нефрит', answer: 'nephritis chronica' },
+                { cell1: 'Гнойный дерматит', answer: 'dermatitis purulenta' },
+                { cell1: 'Деформирующий артрит', answer: 'arthritis deformans' },
+                { cell1: 'Инфекционный гепатит', answer: 'hepatitis infectiosa' },
+                { cell1: 'Кардиомиопатия', answer: 'cardiomyopathia' }
+            ]
+        },
+        ex11: {
+            rows: [
+                { cell1: 'Gastritis et nephritis.', answer: 'Гастрит и нефрит.' },
+                { cell1: 'Dermatitis et arthritis.', answer: 'Дерматит и артрит.' },
+                { cell1: 'Hepatitis et pneumonia.', answer: 'Гепатит и пневмония.' },
+                { cell1: 'Cardiologia et neurologia.', answer: 'Кардиология и неврология.' }
+            ]
+        }
+    };
+
+    function renderExercises() {
+        // Ex1
+        let html = '';
+        EXERCISES.ex1.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td>${escapeHtml(r.c2)}</td>
+                <td>${escapeHtml(r.c3)}</td>
+                <td><input type="text" data-ex="ex1" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex1Body').innerHTML = html;
+
+        // Ex2
+        html = '';
+        EXERCISES.ex2.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex2" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex2Body').innerHTML = html;
+
+        // Ex3
+        html = '';
+        EXERCISES.ex3.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex3" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex3Body').innerHTML = html;
+
+        // Ex4
+        html = '';
+        EXERCISES.ex4.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex4" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex4Body').innerHTML = html;
+
+        // Ex5
+        html = '';
+        EXERCISES.ex5.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex5" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex5Body').innerHTML = html;
+
+        // Ex6
+        html = '';
+        EXERCISES.ex6.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex6" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex6Body').innerHTML = html;
+
+        // Ex7 (advanced)
+        html = '';
+        EXERCISES.ex7.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><span class="latin">${escapeHtml(r.c2)}</span></td>
+                <td><input type="text" data-ex="ex7" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex7Body').innerHTML = html;
+
+        // Ex8 (advanced)
+        html = '';
+        EXERCISES.ex8.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><span class="latin">${escapeHtml(r.c2)}</span></td>
+                <td><input type="text" data-ex="ex8" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex8Body').innerHTML = html;
+
+        // Ex9 (advanced)
+        html = '';
+        EXERCISES.ex9.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex9" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex9Body').innerHTML = html;
+
+        // Ex10
+        html = '';
+        EXERCISES.ex10.rows.forEach((r, i) => {
+            html += `<tr>
+                <td>${escapeHtml(r.cell1)}</td>
+                <td><input type="text" data-ex="ex10" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex10Body').innerHTML = html;
+
+        // Ex11
+        html = '';
+        EXERCISES.ex11.rows.forEach((r, i) => {
+            html += `<tr>
+                <td><span class="latin">${escapeHtml(r.cell1)}</span></td>
+                <td><input type="text" data-ex="ex11" data-row="${i}" data-col="answer"></td>
+            </tr>`;
+        });
+        $('ex11Body').innerHTML = html;
+    }
+
+    function checkExercise(id) {
+        const ex = EXERCISES[id];
+        let correct = 0;
+        let total = 0;
+        const resultEl = $(id + 'Result');
+
+        if (ex.rows[0].c2 !== undefined && ex.rows[0].c3 !== undefined) {
+            // ex1
+            ex.rows.forEach((r, i) => {
+                const inp = document.querySelector(`input[data-ex="${id}"][data-row="${i}"][data-col="answer"]`);
+                const ok = norm(inp.value) === norm(r.answer);
+                inp.classList.toggle('correct', ok);
+                inp.classList.toggle('wrong', !ok && inp.value.trim() !== '');
+                total++;
+                if (ok) correct++;
+            });
+        } else if (ex.rows[0].c2 !== undefined) {
+            // ex7, ex8
+            ex.rows.forEach((r, i) => {
+                const inp = document.querySelector(`input[data-ex="${id}"][data-row="${i}"][data-col="answer"]`);
+                const ok = norm(inp.value) === norm(r.answer);
+                inp.classList.toggle('correct', ok);
+                inp.classList.toggle('wrong', !ok && inp.value.trim() !== '');
+                total++;
+                if (ok) correct++;
+            });
+        } else {
+            // остальные
+            ex.rows.forEach((r, i) => {
+                const inp = document.querySelector(`input[data-ex="${id}"][data-row="${i}"][data-col="answer"]`);
+                const ok = norm(inp.value) === norm(r.answer);
+                inp.classList.toggle('correct', ok);
+                inp.classList.toggle('wrong', !ok && inp.value.trim() !== '');
+                total++;
+                if (ok) correct++;
+            });
+        }
+
+        const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+        resultEl.className = 'result-msg show ' + (percent >= 80 ? 'ok' : 'no');
+        resultEl.innerHTML = `Правильно: <strong>${correct} из ${total}</strong> (${percent}%).` +
+            (percent === 100 ? ' Отлично!' :
+             percent >= 80 ? ' Хорошо!' :
+             percent >= 60 ? ' Есть над чем поработать.' :
+             ' Стоит повторить правила.');
+    }
+
+    function resetExercise(id) {
+        document.querySelectorAll(`[data-ex="${id}"]`).forEach(el => {
+            el.value = '';
+            el.classList.remove('correct', 'wrong');
+        });
+        $(id + 'Result').classList.remove('show');
+    }
+
+    document.querySelectorAll('[data-check]').forEach(btn => {
+        btn.addEventListener('click', () => checkExercise(btn.dataset.check));
+    });
+    document.querySelectorAll('[data-reset]').forEach(btn => {
+        btn.addEventListener('click', () => resetExercise(btn.dataset.reset));
+    });
+
+    // ================================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ================================================================
+    renderLexicon();
+    renderExercises();
+
+})();
+</script>
+</body>
+</html>

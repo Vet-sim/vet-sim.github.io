@@ -285,10 +285,48 @@ body {
 }
 
 @media print {
-  body { background: #fff; padding: 0; }
-  .header, .no-print, .card:not(.print-card) { display: none !important; }
-  .print-card { border: none !important; box-shadow: none !important; padding: 0 !important; }
-  .certificate { page-break-inside: avoid; }
+  @page { size: A4 landscape; margin: 10mm; }
+
+  body {
+    background: #fff !important;
+    padding: 0 !important;
+  }
+
+  /* Скрываем всё лишнее */
+  .header,
+  .no-print,
+  #screenStart,
+  #screenQuestion,
+  footer { display: none !important; }
+
+  /* Оставляем только финальный экран и сертификат */
+  #screenFinal { display: block !important; }
+
+  /* Скрываем всё внутри финала, кроме обёртки сертификата */
+  #finalArea > *:not(#certWrap) { display: none !important; }
+
+  /* Показываем сертификат принудительно */
+  #certWrap,
+  #certWrap.print-card {
+    display: block !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #fff !important;
+  }
+
+  .certificate {
+    page-break-inside: avoid;
+    border-width: 6px !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Убираем тени/фоны контейнеров, чтобы не тянули лишние страницы */
+  .card { box-shadow: none !important; border: none !important; padding: 0 !important; }
+  .container { max-width: 100% !important; }
 }
 </style>
 </head>
@@ -851,11 +889,17 @@ body {
     $('finalArea').innerHTML = finalHTML;
 
     $('restartBtn').addEventListener('click', () => location.reload());
-    $('certBtn').addEventListener('click', () => {
-      $('certWrap').style.display = 'block';
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-      setTimeout(() => window.print(), 400);
-    });
+   $('certBtn').addEventListener('click', () => {
+  const wrap = $('certWrap');
+  wrap.style.display = 'block';
+  wrap.classList.add('print-card');
+
+  // дадим браузеру перерисовать
+  requestAnimationFrame(() => {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    setTimeout(() => window.print(), 200);
+  });
+});
   }
 
   function escapeHtml(s) {

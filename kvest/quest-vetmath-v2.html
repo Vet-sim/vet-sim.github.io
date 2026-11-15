@@ -833,15 +833,17 @@ body {
           <div class="cert-sub">${correctCount} из ${TOTAL_TASKS} задач решены верно · ${percent}% от максимума</div>
 
           <div class="cert-meta">
-            <div>
-              <div>${today}</div>
-              <div style="margin-top:10px;" class="cert-qr" title="QR на сайт ВетСим"></div>
-            </div>
-            <div class="cert-sign">
-              <div class="line"></div>
-              <div>Команда ВетСим</div>
-            </div>
-          </div>
+  <div>
+    <div>${today}</div>
+    <img src="qr-vetsim.png" alt="QR-код на сайт vetsim.ru"
+         class="cert-qr-img"
+         style="margin-top:10px; width:64px; height:64px; display:block;">
+  </div>
+  <div class="cert-sign">
+    <div class="line"></div>
+    <div>Команда ВетСим</div>
+  </div>
+</div>
         </div>
       </div>
     `;

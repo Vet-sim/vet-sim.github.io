@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Информатика · Урок 6 · ВетСим</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Montserrat','Segoe UI',system-ui,sans-serif;
+  background:#FDF8F0; color:#1A2A3A; padding:16px; min-height:100vh;
+}
+.container { max-width:1150px; margin:0 auto; }
+
+/* Шапка */
+.header {
+  background:white; border-radius:1.5rem; padding:14px 24px;
+  display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center;
+  gap:10px; box-shadow:0 2px 10px rgba(0,0,0,.04); margin-bottom:16px;
+  border:1px solid #E7EDE2;
+}
+.header .logo { display:flex; align-items:center; gap:8px; font-weight:700; font-size:1.15rem; }
+.header .logo .gradient {
+  background:linear-gradient(135deg,#2C7DA0,#6B9E6B);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.header .logo .sub { font-weight:400; font-size:.7rem; color:#7B8D6E; display:block; }
+.header-stats { display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:.8rem; }
+.header-stats .timer {
+  background:#2C7DA0; color:white; padding:6px 20px; border-radius:40px;
+  font-weight:700; font-size:.95rem; font-variant-numeric:tabular-nums;
+  min-width:100px; text-align:center; transition:.3s;
+}
+.header-stats .timer.warning { background:#D4A373; }
+.header-stats .timer.danger { background:#b13e3e; animation:pulse 1s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+
+/* Вкладки */
+.tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.tab-btn {
+  background:#EBE3D2; border:none; padding:7px 18px; border-radius:40px;
+  font-weight:600; font-size:.76rem; cursor:pointer; transition:.2s;
+  font-family:inherit; color:#3E5C4A;
+}
+.tab-btn:hover { opacity:.85; }
+.tab-btn.active { background:#2C7DA0; color:white; }
+
+.tab-content { display:none; animation:fadeIn .25s ease; }
+.tab-content.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px);} to{opacity:1;transform:translateY(0);} }
+
+/* Карточки */
+.card {
+  background:white; border-radius:1.5rem; padding:20px 24px;
+  border:1px solid #E7EDE2; box-shadow:0 2px 10px rgba(0,0,0,.04);
+  margin-bottom:14px;
+}
+.card-title {
+  font-weight:700; font-size:1rem; color:#2C7DA0; margin-bottom:12px;
+  display:flex; justify-content:space-between; align-items:center;
+  flex-wrap:wrap; gap:8px; line-height:1.4;
+}
+.card-title .badge {
+  font-size:.65rem; background:#E7EDE2; color:#5F7C62;
+  padding:3px 12px; border-radius:40px; font-weight:600;
+  text-transform:uppercase; letter-spacing:.3px;
+}
+.badge.blue { background:#DBEAF2; color:#1F4E6E; }
+.badge.green { background:#E2EFD8; color:#4A6B3A; }
+.badge.orange { background:#FBE4D0; color:#8A5A2B; }
+
+/* Уведомления */
+.notice {
+  background:#F7F3E8; border-left:4px solid #2C7DA0;
+  padding:10px 14px; border-radius:0 1rem 1rem 0;
+  margin:10px 0; font-size:.85rem; line-height:1.6;
+}
+.notice.green { background:#E8F5E8; border-left-color:#6B9E6B; }
+.notice.blue { background:#E8F0F5; border-left-color:#2C7DA0; }
+.notice.orange { background:#FDF3E8; border-left-color:#D4A373; }
+.notice.red { background:#FDF0E8; border-left-color:#b13e3e; }
+.notice strong { color:#1F4E6E; }
+
+/* Сетки */
+.grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+
+/* Теория */
+.theory-box {
+  background:#F9FBF8; border:1px solid #E7EDE2;
+  border-radius:1rem; padding:14px 16px;
+}
+.theory-box h3 {
+  color:#2C7DA0; font-size:.88rem; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.theory-box p, .theory-box li { font-size:.83rem; line-height:1.6; }
+.theory-box ul, .theory-box ol { padding-left:18px; margin-top:4px; }
+.theory-box ul li, .theory-box ol li { margin-bottom:4px; }
+
+/* Формулы */
+.formula {
+  background:#F0F7FA; border:1px solid #B8D9E8;
+  border-radius:10px; padding:10px 14px; text-align:center;
+  font-family:Georgia,serif; font-size:1rem; color:#1F4E6E;
+  margin:10px 0;
+}
+.formula strong { color:#2C7DA0; }
+.formula .small { font-size:.8rem; color:#5F7C62; font-family:'Montserrat',sans-serif; }
+
+/* Таблицы */
+.table-wrap { overflow-x:auto; margin:10px 0; }
+table.lesson-table {
+  width:100%; border-collapse:collapse; font-size:.82rem;
+  background:white; border-radius:12px; overflow:hidden;
+}
+table.lesson-table th, table.lesson-table td {
+  padding:8px 12px; border-bottom:1px solid #E7EDE2;
+  text-align:left; vertical-align:top;
+}
+table.lesson-table th {
+  background:#F3F7F2; color:#2C7DA0; font-weight:700;
+  font-size:.72rem; text-transform:uppercase; letter-spacing:.3px;
+}
+table.lesson-table tr:last-child td { border-bottom:none; }
+
+/* Кнопки */
+.btn {
+  background:#EBE3D2; border:none; padding:7px 20px; border-radius:40px;
+  font-weight:600; cursor:pointer; transition:.15s; font-family:inherit;
+  font-size:.8rem; color:#1A2A3A; display:inline-flex; align-items:center; gap:6px;
+  text-decoration:none;
+}
+.btn:hover { opacity:.85; transform:translateY(-1px); }
+.btn:active { transform:scale(.96); }
+.btn-primary { background:#2C7DA0; color:white; }
+.btn-primary:hover { background:#236B8A; }
+.btn-success { background:#6B9E6B; color:white; }
+.btn-success:hover { background:#5A865A; }
+.btn-outline { background:transparent; border:1px solid #D9D0BD; }
+.btn-outline:hover { background:#F0EEE5; }
+.btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
+
+/* Раскрывающиеся блоки */
+details {
+  background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem;
+  padding:10px 14px; margin:8px 0; font-size:.85rem;
+}
+details summary {
+  cursor:pointer; font-weight:600; color:#1F4E6E; list-style:none;
+  display:flex; justify-content:space-between; align-items:center;
+}
+details summary::-webkit-details-marker { display:none; }
+details summary::after { content:'▼'; color:#2C7DA0; font-size:.7rem; }
+details[open] summary::after { content:'▲'; }
+details .content { margin-top:10px; padding-top:10px; border-top:1px solid #E7EDE2; line-height:1.6; }
+
+/* Калькуляторы */
+.calc {
+  background:#F0F7FA; border:1px solid #B8D9E8; border-radius:1rem;
+  padding:14px 16px; margin:10px 0;
+}
+.calc h3 { color:#1F4E6E; font-size:.9rem; margin-bottom:10px; }
+.calc label { font-size:.8rem; color:#3E5C4A; display:block; margin-bottom:4px; }
+.calc input, .calc select {
+  width:100%; padding:8px 12px; border:2px solid #D9D0BD;
+  border-radius:20px; font-family:inherit; font-size:.85rem;
+  background:white; outline:none; margin-bottom:8px;
+}
+.calc input:focus, .calc select:focus { border-color:#2C7DA0; }
+.calc .result {
+  background:white; border:2px solid #6B9E6B; border-radius:20px;
+  padding:10px 14px; text-align:center; font-weight:700;
+  color:#2E7D32; font-size:1rem; line-height:1.5;
+}
+.calc .result.error {
+  border-color:#b13e3e; color:#b13e3e;
+}
+
+/* Задачи */
+.task {
+  background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem;
+  padding:14px 16px; margin-bottom:12px;
+}
+.task h3 { font-size:.9rem; color:#2C7DA0; margin-bottom:6px; }
+.task p { font-size:.85rem; line-height:1.6; margin-bottom:8px; }
+.task .solution {
+  background:#E8F5E8; border-left:4px solid #6B9E6B;
+  padding:10px 14px; border-radius:0 .75rem .75rem 0;
+  font-size:.83rem; line-height:1.6; margin-top:8px;
+  display:none;
+}
+.task .solution.show { display:block; }
+
+/* Схема управления */
+.scheme {
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center;
+  gap:6px; margin:14px 0; font-size:.8rem;
+}
+.scheme .box {
+  background:#F0F7FA; border:2px solid #2C7DA0; border-radius:10px;
+  padding:8px 14px; text-align:center; font-weight:600; color:#1F4E6E;
+}
+.scheme .arrow { color:#2C7DA0; font-size:1.2rem; font-weight:700; }
+.scheme .arrow.back { color:#6B9E6B; }
+
+/* Ссылки-карточки */
+.link-card {
+  background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem;
+  padding:14px 18px; display:flex; align-items:center; gap:12px;
+  text-decoration:none; color:#1A2A3A; transition:.15s;
+}
+.link-card:hover { background:#F3F7F2; border-color:#A3B18A; transform:translateY(-1px); }
+.link-card .icon { font-size:1.6rem; }
+.link-card .text { flex:1; }
+.link-card .text strong { display:block; color:#1F4E6E; font-size:.9rem; margin-bottom:2px; }
+.link-card .text span { font-size:.78rem; color:#5F7C62; }
+
+/* Чек-лист */
+.checklist { list-style:none; padding:0; }
+.checklist li {
+  padding:8px 12px; background:#F9FBF8; border-radius:.75rem;
+  margin-bottom:6px; font-size:.85rem; display:flex; align-items:flex-start; gap:8px;
+}
+.checklist li::before { content:'✓'; color:#6B9E6B; font-weight:700; }
+
+/* ===== ТЕСТ 1.2 ===== */
+.test-progress { display:flex; align-items:center; gap:12px; margin-bottom:12px; font-size:.8rem; color:#5F7C62; }
+.test-progress .bar { flex:1; height:6px; background:#E7EDE2; border-radius:20px; overflow:hidden; min-width:80px; }
+.test-progress .bar-fill { height:100%; background:#2C7DA0; border-radius:20px; transition:width .3s; }
+.timer { background:#2C7DA0; color:white; padding:6px 20px; border-radius:40px; font-weight:700; font-size:.95rem; font-variant-numeric:tabular-nums; min-width:90px; text-align:center; transition:.3s; }
+.timer.warning { background:#D4A373; }
+.timer.danger { background:#b13e3e; animation:pulse 1s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.05);} }
+.multi-hint { background:#E8F0F5; color:#1F4E6E; padding:6px 12px; border-radius:20px; font-size:.75rem; display:inline-block; margin-bottom:8px; }
+.match-info { font-size:.78rem; color:#5F7C62; margin-bottom:8px; padding:6px 10px; background:#F9FBF8; border-radius:10px; border-left:3px solid #2C7DA0; }
+.option.match-item { position:relative; }
+.option.paired { background:#E8F5E8; border-color:#6B9E6B; }
+.option.paired .marker { background:#6B9E6B; color:white; font-size:.65rem; }
+
+.q-title { font-weight:600; font-size:.92rem; margin-bottom:10px; line-height:1.55; }
+.q-title .num { color:#2C7DA0; font-weight:700; margin-right:4px; }
+.options { display:flex; flex-direction:column; gap:6px; }
+.option {
+  background:#FEFCF9; border:2px solid #E7EDE2; border-radius:40px;
+  padding:8px 18px; font-size:.85rem; cursor:pointer; transition:.15s;
+  display:flex; align-items:center; gap:10px;
+}
+.option:hover { background:#F3F7F2; border-color:#A3B18A; }
+.option.selected { background:#E9F0E3; border-color:#2C7DA0; box-shadow:0 0 0 3px rgba(44,125,160,.1); }
+.option .marker {
+  width:26px; height:26px; min-width:26px; background:#E2EAD9;
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-weight:700; color:#5F7C62; font-size:.8rem;
+}
+.option.selected .marker { background:#2C7DA0; color:white; }
+
+/* Футер */
+footer {
+  margin-top:20px; padding:16px; background:white; border-radius:1.5rem;
+  border:1px solid #E7EDE2; text-align:center; font-size:.75rem;
+  color:#7B8D6E; line-height:1.6;
+}
+footer strong { color:#1F4E6E; }
+
+@media (max-width:700px) {
+  body { padding:10px; }
+  .header { flex-direction:column; align-items:stretch; padding:12px 16px; }
+  .header .logo { font-size:.95rem; }
+  .header-stats { justify-content:space-between; }
+  .card { padding:14px 16px; }
+  .tab-btn { font-size:.68rem; padding:5px 12px; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="logo">
+    💻 <span class="gradient">Информатика</span>
+    <span class="sub">· Урок 6 · Подходы к измерению информации</span>
+  </div>
+  <div class="header-stats">
+    <span id="headerStatus" style="color:#5F7C62; max-width:340px;">Теория + практика</span>
+    <span class="timer" id="lessonTimer">90:00</span>
+  </div>
+</header>
+
+<!-- ВКЛАДКИ -->
+<div class="tabs">
+  <button class="tab-btn active" data-tab="start">🎬 Старт</button>
+  <button class="tab-btn" data-tab="theory1">🔤 Блок 1. Алфавитный</button>
+  <button class="tab-btn" data-tab="theory2">📊 Блок 2. Содержательный</button>
+  <button class="tab-btn" data-tab="theory3">🔄 Блок 3. Системы</button>
+  <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+  <button class="tab-btn" data-tab="test12">🧪 Тест </button>
+  <button class="tab-btn" data-tab="vetsim">🐾 ВетСим</button>
+</div>
+
+<!-- ===== ВКЛАДКА 1. СТАРТ ===== -->
+<section class="tab-content active" id="tab-start">
+  <div class="card">
+    <div class="card-title"><span>🎬 Добро пожаловать</span><span class="badge blue">5 мин</span></div>
+    <div class="notice blue">
+      <strong>Тема урока:</strong> Подходы к измерению информации. Системы и управление.
+    </div>
+    <div class="notice green">
+      <strong>Цель:</strong> научиться измерять информацию двумя способами (алфавитный и содержательный), понять, что такое система, управление и обратная связь — на примерах из ветеринарии.
+    </div>
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:14px 0 8px;">Что сегодня будет:</h3>
+    <ul class="checklist">
+      <li>Блок 1: Алфавитный подход. Единицы измерения (бит, байт, Кбайт, Мбайт, Гбайт).</li>
+      <li>Блок 2: Содержательный подход. Бит с позиции содержания сообщения.</li>
+      <li>Блок 3: Системы. Управление. Обратная связь.</li>
+      <li>Практика: решение задач (с проверкой).</li>
+      <li>Тест 1.2: проверка знаний предыдущего урока.</li>
+      <li>ВетСим: связь с проектом.</li>
+    </ul>
+    <div class="notice orange">
+      <strong>Связь с ветеринарией:</strong> врач назначает лечение (прямая связь), владелец сообщает о состоянии животного (обратная связь). Это — система управления.
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 2. БЛОК 1 ===== -->
+<section class="tab-content" id="tab-theory1">
+  <div class="card">
+    <div class="card-title"><span>🔤 Блок 1. Алфавитный подход. Единицы измерения</span><span class="badge blue">25 мин</span></div>
+
+    <div class="notice blue">
+      <strong>Суть:</strong> информация измеряется <strong>через длину кода</strong>, без учёта содержания. Мы считаем, сколько символов в сообщении и сколько бит несёт каждый символ.
+    </div>
+
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>📚 Алфавит</h3>
+        <p>Набор символов. <strong>Мощность алфавита (N)</strong> — количество символов в нём.</p>
+      </div>
+      <div class="theory-box">
+        <h3>⚖️ Информационный вес символа (i)</h3>
+        <p>Количество бит на один символ. Связь: <strong>N = 2<sup>i</sup></strong>.</p>
+      </div>
+      <div class="theory-box">
+        <h3>📦 Информационный объём (I)</h3>
+        <p><strong>I = K × i</strong>, где K — количество символов, i — вес одного символа.</p>
+      </div>
+      <div class="theory-box">
+        <h3>💡 Бит</h3>
+        <p>Минимальная единица. 1 бит — это информация, которую несёт один символ <strong>двоичного алфавита</strong> (N=2, i=1).</p>
+      </div>
+    </div>
+
+    <div class="formula">
+      <strong>N = 2<sup>i</sup></strong> &nbsp;·&nbsp; <strong>I = K × i</strong>
+      <div class="small">N — мощность алфавита, i — вес символа (бит), K — количество символов, I — объём (бит)</div>
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:16px 0 8px;">Единицы измерения информации</h3>
+    <div class="table-wrap">
+      <table class="lesson-table">
+        <thead>
+          <tr><th>Единица</th><th>Обозначение</th><th>Связь</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Бит</td><td>бит</td><td>Минимальная единица (0 или 1)</td></tr>
+          <tr><td>Байт</td><td>Б</td><td>1 байт = 8 бит</td></tr>
+          <tr><td>Килобайт</td><td>Кб</td><td>1 Кб = 1024 байт = 2<sup>10</sup> байт</td></tr>
+          <tr><td>Мегабайт</td><td>Мб</td><td>1 Мб = 1024 Кб = 2<sup>20</sup> байт</td></tr>
+          <tr><td>Гигабайт</td><td>Гб</td><td>1 Гб = 1024 Мб = 2<sup>30</sup> байт</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="notice orange">
+      <strong>Важно:</strong> 1 Кбайт = <strong>1024</strong> байт, а не 1000! Это степень двойки (2<sup>10</sup>).
+    </div>
+
+    <details>
+      <summary>🩺 Пример из ветеринарии</summary>
+      <div class="content">
+        <p>Текст «Карта пациента Бобик» — 20 символов. Если алфавит компьютерный (N=256, i=8 бит), то объём = 20 × 8 = <strong>160 бит = 20 байт</strong>.</p>
+        <p>Фото рентгена (2 Мбайт) = <strong>2 097 152 байт</strong>. Если передавать по каналу 1 Мбит/с — займёт ~16 секунд.</p>
+      </div>
+    </details>
+
+    <!-- Калькулятор перевода единиц -->
+    <div class="calc">
+      <h3>🔁 Калькулятор перевода единиц</h3>
+      <label>Значение:</label>
+      <input type="number" id="unitValue" value="1" min="0" step="any">
+      <label>Из:</label>
+      <select id="unitFrom">
+        <option value="bit">Бит (бит)</option>
+        <option value="byte">Байт (Б)</option>
+        <option value="kb">Килобайт (Кб)</option>
+        <option value="mb">Мегабайт (Мб)</option>
+        <option value="gb">Гигабайт (Гб)</option>
+      </select>
+      <label>В:</label>
+      <select id="unitTo">
+        <option value="bit">Бит (бит)</option>
+        <option value="byte" selected>Байт (Б)</option>
+        <option value="kb">Килобайт (Кб)</option>
+        <option value="mb">Мегабайт (Мб)</option>
+        <option value="gb">Гигабайт (Гб)</option>
+      </select>
+      <button class="btn btn-primary" id="unitCalcBtn" style="width:100%; justify-content:center;">Перевести</button>
+      <div class="result" id="unitCalcResult" style="margin-top:10px;">—</div>
+    </div>
+
+    <!-- Калькулятор алфавитного подхода -->
+    <div class="calc">
+      <h3>🧮 Калькулятор алфавитного подхода</h3>
+      <label>Мощность алфавита (N):</label>
+      <input type="number" id="calcN" value="64" min="2" step="1">
+      <label>Количество символов в сообщении (K):</label>
+      <input type="number" id="calcK" value="100" min="1" step="1">
+      <button class="btn btn-primary" id="calcAlphaBtn" style="width:100%; justify-content:center;">Рассчитать</button>
+      <div class="result" id="calcAlphaResult" style="margin-top:10px;">—</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 3. БЛОК 2 ===== -->
+<section class="tab-content" id="tab-theory2">
+  <div class="card">
+    <div class="card-title"><span>📊 Блок 2. Содержательный подход</span><span class="badge blue">15 мин</span></div>
+
+    <div class="notice blue">
+      <strong>Суть:</strong> информация измеряется <strong>через уменьшение неопределённости</strong>. Чем больше вариантов «снимается» — тем больше информации.
+    </div>
+
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>💡 Бит (содержательный)</h3>
+        <p>Количество информации, которое <strong>уменьшает неопределённость в 2 раза</strong>.</p>
+      </div>
+      <div class="theory-box">
+        <h3>🧮 Формула Хартли</h3>
+        <p><strong>2<sup>i</sup> = N</strong>, где N — количество <strong>равновероятных</strong> вариантов, i — количество информации (бит).</p>
+      </div>
+    </div>
+
+    <div class="formula">
+      <strong>2<sup>i</sup> = N</strong>
+      <div class="small">N — число равновероятных вариантов, i — количество информации (бит)</div>
+    </div>
+
+    <div class="notice orange">
+      <strong>Если варианты неравновероятны</strong> — используется формула Шеннона (ознакомительно). В школьном курсе — чаще Хартли.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:16px 0 8px;">Сравнение подходов</h3>
+    <div class="table-wrap">
+      <table class="lesson-table">
+        <thead>
+          <tr><th>Подход</th><th>Что измеряем</th><th>Зависит от содержания?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Алфавитный</strong></td><td>Длину кода</td><td>Нет</td></tr>
+          <tr><td><strong>Содержательный</strong></td><td>Уменьшение неопределённости</td><td>Да</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <details>
+      <summary>🩺 Пример из ветеринарии</summary>
+      <div class="content">
+        <p>Собака заболела. Возможных диагнозов <strong>8</strong> (равновероятных). Сообщение «у собаки чумка» несёт <strong>3 бита</strong> информации (2³ = 8).</p>
+        <p>Если возможных диагнозов <strong>2</strong> (чумка или энтерит) — сообщение несёт <strong>1 бит</strong> (2¹ = 2).</p>
+      </div>
+    </details>
+
+    <!-- Калькулятор Хартли -->
+    <div class="calc">
+      <h3>🧮 Калькулятор Хартли</h3>
+      <label>Количество равновероятных вариантов (N):</label>
+      <input type="number" id="calcHartley" value="8" min="2" step="1">
+      <button class="btn btn-primary" id="calcHartleyBtn" style="width:100%; justify-content:center;">Рассчитать</button>
+      <div class="result" id="calcHartleyResult" style="margin-top:10px;">—</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 4. БЛОК 3 ===== -->
+<section class="tab-content" id="tab-theory3">
+  <div class="card">
+    <div class="card-title"><span>🔄 Блок 3. Системы. Управление. Обратная связь</span><span class="badge blue">15 мин</span></div>
+
+    <div class="grid-2">
+      <div class="theory-box">
+        <h3>🧩 Система</h3>
+        <p>Совокупность взаимосвязанных элементов, работающих как единое целое.</p>
+        <p><strong>Компоненты:</strong> элементы, связи, цель.</p>
+        <p><strong>Пример:</strong> организм животного (органы, системы органов, регуляция).</p>
+      </div>
+      <div class="theory-box">
+        <h3>🎯 Управление</h3>
+        <p>Процесс воздействия на систему для достижения цели.</p>
+        <p><strong>Схема:</strong> управляющий объект → управляемый объект → обратная связь.</p>
+      </div>
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:16px 0 8px;">Схема управления с обратной связью</h3>
+    <div class="scheme">
+      <div class="box">Управляющий<br>объект</div>
+      <span class="arrow">→</span>
+      <div class="box">Канал прямой<br>связи</div>
+      <span class="arrow">→</span>
+      <div class="box">Управляемый<br>объект</div>
+      <span class="arrow back">←</span>
+      <div class="box">Канал обратной<br>связи</div>
+    </div>
+
+    <div class="notice green">
+      <strong>Обратная связь</strong> — информация о состоянии управляемого объекта, которая поступает обратно к управляющему. Без неё управление невозможно.
+    </div>
+
+    <details>
+      <summary>🩺 Пример из ветеринарии</summary>
+      <div class="content">
+        <ul>
+          <li><strong>Врач</strong> (управляющий) назначает лечение (<strong>прямая связь</strong>).</li>
+          <li><strong>Животное</strong> (управляемый объект) реагирует на лечение.</li>
+          <li><strong>Владелец</strong> сообщает врачу: «Собаке лучше / хуже» (<strong>обратная связь</strong>).</li>
+          <li>Врач <strong>корректирует</strong> лечение.</li>
+        </ul>
+        <p><strong>Без обратной связи</strong> врач не узнает, помогает ли лечение, и не сможет его скорректировать.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>💡 Вопрос для размышления</summary>
+      <div class="content">
+        <p>Приведите пример обратной связи в работе ветеринарного фельдшера (кроме врача и животного).</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 5. ПРАКТИКА ===== -->
+<section class="tab-content" id="tab-practice">
+  <div class="card">
+    <div class="card-title"><span>🧩 Практика: 5 задач</span><span class="badge orange">15 мин</span></div>
+
+    <div class="task">
+      <h3>Задача 1. Алфавитный подход</h3>
+      <p>Алфавит племенного учёта содержит 32 символа. Сколько бит несёт один символ?</p>
+      <button class="btn btn-outline" data-solution="sol1">Показать решение</button>
+      <div class="solution" id="sol1">
+        <strong>Решение:</strong> N = 32. 32 = 2<sup>5</sup> → <strong>i = 5 бит</strong>.
+      </div>
+    </div>
+
+    <div class="task">
+      <h3>Задача 2. Объём сообщения</h3>
+      <p>Сообщение из 100 символов записано алфавитом мощностью 16. Каков объём сообщения в битах?</p>
+      <button class="btn btn-outline" data-solution="sol2">Показать решение</button>
+      <div class="solution" id="sol2">
+        <strong>Решение:</strong> N = 16 → 16 = 2<sup>4</sup> → i = 4 бита. Объём = K × i = 100 × 4 = <strong>400 бит</strong>.
+      </div>
+    </div>
+
+    <div class="task">
+      <h3>Задача 3. Содержательный подход</h3>
+      <p>В клинике 4 равновероятных диагноза. Сообщение «у собаки энтерит» несёт сколько бит?</p>
+      <button class="btn btn-outline" data-solution="sol3">Показать решение</button>
+      <div class="solution" id="sol3">
+        <strong>Решение:</strong> 2<sup>i</sup> = 4 → <strong>i = 2 бита</strong>.
+      </div>
+    </div>
+
+    <div class="task">
+      <h3>Задача 4. Единицы измерения</h3>
+      <p>Сколько бит в 2 Кбайтах?</p>
+      <button class="btn btn-outline" data-solution="sol4">Показать решение</button>
+      <div class="solution" id="sol4">
+        <strong>Решение:</strong> 1 Кбайт = 1024 байт = 1024 × 8 = 8192 бит. 2 Кбайт = <strong>16384 бита</strong>.
+      </div>
+    </div>
+
+    <div class="task">
+      <h3>Задача 5. Связь с ветеринарией</h3>
+      <p>Врач назначил лечение. Через день владелец сообщил: «Собаке лучше». Это пример чего? Обоснуйте.</p>
+      <button class="btn btn-outline" data-solution="sol5">Показать решение</button>
+      <div class="solution" id="sol5">
+        <strong>Решение:</strong> Это пример <strong>обратной связи</strong> в системе управления. Владелец сообщает врачу о состоянии животного, и врач может скорректировать лечение.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА: ТЕСТ ПО УРОКУ 5 ===== -->
+<section class="tab-content" id="tab-test12">
+  <div class="card">
+    <div class="card-title"><span>🧪 Тест по уроку 5: Информация и информационные процессы</span><span class="badge" id="test12Badge">15 вопросов · 10 минут</span></div>
+    <div id="test12Start">
+      <div class="notice">
+        <strong>Проверка знаний урока 5.</strong> 15 вопросов разных типов: единичный выбор, множественный выбор, соответствие, краткий ответ. Вопросы и ответы перемешиваются. Время — 10 минут. В конце — % правильных ответов и разбор ошибок.
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+        <button class="btn btn-primary" id="startTest12Btn">🚀 Начать тест</button>
+      </div>
+    </div>
+    <div id="test12Progress" style="display:none;">
+      <div class="test-progress">
+        <span id="test12ProgressText">Вопрос 1 из 15</span>
+        <div class="bar"><div class="bar-fill" id="test12BarFill"></div></div>
+        <span id="test12ProgressPct">0%</span>
+        <span class="timer" id="test12Timer">10:00</span>
+      </div>
+      <div id="test12QuestionCard"></div>
+      <div class="exercise-controls" id="test12Controls" style="justify-content:flex-end; display:flex; gap:8px; margin-top:10px;">
+        <button class="btn btn-primary" id="test12NextBtn" disabled>Далее ▶</button>
+      </div>
+    </div>
+    <div id="test12Final" style="display:none;"></div>
+  </div>
+</section>
+
+<!-- ===== ВКЛАДКА 6. ВЕТСИМ ===== -->
+<section class="tab-content" id="tab-vetsim">
+  <div class="card">
+    <div class="card-title"><span>🐾 ВетСим: связь с проектом</span><span class="badge green">5 мин</span></div>
+
+    <div class="notice blue">
+      <strong>ВетСим</strong> — цифровая экосистема для ветеринарного образования. В ней есть <strong>20+ конструкторов</strong>, витрина тренажёров, цифровая зачётка и дневники становления.
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Как тема урока связана с ВетСим</h3>
+    <ul class="checklist">
+      <li><strong>Алфавитный подход</strong> — тренажёры кодируют информацию (текст, изображения) и измеряют её объём.</li>
+      <li><strong>Содержательный подход</strong> — каждый вопрос тренажёра уменьшает неопределённость (снимает варианты).</li>
+      <li><strong>Системы и управление</strong> — цифровая зачётка и дневники — это <strong>система с обратной связью</strong>: студент видит прогресс и корректирует обучение.</li>
+    </ul>
+
+    <div class="notice green" style="margin-top:14px;">
+      <strong>Попробуйте:</strong> откройте ВетСим, выберите тренажёр и подумайте — какое количество информации несёт каждый вопрос? Как это связано с формулой Хартли?
+    </div>
+
+    <h3 style="color:#2C7DA0; font-size:.95rem; margin:18px 0 8px;">Ссылки</h3>
+    <div class="grid-2">
+      <a href="https://vet-sim.github.io/universal.html" target="_blank" class="link-card">
+        <div class="icon">🧩</div>
+        <div class="text">
+          <strong>20+ конструкторов</strong>
+          <span>Создавай тренажёры без программирования</span>
+        </div>
+      </a>
+      <a href="https://vetsim.ru/students/students.html" target="_blank" class="link-card">
+        <div class="icon">📊</div>
+        <div class="text">
+          <strong>Студентам</strong>
+          <span>Дневники, зачётка, тренажёры</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ФУТЕР -->
+<footer>
+  © ВетСим — ветеринарное просвещение · ООД 10 «Информатика»<br>
+  <strong>Урок 6 · Подходы к измерению информации. Системы и управление</strong><br>
+  36.02.01 Ветеринария · Работает офлайн
+</footer>
+
+</div>
+
+<script>
+(function(){
+  'use strict';
+  const $ = id => document.getElementById(id);
+
+  // ===== ВКЛАДКИ =====
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      $('tab-' + btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+
+  // ===== ТАЙМЕР УРОКА (90 минут) =====
+  let lessonSeconds = 90 * 60;
+  const timerEl = $('lessonTimer');
+  function updateTimer(){
+    const m = Math.floor(lessonSeconds / 60);
+    const s = lessonSeconds % 60;
+    timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    timerEl.classList.remove('warning','danger');
+    if (lessonSeconds <= 300) timerEl.classList.add('danger');
+    else if (lessonSeconds <= 900) timerEl.classList.add('warning');
+  }
+  updateTimer();
+  setInterval(() => {
+    if (lessonSeconds > 0) { lessonSeconds--; updateTimer(); }
+  }, 1000);
+
+  // ===== РАСКРЫТИЕ РЕШЕНИЙ ЗАДАЧ =====
+  document.querySelectorAll('[data-solution]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.solution;
+      const sol = $(id);
+      if (sol) {
+        sol.classList.toggle('show');
+        btn.textContent = sol.classList.contains('show') ? '🙈 Скрыть решение' : 'Показать решение';
+      }
+    });
+  });
+
+  // ===== КАЛЬКУЛЯТОР ПЕРЕВОДА ЕДИНИЦ =====
+  const unitCalcBtn = $('unitCalcBtn');
+  if (unitCalcBtn) {
+    const unitToBits = {
+      bit: 1,
+      byte: 8,
+      kb: 8 * 1024,
+      mb: 8 * 1024 * 1024,
+      gb: 8 * 1024 * 1024 * 1024
+    };
+    const unitNames = {
+      bit: 'бит',
+      byte: 'Б',
+      kb: 'Кб',
+      mb: 'Мб',
+      gb: 'Гб'
+    };
+
+    unitCalcBtn.addEventListener('click', () => {
+      const value = parseFloat($('unitValue').value);
+      const from = $('unitFrom').value;
+      const to = $('unitTo').value;
+      const result = $('unitCalcResult');
+      result.classList.remove('error');
+
+      if (isNaN(value) || value < 0) {
+        result.textContent = '⚠️ Введите неотрицательное число';
+        result.classList.add('error');
+        return;
+      }
+
+      const bits = value * unitToBits[from];
+      const resultValue = bits / unitToBits[to];
+
+      let display;
+      if (resultValue === 0) {
+        display = '0';
+      } else if (resultValue >= 1e15 || (resultValue < 1e-6 && resultValue > 0)) {
+        display = resultValue.toExponential(4);
+      } else {
+        display = parseFloat(resultValue.toFixed(6)).toString();
+      }
+
+      result.innerHTML = `🔁 <strong>${value} ${unitNames[from]} = ${display} ${unitNames[to]}</strong><br>
+        <span style="font-size:.75rem; color:#5F7C62; font-weight:400;">(в битах: ${parseFloat(bits.toFixed(4))} бит)</span>`;
+    });
+  }
+
+  // ===== КАЛЬКУЛЯТОР АЛФАВИТНОГО ПОДХОДА =====
+  const calcAlphaBtn = $('calcAlphaBtn');
+  if (calcAlphaBtn) {
+    calcAlphaBtn.addEventListener('click', () => {
+      const N = parseInt($('calcN').value, 10);
+      const K = parseInt($('calcK').value, 10);
+      const result = $('calcAlphaResult');
+      result.classList.remove('error');
+
+      if (!N || N < 2 || !K || K < 1) {
+        result.textContent = '⚠️ Введите N ≥ 2 и K ≥ 1';
+        result.classList.add('error');
+        return;
+      }
+
+      const i = Math.log2(N);
+      const isInteger = Math.abs(i - Math.round(i)) < 1e-9;
+      const iRounded = Math.round(i * 100) / 100;
+      const totalBits = K * i;
+
+      let totalText;
+      if (totalBits < 8) {
+        totalText = `${totalBits.toFixed(2)} бит`;
+      } else if (totalBits < 8 * 1024) {
+        totalText = `${totalBits.toFixed(2)} бит = ${(totalBits / 8).toFixed(2)} байт`;
+      } else if (totalBits < 8 * 1024 * 1024) {
+        totalText = `${totalBits.toFixed(2)} бит = ${(totalBits / 8 / 1024).toFixed(2)} Кбайт`;
+      } else {
+        totalText = `${totalBits.toFixed(2)} бит = ${(totalBits / 8 / 1024 / 1024).toFixed(2)} Мбайт`;
+      }
+
+      result.innerHTML = `⚖️ Вес одного символа: <strong>i = ${isInteger ? i : iRounded} бит</strong><br>
+        📦 Объём сообщения: <strong>${totalText}</strong><br>
+        <span style="font-size:.75rem; color:#5F7C62; font-weight:400;">N = ${N}, K = ${K}</span>`;
+    });
+  }
+
+  // ===== КАЛЬКУЛЯТОР ХАРТЛИ =====
+  const calcHartleyBtn = $('calcHartleyBtn');
+  if (calcHartleyBtn) {
+    calcHartleyBtn.addEventListener('click', () => {
+      const N = parseInt($('calcHartley').value, 10);
+      const result = $('calcHartleyResult');
+      result.classList.remove('error');
+
+      if (!N || N < 2) {
+        result.textContent = '⚠️ Введите N ≥ 2';
+        result.classList.add('error');
+        return;
+      }
+
+      const i = Math.log2(N);
+      const isInteger = Math.abs(i - Math.round(i)) < 1e-9;
+      const iDisplay = isInteger ? i : i.toFixed(2);
+
+      result.innerHTML = `📊 Количество информации: <strong>i = ${iDisplay} бит</strong><br>
+        <span style="font-size:.75rem; color:#5F7C62; font-weight:400;">2<sup>i</sup> = ${N}</span>`;
+    });
+  }
+
+  // ===== ТЕСТ ПО УРОКУ 5 =====
+  const TEST12_QUESTIONS = [
+    // 1-4: единичный выбор (Знать)
+    { type: 'single', q: 'Что такое информация?', correct: 'Сведения об окружающем мире, уменьшающие неопределённость', wrong: ['Только текст в книге', 'Только числа', 'Только картинки'] },
+    { type: 'single', q: 'Что такое данные?', correct: 'Информация, зафиксированная на носителе', wrong: ['Только текст', 'Сведения об окружающем мире', 'Программа'] },
+    { type: 'single', q: 'Что такое знания?', correct: 'Информация, проверенная практикой и осмысленная', wrong: ['Данные на диске', 'Просто числа', 'Текст в книге'] },
+    { type: 'single', q: 'Что такое кодирование?', correct: 'Преобразование информации в форму, удобную для хранения/передачи', wrong: ['Удаление информации', 'Поиск информации', 'Хранение информации'] },
+
+    // 5-7: множественный выбор (Понимать)
+    { type: 'multi', q: 'Выберите ТРИ примера информационных процессов.', correct: ['Сбор информации', 'Обработка информации', 'Передача информации'], wrong: ['Удаление компьютера', 'Мытьё рук'] },
+    { type: 'multi', q: 'Выберите ДВА свойства равномерного кода.', correct: ['Все кодовые слова одинаковой длины', 'Всегда декодируется однозначно'], wrong: ['Требует условия Фано', 'Все кодовые слова разной длины'] },
+    { type: 'multi', q: 'Выберите ДВА элемента схемы передачи информации.', correct: ['Источник', 'Приёмник'], wrong: ['Процессор', 'Монитор', 'Клавиатура'] },
+
+    // 8-10: соответствие (Уметь)
+    { type: 'match', q: 'Установите соответствие: единица — значение.', pairs: [['1 байт', '8 бит'], ['1 Кбайт', '1024 байт'], ['1 Мбайт', '1024 Кбайт']] },
+    { type: 'match', q: 'Установите соответствие: понятие — определение.', pairs: [['Информация', 'Сведения об окружающем мире'], ['Данные', 'Зафиксированная информация'], ['Знания', 'Проверенная практикой информация']] },
+    { type: 'match', q: 'Установите соответствие: код — тип.', pairs: [['ASCII', 'Равномерный (ASCII)'], ['Азбука Морзе', 'Неравномерный'], ['Unicode', 'Равномерный (Unicode)']] },
+
+    // 11-15: краткий ответ (Владеть)
+    { type: 'short', q: 'Минимальная единица измерения информации — это __________.', correct: ['бит'] },
+    { type: 'short', q: 'Сколько бит в 1 байте? __________.', correct: ['8'] },
+    { type: 'short', q: 'Условие, при котором никакое кодовое слово не является началом другого, называется условием __________.', correct: ['фано'] },
+    { type: 'short', q: 'Формула 2^i = N называется формулой __________.', correct: ['хартли'] },
+    { type: 'short', q: 'Устройство, преобразующее информацию в сигнал для передачи, — это __________.', correct: ['кодирующее устройство', 'кодер'] }
+  ];
+
+  let t12Questions = [];
+  let t12Current = 0;
+  let t12Answers = [];
+  let t12Timer = null;
+  let t12SecondsLeft = 10 * 60;
+  let t12MatchLeft = null;
+
+  function shuffle12(arr){
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function prepareTest12(){
+    t12Questions = shuffle12(TEST12_QUESTIONS).map(item => {
+      if (item.type === 'single') {
+        return {
+          type: 'single',
+          q: item.q,
+          options: shuffle12([item.correct, ...item.wrong]),
+          correct: [item.correct]
+        };
+      }
+      if (item.type === 'multi') {
+        return {
+          type: 'multi',
+          q: item.q,
+          options: shuffle12([...item.correct, ...item.wrong]),
+          correct: [...item.correct]
+        };
+      }
+      if (item.type === 'match') {
+        return {
+          type: 'match',
+          q: item.q,
+          left: shuffle12(item.pairs.map(p => p[0])),
+          right: shuffle12(item.pairs.map(p => p[1])),
+          pairs: item.pairs
+        };
+      }
+      return { type: 'short', q: item.q, correct: [...item.correct] };
+    });
+  }
+
+  function startTest12(){
+    prepareTest12();
+    t12Current = 0;
+    t12Answers = new Array(t12Questions.length).fill(null);
+    t12SecondsLeft = 10 * 60;
+    t12MatchLeft = null;
+    $('test12Start').style.display = 'none';
+    $('test12Progress').style.display = 'block';
+    $('test12Final').style.display = 'none';
+    $('test12Badge').textContent = t12Questions.length + ' вопросов · 10 минут';
+    startTest12Timer();
+    renderTest12();
+  }
+
+  function startTest12Timer(){
+    updateTest12Timer();
+    if (t12Timer) clearInterval(t12Timer);
+    t12Timer = setInterval(() => {
+      t12SecondsLeft--;
+      updateTest12Timer();
+      if (t12SecondsLeft <= 0) { clearInterval(t12Timer); finishTest12(true); }
+    }, 1000);
+  }
+
+  function updateTest12Timer(){
+    const m = Math.floor(t12SecondsLeft / 60);
+    const s = t12SecondsLeft % 60;
+    const el = $('test12Timer');
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    el.classList.remove('warning', 'danger');
+    if (t12SecondsLeft <= 60) el.classList.add('danger');
+    else if (t12SecondsLeft <= 180) el.classList.add('warning');
+  }
+
+  function hasAnswer12(idx){
+    const q = t12Questions[idx];
+    const a = t12Answers[idx];
+    if (!a) return false;
+    if (q.type === 'single') return a.length === 1;
+    if (q.type === 'multi') return a.length > 0;
+    if (q.type === 'match') return a.length === q.pairs.length;
+    if (q.type === 'short') return String(a).trim().length > 0;
+    return false;
+  }
+
+  function checkTest12Ready(){
+    $('test12NextBtn').disabled = !hasAnswer12(t12Current);
+  }
+
+  function renderTest12(){
+    const q = t12Questions[t12Current];
+    const total = t12Questions.length;
+    const percent = Math.round((t12Current / total) * 100);
+    $('test12ProgressText').textContent = `Вопрос ${t12Current + 1} из ${total}`;
+    $('test12BarFill').style.width = percent + '%';
+    $('test12ProgressPct').textContent = percent + '%';
+
+    let html = `<div class="q"><div class="q-title"><span class="num">${t12Current + 1}.</span> ${q.q}</div>`;
+
+    if (q.type === 'single' || q.type === 'multi') {
+      const selected = t12Answers[t12Current] || [];
+      if (q.type === 'multi') {
+        const hint = q.q.match(/ТРИ|ДВА|ЧЕТЫРЕ|ПЯТЬ/i);
+        const need = hint ? hint[0] : 'несколько';
+        html += `<div class="multi-hint">Выбрано: <b>${selected.length}</b> · нужно: <b>${need.toLowerCase()}</b></div>`;
+      } else {
+        html += `<div class="multi-hint">Выберите ОДИН ответ</div>`;
+      }
+      html += '<div class="options">';
+      q.options.forEach((opt) => {
+        const isSel = selected.includes(opt);
+        html += `<div class="option ${isSel ? 'selected' : ''}" data-value="${opt.replace(/"/g, '&quot;')}">
+          <div class="marker">${isSel ? '✓' : '○'}</div>
+          <div>${opt}</div>
+        </div>`;
+      });
+      html += '</div>';
+    } else if (q.type === 'match') {
+      const pairs = t12Answers[t12Current] || [];
+      html += `<div class="match-info">Сопоставлено: <b>${pairs.length}</b> из <b>${q.pairs.length}</b>. Нажмите на левый элемент, затем на правый.</div>`;
+      html += '<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">';
+      html += '<div>' + q.left.map((l) => {
+        const pair = pairs.find(p => p[0] === l);
+        const num = pair ? pairs.indexOf(pair) + 1 : '';
+        const isSelectedLeft = t12MatchLeft === l;
+        return `<div class="option match-item ${pair ? 'paired' : ''} ${isSelectedLeft ? 'selected' : ''}" data-side="left" data-value="${l.replace(/"/g, '&quot;')}">
+          <div class="marker">${pair ? num : (isSelectedLeft ? '●' : '○')}</div>
+          <div>${l}</div>
+        </div>`;
+      }).join('') + '</div>';
+      html += '<div>' + q.right.map((r) => {
+        const pair = pairs.find(p => p[1] === r);
+        const num = pair ? pairs.indexOf(pair) + 1 : '';
+        return `<div class="option match-item ${pair ? 'paired' : ''}" data-side="right" data-value="${r.replace(/"/g, '&quot;')}">
+          <div class="marker">${pair ? num : '○'}</div>
+          <div>${r}</div>
+        </div>`;
+      }).join('') + '</div>';
+      html += '</div>';
+    } else if (q.type === 'short') {
+      html += `<input type="text" id="test12Short" value="${(t12Answers[t12Current] || '').replace(/"/g, '&quot;')}" placeholder="Введите ответ..." style="width:100%; padding:10px 14px; border:2px solid #D9D0BD; border-radius:20px; font-family:inherit; font-size:.9rem; margin-top:8px;">`;
+    }
+
+    html += '</div>';
+    $('test12QuestionCard').innerHTML = html;
+
+    // Обработчики
+    if (q.type === 'single' || q.type === 'multi') {
+      $('test12QuestionCard').querySelectorAll('.option').forEach(optEl => {
+        optEl.addEventListener('click', () => {
+          const opt = optEl.dataset.value;
+          if (q.type === 'single') {
+            t12Answers[t12Current] = [opt];
+          } else {
+            const arr = t12Answers[t12Current] || [];
+            const pos = arr.indexOf(opt);
+            if (pos >= 0) arr.splice(pos, 1); else arr.push(opt);
+            t12Answers[t12Current] = arr;
+          }
+          renderTest12();
+          checkTest12Ready();
+        });
+      });
+    } else if (q.type === 'match') {
+      $('test12QuestionCard').querySelectorAll('.option').forEach(optEl => {
+        optEl.addEventListener('click', () => {
+          const side = optEl.dataset.side;
+          const value = optEl.dataset.value;
+          const pairs = t12Answers[t12Current] || [];
+          if (side === 'left') {
+            const existing = pairs.find(p => p[0] === value);
+            if (existing) {
+              t12Answers[t12Current] = pairs.filter(p => p[0] !== value);
+              t12MatchLeft = null;
+              renderTest12();
+              checkTest12Ready();
+              return;
+            }
+            t12MatchLeft = (t12MatchLeft === value) ? null : value;
+            renderTest12();
+          } else {
+            if (!t12MatchLeft) return;
+            const rightTaken = pairs.some(p => p[1] === value);
+            if (rightTaken) {
+              t12Answers[t12Current] = pairs.filter(p => p[1] !== value);
+              renderTest12();
+              checkTest12Ready();
+              return;
+            }
+            t12Answers[t12Current] = [...pairs, [t12MatchLeft, value]];
+            t12MatchLeft = null;
+            renderTest12();
+            checkTest12Ready();
+          }
+        });
+      });
+    } else if (q.type === 'short') {
+      const inp = $('test12Short');
+      inp.addEventListener('input', () => {
+        t12Answers[t12Current] = inp.value;
+        checkTest12Ready();
+      });
+    }
+
+    const nextBtn = $('test12NextBtn');
+    nextBtn.textContent = t12Current === total - 1 ? '🏁 Завершить' : 'Далее ▶';
+    nextBtn.disabled = !hasAnswer12(t12Current);
+  }
+
+  const startTest12Btn = $('startTest12Btn');
+  if (startTest12Btn) startTest12Btn.addEventListener('click', startTest12);
+
+  const test12NextBtn = $('test12NextBtn');
+  if (test12NextBtn) {
+    test12NextBtn.addEventListener('click', () => {
+      if (!hasAnswer12(t12Current)) return;
+      if (t12Current === t12Questions.length - 1) finishTest12(false);
+      else { t12Current++; t12MatchLeft = null; renderTest12(); }
+    });
+  }
+
+  function checkAnswer12(q, a){
+    if (!a) return false;
+    if (q.type === 'single' || q.type === 'multi') {
+      if (!a.length) return false;
+      const correctSet = new Set(q.correct);
+      const answerSet = new Set(a);
+      return correctSet.size === answerSet.size && [...correctSet].every(x => answerSet.has(x));
+    }
+    if (q.type === 'match') {
+      if (a.length !== q.pairs.length) return false;
+      return a.every(p => q.pairs.some(cp => cp[0] === p[0] && cp[1] === p[1]));
+    }
+    if (q.type === 'short') {
+      const norm = String(a).toLowerCase().trim();
+      return q.correct.some(c => norm.includes(c.toLowerCase()));
+    }
+    return false;
+  }
+
+  function formatUserAnswer12(q, a){
+    if (!a) return '— не отвечено —';
+    if (q.type === 'single' || q.type === 'multi') return a.join(', ');
+    if (q.type === 'match') return a.map(p => `${p[0]} → ${p[1]}`).join('; ');
+    return a;
+  }
+
+  function formatCorrectAnswer12(q){
+    if (q.type === 'single' || q.type === 'multi') return q.correct.join(', ');
+    if (q.type === 'match') return q.pairs.map(p => `${p[0]} → ${p[1]}`).join('; ');
+    return q.correct[0];
+  }
+
+  function finishTest12(timeout){
+    if (t12Timer) clearInterval(t12Timer);
+
+    let correct = 0;
+    t12Questions.forEach((q, i) => { if (checkAnswer12(q, t12Answers[i])) correct++; });
+    const total = t12Questions.length;
+    const percent = Math.round((correct / total) * 100);
+
+    $('test12Progress').style.display = 'none';
+    $('test12Final').style.display = 'block';
+
+    const icon = percent >= 90 ? '🏆' : percent >= 70 ? '🎉' : percent >= 50 ? '😊' : '📚';
+    const message = percent >= 90 ? 'Отличный результат! Материал урока 1.2 усвоен полностью.' :
+                    percent >= 70 ? 'Хороший результат! Материал усвоен уверенно.' :
+                    percent >= 50 ? 'Неплохо, но стоит повторить некоторые темы.' :
+                    'Рекомендуем вернуться к уроку 1.2 и повторить теорию.';
+    const timeoutMsg = timeout ? '<div style="color:#b13e3e; font-weight:600; margin-bottom:12px;">⏰ Время вышло! Тест завершён автоматически.</div>' : '';
+
+    let html = `<div style="text-align:center; padding:30px 20px;">
+      ${timeoutMsg}
+      <div style="font-size:3.5rem; margin-bottom:8px;">${icon}</div>
+      <div style="font-size:3rem; font-weight:800; color:#1F4E6E; line-height:1;">${percent}%</div>
+      <div style="font-size:1.05rem; color:#3E5C4A; margin:12px 0 20px; line-height:1.5;">${message}</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; max-width:520px; margin:0 auto 20px;">
+        <div style="background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:12px;">
+          <div style="font-size:1.5rem; font-weight:700; color:#2C7DA0;">${correct}</div>
+          <div style="font-size:.7rem; color:#7B8D6E; text-transform:uppercase;">Верно</div>
+        </div>
+        <div style="background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:12px;">
+          <div style="font-size:1.5rem; font-weight:700; color:#b13e3e;">${total - correct}</div>
+          <div style="font-size:.7rem; color:#7B8D6E; text-transform:uppercase;">Ошибок</div>
+        </div>
+        <div style="background:#F9FBF8; border:1px solid #E7EDE2; border-radius:1rem; padding:12px;">
+          <div style="font-size:1.5rem; font-weight:700; color:#2C7DA0;">${total}</div>
+          <div style="font-size:.7rem; color:#7B8D6E; text-transform:uppercase;">Всего</div>
+        </div>
+      </div>
+    </div>`;
+
+    html += `<div style="text-align:left; max-width:750px; margin:0 auto;">
+      <div style="font-weight:700; color:#2C7DA0; margin-bottom:10px; font-size:1rem;">🔍 Разбор ответов:</div>`;
+
+    t12Questions.forEach((q, i) => {
+      const ok = checkAnswer12(q, t12Answers[i]);
+      const userAns = formatUserAnswer12(q, t12Answers[i]);
+      const correctAns = formatCorrectAnswer12(q);
+      html += `<div style="background:${ok ? '#E8F5E8' : '#FDF0E8'}; border-radius:12px; padding:10px 12px; margin-bottom:8px; font-size:.85rem; border-left:4px solid ${ok ? '#6B9E6B' : '#b13e3e'};">
+        <div style="font-weight:600; color:${ok ? '#2E7D32' : '#b13e3e'}; margin-bottom:4px;">
+          ${ok ? '✅' : '❌'} Вопрос ${i + 1}. ${q.q}
+        </div>
+        <div style="font-size:.8rem; color:#3E5C4A;">
+          <div><b>Ваш ответ:</b> ${userAns}</div>
+          ${!ok ? `<div style="margin-top:3px;"><b>Правильный ответ:</b> <span style="color:#2E7D32;">${correctAns}</span></div>` : ''}
+        </div>
+      </div>`;
+    });
+
+    html += `</div>`;
+    html += `<div style="text-align:center; margin-top:20px;">
+      <button class="btn btn-primary" onclick="location.reload()">🔄 Пройти заново</button>
+    </div>`;
+
+    $('test12Final').innerHTML = html;
+  }
+
+})();
+</script>
+</body>
+</html>

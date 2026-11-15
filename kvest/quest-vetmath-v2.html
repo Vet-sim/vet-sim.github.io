@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ВетМатематика: вычисли жизнь</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --blue: #0891EB;
+  --blue-dark: #0670b8;
+  --gold: #D49A2A;
+  --gold-dark: #b8801d;
+  --green: #2E9E5B;
+  --green-dark: #247a46;
+  --bg: #F0F9FF;
+  --card: #FFFFFF;
+  --text: #0F2A3A;
+  --muted: #5F7C8E;
+  --line: #D6E9F5;
+  --ok: #2E9E5B;
+  --ok-bg: #E6F7EC;
+  --no: #C0392B;
+  --no-bg: #FDECEA;
+}
+
+body {
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  background: radial-gradient(circle at 20% 0%, #FFFFFF 0%, var(--bg) 45%, #E3F2FC 100%);
+  min-height: 100vh;
+  color: var(--text);
+  padding: 16px;
+  line-height: 1.5;
+}
+
+.container { max-width: 880px; margin: 0 auto; }
+
+/* Шапка */
+.header {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  padding: 14px 22px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  box-shadow: 0 2px 14px rgba(8,145,235,0.08);
+  margin-bottom: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; }
+.brand .grad {
+  background: linear-gradient(135deg, var(--blue), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.brand .sub { font-weight: 400; font-size: .72rem; color: var(--muted); display: block; }
+.stats { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pill {
+  background: #E8F4FD; color: var(--blue-dark);
+  padding: 6px 16px; border-radius: 40px;
+  font-weight: 700; font-size: .85rem;
+}
+.pill.gold { background: #FBF1DC; color: var(--gold-dark); }
+.pill.level { background: #F1ECFA; color: #6B4EAA; }
+
+.timer {
+  background: var(--blue); color: #fff;
+  padding: 6px 18px; border-radius: 40px;
+  font-weight: 800; font-size: .95rem;
+  font-variant-numeric: tabular-nums;
+  min-width: 92px; text-align: center;
+  transition: .3s;
+}
+.timer.warning { background: var(--gold); }
+.timer.danger { background: var(--no); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.06);} }
+
+/* Карточки */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 1.5rem;
+  padding: 22px 26px;
+  box-shadow: 0 2px 14px rgba(8,145,235,0.08);
+  margin-bottom: 14px;
+}
+.card-title {
+  font-weight: 800; font-size: 1.05rem; color: var(--blue-dark);
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+
+/* Кнопки */
+.btn {
+  background: #E3F2FC; border: none;
+  padding: 10px 22px; border-radius: 40px;
+  font-family: inherit; font-size: .88rem; font-weight: 700;
+  color: var(--text); cursor: pointer;
+  transition: .15s; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn:hover { opacity: .88; transform: translateY(-1px); }
+.btn:active { transform: scale(.97); }
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: var(--blue-dark); }
+.btn-gold { background: var(--gold); color: #fff; }
+.btn-gold:hover { background: var(--gold-dark); }
+.btn-outline { background: transparent; border: 1.5px solid var(--line); }
+.btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.btn-big { padding: 14px 28px; font-size: 1rem; }
+
+/* Старт */
+.hero { text-align: center; padding: 6px 0; }
+.hero .emoji { font-size: 3rem; }
+.hero h1 { font-size: 1.55rem; margin: 8px 0 4px; }
+.hero .slogan { color: var(--muted); font-size: .9rem; margin-bottom: 16px; }
+
+.level-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px; margin: 18px 0;
+}
+.level-card {
+  background: #F6FBFE; border: 2px solid var(--line);
+  border-radius: 1.2rem; padding: 16px 18px;
+  cursor: pointer; transition: .18s; text-align: left;
+  position: relative;
+}
+.level-card:hover { border-color: #B8D9E8; transform: translateY(-2px); }
+.level-card.selected { border-color: var(--blue); background: #E8F4FD; box-shadow: 0 0 0 4px rgba(8,145,235,.12); }
+.level-card .icon { font-size: 2rem; }
+.level-card .name { font-weight: 800; font-size: 1rem; color: var(--blue-dark); margin: 6px 0 4px; }
+.level-card .desc { font-size: .78rem; color: var(--muted); line-height: 1.5; }
+.level-card .meta {
+  display: flex; gap: 10px; margin-top: 8px;
+  font-size: .72rem; color: var(--blue-dark); font-weight: 700;
+}
+.level-card .meta span {
+  background: #fff; border: 1px solid var(--line);
+  padding: 2px 10px; border-radius: 20px;
+}
+
+.name-input {
+  width: 100%; max-width: 360px; margin: 8px auto 0;
+  padding: 12px 18px; border: 2px solid var(--line);
+  border-radius: 40px; font-family: inherit; font-size: .95rem;
+  text-align: center; outline: none; transition: .15s;
+}
+.name-input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(8,145,235,.12); }
+
+/* Вопрос */
+.task-anim { animation: fadeIn .3s ease; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+.progress { height: 8px; background: #E3F2FC; border-radius: 20px; overflow: hidden; margin-bottom: 16px; }
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--blue), var(--gold));
+  border-radius: 20px; transition: width .4s;
+}
+.q-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .78rem; color: var(--muted); margin-bottom: 8px;
+  flex-wrap: wrap; gap: 6px;
+}
+.q-case {
+  background: #F6FBFE; border-left: 4px solid var(--blue);
+  border-radius: 0 1rem 1rem 0;
+  padding: 14px 16px; font-size: .9rem; line-height: 1.65;
+  margin: 10px 0 14px;
+}
+.q-case .animal { font-size: 1.4rem; margin-right: 6px; }
+.q-question { font-weight: 700; font-size: 1rem; color: var(--blue-dark); margin-bottom: 12px; }
+.answer-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: stretch; }
+.answer-input {
+  flex: 1; min-width: 180px;
+  padding: 12px 18px; border: 2px solid var(--line);
+  border-radius: 40px; font-family: inherit; font-size: 1rem;
+  outline: none; transition: .15s;
+}
+.answer-input:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(8,145,235,.12); }
+.answer-input.correct { border-color: var(--ok); background: var(--ok-bg); }
+.answer-input.wrong { border-color: var(--no); background: var(--no-bg); }
+.unit { font-size: .85rem; color: var(--muted); align-self: center; }
+
+.feedback {
+  margin-top: 14px; padding: 14px 16px;
+  border-radius: 1rem; font-size: .88rem; line-height: 1.65;
+  display: none;
+}
+.feedback.show { display: block; animation: fadeIn .25s ease; }
+.feedback.ok { background: var(--ok-bg); border-left: 4px solid var(--ok); }
+.feedback.no { background: var(--no-bg); border-left: 4px solid var(--no); }
+.feedback .head { font-weight: 800; margin-bottom: 6px; }
+.feedback .math {
+  background: #fff; border-radius: .6rem; padding: 8px 12px;
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: .82rem; margin-top: 8px; white-space: pre-wrap;
+}
+
+/* Финал */
+.final-hero { text-align: center; padding: 6px 0 10px; }
+.final-hero .score { font-size: 3.6rem; font-weight: 800; color: var(--gold-dark); line-height: 1; }
+.final-hero .lbl { color: var(--muted); font-size: .85rem; margin-top: 4px; }
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px; margin: 18px 0;
+}
+.stat {
+  background: #F6FBFE; border: 1px solid var(--line);
+  border-radius: 1rem; padding: 14px; text-align: center;
+}
+.stat .num { font-size: 1.55rem; font-weight: 800; color: var(--blue-dark); }
+.stat .lbl { font-size: .68rem; color: var(--muted); text-transform: uppercase; margin-top: 2px; }
+
+.review-item {
+  background: #F6FBFE; border: 1px solid var(--line);
+  border-radius: 1rem; padding: 12px 14px;
+  margin-bottom: 8px; font-size: .84rem; line-height: 1.6;
+}
+.review-item.ok { border-left: 4px solid var(--ok); }
+.review-item.no { border-left: 4px solid var(--no); }
+.review-item .r-title { font-weight: 700; margin-bottom: 4px; }
+.review-item .r-ans { color: var(--muted); font-size: .8rem; }
+
+/* Сертификат */
+.cert-wrap {
+  background: #fff; border: 1px solid var(--line);
+  border-radius: 1.5rem; padding: 20px; margin-top: 16px;
+}
+.certificate {
+  position: relative; border: 6px double var(--blue);
+  border-radius: 18px; padding: 34px 30px; text-align: center;
+  background: radial-gradient(circle at 0% 0%, rgba(8,145,235,.06), transparent 40%),
+              radial-gradient(circle at 100% 100%, rgba(212,154,42,.10), transparent 40%),
+              #FFFDF8;
+  overflow: hidden;
+}
+.certificate.school { border-color: var(--green); }
+.certificate.vet { border-color: var(--gold); }
+.certificate::before, .certificate::after {
+  content: '🐾'; position: absolute; font-size: 2.2rem; opacity: .12;
+}
+.certificate::before { top: 10px; left: 14px; transform: rotate(-20deg); }
+.certificate::after { bottom: 10px; right: 14px; transform: rotate(20deg); }
+.cert-logo { font-weight: 800; font-size: 1rem; color: var(--blue-dark); letter-spacing: .5px; }
+.cert-title {
+  font-size: .8rem; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold-dark); margin: 10px 0 4px; font-weight: 700;
+}
+.cert-main { font-size: 1.35rem; font-weight: 800; color: var(--text); margin: 6px 0 18px; }
+.cert-name {
+  font-size: 1.5rem; font-weight: 800; color: var(--blue-dark);
+  margin: 6px 0 4px; border-bottom: 2px dashed var(--line);
+  display: inline-block; padding: 0 16px 4px;
+}
+.cert-sub { font-size: .85rem; color: var(--muted); margin-bottom: 16px; }
+.cert-score {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold), #e9b755);
+  color: #fff; font-weight: 800; font-size: 1.4rem;
+  padding: 10px 26px; border-radius: 40px; margin: 10px 0;
+}
+.cert-meta {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-top: 26px; font-size: .78rem; color: var(--muted);
+  flex-wrap: wrap; gap: 10px;
+}
+.cert-qr {
+  width: 64px; height: 64px;
+  background:
+    repeating-linear-gradient(0deg, #0F2A3A 0 4px, transparent 4px 8px),
+    repeating-linear-gradient(90deg, #0F2A3A 0 4px, transparent 4px 8px);
+  background-color: #fff; border: 4px solid #fff;
+  outline: 1px solid #0F2A3A; border-radius: 6px;
+  display: inline-block;
+}
+.cert-sign { text-align: right; }
+.cert-sign .line { border-top: 1px solid #0F2A3A; width: 140px; margin: 6px 0 4px; padding-top: 2px; }
+
+@media (max-width: 640px) {
+  body { padding: 10px; }
+  .header { padding: 12px 16px; }
+  .card { padding: 16px 16px; }
+  .hero h1 { font-size: 1.35rem; }
+  .final-hero .score { font-size: 2.8rem; }
+  .certificate { padding: 24px 16px; }
+  .cert-main { font-size: 1.15rem; }
+  .cert-name { font-size: 1.2rem; }
+}
+
+@media print {
+  body { background: #fff; padding: 0; }
+  .header, .no-print, .card:not(.print-card) { display: none !important; }
+  .print-card { border: none !important; box-shadow: none !important; padding: 0 !important; }
+  .certificate { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="header no-print">
+    <div class="brand">
+      🧭 <span class="grad">ВетМатематика</span>
+      <span class="sub">· вычисли жизнь</span>
+    </div>
+    <div class="stats">
+      <span class="pill level" id="levelPill" style="display:none;">—</span>
+      <span class="pill" id="scorePill">⭐ 0 баллов</span>
+      <span class="pill gold" id="taskPill">Задача 0 / 5</span>
+      <span class="timer" id="timer">—</span>
+    </div>
+  </header>
+
+  <!-- СТАРТ -->
+  <section class="card" id="screenStart">
+    <div class="hero">
+      <div class="emoji">🐾📐</div>
+      <h1>ВетМатематика: вычисли жизнь</h1>
+      <p class="slogan">«Точность расчёта — точность диагноза»</p>
+    </div>
+
+    <h3 style="color:var(--blue-dark); font-size:.95rem; margin-bottom:10px;">1. Выберите уровень</h3>
+    <div class="level-grid" id="levelGrid">
+      <div class="level-card" data-level="school">
+        <div class="icon">🎓</div>
+        <div class="name">Школьник</div>
+        <div class="desc">Базовые расчёты доз, процентов и простых пропорций. Понятные клинические примеры.</div>
+        <div class="meta"><span>20 мин</span><span>5 задач</span></div>
+      </div>
+      <div class="level-card selected" data-level="student">
+        <div class="icon">🩺</div>
+        <div class="name">Студент</div>
+        <div class="desc">Двухшаговые задачи: концентрации, сухое вещество, скорость инфузии.</div>
+        <div class="meta"><span>15 мин</span><span>5 задач</span></div>
+      </div>
+      <div class="level-card" data-level="vet">
+        <div class="icon">🥼</div>
+        <div class="name">Ветврач</div>
+        <div class="desc">Многопараметрические задачи: рационы, продуктивность, экономика лечения.</div>
+        <div class="meta"><span>12 мин</span><span>5 задач</span></div>
+      </div>
+    </div>
+
+    <h3 style="color:var(--blue-dark); font-size:.95rem; margin:10px 0;">2. Ваше имя</h3>
+    <div style="text-align:center;">
+      <input type="text" class="name-input" id="playerName" placeholder="Иван Петров" maxlength="40">
+    </div>
+
+    <div style="text-align:center; margin-top:18px;">
+      <button class="btn btn-primary btn-big" id="startBtn">🚀 Начать квест</button>
+    </div>
+
+    <div style="font-size:.78rem; color:var(--muted); text-align:center; margin-top:14px;">
+      10 баллов за верный ответ + до 15 бонусных за скорость · в конце — сертификат PDF
+    </div>
+  </section>
+
+  <!-- ВОПРОС -->
+  <section class="card" id="screenQuestion" style="display:none;">
+    <div class="progress"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div id="questionArea"></div>
+  </section>
+
+  <!-- ФИНАЛ -->
+  <section class="card" id="screenFinal" style="display:none;">
+    <div id="finalArea"></div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     УРОВНИ И ЗАДАЧИ
+     ============================================================ */
+  const LEVELS = {
+    school: {
+      name: 'Школьник',
+      icon: '🎓',
+      timeLimit: 20 * 60,
+      bonus: [
+        { maxSeconds: 10 * 60, points: 15 },
+        { maxSeconds: 15 * 60, points: 10 },
+        { maxSeconds: 20 * 60, points: 5 }
+      ],
+      certTitle: 'Юный ветматематик',
+      certClass: 'school',
+      certIcon: '🎓',
+      tasks: [
+        {
+          id: 's1', animal: '🐕', title: 'Дозировка',
+          case: 'Собаке весом 12 кг назначен антибиотик в дозе 5 мг/кг.',
+          question: 'Сколько мг препарата нужно дать собаке?',
+          unit: 'мг', answer: 60, tolerance: 0.5,
+          math: 'Доза = вес × доза на кг = 12 × 5 = 60 мг',
+          explain: 'Умножаем вес собаки на дозу препарата на 1 кг.'
+        },
+        {
+          id: 's2', animal: '🐈', title: 'Инфузия',
+          case: 'Кошке назначено 200 мл физраствора за 4 часа. Капельница даёт 20 капель/мл.',
+          question: 'Сколько капель в минуту нужно настроить? (округлите до целого)',
+          unit: 'капель/мин', answer: 17, tolerance: 0.5,
+          math: 'Всего капель = 200 × 20 = 4000\nВремя = 4 × 60 = 240 мин\nСкорость = 4000 / 240 ≈ 16,7 ≈ 17',
+          explain: 'Переводим объём в капли, время — в минуты, делим.'
+        },
+        {
+          id: 's3', animal: '🐄', title: 'Рацион',
+          case: 'Корове весом 500 кг нужно 16% сухого вещества от веса.',
+          question: 'Сколько кг сухого вещества нужно корове в день?',
+          unit: 'кг', answer: 80, tolerance: 0.5,
+          math: 'Сухое вещество = 500 × 0,16 = 80 кг',
+          explain: '16% = 0,16. Умножаем вес на долю.'
+        },
+        {
+          id: 's4', animal: '🐮', title: 'Прирост',
+          case: 'Телёнок родился весом 40 кг. Через 3 месяца весит 120 кг.',
+          question: 'Каков среднесуточный прирост? (округлите до сотых)',
+          unit: 'кг/сутки', answer: 0.89, tolerance: 0.03,
+          math: 'Прирост = 120 − 40 = 80 кг\nДней = 3 × 30 = 90\nСреднесуточный = 80 / 90 ≈ 0,89',
+          explain: 'Разницу весов делим на количество дней.'
+        },
+        {
+          id: 's5', animal: '🐄', title: 'Экономика',
+          case: 'Без лечения корова теряет 3 л молока в день в течение 30 дней. Молоко стоит 40 руб/литр.',
+          question: 'Какой ущерб от болезни без лечения?',
+          unit: 'руб', answer: 3600, tolerance: 50,
+          math: 'Потеря = 3 × 30 = 90 л\nУщерб = 90 × 40 = 3600 руб',
+          explain: 'Умножаем потерю молока на цену.'
+        }
+      ]
+    },
+    student: {
+      name: 'Студент',
+      icon: '🩺',
+      timeLimit: 15 * 60,
+      bonus: [
+        { maxSeconds: 7 * 60, points: 15 },
+        { maxSeconds: 11 * 60, points: 10 },
+        { maxSeconds: 15 * 60, points: 5 }
+      ],
+      certTitle: 'Сертификат участника',
+      certClass: '',
+      certIcon: '🩺',
+      tasks: [
+        {
+          id: 'st1', animal: '🐕', title: 'Дозировка',
+          case: 'Собаке весом 12 кг назначен антибиотик 5 мг/кг. Препарат — ампулы 2 мл, концентрация 50 мг/мл.',
+          question: 'Сколько мл препарата нужно ввести?',
+          unit: 'мл', answer: 1.2, tolerance: 0.05,
+          math: 'Доза = 12 × 5 = 60 мг\nОбъём = 60 / 50 = 1,2 мл',
+          explain: 'Сначала общая доза, затем делим на концентрацию.'
+        },
+        {
+          id: 'st2', animal: '🐈', title: 'Инфузия',
+          case: 'Кошке назначено 200 мл за 4 часа. Капельница 20 капель/мл.',
+          question: 'Сколько капель в минуту?',
+          unit: 'капель/мин', answer: 17, tolerance: 0.5,
+          math: '4000 капель / 240 мин ≈ 16,7 ≈ 17',
+          explain: 'Округляем до целого.'
+        },
+        {
+          id: 'st3', animal: '🐄', title: 'Рацион',
+          case: 'Корове 500 кг нужно 16% сухого вещества. В рационе 60% сена (СВ 85%) и 40% силоса (СВ 30%).',
+          question: 'Сколько кг сена нужно дать?',
+          unit: 'кг', answer: 56.5, tolerance: 1,
+          math: 'СВ = 500 × 0,16 = 80 кг\nСено = 80 × 0,6 / 0,85 ≈ 56,5 кг',
+          explain: 'Долю сена в СВ делим на долю СВ в сене.'
+        },
+        {
+          id: 'st4', animal: '🐮', title: 'Прирост',
+          case: 'Телёнок родился 40 кг, через 3 месяца — 120 кг.',
+          question: 'Среднесуточный прирост (кг/сутки)?',
+          unit: 'кг/сутки', answer: 0.89, tolerance: 0.03,
+          math: '80 кг / 90 дней ≈ 0,89',
+          explain: 'Разница весов на число дней.'
+        },
+        {
+          id: 'st5', animal: '🐄', title: 'Экономика',
+          case: 'Лечение мастита — 3000 руб. Без лечения потеря 15% от 20 л/день × 30 дней × 40 руб/л.',
+          question: 'Какова экономия от лечения? (ущерб минус стоимость лечения)',
+          unit: 'руб', answer: 600, tolerance: 50,
+          math: 'Потеря = 20 × 0,15 × 30 × 40 = 3600 руб\nЭкономия = 3600 − 3000 = 600 руб',
+          explain: 'Сравниваем ущерб и стоимость лечения.'
+        }
+      ]
+    },
+    vet: {
+      name: 'Ветврач',
+      icon: '🥼',
+      timeLimit: 12 * 60,
+      bonus: [
+        { maxSeconds: 6 * 60, points: 15 },
+        { maxSeconds: 9 * 60, points: 10 },
+        { maxSeconds: 12 * 60, points: 5 }
+      ],
+      certTitle: 'Сертификат специалиста',
+      certClass: 'vet',
+      certIcon: '🥼',
+      tasks: [
+        {
+          id: 'v1', animal: '🐕', title: 'Дозировка',
+          case: 'Собаке 12 кг назначен антибиотик 5 мг/кг. Ампулы 2 мл, концентрация 50 мг/мл.',
+          question: 'Сколько ампул потребуется на один приём? (округлите вверх)',
+          unit: 'ампул', answer: 1, tolerance: 0.1,
+          math: 'Доза = 60 мг → объём = 1,2 мл\n1 ампула = 2 мл ≥ 1,2 мл → 1 ампула',
+          explain: 'Объём 1,2 мл помещается в одну ампулу 2 мл.'
+        },
+        {
+          id: 'v2', animal: '🐈', title: 'Инфузия',
+          case: 'Кошке 200 мл за 4 часа, капельница 20 капель/мл.',
+          question: 'Сколько мл/час нужно настроить?',
+          unit: 'мл/час', answer: 50, tolerance: 0.5,
+          math: '200 мл / 4 ч = 50 мл/час',
+          explain: 'Для инфузионного насоса делим объём на время в часах.'
+        },
+        {
+          id: 'v3', animal: '🐄', title: 'Рацион',
+          case: 'Корове 500 кг нужно 16% СВ. В рационе 60% сена (СВ 85%) и 40% силоса (СВ 30%).',
+          question: 'Сколько кг силоса нужно дать?',
+          unit: 'кг', answer: 106.7, tolerance: 2,
+          math: 'СВ = 80 кг\nСилос = 80 × 0,4 / 0,30 ≈ 106,7 кг',
+          explain: 'Доля силоса в СВ делим на долю СВ в силосе.'
+        },
+        {
+          id: 'v4', animal: '🐮', title: 'Прирост',
+          case: 'Телёнок 40 кг → 120 кг за 3 месяца. Среднесуточный прирост ≈ 0,89 кг.',
+          question: 'Сколько телёнок будет весить через 6 месяцев от рождения (при том же темпе)?',
+          unit: 'кг', answer: 200, tolerance: 3,
+          math: '90 дней × 0,89 = 80 кг\n40 + 80 + 80 = 200 кг (через 6 мес от рождения)',
+          explain: 'За 3 месяца + 80 кг. Через 6 месяцев — ещё +80 кг к 120 кг = 200 кг.'
+        },
+        {
+          id: 'v5', animal: '🐄', title: 'Экономика',
+          case: 'Лечение мастита 3000 руб. Без лечения потеря 15% × 20 л/день × 30 дней × 40 руб/л.',
+          question: 'Сколько дней лечения окупается за счёт сохранённого молока? (округлите до целых)',
+          unit: 'дней', answer: 25, tolerance: 1,
+          math: 'Ущерб за 30 дней = 3600 руб\nЕжедневный ущерб = 3600 / 30 = 120 руб/день\nОкупаемость = 3000 / 120 = 25 дней',
+          explain: 'Стоимость лечения делим на ежедневный ущерб от болезни.'
+        }
+      ]
+    }
+  };
+
+  const TOTAL_TASKS = 5;
+  const BASE_PER_TASK = 10;
+  const MAX_BONUS = 15;
+
+  /* ============================================================
+     СОСТОЯНИЕ
+     ============================================================ */
+  const state = {
+    levelKey: 'student',
+    playerName: '',
+    current: 0,
+    score: 0,
+    baseScore: 0,
+    speedBonus: 0,
+    startTime: 0,
+    answers: [],
+    timerId: null,
+    secondsLeft: 0,
+    finished: false
+  };
+
+  const $ = id => document.getElementById(id);
+
+  /* ============================================================
+     ТАЙМЕР
+     ============================================================ */
+  function fmtTime(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+  }
+
+  function startTimer() {
+    updateTimerUI();
+    state.timerId = setInterval(() => {
+      state.secondsLeft--;
+      updateTimerUI();
+      if (state.secondsLeft <= 0) {
+        clearInterval(state.timerId);
+        finishQuest(true);
+      }
+    }, 1000);
+  }
+
+  function updateTimerUI() {
+    const el = $('timer');
+    el.textContent = fmtTime(state.secondsLeft);
+    el.classList.remove('warning', 'danger');
+    if (state.secondsLeft <= 60) el.classList.add('danger');
+    else if (state.secondsLeft <= 180) el.classList.add('warning');
+  }
+
+  /* ============================================================
+     ВЫБОР УРОВНЯ
+     ============================================================ */
+  function bindLevelCards() {
+    document.querySelectorAll('.level-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.level-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        state.levelKey = card.dataset.level;
+      });
+    });
+  }
+
+  /* ============================================================
+     СТАРТ
+     ============================================================ */
+  function startQuest() {
+    const nameInput = $('playerName');
+    const name = nameInput.value.trim();
+    if (!name) {
+      nameInput.focus();
+      nameInput.style.borderColor = '#C0392B';
+      nameInput.placeholder = 'Введите имя, чтобы продолжить';
+      return;
+    }
+    nameInput.style.borderColor = '';
+
+    const level = LEVELS[state.levelKey];
+    state.playerName = name;
+    state.current = 0;
+    state.score = 0;
+    state.baseScore = 0;
+    state.speedBonus = 0;
+    state.answers = [];
+    state.secondsLeft = level.timeLimit;
+    state.finished = false;
+    state.startTime = Date.now();
+
+    $('levelPill').style.display = '';
+    $('levelPill').textContent = level.icon + ' ' + level.name;
+
+    $('screenStart').style.display = 'none';
+    $('screenFinal').style.display = 'none';
+    $('screenQuestion').style.display = 'block';
+
+    startTimer();
+    renderTask();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ============================================================
+     РЕНДЕР ЗАДАЧИ
+     ============================================================ */
+  function renderTask() {
+    const level = LEVELS[state.levelKey];
+    const t = level.tasks[state.current];
+
+    $('progressFill').style.width = (state.current / TOTAL_TASKS * 100) + '%';
+    $('taskPill').textContent = `Задача ${state.current + 1} / ${TOTAL_TASKS}`;
+    $('scorePill').textContent = `⭐ ${state.score} баллов`;
+
+    const html = `
+      <div class="task-anim">
+        <div class="q-meta">
+          <span>${level.icon} Уровень: <strong>${level.name}</strong></span>
+          <span style="color:var(--muted);">+10 баллов за верный ответ</span>
+        </div>
+        <div class="q-case">
+          <span class="animal">${t.animal}</span>
+          <strong>${t.title}.</strong> ${t.case}
+        </div>
+        <div class="q-question">${t.question}</div>
+        <div class="answer-row">
+          <input type="text" inputmode="decimal" class="answer-input" id="answerInput" placeholder="Введите число..." autocomplete="off">
+          <span class="unit">${t.unit}</span>
+          <button class="btn btn-primary" id="checkBtn">Проверить</button>
+        </div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+    `;
+    $('questionArea').innerHTML = html;
+
+    const input = $('answerInput');
+    input.focus();
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const btn = $('checkBtn');
+        if (btn && !btn.disabled) btn.click();
+      }
+    });
+    $('checkBtn').addEventListener('click', checkAnswer);
+  }
+
+  /* ============================================================
+     ПРОВЕРКА
+     ============================================================ */
+  function parseNumber(str) {
+    return parseFloat(String(str).replace(',', '.').replace(/\s+/g, ''));
+  }
+
+  function checkAnswer() {
+    const level = LEVELS[state.levelKey];
+    const t = level.tasks[state.current];
+    const input = $('answerInput');
+    const value = parseNumber(input.value);
+    const feedback = $('feedback');
+    const checkBtn = $('checkBtn');
+
+    if (isNaN(value)) {
+      feedback.className = 'feedback show no';
+      feedback.innerHTML = '<div class="head">⚠️ Введите число</div>Например: 1,2 или 1.2';
+      return;
+    }
+
+    const ok = Math.abs(value - t.answer) <= t.tolerance;
+
+    state.answers.push({ taskId: t.id, value, ok, title: t.title });
+    if (ok) { state.score += BASE_PER_TASK; state.baseScore += BASE_PER_TASK; }
+
+    input.disabled = true;
+    input.classList.add(ok ? 'correct' : 'wrong');
+    checkBtn.disabled = true;
+
+    feedback.className = 'feedback show ' + (ok ? 'ok' : 'no');
+    feedback.innerHTML = `
+      <div class="head">${ok ? '✅ Верно! +10 баллов' : '❌ Неверно'}</div>
+      ${!ok ? `<div>Правильный ответ: <strong>${t.answer} ${t.unit}</strong></div>` : ''}
+      <div class="math">${t.math}</div>
+      <div style="margin-top:10px;">${t.explain}</div>
+      <div style="margin-top:14px; text-align:right;">
+        <button class="btn btn-gold" id="nextBtn">
+          ${state.current === TOTAL_TASKS - 1 ? '🏁 Завершить квест' : 'Далее ▶'}
+        </button>
+      </div>
+    `;
+
+    $('scorePill').textContent = `⭐ ${state.score} баллов`;
+
+    $('nextBtn').addEventListener('click', () => {
+      if (state.current === TOTAL_TASKS - 1) {
+        finishQuest(false);
+      } else {
+        state.current++;
+        renderTask();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+
+  /* ============================================================
+     ФИНАЛ
+     ============================================================ */
+  function calcSpeedBonus(secondsUsed) {
+    const level = LEVELS[state.levelKey];
+    for (const b of level.bonus) {
+      if (secondsUsed <= b.maxSeconds) return b.points;
+    }
+    return 0;
+  }
+
+  function finishQuest(timeout) {
+    if (state.finished) return;
+    state.finished = true;
+    clearInterval(state.timerId);
+
+    const level = LEVELS[state.levelKey];
+    const secondsUsed = Math.max(0, Math.min(level.timeLimit, Math.round((Date.now() - state.startTime) / 1000)));
+    const speedBonus = timeout ? 0 : calcSpeedBonus(secondsUsed);
+    state.speedBonus = speedBonus;
+    state.score += speedBonus;
+
+    const correctCount = state.answers.filter(a => a.ok).length;
+    const answered = state.answers.length;
+    const maxScore = TOTAL_TASKS * BASE_PER_TASK + MAX_BONUS;
+    const percent = Math.round((state.score / maxScore) * 100);
+
+    $('screenQuestion').style.display = 'none';
+    $('screenFinal').style.display = 'block';
+    $('progressFill').style.width = '100%';
+    $('scorePill').textContent = `⭐ ${state.score} баллов`;
+
+    const today = new Date().toLocaleDateString('ru-RU', {
+      day: '2-digit', month: 'long', year: 'numeric'
+    });
+
+    const timeoutMsg = timeout
+      ? '<div style="color:var(--no); font-weight:700; margin-bottom:8px;">⏰ Время вышло — квест завершён автоматически.</div>'
+      : '';
+
+    const reviewHTML = level.tasks.map((t, i) => {
+      const ans = state.answers[i];
+      const ok = ans && ans.ok;
+      const yourText = ans ? `${ans.value}` : '— не отвечено —';
+      return `
+        <div class="review-item ${ok ? 'ok' : 'no'}">
+          <div class="r-title">${ok ? '✅' : '❌'} ${t.animal} ${t.title}</div>
+          <div class="r-ans">Ваш ответ: <strong>${yourText}</strong> ${ans ? t.unit : ''} · Правильно: <strong>${t.answer} ${t.unit}</strong></div>
+        </div>
+      `;
+    }).join('');
+
+    const finalHTML = `
+      ${timeoutMsg}
+      <div class="final-hero">
+        <div style="font-size:2.8rem;">🏆</div>
+        <div class="score">${state.score}</div>
+        <div class="lbl">баллов из ${maxScore} · ${percent}%</div>
+        <div style="margin-top:6px; color:var(--muted); font-size:.85rem;">
+          ${level.icon} Уровень «${level.name}»
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat"><div class="num">${correctCount}/${TOTAL_TASKS}</div><div class="lbl">Верно</div></div>
+        <div class="stat"><div class="num">${answered}/${TOTAL_TASKS}</div><div class="lbl">Отвечено</div></div>
+        <div class="stat"><div class="num">${fmtTime(secondsUsed)}</div><div class="lbl">Время</div></div>
+        <div class="stat"><div class="num">+${speedBonus}</div><div class="lbl">Бонус</div></div>
+      </div>
+
+      <div style="font-weight:800; color:var(--blue-dark); margin:8px 0;">🔍 Разбор задач</div>
+      ${reviewHTML}
+
+      <div style="text-align:center; margin-top:20px;" class="no-print">
+        <button class="btn btn-outline" id="restartBtn">🔄 Пройти заново</button>
+        <button class="btn btn-gold" id="certBtn">🎓 Скачать сертификат (PDF)</button>
+      </div>
+
+      <div class="cert-wrap print-card" id="certWrap" style="display:none;">
+        <div class="certificate ${level.certClass}" id="certificate">
+          <div class="cert-logo">🐾 ВетСим</div>
+          <div class="cert-title">${level.certTitle}</div>
+          <div class="cert-main">${level.certIcon} Квест «ВетМатематика» · ${level.name}</div>
+
+          <div>Награждается</div>
+          <div class="cert-name" id="certName">${escapeHtml(state.playerName)}</div>
+          <div class="cert-sub">за успешное прохождение квеста «ВетМатематика: вычисли жизнь» на уровне «${level.name}»</div>
+
+          <div class="cert-score">${state.score} баллов</div>
+          <div class="cert-sub">${correctCount} из ${TOTAL_TASKS} задач решены верно · ${percent}% от максимума</div>
+
+          <div class="cert-meta">
+            <div>
+              <div>${today}</div>
+              <div style="margin-top:10px;" class="cert-qr" title="QR на сайт ВетСим"></div>
+            </div>
+            <div class="cert-sign">
+              <div class="line"></div>
+              <div>Команда ВетСим</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('finalArea').innerHTML = finalHTML;
+
+    $('restartBtn').addEventListener('click', () => location.reload());
+    $('certBtn').addEventListener('click', () => {
+      $('certWrap').style.display = 'block';
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      setTimeout(() => window.print(), 400);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  /* ============================================================
+     ЗАПУСК
+     ============================================================ */
+  document.addEventListener('DOMContentLoaded', () => {
+    bindLevelCards();
+    $('startBtn').addEventListener('click', startQuest);
+    $('playerName').addEventListener('keydown', e => {
+      if (e.key === 'Enter') startQuest();
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

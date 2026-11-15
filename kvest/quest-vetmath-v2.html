@@ -273,6 +273,9 @@ body {
 .cert-sign { text-align: right; }
 .cert-sign .line { border-top: 1px solid #0F2A3A; width: 140px; margin: 6px 0 4px; padding-top: 2px; }
 
+/* Класс для скрытия сертификата до нажатия кнопки */
+.hidden-cert { display: none; }
+
 @media (max-width: 640px) {
   body { padding: 10px; }
   .header { padding: 12px 16px; }
@@ -299,15 +302,17 @@ body {
   #screenQuestion,
   footer { display: none !important; }
 
-  /* Оставляем только финальный экран и сертификат */
+  /* Показываем финальный экран и его содержимое */
   #screenFinal { display: block !important; }
+  #finalArea  { display: block !important; }
 
   /* Скрываем всё внутри финала, кроме обёртки сертификата */
   #finalArea > *:not(#certWrap) { display: none !important; }
 
-  /* Показываем сертификат принудительно */
+  /* Принудительно показываем сертификат */
   #certWrap,
-  #certWrap.print-card {
+  #certWrap.print-card,
+  #certWrap.hidden-cert {
     display: block !important;
     border: none !important;
     box-shadow: none !important;
@@ -857,7 +862,7 @@ body {
         <button class="btn btn-gold" id="certBtn">🎓 Скачать сертификат (PDF)</button>
       </div>
 
-      <div class="cert-wrap print-card" id="certWrap" style="display:none;">
+      <div class="cert-wrap print-card hidden-cert" id="certWrap">
         <div class="certificate ${level.certClass}" id="certificate">
           <div class="cert-logo">🐾 ВетСим</div>
           <div class="cert-title">${level.certTitle}</div>
@@ -871,17 +876,17 @@ body {
           <div class="cert-sub">${correctCount} из ${TOTAL_TASKS} задач решены верно · ${percent}% от максимума</div>
 
           <div class="cert-meta">
-  <div>
-    <div>${today}</div>
-    <img src="qr-vetsim.png" alt="QR-код на сайт vetsim.ru"
-         class="cert-qr-img"
-         style="margin-top:10px; width:64px; height:64px; display:block;">
-  </div>
-  <div class="cert-sign">
-    <div class="line"></div>
-    <div>Команда ВетСим</div>
-  </div>
-</div>
+            <div>
+              <div>${today}</div>
+              <img src="qr-vetsim.png" alt="QR-код на сайт vetsim.ru"
+                   class="cert-qr-img"
+                   style="margin-top:10px; width:64px; height:64px; display:block;">
+            </div>
+            <div class="cert-sign">
+              <div class="line"></div>
+              <div>Команда ВетСим</div>
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -889,17 +894,16 @@ body {
     $('finalArea').innerHTML = finalHTML;
 
     $('restartBtn').addEventListener('click', () => location.reload());
-   $('certBtn').addEventListener('click', () => {
-  const wrap = $('certWrap');
-  wrap.style.display = 'block';
-  wrap.classList.add('print-card');
+    $('certBtn').addEventListener('click', () => {
+      const wrap = $('certWrap');
+      wrap.classList.remove('hidden-cert');
+      wrap.classList.add('print-card');
 
-  // дадим браузеру перерисовать
-  requestAnimationFrame(() => {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    setTimeout(() => window.print(), 200);
-  });
-});
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        setTimeout(() => window.print(), 200);
+      });
+    });
   }
 
   function escapeHtml(s) {

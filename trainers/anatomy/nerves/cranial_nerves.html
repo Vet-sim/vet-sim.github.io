@@ -16,7 +16,7 @@
 <!-- /Yandex.Metrika counter -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Черепно-мозговые нервы | 3 этапа | ВетСим</title>
+    <title>Черепно-мозговые нервы | 4 этапа | ВетСим</title>
     <style>
         * {
             margin: 0;
@@ -204,7 +204,7 @@
 <body>
 <div class="container">
     <h1>🧠 Черепно-мозговые нервы (Canis familiaris)</h1>
-    <div class="sub">Тренажёр: номер → русское | русское → латынь | название → тип нерва</div>
+    <div class="sub">Тренажёр: номер → русское | русское → латынь | название → тип | симптом → нерв</div>
 
     <div class="trainer-layout">
         <!-- Левая колонка: анатомический рисунок -->
@@ -218,6 +218,7 @@
                 <button id="stage1Btn" class="stage-btn active">📘 Этап 1: Номер ↔ Русское</button>
                 <button id="stage2Btn" class="stage-btn">📗 Этап 2: Русское ↔ Латынь</button>
                 <button id="stage3Btn" class="stage-btn">🔬 Этап 3: Нерв ↔ Тип</button>
+                <button id="stage4Btn" class="stage-btn">🩺 Этап 4: Симптом ↔ Нерв</button>
             </div>
 
             <div class="progress-info">
@@ -235,47 +236,45 @@
             </div>
         </div>
     </div>
-    <footer>© ВетСим — интерактивная анатомия. CC BY-NC. Три этапа + перемешанные варианты.</footer>
+    <footer>© ВетСим — интерактивная анатомия. CC BY-NC. Четыре этапа + перемешанные варианты.</footer>
 </div>
 
 <script>
     // --------------------------------------------------------------
     // БАЗА ДАННЫХ (12 нервов)
-    // Тип: 'sensory' – чувствительный, 'motor' – двигательный, 'mixed' – смешанный
     // --------------------------------------------------------------
     const nerves = [
-        { id: 1, num: "I", russian: "Обонятельный нерв", latin: "nervus olfactorius", type: "sensory", typeRu: "чувствительный" },
-        { id: 2, num: "II", russian: "Зрительный нерв", latin: "nervus opticus", type: "sensory", typeRu: "чувствительный" },
-        { id: 3, num: "III", russian: "Глазодвигательный нерв", latin: "nervus oculomotorius", type: "motor", typeRu: "двигательный" },
-        { id: 4, num: "IV", russian: "Блоковый нерв", latin: "nervus trochlearis", type: "motor", typeRu: "двигательный" },
-        { id: 5, num: "V", russian: "Тройничный нерв", latin: "nervus trigeminus", type: "mixed", typeRu: "смешанный" },
-        { id: 6, num: "VI", russian: "Отводящий нерв", latin: "nervus abducens", type: "motor", typeRu: "двигательный" },
-        { id: 7, num: "VII", russian: "Лицевой нерв", latin: "nervus facialis", type: "mixed", typeRu: "смешанный" },
-        { id: 8, num: "VIII", russian: "Преддверно-улитковый нерв", latin: "nervus vestibulocochlearis", type: "sensory", typeRu: "чувствительный" },
-        { id: 9, num: "IX", russian: "Языкоглоточный нерв", latin: "nervus glossopharyngeus", type: "mixed", typeRu: "смешанный" },
-        { id: 10, num: "X", russian: "Блуждающий нерв", latin: "nervus vagus", type: "mixed", typeRu: "смешанный" },
-        { id: 11, num: "XI", russian: "Добавочный нерв", latin: "nervus accessorius", type: "motor", typeRu: "двигательный" },
-        { id: 12, num: "XII", russian: "Подъязычный нерв", latin: "nervus hypoglossus", type: "motor", typeRu: "двигательный" }
+        { id: 1, num: "I", russian: "Обонятельный нерв", latin: "nervus olfactorius", type: "sensory", typeRu: "чувствительный", symptom: "Аносмия (потеря нюха). Рутинно не проверяется, но собака может терять интерес к еде." },
+        { id: 2, num: "II", russian: "Зрительный нерв", latin: "nervus opticus", type: "sensory", typeRu: "чувствительный", symptom: "Слепота. Зрачковый рефлекс отсутствует (поражение афферентной части)." },
+        { id: 3, num: "III", russian: "Глазодвигательный нерв", latin: "nervus oculomotorius", type: "motor", typeRu: "двигательный", symptom: "Птоз, мидриаз, вентролатеральный страбизм (косоглазие)." },
+        { id: 4, num: "IV", russian: "Блоковый нерв", latin: "nervus trochlearis", type: "motor", typeRu: "двигательный", symptom: "Изолированное поражение выявить сложно. Чаще входит в синдром кавернозного синуса (с III и VI)." },
+        { id: 5, num: "V", russian: "Тройничный нерв", latin: "nervus trigeminus", type: "mixed", typeRu: "смешанный", symptom: "Атрофия жевательных мышц, выпадение роговичного рефлекса, свисание челюсти (при двустороннем поражении)." },
+        { id: 6, num: "VI", russian: "Отводящий нерв", latin: "nervus abducens", type: "motor", typeRu: "двигательный", symptom: "Медиальный страбизм (сходящееся косоглазие) — глаз не отводится кнаружи." },
+        { id: 7, num: "VII", russian: "Лицевой нерв", latin: "nervus facialis", type: "mixed", typeRu: "смешанный", symptom: "Асимметрия морды, лагофтальм, свисание губы, слюнотечение." },
+        { id: 8, num: "VIII", russian: "Преддверно-улитковый нерв", latin: "nervus vestibulocochlearis", type: "sensory", typeRu: "чувствительный", symptom: "Глухота, наклон головы, нистагм, атаксия. При периферическом поражении парезов конечностей нет." },
+        { id: 9, num: "IX", russian: "Языкоглоточный нерв", latin: "nervus glossopharyngeus", type: "mixed", typeRu: "смешанный", symptom: "Дисфагия, потеря глоточного рефлекса. Часто поражается вместе с X (синдром яремного отверстия)." },
+        { id: 10, num: "X", russian: "Блуждающий нерв", latin: "nervus vagus", type: "mixed", typeRu: "смешанный", symptom: "Дисфония/афония, мегаэзофагус, регургитация, нарушения сердечного ритма." },
+        { id: 11, num: "XI", russian: "Добавочный нерв", latin: "nervus accessorius", type: "motor", typeRu: "двигательный", symptom: "Атрофия трапециевидной мышцы. У собак выявить сложно из-за рудиментарности мышц." },
+        { id: 12, num: "XII", russian: "Подъязычный нерв", latin: "nervus hypoglossus", type: "motor", typeRu: "двигательный", symptom: "Атрофия языка, отклонение языка в сторону поражения при высушивании." }
     ];
 
-    let currentStage = 1;              // 1, 2 или 3
-    // Ответы: для каждого этапа массив из 12 значений (индекс выбранного варианта из перемешанного списка)
+    let currentStage = 1;              // 1, 2, 3 или 4
     let userAnswersStage1 = new Array(12).fill(null);
     let userAnswersStage2 = new Array(12).fill(null);
     let userAnswersStage3 = new Array(12).fill(null);
+    let userAnswersStage4 = new Array(12).fill(null);
 
-    // Перемешанные индексы для вариантов
-    let shuffledRussianIndices = [];    // для этапа 1 (русские названия)
-    let shuffledLatinIndices = [];      // для этапа 2 (латинские названия)
-    let shuffledTypeIndices = [];       // для этапа 3 (типы: чувствительный/двигательный/смешанный)
-    // варианты типов (3 штуки)
+    let shuffledRussianIndices = [];
+    let shuffledLatinIndices = [];
+    let shuffledTypeIndices = [];
+    let shuffledSymptomIndices = []; // для этапа 4 (порядок симптомов)
+    
     const typeOptions = [
         { value: "sensory", label: "чувствительный" },
         { value: "motor", label: "двигательный" },
         { value: "mixed", label: "смешанный" }
     ];
 
-    // Перемешивание массива (Fisher-Yates)
     function shuffleArray(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -284,17 +283,14 @@
         return arr;
     }
 
-    // Инициализация перемешанных списков (вызывается один раз при загрузке)
     function initShuffled() {
         let indices12 = [...Array(12).keys()];
         shuffledRussianIndices = shuffleArray([...indices12]);
         shuffledLatinIndices = shuffleArray([...indices12]);
-        // Для типа: 12 элементов, каждый – случайный порядок из трёх типов? Нет, нужно для каждого нерва предоставить перемешанные варианты типов (одинаковые для всех строк, но случайный порядок)
-        // Проще: создать один массив из трёх объектов (sensory, motor, mixed) и перемешать его один раз – он будет одинаков для всех строк.
-        shuffledTypeIndices = shuffleArray([0,1,2]); // индексы typeOptions
+        shuffledTypeIndices = shuffleArray([0,1,2]);
+        shuffledSymptomIndices = shuffleArray([...indices12]); // порядок симптомов
     }
 
-    // Подсчёт правильных ответов для текущего этапа
     function countCorrect() {
         let correct = 0;
         if (currentStage === 1) {
@@ -307,10 +303,15 @@
                 let selected = userAnswersStage2[i];
                 if (selected !== null && nerves[selected].latin === nerves[i].latin) correct++;
             }
-        } else { // stage 3
+        } else if (currentStage === 3) {
             for (let i = 0; i < 12; i++) {
                 let selected = userAnswersStage3[i];
                 if (selected !== null && typeOptions[selected].value === nerves[i].type) correct++;
+            }
+        } else { // stage 4
+            for (let i = 0; i < 12; i++) {
+                let selected = userAnswersStage4[i];
+                if (selected !== null && nerves[selected].id === nerves[i].id) correct++;
             }
         }
         return correct;
@@ -321,7 +322,6 @@
         document.getElementById('progressText').innerHTML = `✅ Правильных ответов: ${correct} / 12`;
     }
 
-    // Подсветка строки (зелёная, если ответ верен)
     function highlightRow(rowDiv, nerveIdx) {
         let isCorrect = false;
         if (currentStage === 1) {
@@ -330,29 +330,31 @@
         } else if (currentStage === 2) {
             let selected = userAnswersStage2[nerveIdx];
             if (selected !== null && nerves[selected] && nerves[selected].latin === nerves[nerveIdx].latin) isCorrect = true;
-        } else {
+        } else if (currentStage === 3) {
             let selected = userAnswersStage3[nerveIdx];
             if (selected !== null && typeOptions[selected].value === nerves[nerveIdx].type) isCorrect = true;
+        } else {
+            let selected = userAnswersStage4[nerveIdx];
+            if (selected !== null && nerves[selected] && nerves[selected].id === nerves[nerveIdx].id) isCorrect = true;
         }
+        
         const existingBadge = rowDiv.querySelector('.correct-badge');
         if (existingBadge) existingBadge.remove();
         rowDiv.style.backgroundColor = isCorrect ? '#F1F9EE' : '#FEFCF9';
         rowDiv.style.borderLeft = isCorrect ? '4px solid #7CA86A' : '1px solid #E2EAD9';
-        if (isCorrect && !rowDiv.querySelector('.correct-badge')) {
+        if (isCorrect) {
             const badge = document.createElement('span');
             badge.className = 'correct-badge';
             badge.textContent = '✓ верно';
             rowDiv.appendChild(badge);
-        } else if (!isCorrect && existingBadge) existingBadge.remove();
+        }
     }
 
-    // Рендер текущего этапа
     function renderGame() {
         const container = document.getElementById('pairsList');
         container.innerHTML = '';
 
         if (currentStage === 1) {
-            // Левая колонка – номер (I, II...), справа – перемешанные русские названия
             for (let i = 0; i < nerves.length; i++) {
                 const nerve = nerves[i];
                 const rowDiv = document.createElement('div');
@@ -382,8 +384,7 @@
                 selectEl.addEventListener('change', (e) => {
                     const selectedIdx = parseInt(e.target.value);
                     const nerveIdx = parseInt(selectEl.getAttribute('data-idx'));
-                    if (isNaN(selectedIdx)) userAnswersStage1[nerveIdx] = null;
-                    else userAnswersStage1[nerveIdx] = selectedIdx;
+                    userAnswersStage1[nerveIdx] = isNaN(selectedIdx) ? null : selectedIdx;
                     updateProgressDisplay();
                     highlightRow(rowDiv, nerveIdx);
                 });
@@ -395,7 +396,6 @@
             }
         } 
         else if (currentStage === 2) {
-            // Левая колонка – русское название, справа – перемешанные латинские
             for (let i = 0; i < nerves.length; i++) {
                 const nerve = nerves[i];
                 const rowDiv = document.createElement('div');
@@ -425,8 +425,7 @@
                 selectEl.addEventListener('change', (e) => {
                     const selectedIdx = parseInt(e.target.value);
                     const nerveIdx = parseInt(selectEl.getAttribute('data-idx'));
-                    if (isNaN(selectedIdx)) userAnswersStage2[nerveIdx] = null;
-                    else userAnswersStage2[nerveIdx] = selectedIdx;
+                    userAnswersStage2[nerveIdx] = isNaN(selectedIdx) ? null : selectedIdx;
                     updateProgressDisplay();
                     highlightRow(rowDiv, nerveIdx);
                 });
@@ -437,9 +436,7 @@
                 highlightRow(rowDiv, i);
             }
         }
-        else { // Stage 3 – тип нерва
-            // Левая колонка – отображаем "I – Обонятельный нерв" (номер + русское название)
-            // Справа – выпадающий список типов (чувствительный, двигательный, смешанный) в случайном порядке (одинаковом для всех строк)
+        else if (currentStage === 3) {
             for (let i = 0; i < nerves.length; i++) {
                 const nerve = nerves[i];
                 const rowDiv = document.createElement('div');
@@ -458,7 +455,6 @@
                 defaultOpt.textContent = '— выберите тип нерва —';
                 selectEl.appendChild(defaultOpt);
 
-                // shuffledTypeIndices – массив [0,1,2] в случайном порядке
                 for (let ti of shuffledTypeIndices) {
                     const opt = document.createElement('option');
                     opt.value = ti;
@@ -470,8 +466,7 @@
                 selectEl.addEventListener('change', (e) => {
                     const selectedIdx = parseInt(e.target.value);
                     const nerveIdx = parseInt(selectEl.getAttribute('data-idx'));
-                    if (isNaN(selectedIdx)) userAnswersStage3[nerveIdx] = null;
-                    else userAnswersStage3[nerveIdx] = selectedIdx;
+                    userAnswersStage3[nerveIdx] = isNaN(selectedIdx) ? null : selectedIdx;
                     updateProgressDisplay();
                     highlightRow(rowDiv, nerveIdx);
                 });
@@ -482,41 +477,89 @@
                 highlightRow(rowDiv, i);
             }
         }
+        else { // Stage 4 – Симптом -> Нерв
+            // Идем по перемешанным индексам симптомов, но для проверки сохраняем исходный индекс нерва
+            for (let idx of shuffledSymptomIndices) {
+                const nerve = nerves[idx]; // idx - это исходный индекс нерва, у которого берем симптом
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'pair-row';
+                rowDiv.style.flexDirection = 'column';
+                rowDiv.style.alignItems = 'flex-start';
+
+                const symptomSpan = document.createElement('div');
+                symptomSpan.style.fontSize = '0.9rem';
+                symptomSpan.style.marginBottom = '8px';
+                symptomSpan.style.width = '100%';
+                symptomSpan.textContent = `Симптом: ${nerve.symptom}`;
+
+                const selectEl = document.createElement('select');
+                selectEl.className = 'pair-right-select';
+                selectEl.setAttribute('data-idx', idx); // индекс нерва
+                selectEl.style.width = '100%';
+
+                const defaultOpt = document.createElement('option');
+                defaultOpt.value = '';
+                defaultOpt.textContent = '— выберите нерв (I–XII) —';
+                selectEl.appendChild(defaultOpt);
+
+                // 12 вариантов: I – Обонятельный, II – Зрительный и т.д. (перемешаны)
+                let nerveIndices = [...Array(12).keys()];
+                shuffleArray(nerveIndices); // перемешать
+                for (let nIdx of nerveIndices) {
+                    const n = nerves[nIdx];
+                    const opt = document.createElement('option');
+                    opt.value = nIdx;
+                    opt.textContent = `${n.num} – ${n.russian}`;
+                    if (userAnswersStage4[idx] === nIdx) opt.selected = true;
+                    selectEl.appendChild(opt);
+                }
+
+                selectEl.addEventListener('change', (e) => {
+                    const selectedNerveIdx = parseInt(e.target.value);
+                    userAnswersStage4[idx] = isNaN(selectedNerveIdx) ? null : selectedNerveIdx;
+                    updateProgressDisplay();
+                    highlightRow(rowDiv, idx); // highlightRow ожидает исходный idx нерва
+                });
+
+                rowDiv.appendChild(symptomSpan);
+                rowDiv.appendChild(selectEl);
+                container.appendChild(rowDiv);
+                highlightRow(rowDiv, idx);
+            }
+        }
         updateProgressDisplay();
     }
 
-    // Сброс текущего этапа
     function resetCurrentStage() {
         if (currentStage === 1) userAnswersStage1.fill(null);
         else if (currentStage === 2) userAnswersStage2.fill(null);
-        else userAnswersStage3.fill(null);
+        else if (currentStage === 3) userAnswersStage3.fill(null);
+        else userAnswersStage4.fill(null);
         renderGame();
     }
 
-    // Переключение этапа
     function setStage(stage) {
         currentStage = stage;
         document.getElementById('stage1Btn').classList.toggle('active', stage === 1);
         document.getElementById('stage2Btn').classList.toggle('active', stage === 2);
         document.getElementById('stage3Btn').classList.toggle('active', stage === 3);
+        document.getElementById('stage4Btn').classList.toggle('active', stage === 4);
         renderGame();
     }
 
-    // Экспорт текущего документа в отдельный HTML-файл (сохранить как тренажёр)
     function exportStandalone() {
         const htmlContent = document.documentElement.outerHTML;
         const blob = new Blob([htmlContent], { type: 'text/html' });
         const link = document.createElement('a');
         const url = URL.createObjectURL(blob);
         link.href = url;
-        link.download = 'cranial_nerves_3stages.html';
+        link.download = 'cranial_nerves_4stages.html';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
     }
 
-    // Загрузка пользовательского изображения (двойной клик)
     const brainImg = document.getElementById('brainImage');
     brainImg.addEventListener('dblclick', () => {
         const input = document.createElement('input');
@@ -533,14 +576,13 @@
         input.click();
     });
 
-    // Инициализация
     initShuffled();
     renderGame();
 
-    // Обработчики кнопок
     document.getElementById('stage1Btn').addEventListener('click', () => setStage(1));
     document.getElementById('stage2Btn').addEventListener('click', () => setStage(2));
     document.getElementById('stage3Btn').addEventListener('click', () => setStage(3));
+    document.getElementById('stage4Btn').addEventListener('click', () => setStage(4));
     document.getElementById('resetGameBtn').addEventListener('click', () => resetCurrentStage());
     document.getElementById('exportBtn').addEventListener('click', () => exportStandalone());
 </script>

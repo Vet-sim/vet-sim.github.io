@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Рабочая тетрадь по латинскому языку в ветеринарии — интерактивная версия</title>
+  <style>
+    :root {
+      --primary: #2c5e3a;
+      --primary-light: #e8f0ea;
+      --accent: #b8860b;
+      --bg: #f9faf7;
+      --card: #ffffff;
+      --border: #d0d7cc;
+      --text: #1e2b22;
+      --error: #c0392b;
+      --success: #27ae60;
+      --warning: #e67e22;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', 'PT Sans', Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    header {
+      background: var(--primary);
+      color: #fff;
+      padding: 1.8rem 2rem;
+      border-radius: 14px;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    header h1 { font-size: 1.8rem; font-weight: 600; letter-spacing: 0.3px; }
+    header .subtitle { font-size: 1rem; opacity: 0.9; margin-top: 0.3rem; }
+    header .authorship { font-size: 0.85rem; opacity: 0.75; margin-top: 0.8rem; font-style: italic; }
+    .badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+    .topic-card {
+      background: var(--card);
+      border-radius: 14px;
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-left: 5px solid var(--primary);
+    }
+    .topic-card h2 {
+      font-size: 1.35rem;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .topic-card h2 .bloom {
+      font-size: 0.7rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .topic-desc {
+      font-size: 0.9rem;
+      color: #5a6b5e;
+      margin-bottom: 1.2rem;
+      font-style: italic;
+    }
+    .task {
+      background: #fdfdfd;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.2rem;
+    }
+    .task-title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .task-title .num {
+      background: var(--primary);
+      color: #fff;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.8rem 0;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.6rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(44,94,58,0.15);
+    }
+    input.correct { border-color: var(--success); background: #eafaf1; }
+    input.incorrect { border-color: var(--error); background: #fdedec; }
+    textarea { min-height: 60px; resize: vertical; }
+    .btn-check {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 0.5rem;
+    }
+    .btn-check:hover { background: #1f4629; }
+    .btn-check:active { transform: scale(0.97); }
+    .btn-reset {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 0.4rem 1rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      margin-left: 0.5rem;
+      transition: background 0.2s;
+    }
+    .btn-reset:hover { background: var(--primary-light); }
+    .feedback {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      min-height: 1.2em;
+    }
+    .feedback.ok { color: var(--success); }
+    .feedback.err { color: var(--error); }
+    .feedback.partial { color: var(--warning); }
+    .inline-input {
+      display: inline-block;
+      width: 120px;
+      margin: 0 4px;
+    }
+    .inline-input-wide { width: 200px; }
+    .word-bank {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin: 0.6rem 0;
+      padding: 0.6rem;
+      background: #f3f6f2;
+      border-radius: 8px;
+      font-size: 0.85rem;
+    }
+    .word-bank span {
+      background: #fff;
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+    }
+    .transcription-cell input { width: 100%; }
+    .hint {
+      font-size: 0.8rem;
+      color: #7a8a7e;
+      margin-top: 0.3rem;
+    }
+    .score-summary {
+      background: var(--primary-light);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .score-summary .total {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+    .progress-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      flex: 1;
+      min-width: 150px;
+    }
+    .progress-bar .fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.4s ease;
+      border-radius: 4px;
+    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+    .decl-table td { text-align: center; }
+    .decl-table input { text-align: center; }
+    .author-note {
+      background: #fff8e7;
+      border-left: 4px solid var(--accent);
+      padding: 1rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+    }
+    .author-note strong { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Рабочая тетрадь <span class="badge">интерактивная</span></h1>
+  <div class="subtitle">для самостоятельной работы студентов специальности 36.02.01 «Ветеринария» по дисциплине «Латинский язык в ветеринарии»</div>
+  <div class="authorship">Автор-составитель: Копосова Елена Николаевна, БПОУ ВО «Великоустюгский многопрофильный колледж»</div>
+</header>
+
+<div class="author-note">
+  <strong>Уважаемый студент!</strong> Заполняйте поля и нажимайте «Проверить» после каждого задания. Система покажет правильные ответы и подсветит ошибки. В конце страницы отображается общий прогресс. Работайте последовательно: от знания терминов к их применению в рецептуре. Удачи!
+</div>
+
+<!-- ==================== ТЕМА 1. ФОНЕТИКА ==================== -->
+<div class="topic-card">
+  <h2>Тема 1. Фонетика <span class="bloom">Знание → Понимание</span></h2>
+  <div class="topic-desc">Латинский алфавит, гласные, дифтонги, правила чтения буквосочетаний, долгота и краткость слогов, ударение.</div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">1</span> Латинский алфавит (знание)</div>
+    <p>Заполните названия букв латинского алфавита.</p>
+    <table>
+      <tr><th>Буква</th><th>Название</th><th>Буква</th><th>Название</th></tr>
+      <tr><td>A a</td><td><input type="text" data-answer="а" placeholder="..."></td><td>N n</td><td><input type="text" data-answer="эн" placeholder="..."></td></tr>
+      <tr><td>B b</td><td><input type="text" data-answer="бэ" placeholder="..."></td><td>O o</td><td><input type="text" data-answer="о" placeholder="..."></td></tr>
+      <tr><td>C c</td><td><input type="text" data-answer="цэ" placeholder="..."></td><td>P p</td><td><input type="text" data-answer="пэ" placeholder="..."></td></tr>
+      <tr><td>D d</td><td><input type="text" data-answer="дэ" placeholder="..."></td><td>Q q</td><td><input type="text" data-answer="ку" placeholder="..."></td></tr>
+      <tr><td>E e</td><td><input type="text" data-answer="э" placeholder="..."></td><td>R r</td><td><input type="text" data-answer="эр" placeholder="..."></td></tr>
+      <tr><td>F f</td><td><input type="text" data-answer="эф" placeholder="..."></td><td>S s</td><td><input type="text" data-answer="эс" placeholder="..."></td></tr>
+      <tr><td>G g</td><td><input type="text" data-answer="гэ" placeholder="..."></td><td>T t</td><td><input type="text" data-answer="тэ" placeholder="..."></td></tr>
+      <tr><td>H h</td><td><input type="text" data-answer="ха" placeholder="..."></td><td>U u</td><td><input type="text" data-answer="у" placeholder="..."></td></tr>
+      <tr><td>I i</td><td><input type="text" data-answer="и" placeholder="..."></td><td>V v</td><td><input type="text" data-answer="вэ" placeholder="..."></td></tr>
+      <tr><td>J j</td><td><input type="text" data-answer="йота" placeholder="..."></td><td>X x</td><td><input type="text" data-answer="икс" placeholder="..."></td></tr>
+      <tr><td>K k</td><td><input type="text" data-answer="ка" placeholder="..."></td><td>Y y</td><td><input type="text" data-answer="ипсилон" placeholder="..."></td></tr>
+      <tr><td>L l</td><td><input type="text" data-answer="эль" placeholder="..."></td><td>Z z</td><td><input type="text" data-answer="зэта" placeholder="..."></td></tr>
+      <tr><td>M m</td><td><input type="text" data-answer="эм" placeholder="..."></td><td></td><td></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">2</span> Гласные и дифтонги (знание)</div>
+    <p>Запишите все гласные буквы латинского алфавита (через запятую):</p>
+    <input type="text" data-answer="a,e,i,o,u,y" placeholder="например: a, e, i, ..." class="inline-input-wide">
+    <div class="hint">Подсказка: их шесть.</div>
+    <p style="margin-top:0.8rem;">Перечислите дифтонги (через запятую):</p>
+    <input type="text" data-answer="ae,oe,au,eu" placeholder="например: ae, oe, ..." class="inline-input-wide">
+    <div class="hint">Подсказка: четыре основных дифтонга.</div>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">3</span> Дифтонги: распределение и транскрипция (понимание → применение)</div>
+    <p>Распределите слова по столбцам в зависимости от дифтонга и запишите транскрипцию (русскими буквами, например: [лэзио]).</p>
+    <div class="word-bank">
+      <span>laesio</span><span>aurum</span><span>foetus</span><span>aër</span><span>taurus</span><span>leukaemia</span><span>vaccae</span><span>oedema</span><span>costae</span><span>aloë</span><span>haematoma</span><span>auscultatio</span><span>roentgenologia</span><span>cauterisatio</span><span>pnoë</span><span>achylia</span><span>apnoë</span><span>diploë</span><span>caulis</span><span>anaemia</span><span>pleura</span><span>gangraena</span><span>oesophagus</span><span>trauma</span><span>pneumonia</span>
+    </div>
+    <table>
+      <tr><th>ae</th><th>eu</th><th>oe</th><th>oë / aë (раздельное чтение)</th></tr>
+      <tr>
+        <td><textarea data-answer="laesio [лэзио], vaccae [вакцэ], costae [костэ], anaemia [анэмиа], gangraena [гангрэнa]" placeholder="слово [транскрипция]"></textarea></td>
+        <td><textarea data-answer="leukaemia [леукемиа], pleura [плеура], pneumonia [пнеумониа]" placeholder="слово [транскрипция]"></textarea></td>
+        <td><textarea data-answer="foetus [фётус], oedema [ёдэма], roentgenologia [рёнтгенологиа], oesophagus [ёзофагус]" placeholder="слово [транскрипция]"></textarea></td>
+        <td><textarea data-answer="aër [аэр], aloë [алоэ], pnoë [пноэ], apnoë [апноэ], diploë [диплоэ]" placeholder="слово [транскрипция]"></textarea></td>
+      </tr>
+    </table>
+    <div class="hint">Внимание: слова aurum, taurus, auscultatio, cauterisatio, caulis, trauma содержат au — это не дифтонг, а сочетание гласных; их можно не вносить.</div>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">4</span> Правила чтения ti, s, ch, ph, th, rh (знание → применение)</div>
+    <p>Распределите слова по колонкам в соответствии с произношением буквосочетаний. Запишите транскрипцию.</p>
+    <div class="word-bank">
+      <span>Solutio</span><span>rheumatismus</span><span>intestinum</span><span>morphinum</span><span>rhizoma</span><span>thromboembolia</span><span>cachexia</span><span>phalanx</span><span>typhus</span><span>functio</span><span>rachitis</span><span>auscultatio</span><span>combustio</span><span>mentha</span><span>diaphragma</span><span>ethmoidalis</span><span>zygomaticus</span><span>lymphaticus</span><span>vitium</span><span>destillatus</span><span>gingivitis</span><span>pharynx</span><span>erythema</span><span>cholera</span><span>sphincter</span><span>emphysema</span><span>chininum</span><span>atrophia</span><span>pharmaceuta</span>
+    </div>
+    <table>
+      <tr><th>Ti [ци]</th><th>Ti [ти]</th><th>Ch [х]</th><th>Ph [ф]</th><th>Th [т]</th><th>Rh [р]</th></tr>
+      <tr>
+        <td><textarea data-answer="Solutio [сольуцио], functio [функцио], auscultatio [аускультацио], combustio [комбустио], vitium [вициум]" placeholder="слово [транскрипция]"></textarea></td>
+        <td><textarea data-answer="intestinum [интэстинум], typhus [тифус], rachitis [рахитис], zygomaticus [зигоматикус], lymphaticus [лимфатикус], destillatus [дэстиллятус]" placeholder="слово [транскрипция]"></textarea></td>
+        <td><textarea data-answer="cachexia [кахексия], phalanx [фаланкс], cholera [холера], chininum [хининум]" placeholder="слово [транскрипция]"></textarea></td>
+        <td><textarea data-answer="morphinum [морфинум], phalanx [фаланкс], diaphragma [диафрагма], pharynx [фаринкс], emphysema [эмфизема], atrophia [атрофиа], pharmaceuta [фармацевта]" placeholder="слово [транскрипция]"></textarea></td>
+        <td><textarea data-answer="thromboembolia [тромбоэмболиа], typhus [тифус], mentha [мэнта], erythema [эритэма]" placeholder="слово [транскрипция]"></textarea></td>
+        <td><textarea data-answer="rheumatismus [рэвматизмус], rhizoma [ризома], rachitis [рахитис]" placeholder="слово [транскрипция]"></textarea></td>
+      </tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">5</span> Долгота и краткость слогов, ударение (понимание → применение)</div>
+    <p>Перечислите основные правила долготы (не менее 4):</p>
+    <textarea data-answer="1. Гласный перед двумя и более согласными — долгий. 2. Гласный перед x, z — долгий. 3. Дифтонги ae, oe, au, eu — долгие. 4. Гласный перед суффиксами -al-, -ar-, -at-, -iv-, -os-, -ur- — долгий." placeholder="1. ...&#10;2. ..."></textarea>
+    <p style="margin-top:0.6rem;">Перечислите основные правила краткости (не менее 4):</p>
+    <textarea data-answer="1. Гласный перед другим гласным — краткий. 2. Гласный перед h — краткий. 3. Гласный перед сочетанием muta cum liquida (b/p/d/t/g/c + l/r) — краткий. 4. Гласный в суффиксах -ic-, -ol-, -ul- — краткий." placeholder="1. ...&#10;2. ..."></textarea>
+    <p style="margin-top:0.6rem;">Перечислите правила постановки ударения:</p>
+    <textarea data-answer="1. Ударение никогда не ставится на последний слог. 2. В двусложных словах ударение падает на первый слог. 3. В многосложных словах ударение падает на предпоследний слог, если он долгий. 4. Если предпоследний слог краткий, ударение переносится на третий слог от конца." placeholder="1. ...&#10;2. ..."></textarea>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">6</span> Расстановка ударения (применение)</div>
+    <p>Выделите долготу/краткость и поставьте ударение (запишите слово с ударением, например: fíbula).</p>
+    <table>
+      <tr><th>Слово</th><th>С ударением</th><th>Слово</th><th>С ударением</th></tr>
+      <tr><td>Fibula</td><td><input type="text" data-answer="fíbula" placeholder="..."></td><td>Atlas</td><td><input type="text" data-answer="átlas" placeholder="..."></td></tr>
+      <tr><td>Glandula</td><td><input type="text" data-answer="glándula" placeholder="..."></td><td>Lumbalis</td><td><input type="text" data-answer="lumbális" placeholder="..."></td></tr>
+      <tr><td>Ulna</td><td><input type="text" data-answer="úlna" placeholder="..."></td><td>Valva</td><td><input type="text" data-answer="válva" placeholder="..."></td></tr>
+      <tr><td>Pelvis</td><td><input type="text" data-answer="pélvis" placeholder="..."></td><td>Palpebra</td><td><input type="text" data-answer="pálpebra" placeholder="..."></td></tr>
+      <tr><td>Mandibula</td><td><input type="text" data-answer="mandíbula" placeholder="..."></td><td>Lobus</td><td><input type="text" data-answer="lóbus" placeholder="..."></td></tr>
+      <tr><td>Palatinus</td><td><input type="text" data-answer="palatínus" placeholder="..."></td><td>Longitudinalis</td><td><input type="text" data-answer="longitudinális" placeholder="..."></td></tr>
+      <tr><td>Flavus</td><td><input type="text" data-answer="flávus" placeholder="..."></td><td>Lateralis</td><td><input type="text" data-answer="laterális" placeholder="..."></td></tr>
+      <tr><td>Inferior</td><td><input type="text" data-answer="inférior" placeholder="..."></td><td>Iliacus</td><td><input type="text" data-answer="ilíacus" placeholder="..."></td></tr>
+      <tr><td>Jugularis</td><td><input type="text" data-answer="juguláris" placeholder="..."></td><td>Jugum</td><td><input type="text" data-answer="júgum" placeholder="..."></td></tr>
+      <tr><td>Jejunum</td><td><input type="text" data-answer="jejúnum" placeholder="..."></td><td>Junctura</td><td><input type="text" data-answer="junctúra" placeholder="..."></td></tr>
+      <tr><td>Iodum</td><td><input type="text" data-answer="iódum" placeholder="..."></td><td>Iater</td><td><input type="text" data-answer="íater" placeholder="..."></td></tr>
+      <tr><td>Canális palatinus major</td><td><input type="text" data-answer="canális palatínus major" placeholder="..."></td><td>Tuberculum majus</td><td><input type="text" data-answer="tubérculum május" placeholder="..."></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== ТЕМА 2. СКЛОНЕНИЯ ==================== -->
+<div class="topic-card">
+  <h2>Тема 2. Система латинских склонений <span class="bloom">Знание → Понимание → Применение</span></h2>
+  <div class="topic-desc">1-е и 2-е склонения существительных и прилагательных, падежные окончания, согласование прилагательных с существительными.</div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">1</span> Практическая основа существительного (знание)</div>
+    <p>Дополните определение:</p>
+    <p>Практическая основа существительного — это <input type="text" data-answer="основа, выделяемая по форме родительного падежа единственного числа путем отбрасывания падежного окончания" placeholder="..." class="inline-input-wide" style="width:100%;"></p>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">2</span> Падежные окончания 1-го склонения (знание)</div>
+    <table class="decl-table">
+      <tr><th></th><th>Ед. число</th><th>Мн. число</th></tr>
+      <tr><td>Именительный падеж</td><td><input type="text" data-answer="-a" placeholder="..."></td><td><input type="text" data-answer="-ae" placeholder="..."></td></tr>
+      <tr><td>Родительный падеж</td><td><input type="text" data-answer="-ae" placeholder="..."></td><td><input type="text" data-answer="-arum" placeholder="..."></td></tr>
+      <tr><td>Дательный падеж</td><td><input type="text" data-answer="-ae" placeholder="..."></td><td><input type="text" data-answer="-is" placeholder="..."></td></tr>
+      <tr><td>Винительный падеж</td><td><input type="text" data-answer="-am" placeholder="..."></td><td><input type="text" data-answer="-as" placeholder="..."></td></tr>
+      <tr><td>Творительный падеж</td><td><input type="text" data-answer="-a" placeholder="..."></td><td><input type="text" data-answer="-is" placeholder="..."></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">3</span> Склонение в единственном числе (применение)</div>
+    <p>Просклоняйте существительные 1-го склонения в единственном числе.</p>
+    <table class="decl-table">
+      <tr><th>Падеж</th><th>tinctura (настойка)</th><th>lingua (язык)</th><th>aqua (вода)</th><th>scapula (лопатка)</th></tr>
+      <tr><td>Nom.</td><td><input type="text" data-answer="tinctura"></td><td><input type="text" data-answer="lingua"></td><td><input type="text" data-answer="aqua"></td><td><input type="text" data-answer="scapula"></td></tr>
+      <tr><td>Gen.</td><td><input type="text" data-answer="tincturae"></td><td><input type="text" data-answer="linguae"></td><td><input type="text" data-answer="aquae"></td><td><input type="text" data-answer="scapulae"></td></tr>
+      <tr><td>Dat.</td><td><input type="text" data-answer="tincturae"></td><td><input type="text" data-answer="linguae"></td><td><input type="text" data-answer="aquae"></td><td><input type="text" data-answer="scapulae"></td></tr>
+      <tr><td>Acc.</td><td><input type="text" data-answer="tincturam"></td><td><input type="text" data-answer="linguam"></td><td><input type="text" data-answer="aquam"></td><td><input type="text" data-answer="scapulam"></td></tr>
+      <tr><td>Abl.</td><td><input type="text" data-answer="tinctura"></td><td><input type="text" data-answer="lingua"></td><td><input type="text" data-answer="aqua"></td><td><input type="text" data-answer="scapula"></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">4</span> Склонение во множественном числе (применение)</div>
+    <p>Просклоняйте существительные 1-го склонения во множественном числе.</p>
+    <table class="decl-table">
+      <tr><th>Падеж</th><th>fractura (перелом)</th><th>gutta (капля)</th><th>pilula (пилюля)</th><th>natura (природа)</th></tr>
+      <tr><td>Nom.</td><td><input type="text" data-answer="fracturae"></td><td><input type="text" data-answer="guttae"></td><td><input type="text" data-answer="pilulae"></td><td><input type="text" data-answer="naturae"></td></tr>
+      <tr><td>Gen.</td><td><input type="text" data-answer="fracturarum"></td><td><input type="text" data-answer="guttarum"></td><td><input type="text" data-answer="pilularum"></td><td><input type="text" data-answer="naturarum"></td></tr>
+      <tr><td>Dat.</td><td><input type="text" data-answer="fracturis"></td><td><input type="text" data-answer="guttis"></td><td><input type="text" data-answer="pilulis"></td><td><input type="text" data-answer="naturis"></td></tr>
+      <tr><td>Acc.</td><td><input type="text" data-answer="fracturas"></td><td><input type="text" data-answer="guttas"></td><td><input type="text" data-answer="pilulas"></td><td><input type="text" data-answer="naturas"></td></tr>
+      <tr><td>Abl.</td><td><input type="text" data-answer="fracturis"></td><td><input type="text" data-answer="guttis"></td><td><input type="text" data-answer="pilulis"></td><td><input type="text" data-answer="naturis"></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">5</span> Падежные окончания 2-го склонения (знание)</div>
+    <table class="decl-table">
+      <tr><th rowspan="2"></th><th colspan="2">Ед. число</th><th colspan="2">Мн. число</th></tr>
+      <tr><th>м.р.</th><th>ср.р.</th><th>м.р.</th><th>ср.р.</th></tr>
+      <tr><td>Nom.</td><td><input type="text" data-answer="-us/-er/-ir"></td><td><input type="text" data-answer="-um"></td><td><input type="text" data-answer="-i"></td><td><input type="text" data-answer="-a"></td></tr>
+      <tr><td>Gen.</td><td><input type="text" data-answer="-i"></td><td><input type="text" data-answer="-i"></td><td><input type="text" data-answer="-orum"></td><td><input type="text" data-answer="-orum"></td></tr>
+      <tr><td>Dat.</td><td><input type="text" data-answer="-o"></td><td><input type="text" data-answer="-o"></td><td><input type="text" data-answer="-is"></td><td><input type="text" data-answer="-is"></td></tr>
+      <tr><td>Acc.</td><td><input type="text" data-answer="-um"></td><td><input type="text" data-answer="-um"></td><td><input type="text" data-answer="-os"></td><td><input type="text" data-answer="-a"></td></tr>
+      <tr><td>Abl.</td><td><input type="text" data-answer="-o"></td><td><input type="text" data-answer="-o"></td><td><input type="text" data-answer="-is"></td><td><input type="text" data-answer="-is"></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">6</span> Склонение 2-го склонения (применение)</div>
+    <p><strong>Единственное число:</strong></p>
+    <table class="decl-table">
+      <tr><th>Падеж</th><th>musculus (мышца)</th><th>oculus (глаз)</th><th>morbus (болезнь)</th><th>nervus (нерв)</th></tr>
+      <tr><td>Nom.</td><td><input type="text" data-answer="musculus"></td><td><input type="text" data-answer="oculus"></td><td><input type="text" data-answer="morbus"></td><td><input type="text" data-answer="nervus"></td></tr>
+      <tr><td>Gen.</td><td><input type="text" data-answer="musculi"></td><td><input type="text" data-answer="oculi"></td><td><input type="text" data-answer="morbi"></td><td><input type="text" data-answer="nervi"></td></tr>
+      <tr><td>Dat.</td><td><input type="text" data-answer="musculo"></td><td><input type="text" data-answer="oculo"></td><td><input type="text" data-answer="morbo"></td><td><input type="text" data-answer="nervo"></td></tr>
+      <tr><td>Acc.</td><td><input type="text" data-answer="musculum"></td><td><input type="text" data-answer="oculum"></td><td><input type="text" data-answer="morbum"></td><td><input type="text" data-answer="nervum"></td></tr>
+      <tr><td>Abl.</td><td><input type="text" data-answer="musculo"></td><td><input type="text" data-answer="oculo"></td><td><input type="text" data-answer="morbo"></td><td><input type="text" data-answer="nervo"></td></tr>
+    </table>
+    <p style="margin-top:0.8rem;"><strong>Множественное число:</strong></p>
+    <table class="decl-table">
+      <tr><th>Падеж</th><th>medicamentum (лекарство)</th><th>vaselinum (вазелин)</th><th>ligamentum (связка)</th><th>cranium (череп)</th></tr>
+      <tr><td>Nom.</td><td><input type="text" data-answer="medicamenta"></td><td><input type="text" data-answer="vaselina"></td><td><input type="text" data-answer="ligamenta"></td><td><input type="text" data-answer="crania"></td></tr>
+      <tr><td>Gen.</td><td><input type="text" data-answer="medicamentorum"></td><td><input type="text" data-answer="vaselinorum"></td><td><input type="text" data-answer="ligamentorum"></td><td><input type="text" data-answer="craniorum"></td></tr>
+      <tr><td>Dat.</td><td><input type="text" data-answer="medicamentis"></td><td><input type="text" data-answer="vaselinis"></td><td><input type="text" data-answer="ligamentis"></td><td><input type="text" data-answer="craniis"></td></tr>
+      <tr><td>Acc.</td><td><input type="text" data-answer="medicamenta"></td><td><input type="text" data-answer="vaselina"></td><td><input type="text" data-answer="ligamenta"></td><td><input type="text" data-answer="crania"></td></tr>
+      <tr><td>Abl.</td><td><input type="text" data-answer="medicamentis"></td><td><input type="text" data-answer="vaselinis"></td><td><input type="text" data-answer="ligamentis"></td><td><input type="text" data-answer="craniis"></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">7</span> Перевод словосочетаний с определением падежа и числа (анализ → применение)</div>
+    <p>Переведите, определив падеж и число:</p>
+    <table>
+      <tr><th>Словосочетание</th><th>Перевод</th><th>Падеж, число</th></tr>
+      <tr><td>Bolus alba</td><td><input type="text" data-answer="белая глина"></td><td><input type="text" data-answer="Nom. sing."></td></tr>
+      <tr><td>Musculus latus</td><td><input type="text" data-answer="широкая мышца"></td><td><input type="text" data-answer="Nom. sing."></td></tr>
+      <tr><td>Lobus dexter</td><td><input type="text" data-answer="правая доля"></td><td><input type="text" data-answer="Nom. sing."></td></tr>
+      <tr><td>Venae cavae</td><td><input type="text" data-answer="полые вены"></td><td><input type="text" data-answer="Nom. plur."></td></tr>
+      <tr><td>Folium flavum</td><td><input type="text" data-answer="жёлтый лист"></td><td><input type="text" data-answer="Nom. sing."></td></tr>
+      <tr><td>Lobi sinistri</td><td><input type="text" data-answer="левые доли"></td><td><input type="text" data-answer="Nom. plur."></td></tr>
+      <tr><td>Septa lata</td><td><input type="text" data-answer="широкие перегородки"></td><td><input type="text" data-answer="Nom. plur."></td></tr>
+      <tr><td>Musculus obliquus</td><td><input type="text" data-answer="косая мышца"></td><td><input type="text" data-answer="Nom. sing."></td></tr>
+      <tr><td>Periodus critica</td><td><input type="text" data-answer="критический период"></td><td><input type="text" data-answer="Nom. sing."></td></tr>
+      <tr><td>Tuberculum parvum</td><td><input type="text" data-answer="маленький бугорок"></td><td><input type="text" data-answer="Nom. sing."></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== ТЕМА 3. ГЛАГОЛЫ ==================== -->
+<div class="topic-card">
+  <h2>Тема 3. Глаголы <span class="bloom">Знание → Понимание → Применение</span></h2>
+  <div class="topic-desc">Спряжения, неопределённая форма, повелительное наклонение, глагол esse, рецептурные глаголы.</div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">1</span> Спряжения глаголов (знание)</div>
+    <p>Допишите:</p>
+    <p>Основа глаголов определяется по <input type="text" data-answer="неопределённой форме (инфинитиву)" class="inline-input-wide">, которая имеет окончание <input type="text" data-answer="-re" class="inline-input" style="width:80px;">.</p>
+    <p>К I спряжению относятся глаголы с основой на <input type="text" data-answer="-a" class="inline-input" style="width:60px;">.</p>
+    <p>Ко II спряжению — с основой на <input type="text" data-answer="-e" class="inline-input" style="width:60px;">.</p>
+    <p>К III спряжению — с основой на <input type="text" data-answer="согласный" class="inline-input" style="width:120px;">.</p>
+    <p>К IV спряжению — с основой на <input type="text" data-answer="-i" class="inline-input" style="width:60px;">.</p>
+    <p>Чтобы определить основу глагола, необходимо <input type="text" data-answer="отбросить окончание -re от формы инфинитива" style="width:100%;"></p>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">2</span> Окончания неопределённой формы (знание)</div>
+    <table>
+      <tr><th>Спряжение</th><th>Окончание инфинитива</th></tr>
+      <tr><td>I</td><td><input type="text" data-answer="-are" placeholder="..."></td></tr>
+      <tr><td>II</td><td><input type="text" data-answer="-ere" placeholder="..."></td></tr>
+      <tr><td>III</td><td><input type="text" data-answer="-ere" placeholder="..."></td></tr>
+      <tr><td>IV</td><td><input type="text" data-answer="-ire" placeholder="..."></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">3</span> Определение основы и спряжения (применение)</div>
+    <table>
+      <tr><th>Глагол</th><th>Перевод</th><th>Основа</th><th>Спряжение</th></tr>
+      <tr><td>Dare</td><td><input type="text" data-answer="давать"></td><td><input type="text" data-answer="da-"></td><td><input type="text" data-answer="I"></td></tr>
+      <tr><td>Finire</td><td><input type="text" data-answer="заканчивать"></td><td><input type="text" data-answer="fini-"></td><td><input type="text" data-answer="IV"></td></tr>
+      <tr><td>Signare</td><td><input type="text" data-answer="обозначать"></td><td><input type="text" data-answer="signa-"></td><td><input type="text" data-answer="I"></td></tr>
+      <tr><td>Vertere</td><td><input type="text" data-answer="поворачивать"></td><td><input type="text" data-answer="vert-"></td><td><input type="text" data-answer="III"></td></tr>
+      <tr><td>Solvere</td><td><input type="text" data-answer="растворять"></td><td><input type="text" data-answer="solv-"></td><td><input type="text" data-answer="III"></td></tr>
+      <tr><td>Audire</td><td><input type="text" data-answer="слушать"></td><td><input type="text" data-answer="audi-"></td><td><input type="text" data-answer="IV"></td></tr>
+      <tr><td>Miscere</td><td><input type="text" data-answer="смешивать"></td><td><input type="text" data-answer="misce-"></td><td><input type="text" data-answer="II"></td></tr>
+      <tr><td>Vivere</td><td><input type="text" data-answer="жить"></td><td><input type="text" data-answer="viv-"></td><td><input type="text" data-answer="III"></td></tr>
+      <tr><td>Agitare</td><td><input type="text" data-answer="взбалтывать"></td><td><input type="text" data-answer="agita-"></td><td><input type="text" data-answer="I"></td></tr>
+      <tr><td>Terere</td><td><input type="text" data-answer="тереть"></td><td><input type="text" data-answer="ter-"></td><td><input type="text" data-answer="III"></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">4</span> Глагол ESSE (быть) (знание)</div>
+    <table>
+      <tr><th>Лицо</th><th>Ед. число</th><th>Мн. число</th></tr>
+      <tr><td>1-е</td><td>sum</td><td>sumus</td></tr>
+      <tr><td>2-е</td><td>es</td><td>estis</td></tr>
+      <tr><td>3-е</td><td>est</td><td>sunt</td></tr>
+    </table>
+    <p style="margin-top:0.6rem;">Вставьте пропущенное: глагол esse используется как связка в 3-м лице единственного числа <input type="text" data-answer="est" class="inline-input" style="width:80px;"> и 3-м лице множественного числа <input type="text" data-answer="sunt" class="inline-input" style="width:80px;">.</p>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">5</span> Повелительное наклонение (применение)</div>
+    <table>
+      <tr><th>Спряжение</th><th>Инфинитив</th><th>2 л. ед. ч.</th><th>2 л. мн. ч.</th></tr>
+      <tr><td></td><td>dare</td><td><input type="text" data-answer="da"></td><td><input type="text" data-answer="date"></td></tr>
+      <tr><td></td><td>recipere</td><td><input type="text" data-answer="recipe"></td><td><input type="text" data-answer="recipite"></td></tr>
+      <tr><td></td><td>sterilisare</td><td><input type="text" data-answer="sterilisa"></td><td><input type="text" data-answer="sterilisate"></td></tr>
+      <tr><td></td><td>auscultare</td><td><input type="text" data-answer="ausculta"></td><td><input type="text" data-answer="auscultate"></td></tr>
+      <tr><td></td><td>solvere</td><td><input type="text" data-answer="solve"></td><td><input type="text" data-answer="solvite"></td></tr>
+      <tr><td></td><td>videre</td><td><input type="text" data-answer="vide"></td><td><input type="text" data-answer="videte"></td></tr>
+    </table>
+    <div class="hint">Для глаголов III спряжения в ед. ч. конечный -e основы сохраняется, во мн. ч. добавляется -ite.</div>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">6</span> Перевод рецептурных команд (применение)</div>
+    <table>
+      <tr><th>Латинская команда</th><th>Перевод</th></tr>
+      <tr><td>Misce. Da. Signa.</td><td><input type="text" data-answer="Смешай. Выдай. Обозначь."></td></tr>
+      <tr><td>Recipe guttas.</td><td><input type="text" data-answer="Возьми капли."></td></tr>
+      <tr><td>Verte.</td><td><input type="text" data-answer="Переверни."></td></tr>
+      <tr><td>Divide massam pilularum.</td><td><input type="text" data-answer="Раздели пилюльную массу."></td></tr>
+      <tr><td>Praepara pilulas.</td><td><input type="text" data-answer="Приготовь пилюли."></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== ТЕМА 4. ТЕРМИНОЛОГИЯ ==================== -->
+<div class="topic-card">
+  <h2>Тема 4. Ветеринарная терминология <span class="bloom">Понимание → Анализ → Синтез</span></h2>
+  <div class="topic-desc">Анатомическая терминология, способы образования терминов, терминоэлементы.</div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">1</span> Перевод анатомических терминов (понимание)</div>
+    <table>
+      <tr><th>Латинский термин</th><th>Русский перевод</th></tr>
+      <tr><td>Caput vertebrae</td><td><input type="text" data-answer="головка позвонка"></td></tr>
+      <tr><td>Tunica mucosa</td><td><input type="text" data-answer="слизистая оболочка"></td></tr>
+      <tr><td>Corpus ceci (caeci)</td><td><input type="text" data-answer="тело слепой кишки"></td></tr>
+      <tr><td>Cartilago costae</td><td><input type="text" data-answer="хрящ ребра"></td></tr>
+      <tr><td>Fossa atlantis</td><td><input type="text" data-answer="ямка атланта"></td></tr>
+      <tr><td>Saccus dorsalis</td><td><input type="text" data-answer="дорсальный мешок"></td></tr>
+      <tr><td>Plica vocalis</td><td><input type="text" data-answer="голосовая складка"></td></tr>
+      <tr><td>Sutura coronalis</td><td><input type="text" data-answer="венечный шов"></td></tr>
+      <tr><td>Haemorrhagia nasalis</td><td><input type="text" data-answer="носовое кровотечение"></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">2</span> Способы образования терминов (анализ)</div>
+    <p>Разберите слово <strong>intercostalis</strong> по составу:</p>
+    <table>
+      <tr><th>Морфема</th><th>Значение</th></tr>
+      <tr><td>inter-</td><td><input type="text" data-answer="приставка, означает «между»"></td></tr>
+      <tr><td>-cost-</td><td><input type="text" data-answer="корень, означает «ребро»"></td></tr>
+      <tr><td>-al-</td><td><input type="text" data-answer="суффикс прилагательного"></td></tr>
+      <tr><td>-is</td><td><input type="text" data-answer="окончание Nom. sing."></td></tr>
+    </table>
+    <p style="margin-top:0.5rem;">Общее значение термина: <input type="text" data-answer="межрёберный" style="width:200px;"></p>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">3</span> Терминоэлементы (синтез)</div>
+    <p>Образуйте термины с указанными значениями:</p>
+    <table>
+      <tr><th>Значение</th><th>Термин</th></tr>
+      <tr><td>Воспаление кожи</td><td><input type="text" data-answer="dermatitis"></td></tr>
+      <tr><td>Воспаление печени</td><td><input type="text" data-answer="hepatitis"></td></tr>
+      <tr><td>Воспаление почек</td><td><input type="text" data-answer="nephritis"></td></tr>
+      <tr><td>Наука о болезнях</td><td><input type="text" data-answer="pathologia"></td></tr>
+      <tr><td>Боль в суставе</td><td><input type="text" data-answer="arthralgia"></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== ТЕМА 5. РЕЦЕПТУРА ==================== -->
+<div class="topic-card">
+  <h2>Тема 5. Рецептура <span class="bloom">Синтез → Оценка</span></h2>
+  <div class="topic-desc">Структура рецепта, лекарственные формы, правила выписывания.</div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">1</span> Структура рецепта (знание)</div>
+    <p>Перечислите основные части рецепта (в правильном порядке):</p>
+    <textarea data-answer="1. Inscriptio (штамп и дата). 2. Nomen aegroti (ФИО больного). 3. Nomen medici (ФИО врача). 4. Praescriptio (название и количество лекарства). 5. Subscriptio (указания фармацевту). 6. Signatura (способ применения). 7. Nomen medici et sigillum (подпись и печать врача)." placeholder="1. ...&#10;2. ..."></textarea>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">2</span> Выписывание рецептов (синтез)</div>
+    <p>Выпишите рецепт на русском языке по заданному составу:</p>
+    <p><strong>Возьми:</strong> Настойки валерианы 20 мл<br>
+    <strong>Выдай:</strong> В тёмной склянке<br>
+    <strong>Обозначь:</strong> По 15 капель 3 раза в день.</p>
+    <textarea data-answer="Recipe: Tincturae Valerianae 20 ml. Da in vitro nigro. Signa: По 15 капель 3 раза в день." placeholder="Recipe: ..." style="min-height:80px;"></textarea>
+    <div class="hint">Используйте Gen. sing. для названия настойки, укажите объём в мл, Da in vitro nigro, Signa с русским текстом.</div>
+    <button class="btn-check" onclick="checkTask(this, true)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+
+  <div class="task">
+    <div class="task-title"><span class="num">3</span> Латинские названия лекарственных форм (знание)</div>
+    <table>
+      <tr><th>Русское название</th><th>Латинское название (Gen. sing.)</th></tr>
+      <tr><td>Настойка</td><td><input type="text" data-answer="Tincturae"></td></tr>
+      <tr><td>Раствор</td><td><input type="text" data-answer="Solutionis"></td></tr>
+      <tr><td>Мазь</td><td><input type="text" data-answer="Unguenti"></td></tr>
+      <tr><td>Порошок</td><td><input type="text" data-answer="Pulveris"></td></tr>
+      <tr><td>Таблетка</td><td><input type="text" data-answer="Tabulettae"></td></tr>
+      <tr><td>Капля</td><td><input type="text" data-answer="Guttae"></td></tr>
+      <tr><td>Эмульсия</td><td><input type="text" data-answer="Emulsi"></td></tr>
+      <tr><td>Настой</td><td><input type="text" data-answer="Infusi"></td></tr>
+      <tr><td>Отвар</td><td><input type="text" data-answer="Decocti"></td></tr>
+      <tr><td>Суппозиторий</td><td><input type="text" data-answer="Suppositorii"></td></tr>
+    </table>
+    <button class="btn-check" onclick="checkTask(this)">Проверить</button>
+    <button class="btn-reset" onclick="resetTask(this)">Сбросить</button>
+    <div class="feedback"></div>
+  </div>
+</div>
+
+<!-- ==================== ИТОГОВЫЙ ПРОГРЕСС ==================== -->
+<div class="score-summary" id="scoreSummary">
+  <div>
+    <strong>Общий прогресс:</strong>
+    <span class="total" id="totalScore">0 / 0</span>
+    <span style="font-size:0.85rem;color:#5a6b5e;">(правильных ответов)</span>
+  </div>
+  <div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+  <button class="btn-check" onclick="checkAll()" style="background:var(--accent);">Проверить всё</button>
+  <button class="btn-reset" onclick="resetAll()">Сбросить всё</button>
+</div>
+
+<script>
+  // Нормализация ответа
+  function normalize(str) {
+    if (!str) return '';
+    return str
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/[.,;:!?]/g, '')
+      .replace(/ё/g, 'е')
+      .trim();
+  }
+
+  // Проверка одной задачи (task div)
+  function checkTask(btn, fuzzy = false) {
+    const task = btn.closest('.task');
+    const inputs = task.querySelectorAll('input[data-answer], textarea[data-answer]');
+    let correct = 0, total = 0;
+    inputs.forEach(inp => {
+      total++;
+      const expected = normalize(inp.dataset.answer);
+      const actual = normalize(inp.value);
+      let isCorrect = false;
+      if (fuzzy) {
+        // Для развёрнутых ответов: засчитываем, если ключевые фрагменты присутствуют
+        const keywords = expected.split(/[,;]\s*/).filter(k => k.length > 2);
+        const found = keywords.filter(k => actual.includes(k)).length;
+        isCorrect = found >= Math.ceil(keywords.length * 0.6);
+      } else {
+        // Для коротких ответов: точное совпадение или вариант через /
+        const variants = expected.split('/').map(v => v.trim());
+        isCorrect = variants.some(v => v === actual);
+      }
+      if (isCorrect) {
+        inp.classList.add('correct');
+        inp.classList.remove('incorrect');
+        correct++;
+      } else {
+        inp.classList.add('incorrect');
+        inp.classList.remove('correct');
+      }
+    });
+    const fb = task.querySelector('.feedback');
+    if (fb) {
+      const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+      if (pct === 100) {
+        fb.textContent = `✅ Отлично! Все ${total} ответов верны.`;
+        fb.className = 'feedback ok';
+      } else if (pct >= 60) {
+        fb.textContent = `⚠️ Частично верно: ${correct} из ${total} (${pct}%). Проверьте подсвеченные поля.`;
+        fb.className = 'feedback partial';
+      } else {
+        fb.textContent = `❌ Верно ${correct} из ${total} (${pct}%). Обратитесь к теории и попробуйте снова.`;
+        fb.className = 'feedback err';
+      }
+    }
+    updateProgress();
+  }
+
+  // Сброс одной задачи
+  function resetTask(btn) {
+    const task = btn.closest('.task');
+    task.querySelectorAll('input[data-answer], textarea[data-answer]').forEach(inp => {
+      inp.value = '';
+      inp.classList.remove('correct', 'incorrect');
+    });
+    const fb = task.querySelector('.feedback');
+    if (fb) { fb.textContent = ''; fb.className = 'feedback'; }
+    updateProgress();
+  }
+
+  // Подсчёт общего прогресса
+  function updateProgress() {
+    const allInputs = document.querySelectorAll('input[data-answer], textarea[data-answer]');
+    const total = allInputs.length;
+    const correct = document.querySelectorAll('input[data-answer].correct, textarea[data-answer].correct').length;
+    const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+    document.getElementById('totalScore').textContent = `${correct} / ${total}`;
+    document.getElementById('progressFill').style.width = pct + '%';
+  }
+
+  function checkAll() {
+    document.querySelectorAll('.task').forEach(task => {
+      const btn = task.querySelector('.btn-check');
+      if (btn) btn.click();
+    });
+  }
+
+  function resetAll() {
+    document.querySelectorAll('.task').forEach(task => {
+      const btn = task.querySelector('.btn-reset');
+      if (btn) btn.click();
+    });
+  }
+
+  // Инициализация прогресса
+  document.addEventListener('DOMContentLoaded', updateProgress);
+</script>
+
+</body>
+</html>

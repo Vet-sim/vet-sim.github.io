@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Профессиональный компас ветеринара · 2.0</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --teal: #0FA3A3;
+  --teal-dark: #0A7A7A;
+  --mint: #7EE0C3;
+  --blue: #2E7DD1;
+  --blue-dark: #1B4F8C;
+  --gold: #E0A93B;
+  --bg: #0B1F2A;
+  --card: rgba(255,255,255,0.94);
+  --text: #0F2A3A;
+  --muted: #5F7C8E;
+  --line: #D6E9F0;
+  --ok: #2E9E5B;
+  --no: #C0392B;
+  --radius: 18px;
+  --shadow: 0 10px 40px rgba(0,0,0,.25);
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Segoe UI', system-ui, Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+#bgCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+}
+
+/* Карточки */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px 30px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  margin-bottom: 18px;
+  border: 1px solid rgba(255,255,255,.6);
+  animation: slideUp .45s ease both;
+}
+@keyframes slideUp {
+  from { opacity:0; transform: translateY(16px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* Заголовки */
+h1 { font-size: 1.7rem; margin-bottom: 6px; color: var(--blue-dark); }
+h2 { font-size: 1.3rem; margin-bottom: 12px; color: var(--blue-dark); }
+h3 { font-size: 1rem; margin: 18px 0 10px; color: var(--blue-dark); }
+
+.subtitle { color: var(--muted); font-size: .92rem; margin-bottom: 18px; }
+
+/* Кнопки */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  color: #fff;
+  border: none;
+  padding: 13px 28px;
+  border-radius: 40px;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .18s;
+  box-shadow: 0 4px 16px rgba(15,163,163,.35);
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(15,163,163,.45); }
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity:.5; cursor: not-allowed; transform:none; box-shadow:none; }
+.btn-outline {
+  background: transparent;
+  color: var(--blue-dark);
+  border: 2px solid var(--line);
+  box-shadow: none;
+}
+.btn-outline:hover { border-color: var(--teal); box-shadow: none; }
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), #d18b1f);
+  box-shadow: 0 4px 16px rgba(224,169,59,.35);
+}
+.btn-row { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:16px; }
+
+/* Прогресс */
+.progress-wrap {
+  position: sticky; top: 12px; z-index: 10;
+  background: var(--card);
+  border-radius: 40px;
+  padding: 10px 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 12px;
+  font-size: .8rem; font-weight: 700; color: var(--blue-dark);
+}
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #E3F2FC;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--mint));
+  width: 0%;
+  transition: width .35s ease;
+}
+
+/* Стартовый блок */
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+.option-card {
+  background: #F6FBFE;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: .16s;
+  font-size: .88rem;
+  font-weight: 600;
+  text-align: left;
+}
+.option-card:hover { border-color: var(--teal); transform: translateY(-2px); }
+.option-card.selected {
+  border-color: var(--teal);
+  background: #E4F7F5;
+  box-shadow: 0 0 0 4px rgba(15,163,163,.14);
+}
+
+/* Вопросы Лайкерт */
+.question {
+  margin-bottom: 22px;
+  animation: fadeIn .35s ease;
+}
+@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+.q-text {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+.q-scale {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.scale-btn {
+  flex: 1;
+  min-width: 54px;
+  padding: 12px 6px;
+  border-radius: 12px;
+  border: 2px solid var(--line);
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--muted);
+  transition: .14s;
+  line-height: 1.2;
+  text-align: center;
+}
+.scale-btn .num { display:block; font-size: 1.05rem; margin-bottom: 2px; }
+.scale-btn:hover { border-color: var(--teal); color: var(--teal-dark); }
+.scale-btn.selected {
+  background: linear-gradient(135deg, var(--teal), var(--blue));
+  border-color: transparent;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(15,163,163,.35);
+}
+.scale-btn.zero { flex: .7; }
+
+/* Приоритеты forced-choice */
+.forced {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.forced-opt {
+  padding: 14px 18px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  cursor: pointer;
+  font-size: .9rem;
+  font-weight: 600;
+  transition: .14s;
+}
+.forced-opt:hover { border-color: var(--teal); }
+.forced-opt.selected {
+  border-color: var(--teal);
+  background: #E4F7F5;
+  box-shadow: 0 0 0 4px rgba(15,163,163,.14);
+}
+.forced-opt.neutral { font-size: .8rem; color: var(--muted); font-weight: 500; }
+
+/* Результаты */
+.direction-card {
+  background: #F6FBFE;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  border-left: 5px solid var(--teal);
+}
+.direction-card h4 {
+  font-size: 1.05rem;
+  color: var(--blue-dark);
+  margin-bottom: 6px;
+}
+.level-tag {
+  display: inline-block;
+  font-size: .72rem;
+  font-weight: 800;
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.level-strong { background: #D4F5E9; color: #0A7A5A; }
+.level-good   { background: #DFF0FB; color: var(--blue-dark); }
+.level-possible { background: #FBF1DC; color: #8A6317; }
+.level-weak   { background: #F0F0F0; color: #777; }
+
+.bar-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px; font-size: .82rem;
+}
+.bar-label { width: 150px; color: var(--muted); font-weight: 600; }
+.bar-track {
+  flex: 1; height: 10px; background: #E3F2FC;
+  border-radius: 20px; overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--blue));
+  border-radius: 20px;
+  transition: width .8s ease;
+}
+.bar-val { width: 40px; text-align: right; font-weight: 800; color: var(--blue-dark); }
+
+.warn-box {
+  background: #FFF6E5;
+  border-left: 4px solid var(--gold);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: .86rem;
+  margin: 14px 0;
+}
+
+.info-box {
+  background: #E9F6FF;
+  border-left: 4px solid var(--blue);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: .86rem;
+  margin: 14px 0;
+}
+
+.disclaimer {
+  font-size: .78rem;
+  color: var(--muted);
+  text-align: center;
+  margin-top: 22px;
+  line-height: 1.5;
+  padding: 0 10px;
+}
+
+/* Сохранение */
+.save-hint {
+  position: fixed;
+  bottom: 20px; right: 20px;
+  background: var(--ok); color: #fff;
+  padding: 10px 20px; border-radius: 30px;
+  font-size: .8rem; font-weight: 700;
+  opacity: 0; transform: translateY(20px);
+  transition: .3s;
+  z-index: 100;
+}
+.save-hint.show { opacity:1; transform: translateY(0); }
+
+@media (max-width: 640px) {
+  .card { padding: 20px 18px; }
+  h1 { font-size: 1.35rem; }
+  .bar-label { width: 110px; font-size: .75rem; }
+  .scale-btn { font-size: .65rem; padding: 10px 4px; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="app" id="app">
+
+  <!-- СТАРТ -->
+  <section class="card" id="screenStart">
+    <h1>🧭 Профессиональный компас ветеринара</h1>
+    <p class="subtitle">Версия 2.0 · Помогает увидеть, какие ветеринарные задачи, условия и ценности вам действительно близки. Это не экзамен и не приговор — это карта возможных траекторий.</p>
+
+    <div class="info-box">
+      <strong>Как это работает.</strong> 120 вопросов: интересы, рабочие условия, самооценка навыков, ценности и приоритеты. Ответы сохраняются в браузере — можно прерваться и вернуться.
+    </div>
+
+    <h3>Блок 0 · Стартовый профиль</h3>
+    <div id="startProfile"></div>
+
+    <div class="btn-row">
+      <button class="btn" id="toTestBtn">🚀 Начать тест</button>
+      <button class="btn btn-outline" id="resetBtn" style="display:none;">Сбросить и начать заново</button>
+    </div>
+
+    <p class="disclaimer">Тест не заменяет консультацию карьерного консультанта, психолога или профессиональную оценку компетенций. Результат отражает паттерн ответов, а не приговор.</p>
+  </section>
+
+  <!-- ТЕСТ -->
+  <section id="screenTest" style="display:none;">
+    <div class="progress-wrap">
+      <span id="progressLabel">Блок 1 / 5</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span id="progressPct">0%</span>
+    </div>
+
+    <div class="card">
+      <h2 id="blockTitle"></h2>
+      <p class="subtitle" id="blockSubtitle"></p>
+      <div id="questionsArea"></div>
+      <div class="btn-row">
+        <button class="btn btn-outline" id="backBtn">◀ Назад</button>
+        <button class="btn" id="nextBtn">Далее ▶</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- РЕЗУЛЬТАТЫ -->
+  <section id="screenResults" style="display:none;">
+    <div class="card">
+      <h1>📊 Ваш профессиональный профиль</h1>
+      <p class="subtitle" id="resultSummary"></p>
+      <div id="resultsArea"></div>
+      <div class="btn-row">
+        <button class="btn btn-outline" id="restartBtn">🔄 Пройти заново</button>
+        <button class="btn btn-gold" id="printBtn">🖨 Сохранить / распечатать</button>
+      </div>
+      <p class="disclaimer">Результат основан на ваших ответах и не является окончательным определением профессии. Используйте его как отправную точку для размышлений и разговора с наставником.</p>
+    </div>
+  </section>
+
+</div>
+
+<div class="save-hint" id="saveHint">✓ Прогресс сохранён</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   ДАННЫЕ: направления, шкалы, вопросы
+   ============================================================ */
+
+const DIRECTIONS = {
+  small:   { name:'Клиника: мелкие домашние животные', short:'Мелкие животные', icon:'🐕', roles:['Терапевт','Хирург','Врач УЗИ/рентгена','Анестезиолог','Врач скорой помощи'], develop:['Клиническое мышление','Навыки коммуникации с владельцем','Работа с диагностикой','Стрессоустойчивость'] },
+  farm:    { name:'Клиника: сельхозживотные / mixed practice', short:'Сельхозживотные', icon:'🐄', roles:['Ветеринарный врач КРС','Специалист по свиноводству','Птицевод','Врач mixed practice','Специалист по репродукции'], develop:['Работа со стадом','Выездная практика','Производственные показатели','Физическая выносливость'] },
+  sanex:   { name:'Ветеринарно-санитарная экспертиза и контроль', short:'Ветсанэкспертиза', icon:'🔬', roles:['Ветсанэксперт','Лабораторный специалист','Специалист по качеству','Инспектор производства'], develop:['Знание регламентов','Точность и внимание к деталям','Работа с документами','Лабораторные методы'] },
+  science: { name:'Наука, исследования и преподавание', short:'Наука', icon:'🧪', roles:['Научный сотрудник','Преподаватель','R&D-специалист','Аспирант','Научный коммуникатор'], develop:['Аналитическое мышление','Работа с данными','Публикации','Методология исследований'] },
+  industry:{ name:'Индустрия: фарма, корма, диагностика, оборудование', short:'Индустрия', icon:'🏭', roles:['Технический специалист','Менеджер по продукту','Специалист техподдержки','Медицинский советник','Специалист по развитию'], develop:['Знание продукта','Коммуникация с клиентами','Презентации','Понимание рынка'] },
+  gov:     { name:'Государственная служба и общественное здоровье', short:'Госслужба', icon:'🏛', roles:['Ветинспектор','Эпизоотолог','Специалист по зоонозам','Сотрудник надзорного органа'], develop:['Знание законодательства','Работа со вспышками','Документация','Межведомственное взаимодействие'] },
+  exotic:  { name:'Экзотические, зоопарковые и дикие животные', short:'Экзотические животные', icon:'🦜', roles:['Врач по экзотическим животным','Зоопарковый ветеринар','Специалист по реабилитации','Полевой биолог'], develop:['Специфика видов','Работа с дикими животными','Охрана природы','Нестандартные пациенты'] },
+  manage:  { name:'Управление и предпринимательство', short:'Управление', icon:'📈', roles:['Управляющий клиникой','Владелец практики','Операционный директор','Проектный менеджер'], develop:['Финансы и бюджет','Управление командой','Процессы и стандарты','Предпринимательство'] }
+};
+
+const SCALES = {
+  obj:  { a:'Пациент', b:'Система',       label:'Объект работы' },
+  mob:  { a:'Стационарно', b:'Мобильно',  label:'Мобильность' },
+  ritm: { a:'Планово', b:'Экстренно',     label:'Ритм' },
+  think:{ a:'Быстрое действие', b:'Глубокий анализ', label:'Стиль мышления' },
+  inter:{ a:'Люди', b:'Автономия',        label:'Взаимодействие' }
+};
+
+/* Блок 0 */
+const START_PROFILE = [
+  { id:'status', q:'Какой у вас сейчас статус?', opts:['Студент ветеринарного факультета или колледжа','Выпускник, ищу первое место работы','Практикующий ветеринарный врач','Работаю в смежной сфере и рассматриваю переход','Другое'], key:'status' },
+  { id:'expSmall', q:'Опыт работы с мелкими домашними животными?', opts:['Нет опыта','Учебная практика / волонтёрство','Стажировка / работа ассистентом','Самостоятельная клиническая практика'], key:'expSmall' },
+  { id:'expFarm', q:'Опыт работы с сельхозживотными?', opts:['Нет опыта','Учебная практика / волонтёрство','Стажировка / работа ассистентом','Самостоятельная практика'], key:'expFarm' },
+  { id:'expOther', q:'Опыт в лаборатории, науке, госслужбе, ветсанэкспертизе или индустрии?', opts:['Нет','Небольшой: практика, проект, стажировка','Есть регулярный опыт работы'], key:'expOther' },
+  { id:'schedule', q:'Ограничения по графику?', opts:['Нужен стабильный дневной график','Готов(а) иногда задерживаться или выходить в смены','Готов(а) к регулярным сменам, дежурствам и вызовам','Нет ограничений по графику'], key:'schedule' },
+  { id:'geo', q:'Ограничения по географии?', opts:['Важно работать рядом с домом','Готов(а) ездить в пределах города или района','Готов(а) к регулярным выездам и командировкам','Готов(а) рассматривать переезд'], key:'geo' },
+  { id:'goal', q:'Что для вас сейчас важнее всего?', opts:['Получить первый опыт','Найти стабильную работу','Развиваться в конкретной специализации','Повысить доход','Сменить направление','Построить собственное дело'], key:'goal' }
+];
+
+/* Вопросы: каждый — {q, scales:{...}, dirs:{...}, reverse?} */
+const QUESTIONS = {
+  1: { title:'Блок 1 · Профессиональные интересы', subtitle:'Что вам нравится делать. Отвечайте по ощущению, а не по «правильности».', items:[
+    { q:'Проводить осмотр домашнего животного и объяснять владельцу, что происходит.', scales:{obj:2, inter:2}, dirs:{small:3, farm:1} },
+    { q:'Ставить предварительный диагноз по жалобам, анамнезу и результатам осмотра.', scales:{think:2, obj:1}, dirs:{small:2, farm:1} },
+    { q:'Выполнять инъекции, инфузии, перевязки и другие манипуляции.', scales:{obj:2, think:1}, dirs:{small:2, farm:1, exotic:1} },
+    { q:'Ассистировать или выполнять хирургические вмешательства.', scales:{obj:2, think:2}, dirs:{small:2, farm:1, exotic:1} },
+    { q:'Работать с УЗИ, рентгеном, анализами и другими методами диагностики.', scales:{think:2, obj:1}, dirs:{small:2, farm:1, science:1} },
+    { q:'Вести пациента с хроническим заболеванием в течение месяцев или лет.', scales:{obj:2}, dirs:{small:2} },
+    { q:'Оказывать неотложную помощь животному в критическом состоянии.', scales:{think:2, ritm:2}, dirs:{small:2, farm:1, exotic:1} },
+    { q:'Разбираться в редких или сложных случаях, когда стандартная схема не помогает.', scales:{think:2, obj:1}, dirs:{small:1, science:1, exotic:1} },
+    { q:'Обследовать крупный рогатый скот, свиней, овец или птицу на ферме.', scales:{obj:1, mob:2}, dirs:{farm:3} },
+    { q:'Участвовать в вакцинациях, обработках и профилактических мероприятиях в хозяйстве.', scales:{obj:1, mob:1}, dirs:{farm:2} },
+    { q:'Помогать при родах и работать с репродукцией сельскохозяйственных животных.', scales:{obj:2, think:1}, dirs:{farm:3} },
+    { q:'Оценивать здоровье стада, а не только одного заболевшего животного.', scales:{obj:2, think:1}, dirs:{farm:2, gov:1} },
+    { q:'Проводить ветеринарно-санитарную экспертизу продукции животного происхождения.', scales:{obj:2, think:1}, dirs:{sanex:3} },
+    { q:'Проверять соблюдение санитарных норм на предприятии, рынке или производстве.', scales:{obj:2, think:1}, dirs:{sanex:2, gov:1} },
+    { q:'Работать с пробами: отбирать, маркировать, исследовать, интерпретировать результаты.', scales:{obj:1, think:2}, dirs:{sanex:2, science:1} },
+    { q:'Изучать возбудителей болезней, механизмы их распространения и методы контроля.', scales:{think:2}, dirs:{science:2, gov:1} },
+    { q:'Участвовать в разработке или испытании вакцины, препарата или кормовой добавки.', scales:{think:2}, dirs:{science:2, industry:2} },
+    { q:'Читать научные статьи, анализировать данные и готовить отчёт или публикацию.', scales:{think:2, inter:1}, dirs:{science:3} },
+    { q:'Преподавать ветеринарные дисциплины студентам или практикантам.', scales:{inter:2}, dirs:{science:2, industry:1} },
+    { q:'Консультировать компанию по применению препарата, корма или оборудования.', scales:{inter:2, obj:1}, dirs:{industry:3} },
+    { q:'Помогать врачу или владельцу разобраться в характеристиках ветеринарного продукта.', scales:{inter:2, obj:1}, dirs:{industry:2, small:1} },
+    { q:'Участвовать в разработке нового корма, лекарства, диагностического теста или оборудования.', scales:{think:2}, dirs:{industry:3, science:1} },
+    { q:'Проводить противоэпизоотические мероприятия при вспышке инфекционного заболевания.', scales:{obj:2, mob:1}, dirs:{gov:3, farm:1} },
+    { q:'Контролировать перемещение животных, продукцию или соблюдение ветеринарных требований.', scales:{obj:2, think:1}, dirs:{gov:2, sanex:1} },
+    { q:'Работать с зоонозами — болезнями, которые могут передаваться от животных человеку.', scales:{obj:1}, dirs:{gov:2, science:1} },
+    { q:'Ухаживать за экзотическими животными в зоопарке, питомнике или реабилитационном центре.', scales:{obj:2, mob:1}, dirs:{exotic:3} },
+    { q:'Работать с птицами, рептилиями, грызунами, хорьками или другими нестандартными пациентами.', scales:{obj:2, think:1}, dirs:{exotic:3} },
+    { q:'Участвовать в сохранении диких животных или реабилитации после травмы.', scales:{obj:1}, dirs:{exotic:3} },
+    { q:'Организовывать работу клиники: расписание, закупки, персонал, стандарты.', scales:{inter:2, obj:1}, dirs:{manage:3} },
+    { q:'Открыть собственную клинику или развивать ветеринарный бизнес.', scales:{inter:2}, dirs:{manage:3, industry:1} }
+  ]},
+  2: { title:'Блок 2 · Рабочие предпочтения и условия', subtitle:'Где и в каком ритме вам комфортно работать.', items:[
+    { q:'Мне комфортно работать по стабильному графику в одном месте.', scales:{mob:2, ritm:1}, dirs:{small:1, sanex:1, science:1} },
+    { q:'Мне нравится, когда рабочий день заранее предсказуем.', scales:{ritm:2}, dirs:{sanex:1, science:1, gov:1} },
+    { q:'Я готов(а) регулярно выезжать на фермы, предприятия или в другие населённые пункты.', scales:{mob:3}, dirs:{farm:3, gov:1} },
+    { q:'Меня не пугает работа на открытом воздухе, в помещении для животных, в грязи или при запахах.', scales:{mob:2}, dirs:{farm:2, exotic:1}, realistic:2 },
+    { q:'Я готов(а) к физически тяжёлой работе: фиксировать животное, поднимать оборудование, долго стоять.', scales:{mob:1}, dirs:{farm:2}, realistic:2 },
+    { q:'Мне интересно работать с крупными животными и стадом.', scales:{obj:1, mob:1}, dirs:{farm:3} },
+    { q:'Мне комфортнее работать с небольшими домашними животными.', scales:{obj:2, mob:1}, dirs:{small:3} },
+    { q:'Я готов(а) к ночным дежурствам и экстренным вызовам.', scales:{ritm:3}, dirs:{small:1, farm:1}, realistic:2 },
+    { q:'Я предпочитаю работать в команде с коллегами, ассистентами и администраторами.', scales:{inter:2}, dirs:{small:1, manage:1} },
+    { q:'Мне комфортно принимать решения самостоятельно, без постоянного контроля.', scales:{inter:2}, dirs:{science:1, sanex:1, manage:1} },
+    { q:'Я предпочитаю работать сосредоточенно, с минимальным количеством разговоров.', scales:{inter:2}, dirs:{science:2, sanex:1} },
+    { q:'Мне важно ежедневно общаться с клиентами и объяснять им сложное простыми словами.', scales:{inter:3}, dirs:{small:2, industry:1} },
+    { q:'Я готов(а) к эмоционально тяжёлым разговорам с владельцами животных.', scales:{inter:2}, dirs:{small:2}, realistic:2 },
+    { q:'Мне интересно работать с документами, протоколами, актами, стандартами и отчётами.', scales:{obj:2, think:1}, dirs:{sanex:2, gov:1} },
+    { q:'Мне комфортна работа, где важны точность, последовательность и соблюдение регламентов.', scales:{obj:2, think:1}, dirs:{sanex:2, gov:1} },
+    { q:'Мне нравится работа, где каждый день немного отличается от предыдущего.', scales:{ritm:1, think:1}, dirs:{small:1, farm:1} },
+    { q:'Я готов(а) к работе в условиях дефицита времени и необходимости быстро принимать решения.', scales:{think:2, ritm:2}, dirs:{small:2, farm:1} },
+    { q:'Мне комфортно работать с компьютером, таблицами, базами данных и цифровыми системами.', scales:{obj:1, think:1}, dirs:{science:1, industry:1, sanex:1} },
+    { q:'Я предпочитаю работу, где можно видеть конкретный результат: животное поправилось, проблема решена.', scales:{obj:1}, dirs:{small:2, farm:1} },
+    { q:'Мне интереснее влиять на процесс или систему, чем решать одну конкретную проблему.', scales:{obj:1}, dirs:{gov:1, science:1, manage:1} },
+    { q:'Я готов(а) к публичным выступлениям, обучению коллег или проведению презентаций.', scales:{inter:2}, dirs:{science:1, industry:1, manage:1}, realistic:1 },
+    { q:'Мне комфортно работать с людьми из разных сфер: фермерами, чиновниками, предпринимателями, учёными.', scales:{inter:2}, dirs:{industry:1, gov:1, manage:1} },
+    { q:'Я готов(а) к разъездам и командировкам, если это нужно для работы.', scales:{mob:2}, dirs:{farm:1, gov:1, industry:1}, realistic:1 },
+    { q:'Мне важна возможность работать рядом с домом и не тратить много времени на дорогу.', scales:{mob:2}, dirs:{small:1, science:1} },
+    { q:'Мне важна стабильная зарплата и понятные условия труда, даже если работа менее разнообразна.', scales:{ritm:1}, dirs:{sanex:1, gov:1} }
+  ]},
+  3: { title:'Блок 3 · Навыки и самооценка', subtitle:'Что вы считаете своим сильным местом. Честность важнее «правильности».', items:[
+    { q:'Я спокойно действую, когда ситуация требует быстрого решения.', scales:{think:2}, dirs:{small:2, farm:1} },
+    { q:'Я умею сохранять спокойствие, когда животному плохо или владелец в панике.', scales:{inter:1, think:1}, dirs:{small:2, farm:1} },
+    { q:'Я внимателен(на) к мелким деталям: дозировкам, срокам, документам, показателям.', scales:{think:2, obj:1}, dirs:{sanex:2, science:1} },
+    { q:'Мне легко разбираться в схемах, таблицах, инструкциях и технической информации.', scales:{think:2}, dirs:{science:1, industry:1} },
+    { q:'Я умею объяснять сложную информацию понятным языком.', scales:{inter:3}, dirs:{small:1, industry:1, science:1} },
+    { q:'Я умею слушать человека и уточнять, что именно его беспокоит.', scales:{inter:2}, dirs:{small:2} },
+    { q:'Я умею убеждать и договариваться, не переходя на конфликт.', scales:{inter:2}, dirs:{manage:2, industry:1} },
+    { q:'Я не боюсь брать на себя ответственность за принятое решение.', scales:{think:1}, dirs:{small:1, manage:1}, realistic:1 },
+    { q:'Я умею организовать несколько дел одновременно.', scales:{inter:1, think:1}, dirs:{manage:2} },
+    { q:'Я умею планировать работу и доводить её до конца.', scales:{think:1}, dirs:{manage:2, science:1} },
+    { q:'Я способен(на) долго заниматься одной задачей, не отвлекаясь.', scales:{think:2, inter:1}, dirs:{science:2} },
+    { q:'Мне интересно искать причину проблемы, а не только устранять её внешние проявления.', scales:{think:2}, dirs:{science:2, sanex:1} },
+    { q:'Я умею работать с большим объёмом информации и выделять главное.', scales:{think:2}, dirs:{science:2, sanex:1} },
+    { q:'Я умею замечать несоответствия, ошибки и риски.', scales:{think:2, obj:1}, dirs:{sanex:2, gov:1} },
+    { q:'Мне легко осваивать новое оборудование, программы или методики.', scales:{think:1, obj:1}, dirs:{industry:1, science:1} },
+    { q:'Я уверен(а) в своих практических навыках работы руками.', scales:{obj:2, think:1}, dirs:{small:2, farm:1, exotic:1} },
+    { q:'Я не испытываю сильного дискомфорта от крови, ран, выделений или процедур.', dirs:{small:1, farm:1, exotic:1}, realistic:3 },
+    { q:'Я умею аккуратно обращаться с животными, даже если они напуганы или агрессивны.', scales:{obj:2, inter:1}, dirs:{small:1, farm:1, exotic:1}, realistic:1 },
+    { q:'Я умею сохранять профессиональную дистанцию в сложных ситуациях.', scales:{inter:1}, dirs:{gov:1, science:1}, realistic:1 },
+    { q:'Я умею работать в команде и распределять задачи.', scales:{inter:2}, dirs:{manage:2, industry:1} },
+    { q:'Я умею признавать ошибки и исправлять их.', dirs:{small:1, manage:1}, realistic:1, growth:2 },
+    { q:'Я способен(на) принимать решения при неполной информации.', scales:{think:2}, dirs:{small:1, manage:1} },
+    { q:'Я умею вести переговоры и отстаивать свою позицию.', scales:{inter:2}, dirs:{manage:2, industry:1} },
+    { q:'Я умею обучать других и понятно объяснять порядок действий.', scales:{inter:2}, dirs:{science:1, industry:1, manage:1} },
+    { q:'Я умею работать с правилами, сроками и требованиями без постоянного напоминания.', scales:{think:1}, dirs:{sanex:1, gov:1} }
+  ]},
+  4: { title:'Блок 4 · Ценности и мотивация', subtitle:'Ради чего вам важно работать.', items:[
+    { q:'Спасать жизнь или облегчать страдание конкретного животного.', scales:{obj:1}, dirs:{small:2, farm:1, exotic:1} },
+    { q:'Видеть благодарность владельца и результат лечения.', scales:{inter:1}, dirs:{small:2} },
+    { q:'Помогать людям сохранять здоровье и благополучие их питомцев.', scales:{inter:1}, dirs:{small:1} },
+    { q:'Защищать людей от болезней, которые передаются от животных.', scales:{obj:1}, dirs:{gov:2, sanex:1} },
+    { q:'Обеспечивать безопасность пищевой продукции.', scales:{obj:2}, dirs:{sanex:3, gov:1} },
+    { q:'Предотвращать распространение опасных заболеваний среди животных.', scales:{obj:1}, dirs:{gov:2, farm:1} },
+    { q:'Делать научное открытие или вносить вклад в развитие ветеринарной медицины.', scales:{think:2}, dirs:{science:3} },
+    { q:'Понимать, как устроены болезни, лекарства и биологические процессы.', scales:{think:2}, dirs:{science:2} },
+    { q:'Создавать полезный продукт: препарат, корм, диагностический тест, сервис.', scales:{obj:1}, dirs:{industry:3} },
+    { q:'Работать в инновационной среде и видеть результат своих идей.', scales:{think:1}, dirs:{industry:2, science:1} },
+    { q:'Зарабатывать столько, чтобы чувствовать финансовую уверенность.', dirs:{manage:1, industry:1} },
+    { q:'Иметь возможность карьерного роста и управления командой.', scales:{inter:2}, dirs:{manage:3} },
+    { q:'Быть независимым(ой) от работодателя и строить собственное дело.', scales:{inter:1}, dirs:{manage:3} },
+    { q:'Работать с живыми животными каждый день.', scales:{obj:2}, dirs:{small:2, farm:1, exotic:1} },
+    { q:'Работать там, где можно влиять на правила, стандарты или политику отрасли.', scales:{obj:1}, dirs:{gov:2, manage:1} },
+    { q:'Помогать сохранять редкие виды и дикую природу.', scales:{obj:1}, dirs:{exotic:3} },
+    { q:'Работать с людьми и быть полезным(ой) им.', scales:{inter:3}, dirs:{small:1, industry:1} },
+    { q:'Иметь понятные обязанности и стабильность.', scales:{ritm:1}, dirs:{sanex:1, gov:1} },
+    { q:'Иметь свободу в выборе методов работы и графика.', scales:{inter:2}, dirs:{science:1, manage:1} },
+    { q:'Чувствовать, что моя работа важна для общества, а не только для отдельного клиента.', dirs:{gov:2, science:1, sanex:1} }
+  ]},
+  5: { title:'Блок 5 · Приоритеты и контроль качества', subtitle:'Сравните два варианта. Если оба не подходят — выберите «Затрудняюсь».', forced:true, items:[
+    { q:'Что для вас важнее?', a:'Точное лечение одного пациента', b:'Предотвращение проблемы у целого стада', dirsA:{small:1}, dirsB:{farm:1, gov:1} },
+    { q:'Что для вас важнее?', a:'Стабильный график', b:'Разнообразие и выезды', dirsA:{sanex:1, science:1}, dirsB:{farm:1, gov:1} },
+    { q:'Что для вас важнее?', a:'Самостоятельная экспертная работа', b:'Постоянное общение с людьми', dirsA:{science:1, sanex:1}, dirsB:{small:1, industry:1, manage:1} },
+    { q:'Что для вас важнее?', a:'Работа руками и процедурами', b:'Анализ данных и документов', dirsA:{small:1, farm:1}, dirsB:{science:1, sanex:1} },
+    { q:'Что для вас важнее?', a:'Помощь конкретному владельцу', b:'Влияние на отрасль', dirsA:{small:1}, dirsB:{gov:1, science:1, industry:1} },
+    { q:'Что для вас важнее?', a:'Известность как клинициста', b:'Вклад в науку и разработки', dirsA:{small:1}, dirsB:{science:1, industry:1} },
+    { q:'Что для вас важнее?', a:'Работа в крупной организации', b:'Собственное дело', dirsA:{gov:1, industry:1}, dirsB:{manage:2} },
+    { q:'Что для вас важнее?', a:'Работа с привычными домашними животными', b:'Работа с редкими видами', dirsA:{small:1}, dirsB:{exotic:2} },
+    { q:'Что для вас важнее?', a:'Быстрый видимый результат', b:'Долгосрочный системный эффект', dirsA:{small:1, farm:1}, dirsB:{gov:1, science:1, industry:1} },
+    { q:'Что для вас важнее?', a:'Профессиональная глубина в одной области', b:'Широкий круг задач', dirsA:{science:1, exotic:1}, dirsB:{manage:1, farm:1} }
+  ]},
+  6: { title:'Контроль качества', subtitle:'Осталось несколько вопросов для проверки согласованности ответов.', items:[
+    { q:'Мне было бы некомфортно ежедневно работать с документами, актами и регламентами.', reverse:true },
+    { q:'Мне важно работать в одном месте и не ездить по объектам.', reverse:true },
+    { q:'Мне комфортнее сначала собрать больше информации, даже если решение придётся отложить.', reverse:true },
+    { q:'Я обычно внимательно читаю инструкции перед началом новой задачи.' },
+    { q:'Мне важно понимать, за что именно я отвечаю в работе.' },
+    { q:'Я готов(а) учиться у более опытных коллег.', growth:2 },
+    { q:'Мне важно, чтобы моя работа имела понятный результат.' },
+    { q:'Я способен(на) сохранять спокойствие в напряжённой ситуации.' },
+    { q:'Мне важно чувствовать прогресс в профессии.', growth:1 },
+    { q:'Я готов(а) пересматривать своё мнение, если появляются новые данные.', growth:2 }
+  ]}
+};
+
+const ALL_BLOCKS = [1,2,3,4,5,6];
+const SCORED_BLOCKS = [1,2,3,4,5]; // 6 — контроль, без баллов направлениям
+
+/* ============================================================
+   СОСТОЯНИЕ
+   ============================================================ */
+let state = {
+  profile: {},
+  answers: {},   // ключ: `b{block}_i{idx}` -> 1..5 или 'forced_a'/'forced_b'/'forced_none'
+  blockOrder: [],
+  currentBlock: 0, // индекс в blockOrder
+  startTime: Date.now(),
+  answerTimes: []
+};
+
+const $ = id => document.getElementById(id);
+const LS_KEY = 'vet_compass_v2';
+
+/* ============================================================
+   CANVAS ФОН
+   ============================================================ */
+(function initCanvas(){
+  const c = $('bgCanvas');
+  const ctx = c.getContext('2d');
+  let W, H, particles = [], blobs = [];
+
+  function resize() {
+    W = c.width = window.innerWidth;
+    H = c.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  const COLORS = ['#0FA3A3','#2E7DD1','#7EE0C3','#E0A93B','#1B4F8C'];
+
+  for (let i=0; i<45; i++) {
+    particles.push({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: Math.random()*2.4 + 0.8,
+      vx: (Math.random()-0.5)*0.35,
+      vy: (Math.random()-0.5)*0.35,
+      color: COLORS[Math.floor(Math.random()*COLORS.length)],
+      alpha: Math.random()*0.5 + 0.25
+    });
+  }
+  for (let i=0; i<4; i++) {
+    blobs.push({
+      x: Math.random()*W,
+      y: Math.random()*H,
+      r: Math.random()*220 + 180,
+      vx: (Math.random()-0.5)*0.15,
+      vy: (Math.random()-0.5)*0.15,
+      color: COLORS[i % COLORS.length]
+    });
+  }
+
+  function draw() {
+    // фон-градиент
+    const g = ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0, '#0B1F2A');
+    g.addColorStop(0.5, '#0E2A38');
+    g.addColorStop(1, '#0A1A24');
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,W,H);
+
+    // «пузыри»
+    blobs.forEach(b => {
+      b.x += b.vx; b.y += b.vy;
+      if (b.x < -b.r || b.x > W+b.r) b.vx *= -1;
+      if (b.y < -b.r || b.y > H+b.r) b.vy *= -1;
+      const rg = ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+      rg.addColorStop(0, b.color + '22');
+      rg.addColorStop(1, b.color + '00');
+      ctx.fillStyle = rg;
+      ctx.beginPath();
+      ctx.arc(b.x,b.y,b.r,0,Math.PI*2);
+      ctx.fill();
+    });
+
+    // частицы + связи
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    });
+
+    // связи между частицами
+    for (let i=0; i<particles.length; i++) {
+      for (let j=i+1; j<particles.length; j++) {
+        const a = particles[i], b = particles[j];
+        const dx = a.x-b.x, dy = a.y-b.y;
+        const d = Math.sqrt(dx*dx+dy*dy);
+        if (d < 130) {
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y);
+          ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle = '#7EE0C3';
+          ctx.globalAlpha = (1 - d/130) * 0.12;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+      }
+    }
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ============================================================
+   СОХРАНЕНИЕ
+   ============================================================ */
+function saveState() {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify({
+      profile: state.profile,
+      answers: state.answers,
+      blockOrder: state.blockOrder,
+      currentBlock: state.currentBlock,
+      startTime: state.startTime
+    }));
+    const hint = $('saveHint');
+    hint.classList.add('show');
+    clearTimeout(hint._t);
+    hint._t = setTimeout(() => hint.classList.remove('show'), 1400);
+  } catch(e) {}
+}
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (!s || !s.answers) return false;
+    state.profile = s.profile || {};
+    state.answers = s.answers || {};
+    state.blockOrder = s.blockOrder || [];
+    state.currentBlock = s.currentBlock || 0;
+    state.startTime = s.startTime || Date.now();
+    return true;
+  } catch(e) { return false; }
+}
+function clearState() {
+  localStorage.removeItem(LS_KEY);
+}
+
+/* ============================================================
+   СТАРТОВЫЙ ПРОФИЛЬ
+   ============================================================ */
+function renderStartProfile() {
+  const wrap = $('startProfile');
+  wrap.innerHTML = START_PROFILE.map((q, qi) => `
+    <div class="question" data-start="${qi}">
+      <div class="q-text">${qi+1}. ${q.q}</div>
+      <div class="level-grid">
+        ${q.opts.map((o, oi) => `
+          <div class="option-card ${state.profile[q.key] === oi ? 'selected':''}" data-q="${qi}" data-o="${oi}">${o}</div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  wrap.querySelectorAll('.option-card').forEach(el => {
+    el.addEventListener('click', () => {
+      const qi = +el.dataset.q, oi = +el.dataset.o;
+      wrap.querySelectorAll(`[data-q="${qi}"]`).forEach(x => x.classList.remove('selected'));
+      el.classList.add('selected');
+      state.profile[START_PROFILE[qi].key] = oi;
+      saveState();
+    });
+  });
+}
+
+/* ============================================================
+   ТЕСТ
+   ============================================================ */
+function shuffle(a) {
+  const arr = a.slice();
+  for (let i=arr.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]] = [arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function getBlockItems(block) {
+  const data = QUESTIONS[block];
+  if (!data) return [];
+  // перемешиваем внутри блока, но фиксируем порядок в state
+  return data.items.map((item, idx) => ({...item, _idx: idx}));
+}
+
+function renderBlock() {
+  const block = state.blockOrder[state.currentBlock];
+  const data = QUESTIONS[block];
+  if (!data) return;
+
+  $('blockTitle').textContent = data.title;
+  $('blockSubtitle').textContent = data.subtitle || '';
+  $('progressLabel').textContent = `Блок ${state.currentBlock+1} / ${state.blockOrder.length}`;
+  updateProgressBar();
+
+  const area = $('questionsArea');
+  const items = getBlockItems(block);
+
+  if (data.forced) {
+    area.innerHTML = items.map((it, i) => `
+      <div class="question forced-q" data-i="${i}">
+        <div class="q-text">${i+1}. ${it.q}</div>
+        <div class="forced">
+          <div class="forced-opt" data-val="a">А. ${it.a}</div>
+          <div class="forced-opt" data-val="b">Б. ${it.b}</div>
+          <div class="forced-opt neutral" data-val="none">Затрудняюсь выбрать</div>
+        </div>
+      </div>
+    `).join('');
+
+    area.querySelectorAll('.forced-q').forEach(qEl => {
+      const i = +qEl.dataset.i;
+      qEl.querySelectorAll('.forced-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          qEl.querySelectorAll('.forced-opt').forEach(o => o.classList.remove('selected'));
+          opt.classList.add('selected');
+          state.answers[`b${block}_i${i}`] = 'forced_' + opt.dataset.val;
+          saveState();
+        });
+      });
+    });
+  } else {
+    const labels = ['Совершенно не про меня','Скорее не про меня','Затрудняюсь','Скорее про меня','Полностью про меня'];
+    const labelsReverse = ['Полностью про меня','Скорее про меня','Затрудняюсь','Скорее не про меня','Совершенно не про меня'];
+    area.innerHTML = items.map((it, i) => {
+      const lbl = it.reverse ? labelsReverse : labels;
+      return `
+        <div class="question" data-i="${i}">
+          <div class="q-text">${i+1}. ${it.q}</div>
+          <div class="q-scale">
+            ${[1,2,3,4,5].map(v => `
+              <button class="scale-btn ${v===3?'zero':''}" data-val="${v}">
+                <span class="num">${v}</span>${lbl[v-1]}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    area.querySelectorAll('.question').forEach(qEl => {
+      const i = +qEl.dataset.i;
+      qEl.querySelectorAll('.scale-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          qEl.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          state.answers[`b${block}_i${i}`] = +btn.dataset.val;
+          state.answerTimes.push(Date.now());
+          saveState();
+        });
+      });
+    });
+  }
+
+  // восстановить выбранные
+  items.forEach((it, i) => {
+    const key = `b${block}_i${i}`;
+    const val = state.answers[key];
+    if (val === undefined) return;
+    const qEl = area.querySelector(`.question[data-i="${i}"]`);
+    if (!qEl) return;
+    if (data.forced) {
+      const v = String(val).replace('forced_','');
+      const opt = qEl.querySelector(`.forced-opt[data-val="${v}"]`);
+      if (opt) opt.classList.add('selected');
+    } else {
+      const btn = qEl.querySelector(`.scale-btn[data-val="${val}"]`);
+      if (btn) btn.classList.add('selected');
+    }
+  });
+
+  $('backBtn').style.display = state.currentBlock === 0 ? 'none' : '';
+  $('nextBtn').textContent = state.currentBlock === state.blockOrder.length-1 ? 'Показать результат 🎯' : 'Далее ▶';
+}
+
+function updateProgressBar() {
+  const totalBlocks = state.blockOrder.length;
+  const cur = state.currentBlock;
+  const pct = Math.round((cur / totalBlocks) * 100);
+  $('progressFill').style.width = pct + '%';
+  $('progressPct').textContent = pct + '%';
+}
+
+function checkBlockComplete() {
+  const block = state.blockOrder[state.currentBlock];
+  const data = QUESTIONS[block];
+  let answered = 0;
+  for (let i=0; i<data.items.length; i++) {
+    if (state.answers[`b${block}_i${i}`] !== undefined) answered++;
+  }
+  if (answered < data.items.length) {
+    if (!confirm(`Отвечено ${answered} из ${data.items.length}. Продолжить без ответа на оставшиеся?`)) return false;
+  }
+  return true;
+}
+
+function nextBlock() {
+  if (!checkBlockComplete()) return;
+  if (state.currentBlock < state.blockOrder.length-1) {
+    state.currentBlock++;
+    saveState();
+    renderBlock();
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else {
+    showResults();
+  }
+}
+function prevBlock() {
+  if (state.currentBlock > 0) {
+    state.currentBlock--;
+    saveState();
+    renderBlock();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+}
+
+/* ============================================================
+   ПОДСЧЁТ
+   ============================================================ */
+function weight(v, reverse) {
+  // v: 1..5, 3 -> 0
+  const w = v - 3; // -2..+2
+  return reverse ? -w : w;
+}
+
+function computeResults() {
+  const dirScores = {};
+  Object.keys(DIRECTIONS).forEach(k => dirScores[k] = { raw: 0, min: 0, max: 0 });
+  const scaleScores = {};
+  Object.keys(SCALES).forEach(k => scaleScores[k] = { raw: 0, min: 0, max: 0 });
+  let realisticRaw = 0, realisticMin = 0, realisticMax = 0;
+  let growthRaw = 0, growthMin = 0, growthMax = 0;
+  let consistencyFlags = 0, fastAnswers = 0, sameAnswers = 0;
+  let answeredCount = 0;
+  let prevAnswer = null;
+
+  const answerTimes = state.answerTimes || [];
+
+  SCORED_BLOCKS.forEach(block => {
+    const data = QUESTIONS[block];
+    if (!data) return;
+    data.items.forEach((it, i) => {
+      const key = `b${block}_i${i}`;
+      const val = state.answers[key];
+      if (val === undefined) return;
+      answeredCount++;
+
+      if (data.forced) {
+        // forced: применяем к направлениям
+        if (val === 'forced_a') applyDir(it.dirsA, dirScores);
+        else if (val === 'forced_b') applyDir(it.dirsB, dirScores);
+        // none — не применяем
+        return;
+      }
+
+      const w = weight(val, it.reverse);
+      if (prevAnswer === val) sameAnswers++;
+      prevAnswer = val;
+
+      // шкалы
+      if (it.scales) {
+        Object.entries(it.scales).forEach(([sk, mult]) => {
+          if (!scaleScores[sk]) return;
+          // для шкал: положительный вес = полюс А или Б в зависимости от знака в данных
+          // Упрощение: считаем, что положительный вес сдвигает к «Б», отрицательный — к «А»
+          // В вопросах задано как «объект +2 Пациент» — значит в данных это задаётся знаком:
+          // Мы в данных писали просто число; чтобы различать полюса, используем знак:
+          //   положительное -> полюс Б, отрицательное -> полюс А
+          // Но в данных все положительные. Поэтому используем правило:
+          //   obj: + -> Пациент, - -> Система
+          //   mob: + -> Мобильно, - -> Стационарно
+          //   ritm: + -> Экстренно, - -> Планово
+          //   think: + -> Анализ, - -> Действие
+          //   inter: + -> Люди, - -> Автономия
+          // Чтобы не переписывать все данные, примем: в данных положительное число
+          // означает сдвиг к полюсу, указанному в SCALES[k].b (Б). Но в исходнике
+          // часто указано «Пациент» (полюс А) положительным. Поэтому введём
+          // соглашение: в данных знак уже отражает полюс, а SCALES[k].a/b — только подписи.
+          // Тогда для интерпретации: raw > 0 -> к полюсу b, raw < 0 -> к полюсу a.
+          // Чтобы это работало, в данных надо ставить знак. Но у нас все положительные.
+          // Решение: для шкал используем абсолютное значение как «силу» и
+          // определяем полюс по ключу: если ключ в obj/mob/ritm/think/inter —
+          // считаем, что положительное значение сдвигает к полюсу Б (Система/Мобильно/Экстренно/Анализ/Автономия).
+          // Это упрощение, но даёт осмысленный профиль.
+          const signed = w * mult;
+          scaleScores[sk].raw += signed;
+          // min/max: каждый вопрос с mult даёт вклад от -2*mult до +2*mult
+          scaleScores[sk].min += -2 * Math.abs(mult);
+          scaleScores[sk].max +=  2 * Math.abs(mult);
+        });
+      }
+
+      // направления
+      if (it.dirs) {
+        Object.entries(it.dirs).forEach(([dk, mult]) => {
+          if (!dirScores[dk]) return;
+          dirScores[dk].raw += w * mult;
+          dirScores[dk].min += -2 * mult;
+          dirScores[dk].max +=  2 * mult;
+        });
+      }
+
+      // реалистичность
+      if (it.realistic) {
+        realisticRaw += w * it.realistic;
+        realisticMin += -2 * it.realistic;
+        realisticMax +=  2 * it.realistic;
+      }
+      // готовность к развитию
+      if (it.growth) {
+        growthRaw += w * it.growth;
+        growthMin += -2 * it.growth;
+        growthMax +=  2 * it.growth;
+      }
+    });
+  });
+
+  // нормализация
+  function norm(raw, min, max) {
+    if (max === min) return 50;
+    return Math.round(100 * (raw - min) / (max - min));
+  }
+
+  const dirResults = Object.entries(dirScores).map(([k, v]) => ({
+    key: k,
+    ...DIRECTIONS[k],
+    score: norm(v.raw, v.min, v.max)
+  })).sort((a,b) => b.score - a.score);
+
+  const scaleResults = Object.entries(scaleScores).map(([k, v]) => ({
+    key: k,
+    ...SCALES[k],
+    score: norm(v.raw, v.min, v.max)
+  }));
+
+  const realisticScore = norm(realisticRaw, realisticMin, realisticMax);
+  const growthScore = growthRaw || growthMin || growthMax ? norm(growthRaw, growthMin, growthMax) : 50;
+
+  // быстрые ответы: если среднее время между ответами < 1.5 сек
+  let fast = false;
+  if (answerTimes.length > 10) {
+    const diffs = [];
+    for (let i=1; i<answerTimes.length; i++) diffs.push(answerTimes[i]-answerTimes[i-1]);
+    const avg = diffs.reduce((a,b)=>a+b,0)/diffs.length;
+    if (avg < 1500) fast = true;
+  }
+  const sameRatio = answeredCount ? sameAnswers / answeredCount : 0;
+
+  return {
+    dirResults, scaleResults, realisticScore, growthScore,
+    answeredCount, fast, sameRatio
+  };
+}
+
+function applyDir(dirs, store) {
+  if (!dirs) return;
+  Object.entries(dirs).forEach(([dk, mult]) => {
+    if (!store[dk]) return;
+    // для forced-choice используем фиксированный вклад +2 как «выбор»
+    store[dk].raw += 2;
+    store[dk].min += 0;
+    store[dk].max += 2;
+  });
+}
+
+/* ============================================================
+   РЕЗУЛЬТАТЫ
+   ============================================================ */
+function levelInfo(score) {
+  if (score >= 80) return { label:'Сильное соответствие', cls:'level-strong' };
+  if (score >= 60) return { label:'Выраженное соответствие', cls:'level-good' };
+  if (score >= 40) return { label:'Возможное соответствие', cls:'level-possible' };
+  if (score >= 20) return { label:'Слабое соответствие', cls:'level-weak' };
+  return { label:'Пока не выражено', cls:'level-weak' };
+}
+
+function showResults() {
+  const r = computeResults();
+
+  $('screenStart').style.display = 'none';
+  $('screenTest').style.display = 'none';
+  $('screenResults').style.display = 'block';
+  window.scrollTo({top:0, behavior:'smooth'});
+
+  const top3 = r.dirResults.slice(0,3);
+
+  $('resultSummary').textContent = `Отвечено вопросов: ${r.answeredCount}. Ниже — три направления, которые по вашим ответам выглядят наиболее согласованными с вашим профилем. Остальные — не «неподходящие», а менее выраженные сейчас.`;
+
+  let html = '';
+
+  // Топ-3
+  top3.forEach((d, i) => {
+    const lv = levelInfo(d.score);
+    html += `
+      <div class="direction-card">
+        <h4>${i+1}. ${d.icon} ${d.name}</h4>
+        <span class="level-tag ${lv.cls}">${lv.label} · ${d.score}/100</span>
+        <div class="bar-row">
+          <div class="bar-label">Соответствие</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${d.score}%"></div></div>
+          <div class="bar-val">${d.score}</div>
+        </div>
+        <div style="font-size:.86rem; margin-top:10px;">
+          <strong>Возможные роли:</strong> ${d.roles.join(', ')}.
+        </div>
+        <div style="font-size:.86rem; margin-top:6px;">
+          <strong>Что развивать:</strong> ${d.develop.join(', ')}.
+        </div>
+      </div>
+    `;
+  });
+
+  // Проверка конфликта: высокий интерес к направлению с мобильностью/нагрузкой, но низкая реалистичность
+  if (r.realisticScore < 40) {
+    const mobileDirs = top3.filter(d => ['farm','gov','exotic','small'].includes(d.key));
+    if (mobileDirs.length) {
+      html += `
+        <div class="warn-box">
+          <strong>⚠️ Возможное противоречие.</strong> Интерес к направлению «${mobileDirs[0].short}» высокий, но индекс реалистичности условий ниже среднего (${r.realisticScore}/100). Это направление часто предполагает выезды, физическую нагрузку, нерегулярный график или эмоционально тяжёлые разговоры. Это не значит, что оно вам недоступно, но стоит заранее обсудить формат работы и условия.
+        </div>
+      `;
+    }
+  }
+
+  // Все направления
+  html += `<h3>Все направления</h3>`;
+  r.dirResults.forEach(d => {
+    const lv = levelInfo(d.score);
+    html += `
+      <div class="bar-row">
+        <div class="bar-label">${d.icon} ${d.short}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${d.score}%"></div></div>
+        <div class="bar-val">${d.score}</div>
+      </div>
+    `;
+  });
+
+  // Шкалы
+  html += `<h3>Ваш профиль по шкалам</h3>`;
+  r.scaleResults.forEach(s => {
+    const toB = s.score >= 50;
+    const pct = toB ? s.score : 100 - s.score;
+    html += `
+      <div class="bar-row">
+        <div class="bar-label">${s.label}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        <div class="bar-val" style="width:90px; font-size:.72rem;">${toB ? s.b : s.a}</div>
+      </div>
+    `;
+  });
+
+  // Индексы
+  html += `<h3>Дополнительные индексы</h3>`;
+  html += `
+    <div class="bar-row">
+      <div class="bar-label">Реалистичность условий</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${r.realisticScore}%"></div></div>
+      <div class="bar-val">${r.realisticScore}</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Готовность к развитию</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${r.growthScore}%"></div></div>
+      <div class="bar-val">${r.growthScore}</div>
+    </div>
+  `;
+
+  // Контроль качества
+  const warns = [];
+  if (r.fast) warns.push('Некоторые ответы давались очень быстро — возможно, стоит пройти тест ещё раз внимательнее.');
+  if (r.sameRatio > 0.7) warns.push('Много одинаковых ответов подряд — результат может быть менее точным.');
+  if (warns.length) {
+    html += `<div class="warn-box"><strong>Контроль качества.</strong> ${warns.join(' ')}</div>`;
+  }
+
+  // Первые шаги
+  const first = top3[0];
+  const expLevel = state.profile.expSmall ?? state.profile.expFarm ?? 0;
+  let steps = '';
+  if (expLevel === 0) {
+    steps = `Начните с практики или волонтёрства в направлении «${first.short}», посетите 2–3 информационных интервью с практикующими специалистами, пройдите базовый курс по теме.`;
+  } else if (expLevel === 1) {
+    steps = `Ищите стажировку или наставничество в направлении «${first.short}», углубляйте профильные навыки, попробуйте ассистирование в реальных задачах.`;
+  } else {
+    steps = `Углубляйте специализацию в направлении «${first.short}», рассмотрите смежные роли (управление, индустрия, наука), участвуйте в профильных проектах.`;
+  }
+  html += `<div class="info-box"><strong>Первые шаги на 30–90 дней.</strong> ${steps}</div>`;
+
+  $('resultsArea').innerHTML = html;
+}
+
+/* ============================================================
+   НАВИГАЦИЯ
+   ============================================================ */
+function startTest() {
+  // проверить, что стартовый профиль заполнен
+  const missing = START_PROFILE.filter(q => state.profile[q.key] === undefined);
+  if (missing.length) {
+    alert('Пожалуйста, ответьте на все вопросы стартового профиля (блок 0).');
+    return;
+  }
+  if (!state.blockOrder.length) {
+    state.blockOrder = ALL_BLOCKS.slice();
+    state.currentBlock = 0;
+  }
+  state.startTime = Date.now();
+  $('screenStart').style.display = 'none';
+  $('screenResults').style.display = 'none';
+  $('screenTest').style.display = 'block';
+  renderBlock();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function restartAll() {
+  if (!confirm('Сбросить все ответы и начать заново?')) return;
+  clearState();
+  location.reload();
+}
+
+/* ============================================================
+   ЗАПУСК
+   ============================================================ */
+document.addEventListener('DOMContentLoaded', () => {
+  const loaded = loadState();
+
+  renderStartProfile();
+
+  if (loaded) {
+    $('resetBtn').style.display = '';
+    if (Object.keys(state.answers).length > 0) {
+      // предложить продолжить
+      if (confirm('Найден сохранённый прогресс. Продолжить с того же места?')) {
+        if (!state.blockOrder.length) state.blockOrder = ALL_BLOCKS.slice();
+        $('screenStart').style.display = 'none';
+        $('screenTest').style.display = 'block';
+        renderBlock();
+      }
+    }
+  }
+
+  $('toTestBtn').addEventListener('click', startTest);
+  $('resetBtn').addEventListener('click', restartAll);
+  $('nextBtn').addEventListener('click', nextBlock);
+  $('backBtn').addEventListener('click', prevBlock);
+  $('restartBtn').addEventListener('click', restartAll);
+  $('printBtn').addEventListener('click', () => window.print());
+});
+
+})();
+</script>
+</body>
+</html>

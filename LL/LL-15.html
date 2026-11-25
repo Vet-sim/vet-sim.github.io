@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Латинский язык · Урок 15 · ВетСим</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif; background: #FDF8F0; color: #1A2A3A; padding: 16px; min-height: 100vh; line-height: 1.5; }
+.container { max-width: 1150px; margin: 0 auto; }
+
+.header { background: white; border-radius: 1.5rem; padding: 14px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 16px; border: 1px solid #E7EDE2; }
+.header .logo { font-weight: 700; font-size: 1.05rem; color: #1A2A3A; }
+.header .logo .gradient { background: linear-gradient(135deg, #2C7DA0, #6B9E6B); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.header .logo .sub { font-weight: 400; font-size: 0.72rem; color: #7B8D6E; display: block; margin-top: 2px; }
+.header-stats { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.82rem; }
+.header-stats .score { background: #2C7DA0; color: white; padding: 4px 16px; border-radius: 40px; font-weight: 600; }
+.header-stats .progress-text { color: #5F7C62; max-width: 340px; }
+
+.btn { background: #EBE3D2; border: none; padding: 7px 20px; border-radius: 40px; font-weight: 600; cursor: pointer; transition: 0.15s; font-family: inherit; font-size: 0.8rem; color: #1A2A3A; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.btn:active { transform: scale(0.96); }
+.btn-primary { background: #2C7DA0; color: white; }
+.btn-primary:hover { background: #236B8A; }
+.btn-success { background: #6B9E6B; color: white; }
+.btn-outline { background: transparent; border: 1px solid #D9D0BD; }
+.btn-outline:hover { background: #F0EEE5; }
+.btn-sm { padding: 4px 14px; font-size: 0.72rem; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.tab-btn { background: #EBE3D2; border: none; padding: 7px 18px; border-radius: 40px; font-weight: 600; font-size: 0.76rem; cursor: pointer; transition: 0.2s; font-family: inherit; color: #3E5C4A; }
+.tab-btn:hover { opacity: 0.85; }
+.tab-btn.active { background: #2C7DA0; color: white; }
+.tab-content { display: none; animation: fadeIn 0.25s ease; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.card { background: white; border-radius: 1.5rem; padding: 20px 24px; border: 1px solid #E7EDE2; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 14px; }
+.card-title { font-weight: 700; font-size: 1rem; color: #2C7DA0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; line-height: 1.4; }
+.card-title .badge { font-size: 0.65rem; background: #E7EDE2; color: #5F7C62; padding: 3px 12px; border-radius: 40px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+.badge.blue { background: #DBEAF2; color: #1F4E6E; }
+.badge.green { background: #E2EFD8; color: #4A6B3A; }
+.badge.orange { background: #FBE4D0; color: #8A5A2B; }
+
+.q { padding: 12px 0; border-bottom: 1px solid #f0ebe3; }
+.q:last-child { border-bottom: none; }
+.q-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 10px; line-height: 1.55; }
+.q-title .num { color: #2C7DA0; font-weight: 700; margin-right: 4px; }
+.options { display: flex; flex-direction: column; gap: 6px; }
+.option { background: #FEFCF9; border: 2px solid #E7EDE2; border-radius: 40px; padding: 8px 18px; font-size: 0.85rem; cursor: pointer; transition: 0.15s; display: flex; align-items: center; gap: 10px; }
+.option:hover { background: #F3F7F2; border-color: #A3B18A; }
+.option.selected { background: #E9F0E3; border-color: #2C7DA0; box-shadow: 0 0 0 3px rgba(44,125,160,0.1); }
+.option .marker { width: 26px; height: 26px; min-width: 26px; background: #E2EAD9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #5F7C62; font-size: 0.8rem; }
+.option.selected .marker { background: #2C7DA0; color: white; }
+
+.test-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; font-size: 0.8rem; color: #5F7C62; flex-wrap: wrap; }
+.test-progress .bar { flex: 1; height: 6px; background: #E7EDE2; border-radius: 20px; overflow: hidden; min-width: 80px; }
+.test-progress .bar-fill { height: 100%; background: #2C7DA0; border-radius: 20px; transition: width 0.3s; }
+.timer { background: #2C7DA0; color: white; padding: 6px 20px; border-radius: 40px; font-weight: 700; font-size: 0.95rem; font-variant-numeric: tabular-nums; min-width: 90px; text-align: center; transition: 0.3s; }
+.timer.warning { background: #D4A373; }
+.timer.danger { background: #b13e3e; animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+.latin { font-family: Georgia, 'Times New Roman', serif; color: #1F4E6E; font-weight: 700; }
+.theory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; margin-top: 10px; }
+.theory-box { background: #F9FBF8; border: 1px solid #E7EDE2; border-radius: 1rem; padding: 14px 16px; }
+.theory-box h3 { color: #2C7DA0; font-size: 0.88rem; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.theory-box p, .theory-box li { font-size: 0.83rem; line-height: 1.6; }
+.theory-box ul { padding-left: 18px; margin-top: 4px; }
+.theory-box ul li { margin-bottom: 3px; }
+
+.notice { background: #F7F3E8; border-left: 4px solid #2C7DA0; padding: 10px 14px; border-radius: 0 1rem 1rem 0; margin: 10px 0; font-size: 0.83rem; line-height: 1.6; }
+.notice.green { background: #E8F5E8; border-left-color: #6B9E6B; }
+.notice.blue { background: #E8F0F5; border-left-color: #2C7DA0; }
+.notice.orange { background: #FDF3E8; border-left-color: #D4A373; }
+.notice.red { background: #FDF0E8; border-left-color: #b13e3e; }
+.notice strong { color: #1F4E6E; }
+
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+table.lesson-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; background: white; border-radius: 12px; overflow: hidden; }
+table.lesson-table th, table.lesson-table td { padding: 8px 12px; border-bottom: 1px solid #E7EDE2; text-align: left; vertical-align: top; }
+table.lesson-table th { background: #F3F7F2; color: #2C7DA0; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.3px; }
+table.lesson-table tr:last-child td { border-bottom: none; }
+
+.lexicon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
+.lex-card { background: #F9FBF8; border: 1px solid #E7EDE2; border-radius: 1rem; padding: 10px 14px; font-size: 0.82rem; line-height: 1.5; }
+.lex-card .lex-latin { font-family: Georgia, serif; font-weight: 700; color: #1F4E6E; font-size: 0.92rem; display: block; margin-bottom: 2px; }
+.lex-card .lex-trans { color: #3E5C4A; font-weight: 500; }
+.lex-section-title { font-weight: 700; color: #2C7DA0; font-size: 0.88rem; margin: 14px 0 8px; padding-bottom: 4px; border-bottom: 2px solid #E7EDE2; }
+.lex-section-title:first-child { margin-top: 0; }
+
+.exercise { background: #F9FBF8; border: 1px solid #E7EDE2; border-radius: 1rem; padding: 14px 18px; margin-bottom: 12px; }
+.exercise.advanced { background: #FDF7EC; border-color: #E8D9B8; border-left: 4px solid #D4A373; }
+.exercise h3 { font-size: 0.9rem; color: #2C7DA0; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.exercise.advanced h3 { color: #8A5A2B; }
+.exercise table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.exercise table th, .exercise table td { padding: 6px 8px; border: 1px solid #E7EDE2; text-align: left; vertical-align: top; }
+.exercise table th { background: #F3F7F2; color: #2C7DA0; font-size: 0.72rem; }
+.exercise input[type="text"] { width: 100%; padding: 6px 10px; border: 2px solid #D9D0BD; border-radius: 20px; font-family: inherit; font-size: 0.82rem; background: white; color: #3E5C4A; outline: none; transition: 0.15s; }
+.exercise input:focus { border-color: #2C7DA0; box-shadow: 0 0 0 3px rgba(44,125,160,0.1); }
+.exercise input.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.exercise input.wrong { border-color: #b13e3e; background: #FDF0E8; }
+.exercise textarea { width: 100%; min-height: 60px; padding: 6px 10px; border: 2px solid #D9D0BD; border-radius: 14px; font-family: inherit; font-size: 0.82rem; background: white; color: #3E5C4A; outline: none; transition: 0.15s; resize: vertical; line-height: 1.5; }
+.exercise textarea:focus { border-color: #2C7DA0; box-shadow: 0 0 0 3px rgba(44,125,160,0.1); }
+.exercise textarea.correct { border-color: #6B9E6B; background: #E8F5E8; }
+.exercise textarea.wrong { border-color: #b13e3e; background: #FDF0E8; }
+
+.exercise-controls { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.result-msg { margin-top: 10px; padding: 10px 14px; border-radius: 1rem; font-size: 0.85rem; font-weight: 500; display: none; line-height: 1.55; }
+.result-msg.show { display: block; }
+.result-msg.ok { background: #E8F5E8; color: #2E7D32; }
+.result-msg.no { background: #FDF0E8; color: #b13e3e; }
+
+.final-screen { text-align: center; padding: 20px; }
+.final-screen .score-big { font-size: 3rem; font-weight: 800; color: #1F4E6E; line-height: 1; }
+.final-screen .icon { font-size: 3.5rem; margin-bottom: 8px; }
+.final-screen .message { font-size: 1.05rem; color: #3E5C4A; margin: 12px 0 20px; line-height: 1.5; }
+.final-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; max-width: 520px; margin: 0 auto 20px; }
+.stat-box { background: #F9FBF8; border: 1px solid #E7EDE2; border-radius: 1rem; padding: 12px; }
+.stat-box .num { font-size: 1.5rem; font-weight: 700; color: #2C7DA0; }
+.stat-box .lbl { font-size: 0.7rem; color: #7B8D6E; text-transform: uppercase; }
+
+.retake-container { max-width: 600px; margin: 16px auto 0; text-align: center; }
+.cooldown-notice { background: #FDF3E8; border-left: 4px solid #D4A373; padding: 14px 18px; border-radius: 0 1rem 1rem 0; font-size: 0.9rem; line-height: 1.55; text-align: left; }
+.cooldown-notice strong { color: #8A5A2B; font-size: 1.15rem; font-variant-numeric: tabular-nums; }
+
+footer { margin-top: 20px; padding: 16px; background: white; border-radius: 1.5rem; border: 1px solid #E7EDE2; text-align: center; font-size: 0.75rem; color: #7B8D6E; line-height: 1.6; }
+footer strong { color: #1F4E6E; }
+
+@media (max-width: 700px) {
+    body { padding: 10px; }
+    .header { flex-direction: column; align-items: stretch; padding: 12px 16px; }
+    .header .logo { font-size: 0.95rem; }
+    .header-stats { justify-content: space-between; }
+    .card { padding: 14px 16px; }
+    .tab-btn { font-size: 0.68rem; padding: 5px 12px; }
+    .q-title { font-size: 0.85rem; }
+    .option { padding: 8px 14px; font-size: 0.82rem; }
+    .exercise { padding: 12px; }
+    .exercise table { font-size: 0.75rem; }
+    .exercise table th, .exercise table td { padding: 4px 6px; }
+    .final-screen .score-big { font-size: 2.4rem; }
+}
+@media (max-width: 450px) {
+    .tab-btn { font-size: 0.65rem; padding: 5px 10px; }
+    .option { padding: 7px 12px; font-size: 0.78rem; }
+    .option .marker { width: 22px; height: 22px; min-width: 22px; font-size: 0.72rem; }
+    .exercise table { font-size: 0.7rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header class="header">
+    <div class="logo">📚 <span class="gradient">Lingua Latina</span><span class="sub">· Урок 15. Рецепт: выписывание жидких лекарственных форм</span></div>
+    <div class="header-stats">
+        <span class="progress-text" id="headerStatus">Входной тест · Урок 14: мягкие лекарственные формы</span>
+        <span class="score" id="headerScore">⭐ 0</span>
+    </div>
+</header>
+
+<div class="tabs">
+    <button class="tab-btn active" data-tab="test">🧪 Входной тест</button>
+    <button class="tab-btn" data-tab="theory">📖 Теория</button>
+    <button class="tab-btn" data-tab="lexicon">📚 Лексика</button>
+    <button class="tab-btn" data-tab="practice">🧩 Практика</button>
+    <button class="tab-btn" data-tab="advanced">⭐ Дополнительно</button>
+    <button class="tab-btn" data-tab="vet">🐾 Ветпрактика</button>
+</div>
+
+<section class="tab-content active" id="tab-test">
+    <div class="card">
+        <div class="card-title">
+            <span>🧪 Входной тест: урок 14 — мягкие лекарственные формы</span>
+            <span class="badge" id="testBadge">25 вопросов</span>
+        </div>
+        <div id="testStart">
+            <div class="notice">
+                <strong>Проверка знаний предыдущего урока.</strong> Тест включает <strong>лексику</strong> (названия мягких форм, рецептурные элементы) и <strong>теорию</strong> (правила выписывания мазей, паст, линиментов, суппозиториев). 25 заданий, 15 минут.
+            </div>
+            <div class="notice orange">
+                <strong>⚠️ Внимание!</strong> Тест проходится <strong>один раз</strong>. Результат сохраняется на этом устройстве. При результате <strong>ниже 60%</strong> пересдача будет доступна <strong>через 30 минут</strong> (время на подготовку). Через <strong>2 дня</strong> результат сбрасывается автоматически.
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;">
+                <button class="btn btn-primary" id="startTestBtn">🚀 Начать тест</button>
+            </div>
+        </div>
+        <div id="testProgress" style="display:none;">
+            <div class="test-progress">
+                <span id="testProgressText">Вопрос 1 из 25</span>
+                <div class="bar"><div class="bar-fill" id="testBarFill"></div></div>
+                <span id="testProgressPct">0%</span>
+                <span class="timer" id="testTimer">15:00</span>
+            </div>
+            <div id="questionCard"></div>
+            <div class="exercise-controls" style="justify-content:flex-end;">
+                <button class="btn btn-primary" id="testNextBtn" disabled>Далее ▶</button>
+            </div>
+        </div>
+        <div id="testFinal" style="display:none;"></div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-theory">
+    <div class="card">
+        <div class="card-title"><span>📖 Жидкие лекарственные формы</span></div>
+        <div class="notice blue">
+            <strong>Жидкие лекарственные формы</strong> — растворы, настойки, настои, отвары, эмульсии, суспензии, сиропы, экстракты, слизи. Широко используются для обработки ран, внутреннего применения, инъекций.
+        </div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead><tr><th>Форма</th><th>Латинское название</th><th>Род</th><th>Склонение</th></tr></thead>
+                <tbody>
+                    <tr><td>Раствор</td><td class="latin">solutio, onis, f</td><td>ж.р.</td><td>III</td></tr>
+                    <tr><td>Настойка</td><td class="latin">tinctura, ae, f</td><td>ж.р.</td><td>I</td></tr>
+                    <tr><td>Настой</td><td class="latin">infusum, i, n</td><td>ср.р.</td><td>II</td></tr>
+                    <tr><td>Отвар</td><td class="latin">decoctum, i, n</td><td>ср.р.</td><td>II</td></tr>
+                    <tr><td>Эмульсия</td><td class="latin">emulsum, i, n</td><td>ср.р.</td><td>II</td></tr>
+                    <tr><td>Суспензия</td><td class="latin">suspensio, onis, f</td><td>ж.р.</td><td>III</td></tr>
+                    <tr><td>Сироп</td><td class="latin">sirupus, i, m</td><td>м.р.</td><td>II</td></tr>
+                    <tr><td>Экстракт</td><td class="latin">extractum, i, n</td><td>ср.р.</td><td>II</td></tr>
+                    <tr><td>Слизь</td><td class="latin">mucilago, inis, f</td><td>ж.р.</td><td>III</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="notice green">
+            <strong>Gen. sing.:</strong> <span class="latin">solutionis</span>, <span class="latin">tincturae</span>, <span class="latin">infusi</span>, <span class="latin">decocti</span>. В рецепте название формы ставится в <strong>родительном падеже</strong>.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Растворы — 2 способа выписывания</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Простой (одно вещество)</h3>
+                <p style="font-family:Georgia,serif;font-size:0.82rem;line-height:1.8;margin-top:6px;">
+                    <span class="latin">Rp.: Solutionis Rivanolis 0,1% 100 ml</span><br>
+                    <span class="latin">S.</span> Для промывания ран.
+                </p>
+                <ul style="margin-top:8px;">
+                    <li><span class="latin">Solutionis</span> — Gen. sing.</li>
+                    <li>0,1% — концентрация</li>
+                    <li>100 ml — объём</li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>Сложный (несколько веществ)</h3>
+                <p style="font-family:Georgia,serif;font-size:0.82rem;line-height:1.8;margin-top:6px;">
+                    <span class="latin">Rp.: Solutionis 100 ml</span><br>
+                    <span class="latin">Recipe: Rivanolis 0,1</span><br>
+                    <span class="latin">Natrii chloridi 0,9</span><br>
+                    <span class="latin">Aquae destillatae ad 100 ml</span><br>
+                    <span class="latin">Misce, fiat solutio</span><br>
+                    <span class="latin">S.</span> Для промывания ран.
+                </p>
+                <ul style="margin-top:8px;">
+                    <li>Сначала общий объём</li>
+                    <li>Затем перечень веществ</li>
+                    <li><span class="latin">ad 100 ml</span> — до 100 мл</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Настойки, настои, отвары</span></div>
+        
+        <p style="font-size:0.85rem; margin-bottom:6px;"><strong>🧪 Настойка (Tinctura)</strong> — готовая спиртовая вытяжка. Выписывается просто: название + объём.</p>
+        <div class="notice">
+            <span class="latin">Rp.: Tincturae Valerianae 25 ml</span><br>
+            <span class="latin">S.</span> По 20 капель 3 раза в день.
+        </div>
+
+        <p style="font-size:0.85rem; margin-top:14px; margin-bottom:6px;"><strong>🧪 Настой (Infusum) и Отвар (Decoctum)</strong> — водные извлечения. Настои из листьев/цветов (15–20 мин), отвары из коры/корней (30–40 мин).</p>
+        <div class="notice">
+            <span class="latin">Rp.: Infusi herbae Leonuri 100 ml</span><br>
+            <span class="latin">S.</span> По 1 столовой ложке 3 раза в день.<br><br>
+            <span class="latin">Rp.: Decocti corticis Quercus 100 ml</span><br>
+            <span class="latin">S.</span> Для промывания ран.
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-title"><span>📌 Эмульсии, сиропы, экстракты</span></div>
+        <div class="table-wrap">
+            <table class="lesson-table">
+                <thead><tr><th>Форма</th><th>Формула</th><th>Пример</th></tr></thead>
+                <tbody>
+                    <tr><td>Эмульсия</td><td><span class="latin">Rp.: Emulsi [назв. Gen.] [объём] ml</span></td><td><span class="latin">Emulsi Olei Ricini 100 ml</span></td></tr>
+                    <tr><td>Сироп</td><td><span class="latin">Rp.: Sirupi [назв. Gen.] [объём] ml</span></td><td><span class="latin">Sirupi Althaeae 100 ml</span></td></tr>
+                    <tr><td>Экстракт</td><td><span class="latin">Rp.: Extracti [назв. Gen.] [конц.]% [объём] ml</span></td><td><span class="latin">Extracti Belladonnae 1% 10 ml</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="notice orange">
+            <strong>Важно!</strong> В жидких формах объём указывается в <strong>миллилитрах (ml)</strong> или <strong>каплях (gtt.)</strong>.
+        </div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-lexicon">
+    <div class="card">
+        <div class="card-title"><span>📚 Лексический минимум урока 15</span><span class="badge">10 слов</span></div>
+        <div class="lex-section-title">📗 Жидкие лекарственные формы</div>
+        <div class="lexicon-grid" id="lexForms"></div>
+        <div class="lex-section-title">📘 Рецептурные элементы</div>
+        <div class="lexicon-grid" id="lexElements"></div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-practice">
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 1. Переведите названия жидких форм</span></div>
+        <div class="exercise" id="ex1">
+            <div class="table-wrap"><table><thead><tr><th>Латинское слово</th><th>Перевод</th></tr></thead><tbody id="ex1Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex1">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex1">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex1Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 2. Прочитайте и переведите рецепты на растворы</span></div>
+        <div class="exercise" id="ex2">
+            <div class="table-wrap"><table><thead><tr><th>Рецепт</th><th>Перевод</th></tr></thead><tbody id="ex2Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex2">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex2">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex2Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 3. Составьте рецепты на растворы</span></div>
+        <div class="exercise" id="ex3">
+            <div class="table-wrap"><table><thead><tr><th>Ситуация</th><th>Рецепт</th></tr></thead><tbody id="ex3Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex3">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex3">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex3Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 4. Восстановите пропуски в рецептах</span></div>
+        <div class="exercise" id="ex4">
+            <div class="table-wrap"><table><thead><tr><th>Рецепт (с пропуском)</th><th>Пропущенное</th></tr></thead><tbody id="ex4Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex4">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex4">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex4Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 5. Прочитайте и переведите рецепты на настойки, настои, отвары</span></div>
+        <div class="exercise" id="ex5">
+            <div class="table-wrap"><table><thead><tr><th>Рецепт</th><th>Перевод</th></tr></thead><tbody id="ex5Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex5">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex5">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex5Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>🧩 Упражнение 6. Составьте рецепты на сиропы, эмульсии, экстракты</span></div>
+        <div class="exercise" id="ex6">
+            <div class="table-wrap"><table><thead><tr><th>Ситуация</th><th>Рецепт</th></tr></thead><tbody id="ex6Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex6">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex6">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex6Result"></div>
+        </div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-advanced">
+    <div class="card">
+        <div class="card-title"><span>⭐ Дополнительные задания</span><span class="badge orange">3 задания</span></div>
+        <div class="notice orange">
+            Эти задания — повышенной сложности: <strong>поиск ошибок</strong>, <strong>определение формы</strong> и <strong>клинические случаи</strong>.
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 7. Найдите ошибку и напишите исправленный рецепт</span></div>
+        <div class="exercise advanced" id="ex7">
+            <div class="notice" style="margin-top:0;">
+                В каждом рецепте (кроме одного) есть ошибка. Найдите её и запишите исправленный вариант. Для рецепта без ошибки — скопируйте его как есть.
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Рецепт</th><th>Исправленный вариант</th></tr></thead><tbody id="ex7Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex7">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex7">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex7Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 8. Определите лекарственную форму</span></div>
+        <div class="exercise advanced" id="ex8">
+            <div class="notice" style="margin-top:0;">
+                Определите форму (раствор, настойка, настой, отвар, сироп, эмульсия) и переведите рецепт.
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Рецепт</th><th>Форма</th><th>Перевод</th></tr></thead><tbody id="ex8Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex8">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex8">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex8Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>⭐ Упражнение 9. Клинический случай: составьте рецепт</span></div>
+        <div class="exercise advanced" id="ex9">
+            <div class="notice" style="margin-top:0;">
+                Самостоятельно выберите форму и запишите полную рецептурную пропись.
+            </div>
+            <div class="table-wrap"><table><thead><tr><th>Ситуация</th><th>Рецепт</th></tr></thead><tbody id="ex9Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex9">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex9">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex9Result"></div>
+        </div>
+    </div>
+</section>
+
+<section class="tab-content" id="tab-vet">
+    <div class="card">
+        <div class="card-title"><span>🐾 Профессиональная вставка. Выпишите рецепты</span></div>
+        <div class="notice blue">
+            <strong>Ты — ветеринарный фельдшер.</strong> Для каждого пациента выпиши рецепт на латинском языке, соблюдая структуру и сокращения.
+        </div>
+        <div class="exercise" id="ex10">
+            <div class="table-wrap"><table><thead><tr><th>Ситуация</th><th>Рецепт</th></tr></thead><tbody id="ex10Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex10">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex10">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex10Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>📝 Задание 11. Переведите с латинского на русский</span></div>
+        <div class="exercise" id="ex11">
+            <div class="table-wrap"><table><thead><tr><th>Латинский рецепт</th><th>Перевод</th></tr></thead><tbody id="ex11Body"></tbody></table></div>
+            <div class="exercise-controls">
+                <button class="btn btn-primary" data-check="ex11">✅ Проверить</button>
+                <button class="btn btn-outline" data-reset="ex11">🔄 Сбросить</button>
+            </div>
+            <div class="result-msg" id="ex11Result"></div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title"><span>📖 Справочные материалы</span></div>
+        <div class="theory-grid">
+            <div class="theory-box">
+                <h3>Растворы</h3>
+                <ul>
+                    <li>Простой: <span class="latin">Solutionis [вещ.] [конц.]% [объём] ml</span></li>
+                    <li>Сложный: <span class="latin">Solutionis [объём] ml Recipe: ... Misce, fiat solutio</span></li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>Настойки, настои, отвары</h3>
+                <ul>
+                    <li>Настойка: <span class="latin">Tincturae [вещ.] [объём] ml</span></li>
+                    <li>Настой: <span class="latin">Infusi [сырьё] [объём] ml</span></li>
+                    <li>Отвар: <span class="latin">Decocti [сырьё] [объём] ml</span></li>
+                </ul>
+            </div>
+            <div class="theory-box">
+                <h3>Другие формы</h3>
+                <ul>
+                    <li>Сироп: <span class="latin">Sirupi [вещ.] [объём] ml</span></li>
+                    <li>Эмульсия: <span class="latin">Emulsi [вещ.] [объём] ml</span></li>
+                    <li>Экстракт: <span class="latin">Extracti [вещ.] [конц.]% [объём] ml</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    © ВетСим — ветеринарное просвещение · Латинский язык в ветеринарии<br>
+    <strong>Автор проекта и тренажёра: Тераевич Алла Сергеевна</strong><br>
+    Урок 15. Рецепт: выписывание жидких лекарственных форм · Работает офлайн<br>
+    <span style="font-size:0.7rem;">Результат теста сохраняется на устройстве. Сброс — автоматически через 2 дня.</span>
+</footer>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    const $ = id => document.getElementById(id);
+
+    // ============================================================
+    //  КОНСТАНТЫ
+    // ============================================================
+    const STORAGE_KEY = 'vetsim_lesson15_test_v1';
+    const TEST_DURATION = 15 * 60;                    // 15 минут
+    const ACTUALITY_MS = 2 * 24 * 60 * 60 * 1000;     // 2 дня
+    const RETAKE_COOLDOWN_MS = 30 * 60 * 1000;         // 30 минут
+    const PASS_THRESHOLD = 60;                         // проходной балл, %
+
+    // ============================================================
+    //  УТИЛИТЫ
+    // ============================================================
+    function shuffle(arr) {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+    function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+    function norm(s) {
+        return String(s).toLowerCase().replace(/[.,;:!?\s«»"]/g, '').replace(/ё/g, 'е');
+    }
+    function fmtDate(ts) {
+        const d = new Date(ts);
+        return d.toLocaleDateString('ru-RU') + ' в ' + d.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+    }
+
+    // ============================================================
+    //  ДАННЫЕ ДЛЯ ВХОДНОГО ТЕСТА (урок 14)
+    // ============================================================
+    const LEX14_WORDS = [
+        { latin: 'unguentum', ru: 'мазь' },
+        { latin: 'pasta', ru: 'паста' },
+        { latin: 'linimentum', ru: 'линимент' },
+        { latin: 'suppositorium', ru: 'свеча, суппозиторий' },
+        { latin: 'emplastrum', ru: 'пластырь' },
+        { latin: 'Misce, fiat', ru: 'Смешай, пусть получится' },
+        { latin: 'Unguenti', ru: 'Мази (Gen. sing.)' },
+        { latin: 'Pastae', ru: 'Пасты (Gen. sing.)' },
+        { latin: 'Suppositoriorum', ru: 'Свечей (Gen. plur.)' }
+    ];
+
+    const THEORY14_QUESTIONS = [
+        { q: 'Какое слово ставится в Gen. sing. при выписывании простой мази?', correct: 'Unguenti', wrong: ['Unguentum', 'Unguento', 'Unguentis'] },
+        { q: 'Что обязательно пишется в конце сложной мази?', correct: 'Misce, fiat unguentum', wrong: ['Misce, fiat pasta', 'Misce, fiat linimentum', 'Recipe, fiat solutio'] },
+        { q: 'Чем паста отличается от мази?', correct: 'Содержанием порошков не менее 25%', wrong: ['Способом нанесения', 'Температурой плавления', 'Цветом'] },
+        { q: 'Что такое линимент?', correct: 'Жидкая мазь, перед применением взбалтывается', wrong: ['Твёрдая форма', 'Раствор для инъекций', 'Суппозиторий'] },
+        { q: 'Как переводится «Misce, fiat»?', correct: 'Смешай, пусть получится', wrong: ['Возьми и выдай', 'Обозначь и подпиши', 'Раствори и профильтруй'] },
+        { q: 'В каком падеже ставится Suppositoriorum?', correct: 'Gen. plur. (родительный множественный)', wrong: ['Gen. sing. (родительный единственный)', 'Nom. sing. (именительный)', 'Acc. sing. (винительный)'] },
+        { q: 'Какой предлог используется при выписывании суппозиториев с веществом?', correct: 'cum (с) + Abl.', wrong: ['ad + Acc.', 'in + Abl.', 'sub + Abl.'] },
+        { q: 'Как выписывается простая мазь?', correct: 'Rp.: Unguenti [вещ. Gen.] [конц.]% [вес]', wrong: ['Rp.: Unguenti [вещ. Nom.] [вес]', 'Rp.: Unguenti [вещ.] D.t.d. N.', 'Rp.: Unguenti in tabulettis'] },
+        { q: 'Что такое суппозиторий?', correct: 'Свеча (дозированная мягкая форма)', wrong: ['Порошок', 'Таблетка', 'Раствор'] },
+        { q: 'Какой вес указывается при выписывании мази?', correct: 'Общий вес в граммах', wrong: ['Вес одной дозы', 'Объём в миллилитрах', 'Количество в штуках'] },
+        { q: 'Какая форма требует указания концентрации в процентах?', correct: 'Мазь, паста, линимент', wrong: ['Суппозиторий', 'Пластырь', 'Порошок'] },
+        { q: 'Какое слово ставится в Gen. sing. при выписывании пасты?', correct: 'Pastae', wrong: ['Pasta', 'Pasto', 'Pastis'] },
+        { q: 'Что означает Emplastrum?', correct: 'Пластырь', wrong: ['Мазь', 'Паста', 'Свеча'] },
+        { q: 'Как переводится «Suppositorium vaginarium»?', correct: 'Вагинальная свеча', wrong: ['Ректальная свеча', 'Мазь для влагалища', 'Таблетка для влагалища'] }
+    ];
+
+    // ============================================================
+    //  LOCALSTORAGE
+    // ============================================================
+    function saveState(state) {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) { console.warn('localStorage save failed', e); }
+    }
+    function loadState() {
+        try { const r = localStorage.getItem(STORAGE_KEY); return r ? JSON.parse(r) : null; } catch(e) { return null; }
+    }
+    function clearState() {
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+    }
+
+    // ============================================================
+    //  ВКЛАДКИ
+    // ============================================================
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            btn.classList.add('active');
+            $('tab-' + btn.dataset.tab).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // ============================================================
+    //  ТЕСТ — ГЛОБАЛЬНОЕ СОСТОЯНИЕ
+    // ============================================================
+    let testQuestions = [];
+    let testAnswers = [];
+    let testCurrent = 0;
+    let testStartedAt = 0;
+    let testTimerInterval = null;
+    let testSecondsLeft = 0;
+    let cooldownInterval = null;
+
+    // ============================================================
+    //  ПОДГОТОВКА ВОПРОСОВ
+    // ============================================================
+    function prepareTestQuestions() {
+        const lexPool = shuffle(LEX14_WORDS).slice(0, 11);
+        const theoryPool = shuffle(THEORY14_QUESTIONS).slice(0, 14);
+
+        const lexQs = lexPool.map(w => {
+            const isLatinToRu = Math.random() < 0.5;
+            let questionText, correctAnswer, distractors;
+            if (isLatinToRu) {
+                questionText = 'Что означает <span class="latin">' + escapeHtml(w.latin) + '</span>?';
+                correctAnswer = w.ru;
+                const others = LEX14_WORDS.filter(x => x.ru !== w.ru).map(x => x.ru);
+                distractors = shuffle([...new Set(others)]).slice(0, 3);
+            } else {
+                questionText = 'Какой термин означает «' + escapeHtml(w.ru) + '»?';
+                correctAnswer = w.latin;
+                const others = LEX14_WORDS.filter(x => x.latin !== w.latin).map(x => x.latin);
+                distractors = shuffle([...new Set(others)]).slice(0, 3);
+            }
+            const options = shuffle([correctAnswer, ...distractors]);
+            return { question: questionText, options, correct: options.indexOf(correctAnswer) };
+        });
+
+        const theoryQs = theoryPool.map(t => {
+            const options = shuffle([t.correct, ...t.wrong]);
+            return { question: t.q, options, correct: options.indexOf(t.correct) };
+        });
+
+        return shuffle([...lexQs, ...theoryQs]);
+    }
+
+    // ============================================================
+    //  СТАРТ / ВОССТАНОВЛЕНИЕ / ЗАВЕРШЕНИЕ ТЕСТА
+    // ============================================================
+    function startTest() {
+        testQuestions = prepareTestQuestions();
+        testAnswers = new Array(testQuestions.length).fill(null);
+        testCurrent = 0;
+        testStartedAt = Date.now();
+        testSecondsLeft = TEST_DURATION;
+
+        saveState({
+            status: 'in_progress',
+            startedAt: testStartedAt,
+            currentIndex: 0,
+            questions: testQuestions,
+            answers: testAnswers
+        });
+
+        $('testStart').style.display = 'none';
+        $('testProgress').style.display = 'block';
+        $('testFinal').style.display = 'none';
+        $('testBadge').textContent = testQuestions.length + ' вопросов';
+
+        startTestTimer(TEST_DURATION);
+        renderTestQuestion();
+    }
+
+    function startTestTimer(seconds) {
+        if (testTimerInterval) clearInterval(testTimerInterval);
+        const startWall = Date.now();
+        const initialRemaining = seconds;
+        testSecondsLeft = seconds;
+        updateTestTimerDisplay();
+
+        testTimerInterval = setInterval(() => {
+            const elapsed = Math.floor((Date.now() - startWall) / 1000);
+            testSecondsLeft = Math.max(0, initialRemaining - elapsed);
+            updateTestTimerDisplay();
+            if (testSecondsLeft <= 0) {
+                clearInterval(testTimerInterval);
+                finishTest(true);
+            }
+        }, 500);
+    }
+
+    function updateTestTimerDisplay() {
+        const m = Math.floor(testSecondsLeft / 60);
+        const s = testSecondsLeft % 60;
+        const el = $('testTimer');
+        el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+        el.classList.remove('warning', 'danger');
+        if (testSecondsLeft <= 60) el.classList.add('danger');
+        else if (testSecondsLeft <= 300) el.classList.add('warning');
+    }
+
+    function renderTestQuestion() {
+        const q = testQuestions[testCurrent];
+        const total = testQuestions.length;
+        const percent = Math.round((testCurrent / total) * 100);
+        $('testProgressText').textContent = 'Вопрос ' + (testCurrent + 1) + ' из ' + total;
+        $('testBarFill').style.width = percent + '%';
+        $('testProgressPct').textContent = percent + '%';
+        $('headerStatus').textContent = 'Вопрос ' + (testCurrent + 1) + ' из ' + total;
+
+        const letters = ['А', 'Б', 'В', 'Г', 'Д', 'Е'];
+        let html = '<div class="q"><div class="q-title"><span class="num">' + (testCurrent + 1) + '.</span> ' + q.question + '</div><div class="options">';
+        q.options.forEach((opt, i) => {
+            const selected = testAnswers[testCurrent] === i;
+            html += '<div class="option ' + (selected ? 'selected' : '') + '" data-idx="' + i + '">' +
+                '<div class="marker">' + letters[i] + '</div>' +
+                '<div class="text">' + escapeHtml(opt) + '</div>' +
+            '</div>';
+        });
+        html += '</div></div>';
+        $('questionCard').innerHTML = html;
+
+        $('questionCard').querySelectorAll('.option').forEach(optEl => {
+            optEl.addEventListener('click', () => {
+                testAnswers[testCurrent] = parseInt(optEl.dataset.idx);
+                saveState({
+                    status: 'in_progress',
+                    startedAt: testStartedAt,
+                    currentIndex: testCurrent,
+                    questions: testQuestions,
+                    answers: testAnswers
+                });
+                renderTestQuestion();
+                $('testNextBtn').disabled = false;
+            });
+        });
+
+        const nextBtn = $('testNextBtn');
+        nextBtn.textContent = testCurrent === total - 1 ? '🏁 Завершить' : 'Далее ▶';
+        nextBtn.disabled = testAnswers[testCurrent] === null;
+    }
+
+    function finishTest(timeout) {
+        if (testTimerInterval) clearInterval(testTimerInterval);
+
+        let correct = 0;
+        testQuestions.forEach((q, i) => { if (testAnswers[i] === q.correct) correct++; });
+        const total = testQuestions.length;
+        const percent = Math.round((correct / total) * 100);
+
+        const completed = {
+            status: 'completed',
+            startedAt: testStartedAt,
+            completedAt: Date.now(),
+            currentIndex: testCurrent,
+            questions: testQuestions,
+            answers: testAnswers,
+            correct, total, percent,
+            timeout: !!timeout
+        };
+        saveState(completed);
+        showFinalScreen(completed);
+    }
+
+    function finalizeExpired(saved) {
+        let correct = 0;
+        saved.questions.forEach((q, i) => { if (saved.answers[i] === q.correct) correct++; });
+        const total = saved.questions.length;
+        const percent = Math.round((correct / total) * 100);
+
+        const completed = {
+            status: 'completed',
+            startedAt: saved.startedAt,
+            completedAt: Date.now(),
+            currentIndex: saved.currentIndex,
+            questions: saved.questions,
+            answers: saved.answers,
+            correct, total, percent,
+            timeout: true
+        };
+        saveState(completed);
+        showFinalScreen(completed);
+    }
+
+    // ============================================================
+    //  ЭКРАН РЕЗУЛЬТАТА
+    // ============================================================
+    function showFinalScreen(state, opts = {}) {
+        $('testStart').style.display = 'none';
+        $('testProgress').style.display = 'none';
+        $('testFinal').style.display = 'block';
+
+        const percent = state.percent;
+        const correct = state.correct;
+        const total = state.total;
+        const icon = percent >= 90 ? '🏆' : percent >= 75 ? '🎉' : percent >= 60 ? '😊' : '📚';
+        const message = percent >= 90 ? 'Отличный результат! Материал усвоен полностью.' :
+                        percent >= 75 ? 'Хороший результат! Материал усвоен уверенно.' :
+                        percent >= 60 ? 'Неплохо. Тест пройден, но есть над чем поработать.' :
+                        'Результат ниже проходного (60%). Рекомендуем повторить материал.';
+
+        const timeoutMsg = state.timeout ? '<div style="color:#b13e3e; font-weight:600; margin-bottom:12px;">⏰ Время вышло! Тест завершён автоматически.</div>' : '';
+        const dateStr = state.completedAt ? fmtDate(state.completedAt) : '';
+
+        let html = '<div class="final-screen">' + timeoutMsg +
+            '<div class="icon">' + icon + '</div>' +
+            '<div class="score-big">' + percent + '%</div>' +
+            '<div class="message">' + message + '</div>' +
+            '<div class="final-stats">' +
+                '<div class="stat-box"><div class="num">' + correct + '</div><div class="lbl">Верно</div></div>' +
+                '<div class="stat-box"><div class="num">' + (total - correct) + '</div><div class="lbl">Ошибок</div></div>' +
+                '<div class="stat-box"><div class="num">' + total + '</div><div class="lbl">Всего</div></div>' +
+            '</div>';
+
+        if (dateStr) {
+            html += '<div style="font-size:0.78rem; color:#7B8D6E; margin-bottom:14px;">Завершён: ' + dateStr + '</div>';
+        }
+
+        // Блок пересдачи / статуса
+        html += '<div id="retakeContainer" class="retake-container">';
+        if (state.percent >= PASS_THRESHOLD) {
+            html += '<div class="notice green" style="text-align:left;">' +
+                '✅ <strong>Тест пройден.</strong> Повторное прохождение на этом устройстве недоступно.<br>' +
+                '<span style="font-size:0.78rem;">Результат автоматически сбросится через 2 дня.</span>' +
+            '</div>';
+        } else if (opts.retakeAvailable) {
+            html += '<div class="notice orange" style="text-align:left; margin-bottom:12px;">' +
+                '<strong>Результат ниже проходного (60%).</strong> Вы можете пройти тест повторно после подготовки.' +
+            '</div>' +
+            '<button class="btn btn-primary" id="retakeBtn">🔄 Пройти заново</button>';
+        } else if (opts.cooldownRemaining) {
+            html += '<div class="cooldown-notice">' +
+                '<strong>Результат ниже проходного (60%).</strong><br>' +
+                'Пересдача будет доступна через: <strong id="cooldownTimer">--:--</strong><br>' +
+                '<span style="font-size:0.78rem; color:#7B8D6E;">Используйте это время для подготовки.</span>' +
+            '</div>';
+        }
+        html += '</div>';
+
+        // Разбор ответов
+        html += '<div style="text-align:left; max-width:750px; margin:24px auto 0;">';
+        html += '<div style="font-weight:700; color:#2C7DA0; margin-bottom:8px;">Разбор ответов:</div>';
+        state.questions.forEach((q, i) => {
+            const userIdx = state.answers[i];
+            const userAnswer = userIdx !== null && userIdx !== undefined ? q.options[userIdx] : '— не отвечено —';
+            const correctAnswer = q.options[q.correct];
+            const ok = userIdx === q.correct;
+            html += '<div style="background:' + (ok ? '#E8F5E8' : '#FDF0E8') + '; border-radius:12px; padding:8px 12px; margin-bottom:6px; font-size:0.82rem;">' +
+                '<div style="font-weight:600; color:' + (ok ? '#2E7D32' : '#b13e3e') + ';">' + (i+1) + '. ' + q.question + '</div>' +
+                '<div style="font-size:0.78rem; color:#3E5C4A; margin-top:3px;">' +
+                    (ok ? '✅ ' + escapeHtml(userAnswer) : '❌ Ваш ответ: ' + escapeHtml(userAnswer) + ' · ✅ Правильно: ' + escapeHtml(correctAnswer)) +
+                '</div>' +
+            '</div>';
+        });
+        html += '</div></div>';
+        $('testFinal').innerHTML = html;
+
+        $('headerScore').textContent = '⭐ ' + percent;
+        $('headerStatus').textContent = 'Тест завершён · ' + percent + '%';
+
+        // Привязка событий
+        if (opts.retakeAvailable) {
+            const btn = $('retakeBtn');
+            if (btn) btn.addEventListener('click', startRetake);
+        }
+        if (opts.cooldownRemaining) {
+            startCooldownTimer(opts.cooldownRemaining);
+        }
+    }
+
+    function startCooldownTimer(remainingMs) {
+        if (cooldownInterval) clearInterval(cooldownInterval);
+        let left = remainingMs;
+        const tick = () => {
+            const m = Math.floor(left / 60000);
+            const s = Math.floor((left % 60000) / 1000);
+            const el = $('cooldownTimer');
+            if (el) el.textContent = String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+            if (left <= 0) {
+                clearInterval(cooldownInterval);
+                const container = $('retakeContainer');
+                if (container) {
+                    container.innerHTML = '<div class="notice orange" style="text-align:left; margin-bottom:12px;">' +
+                        '<strong>Результат ниже проходного (60%).</strong> Вы можете пройти тест повторно после подготовки.' +
+                    '</div>' +
+                    '<button class="btn btn-primary" id="retakeBtn">🔄 Пройти заново</button>';
+                    $('retakeBtn').addEventListener('click', startRetake);
+                }
+                return;
+            }
+            left -= 1000;
+        };
+        tick();
+        cooldownInterval = setInterval(tick, 1000);
+    }
+
+    function startRetake() {
+        if (!confirm('Начать тест заново? Ваш предыдущий результат будет удалён.')) return;
+        if (cooldownInterval) clearInterval(cooldownInterval);
+        clearState();
+        testQuestions = [];
+        testAnswers = [];
+        testCurrent = 0;
+        testStartedAt = 0;
+        startTest();
+    }
+
+    function showStartScreen() {
+        $('testStart').style.display = 'block';
+        $('testProgress').style.display = 'none';
+        $('testFinal').style.display = 'none';
+        $('testBadge').textContent = '25 вопросов';
+        $('headerScore').textContent = '⭐ 0';
+        $('headerStatus').textContent = 'Входной тест · Урок 14: мягкие лекарственные формы';
+    }
+
+    // ============================================================
+    //  ВОССТАНОВЛЕНИЕ СОСТОЯНИЯ ПРИ ЗАГРУЗКЕ
+    // ============================================================
+    function restoreState() {
+        const saved = loadState();
+        if (!saved) return;
+
+        const now = Date.now();
+        const baseTime = saved.completedAt || saved.startedAt || now;
+
+        // 2-дневная актуальность
+        if (now - baseTime > ACTUALITY_MS) {
+            clearState();
+            return;
+        }
+
+        if (saved.status === 'in_progress') {
+            const elapsed = Math.floor((now - saved.startedAt) / 1000);
+            const remaining = TEST_DURATION - elapsed;
+
+            if (remaining <= 0) {
+                finalizeExpired(saved);
+            } else {
+                testQuestions = saved.questions;
+                testAnswers = saved.answers;
+                testCurrent = saved.currentIndex || 0;
+                testStartedAt = saved.startedAt;
+
+                $('testStart').style.display = 'none';
+                $('testProgress').style.display = 'block';
+                $('testFinal').style.display = 'none';
+                $('testBadge').textContent = testQuestions.length + ' вопросов';
+
+                startTestTimer(remaining);
+                renderTestQuestion();
+            }
+            return;
+        }
+
+        if (saved.status === 'completed') {
+            const timeSinceComplete = now - saved.completedAt;
+
+            if (saved.percent >= PASS_THRESHOLD) {
+                showFinalScreen(saved);
+            } else if (timeSinceComplete < RETAKE_COOLDOWN_MS) {
+                showFinalScreen(saved, { cooldownRemaining: RETAKE_COOLDOWN_MS - timeSinceComplete });
+            } else {
+                showFinalScreen(saved, { retakeAvailable: true });
+            }
+        }
+    }
+
+    // ============================================================
+    //  ЛЕКСИКА УРОКА 15
+    // ============================================================
+    const LEX_FORMS = [
+        { latin: 'solutio, onis, f', ru: 'раствор' },
+        { latin: 'tinctura, ae, f', ru: 'настойка' },
+        { latin: 'infusum, i, n', ru: 'настой' },
+        { latin: 'decoctum, i, n', ru: 'отвар' },
+        { latin: 'emulsum, i, n', ru: 'эмульсия' },
+        { latin: 'sirupus, i, m', ru: 'сироп' },
+        { latin: 'extractum, i, n', ru: 'экстракт' }
+    ];
+    const LEX_ELEMENTS = [
+        { latin: 'Solutionis', ru: 'Раствора (Gen. sing.)' },
+        { latin: 'Tincturae', ru: 'Настойки (Gen. sing.)' },
+        { latin: 'Infusi', ru: 'Настоя (Gen. sing.)' },
+        { latin: 'Decocti', ru: 'Отвара (Gen. sing.)' },
+        { latin: 'ad 100 ml', ru: 'до 100 мл' },
+        { latin: 'Misce, fiat solutio', ru: 'Смешай, пусть получится раствор' }
+    ];
+
+    function renderLexicon() {
+        function renderGroup(gridId, list) {
+            let html = '';
+            list.forEach(a => {
+                html += '<div class="lex-card"><span class="lex-latin">' + escapeHtml(a.latin) + '</span><span class="lex-trans">' + escapeHtml(a.ru) + '</span></div>';
+            });
+            $(gridId).innerHTML = html;
+        }
+        renderGroup('lexForms', LEX_FORMS);
+        renderGroup('lexElements', LEX_ELEMENTS);
+    }
+
+    // ============================================================
+    //  УПРАЖНЕНИЯ — ДАННЫЕ
+    // ============================================================
+    const EXERCISES = {
+        ex1: { rows: [
+            { cell1: 'solutio', answer: 'раствор' },
+            { cell1: 'tinctura', answer: 'настойка' },
+            { cell1: 'infusum', answer: 'настой' },
+            { cell1: 'decoctum', answer: 'отвар' },
+            { cell1: 'emulsum', answer: 'эмульсия' },
+            { cell1: 'sirupus', answer: 'сироп' },
+            { cell1: 'extractum', answer: 'экстракт' }
+        ]},
+        ex2: { rows: [
+            { cell1: 'Rp.: Solutionis Rivanolis 0,1% 100 ml S. Для промывания ран.', answer: 'Возьми: раствора риванола 0,1% 100 мл. Обозначь: для промывания ран.' },
+            { cell1: 'Rp.: Solutionis Natrii chloridi 0,9% 200 ml S. Для внутривенного введения.', answer: 'Возьми: раствора натрия хлорида 0,9% 200 мл. Обозначь: для внутривенного введения.' },
+            { cell1: 'Rp.: Solutionis Calcii gluconatis 10% 100 ml S. Для внутривенного введения.', answer: 'Возьми: раствора кальция глюконата 10% 100 мл. Обозначь: для внутривенного введения.' },
+            { cell1: 'Rp.: Solutionis 100 ml Recipe: Rivanolis 0,1 Natrii chloridi 0,9 Aquae destillatae ad 100 ml Misce, fiat solutio S. Для промывания ран.', answer: 'Возьми: раствора 100 мл. Возьми: риванола 0,1, натрия хлорида 0,9, воды дистиллированной до 100 мл. Смешай, пусть получится раствор. Обозначь: для промывания ран.' }
+        ]},
+        ex3: { rows: [
+            { cell1: 'Выпиши 100 мл 0,1% раствора риванола для промывания ран.', answer: 'Rp.: Solutionis Rivanolis 0,1% 100 ml S. Для промывания ран.' },
+            { cell1: 'Выпиши 200 мл 0,9% раствора натрия хлорида для внутривенного введения.', answer: 'Rp.: Solutionis Natrii chloridi 0,9% 200 ml S. Для внутривенного введения.' },
+            { cell1: 'Выпиши 100 мл 10% раствора кальция глюконата для внутривенного введения.', answer: 'Rp.: Solutionis Calcii gluconatis 10% 100 ml S. Для внутривенного введения.' },
+            { cell1: 'Выпиши 100 мл сложного раствора, содержащего 0,1 г риванола и 0,9 г натрия хлорида, для промывания ран.', answer: 'Rp.: Solutionis 100 ml Recipe: Rivanolis 0,1 Natrii chloridi 0,9 Aquae destillatae ad 100 ml Misce, fiat solutio S. Для промывания ран.' }
+        ]},
+        ex4: { rows: [
+            { cell1: 'Rp.: Solutionis Rivanolis ___% 100 ml S. Для промывания ран.', answer: '0,1' },
+            { cell1: 'Rp.: Solutionis Natrii chloridi 0,9% ___ ml S. Для внутривенного введения.', answer: '200' },
+            { cell1: 'Rp.: Solutionis ___ ml Recipe: Rivanolis 0,1 Natrii chloridi 0,9 Aquae destillatae ad 100 ml Misce, fiat solutio S. Для промывания ран.', answer: '100' },
+            { cell1: 'Rp.: Decocti corticis Quercus 100 ml S. Для ___ ран.', answer: 'промывания' }
+        ]},
+        ex5: { rows: [
+            { cell1: 'Rp.: Tincturae Valerianae 25 ml S. По 20 капель 3 раза в день.', answer: 'Возьми: настойки валерианы 25 мл. Обозначь: по 20 капель 3 раза в день.' },
+            { cell1: 'Rp.: Infusi herbae Leonuri 100 ml S. По 1 столовой ложке 3 раза в день.', answer: 'Возьми: настоя травы пустырника 100 мл. Обозначь: по 1 столовой ложке 3 раза в день.' },
+            { cell1: 'Rp.: Decocti corticis Quercus 100 ml S. Для промывания ран.', answer: 'Возьми: отвара коры дуба 100 мл. Обозначь: для промывания ран.' },
+            { cell1: 'Rp.: Infusi florum Chamomillae 100 ml S. Для полосканий.', answer: 'Возьми: настоя цветков ромашки 100 мл. Обозначь: для полосканий.' }
+        ]},
+        ex6: { rows: [
+            { cell1: 'Выпиши 100 мл эмульсии касторового масла. Принимать по 1 столовой ложке 1 раз в день.', answer: 'Rp.: Emulsi Olei Ricini 100 ml S. По 1 столовой ложке 1 раз в день.' },
+            { cell1: 'Выпиши 100 мл сиропа алтея. Принимать по 1 чайной ложке 3 раза в день.', answer: 'Rp.: Sirupi Althaeae 100 ml S. По 1 чайной ложке 3 раза в день.' },
+            { cell1: 'Выпиши 10 мл 1% экстракта белладонны. Принимать по 5 капель 2 раза в день.', answer: 'Rp.: Extracti Belladonnae 1% 10 ml S. По 5 капель 2 раза в день.' }
+        ]},
+        ex7: { rows: [
+            { cell1: 'Rp.: Solutio Rivanolis 0,1% 100 ml S. Для промывания ран.', answer: 'Rp.: Solutionis Rivanolis 0,1% 100 ml S. Для промывания ран.' },
+            { cell1: 'Rp.: Tinctura Valerianae 25 ml S. По 20 капель 3 раза в день.', answer: 'Rp.: Tincturae Valerianae 25 ml S. По 20 капель 3 раза в день.' },
+            { cell1: 'Rp.: Infusi herba Leonuri 100 ml S. По 1 столовой ложке 3 раза в день.', answer: 'Rp.: Infusi herbae Leonuri 100 ml S. По 1 столовой ложке 3 раза в день.' },
+            { cell1: 'Rp.: Sirupi Althaeae 100 ml S. По 1 чайной ложке 3 раза в день.', answer: 'Rp.: Sirupi Althaeae 100 ml S. По 1 чайной ложке 3 раза в день.' }
+        ]},
+        ex8: { rows: [
+            { cell1: 'Rp.: Solutionis Rivanolis 0,1% 100 ml S. Для промывания ран.', c2: 'раствор', answer: 'Возьми: раствора риванола 0,1% 100 мл. Обозначь: для промывания ран.' },
+            { cell1: 'Rp.: Tincturae Valerianae 25 ml S. По 20 капель 3 раза в день.', c2: 'настойка', answer: 'Возьми: настойки валерианы 25 мл. Обозначь: по 20 капель 3 раза в день.' },
+            { cell1: 'Rp.: Infusi herbae Leonuri 100 ml S. По 1 столовой ложке 3 раза в день.', c2: 'настой', answer: 'Возьми: настоя травы пустырника 100 мл. Обозначь: по 1 столовой ложке 3 раза в день.' },
+            { cell1: 'Rp.: Decocti corticis Quercus 100 ml S. Для промывания ран.', c2: 'отвар', answer: 'Возьми: отвара коры дуба 100 мл. Обозначь: для промывания ран.' }
+        ]},
+        ex9: { rows: [
+            { cell1: 'Собаке с раной — 100 мл 0,1% раствора риванола для промывания.', answer: 'Rp.: Solutionis Rivanolis 0,1% 100 ml S. Для промывания ран.' },
+            { cell1: 'Кошке с расстройством — 100 мл настоя пустырника. По 1 столовой ложке 3 раза в день.', answer: 'Rp.: Infusi herbae Leonuri 100 ml S. По 1 столовой ложке 3 раза в день.' },
+            { cell1: 'Лошади для промывания раны — 100 мл отвара коры дуба.', answer: 'Rp.: Decocti corticis Quercus 100 ml S. Для промывания ран.' }
+        ]},
+        ex10: { rows: [
+            { cell1: 'Собаке требуется 100 мл 0,1% раствора риванола для промывания ран.', answer: 'Rp.: Solutionis Rivanolis 0,1% 100 ml S. Для промывания ран.' },
+            { cell1: 'Собаке требуется 25 мл настойки валерианы. Принимать по 20 капель 3 раза в день.', answer: 'Rp.: Tincturae Valerianae 25 ml S. По 20 капель 3 раза в день.' },
+            { cell1: 'Кошке требуется 100 мл настоя пустырника. Принимать по 1 столовой ложке 3 раза в день.', answer: 'Rp.: Infusi herbae Leonuri 100 ml S. По 1 столовой ложке 3 раза в день.' },
+            { cell1: 'Лошади требуется 100 мл отвара коры дуба для промывания ран.', answer: 'Rp.: Decocti corticis Quercus 100 ml S. Для промывания ран.' },
+            { cell1: 'Собаке требуется 100 мл сиропа алтея. Принимать по 1 чайной ложке 3 раза в день.', answer: 'Rp.: Sirupi Althaeae 100 ml S. По 1 чайной ложке 3 раза в день.' }
+        ]},
+        ex11: { rows: [
+            { cell1: 'Rp.: Solutionis Rivanolis 0,1% 100 ml S. Для промывания ран.', answer: 'Возьми: раствора риванола 0,1% 100 мл. Обозначь: для промывания ран.' },
+            { cell1: 'Rp.: Tincturae Valerianae 25 ml S. По 20 капель 3 раза в день.', answer: 'Возьми: настойки валерианы 25 мл. Обозначь: по 20 капель 3 раза в день.' },
+            { cell1: 'Rp.: Infusi herbae Leonuri 100 ml S. По 1 столовой ложке 3 раза в день.', answer: 'Возьми: настоя травы пустырника 100 мл. Обозначь: по 1 столовой ложке 3 раза в день.' },
+            { cell1: 'Rp.: Decocti corticis Quercus 100 ml S. Для промывания ран.', answer: 'Возьми: отвара коры дуба 100 мл. Обозначь: для промывания ран.' }
+        ]}
+    };
+
+    // ============================================================
+    //  РЕНДЕР УПРАЖНЕНИЙ
+    // ============================================================
+    function renderExercises() {
+        function simple(id) {
+            let html = '';
+            EXERCISES[id].rows.forEach((r, i) => {
+                html += '<tr><td><span class="latin" style="font-size:0.8rem;">' + escapeHtml(r.cell1) + '</span></td>' +
+                    '<td><textarea data-ex="' + id + '" data-row="' + i + '" data-col="answer"></textarea></td></tr>';
+            });
+            $(id + 'Body').innerHTML = html;
+        }
+        
+        // Ex1 (input)
+        let html = '';
+        EXERCISES.ex1.rows.forEach((r, i) => {
+            html += '<tr><td><span class="latin">' + escapeHtml(r.cell1) + '</span></td>' +
+                '<td><input type="text" data-ex="ex1" data-row="' + i + '" data-col="answer"></td></tr>';
+        });
+        $('ex1Body').innerHTML = html;
+
+        // Ex2, Ex3, Ex4 (inputs/textarea)
+        simple('ex2'); simple('ex3');
+        
+        html = '';
+        EXERCISES.ex4.rows.forEach((r, i) => {
+            html += '<tr><td><span class="latin" style="font-size:0.78rem;">' + escapeHtml(r.cell1) + '</span></td>' +
+                '<td><input type="text" data-ex="ex4" data-row="' + i + '" data-col="answer"></td></tr>';
+        });
+        $('ex4Body').innerHTML = html;
+
+        simple('ex5'); simple('ex6');
+        
+        // Ex7 (textarea)
+        html = '';
+        EXERCISES.ex7.rows.forEach((r, i) => {
+            html += '<tr><td><span class="latin" style="font-size:0.78rem;">' + escapeHtml(r.cell1) + '</span></td>' +
+                '<td><textarea data-ex="ex7" data-row="' + i + '" data-col="answer" placeholder="Исправленный рецепт..."></textarea></td></tr>';
+        });
+        $('ex7Body').innerHTML = html;
+
+        // Ex8 (input + textarea)
+        html = '';
+        EXERCISES.ex8.rows.forEach((r, i) => {
+            html += '<tr><td><span class="latin" style="font-size:0.78rem;">' + escapeHtml(r.cell1) + '</span></td>' +
+                '<td><input type="text" data-ex="ex8" data-row="' + i + '" data-col="form" placeholder="форма"></td>' +
+                '<td><textarea data-ex="ex8" data-row="' + i + '" data-col="answer"></textarea></td></tr>';
+        });
+        $('ex8Body').innerHTML = html;
+
+        // Ex9, Ex10, Ex11
+        simple('ex9'); simple('ex10'); simple('ex11');
+    }
+
+    // ============================================================
+    //  ПРОВЕРКА УПРАЖНЕНИЙ
+    // ============================================================
+    function checkExercise(id) {
+        const ex = EXERCISES[id];
+        let correct = 0, total = 0;
+        ex.rows.forEach((r, i) => {
+            const input = document.querySelector('[data-ex="' + id + '"][data-row="' + i + '"][data-col="answer"]');
+            if (input) {
+                const ok = norm(input.value) === norm(r.answer) && input.value.trim() !== '';
+                input.classList.toggle('correct', ok);
+                input.classList.toggle('wrong', !ok && input.value.trim() !== '');
+                total++;
+                if (ok) correct++;
+            }
+            if (r.c2 !== undefined) {
+                const f = document.querySelector('[data-ex="' + id + '"][data-row="' + i + '"][data-col="form"]');
+                if (f) {
+                    const ok = norm(f.value) === norm(r.c2);
+                    f.classList.toggle('correct', ok);
+                    f.classList.toggle('wrong', !ok && f.value.trim() !== '');
+                    total++;
+                    if (ok) correct++;
+                }
+            }
+        });
+        const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+        const el = $(id + 'Result');
+        el.className = 'result-msg show ' + (percent >= 80 ? 'ok' : 'no');
+        el.innerHTML = 'Правильно: <strong>' + correct + ' из ' + total + '</strong> (' + percent + '%).' +
+            (percent === 100 ? ' Отлично!' :
+             percent >= 80 ? ' Хорошо!' :
+             percent >= 60 ? ' Есть над чем поработать.' :
+             ' Стоит повторить правила.');
+    }
+
+    function resetExercise(id) {
+        document.querySelectorAll('[data-ex="' + id + '"]').forEach(el => {
+            el.value = '';
+            el.classList.remove('correct', 'wrong');
+        });
+        $(id + 'Result').classList.remove('show');
+    }
+
+    document.querySelectorAll('[data-check]').forEach(btn => {
+        btn.addEventListener('click', () => checkExercise(btn.dataset.check));
+    });
+    document.querySelectorAll('[data-reset]').forEach(btn => {
+        btn.addEventListener('click', () => resetExercise(btn.dataset.reset));
+    });
+
+    // ============================================================
+    //  СОБЫТИЯ СТАРТА / ДАЛЕЕ
+    // ============================================================
+    $('startTestBtn').addEventListener('click', startTest);
+    $('testNextBtn').addEventListener('click', () => {
+        if (testAnswers[testCurrent] === null) return;
+        if (testCurrent === testQuestions.length - 1) {
+            finishTest(false);
+        } else {
+            testCurrent++;
+            saveState({
+                status: 'in_progress',
+                startedAt: testStartedAt,
+                currentIndex: testCurrent,
+                questions: testQuestions,
+                answers: testAnswers
+            });
+            renderTestQuestion();
+        }
+    });
+
+    // ============================================================
+    //  ИНИЦИАЛИЗАЦИЯ
+    // ============================================================
+    renderLexicon();
+    renderExercises();
+    restoreState();
+
+})();
+</script>
+</body>
+</html>

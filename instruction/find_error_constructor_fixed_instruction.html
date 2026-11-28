@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Инструкция: Найди ошибки | ВетСим</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== БАЗОВЫЕ СТИЛИ ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #FDF8F0;
+            font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+            color: #3E5C4A;
+            padding: 2rem 1.5rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 2rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+            border: 1px solid #E7EDE2;
+        }
+        /* ===== ШАПКА ===== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1F4E6E;
+        }
+        .logo span {
+            background: linear-gradient(135deg, #6B8C5C, #A38B60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .version {
+            font-size: 0.7rem;
+            background: #F0EEE5;
+            padding: 2px 12px;
+            border-radius: 20px;
+            color: #7B8D6E;
+        }
+        .subtitle {
+            width: 100%;
+            font-size: 0.9rem;
+            color: #5F7C62;
+            margin-top: 0.2rem;
+        }
+        .header-actions {
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #EBE3D2;
+            padding: 6px 16px;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #3E5C4A;
+            text-decoration: none;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .btn:hover { opacity: 0.8; transform: translateY(-1px); }
+        .btn-primary { background: #2C7DA0; color: white; }
+        .btn-primary:hover { background: #236B8A; }
+        .btn-success { background: #6B9E6B; color: white; }
+        .btn-success:hover { background: #5A865A; }
+        /* ===== ОГЛАВЛЕНИЕ ===== */
+        .toc {
+            background: #F9F6EF;
+            border-radius: 1.2rem;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #A3B18A;
+        }
+        .toc h2 { font-size: 1rem; color: #1F4E6E; margin-bottom: 0.5rem; }
+        .toc ul { list-style: none; columns: 2; column-gap: 2rem; }
+        .toc ul li { padding: 2px 0; font-size: 0.85rem; }
+        .toc ul li a { color: #2C7DA0; text-decoration: none; transition: 0.2s; }
+        .toc ul li a:hover { text-decoration: underline; color: #1F4E6E; }
+        /* ===== ЗАГОЛОВКИ ===== */
+        h1 { font-size: 1.8rem; color: #1F4E6E; font-weight: 700; margin-bottom: 0.5rem; }
+        h2 {
+            font-size: 1.4rem;
+            color: #1F4E6E;
+            font-weight: 700;
+            margin: 2rem 0 1rem 0;
+            border-bottom: 2px solid #E2EAD9;
+            padding-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        h2 .badge {
+            font-size: 0.6rem;
+            background: #2C7DA0;
+            color: white;
+            padding: 1px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        h3 { font-size: 1.1rem; color: #2C7DA0; font-weight: 600; margin: 1.5rem 0 0.5rem 0; }
+        h4 { font-size: 0.95rem; color: #3E5C4A; font-weight: 600; margin: 1rem 0 0.3rem 0; }
+        p { margin-bottom: 0.8rem; font-size: 0.95rem; }
+        /* ===== СПИСКИ ===== */
+        ul, ol { margin: 0.5rem 0 1rem 1.5rem; }
+        ul li, ol li { margin-bottom: 0.4rem; font-size: 0.9rem; }
+        /* ===== ВЫДЕЛЕНИЯ ===== */
+        .highlight {
+            background: #F0EEE5;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .tag {
+            background: #E2EAD9;
+            color: #3E5C4A;
+            padding: 1px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin: 0 2px;
+        }
+        /* ===== БЛОКИ ПРИМЕРОВ ===== */
+        .example-box {
+            background: #F9F6EF;
+            border-radius: 1rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #A3B18A;
+            font-size: 0.9rem;
+        }
+        .example-box .label {
+            font-weight: 600;
+            color: #1F4E6E;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .example-box code {
+            background: #fff;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            border: 1px solid #E2EAD9;
+        }
+        /* ===== ТАБЛИЦЫ ===== */
+        .table-wrap { overflow-x: auto; margin: 1rem 0 1.5rem; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            border: 1px solid #E2EAD9;
+        }
+        table th {
+            background: #1F4E6E;
+            color: #fff;
+            padding: 0.6rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #E2EAD9;
+            vertical-align: top;
+        }
+        table tr:nth-child(even) td { background: #F9F6EF; }
+        table tr:last-child td { border-bottom: none; }
+        /* ===== СХЕМА ===== */
+        .schema {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+        .schema .step {
+            background: #FDFCF9;
+            border: 2px solid #E2EAD9;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+            max-width: 160px;
+        }
+        .schema .step .step-icon { font-size: 1.8rem; }
+        .schema .step .step-label { font-size: 0.75rem; font-weight: 600; color: #1F4E6E; margin-top: 0.2rem; }
+        .schema .arrow { font-size: 1.5rem; color: #A3B18A; display: flex; align-items: center; }
+        /* ===== БЛОКИ ВНИМАНИЯ ===== */
+        .note {
+            background: #F0F6FA;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #2C7DA0;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+        .note strong { color: #1F4E6E; }
+        .warning {
+            background: #FDE8E0;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #D47A6A;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+        .warning strong { color: #D47A6A; }
+        .tip {
+            background: #E8F5E8;
+            border-radius: 1rem;
+            padding: 0.8rem 1.2rem;
+            border-left: 4px solid #6B9E6B;
+            margin: 0.8rem 0;
+            font-size: 0.9rem;
+        }
+        .tip strong { color: #6B9E6B; }
+        /* ===== ПОДВАЛ ===== */
+        .footer {
+            text-align: center;
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #E2EAD9;
+            font-size: 0.7rem;
+            color: #8A9B7A;
+        }
+        .footer a { color: #2C7DA0; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        /* ===== АДАПТИВ ===== */
+        @media (max-width: 900px) {
+            .container { padding: 1.5rem 1.2rem; }
+            .toc ul { columns: 1; }
+            .schema { flex-direction: column; align-items: center; }
+            .schema .step { max-width: 100%; width: 100%; }
+            .schema .arrow { transform: rotate(90deg); }
+            h1 { font-size: 1.4rem; }
+            h2 { font-size: 1.2rem; }
+        }
+        @media (max-width: 600px) {
+            body { padding: 0.8rem; }
+            .container { padding: 1rem 0.8rem; }
+            .header { flex-direction: column; align-items: stretch; gap: 0.5rem; }
+            .header-actions { justify-content: center; }
+            h1 { font-size: 1.2rem; }
+            table { font-size: 0.75rem; }
+            table th, table td { padding: 0.4rem 0.6rem; }
+        }
+        /* ===== ПЕЧАТЬ ===== */
+        @media print {
+            body { padding: 0.5rem; background: #fff; }
+            .container { box-shadow: none; border: 1px solid #ddd; padding: 1.5rem; }
+            .toc { break-inside: avoid; }
+            .schema .step { break-inside: avoid; }
+            .example-box { break-inside: avoid; }
+            table { break-inside: avoid; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ===== ШАПКА ===== -->
+        <div class="header">
+            <div class="logo">🔍 <span>ВетСим</span> — Найди ошибки</div>
+            <span class="version">v1.0</span>
+            <div class="subtitle">Инструкция по работе для преподавателей ветеринарных дисциплин</div>
+            <div class="header-actions no-print">
+                <a href="find_error_constructor_fixed(3).html" target="_blank" class="btn btn-primary">
+                    🚀 Перейти к конструктору
+                </a>
+                <button class="btn btn-success" onclick="window.print()">
+                    🖨️ Распечатать инструкцию
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== ВСТУПЛЕНИЕ ===== -->
+        <p>
+            <strong>Добро пожаловать!</strong> Конструктор «Найди ошибки» — это инструмент для создания интерактивных заданий, в которых студент должен найти и исправить намеренные ошибки в тексте. Это формат для проверки внимательности, знания терминологии и критического мышления.
+        </p>
+
+        <div class="note">
+            <strong>💡 Главная идея:</strong> Вы создаёте текст с ошибками, размечаете фрагменты, указываете правильные варианты и пояснения. Студент читает текст, кликает по ошибкам, получает мгновенную обратную связь и видит результат в конце.
+        </div>
+
+        <!-- ===== ОГЛАВЛЕНИЕ ===== -->
+        <div class="toc">
+            <h2>📋 Оглавление</h2>
+            <ul>
+                <li><a href="#s1">1. Что такое «Найди ошибки»</a></li>
+                <li><a href="#s2">2. Интерфейс и инструменты</a></li>
+                <li><a href="#s3">3. Создание задания</a></li>
+                <li><a href="#s4">4. Настройки тренажёра</a></li>
+                <li><a href="#s5">5. Режим студента</a></li>
+                <li><a href="#s6">6. Экспорт задания</a></li>
+                <li><a href="#s7">7. Практические примеры</a></li>
+                <li><a href="#s8">8. Частые вопросы (FAQ)</a></li>
+            </ul>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 1 ===== -->
+        <h2 id="s1">1. Что такое «Найди ошибки»</h2>
+
+        <p>
+            Конструктор «Найди ошибки» — это инструмент для создания <strong>текстовых упражнений на поиск и исправление ошибок</strong>. Он решает несколько задач преподавателя:
+        </p>
+        <ul>
+            <li><strong>Проверка внимательности</strong> — студент должен заметить несоответствия в тексте.</li>
+            <li><strong>Закрепление терминологии</strong> — ошибки касаются ключевых понятий дисциплины.</li>
+            <li><strong>Развитие критического мышления</strong> — студент анализирует контекст и аргументирует выбор.</li>
+            <li><strong>Отработка безопасности</strong> — можно отметить критические ошибки (например, неверная дозировка).</li>
+        </ul>
+
+        <div class="schema">
+            <div class="step">
+                <div class="step-icon">📝</div>
+                <div class="step-label">Текст</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Напишите учебный текст</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">⚠️</div>
+                <div class="step-label">Разметка</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Отметьте фрагменты с ошибками</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">👆</div>
+                <div class="step-label">Поиск</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Студент кликает по ошибкам</div>
+            </div>
+            <div class="arrow">→</div>
+            <div class="step">
+                <div class="step-icon">📊</div>
+                <div class="step-label">Результат</div>
+                <div style="font-size:0.65rem; color:#7B8D6E;">Автоматический подсчёт и разбор</div>
+            </div>
+        </div>
+
+        <!-- ===== РАЗДЕЛ 2 ===== -->
+        <h2 id="s2">2. Интерфейс и инструменты</h2>
+
+        <p>Конструктор состоит из трёх вкладок и нескольких ключевых зон:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Зона / вкладка</th>
+                        <th>Что находится</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>✏️ Редактор</strong></td>
+                        <td>Поле автора, название, инструкция, текст с ошибками, панель разметки, список ошибок</td>
+                        <td>Написание текста, разметка ошибок, редактирование</td>
+                    </tr>
+                    <tr>
+                        <td><strong>⚙️ Настройки</strong></td>
+                        <td>Показ общего количества ошибок, лимит промахов, таймер (прямой/обратный)</td>
+                        <td>Настройка параметров тренажёра</td>
+                    </tr>
+                    <tr>
+                        <td><strong>🚀 Экспорт</strong></td>
+                        <td>Сохранение проекта (JSON), загрузка проекта, экспорт в HTML</td>
+                        <td>Сохранение и публикация задания</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3>2.1 Панель разметки ошибки</h3>
+        <p>Появляется после нажатия «⚠️ Отметить как ошибку». Содержит:</p>
+        <ul>
+            <li><strong>Правильный вариант *</strong> — обязательное поле, как должно быть.</li>
+            <li><strong>Тип ошибки</strong> — терминология, фактическая, дозировка, логика, критическая (безопасность), другое.</li>
+            <li><strong>Пояснение</strong> — необязательное, но именно оно делает задание обучающим.</li>
+        </ul>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Всегда заполняйте пояснение — студент увидит его после нахождения ошибки. Это превращает упражнение в мини-урок.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 3 ===== -->
+        <h2 id="s3">3. Создание задания</h2>
+
+        <h3>3.1 Как разметить ошибку</h3>
+        <ol>
+            <li>Напишите или вставьте текст в поле <span class="highlight">«📝 Текст с ошибками»</span>.</li>
+            <li>Выделите мышью фрагмент, который содержит ошибку (минимум 2 символа).</li>
+            <li>Нажмите кнопку <span class="highlight">«⚠️ Отметить как ошибку»</span>.</li>
+            <li>В панели разметки укажите <strong>правильный вариант</strong> (обязательно).</li>
+            <li>Выберите <strong>тип ошибки</strong> и, при желании, добавьте <strong>пояснение</strong>.</li>
+            <li>Нажмите <span class="highlight">«💾 Сохранить ошибку»</span> — фрагмент подсветится оранжевым.</li>
+        </ol>
+
+        <h3>3.2 Рекомендации по созданию ошибок</h3>
+        <ul>
+            <li><strong>Ключевые термины:</strong> Ошибайтесь в терминах, названиях болезней, анатомических структурах.</li>
+            <li><strong>Дозировки:</strong> Неверные дозы — отличный материал для критических ошибок.</li>
+            <li><strong>Количество ошибок:</strong> Оптимально 5–10 ошибок в одном тексте.</li>
+            <li><strong>Контекст:</strong> Ошибка должна быть заметна внимательному студенту, но не бросаться в глаза с первого слова.</li>
+        </ul>
+
+        <h3>3.3 Управление ошибками</h3>
+        <ul>
+            <li><strong>Редактирование:</strong> Кликните по подсвеченному фрагменту в тексте или по кнопке ✏️ в списке ошибок.</li>
+            <li><strong>Удаление:</strong> Кнопка ✖ в списке ошибок.</li>
+            <li><strong>Снять всю разметку:</strong> Кнопка <span class="highlight">«❌ Снять всю разметку»</span> — текст останется, маркеры исчезнут.</li>
+            <li><strong>Очистить текст:</strong> Кнопка <span class="highlight">«🗑️ Очистить текст»</span> — удаляет и текст, и ошибки.</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> Не выделяйте фрагмент, который уже размечен. Чтобы изменить ошибку, кликните по ней и отредактируйте в панели.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 4 ===== -->
+        <h2 id="s4">4. Настройки тренажёра</h2>
+
+        <p>На вкладке <span class="highlight">«⚙️ Настройки»</span> задаются параметры прохождения:</p>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Параметр</th>
+                        <th>Что делает</th>
+                        <th>Рекомендация</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Показывать общее количество ошибок</strong></td>
+                        <td>Студент видит «Найдено: 0 / 7»</td>
+                        <td>Включайте для тренировки, выключайте для контроля</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Лимит промахов</strong></td>
+                        <td>После N кликов мимо тренажёр завершается (0 = без лимита)</td>
+                        <td>5–7 промахов — оптимально</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Таймер</strong></td>
+                        <td>Прямой (считает время) или обратный (ограничивает)</td>
+                        <td>Для аудиторной работы — обратный, для домашней — прямой</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Настройки сохраняются в проекте (JSON) и в экспортированном HTML. Студент не может их изменить.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 5 ===== -->
+        <h2 id="s5">5. Режим студента</h2>
+
+        <p>В экспортированном тренажёре студент видит:</p>
+        <ul>
+            <li><strong>Заголовок</strong> и <strong>инструкцию</strong> задания.</li>
+            <li><strong>Верхнюю панель:</strong> таймер, счётчик найденных ошибок, счётчик промахов.</li>
+            <li><strong>Текст</strong> с кликабельными фрагментами (но без визуальной подсказки, где ошибки).</li>
+            <li><strong>Кнопку «Завершить»</strong> — досрочное завершение.</li>
+        </ul>
+
+        <h3>5.1 Как работает поиск</h3>
+        <ul>
+            <li>Студент кликает по фрагменту, который считает ошибочным.</li>
+            <li>Если фрагмент размечен как ошибка — он подсвечивается зелёным, появляется карточка с правильным вариантом и пояснением.</li>
+            <li>Если фрагмент не размечен — засчитывается промах, появляется уведомление «Мимо!».</li>
+            <li>При достижении лимита промахов тренажёр завершается автоматически.</li>
+        </ul>
+
+        <h3>5.2 Итоговый экран</h3>
+        <p>После завершения студент видит:</p>
+        <ul>
+            <li><strong>Найдено ошибок</strong> — сколько из общего числа он нашёл.</li>
+            <li><strong>Всего ошибок</strong> — общее количество.</li>
+            <li><strong>Промахов</strong> — сколько раз кликнул мимо.</li>
+            <li><strong>Время</strong> — затраченное время.</li>
+            <li><strong>Разбор всех ошибок:</strong> найденные — зелёным, пропущенные — красным, с правильными вариантами и пояснениями.</li>
+            <li><strong>Кнопку «Пройти ещё раз»</strong> — перезапуск.</li>
+        </ul>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Итоговый разбор — самая ценная часть. Студент видит не только свои ошибки, но и то, что пропустил, с пояснениями.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 6 ===== -->
+        <h2 id="s6">6. Экспорт задания</h2>
+
+        <p>Готовое задание экспортируется в <strong>автономный HTML-файл</strong>.</p>
+
+        <h3>6.1 Как экспортировать</h3>
+        <ol>
+            <li>Убедитесь, что размечена хотя бы одна ошибка.</li>
+            <li>Перейдите на вкладку <span class="highlight">«🚀 Экспорт»</span>.</li>
+            <li>Нажмите <span class="highlight">«🚀 Экспорт в готовый тренажёр»</span>.</li>
+            <li>Скачайте файл <span class="highlight">find_error_trainer.html</span>.</li>
+        </ol>
+
+        <h3>6.2 Что получает студент</h3>
+        <ul>
+            <li><strong>Один HTML-файл</strong> — всё встроено: текст, ошибки, настройки, автор.</li>
+            <li><strong>Интерактивный текст</strong> с кликабельными фрагментами.</li>
+            <li><strong>Автоматическая проверка</strong> — мгновенная обратная связь.</li>
+            <li><strong>Работает офлайн</strong> — открывается в любом браузере без интернета.</li>
+        </ul>
+
+        <h3>6.3 Сохранение проекта</h3>
+        <p>Кнопка <span class="highlight">«💾 Сохранить проект (JSON)»</span> позволяет сохранить черновик и вернуться к нему позже. Кнопка <span class="highlight">«📂 Загрузить проект»</span> — восстановить из JSON.</p>
+
+        <div class="note">
+            <strong>📌 Важно:</strong> Экспортированный HTML-файл не зависит от конструктора. Его можно отправить студентам по почте, в мессенджере или разместить на сайте.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 7 ===== -->
+        <h2 id="s7">7. Практические примеры</h2>
+
+        <h3>Пример 1: Анатомия сердца</h3>
+        <div class="example-box">
+            <div class="label">📘 Текст с ошибками</div>
+            <p>
+                <i>Сердце собаки состоит из <span style="color:#BC5A3C; text-decoration:line-through;">трёх</span> камер. Артерии несут кровь <span style="color:#BC5A3C; text-decoration:line-through;">к сердцу</span>, а вены — от сердца. Кислород поступает в кровь в <span style="color:#BC5A3C; text-decoration:line-through;">печени</span>.</i>
+            </p>
+            <p>
+                <strong>Правильные варианты:</strong><br>
+                «трёх» → <strong>четырёх</strong> · «к сердцу» → <strong>от сердца</strong> · «в печени» → <strong>в лёгких</strong>
+            </p>
+            <p><strong>Типы ошибок:</strong> фактическая · фактическая · фактическая</p>
+        </div>
+
+        <h3>Пример 2: Симптомы пироплазмоза</h3>
+        <div class="example-box">
+            <div class="label">📘 Текст с ошибками</div>
+            <p>
+                <i>Пироплазмоз у собак вызывается паразитом <span style="color:#BC5A3C; text-decoration:line-through;">Babesia canis</span>. Основные симптомы: лихорадка, <span style="color:#BC5A3C; text-decoration:line-through;">повышение аппетита</span>, гемоглобинурия. Для диагностики используют <span style="color:#BC5A3C; text-decoration:line-through;">рентген</span> крови.</i>
+            </p>
+            <p>
+                <strong>Правильные варианты:</strong><br>
+                «Babesia canis» → <strong>Babesia canis</strong> (верно, это не ошибка — пример для демонстрации) · «повышение аппетита» → <strong>слабость</strong> · «рентген» → <strong>микроскопию</strong>
+            </p>
+            <p><strong>Типы ошибок:</strong> фактическая · фактическая · фактическая</p>
+        </div>
+
+        <h3>Пример 3: Дозировка антибиотика (критическая ошибка)</h3>
+        <div class="example-box">
+            <div class="label">📘 Текст с ошибками</div>
+            <p>
+                <i>Амоксициллин для собак назначают в дозе <span style="color:#BC5A3C; text-decoration:line-through;">50 мг/кг</span> два раза в день. Курс лечения — <span style="color:#BC5A3C; text-decoration:line-through;">1 день</span>. Препарат вводят <span style="color:#BC5A3C; text-decoration:line-through;">внутривенно</span>.</i>
+            </p>
+            <p>
+                <strong>Правильные варианты:</strong><br>
+                «50 мг/кг» → <strong>12,5–25 мг/кг</strong> · «1 день» → <strong>5–7 дней</strong> · «внутривенно» → <strong>внутрь (перорально)</strong>
+            </p>
+            <p><strong>Типы ошибок:</strong> дозировка · логика · критическая (безопасность)</p>
+        </div>
+
+        <div class="tip">
+            <strong>💡 Совет:</strong> Начинайте с текста на 100–150 слов и 5–6 ошибок. Проверьте на коллегах, чтобы убедиться, что ошибки заметны, но не очевидны.
+        </div>
+
+        <!-- ===== РАЗДЕЛ 8 ===== -->
+        <h2 id="s8">8. Частые вопросы (FAQ)</h2>
+
+        <h4>❓ Сколько ошибок можно добавить?</h4>
+        <p>Количество не ограничено. Рекомендуется 5–10 ошибок для одного текста.</p>
+
+        <h4>❓ Можно ли размечать не только слова, но и фразы?</h4>
+        <p>Да, выделяйте любой фрагмент от 2 символов. Это удобно для дозировок, названий болезней, целых формулировок.</p>
+
+        <h4>❓ Что будет, если студент кликнет мимо?</h4>
+        <p>Засчитывается промах, появляется уведомление «Мимо!». При достижении лимита тренажёр завершается.</p>
+
+        <h4>❓ Работает ли задание без интернета?</h4>
+        <p>Да, готовый HTML-файл работает полностью офлайн.</p>
+
+        <h4>❓ Может ли студент увидеть правильные ответы заранее?</h4>
+        <p>Нет. Правильные ответы и пояснения появляются только после клика по размеченному фрагменту или на итоговом экране.</p>
+
+        <h4>❓ Можно ли изменить настройки после экспорта?</h4>
+        <p>Нет, настройки вшиваются в HTML. Чтобы изменить — отредактируйте проект и экспортируйте заново.</p>
+
+        <div class="warning">
+            <strong>⚠️ Важно:</strong> Убедитесь, что все правильные варианты введены без ошибок. Проверка сравнивает текст фрагмента с разметкой; если разметка не совпадает с текстом после редактирования — ошибка может не сработать.
+        </div>
+
+        <!-- ===== ЗАКЛЮЧЕНИЕ ===== -->
+        <h2>🎯 Заключение</h2>
+
+        <p>
+            Конструктор «Найди ошибки» превращает чтение текста в <strong>интерактивное упражнение на внимание, терминологию и критическое мышление</strong>.
+        </p>
+
+        <p><strong>Ключевые преимущества:</strong></p>
+        <ul>
+            <li><strong>Внимательность</strong> — студент учится замечать несоответствия.</li>
+            <li><strong>Терминология</strong> — ошибки касаются ключевых понятий дисциплины.</li>
+            <li><strong>Критическое мышление</strong> — студент анализирует контекст.</li>
+            <li><strong>Безопасность</strong> — можно отметить критические ошибки (дозировки, пути введения).</li>
+            <li><strong>Автоматическая проверка</strong> — мгновенная обратная связь.</li>
+            <li><strong>Гибкость</strong> — подходит для любых дисциплин.</li>
+            <li><strong>Офлайн-доступность</strong> — не нужен интернет.</li>
+        </ul>
+
+        <div class="tip" style="text-align:center; margin: 1.5rem 0;">
+            <p style="font-size:1rem;"><strong>💡 Совет:</strong> Начните с текста на 100–150 слов с 5–6 ошибками. Проверьте на коллегах, чтобы убедиться, что ошибки логичны и контекст достаточно ясен.</p>
+        </div>
+
+        <!-- ===== ПОДВАЛ ===== -->
+        <div class="footer">
+            <p>© 2026 VetSim — Интерактивные тренажёры для ветеринарного образования</p>
+            <p>Автор проекта и вайбкодинг: Алла Сергеевна Тераевич, преподаватель ветеринарных дисциплин</p>
+            <p>Автор идеи конструктора — студентка ВАЭК: Савельева Екатерина</p>
+            <p>Лицензия <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY‑NC 4.0</a> — свободное некоммерческое использование с указанием авторства.</p>
+            <p>💬 Сообщество: <a href="https://vk.ru/vetsimpros" target="_blank">ВКонтакте</a> | По вопросам: <a href="https://vk.ru/vet_sim" target="_blank">https://vk.ru/vet_sim</a></p>
+        </div>
+
+    </div>
+</body>
+</html>
